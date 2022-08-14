@@ -1,0 +1,543 @@
+// Copyright 2022 Marco Naveni. All Rights Reserved.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "ClassicFunctionLibrary.h"
+#include "Blueprint/UserWidget.h"
+#include "GameData.h"
+#include "RuntimeImageReader.h"
+#include "MainInterface.generated.h"
+
+UENUM(BlueprintType, Category = "Navigation")
+enum EPositionY
+{
+	TOP        UMETA(DisplayName = "Top"),
+	CENTRAL    UMETA(DisplayName = "Center"),
+	BOTTOM     UMETA(DisplayName = "Bottom")
+};
+
+UENUM(BlueprintType, Category = "Navigation")
+enum EFocus
+{
+	MAIN        UMETA(DisplayName = "Main"),
+	SYSTEM    UMETA(DisplayName = "System"),
+	INFO     UMETA(DisplayName = "Info")
+};
+
+
+/**
+ * 
+ */
+UCLASS()
+class CLASSICLAUNCHER_API UMainInterface : public UUserWidget
+{
+	GENERATED_BODY()
+
+
+protected:
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UHorizontalBox* HBListGame;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UScrollBox* ScrollListGame;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* TxtTitleGame;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* TxtDebug;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UMultiLineEditableTextBox* TxtDescription;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* BgBottomMenu;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* ImgImageBottom;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* ImgVideo;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* BgTopBar;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* BgTopBarIcon;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* BgBackground;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* BgTitle;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* ImgFrame;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* ImgPreventClickMouse;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* BgBottom;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UCanvasPanel* CanvasPanelSystemSelect;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UCanvasPanel* CanvasPanelInfo;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UCanvasPanel* CanvasPanelConfiguration;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UCanvasPanel* CanvasPanelBottom;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UArrow* WBPArrow;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UToolTip* WBPToolTipConfiguration;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UToolTip* WBPToolTipFavorites;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UToolTip* WBPToolTipInfo;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UToolTip* WBPToolTipSystem;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UClassicInfoInterface* WBPInfo;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UClassicSystemListInterface* WBPSystemsList;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UClassicButtonsIcons* WBPButtonsIconsInterfaces;
+	
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UClassicButton* BtnSelectSystem;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UClassicButton* BtnConfigurations;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UClassicButton* BtnFavorites;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UClassicButton* BtnInfo;
+
+	//animations WidgetBind
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FrameAnimationX1;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FrameAnimationX2;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FrameAnimationX3;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FrameAnimationY1ToSystems;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FrameAnimationY2ToSystems;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FrameAnimationY3ToSystems;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FrameAnimationY4ToSystems;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FrameAnimationY1ToConfig;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FrameAnimationY2ToConfig;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FrameAnimationY3ToConfig;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FrameAnimationY4ToConfig;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FrameAnimationY1ToFavorite;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FrameAnimationY2ToFavorite;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FrameAnimationY3ToFavorite;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FrameAnimationY4ToFavorite;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FrameAnimationY1ToInfo;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FrameAnimationY2ToInfo;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FrameAnimationY3ToInfo;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FrameAnimationY4ToInfo;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FrameAnimationXTop1;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FrameAnimationXTop2;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FrameAnimationXTop3;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* ShowDescBottomInfo;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* ShowSystem;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* BarTop;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FadeStartSystem;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* ShowInfo;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* LoadListGame;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* VideoAnimation;
+
+
+	//subclass and references
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
+	TSubclassOf<class UCard> cardClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
+	TSubclassOf<class UCover> coverClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
+	TSubclassOf<class UClassicButtonSystem> buttonSystemClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
+	TArray<class UCard*> cardReference;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
+	TArray<class UCover*> coverReference;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
+	TArray<class UClassicButtonSystem*> ButtonSystemReferences;
+
+public:
+
+	UMainInterface(const FObjectInitializer& ObjectInitializer);
+
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+	virtual void NativeConstruct() override;
+	virtual void NativePreConstruct() override;
+	virtual bool Initialize() override;
+	virtual FReply NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
+	virtual FReply NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
+
+
+	//variables
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	TArray<FGameData> GameData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	TArray<FGameData> NewGameData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	TArray<FConfigSystem> GameSystems;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	FConfig ConfigurationData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	int32 IndexCard;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	int32 FirstIndex;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	int32 LastIndex;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	int32 IndexAsyncImage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	int32 ProcessID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	int32 PositionCenterX;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	int32 PositionTopX;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	EButtonsGame ENavigationButton;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	TEnumAsByte<EPositionY> PositionY;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	TEnumAsByte<EFocus> Focus;
+
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	//FKey KeyPressed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	FKeyEvent KeyEvent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	bool bDelayPressed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	bool bKeyPressed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	bool bUpDownPressed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	bool bKeyTrigger;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	bool bInputEnable;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	bool bScroll;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	bool bFilterFavorites;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	FString CorePath;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	float TimerDelayAnimation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	float TriggerDelayPressed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	float SpeedScroll;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	int32 CountSystem;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	int32 CountLocationY;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	int32 MaxFrameMove;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	int32 CountGarbageCollection;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	TArray<UTexture2D*> ImageCards;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	UTexture2D* ImageCard;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	UTexture2D* ImageNull;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	UTexture2D* ImageFrameTop;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	UTexture2D* ImageFrameCenter;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Components")
+	class UClassicGameInstance* ClassicGameInstance;
+
+	//timers
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
+	FTimerHandle pTimerHandle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
+	FTimerHandle DelayCreateGameListTimerHandle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
+	FTimerHandle DelayReloadTimerHandle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
+	FTimerHandle DelayLoadListTimerHandle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
+	FTimerHandle DelayPressedTimerHandle;
+
+	//Functions
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void RestartWidget();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void OnErrorMessage(const FString& ErrorMessage);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void SetDebugMessage(const FString Message);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnError(const FString& ErrorMessage);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void LoadConfigurationNative();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void LoadConfiguration();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void LoadConfigSystemsNative();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void LoadConfigSystems();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void LoadListNative();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void ViewList();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void SetPaddingCovers();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void LoadList();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void CreateGameListNative();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void CreateGameList();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void SaveGame();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void GameSettingsInit();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void GameSettingsRunning();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void GameSettingsRunningInternal();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void CreateCardsCoversWidget(int32 Min, int32 Max);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void CreateCardCoverWidget(FGameData Data);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void CreateGameSystems();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void OnNativeNavigationGame(EButtonsGame Navigate);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnNavigationGame(EButtonsGame Navigate);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void OnNativeClick(FString Value);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void OnNativeClickSystem(int32 Value);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnClickPathEvent(const FString& ValuePath);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnClickSystem(const int32 Value);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void OnNavigationFocus(UCard* Card);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void SetButtonsIconInterfaces(TEnumAsByte<EPositionY> GetPosition);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UTexture2D* SetImageFromPath(FString PathImage);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface", meta = (count = "150.0"))
+	void ForceGarbageCollectionBP(float Count = 150.0f);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void MaximizeViewPort();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void MinimizeViewPort();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void LoadFirstImages();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void LoadImages();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void ImageOut(UTexture2D* TextureOut, int32 Index);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void ASyncLoadCard(FString PathImage,int32 Index);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void SetImagesCard(UTexture2D* Texture, UCard* Card, int32 Index);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void SetImagesCover(UTexture2D* Texture,UCover* Cover, int32 Index);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void AddImagesCardCover(UTexture2D* Texture, int32 Index);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void LoadImageAsync(const int32& Index);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void LoadImageSync(const int32& Index);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void PressedDelayNavigation(float Delay);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void PressedTimerNavigation();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void SetRenderOpacityList();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void ClearData(bool bAnimationBarTop, bool bAnimationShowSystem);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnLoopStartAsyncImage(const int32& Index);
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnLoopPauseAsyncImage(const int32& Index);
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnLoopResumeAsyncImage(const int32& Index);
+
+private:
+
+	UPROPERTY()
+	TArray<FString> TextTop;
+	UPROPERTY()
+	TArray<FString> TextCenter;
+	UPROPERTY()
+	TArray<ESlateVisibility> IconTop;
+	UPROPERTY()
+	TArray<ESlateVisibility> IconCenter;
+
+};
