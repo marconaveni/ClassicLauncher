@@ -166,6 +166,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	static TArray<FGameData> FilterFavoriteGameData(TArray<FGameData> datas, bool filterFavorites);
 
+	///////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////
+	///these functions are not mine, all credits go to Rama
+
 	//function credits rama VictoryBPFunctionLibrary
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	static bool LoadStringFile(FString& Result, FString FullFilePath);
@@ -173,6 +177,21 @@ public:
 	//function credits rama VictoryBPFunctionLibrary
 	UFUNCTION(BlueprintPure, Category = "Functions|LoadTexture", meta = (DisplayName = "LoadTexture", Keywords = "loadtexture"))
 	static UTexture2D* LoadTexture2DFromFile(const FString& FullFilePath, bool& IsValid, EClassicImageFormat ImageFormat, int32& Width, int32& Height);
+
+	//function credits rama VictoryBPFunctionLibrary
+	UFUNCTION(BlueprintCallable, Category = "Functions|System")
+	static void CreateProcess(int32& ProcessId, FString FullPath, TArray<FString> CommandlineArgs, bool Detach, bool Hidden, int32 Priority = 0, FString OptionalWorkingDirectory = "");
+
+	//function credits rama VictoryBPFunctionLibrary
+	UFUNCTION(BlueprintPure, Category = "Functions|System")
+	static bool ClassicIsApplicationRunning(int32 ProcessId)
+	{
+		//Please note it should really be uint32 but that is not supported by BP yet
+		return FPlatformProcess::IsApplicationRunning(ProcessId);
+	}
+
+	/////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////
 
 	UFUNCTION(BlueprintCallable, Category = "Functions|LoadTexture", meta = (DisplayName = "AsyncLoadTexture", Keywords = "asyncloadtexture"))
 	static void AsyncLoadTexture2DFromFile(FLoadImageDelegate Out, const FString FullFilePath, int32 Index);

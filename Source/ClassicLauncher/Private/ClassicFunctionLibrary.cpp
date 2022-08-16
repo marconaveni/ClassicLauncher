@@ -482,6 +482,39 @@ UTexture2D* UClassicFunctionLibrary::LoadTexture2DFromFile(const FString& FullFi
 	return NewTexture;
 }
 
+void UClassicFunctionLibrary::CreateProcess(int32& ProcessId, FString FullPath, TArray<FString> CommandlineArgs, bool Detach, bool Hidden, int32 Priority, FString OptionalWorkingDirectory)
+{
+	FString Args = "";
+	if (CommandlineArgs.Num() > 1)
+	{
+		Args = CommandlineArgs[0];
+		for (int32 v = 1; v < CommandlineArgs.Num(); v++)
+		{
+			Args += " " + CommandlineArgs[v];
+		}
+	}
+	else if (CommandlineArgs.Num() > 0)
+	{
+		Args = CommandlineArgs[0];
+	}
+
+	uint32 NeedBPUINT32 = 0;
+	FProcHandle ProcHandle = FPlatformProcess::CreateProc(
+		*FullPath,
+		*Args,
+		Detach,//* @param bLaunchDetached		if true, the new process will have its own window
+		false,//* @param bLaunchHidded			if true, the new process will be minimized in the task bar
+		Hidden,//* @param bLaunchReallyHidden	if true, the new process will not have a window or be in the task bar
+		&NeedBPUINT32,
+		Priority,
+		(OptionalWorkingDirectory != "") ? *OptionalWorkingDirectory : nullptr,//const TCHAR* OptionalWorkingDirectory, 
+		 nullptr
+	);
+	
+	//Not sure what to do to expose UINT32 to BP
+	ProcessId = NeedBPUINT32;
+}
+
 
 
 
@@ -561,6 +594,7 @@ FString UClassicFunctionLibrary::FormatDateToXml()
 	FDateTime DateTime = FDateTime::Now();
 	return DateTime.ToString(TEXT("%Y%m%dT%H%M%S"));
 }
+
 
 
 

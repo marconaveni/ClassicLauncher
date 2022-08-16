@@ -13,6 +13,7 @@
 #include "Components/TextBlock.h"
 #include "Components/Image.h"
 #include "Arrow.h"
+#include "ClassicButton.h"
 #include "ClassicButtonsIcons.h"
 #include "ClassicInfoInterface.h"
 #include "ClassicSystemListInterface.h"
@@ -21,6 +22,11 @@
 #include "Components/MultiLineEditableTextBox.h"
 
 #include "RuntimeImageLoader.h"
+#include "ToolTip.h"
+#include "Animation/UMGSequencePlayer.h"
+#include "Components/CanvasPanel.h"
+#include "Components/CanvasPanelSlot.h"
+
 
 
 UMainInterface::UMainInterface(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -39,7 +45,7 @@ UMainInterface::UMainInterface(const FObjectInitializer& ObjectInitializer) : Su
 	bDelayPressed = true;
 	bKeyPressed = false;
 	bUpDownPressed = true;
-	bKeyTrigger = false;
+	bKeyTriggerLeft = false;
 	bInputEnable = true;
 	bScroll = false;
 	bFilterFavorites = false;
@@ -85,6 +91,45 @@ UMainInterface::UMainInterface(const FObjectInitializer& ObjectInitializer) : Su
 
 }
 
+void UMainInterface::NativePreConstruct()
+{
+	Super::NativePreConstruct();
+}
+
+
+
+void UMainInterface::NativeConstruct()
+{
+	ClassicGameInstance = Cast<UClassicGameInstance>(GetGameInstance());
+
+	SetRenderOpacityList();
+	LoadConfigurationNative();
+	GameSettingsInit();
+
+	Super::NativeConstruct();
+}
+
+void UMainInterface::NativeOnInitialized()
+{
+	BtnSelectSystem->OnFocusTrigger.AddDynamic(this, &UMainInterface::OnFocusSelectSystem);
+	BtnSelectSystem->OnFocusLostTrigger.AddDynamic(this, &UMainInterface::OnLostFocusSelectSystem);
+	BtnSelectSystem->OnClickTrigger.AddDynamic(this, &UMainInterface::OnClickSelectSystem);
+
+	BtnConfigurations->OnFocusTrigger.AddDynamic(this, &UMainInterface::OnFocusConfigurations);
+	BtnConfigurations->OnFocusLostTrigger.AddDynamic(this, &UMainInterface::OnLostFocusConfigurations);
+	BtnConfigurations->OnClickTrigger.AddDynamic(this, &UMainInterface::OnClickConfigurations);
+
+	BtnFavorites->OnFocusTrigger.AddDynamic(this, &UMainInterface::OnFocusFavorites);
+	BtnFavorites->OnFocusLostTrigger.AddDynamic(this, &UMainInterface::OnLostFocusFavorites);
+	BtnFavorites->OnClickTrigger.AddDynamic(this, &UMainInterface::OnClickFavorites);
+
+	BtnInfo->OnFocusTrigger.AddDynamic(this, &UMainInterface::OnFocusInfo);
+	BtnInfo->OnFocusLostTrigger.AddDynamic(this, &UMainInterface::OnLostFocusInfo);
+	BtnInfo->OnClickTrigger.AddDynamic(this, &UMainInterface::OnClickInfo);
+
+	Super::NativeOnInitialized();
+}
+
 void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
@@ -96,17 +141,6 @@ void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 			WBPInfo->ScrollTopEnd(UClassicFunctionLibrary::GetInputButton(KeyEvent));
 		}
 	}
-}
-
-void UMainInterface::NativeConstruct()
-{
-	ClassicGameInstance = Cast<UClassicGameInstance>(GetGameInstance());
-
-	SetRenderOpacityList();
-	LoadConfigurationNative();
-	GameSettingsInit();
-
-	Super::NativeConstruct();
 }
 
 void UMainInterface::RestartWidget()
@@ -291,7 +325,7 @@ void UMainInterface::CreateGameListNative()
 
 void UMainInterface::SaveGame()
 {
-	if (bool Saved = UGameplayStatics::SaveGameToSlot(ClassicGameInstance->ClassicSaveGameInstance, ClassicGameInstance->SlotGame, 0))
+	if (UGameplayStatics::SaveGameToSlot(ClassicGameInstance->ClassicSaveGameInstance, ClassicGameInstance->SlotGame, 0))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Saved"));
 	}
@@ -301,16 +335,7 @@ void UMainInterface::SaveGame()
 	}
 }
 
-void UMainInterface::NativePreConstruct()
-{
-	Super::NativePreConstruct();
-}
 
-bool UMainInterface::Initialize()
-{
-	bool Success = Super::Initialize();
-	return false;
-}
 
 FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
@@ -333,6 +358,25 @@ FReply UMainInterface::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEven
 	KeyEvent = InKeyEvent;
 	bKeyPressed = false;
 	return Super::NativeOnKeyUp(InGeometry, InKeyEvent);
+}
+
+
+void UMainInterface::OnAnimationStartedPlaying(UUMGSequencePlayer& Player)
+{
+	Super::OnAnimationStartedPlaying(Player);
+	if (PositionY == EPositionY::CENTRAL)
+	{
+		ImgFrame->SetBrushFromTexture(ImageFrameCenter);
+	}
+}
+
+void UMainInterface::OnAnimationFinishedPlaying(UUMGSequencePlayer& Player)
+{
+	Super::OnAnimationFinishedPlaying(Player);
+	if(PositionY == EPositionY::TOP)
+	{
+		ImgFrame->SetBrushFromTexture(ImageFrameTop);
+	}
 }
 
 void UMainInterface::GameSettingsInit()
@@ -426,6 +470,8 @@ void UMainInterface::OnNativeClick(FString Value)
 void UMainInterface::OnNativeClickSystem(int32 Value)
 {
 	CountSystem = Value;
+	ClearData(true, true);
+
 	//this function is BlueprintImplementableEvent
 	OnClickSystem(Value);
 }
@@ -492,15 +538,6 @@ void UMainInterface::ForceGarbageCollectionBP(float Count)
 	}
 }
 
-void UMainInterface::MaximizeViewPort()
-{
-	GEngine->GameViewportForWorld(GetWorld())->GetWindow()->Minimize();
-}
-
-void UMainInterface::MinimizeViewPort()
-{
-	GEngine->GameViewportForWorld(GetWorld())->GetWindow()->Maximize();
-}
 
 void UMainInterface::ASyncLoadCard(FString PathImage, int32 Index)
 {
@@ -562,7 +599,7 @@ void UMainInterface::LoadImages()
 
 		if (GameData.IsValidIndex(LastIndex) && cardReference.IsValidIndex(LastIndex))
 		{
-			if (bKeyTrigger && IndexAsyncImage < LastIndex)
+			if (/*bKeyTriggerLeft || bKeyTriggerRight &&*/ IndexAsyncImage <= LastIndex)
 			{
 				ASyncLoadCard(GameData[LastIndex].imageFormated, LastIndex);
 				LoadImageSync(LastIndex);
@@ -628,10 +665,15 @@ void UMainInterface::SetRenderOpacityList() {
 
 void UMainInterface::ClearData(bool bAnimationBarTop, bool bAnimationShowSystem)
 {
+	bInputEnable = false;
+
 	TxtDebug->SetVisibility(ESlateVisibility::Hidden);
 	TxtDebug->SetText(FText::FromString(""));
 
-	SetRenderOpacityList();
+	//SetRenderOpacityList();
+	ImgFrame->SetRenderOpacity(0.f);
+	UUserWidget::PlayAnimationReverse(LoadListGame);
+
 	HBListGame->ClearChildren();
 	HBListGame->SetRenderTranslation(FVector2D(385.0f, 0.f));
 
@@ -639,7 +681,6 @@ void UMainInterface::ClearData(bool bAnimationBarTop, bool bAnimationShowSystem)
 	ScrollListGame->ScrollToStart();
 
 	Focus = EFocus::MAIN;
-	bUpDownPressed = true;
 	cardReference.Empty();
 	coverReference.Empty();
 	GameData.Empty();
@@ -648,4 +689,253 @@ void UMainInterface::ClearData(bool bAnimationBarTop, bool bAnimationShowSystem)
 	PositionCenterX = 1;
 	PositionY = EPositionY::CENTRAL;
 
+	bUpDownPressed = true;
+	bDelayPressed = true;
+
+	ImgFrame->SetBrushFromTexture(ImageFrameCenter);
+	AnimationFrameMoveY();
+
+	if (bAnimationBarTop)
+	{
+		UUserWidget::PlayAnimationReverse(BarTop);
+	}
+	if (bAnimationShowSystem)
+	{
+		UUserWidget::PlayAnimationReverse(ShowSystem);
+	}
+
+	SetButtonsIconInterfaces(EPositionY::CENTRAL);
+
+	GetWorld()->GetTimerManager().SetTimer(DelayPressedTimerHandle, this, &UMainInterface::LoadListNative, 0.3f, false, -1);
+
+}
+
+//Animations
+void UMainInterface::AnimationFrameMoveX()
+{
+	const float TranslationFrame = ImgFrame->RenderTransform.Translation.X;
+	switch (PositionCenterX)
+	{
+	case 2:
+		if (TranslationFrame != 385)
+		{
+			UUserWidget::PlayAnimationForward(FrameAnimationX1);
+		}
+		break;
+	case 3:
+		if (TranslationFrame != 770)
+		{
+			UUserWidget::PlayAnimationForward(FrameAnimationX2);
+		}
+		break;
+	case 4:
+		if (TranslationFrame != 1155)
+		{
+			UUserWidget::PlayAnimationForward(FrameAnimationX3);
+		}
+		break;
+	}
+	FrameMoveX();
+
+}
+
+void UMainInterface::AnimationFrameMoveY()
+{
+	const float TranslationFrame = ImgFrame->RenderTransform.Translation.X;
+	switch (PositionCenterX)
+	{
+	case 1:
+		if (TranslationFrame != 0)
+		{
+			UUserWidget::PlayAnimationReverse(FrameAnimationX1);
+		}
+		break;
+	case 2:
+		UUserWidget::PlayAnimationReverse(FrameAnimationX2);
+		break;
+	case 3:
+		UUserWidget::PlayAnimationReverse(FrameAnimationX3);
+		break;
+	}
+	FrameMoveY();
+}
+
+void UMainInterface::AnimationFrameToTop(UWidgetAnimation* Animation1, UWidgetAnimation* Animation2,
+	UWidgetAnimation* Animation3, UWidgetAnimation* Animation4, bool Reverse)
+{
+	if(Reverse)
+	{
+		switch (PositionCenterX)
+		{
+		case 1:
+			UUserWidget::PlayAnimationReverse(Animation1);
+			break;
+		case 2:
+			UUserWidget::PlayAnimationReverse(Animation2);
+			break;
+		case 3:
+			UUserWidget::PlayAnimationReverse(Animation3);
+			break;
+		case 4:
+			UUserWidget::PlayAnimationReverse(Animation4);
+			break;
+		}
+	}else
+	{
+		switch (PositionCenterX)
+		{
+		case 1:
+			UUserWidget::PlayAnimationForward(Animation1);
+			break;
+		case 2:
+			UUserWidget::PlayAnimationForward(Animation2);
+			break;
+		case 3:
+			UUserWidget::PlayAnimationForward(Animation3);
+			break;
+		case 4:
+			UUserWidget::PlayAnimationForward(Animation4);
+			break;
+		}
+	}
+
+}
+
+//bind buttons
+
+void UMainInterface::OnFocusSelectSystem()
+{
+	PositionTopX = 1;
+	SetToolTip(WBPToolTipSystem);
+	WBPToolTipSystem->SetToolTipVisibility(ESlateVisibility::Visible);
+	if (ENavigationButton == EButtonsGame::LEFT)
+	{
+		UUserWidget::PlayAnimationReverse(FrameAnimationXTop1);
+	}
+	else if (ENavigationButton == EButtonsGame::UP)
+	{
+		AnimationFrameToTop(FrameAnimationY1ToSystems, FrameAnimationY2ToSystems, FrameAnimationY3ToSystems, FrameAnimationY4ToSystems, false);
+	}
+}
+
+void UMainInterface::OnFocusConfigurations()
+{
+	PositionTopX = 2;
+	SetToolTip(WBPToolTipConfiguration);
+	WBPToolTipConfiguration->SetToolTipVisibility(ESlateVisibility::Visible);
+	if (ENavigationButton == EButtonsGame::LEFT)
+	{
+		UUserWidget::PlayAnimationReverse(FrameAnimationXTop2);
+	}
+	else if (ENavigationButton == EButtonsGame::RIGHT)
+	{
+		UUserWidget::PlayAnimationForward(FrameAnimationXTop1);
+	}
+	else if (ENavigationButton == EButtonsGame::UP)
+	{
+		AnimationFrameToTop(FrameAnimationY1ToConfig, FrameAnimationY2ToConfig, FrameAnimationY3ToConfig, FrameAnimationY4ToConfig, false);
+	}
+}
+
+void UMainInterface::OnFocusFavorites()
+{
+	PositionTopX = 3;
+	SetToolTip(WBPToolTipFavorites);
+	WBPToolTipFavorites->SetToolTipVisibility(ESlateVisibility::Visible);
+	if (ENavigationButton == EButtonsGame::LEFT)
+	{
+		UUserWidget::PlayAnimationReverse(FrameAnimationXTop3);
+	}
+	else if (ENavigationButton == EButtonsGame::RIGHT)
+	{
+		UUserWidget::PlayAnimationForward(FrameAnimationXTop2);
+	}
+	else if (ENavigationButton == EButtonsGame::UP)
+	{
+		AnimationFrameToTop(FrameAnimationY1ToFavorite, FrameAnimationY2ToFavorite, FrameAnimationY3ToFavorite, FrameAnimationY4ToFavorite, false);
+	}
+}
+
+void UMainInterface::OnFocusInfo()
+{
+	WBPInfo->SetGameInfo(GameData[IndexCard]);
+	PositionTopX = 4;
+	SetToolTip(WBPToolTipInfo);
+	WBPToolTipInfo->SetToolTipVisibility(ESlateVisibility::Visible);
+	if (ENavigationButton == EButtonsGame::RIGHT)
+	{
+		UUserWidget::PlayAnimationForward(FrameAnimationXTop3);
+	}
+	else if (ENavigationButton == EButtonsGame::UP)
+	{
+		AnimationFrameToTop(FrameAnimationY1ToInfo, FrameAnimationY2ToInfo, FrameAnimationY3ToInfo, FrameAnimationY4ToInfo, false);
+	}
+}
+
+void UMainInterface::SetToolTip(UToolTip* ToolTip)
+{
+	UCanvasPanelSlot* SlotToolTipSystem = Cast<UCanvasPanelSlot>(WBPToolTipSystem->Slot);
+	UCanvasPanelSlot* ToolTipConfiguration = Cast<UCanvasPanelSlot>(WBPToolTipConfiguration->Slot);
+	UCanvasPanelSlot* ToolTipFavorites = Cast<UCanvasPanelSlot>(WBPToolTipFavorites->Slot);
+	UCanvasPanelSlot* ToolTipInfo = Cast<UCanvasPanelSlot>(WBPToolTipInfo->Slot);
+	SlotToolTipSystem->SetZOrder(50);
+	ToolTipConfiguration->SetZOrder(50);
+	ToolTipFavorites->SetZOrder(50);
+	ToolTipInfo->SetZOrder(50);
+
+	UCanvasPanelSlot* ToolTipSlot = Cast<UCanvasPanelSlot>(ToolTip->Slot);
+	ToolTipSlot->SetZOrder(51);
+
+}
+
+void UMainInterface::OnLostFocusSelectSystem()
+{
+	WBPToolTipSystem->SetToolTipVisibility(ESlateVisibility::Collapsed);
+	if (ENavigationButton == EButtonsGame::DOWN || ENavigationButton == EButtonsGame::B)
+	{
+		AnimationFrameToTop(FrameAnimationY1ToSystems, FrameAnimationY2ToSystems, FrameAnimationY3ToSystems, FrameAnimationY4ToSystems, true);
+	}
+}
+
+void UMainInterface::OnLostFocusConfigurations()
+{
+	WBPToolTipConfiguration->SetToolTipVisibility(ESlateVisibility::Collapsed);
+	if (ENavigationButton == EButtonsGame::DOWN || ENavigationButton == EButtonsGame::B)
+	{
+		AnimationFrameToTop(FrameAnimationY1ToConfig, FrameAnimationY2ToConfig, FrameAnimationY3ToConfig, FrameAnimationY4ToConfig, true);
+	}
+}
+
+void UMainInterface::OnLostFocusFavorites()
+{
+	WBPToolTipFavorites->SetToolTipVisibility(ESlateVisibility::Collapsed);
+	if (ENavigationButton == EButtonsGame::DOWN || ENavigationButton == EButtonsGame::B)
+	{
+		AnimationFrameToTop(FrameAnimationY1ToFavorite, FrameAnimationY2ToFavorite, FrameAnimationY3ToFavorite, FrameAnimationY4ToFavorite, true);
+	}
+}
+
+void UMainInterface::OnLostFocusInfo()
+{
+	WBPToolTipInfo->SetToolTipVisibility(ESlateVisibility::Collapsed);
+	if (ENavigationButton == EButtonsGame::DOWN || ENavigationButton == EButtonsGame::B)
+	{
+		AnimationFrameToTop(FrameAnimationY1ToInfo, FrameAnimationY2ToInfo, FrameAnimationY3ToInfo, FrameAnimationY4ToInfo, true);
+	}
+}
+
+void UMainInterface::OnClickSelectSystem()
+{
+}
+
+void UMainInterface::OnClickConfigurations()
+{
+}
+
+void UMainInterface::OnClickFavorites()
+{
+}
+
+void UMainInterface::OnClickInfo()
+{
 }

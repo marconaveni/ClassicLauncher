@@ -247,9 +247,12 @@ public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual void NativeConstruct() override;
 	virtual void NativePreConstruct() override;
-	virtual bool Initialize() override;
+	virtual void NativeOnInitialized() override;
 	virtual FReply NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 	virtual FReply NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
+	virtual void OnAnimationStartedPlaying(UUMGSequencePlayer& Player) override;
+	virtual void OnAnimationFinishedPlaying(UUMGSequencePlayer& Player) override;
+
 
 
 	//variables
@@ -296,9 +299,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	TEnumAsByte<EFocus> Focus;
 
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	//FKey KeyPressed;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	FKeyEvent KeyEvent;
 
@@ -312,7 +312,10 @@ public:
 	bool bUpDownPressed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	bool bKeyTrigger;
+	bool bKeyTriggerLeft;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	bool bKeyTriggerRight;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	bool bInputEnable;
@@ -372,13 +375,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle DelayCreateGameListTimerHandle;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle DelayReloadTimerHandle;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle DelayLoadListTimerHandle;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle DelayPressedTimerHandle;
 
@@ -389,10 +389,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface")
 	void OnErrorMessage(const FString& ErrorMessage);
-
 	UFUNCTION(BlueprintCallable, Category = "MainInterface")
 	void SetDebugMessage(const FString Message);
-
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnError(const FString& ErrorMessage);
 
@@ -422,7 +420,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface")
 	void CreateGameListNative();
-
 	UFUNCTION(BlueprintImplementableEvent)
 	void CreateGameList();
 
@@ -478,12 +475,6 @@ public:
 	void ForceGarbageCollectionBP(float Count = 150.0f);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface")
-	void MaximizeViewPort();
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
-	void MinimizeViewPort();
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
 	void LoadFirstImages();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface")
@@ -506,13 +497,11 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void LoadImageAsync(const int32& Index);
-
 	UFUNCTION(BlueprintImplementableEvent)
 	void LoadImageSync(const int32& Index);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface")
 	void PressedDelayNavigation(float Delay);
-
 	UFUNCTION(BlueprintCallable, Category = "MainInterface")
 	void PressedTimerNavigation();
 
@@ -525,9 +514,24 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnLoopStartAsyncImage(const int32& Index);
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnLoopPauseAsyncImage(const int32& Index);
+	void OnLoopPauseAsyncImage();
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnLoopResumeAsyncImage(const int32& Index);
+	void OnLoopResumeAsyncImage();
+
+	//Animation
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Animations")
+	void AnimationFrameMoveX();
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Animations")
+	void AnimationFrameMoveY();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Animations")
+	void AnimationFrameToTop(UWidgetAnimation* Animation1, UWidgetAnimation* Animation2, UWidgetAnimation* Animation3, UWidgetAnimation* Animation4, bool Reverse);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void FrameMoveX();
+	UFUNCTION(BlueprintImplementableEvent)
+	void FrameMoveY();
 
 private:
 
@@ -540,4 +544,33 @@ private:
 	UPROPERTY()
 	TArray<ESlateVisibility> IconCenter;
 
+	//bindbuttons
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void OnFocusSelectSystem();
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void OnFocusConfigurations();
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void OnFocusFavorites();
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void OnFocusInfo();
+
+	void SetToolTip(UToolTip* ToolTip);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void OnLostFocusSelectSystem();
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void OnLostFocusConfigurations();
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void OnLostFocusFavorites();
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void OnLostFocusInfo();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void OnClickSelectSystem();
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void OnClickConfigurations();
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void OnClickFavorites();
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void OnClickInfo();
 };
