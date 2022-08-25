@@ -6,11 +6,12 @@
 #include "ClassicFunctionLibrary.h"
 #include "Blueprint/UserWidget.h"
 #include "GameData.h"
-#include "RuntimeImageReader.h"
 #include "MainInterface.generated.h"
 
+
+
 UENUM(BlueprintType, Category = "Navigation")
-enum EPositionY
+enum class EPositionY : uint8
 {
 	TOP        UMETA(DisplayName = "Top"),
 	CENTRAL    UMETA(DisplayName = "Center"),
@@ -18,7 +19,7 @@ enum EPositionY
 };
 
 UENUM(BlueprintType, Category = "Navigation")
-enum EFocus
+enum class EFocus : uint8
 {
 	MAIN        UMETA(DisplayName = "Main"),
 	SYSTEM    UMETA(DisplayName = "System"),
@@ -134,88 +135,60 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationX1;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationX2;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationX3;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationY1ToSystems;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationY2ToSystems;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationY3ToSystems;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationY4ToSystems;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationY1ToConfig;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationY2ToConfig;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationY3ToConfig;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationY4ToConfig;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationY1ToFavorite;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationY2ToFavorite;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationY3ToFavorite;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationY4ToFavorite;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationY1ToInfo;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationY2ToInfo;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationY3ToInfo;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationY4ToInfo;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationXTop1;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationXTop2;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationXTop3;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* ShowDescBottomInfo;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* ShowSystem;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* BarTop;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FadeStartSystem;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* ShowInfo;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* LoadListGame;
-
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* VideoAnimation;
 
@@ -294,10 +267,10 @@ public:
 	EButtonsGame ENavigationButton;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	TEnumAsByte<EPositionY> PositionY;
+	EPositionY PositionY;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	TEnumAsByte<EFocus> Focus;
+	EFocus Focus;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	FKeyEvent KeyEvent;
@@ -369,9 +342,6 @@ public:
 	class UClassicGameInstance* ClassicGameInstance;
 
 	//timers
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
-	FTimerHandle pTimerHandle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle DelayCreateGameListTimerHandle;
@@ -466,7 +436,7 @@ public:
 	void OnNavigationFocus(UCard* Card);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface")
-	void SetButtonsIconInterfaces(TEnumAsByte<EPositionY> GetPosition);
+	void SetButtonsIconInterfaces(EPositionY GetPosition);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface")
 	UTexture2D* SetImageFromPath(FString PathImage);
@@ -521,17 +491,17 @@ public:
 	//Animation
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Animations")
-	void AnimationFrameMoveX();
+	void AnimationFrameMoveRight();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Animations")
-	void AnimationFrameMoveY();
+	void AnimationFrameMoveLeft();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Animations")
 	void AnimationFrameToTop(UWidgetAnimation* Animation1, UWidgetAnimation* Animation2, UWidgetAnimation* Animation3, UWidgetAnimation* Animation4, bool Reverse);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void FrameMoveX();
+	void FrameMoveRight();
 	UFUNCTION(BlueprintImplementableEvent)
-	void FrameMoveY();
+	void FrameMoveLeft();
 
 private:
 
@@ -573,4 +543,8 @@ private:
 	void OnClickFavorites();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void OnClickInfo();
+
+	//macros ticks
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void ScrollCards();
 };
