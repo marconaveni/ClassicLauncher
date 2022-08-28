@@ -465,6 +465,18 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MainInterface")
 	void AddImagesCardCover(UTexture2D* Texture, int32 Index);
 
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Save")
+	void SetCountPlayerToSave();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Save")
+	void SetFavoriteToSave();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Save")
+	bool SaveGameListXML(FString& GameListPath, TArray<FGameData>& NewGameDatas);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Save")
+	bool SaveGameList();
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void LoadImageAsync(const int32& Index);
 	UFUNCTION(BlueprintImplementableEvent)

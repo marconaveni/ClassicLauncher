@@ -162,6 +162,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	static TArray<FGameData> FormatGameData(TArray<FGameData> datas, FConfig config, FConfigSystem configSystem);
 
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+	static bool FindGameData(TArray<FGameData> datas, FGameData  DataElement, int32& Index);
+
 	//formata o array game data
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	static TArray<FGameData> FilterFavoriteGameData(TArray<FGameData> datas, bool filterFavorites);

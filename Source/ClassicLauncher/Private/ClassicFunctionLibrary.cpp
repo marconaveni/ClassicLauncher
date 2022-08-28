@@ -393,6 +393,21 @@ TArray<FGameData> UClassicFunctionLibrary::FormatGameData(TArray<FGameData> data
 	return datas;
 }
 
+bool UClassicFunctionLibrary::FindGameData(TArray<FGameData> datas, FGameData DataElement, int32& Index)
+{
+	Index = -1;
+	for (FGameData& data : datas)
+	{	
+		Index++;
+		if (data.PathFormated == DataElement.PathFormated) 
+		{
+			return true;
+		}
+	}
+	Index = -1;
+	return false;
+}
+
 TArray<FGameData> UClassicFunctionLibrary::FilterFavoriteGameData(TArray<FGameData> datas, bool filterFavorites)
 {
 	if (filterFavorites) {
@@ -508,9 +523,9 @@ void UClassicFunctionLibrary::CreateProcess(int32& ProcessId, FString FullPath, 
 		&NeedBPUINT32,
 		Priority,
 		(OptionalWorkingDirectory != "") ? *OptionalWorkingDirectory : nullptr,//const TCHAR* OptionalWorkingDirectory, 
-		 nullptr
+		nullptr
 	);
-	
+
 	//Not sure what to do to expose UINT32 to BP
 	ProcessId = NeedBPUINT32;
 }
@@ -524,15 +539,15 @@ void UClassicFunctionLibrary::CreateProcess(int32& ProcessId, FString FullPath, 
 void UClassicFunctionLibrary::AsyncLoadTexture2DFromFile(FLoadImageDelegate Out, const FString FullFilePath, int32 Index)
 {
 	AsyncTask(ENamedThreads::GameThread_Local, [Out, FullFilePath, Index]()
-	{
-		bool isValid = false;
-		int32 Size = 64;
-		UTexture2D* Texture = LoadTexture2DFromFile(FullFilePath, isValid, EClassicImageFormat::PNG, Size, Size);
-		if (isValid)
 		{
-			Out.ExecuteIfBound(Texture, Index);
-		}
-	});
+			bool isValid = false;
+			int32 Size = 64;
+			UTexture2D* Texture = LoadTexture2DFromFile(FullFilePath, isValid, EClassicImageFormat::PNG, Size, Size);
+			if (isValid)
+			{
+				Out.ExecuteIfBound(Texture, Index);
+			}
+		});
 
 }
 

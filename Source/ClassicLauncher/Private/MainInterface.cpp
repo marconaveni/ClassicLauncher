@@ -21,6 +21,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/GameUserSettings.h"
 #include "Components/MultiLineEditableTextBox.h"
+#include "Misc/Paths.h"
 
 #include "RuntimeImageLoader.h"
 #include "ToolTip.h"
@@ -599,7 +600,6 @@ void UMainInterface::LoadImages()
 			FirstIndex = FMath::Clamp(IndexCard + 15, 0, GameData.Num());//15
 		}
 
-
 		if (GameData.IsValidIndex(LastIndex) && cardReference.IsValidIndex(LastIndex))
 		{
 			if (/*bKeyTriggerLeft || bKeyTriggerRight &&*/ IndexAsyncImage <= LastIndex)
@@ -619,7 +619,6 @@ void UMainInterface::LoadImages()
 			coverReference[FirstIndex]->SetVisibility(ESlateVisibility::Hidden);
 			cardReference[FirstIndex]->SetVisibility(ESlateVisibility::Hidden);
 		}
-
 
 	}
 
@@ -643,6 +642,68 @@ void UMainInterface::AddImagesCardCover(UTexture2D* Texture, int32 Index)
 		SetImagesCover(Texture, coverReference[Index], Index);
 	}
 }
+
+void UMainInterface::SetCountPlayerToSave()
+{
+	int32 Find;
+
+	if (UClassicFunctionLibrary::FindGameData(ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].GameDatas, GameData[IndexCard], Find ))
+	{
+		// Find = return inline found index
+		ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].GameDatas[Find].playcount++;
+		ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].GameDatas[Find].lastplayed = UClassicFunctionLibrary::FormatDateToXml();
+
+		GameData[IndexCard].playcount++;
+		GameData[IndexCard].lastplayed = UClassicFunctionLibrary::FormatDateToXml();
+
+		FString Path = ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].RomPath;
+		SaveGameListXML(Path, ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].GameDatas);
+		SaveGameList();
+	}
+}
+
+void UMainInterface::SetFavoriteToSave()
+{
+	int32 Find;
+
+	if (UClassicFunctionLibrary::FindGameData(ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].GameDatas, GameData[IndexCard], Find))
+	{
+		// Find = return inline found index
+		bool ToggleFavorite = !ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].GameDatas[Find].favorite;
+		ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].GameDatas[Find].favorite = ToggleFavorite;
+
+		GameData[IndexCard].favorite = ToggleFavorite;
+
+		cardReference[IndexCard]->SetFavorite(ToggleFavorite, true);
+
+		FString Path = ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].RomPath;
+		SaveGameListXML(Path, ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].GameDatas);
+		SaveGameList();
+
+		SetButtonsIconInterfaces(EPositionY::CENTRAL);
+	}
+}
+
+bool UMainInterface::SaveGameListXML(FString& GameListPath, TArray<FGameData>& NewGameDatas)
+{
+	if (FPaths::FileExists(GameListPath + TEXT("\\gamelist.xml")))
+	{
+		int32 ImageX = GameSystems[CountSystem].ImageX;
+		int32 ImageY = GameSystems[CountSystem].ImageY;
+		FString NewXMLFile = UClassicFunctionLibrary::CreateXMLGameFile(NewGameDatas, FVector2D(ImageX, ImageY));
+		return UClassicFunctionLibrary::SaveStringToFile(GameListPath, TEXT("gamelist.xml"), NewXMLFile, true, false);
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool UMainInterface::SaveGameList()
+{
+	return UGameplayStatics::SaveGameToSlot(ClassicGameInstance->ClassicSaveGameInstance, ClassicGameInstance->SlotGame, 0);
+}
+
 
 //pressed delay
 void UMainInterface::PressedDelayNavigation(float Delay)
