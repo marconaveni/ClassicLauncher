@@ -556,6 +556,9 @@ private:
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void OnClickInfo();
 
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void CreateFolders();
+
 	//macros ticks
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void ScrollCards();

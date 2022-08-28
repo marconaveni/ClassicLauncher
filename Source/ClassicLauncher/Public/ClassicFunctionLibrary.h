@@ -84,26 +84,8 @@ public:
 
 	//verify if not exists folder and create
 	UFUNCTION(BlueprintCallable, Category = "Functions")
-	static FORCEINLINE bool VerifyOrCreateDirectory(const FString& TestDir)
-	{
-		// Every function call, unless the function is inline, adds a small
-		// overhead which we can avoid by creating a local variable like so.
-		// But beware of making every function inline!
-		IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
+	static bool VerifyOrCreateDirectory(const FString& TestDir);
 
-		// Directory Exists?
-		if (!PlatformFile.DirectoryExists(*TestDir))
-		{
-			PlatformFile.CreateDirectory(*TestDir);
-
-			if (!PlatformFile.DirectoryExists(*TestDir))
-			{
-				return false;
-				//~~~~~~~~~~~~~~
-			}
-		}
-		return true;
-	}
 	//delete file if exists in folder 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 		static FORCEINLINE bool DeleteFile(const FString& File)
@@ -132,8 +114,19 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Functions")
 	static FString ReplacePath(FString value , FString path);
 
+	/**
+	*Replace relative media path
+	*
+	*@param    OriginalPathMedia EX: "./game.png or c:\games\roms\game.png" <image> or <thumbnail> or <video> in gamelist.xml
+	*@param    PathMedia EX: "c:\classiclauncher\media" <pathmedia> in config.xml
+	*@param    RomName EX: "./game.zip or c:\games\roms\game.zip" in <path> gamelist.xml
+	*@param    SystemName EX: snes  <systemname> in configsys
+	*@param    TypeMedia 3 types "covers" "screenshots" "videos"
+	*@param    Format  2 types .png . mp4
+	*@return   Return new path EX: "c:\classiclauncher\media\covers\game.png"
+	*/
 	UFUNCTION(BlueprintPure, Category = "Functions")
-	static FString ReplaceCover(FString image, FString media, FString path, FString format, FConfig config, FConfigSystem configSystem);
+	static FString ReplaceMedia(FString OriginalPathMedia, FString PathMedia, FString PathRom, FString RomName, FString SystemName, FString TypeMedia, FString Format);
 
 	//create a file gamelist.xml for save 
 	UFUNCTION(BlueprintCallable, Category = "Functions")

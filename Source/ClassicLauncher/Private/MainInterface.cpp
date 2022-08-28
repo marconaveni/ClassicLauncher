@@ -172,6 +172,7 @@ void UMainInterface::LoadConfigurationNative()
 	{
 		ConfigurationData = UClassicFunctionLibrary::SetConfig(UClassicFunctionLibrary::LoadXMLSingle(ConfigResult, TEXT("config")));
 		UGameplayStatics::SetEnableWorldRendering(this, ConfigurationData.rendering);
+		ConfigurationData.pathmedia = (ConfigurationData.pathmedia != TEXT("")) ? ConfigurationData.pathmedia + TEXT("\\media") : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
 		LoadConfigSystemsNative();
 	}
 	else
@@ -198,7 +199,9 @@ void UMainInterface::LoadConfigSystemsNative()
 				CountSystem = i;
 			}
 		}
+
 		LoadListNative();
+		CreateFolders();
 
 		//BlueprintImplementableEvent
 		LoadConfigSystems();
@@ -244,11 +247,15 @@ void UMainInterface::LoadListNative()
 		ImgFrame->SetBrushFromTexture(ImageFrameCenter);
 		cardReference[0]->SetFocusCard(true);
 
+		
+
 		//Timer
 		GetWorld()->GetTimerManager().SetTimer(DelayLoadListTimerHandle, this, &UMainInterface::ViewList, 0.25f, false, -1);
 
+
 		//BlueprintImplementableEvent
 		LoadList();
+		
 	}
 	else
 	{
@@ -647,7 +654,7 @@ void UMainInterface::SetCountPlayerToSave()
 {
 	int32 Find;
 
-	if (UClassicFunctionLibrary::FindGameData(ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].GameDatas, GameData[IndexCard], Find ))
+	if (UClassicFunctionLibrary::FindGameData(ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].GameDatas, GameData[IndexCard], Find))
 	{
 		// Find = return inline found index
 		ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].GameDatas[Find].playcount++;
@@ -1028,6 +1035,21 @@ void UMainInterface::OnClickInfo()
 	Focus = EFocus::INFO;
 }
 
+void UMainInterface::CreateFolders()
+{
+	const FString PathMedia = (ConfigurationData.pathmedia != TEXT("")) ? ConfigurationData.pathmedia + TEXT("\\media") : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
+
+	UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia);
+
+	for (FConfigSystem& ConfigElement : GameSystems)
+	{
+		UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia + TEXT("\\") + ConfigElement.SystemName);
+		UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia + TEXT("\\") + ConfigElement.SystemName + TEXT("\\covers"));
+		UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia + TEXT("\\") + ConfigElement.SystemName + TEXT("\\screenshots"));	
+		UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia + TEXT("\\") + ConfigElement.SystemName + TEXT("\\videos"));
+	}
+
+}
 
 void UMainInterface::ScrollCards()
 {
@@ -1037,6 +1059,8 @@ void UMainInterface::ScrollCards()
 
 		if ((PositionCenterX == 1 || PositionCenterX == 4) && (FrameX == 0 || FrameX == 1155))
 		{
+			bScroll = true;
+
 			int32 HBGetPosition = HBListGame->RenderTransform.Translation.X;
 			int32 HBNewPosition;
 			int32 Min;

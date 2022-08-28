@@ -177,6 +177,24 @@ bool UClassicFunctionLibrary::SaveStringToFile(FString SaveDirectory, FString Jo
 	return FFileHelper::SaveStringToFile(SaveText, *SaveDirectory, FFileHelper::EEncodingOptions::ForceUTF8);
 }
 
+bool UClassicFunctionLibrary::VerifyOrCreateDirectory(const FString& TestDir)
+{
+	IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
+
+	// Directory Exists?
+	if (!PlatformFile.DirectoryExists(*TestDir))
+	{
+		PlatformFile.CreateDirectory(*TestDir);
+
+		if (!PlatformFile.DirectoryExists(*TestDir))
+		{
+			return false;
+			//~~~~~~~~~~~~~~
+		}
+	}
+	return true;
+}
+
 
 int32 UClassicFunctionLibrary::GenerateNumberWithoutRepeat(int32 value, int32 min, int32 max)
 {
@@ -207,26 +225,56 @@ FString UClassicFunctionLibrary::ReplacePath(FString value, FString path)
 	return value;
 }
 
-FString UClassicFunctionLibrary::ReplaceCover(FString image, FString media, FString path, FString format, FConfig config, FConfigSystem configSystem)
+/**
+*Replace relative media path
+*
+*@param    OriginalPathMedia EX: "./game.png or c:\games\roms\game.png" <image> or <thumbnail> or <video> in gamelist.xml
+*@param    PathMedia EX: "c:\classiclauncher\media" <pathmedia> in config.xml
+*@param    RomName EX: "./game.zip or c:\games\roms\game.zip" in <path> gamelist.xml 
+*@param    SystemName EX: snes  <systemname> in configsys
+*@param    TypeMedia 3 types "covers" "screenshots" "videos"
+*@param    Format  2 types .png . mp4    
+*@return   Return new path EX: "c:\classiclauncher\media\covers\game.png"
+*/
+FString UClassicFunctionLibrary::ReplaceMedia(FString OriginalPathMedia, FString PathMedia, FString PathRom, FString RomName, FString SystemName, FString TypeMedia, FString Format)
 {
-	//const FString testPath = path.Replace(TEXT("./"), TEXT("\\"), ESearchCase::IgnoreCase);
-	const TCHAR* cformat = *format;
-	if (image == TEXT("") || !FPaths::FileExists(ReplacePath(image, configSystem.RomPath))) {
-		image = image.Replace(TEXT("/"), TEXT("\\"), ESearchCase::IgnoreCase);
-		image = image.Replace(TEXT("&amp;"), TEXT("&"), ESearchCase::IgnoreCase);
-		image = config.pathmedia + TEXT("media\\") + configSystem.SystemName + media + path;
-		image = image.Replace(TEXT(".zip"), cformat, ESearchCase::IgnoreCase);
-		image = image.Replace(TEXT("./"), TEXT("\\"), ESearchCase::IgnoreCase);
-		if (!FPaths::FileExists(image)) {
-			image = TEXT("No Media");
-		}
-	}
-	else {
-		image = ReplacePath(image, configSystem.RomPath);
-	}
+	FString NewImage = ReplacePath(OriginalPathMedia, PathRom);
 
-	return image;
+	FString Rom = RomName.Replace(TEXT("./"), TEXT("\\"), ESearchCase::IgnoreCase);
+	Rom = RomName.Replace(TEXT("/"), TEXT("\\"), ESearchCase::IgnoreCase);
+
+	if (!FPaths::FileExists(NewImage))
+	{
+		for (int32 StartIndex = Rom.Len(); StartIndex >= 0 ; StartIndex--)
+		{
+			if (Rom.Mid(StartIndex, 1) == TEXT("\\"))
+			{
+				NewImage = Rom.Mid(StartIndex, Rom.Len());
+				StartIndex = -1;
+			}
+			else if (StartIndex == 0)
+			{
+				NewImage = Rom;
+			}
+		}
+
+		for (int32 StartIndex = NewImage.Len(); StartIndex >= NewImage.Len() - 4; StartIndex--)
+		{
+			if (NewImage.Mid(StartIndex, 1) == TEXT("."))
+			{
+				NewImage = NewImage.Mid(0, StartIndex);
+				StartIndex = -1;
+			}
+		}
+
+		NewImage = PathMedia  + TEXT("\\") + SystemName + TEXT("\\") + TypeMedia + NewImage + Format;
+		UE_LOG(LogTemp, Warning, TEXT("Path out is  %s"), *NewImage);
+	}
+	
+	return NewImage;
+
 }
+
 
 
 FString UClassicFunctionLibrary::CreateXMLGameFile(TArray<FGameData> gameData, FVector2D IgnoreImageSize)
@@ -379,9 +427,9 @@ TArray<FGameData> UClassicFunctionLibrary::FormatGameData(TArray<FGameData> data
 {
 	for (FGameData& data : datas)
 	{
-		data.imageFormated = ReplaceCover(data.image, TEXT("\\covers"), data.Path, TEXT(".png"), config, configSystem);
-		data.thumbnailFormated = ReplaceCover(data.thumbnail, TEXT("\\screenshots"), data.Path, TEXT(".png"), config, configSystem);
-		data.videoFormated = ReplaceCover(data.video, TEXT("\\videos"), data.Path, TEXT(".mp4"), config, configSystem);
+		data.imageFormated = ReplaceMedia(data.image, config.pathmedia, configSystem.RomPath, data.Path, configSystem.SystemName, TEXT("covers"), TEXT(".png"));
+		data.thumbnailFormated = ReplaceMedia(data.thumbnail, config.pathmedia, configSystem.RomPath, data.Path, configSystem.SystemName, TEXT("screenshots"), TEXT(".png"));
+		data.videoFormated = ReplaceMedia  (data.video, config.pathmedia , configSystem.RomPath , data.Path , configSystem.SystemName , TEXT("videos") , TEXT(".mp4"));
 		data.PathFormated = ReplacePath(data.Path, configSystem.RomPath);
 		data.PathFormated = TEXT("\"") + data.PathFormated + TEXT("\"");
 		data.nameFormated = data.name.Replace(TEXT("&amp;"), TEXT("&"), ESearchCase::IgnoreCase);
