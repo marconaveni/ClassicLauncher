@@ -21,10 +21,11 @@ enum class EPositionY : uint8
 UENUM(BlueprintType, Category = "Navigation")
 enum class EFocus : uint8
 {
-	MAIN        UMETA(DisplayName = "Main"),
-	SYSTEM    UMETA(DisplayName = "System"),
+	MAIN     UMETA(DisplayName = "Main"),
+	SYSTEM   UMETA(DisplayName = "System"),
 	INFO     UMETA(DisplayName = "Info")
 };
+
 
 
 /**
@@ -366,27 +367,24 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface")
 	void LoadConfigurationNative();
-
 	UFUNCTION(BlueprintImplementableEvent)
 	void LoadConfiguration();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface")
 	void LoadConfigSystemsNative();
-
 	UFUNCTION(BlueprintImplementableEvent)
 	void LoadConfigSystems();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface")
 	void LoadListNative();
+	UFUNCTION(BlueprintImplementableEvent)
+	void LoadList();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface")
 	void ViewList();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface")
 	void SetPaddingCovers();
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void LoadList();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface")
 	void CreateGameListNative();
@@ -500,6 +498,12 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnLoopResumeAsyncImage();
 
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void MediaPlayer(FString Control);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ControlMediaPlayer(const FString& Control ,FString& ControlOut);
+
 	//Animation
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Animations")
@@ -555,6 +559,15 @@ private:
 	void OnClickFavorites();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void OnClickInfo();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void OnClickBackAction();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void OnClickFavorite();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void CloseMenus();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void CreateFolders();

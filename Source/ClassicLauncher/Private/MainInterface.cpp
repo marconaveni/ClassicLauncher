@@ -27,6 +27,7 @@
 #include "ToolTip.h"
 #include "Animation/UMGSequencePlayer.h"
 #include "Components/CanvasPanelSlot.h"
+#include "Components/CanvasPanel.h"
 
 
 
@@ -247,7 +248,7 @@ void UMainInterface::LoadListNative()
 		ImgFrame->SetBrushFromTexture(ImageFrameCenter);
 		cardReference[0]->SetFocusCard(true);
 
-		
+
 
 		//Timer
 		GetWorld()->GetTimerManager().SetTimer(DelayLoadListTimerHandle, this, &UMainInterface::ViewList, 0.25f, false, -1);
@@ -255,7 +256,7 @@ void UMainInterface::LoadListNative()
 
 		//BlueprintImplementableEvent
 		LoadList();
-		
+
 	}
 	else
 	{
@@ -350,24 +351,67 @@ void UMainInterface::SaveGame()
 
 FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
-	KeyEvent = InKeyEvent;
-	const FString KeyEventString = InKeyEvent.GetKey().ToString();
-
-	if (KeyEventString == "Gamepad_FaceButton_Bottom" || KeyEventString == "Enter")
+	if (bInputEnable)
 	{
-		bKeyPressed = false;
+		KeyEvent = InKeyEvent;
+		const FString KeyEventString = InKeyEvent.GetKey().ToString();
+
+		if (KeyEventString == "Gamepad_FaceButton_Bottom" || KeyEventString == "Enter")
+		{
+			bKeyPressed = false;
+		}
+		else
+		{
+			bKeyPressed = true;
+		}
+
+		switch (UClassicFunctionLibrary::GetInputButton(InKeyEvent))
+		{
+		case EButtonsGame::B:
+			ENavigationButton = EButtonsGame::B;
+			break;
+		case EButtonsGame::Y:
+			ENavigationButton = EButtonsGame::Y;
+			break;
+		case EButtonsGame::LB:
+			ENavigationButton = EButtonsGame::LEFT;
+			bKeyTriggerLeft = true;
+			break;
+		case EButtonsGame::RB:
+			ENavigationButton = EButtonsGame::RIGHT;
+			bKeyTriggerRight = true;
+			break;
+		}
 	}
 	else
 	{
-		bKeyPressed = true;
+
 	}
 	return Super::NativeOnPreviewKeyDown(InGeometry, InKeyEvent);
 }
 
 FReply UMainInterface::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
-	KeyEvent = InKeyEvent;
-	bKeyPressed = false;
+	if (bInputEnable)
+	{
+		KeyEvent = InKeyEvent;
+		bKeyPressed = false;
+		bUpDownPressed = true;
+
+		if (ENavigationButton == EButtonsGame::B)
+		{
+			OnClickBackAction();
+		}
+		else if (ENavigationButton == EButtonsGame::Y)
+		{
+			OnClickFavorite();
+		}
+		if (ENavigationButton == EButtonsGame::LEFT || ENavigationButton == EButtonsGame::RIGHT)
+		{
+			bKeyTriggerLeft = false;
+			bKeyTriggerRight = false;
+		}
+	}
 	return Super::NativeOnKeyUp(InGeometry, InKeyEvent);
 }
 
@@ -780,6 +824,12 @@ void UMainInterface::ClearData(bool bAnimationBarTop, bool bAnimationShowSystem)
 
 }
 
+void UMainInterface::MediaPlayer(FString Control)
+{
+	FString TESTString = TEXT("teste");
+	ControlMediaPlayer(Control, TESTString);
+}
+
 //Animations
 void UMainInterface::AnimationFrameMoveRight()
 {
@@ -1035,6 +1085,60 @@ void UMainInterface::OnClickInfo()
 	Focus = EFocus::INFO;
 }
 
+void UMainInterface::OnClickBackAction()
+{
+	switch (PositionY)
+	{
+	case EPositionY::TOP:
+		CloseMenus();
+		break;
+	case EPositionY::CENTRAL:
+		UKismetSystemLibrary::QuitGame(this, GetOwningPlayer(), EQuitPreference::Quit, false);
+		break;
+	case EPositionY::BOTTOM:
+		OnNativeNavigationGame(EButtonsGame::UP);
+		break;
+	default:
+		break;
+	}
+}
+
+void UMainInterface::OnClickFavorite()
+{
+	if (bInputEnable)
+	{
+		switch (PositionY)
+		{
+		case EPositionY::CENTRAL:
+			SetFavoriteToSave();
+			break;
+		}
+	}
+}
+
+void UMainInterface::CloseMenus()
+{
+	const float TranslationSystemSelect = CanvasPanelSystemSelect->RenderTransform.Translation.Y;
+	const float TranslationInfo = CanvasPanelInfo->RenderTransform.Translation.Y;
+
+	if (TranslationSystemSelect == 0)
+	{
+		UUserWidget::PlayAnimationReverse(ShowSystem);
+		BtnSelectSystem->BtButton->SetKeyboardFocus();
+		Focus = EFocus::MAIN;
+	}
+	else if (TranslationInfo == 0)
+	{
+		UUserWidget::PlayAnimationReverse(ShowInfo);
+		BtnInfo->BtButton->SetKeyboardFocus();
+		Focus = EFocus::MAIN;
+	}
+	else
+	{
+		OnNativeNavigationGame(EButtonsGame::DOWN);
+	}
+}
+
 void UMainInterface::CreateFolders()
 {
 	const FString PathMedia = (ConfigurationData.pathmedia != TEXT("")) ? ConfigurationData.pathmedia + TEXT("\\media") : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
@@ -1045,7 +1149,7 @@ void UMainInterface::CreateFolders()
 	{
 		UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia + TEXT("\\") + ConfigElement.SystemName);
 		UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia + TEXT("\\") + ConfigElement.SystemName + TEXT("\\covers"));
-		UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia + TEXT("\\") + ConfigElement.SystemName + TEXT("\\screenshots"));	
+		UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia + TEXT("\\") + ConfigElement.SystemName + TEXT("\\screenshots"));
 		UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia + TEXT("\\") + ConfigElement.SystemName + TEXT("\\videos"));
 	}
 
@@ -1059,8 +1163,7 @@ void UMainInterface::ScrollCards()
 
 		if ((PositionCenterX == 1 || PositionCenterX == 4) && (FrameX == 0 || FrameX == 1155))
 		{
-			bScroll = true;
-
+			bScroll = false;
 			int32 HBGetPosition = HBListGame->RenderTransform.Translation.X;
 			int32 HBNewPosition;
 			int32 Min;
@@ -1073,6 +1176,7 @@ void UMainInterface::ScrollCards()
 				HBNewPosition = FMath::Clamp(HBGetPosition - SpeedScroll, Min, Max);
 				HBListGame->SetRenderTranslation(FVector2D(HBNewPosition, 0));
 				bScroll = HBGetPosition != HBNewPosition;
+
 				//UE_LOG(LogTemp, Warning, TEXT("HBGetPosition: %d  HBNewPosition: %d "), HBGetPosition, HBNewPosition);
 			}
 			else if (ENavigationButton == EButtonsGame::LEFT)
@@ -1083,6 +1187,7 @@ void UMainInterface::ScrollCards()
 				HBNewPosition = FMath::Clamp(HBGetPosition + SpeedScroll, Min, Max);
 				HBListGame->SetRenderTranslation(FVector2D(HBNewPosition, 0));
 				bScroll = HBGetPosition != HBNewPosition;
+
 				//UE_LOG(LogTemp, Warning, TEXT("HBGetPosition: %d  HBNewPosition: %d "), HBGetPosition, HBNewPosition);
 			}
 			else
