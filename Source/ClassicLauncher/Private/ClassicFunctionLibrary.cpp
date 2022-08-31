@@ -17,72 +17,34 @@ EUINavigation UClassicFunctionLibrary::GetInputnavigation(const FKeyEvent& InKey
 {
 	const FString KeyEvent = InKeyEvent.GetKey().ToString();
 
-	if (KeyEvent == "Left" || KeyEvent == "Gamepad_DPad_Left" || KeyEvent == "Gamepad_LeftStick_Left") {
-		return EUINavigation::Left;
-	}
-	else if (KeyEvent == "Right" || KeyEvent == "Gamepad_DPad_Right" || KeyEvent == "Gamepad_LeftStick_Right") {
-		return EUINavigation::Right;
-	}
-	else if (KeyEvent == "Up" || KeyEvent == "Gamepad_DPad_Up" || KeyEvent == "Gamepad_LeftStick_Up") {
-		return EUINavigation::Up;
-	}
-	else if (KeyEvent == "Down" || KeyEvent == "Gamepad_DPad_Down" || KeyEvent == "Gamepad_LeftStick_Down") {
-		return EUINavigation::Down;
-	}
-	else {
-		return EUINavigation::Invalid;
-	}
+	if (KeyEvent == "Left" || KeyEvent == "Gamepad_DPad_Left" || KeyEvent == "Gamepad_LeftStick_Left") return EUINavigation::Left;
+	else if (KeyEvent == "Right" || KeyEvent == "Gamepad_DPad_Right" || KeyEvent == "Gamepad_LeftStick_Right") return EUINavigation::Right;
+	else if (KeyEvent == "Up" || KeyEvent == "Gamepad_DPad_Up" || KeyEvent == "Gamepad_LeftStick_Up") 	return EUINavigation::Up;
+	else if (KeyEvent == "Down" || KeyEvent == "Gamepad_DPad_Down" || KeyEvent == "Gamepad_LeftStick_Down") return EUINavigation::Down;
+	else return EUINavigation::Invalid;
+
 }
 
 EButtonsGame UClassicFunctionLibrary::GetInputButton(const FKeyEvent& InKeyEvent)
 {
 	const FString KeyEvent = InKeyEvent.GetKey().ToString();
 
-	if (KeyEvent == "Left" || KeyEvent == "Gamepad_DPad_Left" || KeyEvent == "Gamepad_LeftStick_Left") {
-		return EButtonsGame::LEFT;
-	}
-	else if (KeyEvent == "Right" || KeyEvent == "Gamepad_DPad_Right" || KeyEvent == "Gamepad_LeftStick_Right") {
-		return EButtonsGame::RIGHT;
-	}
-	else if (KeyEvent == "Up" || KeyEvent == "Gamepad_DPad_Up" || KeyEvent == "Gamepad_LeftStick_Up") {
-		return EButtonsGame::UP;
-	}
-	else if (KeyEvent == "Down" || KeyEvent == "Gamepad_DPad_Down" || KeyEvent == "Gamepad_LeftStick_Down") {
-		return EButtonsGame::DOWN;
-	}
-	else if (KeyEvent == "Enter" || KeyEvent == "Gamepad_FaceButton_Bottom") {
-		return EButtonsGame::A;
-	}
-	else if (KeyEvent == "Backspace" || KeyEvent == "Gamepad_FaceButton_Right") {
-		return EButtonsGame::B;
-	}
-	else if (KeyEvent == "F" || KeyEvent == "Gamepad_FaceButton_Top") {
-		return EButtonsGame::Y;
-	}
-	else if (KeyEvent == "S" || KeyEvent == "Gamepad_FaceButton_Left") {
-		return EButtonsGame::X;
-	}
-	else if (KeyEvent == "Q" || KeyEvent == "Gamepad_LeftShoulder") {
-		return EButtonsGame::LB;
-	}
-	else if (KeyEvent == "E" || KeyEvent == "Gamepad_RightShoulder") {
-		return EButtonsGame::RB;
-	}
-	else if (KeyEvent == "A" || KeyEvent == "Gamepad_LeftTrigger") {
-		return EButtonsGame::LT;
-	}
-	else if (KeyEvent == "D" || KeyEvent == "Gamepad_RightTrigger") {
-		return EButtonsGame::RT;
-	}
-	else if (KeyEvent == "LeftControl" || KeyEvent == "Gamepad_Special_Right") {
-		return EButtonsGame::START;
-	}
-	else if (KeyEvent == "Alt" || KeyEvent == "Gamepad_Special_Left") {
-		return EButtonsGame::SELECT;
-	}
-	else {
-		return EButtonsGame::NONE;
-	}
+	if (KeyEvent == "Left" || KeyEvent == "Gamepad_DPad_Left" || KeyEvent == "Gamepad_LeftStick_Left")	return EButtonsGame::LEFT;
+	else if (KeyEvent == "Right" || KeyEvent == "Gamepad_DPad_Right" || KeyEvent == "Gamepad_LeftStick_Right")	return EButtonsGame::RIGHT;
+	else if (KeyEvent == "Up" || KeyEvent == "Gamepad_DPad_Up" || KeyEvent == "Gamepad_LeftStick_Up")	return EButtonsGame::UP;
+	else if (KeyEvent == "Down" || KeyEvent == "Gamepad_DPad_Down" || KeyEvent == "Gamepad_LeftStick_Down")	return EButtonsGame::DOWN;
+	else if (KeyEvent == "Enter" || KeyEvent == "Gamepad_FaceButton_Bottom")	return EButtonsGame::A;
+	else if (KeyEvent == "Backspace" || KeyEvent == "Gamepad_FaceButton_Right")	return EButtonsGame::B;
+	else if (KeyEvent == "F" || KeyEvent == "Gamepad_FaceButton_Top")	return EButtonsGame::Y;
+	else if (KeyEvent == "S" || KeyEvent == "Gamepad_FaceButton_Left")	return EButtonsGame::X;
+	else if (KeyEvent == "Q" || KeyEvent == "Gamepad_LeftShoulder")	return EButtonsGame::LB;
+	else if (KeyEvent == "E" || KeyEvent == "Gamepad_RightShoulder")  return EButtonsGame::RB;
+	else if (KeyEvent == "A" || KeyEvent == "Gamepad_LeftTrigger")  return EButtonsGame::LT;
+	else if (KeyEvent == "D" || KeyEvent == "Gamepad_RightTrigger")  return EButtonsGame::RT;
+	else if (KeyEvent == "LeftControl" || KeyEvent == "Gamepad_Special_Right")  return EButtonsGame::START;
+	else if (KeyEvent == "Alt" || KeyEvent == "Gamepad_Special_Left")  return EButtonsGame::SELECT;
+	else return EButtonsGame::NONE;
+
 }
 
 TArray<FGameData> UClassicFunctionLibrary::SortGameDate(TArray<FGameData> gameData)
@@ -230,10 +192,10 @@ FString UClassicFunctionLibrary::ReplacePath(FString value, FString path)
 *
 *@param    OriginalPathMedia EX: "./game.png or c:\games\roms\game.png" <image> or <thumbnail> or <video> in gamelist.xml
 *@param    PathMedia EX: "c:\classiclauncher\media" <pathmedia> in config.xml
-*@param    RomName EX: "./game.zip or c:\games\roms\game.zip" in <path> gamelist.xml 
+*@param    RomName EX: "./game.zip or c:\games\roms\game.zip" in <path> gamelist.xml
 *@param    SystemName EX: snes  <systemname> in configsys
 *@param    TypeMedia 3 types "covers" "screenshots" "videos"
-*@param    Format  2 types .png . mp4    
+*@param    Format  2 types .png . mp4
 *@return   Return new path EX: "c:\classiclauncher\media\covers\game.png"
 */
 FString UClassicFunctionLibrary::ReplaceMedia(FString OriginalPathMedia, FString PathMedia, FString PathRom, FString RomName, FString SystemName, FString TypeMedia, FString Format)
@@ -245,7 +207,7 @@ FString UClassicFunctionLibrary::ReplaceMedia(FString OriginalPathMedia, FString
 
 	if (!FPaths::FileExists(NewImage))
 	{
-		for (int32 StartIndex = Rom.Len(); StartIndex >= 0 ; StartIndex--)
+		for (int32 StartIndex = Rom.Len(); StartIndex >= 0; StartIndex--)
 		{
 			if (Rom.Mid(StartIndex, 1) == TEXT("\\"))
 			{
@@ -267,10 +229,10 @@ FString UClassicFunctionLibrary::ReplaceMedia(FString OriginalPathMedia, FString
 			}
 		}
 
-		NewImage = PathMedia  + TEXT("\\") + SystemName + TEXT("\\") + TypeMedia + NewImage + Format;
+		NewImage = PathMedia + TEXT("\\") + SystemName + TEXT("\\") + TypeMedia + NewImage + Format;
 		UE_LOG(LogTemp, Warning, TEXT("Path out is  %s"), *NewImage);
 	}
-	
+
 	return NewImage;
 
 }
@@ -429,7 +391,7 @@ TArray<FGameData> UClassicFunctionLibrary::FormatGameData(TArray<FGameData> data
 	{
 		data.imageFormated = ReplaceMedia(data.image, config.pathmedia, configSystem.RomPath, data.Path, configSystem.SystemName, TEXT("covers"), TEXT(".png"));
 		data.thumbnailFormated = ReplaceMedia(data.thumbnail, config.pathmedia, configSystem.RomPath, data.Path, configSystem.SystemName, TEXT("screenshots"), TEXT(".png"));
-		data.videoFormated = ReplaceMedia  (data.video, config.pathmedia , configSystem.RomPath , data.Path , configSystem.SystemName , TEXT("videos") , TEXT(".mp4"));
+		data.videoFormated = ReplaceMedia(data.video, config.pathmedia, configSystem.RomPath, data.Path, configSystem.SystemName, TEXT("videos"), TEXT(".mp4"));
 		data.PathFormated = ReplacePath(data.Path, configSystem.RomPath);
 		data.PathFormated = TEXT("\"") + data.PathFormated + TEXT("\"");
 		data.nameFormated = data.name.Replace(TEXT("&amp;"), TEXT("&"), ESearchCase::IgnoreCase);
@@ -445,9 +407,9 @@ bool UClassicFunctionLibrary::FindGameData(TArray<FGameData> datas, FGameData Da
 {
 	Index = -1;
 	for (FGameData& data : datas)
-	{	
+	{
 		Index++;
-		if (data.PathFormated == DataElement.PathFormated) 
+		if (data.PathFormated == DataElement.PathFormated)
 		{
 			return true;
 		}
@@ -606,10 +568,6 @@ void UClassicFunctionLibrary::CreateProcess(int32& ProcessId, FString FullPath, 
 
 
 
-
-
-
-
 void UClassicFunctionLibrary::AsyncLoadTexture2DFromFile(FLoadImageDelegate Out, const FString FullFilePath, int32 Index)
 {
 	AsyncTask(ENamedThreads::GameThread_Local, [Out, FullFilePath, Index]()
@@ -660,7 +618,6 @@ FString UClassicFunctionLibrary::FormatDateTimeToView(FString DateXml)
 
 	FString Hour;
 	FString Minute;
-
 
 	for (int32 i = 9; i < DateFormat.Num(); i++)
 	{

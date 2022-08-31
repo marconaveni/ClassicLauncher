@@ -42,15 +42,18 @@ UMainInterface::UMainInterface(const FObjectInitializer& ObjectInitializer) : Su
 	PositionCenterX = 1;
 	PositionTopX = 1;
 	ENavigationButton = EButtonsGame::NONE;
+	ENavigationScroll = EButtonsGame::NONE;
 	PositionY = EPositionY::CENTRAL;
 	Focus = EFocus::MAIN;
 	bDelayPressed = true;
 	bKeyPressed = false;
 	bUpDownPressed = true;
 	bKeyTriggerLeft = false;
+	bKeyTriggerRight = false;
 	bInputEnable = true;
 	bScroll = false;
 	bFilterFavorites = false;
+	bDelayFavoriteClick = false;
 	CorePath = TEXT("");
 	TimerDelayAnimation = 0.15f;
 	TriggerDelayPressed = 1.0f;
@@ -131,7 +134,6 @@ void UMainInterface::NativeOnInitialized()
 
 	for (TActorIterator<AClassicMediaPlayer> ActorIterator(GetWorld()); ActorIterator; ++ActorIterator)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("AClassicMediaPlayer Founds: %s "), *ActorIterator->GetName());
 		ClassicMediaPlayerReference = *ActorIterator;
 		UE_LOG(LogTemp, Warning, TEXT("Reference AClassicMediaPlayer Founds: %s "), *ClassicMediaPlayerReference->GetName());
 	}
@@ -371,10 +373,17 @@ FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const
 		switch (UClassicFunctionLibrary::GetInputButton(InKeyEvent))
 		{
 		case EButtonsGame::B:
-			ENavigationButton = EButtonsGame::B;
+			if (!bScroll && !bKeyTriggerLeft && !bKeyTriggerRight)
+			{
+				ENavigationButton = EButtonsGame::B;
+			}
 			break;
 		case EButtonsGame::Y:
-			ENavigationButton = EButtonsGame::Y;
+			if (!bScroll && !bKeyTriggerLeft && !bKeyTriggerRight)
+			{
+				ENavigationButton = EButtonsGame::Y;
+				OnClickFavorite();		
+			}
 			break;
 		case EButtonsGame::LB:
 			ENavigationButton = EButtonsGame::LEFT;
@@ -400,20 +409,19 @@ FReply UMainInterface::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEven
 		KeyEvent = InKeyEvent;
 		bKeyPressed = false;
 		bUpDownPressed = true;
+		bDelayFavoriteClick = false;
+		bKeyTriggerLeft = false;
+		bKeyTriggerRight = false;
 
 		if (ENavigationButton == EButtonsGame::B)
 		{
 			OnClickBackAction();
 		}
-		else if (ENavigationButton == EButtonsGame::Y)
+		else if (ENavigationButton == EButtonsGame::LEFT || ENavigationButton == EButtonsGame::RIGHT)
 		{
-			OnClickFavorite();
+	
 		}
-		if (ENavigationButton == EButtonsGame::LEFT || ENavigationButton == EButtonsGame::RIGHT)
-		{
-			bKeyTriggerLeft = false;
-			bKeyTriggerRight = false;
-		}
+		ENavigationButton = EButtonsGame::NONE;
 	}
 	return Super::NativeOnKeyUp(InGeometry, InKeyEvent);
 }
@@ -553,7 +561,6 @@ void UMainInterface::OnNavigationFocus(UCard* Card)
 	SetButtonsIconInterfaces(PositionY);
 	LoadImages();
 }
-
 
 void UMainInterface::SetButtonsIconInterfaces(EPositionY GetPosition)
 {
@@ -716,23 +723,26 @@ void UMainInterface::SetCountPlayerToSave()
 
 void UMainInterface::SetFavoriteToSave()
 {
-	int32 Find;
-
-	if (UClassicFunctionLibrary::FindGameData(ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].GameDatas, GameData[IndexCard], Find))
+	if (bDelayFavoriteClick && ENavigationButton == EButtonsGame::Y && !bScroll)
 	{
-		// Find = return inline found index
-		const bool ToggleFavorite = !ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].GameDatas[Find].favorite;
-		ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].GameDatas[Find].favorite = ToggleFavorite;
+		int32 Find;
 
-		GameData[IndexCard].favorite = ToggleFavorite;
+		if (UClassicFunctionLibrary::FindGameData(ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].GameDatas, GameData[IndexCard], Find))
+		{
+			// Find = return inline found index
+			const bool ToggleFavorite = !ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].GameDatas[Find].favorite;
+			ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].GameDatas[Find].favorite = ToggleFavorite;
 
-		cardReference[IndexCard]->SetFavorite(ToggleFavorite, true);
+			GameData[IndexCard].favorite = ToggleFavorite;
 
-		FString Path = ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].RomPath;
-		SaveGameListXML(Path, ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].GameDatas);
-		SaveGameList();
+			cardReference[IndexCard]->SetFavorite(ToggleFavorite, true);
 
-		SetButtonsIconInterfaces(EPositionY::CENTRAL);
+			FString Path = ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].RomPath;
+			SaveGameListXML(Path, ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].GameDatas);
+			SaveGameList();
+
+			SetButtonsIconInterfaces(EPositionY::CENTRAL);
+		}
 	}
 }
 
@@ -756,6 +766,7 @@ bool UMainInterface::SaveGameList()
 	return UGameplayStatics::SaveGameToSlot(ClassicGameInstance->ClassicSaveGameInstance, ClassicGameInstance->SlotGame, 0);
 }
 
+///////////////////////////////////////////////////////////////////////
 
 //pressed delay
 void UMainInterface::PressedDelayNavigation(float Delay)
@@ -768,6 +779,8 @@ void UMainInterface::PressedTimerNavigation()
 {
 	bDelayPressed = true;
 }
+
+///////////////////////////////////////////////////////////////////////
 
 void UMainInterface::SetRenderOpacityList() {
 
@@ -882,36 +895,20 @@ void UMainInterface::AnimationFrameToTop(UWidgetAnimation* Animation1, UWidgetAn
 	{
 		switch (PositionCenterX)
 		{
-		case 1:
-			UUserWidget::PlayAnimationReverse(Animation1);
-			break;
-		case 2:
-			UUserWidget::PlayAnimationReverse(Animation2);
-			break;
-		case 3:
-			UUserWidget::PlayAnimationReverse(Animation3);
-			break;
-		case 4:
-			UUserWidget::PlayAnimationReverse(Animation4);
-			break;
+		case 1: UUserWidget::PlayAnimationReverse(Animation1); break;
+		case 2: UUserWidget::PlayAnimationReverse(Animation2); break;
+		case 3: UUserWidget::PlayAnimationReverse(Animation3); break;
+		case 4: UUserWidget::PlayAnimationReverse(Animation4); break;
 		}
 	}
 	else
 	{
 		switch (PositionCenterX)
 		{
-		case 1:
-			UUserWidget::PlayAnimationForward(Animation1);
-			break;
-		case 2:
-			UUserWidget::PlayAnimationForward(Animation2);
-			break;
-		case 3:
-			UUserWidget::PlayAnimationForward(Animation3);
-			break;
-		case 4:
-			UUserWidget::PlayAnimationForward(Animation4);
-			break;
+		case 1: UUserWidget::PlayAnimationForward(Animation1); break;
+		case 2:	UUserWidget::PlayAnimationForward(Animation2); break;
+		case 3: UUserWidget::PlayAnimationForward(Animation3); break;
+		case 4: UUserWidget::PlayAnimationForward(Animation4); break;
 		}
 	}
 
@@ -1100,14 +1097,10 @@ void UMainInterface::OnClickBackAction()
 
 void UMainInterface::OnClickFavorite()
 {
-	if (bInputEnable)
+	if (bInputEnable && PositionY == EPositionY::CENTRAL && !bDelayFavoriteClick && !bScroll)
 	{
-		switch (PositionY)
-		{
-		case EPositionY::CENTRAL:
-			SetFavoriteToSave();
-			break;
-		}
+		bDelayFavoriteClick = true;
+		GetWorld()->GetTimerManager().SetTimer(DelayFavoriteTimerHandle, this, &UMainInterface::SetFavoriteToSave, 0.5f, false, -1);	
 	}
 }
 
@@ -1156,6 +1149,15 @@ void UMainInterface::ScrollCards()
 	{
 		const float FrameX = ImgFrame->RenderTransform.Translation.X;
 
+		if (PositionCenterX == 1 && FrameX == 0)
+		{
+			ENavigationScroll = EButtonsGame::LEFT;
+		}
+		else if (PositionCenterX == 4 && FrameX == 1155)
+		{
+			ENavigationScroll = EButtonsGame::RIGHT;
+		}
+
 		if ((PositionCenterX == 1 || PositionCenterX == 4) && (FrameX == 0 || FrameX == 1155))
 		{
 			bScroll = false;
@@ -1163,7 +1165,7 @@ void UMainInterface::ScrollCards()
 			int32 HbNewPosition;
 			int32 Min;
 			int32 Max;
-			if (ENavigationButton == EButtonsGame::RIGHT)
+			if (ENavigationScroll == EButtonsGame::RIGHT)
 			{
 				Min = (IndexCard - PositionCenterX) * -385;
 				Max = 385;
@@ -1172,19 +1174,16 @@ void UMainInterface::ScrollCards()
 				HBListGame->SetRenderTranslation(FVector2D(HbNewPosition, 0));
 				bScroll = HbGetPosition != HbNewPosition;
 			}
-			else if (ENavigationButton == EButtonsGame::LEFT)
+			else if (ENavigationScroll == EButtonsGame::LEFT)
 			{
 				Min = IndexCard * -385;
 				Max = (IndexCard - PositionCenterX) * -385;
 
 				HbNewPosition = FMath::Clamp(HbGetPosition + SpeedScroll, Min, Max);
 				HBListGame->SetRenderTranslation(FVector2D(HbNewPosition, 0));
-				bScroll = HbGetPosition != HbNewPosition;
+				bScroll = HbGetPosition != HbNewPosition;		
 			}
-			else
-			{
-				bScroll = false;
-			}
+			
 		}
 	}
 
