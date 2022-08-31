@@ -138,13 +138,13 @@ void UMainInterface::NativeOnInitialized()
 		UE_LOG(LogTemp, Warning, TEXT("Reference AClassicMediaPlayer Founds: %s "), *ClassicMediaPlayerReference->GetName());
 	}
 
+	GetWorld()->GetTimerManager().SetTimer(TickTimerHandle, this, &UMainInterface::TimerTick, 0.016f, true, -1);
+
 	Super::NativeOnInitialized();
 }
 
-void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+void UMainInterface::TimerTick()
 {
-	Super::NativeTick(MyGeometry, InDeltaTime);
-
 	ScrollCards();
 
 	if (bKeyPressed) {
@@ -154,6 +154,11 @@ void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 			WBPInfo->ScrollTopEnd(UClassicFunctionLibrary::GetInputButton(KeyEvent));
 		}
 	}
+}
+
+void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
 }
 
 void UMainInterface::RestartWidget()
@@ -382,7 +387,7 @@ FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const
 			if (!bScroll && !bKeyTriggerLeft && !bKeyTriggerRight)
 			{
 				ENavigationButton = EButtonsGame::Y;
-				OnClickFavorite();		
+				OnClickFavorite();
 			}
 			break;
 		case EButtonsGame::LB:
@@ -419,9 +424,9 @@ FReply UMainInterface::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEven
 		}
 		else if (ENavigationButton == EButtonsGame::LEFT || ENavigationButton == EButtonsGame::RIGHT)
 		{
-	
+
 		}
-		ENavigationButton = EButtonsGame::NONE;
+		//ENavigationButton = EButtonsGame::NONE;
 	}
 	return Super::NativeOnKeyUp(InGeometry, InKeyEvent);
 }
@@ -434,6 +439,7 @@ void UMainInterface::OnAnimationStartedPlaying(UUMGSequencePlayer& Player)
 	{
 		ImgFrame->SetBrushFromTexture(ImageFrameCenter);
 	}
+	const UWidgetAnimation* AnimationGet = Player.GetAnimation();
 }
 
 void UMainInterface::OnAnimationFinishedPlaying(UUMGSequencePlayer& Player)
@@ -443,6 +449,8 @@ void UMainInterface::OnAnimationFinishedPlaying(UUMGSequencePlayer& Player)
 	{
 		ImgFrame->SetBrushFromTexture(ImageFrameTop);
 	}
+
+	const UWidgetAnimation* AnimationGet = Player.GetAnimation();
 }
 
 void UMainInterface::GameSettingsInit()
@@ -1100,7 +1108,7 @@ void UMainInterface::OnClickFavorite()
 	if (bInputEnable && PositionY == EPositionY::CENTRAL && !bDelayFavoriteClick && !bScroll)
 	{
 		bDelayFavoriteClick = true;
-		GetWorld()->GetTimerManager().SetTimer(DelayFavoriteTimerHandle, this, &UMainInterface::SetFavoriteToSave, 0.5f, false, -1);	
+		GetWorld()->GetTimerManager().SetTimer(DelayFavoriteTimerHandle, this, &UMainInterface::SetFavoriteToSave, 0.5f, false, -1);
 	}
 }
 
@@ -1145,8 +1153,9 @@ void UMainInterface::CreateFolders()
 
 void UMainInterface::ScrollCards()
 {
-	if (PositionY == EPositionY::CENTRAL)
+	if (PositionY == EPositionY::CENTRAL && HBListGame->RenderTransform.Translation.Y == 0)
 	{
+
 		const float FrameX = ImgFrame->RenderTransform.Translation.X;
 
 		if (PositionCenterX == 1 && FrameX == 0)
@@ -1168,7 +1177,9 @@ void UMainInterface::ScrollCards()
 			if (ENavigationScroll == EButtonsGame::RIGHT)
 			{
 				Min = (IndexCard - PositionCenterX) * -385;
-				Max = 385;
+				Max = (IndexCard - PositionCenterX - 1) * -385;
+				//Max = 385;
+				UE_LOG(LogTemp, Warning, TEXT("Min %d  Max %d"), Min, Max);
 
 				HbNewPosition = FMath::Clamp(HbGetPosition - SpeedScroll, Min, Max);
 				HBListGame->SetRenderTranslation(FVector2D(HbNewPosition, 0));
@@ -1181,9 +1192,9 @@ void UMainInterface::ScrollCards()
 
 				HbNewPosition = FMath::Clamp(HbGetPosition + SpeedScroll, Min, Max);
 				HBListGame->SetRenderTranslation(FVector2D(HbNewPosition, 0));
-				bScroll = HbGetPosition != HbNewPosition;		
+				bScroll = HbGetPosition != HbNewPosition;
 			}
-			
+
 		}
 	}
 
@@ -1191,6 +1202,9 @@ void UMainInterface::ScrollCards()
 
 void UMainInterface::SetImageBottom()
 {
+
+	if (ImgVideo == nullptr || ImgImageBottom == nullptr) return;
+
 	ImgVideo->SetVisibility(ESlateVisibility::Hidden);
 	ImgImageBottom->SetVisibility(ESlateVisibility::Visible);
 

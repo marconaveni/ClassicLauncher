@@ -17,21 +17,21 @@ UCard::UCard(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitiali
 void UCard::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
-	if (BtnClick != nullptr) {
-		//equivale doonce blueprint
-		if (BtnClick->HasKeyboardFocus()) {
-			if (!hover) {
-				UUserWidget::PlayAnimationForward(ChangeColor);
-			}
-			hover = true;
-		}
-		else {
-			if (hover) {
-				UUserWidget::PlayAnimationReverse(ChangeColor);
-			}
-			hover = false;
-		}
-	}
+	//if (BtnClick != nullptr) {
+	//	//equivale doonce blueprint
+	//	if (BtnClick->HasKeyboardFocus()) {
+	//		if (!hover) {
+	//			UUserWidget::PlayAnimationForward(ChangeColor);
+	//		}
+	//		hover = true;
+	//	}
+	//	else {
+	//		if (hover) {
+	//			UUserWidget::PlayAnimationReverse(ChangeColor);
+	//		}
+	//		hover = false;
+	//	}
+	//}
 }
 
 void UCard::NativePreConstruct()

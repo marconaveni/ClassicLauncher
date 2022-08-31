@@ -322,7 +322,8 @@ public:
 	class UClassicGameInstance* ClassicGameInstance;
 
 	//timers
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
+	FTimerHandle TickTimerHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle DelayCreateGameListTimerHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
@@ -335,6 +336,8 @@ public:
 	FTimerHandle DelayFavoriteTimerHandle;
 
 	//Functions
+	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	void TimerTick();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface")
 	void RestartWidget();
