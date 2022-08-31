@@ -41,94 +41,64 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UHorizontalBox* HBListGame;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UScrollBox* ScrollListGame;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* TxtTitleGame;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* TxtDebug;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UMultiLineEditableTextBox* TxtDescription;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* BgBottomMenu;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* ImgImageBottom;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* ImgVideo;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* BgTopBar;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* BgTopBarIcon;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* BgBackground;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* BgTitle;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* ImgFrame;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* ImgPreventClickMouse;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* BgBottom;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UCanvasPanel* CanvasPanelSystemSelect;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UCanvasPanel* CanvasPanelInfo;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UCanvasPanel* CanvasPanelConfiguration;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UCanvasPanel* CanvasPanelBottom;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UArrow* WBPArrow;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UToolTip* WBPToolTipConfiguration;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UToolTip* WBPToolTipFavorites;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UToolTip* WBPToolTipInfo;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UToolTip* WBPToolTipSystem;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UClassicInfoInterface* WBPInfo;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UClassicSystemListInterface* WBPSystemsList;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UClassicButtonsIcons* WBPButtonsIconsInterfaces;
-	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UClassicButton* BtnSelectSystem;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UClassicButton* BtnConfigurations;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UClassicButton* BtnFavorites;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UClassicButton* BtnInfo;
 
@@ -213,6 +183,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
 	TArray<class UClassicButtonSystem*> ButtonSystemReferences;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
+	class AClassicMediaPlayer* ClassicMediaPlayerReference;
 
 public:
 
@@ -498,12 +471,6 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnLoopResumeAsyncImage();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
-	void MediaPlayer(FString Control);
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void ControlMediaPlayer(const FString& Control ,FString& ControlOut);
-
 	//Animation
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Animations")
@@ -575,4 +542,9 @@ private:
 	//macros ticks
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void ScrollCards();
+
+public:
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void SetImageBottom();
 };

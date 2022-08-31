@@ -167,6 +167,11 @@ public:
 	///these functions are not mine, all credits go to Rama
 
 	//function credits rama VictoryBPFunctionLibrary
+	/** Obtain all files in a provided directory, with optional extension filter. All files are returned if Ext is left blank. Returns false if operation could not occur. */
+	UFUNCTION(BlueprintPure, Category = "Victory BP Library|File IO")
+	static bool ClassicGetFiles(TArray<FString>& Files, FString RootFolderFullPath, FString Ext);
+
+	//function credits rama VictoryBPFunctionLibrary
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	static bool LoadStringFile(FString& Result, FString FullFilePath);
 

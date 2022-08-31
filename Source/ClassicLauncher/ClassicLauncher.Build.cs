@@ -14,7 +14,7 @@ public class ClassicLauncher : ModuleRules
 		RuntimeDependencies.Add("$(ProjectDir)/config/config.xml");
 		RuntimeDependencies.Add("$(ProjectDir)/musics/*");
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" , "UMG"});
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" , "UMG" , "MediaAssets" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "EasyXMLParser"});
 		PrivateDependencyModuleNames.AddRange(new string[] { "UnrealLibretro" });

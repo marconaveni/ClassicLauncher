@@ -22,13 +22,13 @@
 #include "GameFramework/GameUserSettings.h"
 #include "Components/MultiLineEditableTextBox.h"
 #include "Misc/Paths.h"
-
+#include "ClassicMediaPlayer.h"
 #include "RuntimeImageLoader.h"
 #include "ToolTip.h"
 #include "Animation/UMGSequencePlayer.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/CanvasPanel.h"
-
+#include "EngineUtils.h"
 
 
 UMainInterface::UMainInterface(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -98,11 +98,11 @@ void UMainInterface::NativePreConstruct()
 	Super::NativePreConstruct();
 }
 
-
-
 void UMainInterface::NativeConstruct()
 {
 	ClassicGameInstance = Cast<UClassicGameInstance>(GetGameInstance());
+
+	//UGameplayStatics::GetActorOfClass
 
 	SetRenderOpacityList();
 	LoadConfigurationNative();
@@ -128,6 +128,13 @@ void UMainInterface::NativeOnInitialized()
 	BtnInfo->OnFocusTrigger.AddDynamic(this, &UMainInterface::OnFocusInfo);
 	BtnInfo->OnFocusLostTrigger.AddDynamic(this, &UMainInterface::OnLostFocusInfo);
 	BtnInfo->OnClickTrigger.AddDynamic(this, &UMainInterface::OnClickInfo);
+
+	for (TActorIterator<AClassicMediaPlayer> ActorIterator(GetWorld()); ActorIterator; ++ActorIterator)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AClassicMediaPlayer Founds: %s "), *ActorIterator->GetName());
+		ClassicMediaPlayerReference = *ActorIterator;
+		UE_LOG(LogTemp, Warning, TEXT("Reference AClassicMediaPlayer Founds: %s "), *ClassicMediaPlayerReference->GetName());
+	}
 
 	Super::NativeOnInitialized();
 }
@@ -248,15 +255,11 @@ void UMainInterface::LoadListNative()
 		ImgFrame->SetBrushFromTexture(ImageFrameCenter);
 		cardReference[0]->SetFocusCard(true);
 
-
-
 		//Timer
 		GetWorld()->GetTimerManager().SetTimer(DelayLoadListTimerHandle, this, &UMainInterface::ViewList, 0.25f, false, -1);
 
-
 		//BlueprintImplementableEvent
 		LoadList();
-
 	}
 	else
 	{
@@ -593,7 +596,6 @@ void UMainInterface::ForceGarbageCollectionBP(float Count)
 	}
 }
 
-
 void UMainInterface::ASyncLoadCard(FString PathImage, int32 Index)
 {
 	FLoadImageDelegate ImgDelegate;
@@ -670,7 +672,6 @@ void UMainInterface::LoadImages()
 			coverReference[FirstIndex]->SetVisibility(ESlateVisibility::Hidden);
 			cardReference[FirstIndex]->SetVisibility(ESlateVisibility::Hidden);
 		}
-
 	}
 
 }
@@ -720,7 +721,7 @@ void UMainInterface::SetFavoriteToSave()
 	if (UClassicFunctionLibrary::FindGameData(ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].GameDatas, GameData[IndexCard], Find))
 	{
 		// Find = return inline found index
-		bool ToggleFavorite = !ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].GameDatas[Find].favorite;
+		const bool ToggleFavorite = !ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].GameDatas[Find].favorite;
 		ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].GameDatas[Find].favorite = ToggleFavorite;
 
 		GameData[IndexCard].favorite = ToggleFavorite;
@@ -739,9 +740,9 @@ bool UMainInterface::SaveGameListXML(FString& GameListPath, TArray<FGameData>& N
 {
 	if (FPaths::FileExists(GameListPath + TEXT("\\gamelist.xml")))
 	{
-		int32 ImageX = GameSystems[CountSystem].ImageX;
-		int32 ImageY = GameSystems[CountSystem].ImageY;
-		FString NewXMLFile = UClassicFunctionLibrary::CreateXMLGameFile(NewGameDatas, FVector2D(ImageX, ImageY));
+		const int32 ImageX = GameSystems[CountSystem].ImageX;
+		const int32 ImageY = GameSystems[CountSystem].ImageY;
+		const FString NewXMLFile = UClassicFunctionLibrary::CreateXMLGameFile(NewGameDatas, FVector2D(ImageX, ImageY));
 		return UClassicFunctionLibrary::SaveStringToFile(GameListPath, TEXT("gamelist.xml"), NewXMLFile, true, false);
 	}
 	else
@@ -822,12 +823,6 @@ void UMainInterface::ClearData(bool bAnimationBarTop, bool bAnimationShowSystem)
 
 	GetWorld()->GetTimerManager().SetTimer(DelayPressedTimerHandle, this, &UMainInterface::LoadListNative, 0.3f, false, -1);
 
-}
-
-void UMainInterface::MediaPlayer(FString Control)
-{
-	FString TESTString = TEXT("teste");
-	ControlMediaPlayer(Control, TESTString);
 }
 
 //Animations
@@ -1164,8 +1159,8 @@ void UMainInterface::ScrollCards()
 		if ((PositionCenterX == 1 || PositionCenterX == 4) && (FrameX == 0 || FrameX == 1155))
 		{
 			bScroll = false;
-			int32 HBGetPosition = HBListGame->RenderTransform.Translation.X;
-			int32 HBNewPosition;
+			const int32 HbGetPosition = HBListGame->RenderTransform.Translation.X;
+			int32 HbNewPosition;
 			int32 Min;
 			int32 Max;
 			if (ENavigationButton == EButtonsGame::RIGHT)
@@ -1173,28 +1168,50 @@ void UMainInterface::ScrollCards()
 				Min = (IndexCard - PositionCenterX) * -385;
 				Max = 385;
 
-				HBNewPosition = FMath::Clamp(HBGetPosition - SpeedScroll, Min, Max);
-				HBListGame->SetRenderTranslation(FVector2D(HBNewPosition, 0));
-				bScroll = HBGetPosition != HBNewPosition;
-
-				//UE_LOG(LogTemp, Warning, TEXT("HBGetPosition: %d  HBNewPosition: %d "), HBGetPosition, HBNewPosition);
+				HbNewPosition = FMath::Clamp(HbGetPosition - SpeedScroll, Min, Max);
+				HBListGame->SetRenderTranslation(FVector2D(HbNewPosition, 0));
+				bScroll = HbGetPosition != HbNewPosition;
 			}
 			else if (ENavigationButton == EButtonsGame::LEFT)
 			{
 				Min = IndexCard * -385;
 				Max = (IndexCard - PositionCenterX) * -385;
 
-				HBNewPosition = FMath::Clamp(HBGetPosition + SpeedScroll, Min, Max);
-				HBListGame->SetRenderTranslation(FVector2D(HBNewPosition, 0));
-				bScroll = HBGetPosition != HBNewPosition;
-
-				//UE_LOG(LogTemp, Warning, TEXT("HBGetPosition: %d  HBNewPosition: %d "), HBGetPosition, HBNewPosition);
+				HbNewPosition = FMath::Clamp(HbGetPosition + SpeedScroll, Min, Max);
+				HBListGame->SetRenderTranslation(FVector2D(HbNewPosition, 0));
+				bScroll = HbGetPosition != HbNewPosition;
 			}
 			else
 			{
 				bScroll = false;
 			}
 		}
+	}
+
+}
+
+void UMainInterface::SetImageBottom()
+{
+	ImgVideo->SetVisibility(ESlateVisibility::Hidden);
+	ImgImageBottom->SetVisibility(ESlateVisibility::Visible);
+
+	if (!GameData.IsValidIndex(IndexCard)) return;
+
+	const FString ImagePath = GameData[IndexCard].thumbnailFormated;
+
+	if (FPaths::FileExists(ImagePath))
+	{
+		int32 Size = 32;
+		bool IsValidTexture = false;
+		UTexture2D* ImageLoaded = UClassicFunctionLibrary::LoadTexture2DFromFile(ImagePath, IsValidTexture, EClassicImageFormat::PNG, Size, Size);
+		if (IsValidTexture)
+		{
+			ImgImageBottom->SetBrushFromTexture(ImageLoaded);
+		}
+	}
+	else
+	{
+		ImgImageBottom->SetBrushFromTexture(ImageNull);
 	}
 
 }

@@ -474,6 +474,32 @@ TArray<FGameData> UClassicFunctionLibrary::FilterFavoriteGameData(TArray<FGameDa
 
 }
 
+bool UClassicFunctionLibrary::ClassicGetFiles(TArray<FString>& Files, FString RootFolderFullPath, FString Ext)
+{
+	if (RootFolderFullPath.Len() < 1) return false;
+
+	FPaths::NormalizeDirectoryName(RootFolderFullPath);
+
+	IFileManager& FileManager = IFileManager::Get();
+
+	if (!Ext.Contains(TEXT("*")))
+	{
+		if (Ext == "")
+		{
+			Ext = "*.*";
+		}
+		else
+		{
+			Ext = (Ext.Left(1) == ".") ? "*" + Ext : "*." + Ext;
+		}
+	}
+
+	FString FinalPath = RootFolderFullPath + "/" + Ext;
+
+	FileManager.FindFiles(Files, *FinalPath, true, false);
+	return true;
+}
+
 bool UClassicFunctionLibrary::LoadStringFile(FString& Result, FString FullFilePath)
 {
 	return FFileHelper::LoadFileToString(Result, *FullFilePath);
