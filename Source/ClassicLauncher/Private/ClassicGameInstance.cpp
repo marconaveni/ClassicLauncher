@@ -7,9 +7,6 @@
 
 void UClassicGameInstance::Init()
 {
-	//if (GEngine) {
-	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, "Iniciou Game Instance");
-	//}
 
 	if (UGameplayStatics::DoesSaveGameExist(SlotGame, 0)) {
 		ClassicSaveGameInstance = Cast<UClassicSaveGame>(UGameplayStatics::LoadGameFromSlot(SlotGame, 0));

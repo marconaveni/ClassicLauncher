@@ -242,6 +242,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	EButtonsGame ENavigationScroll;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	EButtonsGame ENavigationBack;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	EButtonsGame ENavigationA;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	EPositionY PositionY;
@@ -336,76 +342,82 @@ public:
 	FTimerHandle DelayFavoriteTimerHandle;
 
 	//Functions
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void TimerTick();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void RestartWidget();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void OnErrorMessage(const FString& ErrorMessage);
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetDebugMessage(const FString Message);
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnError(const FString& ErrorMessage);
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void LoadConfigurationNative();
 	UFUNCTION(BlueprintImplementableEvent)
 	void LoadConfiguration();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void LoadConfigSystemsNative();
 	UFUNCTION(BlueprintImplementableEvent)
 	void LoadConfigSystems();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void LoadListNative();
 	UFUNCTION(BlueprintImplementableEvent)
 	void LoadList();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void ViewList();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetPaddingCovers();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void CreateGameListNative();
 	UFUNCTION(BlueprintImplementableEvent)
 	void CreateGameList();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SaveGame();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void GameSettingsInit();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void GameSettingsRunning();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void GameSettingsRunningInternal();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void CreateCardsCoversWidget(int32 Min, int32 Max);
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void CreateCardCoverWidget(FGameData Data);
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void CreateGameSystems();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnNativeNavigationGame(EButtonsGame Navigate);
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
+	void OnNativeNavigationMain(EButtonsGame Navigate);
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
+	void OnNativeNavigationSystem(EButtonsGame Navigate);
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
+	void OnNativeNavigationInfo(EButtonsGame Navigate);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnNavigationGame(EButtonsGame Navigate);
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnNativeClick(FString Value);
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnNativeClickSystem(int32 Value);
 
 	UFUNCTION(BlueprintImplementableEvent)
@@ -414,37 +426,37 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnClickSystem(const int32 Value);
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnNavigationFocus(UCard* Card);
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetButtonsIconInterfaces(EPositionY GetPosition);
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	UTexture2D* SetImageFromPath(FString PathImage);
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface", meta = (count = "150.0"))
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions", meta = (count = "150.0"))
 	void ForceGarbageCollectionBP(float Count = 150.0f);
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void LoadFirstImages();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void LoadImages();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void ImageOut(UTexture2D* TextureOut, int32 Index);
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void ASyncLoadCard(FString PathImage,int32 Index);
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetImagesCard(UTexture2D* Texture, UCard* Card, int32 Index);
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetImagesCover(UTexture2D* Texture,UCover* Cover, int32 Index);
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void AddImagesCardCover(UTexture2D* Texture, int32 Index);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Save")
@@ -459,20 +471,23 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Save")
 	bool SaveGameList();
 
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void RunningGame(bool IsRun);
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void LoadImageAsync(const int32& Index);
 	UFUNCTION(BlueprintImplementableEvent)
 	void LoadImageSync(const int32& Index);
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void PressedDelayNavigation(float Delay);
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void PressedTimerNavigation();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetRenderOpacityList();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void ClearData(bool bAnimationBarTop, bool bAnimationShowSystem);
 
 	UFUNCTION(BlueprintImplementableEvent)
@@ -509,39 +524,39 @@ private:
 	TArray<ESlateVisibility> IconCenter;
 
 	//bindbuttons
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnFocusSelectSystem();
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnFocusConfigurations();
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnFocusFavorites();
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnFocusInfo();
 
 	void SetToolTip(UToolTip* ToolTip);
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnLostFocusSelectSystem();
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnLostFocusConfigurations();
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnLostFocusFavorites();
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnLostFocusInfo();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickSelectSystem();
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickConfigurations();
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickFavorites();
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickInfo();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickBackAction();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickFavorite();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")

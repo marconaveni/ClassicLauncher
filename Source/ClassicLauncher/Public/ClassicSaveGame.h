@@ -20,6 +20,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SaveGame)
 	TArray<FConfigSystem> ConfigSystemsSave;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SaveGame)
+	FGameData GameDataHistorySave;
+
 	UClassicSaveGame();
 	
 };

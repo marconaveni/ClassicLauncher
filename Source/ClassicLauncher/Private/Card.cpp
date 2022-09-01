@@ -8,30 +8,13 @@
 
 UCard::UCard(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	hover = false;
 	Path = TEXT("");
 	IndexCard = 0;
 }
 
-
 void UCard::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
-	//if (BtnClick != nullptr) {
-	//	//equivale doonce blueprint
-	//	if (BtnClick->HasKeyboardFocus()) {
-	//		if (!hover) {
-	//			UUserWidget::PlayAnimationForward(ChangeColor);
-	//		}
-	//		hover = true;
-	//	}
-	//	else {
-	//		if (hover) {
-	//			UUserWidget::PlayAnimationReverse(ChangeColor);
-	//		}
-	//		hover = false;
-	//	}
-	//}
 }
 
 void UCard::NativePreConstruct()
@@ -46,13 +29,11 @@ bool UCard::Initialize()
 	{
 		BtnClick->OnClicked.AddDynamic(this, &UCard::ButtonClick);
 	}
-
 	return false;
 }
 
 FReply UCard::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
-
 	return Super::NativeOnPreviewKeyDown(InGeometry, InKeyEvent);
 }
 

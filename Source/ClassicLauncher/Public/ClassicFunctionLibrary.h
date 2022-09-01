@@ -109,9 +109,6 @@ public:
 	static int32 GenerateNumberWithoutRepeat(int32 value, int32 min, int32 max);
 
 	UFUNCTION(BlueprintPure, Category = "Functions")
-	static bool InvertBool(bool value);
-
-	UFUNCTION(BlueprintPure, Category = "Functions")
 	static FString ReplacePath(FString value , FString path);
 
 	/**

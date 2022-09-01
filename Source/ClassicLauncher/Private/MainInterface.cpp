@@ -43,6 +43,8 @@ UMainInterface::UMainInterface(const FObjectInitializer& ObjectInitializer) : Su
 	PositionTopX = 1;
 	ENavigationButton = EButtonsGame::NONE;
 	ENavigationScroll = EButtonsGame::NONE;
+	ENavigationBack = EButtonsGame::NONE;
+	ENavigationA = EButtonsGame::NONE;
 	PositionY = EPositionY::CENTRAL;
 	Focus = EFocus::MAIN;
 	bDelayPressed = true;
@@ -154,6 +156,16 @@ void UMainInterface::TimerTick()
 			WBPInfo->ScrollTopEnd(UClassicFunctionLibrary::GetInputButton(KeyEvent));
 		}
 	}
+
+	if (ENavigationBack == EButtonsGame::SELECT && ENavigationA == EButtonsGame::A && ProcessID != 0)
+	{
+		TArray<FString> TextArguments;
+		TextArguments.Add(TEXT("  /PID   "));
+		TextArguments.Add(FString::FromInt(ProcessID));
+		int32 Proc;
+		UClassicFunctionLibrary::CreateProcess(Proc, TEXT("taskkill  "), TextArguments, false, true, 0, TEXT(""));
+	}
+
 }
 
 void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -358,51 +370,42 @@ void UMainInterface::SaveGame()
 }
 
 
-
 FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
 	if (bInputEnable)
 	{
 		KeyEvent = InKeyEvent;
-		const FString KeyEventString = InKeyEvent.GetKey().ToString();
 
-		if (KeyEventString == "Gamepad_FaceButton_Bottom" || KeyEventString == "Enter")
+		const EButtonsGame Input = UClassicFunctionLibrary::GetInputButton(InKeyEvent);
+
+		bKeyPressed = (Input != EButtonsGame::A && Input != EButtonsGame::NONE);
+
+		if (!bScroll && !bKeyTriggerLeft && !bKeyTriggerRight)
 		{
-			bKeyPressed = false;
-		}
-		else
-		{
-			bKeyPressed = true;
+			if (Input == EButtonsGame::B || Input == EButtonsGame::Y)
+			{
+				ENavigationButton = Input;
+			}
 		}
 
-		switch (UClassicFunctionLibrary::GetInputButton(InKeyEvent))
+		if (Input == EButtonsGame::LB)
 		{
-		case EButtonsGame::B:
-			if (!bScroll && !bKeyTriggerLeft && !bKeyTriggerRight)
-			{
-				ENavigationButton = EButtonsGame::B;
-			}
-			break;
-		case EButtonsGame::Y:
-			if (!bScroll && !bKeyTriggerLeft && !bKeyTriggerRight)
-			{
-				ENavigationButton = EButtonsGame::Y;
-				OnClickFavorite();
-			}
-			break;
-		case EButtonsGame::LB:
-			ENavigationButton = EButtonsGame::LEFT;
+			ENavigationButton = Input;
 			bKeyTriggerLeft = true;
-			break;
-		case EButtonsGame::RB:
-			ENavigationButton = EButtonsGame::RIGHT;
+		}
+		else if (Input == EButtonsGame::RB)
+		{
+			ENavigationButton = Input;
 			bKeyTriggerRight = true;
-			break;
 		}
 	}
 	else
 	{
-
+		switch (UClassicFunctionLibrary::GetInputButton(InKeyEvent))
+		{
+		case EButtonsGame::SELECT: ENavigationBack = EButtonsGame::SELECT; break;
+		case EButtonsGame::A: ENavigationA = EButtonsGame::A; break;
+		}
 	}
 	return Super::NativeOnPreviewKeyDown(InGeometry, InKeyEvent);
 }
@@ -422,11 +425,11 @@ FReply UMainInterface::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEven
 		{
 			OnClickBackAction();
 		}
-		else if (ENavigationButton == EButtonsGame::LEFT || ENavigationButton == EButtonsGame::RIGHT)
-		{
-
-		}
-		//ENavigationButton = EButtonsGame::NONE;
+	}
+	else
+	{
+		ENavigationBack = EButtonsGame::NONE;
+		ENavigationA = EButtonsGame::NONE;
 	}
 	return Super::NativeOnKeyUp(InGeometry, InKeyEvent);
 }
@@ -458,16 +461,36 @@ void UMainInterface::GameSettingsInit()
 	UGameUserSettings* Settings = UGameUserSettings::GetGameUserSettings();
 	Settings->SetFrameRateLimit(60.0f);
 	Settings->SetVSyncEnabled(true);
+	Settings->SetResolutionScaleValueEx(25);
+	Settings->SetViewDistanceQuality(0);
+	Settings->SetAntiAliasingQuality(0);
+	Settings->SetPostProcessingQuality(0);
+	Settings->SetShadowQuality(0);
+	Settings->SetGlobalIlluminationQuality(0);
+	Settings->SetReflectionQuality(0);
+	Settings->SetTextureQuality(0);
+	Settings->SetVisualEffectQuality(0);
+	Settings->SetFoliageQuality(0);
+	Settings->SetShadingQuality(0);
 	Settings->ApplySettings(true);
 	Settings->SaveSettings();
 }
 
 void UMainInterface::GameSettingsRunning()
 {
+	UGameUserSettings* Settings = UGameUserSettings::GetGameUserSettings();
+	Settings->SetFrameRateLimit(1.0f);
+	Settings->ApplySettings(true);
+	Settings->SaveSettings();
 }
 
 void UMainInterface::GameSettingsRunningInternal()
 {
+	UGameUserSettings* Settings = UGameUserSettings::GetGameUserSettings();
+	Settings->SetFrameRateLimit(60.0f);
+	Settings->SetResolutionScaleValueEx(100);
+	Settings->ApplySettings(true);
+	Settings->SaveSettings();
 }
 
 void UMainInterface::CreateCardsCoversWidget(int32 Min, int32 Max)
@@ -532,7 +555,48 @@ void UMainInterface::CreateGameSystems()
 void UMainInterface::OnNativeNavigationGame(EButtonsGame Navigate)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("broadcast navigate"));	
-	OnNavigationGame(Navigate);
+
+	if (Navigate == EButtonsGame::LEFT || Navigate == EButtonsGame::RIGHT)
+	{
+		if (bInputEnable && bDelayPressed && bUpDownPressed && !bKeyTriggerLeft && !bKeyTriggerRight)
+		{
+			OnNavigationGame(Navigate);
+			//if (Focus == EFocus::MAIN) { OnNativeNavigationMain(Navigate); }
+			//if (Focus == EFocus::SYSTEM) { OnNativeNavigationSystem(Navigate); }
+			//if (Focus == EFocus::INFO) { OnNativeNavigationInfo(Navigate); }
+		}
+
+	}
+	else if (Navigate == EButtonsGame::UP || Navigate == EButtonsGame::DOWN)
+	{
+		if (!bScroll && bInputEnable && bDelayPressed && bUpDownPressed && !bKeyTriggerLeft && !bKeyTriggerRight)
+		{
+			OnNavigationGame(Navigate);
+			//if (Focus == EFocus::MAIN) { OnNativeNavigationMain(Navigate); }
+			//if (Focus == EFocus::SYSTEM) { OnNativeNavigationSystem(Navigate); }
+			//if (Focus == EFocus::INFO) { OnNativeNavigationInfo(Navigate); }
+		}
+	}
+
+
+}
+
+void UMainInterface::OnNativeNavigationMain(EButtonsGame Navigate)
+{
+	PressedDelayNavigation(TimerDelayAnimation);
+	ENavigationButton = Navigate;
+}
+
+void UMainInterface::OnNativeNavigationSystem(EButtonsGame Navigate)
+{
+	PressedDelayNavigation(0.13f);
+	ENavigationButton = Navigate;
+}
+
+void UMainInterface::OnNativeNavigationInfo(EButtonsGame Navigate)
+{
+	PressedDelayNavigation(0.13f);
+	ENavigationButton = Navigate;
 }
 
 void UMainInterface::OnNativeClick(FString Value)
@@ -655,9 +719,9 @@ void UMainInterface::LoadFirstImages()
 void UMainInterface::LoadImages()
 {
 
-	if (ENavigationButton == EButtonsGame::RIGHT || ENavigationButton == EButtonsGame::LEFT)
+	if (ENavigationButton == EButtonsGame::RIGHT || ENavigationButton == EButtonsGame::RB || ENavigationButton == EButtonsGame::LEFT || ENavigationButton == EButtonsGame::LB)
 	{
-		if (ENavigationButton == EButtonsGame::RIGHT)
+		if (ENavigationButton == EButtonsGame::RIGHT || ENavigationButton == EButtonsGame::RB)
 		{
 			LastIndex = FMath::Clamp(IndexCard + 14, 0, GameData.Num());//14
 			FirstIndex = FMath::Clamp(IndexCard - 15, -1, GameData.Num());//15
@@ -772,6 +836,37 @@ bool UMainInterface::SaveGameListXML(FString& GameListPath, TArray<FGameData>& N
 bool UMainInterface::SaveGameList()
 {
 	return UGameplayStatics::SaveGameToSlot(ClassicGameInstance->ClassicSaveGameInstance, ClassicGameInstance->SlotGame, 0);
+}
+
+void UMainInterface::RunningGame(bool IsRun)
+{
+	if (IsRun)
+	{
+		ClassicMediaPlayerReference->PauseMusic();
+		HBListGame->SetVisibility(ESlateVisibility::Hidden);
+		BtnSelectSystem->SetVisibility(ESlateVisibility::Hidden);
+		BtnConfigurations->SetVisibility(ESlateVisibility::Hidden);
+		BtnFavorites->SetVisibility(ESlateVisibility::Hidden);
+		BtnInfo->SetVisibility(ESlateVisibility::Hidden);
+		bInputEnable = false;
+	}
+	else
+	{
+		ClassicMediaPlayerReference->PlayMusic();
+		HBListGame->SetVisibility(ESlateVisibility::Visible);
+		BtnSelectSystem->SetVisibility(ESlateVisibility::Visible);
+		BtnConfigurations->SetVisibility(ESlateVisibility::Visible);
+		BtnFavorites->SetVisibility(ESlateVisibility::Visible);
+		BtnInfo->SetVisibility(ESlateVisibility::Visible);
+		GameSettingsInit();
+		bInputEnable = true;
+		ProcessID = 0;
+		UUserWidget::PlayAnimationReverse(FadeStartSystem);
+		if (cardReference.IsValidIndex(IndexCard))
+		{
+			cardReference[IndexCard]->SetFocusCard(true);
+		}
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -1178,8 +1273,7 @@ void UMainInterface::ScrollCards()
 			{
 				Min = (IndexCard - PositionCenterX) * -385;
 				Max = (IndexCard - PositionCenterX - 1) * -385;
-				//Max = 385;
-				UE_LOG(LogTemp, Warning, TEXT("Min %d  Max %d"), Min, Max);
+				//UE_LOG(LogTemp, Warning, TEXT("Min %d  Max %d"), Min, Max);
 
 				HbNewPosition = FMath::Clamp(HbGetPosition - SpeedScroll, Min, Max);
 				HBListGame->SetRenderTranslation(FVector2D(HbNewPosition, 0));
@@ -1189,6 +1283,7 @@ void UMainInterface::ScrollCards()
 			{
 				Min = IndexCard * -385;
 				Max = (IndexCard - PositionCenterX) * -385;
+				//UE_LOG(LogTemp, Warning, TEXT("Min %d  Max %d"), Min, Max);
 
 				HbNewPosition = FMath::Clamp(HbGetPosition + SpeedScroll, Min, Max);
 				HBListGame->SetRenderTranslation(FVector2D(HbNewPosition, 0));

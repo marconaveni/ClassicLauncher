@@ -172,10 +172,6 @@ int32 UClassicFunctionLibrary::GenerateNumberWithoutRepeat(int32 value, int32 mi
 	return NewValue;
 }
 
-bool UClassicFunctionLibrary::InvertBool(bool value)
-{
-	return !value;
-}
 
 FString UClassicFunctionLibrary::ReplacePath(FString value, FString path)
 {
@@ -236,7 +232,6 @@ FString UClassicFunctionLibrary::ReplaceMedia(FString OriginalPathMedia, FString
 	return NewImage;
 
 }
-
 
 
 FString UClassicFunctionLibrary::CreateXMLGameFile(TArray<FGameData> gameData, FVector2D IgnoreImageSize)

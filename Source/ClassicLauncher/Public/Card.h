@@ -24,15 +24,11 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FDelegate OnClickTrigger;
 
-
 	UCard(const FObjectInitializer& ObjectInitializer);
 
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
-
 	virtual void NativePreConstruct() override;
-
 	virtual bool Initialize() override;
-
 	virtual FReply NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card|Variables")
@@ -68,10 +64,6 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void ClickButton();
 
-//protected:
-
-
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UButton* BtnClick;
 	
@@ -102,10 +94,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* StartSystem;
 
-private:
 
-	UPROPERTY()
-	bool hover;
 
 
 };
