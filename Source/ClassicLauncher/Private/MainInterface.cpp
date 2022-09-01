@@ -552,6 +552,9 @@ void UMainInterface::CreateGameSystems()
 	}
 }
 
+/////////////////////////////////////////////////
+///navigation area
+
 void UMainInterface::OnNativeNavigationGame(EButtonsGame Navigate)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("broadcast navigate"));	
@@ -561,9 +564,9 @@ void UMainInterface::OnNativeNavigationGame(EButtonsGame Navigate)
 		if (bInputEnable && bDelayPressed && bUpDownPressed && !bKeyTriggerLeft && !bKeyTriggerRight)
 		{
 			OnNavigationGame(Navigate);
-			//if (Focus == EFocus::MAIN) { OnNativeNavigationMain(Navigate); }
-			//if (Focus == EFocus::SYSTEM) { OnNativeNavigationSystem(Navigate); }
-			//if (Focus == EFocus::INFO) { OnNativeNavigationInfo(Navigate); }
+			if (Focus == EFocus::MAIN) { OnNativeNavigationMain(Navigate); }
+			if (Focus == EFocus::SYSTEM) { OnNativeNavigationSystem(Navigate); }
+			if (Focus == EFocus::INFO) { OnNativeNavigationInfo(Navigate); }
 		}
 
 	}
@@ -572,46 +575,65 @@ void UMainInterface::OnNativeNavigationGame(EButtonsGame Navigate)
 		if (!bScroll && bInputEnable && bDelayPressed && bUpDownPressed && !bKeyTriggerLeft && !bKeyTriggerRight)
 		{
 			OnNavigationGame(Navigate);
-			//if (Focus == EFocus::MAIN) { OnNativeNavigationMain(Navigate); }
-			//if (Focus == EFocus::SYSTEM) { OnNativeNavigationSystem(Navigate); }
-			//if (Focus == EFocus::INFO) { OnNativeNavigationInfo(Navigate); }
+			if (Focus == EFocus::MAIN) { OnNativeNavigationMain(Navigate); }
+			if (Focus == EFocus::SYSTEM) { OnNativeNavigationSystem(Navigate); }
+			if (Focus == EFocus::INFO) { OnNativeNavigationInfo(Navigate); }
 		}
 	}
-
-
 }
 
 void UMainInterface::OnNativeNavigationMain(EButtonsGame Navigate)
 {
 	PressedDelayNavigation(TimerDelayAnimation);
 	ENavigationButton = Navigate;
+	if (ENavigationButton == EButtonsGame::LEFT || ENavigationButton == EButtonsGame::RIGHT)
+	{
+
+	}
+	else if (ENavigationButton == EButtonsGame::UP)
+	{
+
+	}
+	else if (ENavigationButton == EButtonsGame::DOWN)
+	{
+
+	}
+
 }
 
 void UMainInterface::OnNativeNavigationSystem(EButtonsGame Navigate)
 {
 	PressedDelayNavigation(0.13f);
 	ENavigationButton = Navigate;
+	if (ENavigationButton == EButtonsGame::UP)
+	{
+		CountLocationY = FMath::Clamp(CountLocationY - 1, 0, ButtonSystemReferences.Num() -1);
+	}
+	else if (ENavigationButton == EButtonsGame::DOWN)
+	{
+		CountLocationY = FMath::Clamp(CountLocationY + 1, 0, ButtonSystemReferences.Num() -1);
+		UE_LOG(LogTemp, Warning, TEXT("The integer value is: %d"), CountLocationY);
+	}
+
+	if (ButtonSystemReferences.IsValidIndex(CountLocationY))
+	{
+		ButtonSystemReferences[CountLocationY]->Click->SetKeyboardFocus();
+	}
 }
 
 void UMainInterface::OnNativeNavigationInfo(EButtonsGame Navigate)
 {
 	PressedDelayNavigation(0.13f);
 	ENavigationButton = Navigate;
-}
-
-void UMainInterface::OnNativeClick(FString Value)
-{
-	//this function is BlueprintImplementableEvent
-	OnClickPathEvent(Value);
-}
-
-void UMainInterface::OnNativeClickSystem(int32 Value)
-{
-	CountSystem = Value;
-	ClearData(true, true);
-
-	//this function is BlueprintImplementableEvent
-	OnClickSystem(Value);
+	const float CurrentOffSet = WBPInfo->CurrentOffSet;
+	if (ENavigationButton == EButtonsGame::UP)
+	{
+		WBPInfo->Scrolled(CurrentOffSet - 200);
+	}
+	else if (ENavigationButton == EButtonsGame::DOWN)
+	{
+		WBPInfo->Scrolled(CurrentOffSet + 200);
+	}
 }
 
 void UMainInterface::OnNavigationFocus(UCard* Card)
@@ -633,6 +655,24 @@ void UMainInterface::OnNavigationFocus(UCard* Card)
 	SetButtonsIconInterfaces(PositionY);
 	LoadImages();
 }
+//end navigate area
+///////////////////////////////////////////////////
+
+void UMainInterface::OnNativeClick(FString Value)
+{
+	//this function is BlueprintImplementableEvent
+	OnClickPathEvent(Value);
+}
+
+void UMainInterface::OnNativeClickSystem(int32 Value)
+{
+	CountSystem = Value;
+	ClearData(true, true);
+
+	//this function is BlueprintImplementableEvent
+	OnClickSystem(Value);
+}
+
 
 void UMainInterface::SetButtonsIconInterfaces(EPositionY GetPosition)
 {
