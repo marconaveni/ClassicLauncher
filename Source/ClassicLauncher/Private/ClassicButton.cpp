@@ -33,7 +33,6 @@ void UClassicButton::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 			hover = false;
 		}
 	}
-
 }
 
 bool UClassicButton::Initialize()

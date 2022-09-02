@@ -47,28 +47,29 @@ EButtonsGame UClassicFunctionLibrary::GetInputButton(const FKeyEvent& InKeyEvent
 
 }
 
-TArray<FGameData> UClassicFunctionLibrary::SortGameDate(TArray<FGameData> gameData)
+void UClassicFunctionLibrary::SortGameDate(TArray<FGameData>& GameDatas)
 {
 	TArray<FString> Names;
 	TArray<FGameData> NewGameData;
 
-	for (FGameData& data : gameData)
+	for (FGameData& GameData : GameDatas)
 	{
-		Names.Add(data.name);
+		Names.Add(GameData.name);
 	}
 	Names.Sort();
-	for (FString& name : Names)
+	for (FString& Name : Names)
 	{
-		for (FGameData& data : gameData)
+		for (FGameData& GameData : GameDatas)
 		{
-			if (data.name == name && data.name != TEXT("null_value")) {
-				NewGameData.Add(data);
-				data.name = TEXT("null_value");
+			if (GameData.name == Name && GameData.name != TEXT("null_value")) {
+				NewGameData.Add(GameData);
+				GameData.name = TEXT("null_value");
 			}
 		}
 	}
-
-	return NewGameData;
+	GameDatas.Empty();
+	GameDatas = NewGameData;
+	GameDatas.Shrink();
 }
 
 TArray<FConfigSystem> UClassicFunctionLibrary::SortConfigSystem(TArray<FConfigSystem> configData)
@@ -338,119 +339,115 @@ UEasyXMLElement* UClassicFunctionLibrary::LoadXMLSingle(FString XMLString, FStri
 	return ElementXML->ReadElement(AccessString, Results);
 }
 
-FConfig UClassicFunctionLibrary::SetConfig(UEasyXMLElement* element)
+void UClassicFunctionLibrary::SetConfig(UEasyXMLElement* Element, FConfig& Config)
 {
-	FConfig  data;
-	data.defaultstartsystem = element->ReadString(TEXT("defaultstartsystem"));
-	data.pathmedia = element->ReadString(TEXT("pathmedia"));
-	data.rendering = element->ReadBool(TEXT("rendering"));
-
-	return data;
+	Config.defaultstartsystem = Element->ReadString(TEXT("defaultstartsystem"));
+	Config.pathmedia = Element->ReadString(TEXT("pathmedia"));
+	Config.rendering = Element->ReadBool(TEXT("rendering"));
 }
 
-TArray<FConfigSystem> UClassicFunctionLibrary::SetConfigSystem(TArray<UEasyXMLElement*>  elements)
+void UClassicFunctionLibrary::SetConfigSystem(TArray<UEasyXMLElement*>  Elements, TArray<FConfigSystem>& ConfigSystems)
 {
-	TArray<FConfigSystem> datas;
-	FConfigSystem  data;
+	FConfigSystem  ConfigSystem;
 
-	for (UEasyXMLElement* element : elements)
+	for (UEasyXMLElement* Element : Elements)
 	{
-		data.Arguments = element->ReadString(TEXT("arguments"));
-		data.Executable = element->ReadString(TEXT("executable"));
-		data.ImageX = element->ReadInt(TEXT("imagex"));
-		data.ImageY = element->ReadInt(TEXT("imagey"));
-		data.RomPath = element->ReadString(TEXT("rompath"));
-		data.SystemLabel = element->ReadString(TEXT("systemlabel"));
-		data.SystemName = element->ReadString(TEXT("systemname"));
-		datas.Add(data);
+		ConfigSystem.Arguments = Element->ReadString(TEXT("arguments"));
+		ConfigSystem.Executable = Element->ReadString(TEXT("executable"));
+		ConfigSystem.ImageX = Element->ReadInt(TEXT("imagex"));
+		ConfigSystem.ImageY = Element->ReadInt(TEXT("imagey"));
+		ConfigSystem.RomPath = Element->ReadString(TEXT("rompath"));
+		ConfigSystem.SystemLabel = Element->ReadString(TEXT("systemlabel"));
+		ConfigSystem.SystemName = Element->ReadString(TEXT("systemname"));
+		ConfigSystems.Add(ConfigSystem);
 	}
-
-	return datas;
 }
 
-
-TArray<FGameData> UClassicFunctionLibrary::SetGameData(TArray<UEasyXMLElement*>  elements)
+void UClassicFunctionLibrary::SetGameData(TArray<UEasyXMLElement*> Elements, TArray<FGameData>& GameDatas)
 {
 
-	TArray<FGameData> datas;
-	FGameData  data;
+	FGameData  GameData;
+	int32 Index = 0;
 
-	for (UEasyXMLElement* element : elements)
+	for (UEasyXMLElement* Element : Elements)
 	{
-		data.Path = element->ReadString(TEXT("path"));
-		data.name = element->ReadString(TEXT("name"));
-		data.desc = element->ReadString(TEXT("desc"));
-		data.rating = element->ReadString(TEXT("rating"));
-		data.releasedate = element->ReadString(TEXT("releasedate"));
-		data.developer = element->ReadString(TEXT("developer"));
-		data.publisher = element->ReadString(TEXT("publisher"));
-		data.genre = element->ReadString(TEXT("genre"));
-		data.players = element->ReadString(TEXT("players"));
-		data.hash = element->ReadString(TEXT("hash"));
-		data.image = element->ReadString(TEXT("image"));
-		data.thumbnail = element->ReadString(TEXT("thumbnail"));
-		data.video = element->ReadString(TEXT("video"));
-		data.genreid = element->ReadString(TEXT("genreid"));
-		data.favorite = element->ReadBool(TEXT("favorite"));
-		data.playcount = element->ReadInt(TEXT("playcount"));
-		data.lastplayed = element->ReadString(TEXT("lastplayed"));
-		data.Executable = element->ReadString(TEXT("executable"));
-		data.Arguments = element->ReadString(TEXT("arguments"));
-		data.ImageX = element->ReadInt(TEXT("imagex"));
-		data.ImageY = element->ReadInt(TEXT("imagey"));
-		datas.Add(data);
-	}
+		GameData.MapIndex = Index;
+		GameData.Path = Element->ReadString(TEXT("path"));
+		GameData.name = Element->ReadString(TEXT("name"));
+		GameData.desc = Element->ReadString(TEXT("desc"));
+		GameData.rating = Element->ReadString(TEXT("rating"));
+		GameData.releasedate = Element->ReadString(TEXT("releasedate"));
+		GameData.developer = Element->ReadString(TEXT("developer"));
+		GameData.publisher = Element->ReadString(TEXT("publisher"));
+		GameData.genre = Element->ReadString(TEXT("genre"));
+		GameData.players = Element->ReadString(TEXT("players"));
+		GameData.hash = Element->ReadString(TEXT("hash"));
+		GameData.image = Element->ReadString(TEXT("image"));
+		GameData.thumbnail = Element->ReadString(TEXT("thumbnail"));
+		GameData.video = Element->ReadString(TEXT("video"));
+		GameData.genreid = Element->ReadString(TEXT("genreid"));
+		GameData.favorite = Element->ReadBool(TEXT("favorite"));
+		GameData.playcount = Element->ReadInt(TEXT("playcount"));
+		GameData.lastplayed = Element->ReadString(TEXT("lastplayed"));
+		GameData.Executable = Element->ReadString(TEXT("executable"));
+		GameData.Arguments = Element->ReadString(TEXT("arguments"));
+		GameData.ImageX = Element->ReadInt(TEXT("imagex"));
+		GameData.ImageY = Element->ReadInt(TEXT("imagey"));
+		GameDatas.Add(GameData);
 
-	return datas;
+		Index += 1;
+	}
 }
 
-TArray<FGameData> UClassicFunctionLibrary::FormatGameData(TArray<FGameData> datas, FConfig config, FConfigSystem configSystem)
+void UClassicFunctionLibrary::FormatGameData(TArray<FGameData>& GameDatas, FConfig Config, FConfigSystem ConfigSystem)
 {
-	for (FGameData& data : datas)
+	for (FGameData& GameData : GameDatas)
 	{
-		data.imageFormated = ReplaceMedia(data.image, config.pathmedia, configSystem.RomPath, data.Path, configSystem.SystemName, TEXT("covers"), TEXT(".png"));
-		data.thumbnailFormated = ReplaceMedia(data.thumbnail, config.pathmedia, configSystem.RomPath, data.Path, configSystem.SystemName, TEXT("screenshots"), TEXT(".png"));
-		data.videoFormated = ReplaceMedia(data.video, config.pathmedia, configSystem.RomPath, data.Path, configSystem.SystemName, TEXT("videos"), TEXT(".mp4"));
-		data.PathFormated = ReplacePath(data.Path, configSystem.RomPath);
-		data.PathFormated = TEXT("\"") + data.PathFormated + TEXT("\"");
-		data.nameFormated = data.name.Replace(TEXT("&amp;"), TEXT("&"), ESearchCase::IgnoreCase);
-		data.descFormated = data.desc.Replace(TEXT("&amp;"), TEXT("&"), ESearchCase::IgnoreCase);
-		data.ImageX = (data.ImageX == 0) ? configSystem.ImageX : data.ImageX;
-		data.ImageY = (data.ImageY == 0) ? configSystem.ImageY : data.ImageY;
+		GameData.imageFormated = ReplaceMedia(GameData.image, Config.pathmedia, ConfigSystem.RomPath, GameData.Path, ConfigSystem.SystemName, TEXT("covers"), TEXT(".png"));
+		GameData.thumbnailFormated = ReplaceMedia(GameData.thumbnail, Config.pathmedia, ConfigSystem.RomPath, GameData.Path, ConfigSystem.SystemName, TEXT("screenshots"), TEXT(".png"));
+		GameData.videoFormated = ReplaceMedia(GameData.video, Config.pathmedia, ConfigSystem.RomPath, GameData.Path, ConfigSystem.SystemName, TEXT("videos"), TEXT(".mp4"));
+		GameData.PathFormated = ReplacePath(GameData.Path, ConfigSystem.RomPath);
+		GameData.PathFormated = TEXT("\"") + GameData.PathFormated + TEXT("\"");
+		GameData.nameFormated = GameData.name.Replace(TEXT("&amp;"), TEXT("&"), ESearchCase::IgnoreCase);
+		GameData.descFormated = GameData.desc.Replace(TEXT("&amp;"), TEXT("&"), ESearchCase::IgnoreCase);
+		GameData.ImageX = (GameData.ImageX == 0) ? ConfigSystem.ImageX : GameData.ImageX;
+		GameData.ImageY = (GameData.ImageY == 0) ? ConfigSystem.ImageY : GameData.ImageY;
 	}
-
-	return datas;
 }
 
 bool UClassicFunctionLibrary::FindGameData(TArray<FGameData> datas, FGameData DataElement, int32& Index)
 {
 	Index = -1;
+
+	if (DataElement.MapIndex == -1) return false;
+
 	for (FGameData& data : datas)
 	{
 		Index++;
-		if (data.PathFormated == DataElement.PathFormated)
+		if (data.MapIndex == DataElement.MapIndex)
 		{
 			return true;
 		}
 	}
 	Index = -1;
+
 	return false;
 }
 
-TArray<FGameData> UClassicFunctionLibrary::FilterFavoriteGameData(TArray<FGameData> datas, bool filterFavorites)
+TArray<FGameData> UClassicFunctionLibrary::FilterFavoriteGameData(TArray<FGameData> GameDatas, bool FilterFavorites)
 {
-	if (filterFavorites) {
-		TArray<FGameData> FilterData;
-		for (FGameData& data : datas)
+	if (FilterFavorites) {
+		TArray<FGameData> FilterGameData;
+		for (FGameData& data : GameDatas)
 		{
 			if (data.favorite) {
-				FilterData.Add(data);
+				FilterGameData.Add(data);
 			}
 		}
-		return FilterData;
+		return FilterGameData;
 	}
 	else {
-		return datas;
+		return GameDatas;
 	}
 
 }

@@ -419,7 +419,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void SetNavigationFocusMain();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void SetNavigationFocusBottom();
+	void SetNavigationFocusUpBottom();
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
+	void SetNavigationFocusDownBottom();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetFocusCardToLeft();

@@ -14,6 +14,10 @@ struct FGameData
 {
 	GENERATED_BODY()
 
+	// map index
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 MapIndex;
+
 	// Use UPROPERTY() to decorate member variables as they allow for easier integration with network replication as well as potential garbage collection processing
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString Path;
@@ -103,6 +107,9 @@ struct FGameData
 	//construtor
 	FGameData()
 	{
+		//map index
+		MapIndex = -1;
+
 		Path = TEXT("");
 		name = TEXT("");
 		desc = TEXT("");

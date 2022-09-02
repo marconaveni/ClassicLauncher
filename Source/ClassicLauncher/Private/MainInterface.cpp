@@ -197,7 +197,7 @@ void UMainInterface::LoadConfigurationNative()
 
 	if (bool IsValidConfig = UClassicFunctionLibrary::LoadStringFile(ConfigResult, GameRoot))
 	{
-		ConfigurationData = UClassicFunctionLibrary::SetConfig(UClassicFunctionLibrary::LoadXMLSingle(ConfigResult, TEXT("config")));
+		UClassicFunctionLibrary::SetConfig(UClassicFunctionLibrary::LoadXMLSingle(ConfigResult, TEXT("config")) , ConfigurationData);
 		UGameplayStatics::SetEnableWorldRendering(this, ConfigurationData.rendering);
 		ConfigurationData.pathmedia = (ConfigurationData.pathmedia != TEXT("")) ? ConfigurationData.pathmedia + TEXT("\\media") : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
 		LoadConfigSystemsNative();
@@ -322,7 +322,7 @@ void UMainInterface::CreateGameListNative()
 
 	if (bool IsValidConfig = UClassicFunctionLibrary::LoadStringFile(ConfigResult, GameRoot))
 	{
-		GameSystems = UClassicFunctionLibrary::SetConfigSystem(UClassicFunctionLibrary::LoadXML(ConfigResult, TEXT("config.system")));
+		UClassicFunctionLibrary::SetConfigSystem(UClassicFunctionLibrary::LoadXML(ConfigResult, TEXT("config.system")) , GameSystems);
 		GameSystems = UClassicFunctionLibrary::SortConfigSystem(GameSystems);
 		for (int32 i = 0; i < GameSystems.Num(); i++)
 		{
@@ -330,9 +330,9 @@ void UMainInterface::CreateGameListNative()
 			IsValidConfig = UClassicFunctionLibrary::LoadStringFile(ConfigResult, GameRoot);
 			if (IsValidConfig)
 			{
-				GameData = UClassicFunctionLibrary::SetGameData(UClassicFunctionLibrary::LoadXML(ConfigResult, TEXT("gameList.game")));
-				GameData = UClassicFunctionLibrary::SortGameDate(GameData);
-				GameData = UClassicFunctionLibrary::FormatGameData(GameData, ConfigurationData, GameSystems[i]);
+				UClassicFunctionLibrary::SetGameData(UClassicFunctionLibrary::LoadXML(ConfigResult, TEXT("gameList.game")) , GameData);
+				UClassicFunctionLibrary::SortGameDate(GameData);
+				UClassicFunctionLibrary::FormatGameData(GameData, ConfigurationData, GameSystems[i]);
 				GameSystems[i].GameDatas = GameData;
 				GameData.Empty();
 			}
@@ -598,11 +598,14 @@ void UMainInterface::OnNativeNavigationMain(EButtonsGame Navigate)
 	}
 	else if (ENavigationButton == EButtonsGame::UP)
 	{
-
+		bUpDownPressed = false;
+		SetNavigationFocusUpBottom();
+		
 	}
 	else if (ENavigationButton == EButtonsGame::DOWN)
 	{
-
+		bUpDownPressed = false;
+		SetNavigationFocusDownBottom();
 	}
 
 }
@@ -708,8 +711,94 @@ void UMainInterface::SetNavigationFocusMain()
 	}
 }
 
-void UMainInterface::SetNavigationFocusBottom()
+void UMainInterface::SetNavigationFocusUpBottom()
 {
+	if (PositionY == EPositionY::BOTTOM)
+	{
+		if (ImgVideo->RenderTransform.Translation.X == 0) 
+		{
+			UUserWidget::PlayAnimationReverse(ShowDescBottomInfo);
+			PositionY = EPositionY::CENTRAL;
+			ClassicMediaPlayerReference->PauseVideo();
+			ClassicMediaPlayerReference->ResumeMusic();
+			UE_LOG(LogTemp, Warning, TEXT("Close frame bottom"));
+		}
+		else 
+		{
+			UUserWidget::PlayAnimationReverse(VideoAnimation);
+		}
+	}
+	else if (PositionY == EPositionY::CENTRAL)
+	{
+		PositionY = EPositionY::TOP;
+		UUserWidget::PlayAnimationForward(BarTop);
+		SetButtonsIconInterfaces(PositionY);
+
+		switch (PositionTopX)
+		{
+		case 1:
+			BtnSelectSystem->BtButton->SetKeyboardFocus();
+			break;
+		case 2:
+			BtnConfigurations->BtButton->SetKeyboardFocus();
+			break;
+		case 3:
+			BtnFavorites->BtButton->SetKeyboardFocus();
+			break;
+		case 4:
+			BtnInfo->BtButton->SetKeyboardFocus();
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+void UMainInterface::SetNavigationFocusDownBottom()
+{
+	if (PositionY == EPositionY::CENTRAL)
+	{
+		if (PositionY != EPositionY::BOTTOM)
+		{
+			PositionY = EPositionY::BOTTOM;
+			UE_LOG(LogTemp, Warning, TEXT("Open frame bottom"));
+			UUserWidget::PlayAnimationForward(ShowDescBottomInfo);
+
+			if (GameData.IsValidIndex(IndexCard))
+			{
+				const FString PathVideo = GameData[IndexCard].videoFormated;
+				if (FPaths::FileExists(PathVideo))
+				{
+					ImgVideo->SetVisibility(ESlateVisibility::Visible);
+					ImgImageBottom->SetVisibility(ESlateVisibility::Hidden);
+					ClassicMediaPlayerReference->PlayVideo(PathVideo);
+				}
+				else
+				{
+					SetImageBottom();
+				}
+			}
+			
+		}
+	}
+	else if (PositionY == EPositionY::BOTTOM)
+	{
+		if (ImgVideo->RenderTransform.Translation.X == 0)
+		{
+			UUserWidget::PlayAnimationForward(VideoAnimation);
+		}
+	}
+	else
+	{
+		if (cardReference.IsValidIndex(IndexCard))
+		{
+			PositionY = EPositionY::CENTRAL;
+			cardReference[IndexCard]->BtnClick->SetKeyboardFocus();
+			UUserWidget::PlayAnimationReverse(BarTop);
+			SetButtonsIconInterfaces(PositionY);
+		}
+
+	}
 }
 
 void UMainInterface::SetFocusCardToLeft()

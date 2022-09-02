@@ -67,7 +67,7 @@ public:
 
 	///** Sort a GameData.name array alphabetically!  */
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static TArray<FGameData> SortGameDate(TArray<FGameData> gameData);
+	static void SortGameDate(TArray<FGameData>& GameDatas);
 
 	///** Sort a GameData.name array alphabetically!  */
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
@@ -149,24 +149,24 @@ public:
 	static UEasyXMLElement* LoadXMLSingle(FString XMLString, FString AccessString);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static FConfig SetConfig(UEasyXMLElement* element);
+	static void SetConfig(UEasyXMLElement* Element , FConfig& Config);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static TArray<FConfigSystem> SetConfigSystem(TArray<UEasyXMLElement*>  elements);
+	static void SetConfigSystem(TArray<UEasyXMLElement*>  Elements, TArray<FConfigSystem>& ConfigSystems);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static TArray<FGameData> SetGameData(TArray<UEasyXMLElement*>  elements);
+	static void SetGameData(TArray<UEasyXMLElement*>  Elements, TArray<FGameData>& GameDatas);
 
-	//formata o array game data
+	//format the array game data with correct path system
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static TArray<FGameData> FormatGameData(TArray<FGameData> datas, FConfig config, FConfigSystem configSystem);
+	static void FormatGameData(TArray<FGameData>& GameDatas, FConfig Config, FConfigSystem ConfigSystem);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
 	static bool FindGameData(TArray<FGameData> datas, FGameData  DataElement, int32& Index);
 
-	//formata o array game data
+	//Return filter GameDatas Array favorites are true
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static TArray<FGameData> FilterFavoriteGameData(TArray<FGameData> datas, bool filterFavorites);
+	static TArray<FGameData> FilterFavoriteGameData(TArray<FGameData> GameData, bool FilterFavorites);
 
 	///////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////
