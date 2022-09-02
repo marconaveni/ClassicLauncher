@@ -410,9 +410,21 @@ public:
 	void OnNativeNavigationSystem(EButtonsGame Navigate);
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnNativeNavigationInfo(EButtonsGame Navigate);
-
+	
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnNavigationGame(EButtonsGame Navigate);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
+	void SetNavigationFocusTop();
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
+	void SetNavigationFocusMain();
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
+	void SetNavigationFocusBottom();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void SetFocusCardToLeft();
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void SetFocusCardToRight();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnNativeClick(FString Value);

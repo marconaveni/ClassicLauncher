@@ -57,7 +57,7 @@ UMainInterface::UMainInterface(const FObjectInitializer& ObjectInitializer) : Su
 	bFilterFavorites = false;
 	bDelayFavoriteClick = false;
 	CorePath = TEXT("");
-	TimerDelayAnimation = 0.15f;
+	TimerDelayAnimation = 0.18f;
 	TriggerDelayPressed = 1.0f;
 	SpeedScroll = 28.0f;
 	CountSystem = 0;
@@ -385,6 +385,7 @@ FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const
 			if (Input == EButtonsGame::B || Input == EButtonsGame::Y)
 			{
 				ENavigationButton = Input;
+				OnClickFavorite();
 			}
 		}
 
@@ -495,7 +496,6 @@ void UMainInterface::GameSettingsRunningInternal()
 
 void UMainInterface::CreateCardsCoversWidget(int32 Min, int32 Max)
 {
-
 	for (int32 i = Min; i < Max; i++)
 	{
 		if (GameData.IsValidIndex(i))
@@ -563,18 +563,17 @@ void UMainInterface::OnNativeNavigationGame(EButtonsGame Navigate)
 	{
 		if (bInputEnable && bDelayPressed && bUpDownPressed && !bKeyTriggerLeft && !bKeyTriggerRight)
 		{
-			OnNavigationGame(Navigate);
+			OnNavigationGame(Navigate); //Call Event Blueprint
 			if (Focus == EFocus::MAIN) { OnNativeNavigationMain(Navigate); }
 			if (Focus == EFocus::SYSTEM) { OnNativeNavigationSystem(Navigate); }
 			if (Focus == EFocus::INFO) { OnNativeNavigationInfo(Navigate); }
 		}
-
 	}
 	else if (Navigate == EButtonsGame::UP || Navigate == EButtonsGame::DOWN)
 	{
 		if (!bScroll && bInputEnable && bDelayPressed && bUpDownPressed && !bKeyTriggerLeft && !bKeyTriggerRight)
 		{
-			OnNavigationGame(Navigate);
+			OnNavigationGame(Navigate); //Call Event Blueprint
 			if (Focus == EFocus::MAIN) { OnNativeNavigationMain(Navigate); }
 			if (Focus == EFocus::SYSTEM) { OnNativeNavigationSystem(Navigate); }
 			if (Focus == EFocus::INFO) { OnNativeNavigationInfo(Navigate); }
@@ -588,7 +587,14 @@ void UMainInterface::OnNativeNavigationMain(EButtonsGame Navigate)
 	ENavigationButton = Navigate;
 	if (ENavigationButton == EButtonsGame::LEFT || ENavigationButton == EButtonsGame::RIGHT)
 	{
-
+		if (PositionY == EPositionY::TOP)
+		{
+			SetNavigationFocusTop();
+		}
+		else if (PositionY == EPositionY::CENTRAL)
+		{
+			SetNavigationFocusMain();
+		}
 	}
 	else if (ENavigationButton == EButtonsGame::UP)
 	{
@@ -655,6 +661,91 @@ void UMainInterface::OnNavigationFocus(UCard* Card)
 	SetButtonsIconInterfaces(PositionY);
 	LoadImages();
 }
+
+void UMainInterface::SetNavigationFocusTop()
+{
+	if (ENavigationButton == EButtonsGame::LEFT)
+	{
+		if (BtnInfo->BtButton->HasKeyboardFocus())
+		{
+			BtnFavorites->BtButton->SetKeyboardFocus();
+		}
+		else if (BtnFavorites->BtButton->HasKeyboardFocus())
+		{
+			BtnConfigurations->BtButton->SetKeyboardFocus();
+		}
+		else if (BtnConfigurations->BtButton->HasKeyboardFocus())
+		{
+			BtnSelectSystem->BtButton->SetKeyboardFocus();
+		}
+	}
+	else if (ENavigationButton == EButtonsGame::RIGHT)
+	{
+		if (BtnSelectSystem->BtButton->HasKeyboardFocus())
+		{
+			BtnConfigurations->BtButton->SetKeyboardFocus();
+		}
+		else if (BtnConfigurations->BtButton->HasKeyboardFocus())
+		{
+			BtnFavorites->BtButton->SetKeyboardFocus();
+		}
+		else if (BtnFavorites->BtButton->HasKeyboardFocus())
+		{
+			BtnInfo->BtButton->SetKeyboardFocus();
+		}
+	}
+}
+
+void UMainInterface::SetNavigationFocusMain()
+{
+	if (ENavigationButton == EButtonsGame::LEFT)
+	{
+		SetFocusCardToLeft();
+	}
+	else if (ENavigationButton == EButtonsGame::RIGHT)
+	{
+		SetFocusCardToRight();
+	}
+}
+
+void UMainInterface::SetNavigationFocusBottom()
+{
+}
+
+void UMainInterface::SetFocusCardToLeft()
+{
+	int32 Index = IndexCard - 1;
+	if (cardReference.IsValidIndex(Index))
+	{
+		cardReference[Index]->SetFocusCard(true);
+		PositionCenterX = FMath::Clamp(PositionCenterX - 1, 1, MaxFrameMove);
+		AnimationFrameMoveLeft();
+		OnNavigationFocus(cardReference[Index]);
+		Index += 1;
+		if (cardReference.IsValidIndex(Index))
+		{
+			cardReference[Index]->SetFocusCard(false);
+		}
+	}
+}
+
+void UMainInterface::SetFocusCardToRight()
+{
+	int32 Index = IndexCard + 1;
+	if (cardReference.IsValidIndex(Index))
+	{
+		cardReference[Index]->SetFocusCard(true);
+		PositionCenterX = FMath::Clamp(PositionCenterX + 1, 1, MaxFrameMove);
+		AnimationFrameMoveRight();
+		OnNavigationFocus(cardReference[Index]);
+		Index -= 1;
+		if (cardReference.IsValidIndex(Index))
+		{
+			cardReference[Index]->SetFocusCard(false);
+		}
+	}
+}
+
 //end navigate area
 ///////////////////////////////////////////////////
 
@@ -666,11 +757,14 @@ void UMainInterface::OnNativeClick(FString Value)
 
 void UMainInterface::OnNativeClickSystem(int32 Value)
 {
-	CountSystem = Value;
-	ClearData(true, true);
+	if (bInputEnable)
+	{
+		CountSystem = Value;
+		ClearData(true, true);
 
-	//this function is BlueprintImplementableEvent
-	OnClickSystem(Value);
+		//this function is BlueprintImplementableEvent
+		OnClickSystem(Value);
+	}
 }
 
 
@@ -774,7 +868,7 @@ void UMainInterface::LoadImages()
 
 		if (GameData.IsValidIndex(LastIndex) && cardReference.IsValidIndex(LastIndex))
 		{
-			if (/*bKeyTriggerLeft || bKeyTriggerRight &&*/ IndexAsyncImage <= LastIndex)
+			if (IndexAsyncImage <= LastIndex)
 			{
 				ASyncLoadCard(GameData[LastIndex].imageFormated, LastIndex);
 				LoadImageSync(LastIndex);
@@ -1198,7 +1292,8 @@ void UMainInterface::OnClickFavorites()
 	{
 		bFilterFavorites = false;
 		OnNativeNavigationGame(EButtonsGame::DOWN);
-		UUserWidget::PlayAnimationForward(LoadListGame);
+		UUserWidget::PlayAnimationReverse(BarTop);
+		BtnFavorites->SetFocusButton(false);
 		ClearData(false, false);
 	}
 	else
@@ -1208,7 +1303,8 @@ void UMainInterface::OnClickFavorites()
 		{
 			bFilterFavorites = true;
 			OnNativeNavigationGame(EButtonsGame::DOWN);
-			UUserWidget::PlayAnimationForward(LoadListGame);
+			UUserWidget::PlayAnimationReverse(BarTop);
+			BtnFavorites->SetFocusButton(false);
 			ClearData(false, false);
 		}
 	}

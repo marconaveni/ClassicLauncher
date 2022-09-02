@@ -40,9 +40,7 @@ public:
 	class UImage* BgImage;
 
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
-
 	virtual bool Initialize() override;
-
 	virtual void NativePreConstruct() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButton|Variables")
@@ -50,6 +48,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButton|Variables")
 	class USoundBase* SoundSelect;
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicButton|Functions")
+	void SetFocusButton(bool Focus);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicButton|Functions")
 	void ButtonClick();

@@ -16,20 +16,19 @@ void UClassicButton::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
     Super::NativeTick(MyGeometry, InDeltaTime);
 	if (BtButton != nullptr) {
 		//equivale doonce blueprint
-		if (BtButton->HasKeyboardFocus()) {
-			if (!hover) {
-				BgImage->SetVisibility(ESlateVisibility::Visible);
-				OnFocusTrigger.Broadcast();
-				UGameplayStatics::PlaySound2D(this, SoundSelect);
-				UUserWidget::PlayAnimationForward(FocusButton);
+		if (BtButton->HasKeyboardFocus()) 
+		{
+			if (!hover) 
+			{
+				SetFocusButton(true);			
 			}
 			hover = true;
 		}
-		else {
-			if (hover) {
-				BgImage->SetVisibility(ESlateVisibility::Hidden);
-				OnFocusLostTrigger.Broadcast();
-				UUserWidget::PlayAnimationReverse(FocusButton);
+		else 
+		{
+			if (hover) 
+			{
+				SetFocusButton(false);			
 			}
 			hover = false;
 		}
@@ -52,6 +51,24 @@ void UClassicButton::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 	BtButton->SetStyle(StyleButton);
+}
+
+void UClassicButton::SetFocusButton(bool Focus)
+{
+	if(Focus)
+	{
+		OnFocusTrigger.Broadcast();
+		BtButton->SetKeyboardFocus();
+		BgImage->SetVisibility(ESlateVisibility::Visible);	
+		UGameplayStatics::PlaySound2D(this, SoundSelect);
+		UUserWidget::PlayAnimationForward(FocusButton);
+	}
+	else
+	{
+		BgImage->SetVisibility(ESlateVisibility::Hidden);
+		UUserWidget::PlayAnimationReverse(FocusButton);
+		OnFocusLostTrigger.Broadcast();
+	}
 }
 
 void UClassicButton::ButtonClick()
