@@ -10,6 +10,10 @@
 #include "Kismet/KismetStringLibrary.h"
 #include "Misc/DateTime.h"
 #include "EasyXMLParseManager.h"
+#include "ImageUtils.h"
+
+
+
 
 
 
@@ -497,56 +501,87 @@ static EImageFormat GetJoyImageFormat(EClassicImageFormat JoyFormat)
 	return EImageFormat::JPEG;
 }
 
-
-
-UTexture2D* UClassicFunctionLibrary::LoadTexture2DFromFile(const FString& FullFilePath, bool& IsValid, EClassicImageFormat ImageFormat, int32& Width, int32& Height)
+UTexture2D* UClassicFunctionLibrary::LoadTexture2DFromFile(const FString& FilePath, EClassicImageFormat ImageFormat, int32& Width, int32& Height)
 {
+	
+	IImageWrapperModule& ImageWrapperModule = FModuleManager::Get().LoadModuleChecked<IImageWrapperModule>(TEXT("ImageWrapper"));
 
-	IsValid = false;
-	UTexture2D* NewTexture = NULL;
+	UTexture2D* NewTexture = nullptr;
+	TArray64<uint8> Buffer;
 
-	IImageWrapperModule& ImageWrapperModule = FModuleManager::LoadModuleChecked<IImageWrapperModule>(FName("ImageWrapper"));
-	TSharedPtr<IImageWrapper> ImageWrapper = ImageWrapperModule.CreateImageWrapper(GetJoyImageFormat(ImageFormat));
-
-	//Load From File
-	TArray<uint8> RawFileData;
-	if (!FFileHelper::LoadFileToArray(RawFileData, *FullFilePath))
+	if (FFileHelper::LoadFileToArray(Buffer, *FilePath))
 	{
-		return NULL;
-	}
+		EPixelFormat PixelFormat = PF_Unknown;
+		EImageFormat Format = GetJoyImageFormat(ImageFormat);
 
-	//Create Texture2D!
-	if (ImageWrapper.IsValid() && ImageWrapper->SetCompressed(RawFileData.GetData(), RawFileData.Num()))
-	{
-		TArray<uint8> UncompressedBGRA;
-		if (ImageWrapper->GetRaw(ERGBFormat::BGRA, 8, UncompressedBGRA))
+
+		if (Format != EImageFormat::Invalid)
 		{
-			//Update!
-			NewTexture = UTexture2D::CreateTransient(ImageWrapper->GetWidth(), ImageWrapper->GetHeight(), PF_B8G8R8A8);
+			TSharedPtr<IImageWrapper> ImageWrapper = ImageWrapperModule.CreateImageWrapper(Format);
 
-			//Valid?
-			if (!NewTexture)
+			int32 BitDepth = 0;
+
+			// Create texture
+			if (ImageWrapper->SetCompressed((void*)Buffer.GetData(), Buffer.Num()))
 			{
-				return NULL;
+
+				PixelFormat = PF_Unknown;
+				ERGBFormat RGBFormat = ERGBFormat::Invalid;
+
+				BitDepth = ImageWrapper->GetBitDepth();
+
+				Width = ImageWrapper->GetWidth();
+				Height = ImageWrapper->GetHeight();
+
+				if (BitDepth == 16)
+				{
+					PixelFormat = PF_FloatRGBA;
+					RGBFormat = ERGBFormat::RGBAF;
+				}
+				else if (BitDepth == 8)
+				{
+					PixelFormat = PF_B8G8R8A8;
+					RGBFormat = ERGBFormat::BGRA;
+				}
+				else
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Error creating texture. Bit depth is unsupported. (%d)"), BitDepth);
+					return nullptr;
+				}
+
+				TArray64<uint8> UncompressedData;
+				ImageWrapper->GetRaw(RGBFormat, BitDepth, UncompressedData);
+
+				// Load texture
+				NewTexture = UTexture2D::CreateTransient(Width, Height, PixelFormat);
+				if (NewTexture)
+				{
+					NewTexture->bNotOfflineProcessed = true;
+					uint8* MipData = static_cast<uint8*>(NewTexture->GetPlatformData()->Mips[0].BulkData.Lock(LOCK_READ_WRITE));
+
+					// Bulk data was already allocated for the correct size when we called CreateTransient above
+					FMemory::Memcpy(MipData, UncompressedData.GetData(), NewTexture->GetPlatformData()->Mips[0].BulkData.GetBulkDataSize());
+
+					// Copy texture and update
+					NewTexture->GetPlatformData()->Mips[0].BulkData.Unlock();
+					NewTexture->UpdateResource();
+				}
 			}
-
-			//Out!
-			Width = ImageWrapper->GetWidth();
-			Height = ImageWrapper->GetHeight();
-
-			//Copy!
-			void* TextureData = NewTexture->GetPlatformData()->Mips[0].BulkData.Lock(LOCK_READ_WRITE);
-			FMemory::Memcpy(TextureData, UncompressedBGRA.GetData(), UncompressedBGRA.Num());
-			NewTexture->GetPlatformData()->Mips[0].BulkData.Unlock();
-
-			NewTexture->UpdateResource();
-
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Error creating texture. Couldn't determine the file format"));
 		}
 	}
-
-
-	IsValid = true;
 	return NewTexture;
+}
+
+UTexture2D* UClassicFunctionLibrary::LoadTexture(const FString& FilePath)
+{
+	int32 Width = 0;
+	int32 Height = 0;
+	return  LoadTexture2DFromFile(FilePath, EClassicImageFormat::PNG, Width, Height);
+	
 }
 
 void UClassicFunctionLibrary::CreateProcess(int32& ProcessId, FString FullPath, TArray<FString> CommandlineArgs, bool Detach, bool Hidden, int32 Priority, FString OptionalWorkingDirectory)
@@ -581,23 +616,19 @@ void UClassicFunctionLibrary::CreateProcess(int32& ProcessId, FString FullPath, 
 	//Not sure what to do to expose UINT32 to BP
 	ProcessId = NeedBPUINT32;
 }
-
-
-
 void UClassicFunctionLibrary::AsyncLoadTexture2DFromFile(FLoadImageDelegate Out, const FString FullFilePath, int32 Index)
 {
 	AsyncTask(ENamedThreads::GameThread_Local, [Out, FullFilePath, Index]()
-		{
-			bool isValid = false;
-			int32 Size = 64;
-			UTexture2D* Texture = LoadTexture2DFromFile(FullFilePath, isValid, EClassicImageFormat::PNG, Size, Size);
-			if (isValid)
+		{	
+			UTexture2D* Texture = LoadTexture(FullFilePath);
+			if (Texture != nullptr)
 			{
 				Out.ExecuteIfBound(Texture, Index);
 			}
 		});
 
 }
+
 
 FString UClassicFunctionLibrary::FormatDateToView(FString DateXml)
 {
@@ -656,11 +687,3 @@ FString UClassicFunctionLibrary::FormatDateToXml()
 	FDateTime DateTime = FDateTime::Now();
 	return DateTime.ToString(TEXT("%Y%m%dT%H%M%S"));
 }
-
-
-
-
-
-
-
-

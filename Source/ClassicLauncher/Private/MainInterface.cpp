@@ -56,10 +56,11 @@ UMainInterface::UMainInterface(const FObjectInitializer& ObjectInitializer) : Su
 	bScroll = false;
 	bFilterFavorites = false;
 	bDelayFavoriteClick = false;
+	bHover = false;
 	CorePath = TEXT("");
 	TimerDelayAnimation = 0.18f;
-	TriggerDelayPressed = 1.0f;
-	SpeedScroll = 28.0f;
+	TriggerDelayPressed = 0.15f;
+	SpeedScroll = 31.0f;
 	CountSystem = 0;
 	CountLocationY = 0;
 	MaxFrameMove = 4;
@@ -141,6 +142,7 @@ void UMainInterface::NativeOnInitialized()
 	}
 
 	GetWorld()->GetTimerManager().SetTimer(TickTimerHandle, this, &UMainInterface::TimerTick, 0.016f, true, -1);
+	GetWorld()->GetTimerManager().SetTimer(TriggerTimerHandle, this, &UMainInterface::TriggerTick, TriggerDelayPressed, false, -1);
 
 	Super::NativeOnInitialized();
 }
@@ -166,6 +168,49 @@ void UMainInterface::TimerTick()
 		UClassicFunctionLibrary::CreateProcess(Proc, TEXT("taskkill  "), TextArguments, false, true, 0, TEXT(""));
 	}
 
+	if (UClassicFunctionLibrary::ClassicIsApplicationRunning(ProcessID))
+	{
+		if (!bHover)
+		{
+			UClassicFunctionLibrary::PauseProcess(1.5f);
+			RunningGame(true);
+		}
+		bHover = true;
+	}
+	else
+	{
+		if (bHover)
+		{
+			RunningGame(false);
+		}
+		bHover = false;
+	}
+
+}
+
+void UMainInterface::TriggerTick()
+{
+	if ((bKeyTriggerLeft || bKeyTriggerRight) && PositionY == EPositionY::CENTRAL)
+	{
+		TriggerDelayPressed = FMath::Clamp(TriggerDelayPressed - 0.002f, 0.085f, 1.0f);
+		SpeedScroll = 385.0f;
+
+		if (ENavigationButton == EButtonsGame::LB && !bKeyTriggerRight && !bScroll)
+		{
+			SetFocusCardToLeft();
+		}
+		else if (ENavigationButton == EButtonsGame::RB && !bKeyTriggerLeft && !bScroll)
+		{
+			SetFocusCardToRight();
+		}
+	}
+	else
+	{
+		TriggerDelayPressed = 0.15f;
+		SpeedScroll = 31.0f;
+	}
+
+	GetWorld()->GetTimerManager().SetTimer(TriggerTimerHandle, this, &UMainInterface::TriggerTick, TriggerDelayPressed, false, -1);
 }
 
 void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -197,7 +242,7 @@ void UMainInterface::LoadConfigurationNative()
 
 	if (bool IsValidConfig = UClassicFunctionLibrary::LoadStringFile(ConfigResult, GameRoot))
 	{
-		UClassicFunctionLibrary::SetConfig(UClassicFunctionLibrary::LoadXMLSingle(ConfigResult, TEXT("config")) , ConfigurationData);
+		UClassicFunctionLibrary::SetConfig(UClassicFunctionLibrary::LoadXMLSingle(ConfigResult, TEXT("config")), ConfigurationData);
 		UGameplayStatics::SetEnableWorldRendering(this, ConfigurationData.rendering);
 		ConfigurationData.pathmedia = (ConfigurationData.pathmedia != TEXT("")) ? ConfigurationData.pathmedia + TEXT("\\media") : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
 		LoadConfigSystemsNative();
@@ -302,7 +347,6 @@ void UMainInterface::ViewList()
 	ScrollListGame->ScrollWidgetIntoView(coverReference[IndexCard], false, EDescendantScrollDestination::Center, 0);
 	OnNavigationFocus(cardReference[IndexCard]);
 	bInputEnable = true;
-
 }
 
 void UMainInterface::SetPaddingCovers()
@@ -322,7 +366,7 @@ void UMainInterface::CreateGameListNative()
 
 	if (bool IsValidConfig = UClassicFunctionLibrary::LoadStringFile(ConfigResult, GameRoot))
 	{
-		UClassicFunctionLibrary::SetConfigSystem(UClassicFunctionLibrary::LoadXML(ConfigResult, TEXT("config.system")) , GameSystems);
+		UClassicFunctionLibrary::SetConfigSystem(UClassicFunctionLibrary::LoadXML(ConfigResult, TEXT("config.system")), GameSystems);
 		GameSystems = UClassicFunctionLibrary::SortConfigSystem(GameSystems);
 		for (int32 i = 0; i < GameSystems.Num(); i++)
 		{
@@ -330,7 +374,7 @@ void UMainInterface::CreateGameListNative()
 			IsValidConfig = UClassicFunctionLibrary::LoadStringFile(ConfigResult, GameRoot);
 			if (IsValidConfig)
 			{
-				UClassicFunctionLibrary::SetGameData(UClassicFunctionLibrary::LoadXML(ConfigResult, TEXT("gameList.game")) , GameData);
+				UClassicFunctionLibrary::SetGameData(UClassicFunctionLibrary::LoadXML(ConfigResult, TEXT("gameList.game")), GameData);
 				UClassicFunctionLibrary::SortGameDate(GameData);
 				UClassicFunctionLibrary::FormatGameData(GameData, ConfigurationData, GameSystems[i]);
 				GameSystems[i].GameDatas = GameData;
@@ -600,7 +644,7 @@ void UMainInterface::OnNativeNavigationMain(EButtonsGame Navigate)
 	{
 		bUpDownPressed = false;
 		SetNavigationFocusUpBottom();
-		
+
 	}
 	else if (ENavigationButton == EButtonsGame::DOWN)
 	{
@@ -616,11 +660,11 @@ void UMainInterface::OnNativeNavigationSystem(EButtonsGame Navigate)
 	ENavigationButton = Navigate;
 	if (ENavigationButton == EButtonsGame::UP)
 	{
-		CountLocationY = FMath::Clamp(CountLocationY - 1, 0, ButtonSystemReferences.Num() -1);
+		CountLocationY = FMath::Clamp(CountLocationY - 1, 0, ButtonSystemReferences.Num() - 1);
 	}
 	else if (ENavigationButton == EButtonsGame::DOWN)
 	{
-		CountLocationY = FMath::Clamp(CountLocationY + 1, 0, ButtonSystemReferences.Num() -1);
+		CountLocationY = FMath::Clamp(CountLocationY + 1, 0, ButtonSystemReferences.Num() - 1);
 		UE_LOG(LogTemp, Warning, TEXT("The integer value is: %d"), CountLocationY);
 	}
 
@@ -715,7 +759,7 @@ void UMainInterface::SetNavigationFocusUpBottom()
 {
 	if (PositionY == EPositionY::BOTTOM)
 	{
-		if (ImgVideo->RenderTransform.Translation.X == 0) 
+		if (ImgVideo->RenderTransform.Translation.X == 0)
 		{
 			UUserWidget::PlayAnimationReverse(ShowDescBottomInfo);
 			PositionY = EPositionY::CENTRAL;
@@ -723,7 +767,7 @@ void UMainInterface::SetNavigationFocusUpBottom()
 			ClassicMediaPlayerReference->ResumeMusic();
 			UE_LOG(LogTemp, Warning, TEXT("Close frame bottom"));
 		}
-		else 
+		else
 		{
 			UUserWidget::PlayAnimationReverse(VideoAnimation);
 		}
@@ -778,7 +822,7 @@ void UMainInterface::SetNavigationFocusDownBottom()
 					SetImageBottom();
 				}
 			}
-			
+
 		}
 	}
 	else if (PositionY == EPositionY::BOTTOM)
@@ -879,13 +923,6 @@ void UMainInterface::SetButtonsIconInterfaces(EPositionY GetPosition)
 	}
 }
 
-UTexture2D* UMainInterface::SetImageFromPath(FString PathImage)
-{
-	bool isValid = false;
-	int32 Size = 64;
-	return  UClassicFunctionLibrary::LoadTexture2DFromFile(PathImage, isValid, EClassicImageFormat::PNG, Size, Size);
-
-}
 
 void UMainInterface::ForceGarbageCollectionBP(float Count)
 {
@@ -907,20 +944,7 @@ void UMainInterface::ASyncLoadCard(FString PathImage, int32 Index)
 
 void UMainInterface::ImageOut(UTexture2D* TextureOut, int32 Index)
 {
-	if (cardReference.IsValidIndex(Index) && coverReference.IsValidIndex(Index))
-	{
-		UCard* Card = cardReference[Index];
-		UCover* Cover = coverReference[Index];
-		int32 ImageX = GameData[Index].ImageX;
-		int32 ImageY = GameData[Index].ImageY;
-
-		AsyncTask(ENamedThreads::GameThread_Local, [Card, Cover, TextureOut, Index, ImageX, ImageY]()
-			{
-				Cover->LoadCoverImage(TextureOut, ImageX, ImageY);
-				Card->LoadImageCard(TextureOut, ImageX, ImageY);
-				//AddImagesCardCover(TextureOut, Index);
-			});
-	}
+	AddImagesCardCover(TextureOut, Index);
 }
 
 void UMainInterface::LoadFirstImages()
@@ -928,7 +952,7 @@ void UMainInterface::LoadFirstImages()
 	const int32 Length = FMath::Clamp(GameData.Num(), 0, 15);
 	for (int32 i = 0; i < Length; i++)
 	{
-		ImageCard = SetImageFromPath(GameData[i].imageFormated);
+		ImageCard = UClassicFunctionLibrary::LoadTexture(GameData[i].imageFormated);
 		AddImagesCardCover(ImageCard, i);
 		coverReference[i]->SetVisibility(ESlateVisibility::Visible);
 		cardReference[i]->SetVisibility(ESlateVisibility::Visible);
@@ -959,7 +983,7 @@ void UMainInterface::LoadImages()
 		{
 			if (IndexAsyncImage <= LastIndex)
 			{
-				ASyncLoadCard(GameData[LastIndex].imageFormated, LastIndex);
+				ASyncLoadCard(GameData[IndexCard].imageFormated, LastIndex);
 				LoadImageSync(LastIndex);
 			}
 			else
@@ -1536,10 +1560,15 @@ void UMainInterface::SetImageBottom()
 	{
 		int32 Size = 32;
 		bool IsValidTexture = false;
-		UTexture2D* ImageLoaded = UClassicFunctionLibrary::LoadTexture2DFromFile(ImagePath, IsValidTexture, EClassicImageFormat::PNG, Size, Size);
-		if (IsValidTexture)
+		UTexture2D* ImageLoaded = UClassicFunctionLibrary::LoadTexture(ImagePath);
+
+		if (ImageLoaded != nullptr)
 		{
 			ImgImageBottom->SetBrushFromTexture(ImageLoaded);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Image not Loaded"));
 		}
 	}
 	else
@@ -1548,3 +1577,5 @@ void UMainInterface::SetImageBottom()
 	}
 
 }
+
+

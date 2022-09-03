@@ -200,8 +200,6 @@ public:
 	virtual void OnAnimationStartedPlaying(UUMGSequencePlayer& Player) override;
 	virtual void OnAnimationFinishedPlaying(UUMGSequencePlayer& Player) override;
 
-
-
 	//variables
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
@@ -286,6 +284,9 @@ public:
 	bool bDelayFavoriteClick;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	bool bHover;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	FString CorePath;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
@@ -340,10 +341,15 @@ public:
 	FTimerHandle DelayPressedTimerHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle DelayFavoriteTimerHandle;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
+	FTimerHandle TriggerTimerHandle;
 
 	//Functions
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void TimerTick();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void TriggerTick();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void RestartWidget();
@@ -446,23 +452,20 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetButtonsIconInterfaces(EPositionY GetPosition);
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	UTexture2D* SetImageFromPath(FString PathImage);
-
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions", meta = (count = "150.0"))
 	void ForceGarbageCollectionBP(float Count = 150.0f);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void ImageOut(UTexture2D* TextureOut, int32 Index);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void ASyncLoadCard(FString PathImage, int32 Index);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void LoadFirstImages();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void LoadImages();
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void ImageOut(UTexture2D* TextureOut, int32 Index);
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void ASyncLoadCard(FString PathImage,int32 Index);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetImagesCard(UTexture2D* Texture, UCard* Card, int32 Index);

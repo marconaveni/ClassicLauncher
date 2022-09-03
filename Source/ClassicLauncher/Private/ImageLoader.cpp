@@ -20,15 +20,14 @@ void UImageLoader::Activate()
 
 void UImageLoader::LoadTexture()
 {
-	bool valid = false;
-	int32 Size = 64;
-	UTexture2D* Image = UClassicFunctionLibrary::LoadTexture2DFromFile(PathTemp, valid, EClassicImageFormat::PNG, Size, Size);
-	if (valid) 
+
+	UTexture2D* Image = UClassicFunctionLibrary::LoadTexture(PathTemp);
+	if (Image != nullptr)
 	{
-		OnLoadedImage.Broadcast(Image,valid);
+		OnLoadedImage.Broadcast(Image,true);
 	}
 	else 
 	{
-		OnFailLoadedImage.Broadcast(Image, valid);
+		OnFailLoadedImage.Broadcast(Image, false);
 	}
 }

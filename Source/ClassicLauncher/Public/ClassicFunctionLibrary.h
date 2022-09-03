@@ -6,12 +6,14 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "GameData.h"
 #include "EasyXMLElement.h"
+#include "RuntimeImageReader.h"
+#include "Card.h"
 #include "ClassicFunctionLibrary.generated.h"
 
 
 
 //~~~~~~~~~~~~~~~~~~~~~~
-//			Key Modifiers
+//			Format
 //~~~~~~~~~~~~~~~~~~~~~~
 UENUM(BlueprintType)
 enum class EClassicImageFormat : uint8
@@ -24,7 +26,9 @@ enum class EClassicImageFormat : uint8
 	ICNS	UMETA(DisplayName = "ICNS       ")
 };
 
-
+//~~~~~~~~~~~~~~~~~~~~~~
+//			Key Modifiers
+//~~~~~~~~~~~~~~~~~~~~~~
 UENUM(BlueprintType)
 enum class EButtonsGame : uint8
 {
@@ -90,7 +94,7 @@ public:
 
 	//delete file if exists in folder 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|File IO")
-		static FORCEINLINE bool DeleteFile(const FString& File)
+	static FORCEINLINE bool DeleteFile(const FString& File)
 	{
 		// Every function call, unless the function is inline, adds a small
 		// overhead which we can avoid by creating a local variable like so.
@@ -111,14 +115,14 @@ public:
 	static int32 GenerateNumberWithoutRepeat(int32 value, int32 min, int32 max);
 
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Strings")
-	static FString ReplacePath(FString value , FString path);
+	static FString ReplacePath(FString value, FString path);
 
 	/** Replace name core Remove */
-	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Strings" , Meta = (ReturnDisplayName = "Replaced Core Name"))
+	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Strings", Meta = (ReturnDisplayName = "Replaced Core Name"))
 	static FString CoreReplace(FString Core);
-	
-	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Strings" , Meta = (ReturnDisplayName = "Core Found"))
-	static bool SwitchOnDefaultLibreto(FString Core , FString& CoreFormated, bool& CanUnzip);
+
+	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Strings", Meta = (ReturnDisplayName = "Core Found"))
+	static bool SwitchOnDefaultLibreto(FString Core, FString& CoreFormated, bool& CanUnzip);
 
 	/**
 	*Replace relative media path
@@ -136,20 +140,20 @@ public:
 
 	//create a file gamelist.xml for save 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData|XML")
-	static FString CreateXMLGameFile(TArray<FGameData> gameData, FVector2D IgnoreImageSize );
-	
-	//generate especify tag ex:  <name>value</name>
+	static FString CreateXMLGameFile(TArray<FGameData> gameData, FVector2D IgnoreImageSize);
+
+	//generate specific tag ex:  <name>value</name>
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData|XML")
 	static FString GenerateXmlTag(FString tagName, FString data);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData|XML")
-	static TArray<UEasyXMLElement*> LoadXML(FString XMLString , FString AccessString);
+	static TArray<UEasyXMLElement*> LoadXML(FString XMLString, FString AccessString);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData|XML")
 	static UEasyXMLElement* LoadXMLSingle(FString XMLString, FString AccessString);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static void SetConfig(UEasyXMLElement* Element , FConfig& Config);
+	static void SetConfig(UEasyXMLElement* Element, FConfig& Config);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
 	static void SetConfigSystem(TArray<UEasyXMLElement*>  Elements, TArray<FConfigSystem>& ConfigSystems);
@@ -172,36 +176,36 @@ public:
 	///////////////////////////////////////////////////////
 	///these functions are not mine, all credits go to Rama
 
-	//function credits rama VictoryBPFunctionLibrary
+	//function credits Rama VictoryBPFunctionLibrary
 	/** Obtain all files in a provided directory, with optional extension filter. All files are returned if Ext is left blank. Returns false if operation could not occur. */
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|File IO")
 	static bool ClassicGetFiles(TArray<FString>& Files, FString RootFolderFullPath, FString Ext);
 
-	//function credits rama VictoryBPFunctionLibrary
+	//function credits Rama VictoryBPFunctionLibrary
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|File IO")
 	static bool LoadStringFile(FString& Result, FString FullFilePath);
 
-	//function credits rama VictoryBPFunctionLibrary
-	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|LoadTexture", meta = (DisplayName = "LoadTexture", Keywords = "loadtexture"))
-	static UTexture2D* LoadTexture2DFromFile(const FString& FullFilePath, bool& IsValid, EClassicImageFormat ImageFormat, int32& Width, int32& Height);
+	//function credits Rama VictoryBPFunctionLibrary
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|LoadTexture")
+	static UTexture2D* LoadTexture2DFromFile(const FString& FilePath, EClassicImageFormat ImageFormat, int32& Width, int32& Height);
 
-	//function credits rama VictoryBPFunctionLibrary
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|LoadTexture", meta = (DisplayName = "AsyncLoadTexture", Keywords = "asyncloadtexture"))
+	static void AsyncLoadTexture2DFromFile(FLoadImageDelegate Out, const FString FullFilePath, int32 Index);
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|LoadTexture", meta = (DisplayName = "LoadTexture", Keywords = "loadtexture" , ReturnDisplayName = "TextureOut"))
+	static UTexture2D* LoadTexture(const FString& FilePath);
+
+	//function credits Rama VictoryBPFunctionLibrary
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|System")
 	static void CreateProcess(int32& ProcessId, FString FullPath, TArray<FString> CommandlineArgs, bool Detach, bool Hidden, int32 Priority = 0, FString OptionalWorkingDirectory = "");
 
-	//function credits rama VictoryBPFunctionLibrary
+	//function credits Rama VictoryBPFunctionLibrary
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|System")
 	static bool ClassicIsApplicationRunning(int32 ProcessId)
 	{
 		//Please note it should really be uint32 but that is not supported by BP yet
 		return FPlatformProcess::IsApplicationRunning(ProcessId);
 	}
-
-	/////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////
-
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|LoadTexture", meta = (DisplayName = "AsyncLoadTexture", Keywords = "asyncloadtexture"))
-	static void AsyncLoadTexture2DFromFile(FLoadImageDelegate Out, const FString FullFilePath, int32 Index);
 
 	//formated date ex 19940619T000000 to 1994-06-19 
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Date")
@@ -215,6 +219,4 @@ public:
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Date")
 	static FString FormatDateToXml();
 
-
 };
-
