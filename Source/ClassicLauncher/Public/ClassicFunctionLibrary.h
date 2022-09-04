@@ -121,6 +121,10 @@ public:
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Strings", Meta = (ReturnDisplayName = "Replaced Core Name"))
 	static FString CoreReplace(FString Core);
 
+	/** Replace $(Home) ClassicLauncher root directory  */
+	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Strings")
+	static FString HomeDirectoryReplace(FString Directory);
+
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Strings", Meta = (ReturnDisplayName = "Core Found"))
 	static bool SwitchOnDefaultLibreto(FString Core, FString& CoreFormated, bool& CanUnzip);
 
@@ -135,7 +139,7 @@ public:
 	*@param    Format  2 types .png . mp4
 	*@return   Return new path EX: "c:\classiclauncher\media\covers\game.png"
 	*/
-	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|GameData")
+	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Strings")
 	static FString ReplaceMedia(FString OriginalPathMedia, FString PathMedia, FString PathRom, FString RomName, FString SystemName, FString TypeMedia, FString Format);
 
 	//create a file gamelist.xml for save 

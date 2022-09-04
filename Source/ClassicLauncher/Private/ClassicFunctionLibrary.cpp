@@ -10,10 +10,6 @@
 #include "Kismet/KismetStringLibrary.h"
 #include "Misc/DateTime.h"
 #include "EasyXMLParseManager.h"
-#include "ImageUtils.h"
-
-
-
 
 
 
@@ -193,6 +189,12 @@ FString UClassicFunctionLibrary::CoreReplace(FString Core)
 	Core = Core.Replace(TEXT("$("), TEXT(""), ESearchCase::IgnoreCase);
 	Core = Core.Replace(TEXT(")"), TEXT(""), ESearchCase::IgnoreCase);
 	return Core;
+}
+
+FString UClassicFunctionLibrary::HomeDirectoryReplace(FString Directory)
+{
+	FString RootDirectory = GetGameRootDirectory();
+	return Directory.Replace(TEXT("$(home"), *RootDirectory, ESearchCase::IgnoreCase);
 }
 
 bool UClassicFunctionLibrary::SwitchOnDefaultLibreto(FString Core, FString& CoreFormated, bool& CanUnzip)
@@ -503,7 +505,7 @@ static EImageFormat GetJoyImageFormat(EClassicImageFormat JoyFormat)
 
 UTexture2D* UClassicFunctionLibrary::LoadTexture2DFromFile(const FString& FilePath, EClassicImageFormat ImageFormat, int32& Width, int32& Height)
 {
-	
+
 	IImageWrapperModule& ImageWrapperModule = FModuleManager::Get().LoadModuleChecked<IImageWrapperModule>(TEXT("ImageWrapper"));
 
 	UTexture2D* NewTexture = nullptr;
@@ -581,7 +583,7 @@ UTexture2D* UClassicFunctionLibrary::LoadTexture(const FString& FilePath)
 	int32 Width = 0;
 	int32 Height = 0;
 	return  LoadTexture2DFromFile(FilePath, EClassicImageFormat::PNG, Width, Height);
-	
+
 }
 
 void UClassicFunctionLibrary::CreateProcess(int32& ProcessId, FString FullPath, TArray<FString> CommandlineArgs, bool Detach, bool Hidden, int32 Priority, FString OptionalWorkingDirectory)
@@ -619,7 +621,7 @@ void UClassicFunctionLibrary::CreateProcess(int32& ProcessId, FString FullPath, 
 void UClassicFunctionLibrary::AsyncLoadTexture2DFromFile(FLoadImageDelegate Out, const FString FullFilePath, int32 Index)
 {
 	AsyncTask(ENamedThreads::GameThread_Local, [Out, FullFilePath, Index]()
-		{	
+		{
 			UTexture2D* Texture = LoadTexture(FullFilePath);
 			if (Texture != nullptr)
 			{
