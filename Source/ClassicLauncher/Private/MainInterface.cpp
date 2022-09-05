@@ -23,6 +23,7 @@
 #include "Components/MultiLineEditableTextBox.h"
 #include "Misc/Paths.h"
 #include "ClassicMediaPlayer.h"
+#include "ClassicLibretroTV.h"
 #include "RuntimeImageLoader.h"
 #include "ToolTip.h"
 #include "Animation/UMGSequencePlayer.h"
@@ -57,7 +58,6 @@ UMainInterface::UMainInterface(const FObjectInitializer& ObjectInitializer) : Su
 	bFilterFavorites = false;
 	bDelayFavoriteClick = false;
 	bHover = false;
-	CorePath = TEXT("");
 	TimerDelayAnimation = 0.18f;
 	TriggerDelayPressed = 0.15f;
 	SpeedScroll = 31.0f;
@@ -139,6 +139,12 @@ void UMainInterface::NativeOnInitialized()
 	{
 		ClassicMediaPlayerReference = *ActorIterator;
 		UE_LOG(LogTemp, Warning, TEXT("Reference AClassicMediaPlayer Founds: %s "), *ClassicMediaPlayerReference->GetName());
+	}
+
+	for (TActorIterator<AClassicLibretroTV> ActorIterator(GetWorld()); ActorIterator; ++ActorIterator)
+	{
+		ClassicLibretroTVReference = *ActorIterator;
+		UE_LOG(LogTemp, Warning, TEXT("Reference AClassicLibretroTV Founds: %s "), *ClassicLibretroTVReference->GetName());
 	}
 
 	GetWorld()->GetTimerManager().SetTimer(TickTimerHandle, this, &UMainInterface::TimerTick, 0.016f, true, -1);
@@ -882,11 +888,67 @@ void UMainInterface::SetFocusCardToRight()
 //end navigate area
 ///////////////////////////////////////////////////
 
-void UMainInterface::OnNativeClick(FString Value)
+void UMainInterface::OnNativeClick(FString RomPath)
 {
+	if (PositionY == EPositionY::CENTRAL && bInputEnable)
+	{
+		UUserWidget::PlayAnimationForward(FadeStartSystem);
+		SetCountPlayerToSave();
+		UGameplayStatics::PlaySound2D(this, SoundSelect);
+
+		GetWorld()->GetTimerManager().SetTimer(LauncherTimerHandle, this, &UMainInterface::ClassicLaunch , 1.0f, false, -1);
+
+	}
 	//this function is BlueprintImplementableEvent
-	OnClickPathEvent(Value);
+	OnClickPathEvent(RomPath);
 }
+
+void UMainInterface::ClassicLaunch()
+{
+	const FString PathRomFormated = UClassicFunctionLibrary::HomeDirectoryReplace(GameData[IndexCard].PathFormated);
+	FString ExecutablePath = (GameData[IndexCard].Executable == TEXT("")) ? GameSystems[CountSystem].Executable : GameData[IndexCard].Executable;
+	FString Arguments = (GameData[IndexCard].Arguments == TEXT("")) ? GameSystems[CountSystem].Arguments : GameData[IndexCard].Arguments;
+	bool CanUnzip = false;
+	FString CoreFormated;
+
+	if (UClassicFunctionLibrary::SwitchOnDefaultLibreto(ExecutablePath, CoreFormated, CanUnzip))
+	{
+		OpenLibretro(CoreFormated, PathRomFormated, CanUnzip);
+		UE_LOG(LogTemp, Warning, TEXT("RomPath %s , CorePath %s , CanUnzip %s"), *PathRomFormated, *CoreFormated, (CanUnzip ? TEXT("true") : TEXT("false")) );
+	}
+	else 
+	{
+		TArray<FString> Commands;
+		Commands.Add(UClassicFunctionLibrary::HomeDirectoryReplace(Arguments));
+		Commands.Add(UClassicFunctionLibrary::HomeDirectoryReplace(PathRomFormated));
+
+		OpenExternalProcess(ExecutablePath, Commands);
+		UE_LOG(LogTemp, Warning, TEXT("OpenExternalProcess: %s %s %s"), *ExecutablePath, *Arguments, *PathRomFormated);
+	}
+
+}
+
+void UMainInterface::OpenLibretro(FString CorePath, FString RomPath, bool CanUnzip)
+{
+	if (ClassicLibretroTVReference != nullptr)
+	{
+		ClassicLibretroTVReference->OnNativeLoadRom(CorePath, RomPath, CanUnzip);
+		SetVisibility(ESlateVisibility::Hidden);
+		GameSettingsRunningInternal();
+		RunningGame(true);
+	}
+	else 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Error ClassicLibretroTVReference is null"));
+	}
+}
+
+void UMainInterface::OpenExternalProcess( FString ExecutablePath, TArray<FString> CommandArgs)
+{
+	UClassicFunctionLibrary::CreateProcess(ProcessID, ExecutablePath, CommandArgs, false, false);
+	GameSettingsRunning();
+}
+
 
 void UMainInterface::OnNativeClickSystem(int32 Value)
 {

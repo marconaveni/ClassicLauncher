@@ -187,6 +187,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
 	class AClassicMediaPlayer* ClassicMediaPlayerReference;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
+	class AClassicLibretroTV* ClassicLibretroTVReference;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
+	class USoundBase* SoundSelect;
+
 public:
 
 	UMainInterface(const FObjectInitializer& ObjectInitializer);
@@ -287,9 +293,6 @@ public:
 	bool bHover;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	FString CorePath;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	float TimerDelayAnimation;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
@@ -343,6 +346,8 @@ public:
 	FTimerHandle DelayFavoriteTimerHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle TriggerTimerHandle;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
+	FTimerHandle LauncherTimerHandle;
 
 	//Functions
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
@@ -435,7 +440,13 @@ public:
 	void SetFocusCardToRight();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void OnNativeClick(FString Value);
+	void OnNativeClick(FString RomPath);
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void ClassicLaunch();
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void OpenLibretro(FString CorePath ,FString RomPath, bool CanUnzip);
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void OpenExternalProcess( FString ExecutablePath, TArray<FString> CommandArgs);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnNativeClickSystem(int32 Value);
