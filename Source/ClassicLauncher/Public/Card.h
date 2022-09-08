@@ -61,6 +61,8 @@ public:
 	UFUNCTION(BlueprintCallable,  Category = "Card|Functions")
 	void ButtonClick();
 
+	void AnimationFade();
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void ClickButton();
 
@@ -71,11 +73,17 @@ public:
 	class UImage* Cover;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* Background;
+	class UImage* BackgroundFavorite;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* FrameFavorite;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* FrameBackground;
+	class UImage* BackgroundMain;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* FrameMain;
 
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* BackgroundSelected;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* FrameSelected;
 

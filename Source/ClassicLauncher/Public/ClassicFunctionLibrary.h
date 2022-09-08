@@ -32,21 +32,23 @@ enum class EClassicImageFormat : uint8
 UENUM(BlueprintType)
 enum class EButtonsGame : uint8
 {
-	LEFT	UMETA(DisplayName = "Left"),
-	RIGHT	UMETA(DisplayName = "Right"),
-	UP		UMETA(DisplayName = "Up"),
-	DOWN	UMETA(DisplayName = "Down"),
-	A		UMETA(DisplayName = "A / Enter"),
-	B		UMETA(DisplayName = "B / Backspace"),
-	Y		UMETA(DisplayName = "Y / F"), 
-	X		UMETA(DisplayName = "X / S"),
-	LB		UMETA(DisplayName = "LB / Q"),
-	RB		UMETA(DisplayName = "RB / E"),
-	LT		UMETA(DisplayName = "LT / A"),
-	RT		UMETA(DisplayName = "RT / D"),
-	START	UMETA(DisplayName = "Start / Ctrl"),
-	SELECT	UMETA(DisplayName = "Select(Back) / Alt"),
-	NONE    UMETA(DisplayName = "No Input")
+	LEFT		UMETA(DisplayName = "Left"),
+	RIGHT		UMETA(DisplayName = "Right"),
+	UP			UMETA(DisplayName = "Up"),
+	DOWN		UMETA(DisplayName = "Down"),
+	A			UMETA(DisplayName = "A / Enter"),
+	B			UMETA(DisplayName = "B / Backspace"),
+	Y			UMETA(DisplayName = "Y / F"), 
+	X			UMETA(DisplayName = "X / S"),
+	LB			UMETA(DisplayName = "LB / Q"),
+	RB			UMETA(DisplayName = "RB / E"),
+	LT			UMETA(DisplayName = "LT / A"),
+	RT			UMETA(DisplayName = "RT / D"),
+	START		UMETA(DisplayName = "Start / Ctrl"),
+	SELECT		UMETA(DisplayName = "Select(Back) / Alt"),
+	SCROLLUP	UMETA(DisplayName = "Stick Right Up / Mouse Scroll Up"),
+	SCROLLDOWN	UMETA(DisplayName = "Stick Right Down / Mouse Scroll Down"),
+	NONE		UMETA(DisplayName = "No Input")
 };
 
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FLoadImageDelegate, UTexture2D*, TextureOut, int32 , Index);

@@ -109,8 +109,12 @@ void UCard::LoadImageCard(UTexture2D* texture, int32 width, int32 height)
 }
 
 void UCard::ButtonClick()
-{
-	UUserWidget::PlayAnimationForward(StartSystem,1.0f,true);
+{	
 	ClickButton();
 	OnClickTrigger.Broadcast(Path);
+}
+
+void UCard::AnimationFade()
+{
+	UUserWidget::PlayAnimationForward(StartSystem, 1.0f, true);
 }

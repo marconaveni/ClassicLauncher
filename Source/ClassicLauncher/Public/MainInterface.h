@@ -50,6 +50,8 @@ protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UMultiLineEditableTextBox* TxtDescription;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UScrollBox* ScrollDescription;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* BgBottomMenu;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* ImgImageBottom;
@@ -203,6 +205,7 @@ public:
 	virtual void NativeOnInitialized() override;
 	virtual FReply NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 	virtual FReply NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
+	virtual FReply NativeOnMouseWheel(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual void OnAnimationStartedPlaying(UUMGSequencePlayer& Player) override;
 	virtual void OnAnimationFinishedPlaying(UUMGSequencePlayer& Player) override;
 
@@ -300,6 +303,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	float SpeedScroll;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	float DescriptionScrollScale;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	int32 CountSystem;
@@ -592,6 +598,9 @@ private:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void CreateFolders();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void SetScrollDescription(EButtonsGame Scroll);
 
 	//macros ticks
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")

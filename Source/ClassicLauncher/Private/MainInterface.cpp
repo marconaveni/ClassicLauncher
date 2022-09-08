@@ -60,10 +60,11 @@ UMainInterface::UMainInterface(const FObjectInitializer& ObjectInitializer) : Su
 	bHover = false;
 	TimerDelayAnimation = 0.18f;
 	TriggerDelayPressed = 0.15f;
-	SpeedScroll = 31.0f;
+	SpeedScroll = 25.0f;/*31.0f;*/
 	CountSystem = 0;
 	CountLocationY = 0;
 	MaxFrameMove = 4;
+	DescriptionScrollScale = 0.f;
 
 	TextTop.Add(TEXT(""));
 	TextTop.Add(TEXT("Game List"));
@@ -147,7 +148,7 @@ void UMainInterface::NativeOnInitialized()
 		UE_LOG(LogTemp, Warning, TEXT("Reference AClassicLibretroTV Founds: %s "), *ClassicLibretroTVReference->GetName());
 	}
 
-	GetWorld()->GetTimerManager().SetTimer(TickTimerHandle, this, &UMainInterface::TimerTick, 0.016f, true, -1);
+	GetWorld()->GetTimerManager().SetTimer(TickTimerHandle, this, &UMainInterface::TimerTick, 0.015f, true, -1);
 	GetWorld()->GetTimerManager().SetTimer(TriggerTimerHandle, this, &UMainInterface::TriggerTick, TriggerDelayPressed, false, -1);
 
 	Super::NativeOnInitialized();
@@ -155,7 +156,44 @@ void UMainInterface::NativeOnInitialized()
 
 void UMainInterface::TimerTick()
 {
-	ScrollCards();
+
+
+
+
+}
+
+void UMainInterface::TriggerTick()
+{
+	if ((bKeyTriggerLeft || bKeyTriggerRight) && PositionY == EPositionY::CENTRAL)
+	{
+		TriggerDelayPressed = FMath::Clamp(TriggerDelayPressed - 0.002f, 0.085f, 1.0f);
+		SpeedScroll = 385.0f;
+
+		if (ENavigationButton == EButtonsGame::LB && !bKeyTriggerRight && !bScroll)
+		{
+			SetFocusCardToLeft();
+		}
+		else if (ENavigationButton == EButtonsGame::RB && !bKeyTriggerLeft && !bScroll)
+		{
+			SetFocusCardToRight();
+		}
+	}
+	else if (bKeyPressed && PositionY == EPositionY::CENTRAL)
+	{
+		SpeedScroll = FMath::Clamp(SpeedScroll + 0.2f , 28.0f, 38.0f);
+	}
+	else
+	{
+		TriggerDelayPressed = 0.15f;
+		SpeedScroll = 28.0f;
+	}
+
+	GetWorld()->GetTimerManager().SetTimer(TriggerTimerHandle, this, &UMainInterface::TriggerTick, TriggerDelayPressed, false, -1);
+}
+
+void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
 
 	if (bKeyPressed) {
 		OnNativeNavigationGame(UClassicFunctionLibrary::GetInputButton(KeyEvent));
@@ -192,36 +230,9 @@ void UMainInterface::TimerTick()
 		bHover = false;
 	}
 
-}
 
-void UMainInterface::TriggerTick()
-{
-	if ((bKeyTriggerLeft || bKeyTriggerRight) && PositionY == EPositionY::CENTRAL)
-	{
-		TriggerDelayPressed = FMath::Clamp(TriggerDelayPressed - 0.002f, 0.085f, 1.0f);
-		SpeedScroll = 385.0f;
+	ScrollCards();
 
-		if (ENavigationButton == EButtonsGame::LB && !bKeyTriggerRight && !bScroll)
-		{
-			SetFocusCardToLeft();
-		}
-		else if (ENavigationButton == EButtonsGame::RB && !bKeyTriggerLeft && !bScroll)
-		{
-			SetFocusCardToRight();
-		}
-	}
-	else
-	{
-		TriggerDelayPressed = 0.15f;
-		SpeedScroll = 31.0f;
-	}
-
-	GetWorld()->GetTimerManager().SetTimer(TriggerTimerHandle, this, &UMainInterface::TriggerTick, TriggerDelayPressed, false, -1);
-}
-
-void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
-{
-	Super::NativeTick(MyGeometry, InDeltaTime);
 }
 
 void UMainInterface::RestartWidget()
@@ -437,7 +448,12 @@ FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const
 				ENavigationButton = Input;
 				OnClickFavorite();
 			}
+			if (Input == EButtonsGame::SCROLLDOWN || Input == EButtonsGame::SCROLLUP)
+			{
+				SetScrollDescription(Input);
+			}
 		}
+
 
 		if (Input == EButtonsGame::LB)
 		{
@@ -449,6 +465,8 @@ FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const
 			ENavigationButton = Input;
 			bKeyTriggerRight = true;
 		}
+
+
 	}
 	else
 	{
@@ -483,6 +501,21 @@ FReply UMainInterface::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEven
 		ENavigationA = EButtonsGame::NONE;
 	}
 	return Super::NativeOnKeyUp(InGeometry, InKeyEvent);
+}
+
+FReply UMainInterface::NativeOnMouseWheel(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	const float ScrollScale = InMouseEvent.GetWheelDelta();
+	if (ScrollScale > 0)
+	{
+		SetScrollDescription(EButtonsGame::SCROLLUP);
+	}
+	else if (ScrollScale < 0)
+	{
+		SetScrollDescription(EButtonsGame::SCROLLDOWN);
+	}
+
+	return Super::NativeOnMouseWheel(InGeometry, InMouseEvent);
 }
 
 
@@ -609,17 +642,7 @@ void UMainInterface::OnNativeNavigationGame(EButtonsGame Navigate)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("broadcast navigate"));	
 
-	if (Navigate == EButtonsGame::LEFT || Navigate == EButtonsGame::RIGHT)
-	{
-		if (bInputEnable && bDelayPressed && bUpDownPressed && !bKeyTriggerLeft && !bKeyTriggerRight)
-		{
-			OnNavigationGame(Navigate); //Call Event Blueprint
-			if (Focus == EFocus::MAIN) { OnNativeNavigationMain(Navigate); }
-			if (Focus == EFocus::SYSTEM) { OnNativeNavigationSystem(Navigate); }
-			if (Focus == EFocus::INFO) { OnNativeNavigationInfo(Navigate); }
-		}
-	}
-	else if (Navigate == EButtonsGame::UP || Navigate == EButtonsGame::DOWN)
+	if (Navigate == EButtonsGame::UP || Navigate == EButtonsGame::DOWN || Navigate == EButtonsGame::LEFT || Navigate == EButtonsGame::RIGHT)
 	{
 		if (!bScroll && bInputEnable && bDelayPressed && bUpDownPressed && !bKeyTriggerLeft && !bKeyTriggerRight)
 		{
@@ -890,13 +913,13 @@ void UMainInterface::SetFocusCardToRight()
 
 void UMainInterface::OnNativeClick(FString RomPath)
 {
-	if (PositionY == EPositionY::CENTRAL && bInputEnable)
+	if (PositionY == EPositionY::CENTRAL && bInputEnable && cardReference.IsValidIndex(IndexCard))
 	{
 		UUserWidget::PlayAnimationForward(FadeStartSystem);
 		SetCountPlayerToSave();
 		UGameplayStatics::PlaySound2D(this, SoundSelect);
-
-		GetWorld()->GetTimerManager().SetTimer(LauncherTimerHandle, this, &UMainInterface::ClassicLaunch , 1.0f, false, -1);
+		cardReference[IndexCard]->AnimationFade();
+		GetWorld()->GetTimerManager().SetTimer(LauncherTimerHandle, this, &UMainInterface::ClassicLaunch, 1.0f, false, -1);
 
 	}
 	//this function is BlueprintImplementableEvent
@@ -914,9 +937,9 @@ void UMainInterface::ClassicLaunch()
 	if (UClassicFunctionLibrary::SwitchOnDefaultLibreto(ExecutablePath, CoreFormated, CanUnzip))
 	{
 		OpenLibretro(CoreFormated, PathRomFormated, CanUnzip);
-		UE_LOG(LogTemp, Warning, TEXT("RomPath %s , CorePath %s , CanUnzip %s"), *PathRomFormated, *CoreFormated, (CanUnzip ? TEXT("true") : TEXT("false")) );
+		UE_LOG(LogTemp, Warning, TEXT("RomPath %s , CorePath %s , CanUnzip %s"), *PathRomFormated, *CoreFormated, (CanUnzip ? TEXT("true") : TEXT("false")));
 	}
-	else 
+	else
 	{
 		TArray<FString> Commands;
 		Commands.Add(UClassicFunctionLibrary::HomeDirectoryReplace(Arguments));
@@ -937,13 +960,13 @@ void UMainInterface::OpenLibretro(FString CorePath, FString RomPath, bool CanUnz
 		GameSettingsRunningInternal();
 		RunningGame(true);
 	}
-	else 
+	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Error ClassicLibretroTVReference is null"));
 	}
 }
 
-void UMainInterface::OpenExternalProcess( FString ExecutablePath, TArray<FString> CommandArgs)
+void UMainInterface::OpenExternalProcess(FString ExecutablePath, TArray<FString> CommandArgs)
 {
 	UClassicFunctionLibrary::CreateProcess(ProcessID, ExecutablePath, CommandArgs, false, false);
 	GameSettingsRunning();
@@ -1228,6 +1251,7 @@ void UMainInterface::ClearData(bool bAnimationBarTop, bool bAnimationShowSystem)
 	IndexCard = 0;
 	PositionCenterX = 1;
 	PositionY = EPositionY::CENTRAL;
+	DescriptionScrollScale = 0.f;
 
 	bUpDownPressed = true;
 	bDelayPressed = true;
@@ -1557,6 +1581,20 @@ void UMainInterface::CreateFolders()
 
 }
 
+void UMainInterface::SetScrollDescription(EButtonsGame Scroll)
+{
+	if (Scroll == EButtonsGame::SCROLLUP)
+	{
+		DescriptionScrollScale = FMath::Clamp(DescriptionScrollScale - 25.0f, 0, ScrollDescription->GetScrollOffsetOfEnd());
+		ScrollDescription->SetScrollOffset(DescriptionScrollScale);
+	}
+	else if (Scroll == EButtonsGame::SCROLLDOWN)
+	{
+		DescriptionScrollScale = FMath::Clamp(DescriptionScrollScale + 25.0f, 0, ScrollDescription->GetScrollOffsetOfEnd());
+		ScrollDescription->SetScrollOffset(DescriptionScrollScale);
+	}
+}
+
 void UMainInterface::ScrollCards()
 {
 	if (PositionY == EPositionY::CENTRAL && HBListGame->RenderTransform.Translation.Y == 0)
@@ -1575,30 +1613,32 @@ void UMainInterface::ScrollCards()
 
 		if ((PositionCenterX == 1 || PositionCenterX == 4) && (FrameX == 0 || FrameX == 1155))
 		{
-			bScroll = false;
+			//bScroll = false;
 			const int32 HbGetPosition = HBListGame->RenderTransform.Translation.X;
-			int32 HbNewPosition;
-			int32 Min;
-			int32 Max;
+			int32 HbNewPosition = 0;
+			int32 Min = 0;
+			int32 Max = 0;
 			if (ENavigationScroll == EButtonsGame::RIGHT)
 			{
 				Min = (IndexCard - PositionCenterX) * -385;
 				Max = (IndexCard - PositionCenterX - 1) * -385;
 				//UE_LOG(LogTemp, Warning, TEXT("Min %d  Max %d"), Min, Max);
 
-				HbNewPosition = FMath::Clamp(HbGetPosition - SpeedScroll, Min, Max);
+				HbNewPosition = FMath::Clamp(HbGetPosition - SpeedScroll, Min, Max); //min
 				HBListGame->SetRenderTranslation(FVector2D(HbNewPosition, 0));
 				bScroll = HbGetPosition != HbNewPosition;
+				UE_LOG(LogTemp, Warning, TEXT("Min %d HbNewPosition %d Max %d"), Min, HbNewPosition, Max);
+
 			}
 			else if (ENavigationScroll == EButtonsGame::LEFT)
 			{
 				Min = IndexCard * -385;
 				Max = (IndexCard - PositionCenterX) * -385;
-				//UE_LOG(LogTemp, Warning, TEXT("Min %d  Max %d"), Min, Max);
 
-				HbNewPosition = FMath::Clamp(HbGetPosition + SpeedScroll, Min, Max);
+				HbNewPosition = FMath::Clamp(HbGetPosition + SpeedScroll, Min, Max); //max
 				HBListGame->SetRenderTranslation(FVector2D(HbNewPosition, 0));
 				bScroll = HbGetPosition != HbNewPosition;
+				UE_LOG(LogTemp, Warning, TEXT("Min %d HbNewPosition %d Max %d"), Min, HbNewPosition, Max);
 			}
 
 		}

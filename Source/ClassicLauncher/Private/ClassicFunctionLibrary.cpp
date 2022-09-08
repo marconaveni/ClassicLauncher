@@ -43,6 +43,9 @@ EButtonsGame UClassicFunctionLibrary::GetInputButton(const FKeyEvent& InKeyEvent
 	else if (KeyEvent == "D" || KeyEvent == "Gamepad_RightTrigger")  return EButtonsGame::RT;
 	else if (KeyEvent == "LeftControl" || KeyEvent == "Gamepad_Special_Right")  return EButtonsGame::START;
 	else if (KeyEvent == "Alt" || KeyEvent == "Gamepad_Special_Left")  return EButtonsGame::SELECT;
+	else if (KeyEvent == "Mouse_Scroll_Up" || KeyEvent == "Gamepad_RightStick_Up")  return EButtonsGame::SCROLLUP;
+	else if (KeyEvent == "Mouse_Scroll_Down" || KeyEvent == "Gamepad_RightStick_Down")  return EButtonsGame::SCROLLDOWN;
+
 	else return EButtonsGame::NONE;
 
 }
