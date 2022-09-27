@@ -24,6 +24,7 @@
 #include "Misc/Paths.h"
 #include "ClassicMediaPlayer.h"
 #include "ClassicLibretroTV.h"
+#include "ClassicConfigurations.h"
 #include "RuntimeImageLoader.h"
 #include "ToolTip.h"
 #include "Animation/UMGSequencePlayer.h"
@@ -34,37 +35,7 @@
 
 UMainInterface::UMainInterface(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	CountGarbageCollection = 0;
-	IndexCard = 0;
-	FirstIndex = 0;
-	LastIndex = 1;
-	IndexAsyncImage = 0;
-	ProcessID = 0;
-	PositionCenterX = 1;
-	PositionTopX = 1;
-	ENavigationButton = EButtonsGame::NONE;
-	ENavigationScroll = EButtonsGame::NONE;
-	ENavigationBack = EButtonsGame::NONE;
-	ENavigationA = EButtonsGame::NONE;
-	PositionY = EPositionY::CENTRAL;
-	Focus = EFocus::MAIN;
-	bDelayPressed = true;
-	bKeyPressed = false;
-	bUpDownPressed = true;
-	bKeyTriggerLeft = false;
-	bKeyTriggerRight = false;
-	bInputEnable = true;
-	bScroll = false;
-	bFilterFavorites = false;
-	bDelayFavoriteClick = false;
-	bHover = false;
-	TimerDelayAnimation = 0.18f;
-	TriggerDelayPressed = 0.15f;
-	SpeedScroll = 25.0f;/*31.0f;*/
-	CountSystem = 0;
-	CountLocationY = 0;
-	MaxFrameMove = 4;
-	DescriptionScrollScale = 0.f;
+	Clear();
 
 	TextTop.Add(TEXT(""));
 	TextTop.Add(TEXT("Game List"));
@@ -157,9 +128,6 @@ void UMainInterface::NativeOnInitialized()
 void UMainInterface::TimerTick()
 {
 
-
-
-
 }
 
 void UMainInterface::TriggerTick()
@@ -230,14 +198,17 @@ void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		bHover = false;
 	}
 
-
 	ScrollCards();
 
 }
 
 void UMainInterface::RestartWidget()
 {
-	UGameplayStatics::OpenLevel(this, FName("map"), true);
+	//UGameplayStatics::OpenLevel(this, FName("map"), true);
+	TxtDebug->SetVisibility(ESlateVisibility::Hidden);
+	TxtDebug->SetText(FText::FromString(""));
+	Clear();
+	LoadConfigSystemsNative();
 }
 
 void UMainInterface::OnErrorMessage(const FString& ErrorMessage)
@@ -274,7 +245,7 @@ void UMainInterface::LoadConfigurationNative()
 
 void UMainInterface::LoadConfigSystemsNative()
 {
-	bInputEnable = false;
+
 	const TArray<FConfigSystem> Systems = ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave;
 	if (Systems.Num() > 0)
 	{
@@ -454,7 +425,6 @@ FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const
 			}
 		}
 
-
 		if (Input == EButtonsGame::LB)
 		{
 			ENavigationButton = Input;
@@ -465,7 +435,6 @@ FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const
 			ENavigationButton = Input;
 			bKeyTriggerRight = true;
 		}
-
 
 	}
 	else
@@ -870,7 +839,6 @@ void UMainInterface::SetNavigationFocusDownBottom()
 			UUserWidget::PlayAnimationReverse(BarTop);
 			SetButtonsIconInterfaces(PositionY);
 		}
-
 	}
 }
 
@@ -978,7 +946,7 @@ void UMainInterface::OnNativeClickSystem(int32 Value)
 	if (bInputEnable)
 	{
 		CountSystem = Value;
-		ClearData(true, true);
+		ResetCards(true, true);
 
 		//this function is BlueprintImplementableEvent
 		OnClickSystem(Value);
@@ -1225,10 +1193,13 @@ void UMainInterface::SetRenderOpacityList() {
 	ImgFrame->SetRenderOpacity(0.f);
 	HBListGame->SetRenderOpacity(0.f);
 	WBPArrow->SetRenderOpacity(0.f);
+	TxtDebug->SetVisibility(ESlateVisibility::Hidden);
+	TxtDebug->SetText(FText::FromString(""));
 }
 
-void UMainInterface::ClearData(bool bAnimationBarTop, bool bAnimationShowSystem)
+void UMainInterface::ResetCards(bool bAnimationBarTop, bool bAnimationShowSystem)
 {
+
 	bInputEnable = false;
 
 	TxtDebug->SetVisibility(ESlateVisibility::Hidden);
@@ -1272,6 +1243,46 @@ void UMainInterface::ClearData(bool bAnimationBarTop, bool bAnimationShowSystem)
 
 	GetWorld()->GetTimerManager().SetTimer(DelayPressedTimerHandle, this, &UMainInterface::LoadListNative, 0.3f, false, -1);
 
+}
+
+void UMainInterface::Clear()
+{
+	CountGarbageCollection = 0;
+	IndexCard = 0;
+	FirstIndex = 0;
+	LastIndex = 1;
+	IndexAsyncImage = 0;
+	ProcessID = 0;
+	PositionCenterX = 1;
+	PositionTopX = 1;
+	ENavigationButton = EButtonsGame::NONE;
+	ENavigationScroll = EButtonsGame::NONE;
+	ENavigationBack = EButtonsGame::NONE;
+	ENavigationA = EButtonsGame::NONE;
+	PositionY = EPositionY::CENTRAL;
+	Focus = EFocus::MAIN;
+	bDelayPressed = true;
+	bKeyPressed = false;
+	bUpDownPressed = true;
+	bKeyTriggerLeft = false;
+	bKeyTriggerRight = false;
+	bInputEnable = false;
+	bScroll = false;
+	bFilterFavorites = false;
+	bDelayFavoriteClick = false;
+	bHover = false;
+	TimerDelayAnimation = 0.18f;
+	TriggerDelayPressed = 0.15f;
+	SpeedScroll = 28.0f;
+	CountSystem = 0;
+	CountLocationY = 0;
+	MaxFrameMove = 4;
+	DescriptionScrollScale = 0.f;
+
+	cardReference.Empty();
+	coverReference.Empty();
+	GameData.Empty();
+	NewGameData.Empty();
 }
 
 //Animations
@@ -1483,6 +1494,21 @@ void UMainInterface::OnClickSelectSystem()
 
 void UMainInterface::OnClickConfigurations()
 {
+	//Widget is UObject 
+	for (TObjectIterator<UClassicConfigurations> ObjectIterator; ObjectIterator; ++ObjectIterator)
+	{
+		ClassicConfigurationsReference = *ObjectIterator;
+		UE_LOG(LogTemp, Warning, TEXT("Reference UClassicConfigurations Founds: %s "), *ClassicConfigurationsReference->GetName());
+		if (ClassicConfigurationsReference)
+		{
+			break;
+		}
+	}
+	if (ClassicConfigurationsReference)
+	{
+		ClassicConfigurationsReference->SetVisibility(ESlateVisibility::Visible);
+		ClassicConfigurationsReference->SetKeyboardFocus();
+	}
 }
 
 void UMainInterface::OnClickFavorites()
@@ -1493,7 +1519,7 @@ void UMainInterface::OnClickFavorites()
 		OnNativeNavigationGame(EButtonsGame::DOWN);
 		UUserWidget::PlayAnimationReverse(BarTop);
 		BtnFavorites->SetFocusButton(false);
-		ClearData(false, false);
+		ResetCards(false, false);
 	}
 	else
 	{
@@ -1504,7 +1530,7 @@ void UMainInterface::OnClickFavorites()
 			OnNativeNavigationGame(EButtonsGame::DOWN);
 			UUserWidget::PlayAnimationReverse(BarTop);
 			BtnFavorites->SetFocusButton(false);
-			ClearData(false, false);
+			ResetCards(false, false);
 		}
 	}
 }
@@ -1526,7 +1552,7 @@ void UMainInterface::OnClickBackAction()
 		UKismetSystemLibrary::QuitGame(this, GetOwningPlayer(), EQuitPreference::Quit, false);
 		break;
 	case EPositionY::BOTTOM:
-		OnNativeNavigationGame(EButtonsGame::UP);
+		SetNavigationFocusUpBottom();
 		break;
 	default:
 		break;
@@ -1561,7 +1587,7 @@ void UMainInterface::CloseMenus()
 	}
 	else
 	{
-		OnNativeNavigationGame(EButtonsGame::DOWN);
+		SetNavigationFocusDownBottom();	
 	}
 }
 

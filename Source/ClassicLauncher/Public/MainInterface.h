@@ -193,6 +193,9 @@ protected:
 	class AClassicLibretroTV* ClassicLibretroTVReference;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
+	class UClassicConfigurations* ClassicConfigurationsReference;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
 	class USoundBase* SoundSelect;
 
 public:
@@ -522,7 +525,10 @@ public:
 	void SetRenderOpacityList();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void ClearData(bool bAnimationBarTop, bool bAnimationShowSystem);
+	void ResetCards(bool bAnimationBarTop, bool bAnimationShowSystem);
+
+	UFUNCTION()
+	void Clear();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnLoopStartAsyncImage(const int32& Index);
