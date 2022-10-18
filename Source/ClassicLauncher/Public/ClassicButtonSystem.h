@@ -43,8 +43,8 @@ public:
 	UClassicButtonSystem(const FObjectInitializer& ObjectInitializer);
 
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
-
 	virtual bool Initialize() override;
+	virtual void NativePreConstruct() override;
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicButtonSystem|Functions")
 	void SetText(FString NewText, int32 CountSystem_);
@@ -54,6 +54,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButtonSystem|Variables")
 	int32 CountSystem;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButtonSystem|Variables")
+	FString ButtonText;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButtonSystem|Variables")
 	class USoundBase* SoundSelect;
@@ -66,5 +69,5 @@ public:
 private:
 
 	UPROPERTY()
-	bool hover;
+	bool Hover;
 };

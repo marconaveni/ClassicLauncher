@@ -11,7 +11,7 @@
 UClassicButtonSystem::UClassicButtonSystem(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	CountSystem = 0;
-	hover = false;
+	Hover = false;
 }
 
 void UClassicButtonSystem::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -20,21 +20,21 @@ void UClassicButtonSystem::NativeTick(const FGeometry& MyGeometry, float InDelta
 	if (Click != nullptr) {
 		//equivale doonce blueprint
 		if (Click->HasKeyboardFocus()) {
-			if (!hover) {
+			if (!Hover) {
 				BgBackground->SetVisibility(ESlateVisibility::Visible);
 				WBPArrow->SetVisibility(ESlateVisibility::Visible);
 				OnFocusTrigger.Broadcast();
 				UGameplayStatics::PlaySound2D(this, SoundSelect);
 			}
-			hover = true;
+			Hover = true;
 		}
 		else {
-			if (hover) {
+			if (Hover) {
 				BgBackground->SetVisibility(ESlateVisibility::Hidden);
 				WBPArrow->SetVisibility(ESlateVisibility::Hidden);
 				OnFocusLostTrigger.Broadcast();
 			}
-			hover = false;
+			Hover = false;
 		}
 	}
 }
@@ -46,14 +46,21 @@ bool UClassicButtonSystem::Initialize()
 	{
 		Click->OnClicked.AddDynamic(this, &UClassicButtonSystem::ButtonClick);
 	}
+	
+	return Success;
+}
 
-	return false;
+void UClassicButtonSystem::NativePreConstruct()
+{
+	SetText(ButtonText, 0);
+	Super::NativePreConstruct();
 }
 
 void UClassicButtonSystem::SetText(FString NewText, int32 CountSystem_)
 {
 	Text->SetText(FText::FromString(NewText));
 	CountSystem = CountSystem_;
+	ButtonText = NewText;
 }
 
 void UClassicButtonSystem::ButtonClick()

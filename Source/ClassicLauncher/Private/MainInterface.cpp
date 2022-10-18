@@ -5,6 +5,7 @@
 #include "Card.h"
 #include "Cover.h"
 #include "ClassicButtonSystem.h"
+#include "ClassicSlide.h"
 #include "Components/HorizontalBox.h"
 #include "Components/Scrollbox.h"
 #include "Components/TextBlock.h"
@@ -1506,8 +1507,8 @@ void UMainInterface::OnClickConfigurations()
 	}
 	if (ClassicConfigurationsReference)
 	{
-		ClassicConfigurationsReference->SetVisibility(ESlateVisibility::Visible);
-		ClassicConfigurationsReference->SetKeyboardFocus();
+		ClassicConfigurationsReference->ShowConfiguration();
+		ClassicConfigurationsReference->SlideVolume->SetFocusSlide();
 	}
 }
 

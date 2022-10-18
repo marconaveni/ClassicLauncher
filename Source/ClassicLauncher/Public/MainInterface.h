@@ -37,7 +37,7 @@ class CLASSICLAUNCHER_API UMainInterface : public UUserWidget
 	GENERATED_BODY()
 
 
-protected:
+public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UHorizontalBox* HBListGame;
@@ -105,6 +105,8 @@ protected:
 	class UClassicButton* BtnInfo;
 
 	//animations WidgetBind
+
+protected:
 
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationX1;
