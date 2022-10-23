@@ -209,6 +209,7 @@ public:
 	virtual FReply NativeOnMouseWheel(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual void OnAnimationStartedPlaying(UUMGSequencePlayer& Player) override;
 	virtual void OnAnimationFinishedPlaying(UUMGSequencePlayer& Player) override;
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 
 	//variables
 
@@ -335,7 +336,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void LoadConfigurationNative();
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCosmetic, Category = "Teste")
 	void LoadConfiguration();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
@@ -538,6 +539,14 @@ private:
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnLostFocusInfo();
 
+	/**
+	* Function to avoid losing Focus on Widget .
+	*/
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
+	void OnPreventLoseFocus();
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
+	void SetTopButtonFocus();
+
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickSelectSystem();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
@@ -576,4 +585,5 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void ShowMessage(FString Message, float InRate);
+
 };

@@ -123,7 +123,7 @@ void UClassicConfigurations::SetIndexFocus(EButtonsGame Input)
 				IndexSelect = FMath::Clamp(IndexSelect - 1, 0, 3);
 			}
 			SetFocusSelect();	
-			GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &UClassicConfigurations::Delay, 0.13f, false, -1);
+			GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &UClassicConfigurations::Delay, 0.18f, false, -1);
 		}
 
 		const int32 SlideValue = SlideVolume->SlideValue;

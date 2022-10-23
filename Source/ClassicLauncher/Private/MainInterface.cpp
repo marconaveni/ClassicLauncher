@@ -238,7 +238,7 @@ void UMainInterface::LoadConfigurationNative()
 		UClassicFunctionLibrary::SetConfig(UClassicFunctionLibrary::LoadXMLSingle(ConfigResult, TEXT("config")), ConfigurationData);
 		UGameplayStatics::SetEnableWorldRendering(this, ConfigurationData.rendering);
 		ConfigurationData.pathmedia = (ConfigurationData.pathmedia != TEXT("")) ? ConfigurationData.pathmedia + TEXT("\\media") : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
-		WBPClassicConfigurationsInterface->SlideVolume->SetSlideValue(FMath::Clamp(ConfigurationData.volume , 0, 100));
+		WBPClassicConfigurationsInterface->SlideVolume->SetSlideValue(FMath::Clamp(ConfigurationData.volume, 0, 100));
 		LoadConfigSystemsNative();
 	}
 	else
@@ -515,6 +515,42 @@ void UMainInterface::OnAnimationFinishedPlaying(UUMGSequencePlayer& Player)
 	const UWidgetAnimation* AnimationGet = Player.GetAnimation();
 }
 
+FReply UMainInterface::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	OnPreventLoseFocus();
+	return  Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+}
+
+void UMainInterface::OnPreventLoseFocus()
+{
+	if (Focus == EFocus::MAIN)
+	{
+		if (PositionY == EPositionY::TOP)
+		{
+			SetTopButtonFocus();
+		}
+		else
+		{
+			if (cardReference.IsValidIndex(IndexCard))
+			{
+				cardReference[IndexCard]->BtnClick->SetKeyboardFocus();
+			}
+		}
+	}
+	else if (Focus == EFocus::SYSTEM || Focus == EFocus::INFO)
+	{
+		if (ButtonSystemReferences.IsValidIndex(IndexCard))
+		{
+			ButtonSystemReferences[CountLocationY]->Click->SetKeyboardFocus();
+		}
+	}
+	else if (Focus == EFocus::CONFIG)
+	{
+		WBPClassicConfigurationsInterface->SetFocusSelect();
+	}
+}
+
+
 void UMainInterface::GameSettingsInit()
 {
 	UGameUserSettings* Settings = UGameUserSettings::GetGameUserSettings();
@@ -662,7 +698,7 @@ void UMainInterface::OnNativeNavigationMain(EButtonsGame Navigate)
 
 void UMainInterface::OnNativeNavigationSystem(EButtonsGame Navigate)
 {
-	PressedDelayNavigation(0.13f);
+	PressedDelayNavigation(0.18f);
 	ENavigationButton = Navigate;
 	if (ENavigationButton == EButtonsGame::UP)
 	{
@@ -681,7 +717,7 @@ void UMainInterface::OnNativeNavigationSystem(EButtonsGame Navigate)
 
 void UMainInterface::OnNativeNavigationInfo(EButtonsGame Navigate)
 {
-	PressedDelayNavigation(0.13f);
+	PressedDelayNavigation(0.18f);
 	ENavigationButton = Navigate;
 	const float CurrentOffSet = WBPInfo->CurrentOffSet;
 	if (ENavigationButton == EButtonsGame::UP)
@@ -696,7 +732,6 @@ void UMainInterface::OnNativeNavigationInfo(EButtonsGame Navigate)
 
 void UMainInterface::OnNativeNavigationConfiguration(EButtonsGame Navigate)
 {
-	//PressedDelayNavigation(0.13f);
 	WBPClassicConfigurationsInterface->SetIndexFocus(Navigate);
 }
 
@@ -789,23 +824,28 @@ void UMainInterface::SetNavigationFocusUpBottom()
 		UUserWidget::PlayAnimationForward(BarTop);
 		SetButtonsIconInterfaces(PositionY);
 
-		switch (PositionTopX)
-		{
-		case 1:
-			BtnSelectSystem->BtButton->SetKeyboardFocus();
-			break;
-		case 2:
-			BtnConfigurations->BtButton->SetKeyboardFocus();
-			break;
-		case 3:
-			BtnFavorites->BtButton->SetKeyboardFocus();
-			break;
-		case 4:
-			BtnInfo->BtButton->SetKeyboardFocus();
-			break;
-		default:
-			break;
-		}
+		SetTopButtonFocus();
+	}
+}
+
+void UMainInterface::SetTopButtonFocus()
+{
+	switch (PositionTopX)
+	{
+	case 1:
+		BtnSelectSystem->BtButton->SetKeyboardFocus();
+		break;
+	case 2:
+		BtnConfigurations->BtButton->SetKeyboardFocus();
+		break;
+	case 3:
+		BtnFavorites->BtButton->SetKeyboardFocus();
+		break;
+	case 4:
+		BtnInfo->BtButton->SetKeyboardFocus();
+		break;
+	default:
+		break;
 	}
 }
 
@@ -1607,7 +1647,7 @@ void UMainInterface::CloseMenus()
 			WBPClassicConfigurationsInterface->CloseModal();
 		}
 		else
-		{	
+		{
 			GetWorld()->GetTimerManager().SetTimer(BackButtonTimerHandle, this, &UMainInterface::CloseBackMenu, 0.1f, false, -1);
 			Focus = EFocus::MAIN;
 		}
@@ -1634,6 +1674,7 @@ void UMainInterface::ShowMessage(FString Message, float InRate)
 {
 	MessageDisplay->ShowMessage(Message, InRate);
 }
+
 
 void UMainInterface::CreateFolders()
 {
