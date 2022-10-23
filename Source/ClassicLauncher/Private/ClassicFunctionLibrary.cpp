@@ -271,47 +271,63 @@ FString UClassicFunctionLibrary::ReplaceMedia(FString OriginalPathMedia, FString
 
 FString UClassicFunctionLibrary::CreateXMLGameFile(TArray<FGameData> gameData, FVector2D IgnoreImageSize)
 {
-	FString finalData;
+	FString NewGameData;
 
-	finalData += TEXT("<?xml version=\"1.0\"?>\n<gameList>\n");
+	NewGameData += TEXT("<?xml version=\"1.0\"?>\n<gameList>\n");
 
 	for (FGameData& data : gameData)
 	{
-		finalData += TEXT("<game>\n");
-		finalData += GenerateXmlTag(TEXT("path"), data.Path);
-		finalData += GenerateXmlTag(TEXT("name"), data.name);
-		finalData += GenerateXmlTag(TEXT("desc"), data.desc);
-		finalData += GenerateXmlTag(TEXT("rating"), data.rating);
-		finalData += GenerateXmlTag(TEXT("releasedate"), data.releasedate);
-		finalData += GenerateXmlTag(TEXT("developer"), data.developer);
-		finalData += GenerateXmlTag(TEXT("publisher"), data.publisher);
-		finalData += GenerateXmlTag(TEXT("genre"), data.genre);
-		finalData += GenerateXmlTag(TEXT("players"), data.players);
-		finalData += GenerateXmlTag(TEXT("hash"), data.hash);
-		finalData += GenerateXmlTag(TEXT("image"), data.image);
-		finalData += GenerateXmlTag(TEXT("thumbnail"), data.thumbnail);
-		finalData += GenerateXmlTag(TEXT("video"), data.video);
-		finalData += GenerateXmlTag(TEXT("genreid"), data.genreid);
-		finalData += GenerateXmlTag(TEXT("favorite"), (data.favorite) ? TEXT("true") : TEXT("false"));
-		finalData += GenerateXmlTag(TEXT("playcount"), FString::SanitizeFloat(data.playcount, 0));
-		finalData += GenerateXmlTag(TEXT("lastplayed"), data.lastplayed);
-		finalData += GenerateXmlTag(TEXT("executable"), data.Executable);
-		finalData += GenerateXmlTag(TEXT("arguments"), data.Arguments);
+		NewGameData += TEXT("<game>\n");
+		NewGameData += GenerateXmlTag(TEXT("path"), data.Path);
+		NewGameData += GenerateXmlTag(TEXT("name"), data.name);
+		NewGameData += GenerateXmlTag(TEXT("desc"), data.desc);
+		NewGameData += GenerateXmlTag(TEXT("rating"), data.rating);
+		NewGameData += GenerateXmlTag(TEXT("releasedate"), data.releasedate);
+		NewGameData += GenerateXmlTag(TEXT("developer"), data.developer);
+		NewGameData += GenerateXmlTag(TEXT("publisher"), data.publisher);
+		NewGameData += GenerateXmlTag(TEXT("genre"), data.genre);
+		NewGameData += GenerateXmlTag(TEXT("players"), data.players);
+		NewGameData += GenerateXmlTag(TEXT("hash"), data.hash);
+		NewGameData += GenerateXmlTag(TEXT("image"), data.image);
+		NewGameData += GenerateXmlTag(TEXT("thumbnail"), data.thumbnail);
+		NewGameData += GenerateXmlTag(TEXT("video"), data.video);
+		NewGameData += GenerateXmlTag(TEXT("genreid"), data.genreid);
+		NewGameData += GenerateXmlTag(TEXT("favorite"), (data.favorite) ? TEXT("true") : TEXT("false"));
+		NewGameData += GenerateXmlTag(TEXT("playcount"), FString::SanitizeFloat(data.playcount, 0));
+		NewGameData += GenerateXmlTag(TEXT("lastplayed"), data.lastplayed);
+		NewGameData += GenerateXmlTag(TEXT("executable"), data.Executable);
+		NewGameData += GenerateXmlTag(TEXT("arguments"), data.Arguments);
 		if (data.ImageX != IgnoreImageSize.X)
 		{
-			finalData += GenerateXmlTag(TEXT("imagex"), FString::SanitizeFloat(data.ImageX, 0));
+			NewGameData += GenerateXmlTag(TEXT("imagex"), FString::SanitizeFloat(data.ImageX, 0));
 		}
 		if (data.ImageX != IgnoreImageSize.X)
 		{
-			finalData += GenerateXmlTag(TEXT("imagey"), FString::SanitizeFloat(data.ImageY, 0));
+			NewGameData += GenerateXmlTag(TEXT("imagey"), FString::SanitizeFloat(data.ImageY, 0));
 		}
 
-		finalData += TEXT("</game>\n");
+		NewGameData += TEXT("</game>\n");
 
 	}
 
-	finalData += TEXT("</gameList>\n");
-	return finalData;
+	NewGameData += TEXT("</gameList>\n");
+	return NewGameData;
+}
+
+FString UClassicFunctionLibrary::CreateXMLConfigFile(FConfig ConfigData)
+{
+	FString NewConfigXml;
+
+	NewConfigXml += TEXT("<?xml version=\"1.0\"?>\n");
+
+	NewConfigXml += TEXT("<config>\n");
+	NewConfigXml += GenerateXmlTag(TEXT("pathmedia"), ConfigData.pathmedia);
+	NewConfigXml += GenerateXmlTag(TEXT("defaultstartsystem"), ConfigData.defaultstartsystem);
+	NewConfigXml += GenerateXmlTag(TEXT("rendering"), (ConfigData.rendering) ? TEXT("true"): TEXT("false"));
+	NewConfigXml += GenerateXmlTag(TEXT("volume"), FString::SanitizeFloat(ConfigData.volume, 0));
+	NewConfigXml += TEXT("</config>\n");
+
+	return NewConfigXml;
 }
 
 FString UClassicFunctionLibrary::GenerateXmlTag(FString tagName, FString data)

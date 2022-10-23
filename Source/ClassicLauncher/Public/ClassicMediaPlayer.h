@@ -77,4 +77,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Media|Functions")
 	void ChangeMasterVolume(int32 Volume);
+
+	UFUNCTION(BlueprintPure, Category = "Media|Functions")
+	int32 GetMasterVolume();
 };

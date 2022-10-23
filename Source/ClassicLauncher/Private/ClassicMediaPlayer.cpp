@@ -144,3 +144,8 @@ void AClassicMediaPlayer::ChangeMasterVolume(int32 Volume)
 	}
 }
 
+int32 AClassicMediaPlayer::GetMasterVolume()
+{
+	return MasterVolume;
+}
+

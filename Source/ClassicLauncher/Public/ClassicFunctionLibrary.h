@@ -149,6 +149,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData|XML")
 	static FString CreateXMLGameFile(TArray<FGameData> gameData, FVector2D IgnoreImageSize);
 
+	//create a file config.xml for save 
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData|XML")
+	static FString CreateXMLConfigFile(FConfig ConfigData);
+
 	//generate specific tag ex:  <name>value</name>
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData|XML")
 	static FString GenerateXmlTag(FString tagName, FString data);

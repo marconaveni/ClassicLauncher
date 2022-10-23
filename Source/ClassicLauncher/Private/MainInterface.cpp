@@ -693,7 +693,6 @@ void UMainInterface::OnNativeNavigationMain(EButtonsGame Navigate)
 	{
 		bUpDownPressed = false;
 		SetNavigationFocusUpBottom();
-
 	}
 	else if (ENavigationButton == EButtonsGame::DOWN)
 	{
@@ -1717,7 +1716,6 @@ void UMainInterface::ScrollCards()
 {
 	if (PositionY == EPositionY::CENTRAL && HBListGame->RenderTransform.Translation.Y == 0)
 	{
-
 		const float FrameX = ImgFrame->RenderTransform.Translation.X;
 
 		if (PositionCenterX == 1 && FrameX == 0)

@@ -52,6 +52,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void OnSlideVolume(int32 Value);
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
+	void OnSlideLostFocus();
+	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void OnClickUpdate(int32 Value);
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void OnClickDevice(int32 Value);

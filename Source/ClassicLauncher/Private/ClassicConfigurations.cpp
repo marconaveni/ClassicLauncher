@@ -14,6 +14,7 @@
 #include "ClassicSaveGame.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
+#include "ClassicFunctionLibrary.h"
 
 void UClassicConfigurations::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
@@ -29,6 +30,7 @@ void UClassicConfigurations::NativeOnInitialized()
 	IndexSelect = 0;
 
 	SlideVolume->OnSlide.AddDynamic(this, &UClassicConfigurations::OnSlideVolume);
+	SlideVolume->OnFocusLostTriggerSlide.AddDynamic(this, &UClassicConfigurations::OnSlideLostFocus);
 	BtnUpdateGameList->OnClickTrigger.AddDynamic(this, &UClassicConfigurations::OnClickUpdate);
 	BtnDeviceInfo->OnClickTrigger.AddDynamic(this, &UClassicConfigurations::OnClickDevice);
 	BtnLicenseInfo->OnClickTrigger.AddDynamic(this, &UClassicConfigurations::OnClickLicense);
@@ -57,8 +59,40 @@ FReply UClassicConfigurations::NativeOnPreviewKeyDown(const FGeometry& InGeometr
 
 void UClassicConfigurations::OnSlideVolume(int32 Value)
 {
-	ClassicMediaPlayerReference->ChangeMasterVolume(Value);
-	//UE_LOG(LogTemp, Warning, TEXT("The slide value is: %d"), Value);
+	if (IsValid(ClassicMediaPlayerReference))
+	{
+		ClassicMediaPlayerReference->ChangeMasterVolume(Value);
+	}
+}
+
+void UClassicConfigurations::OnSlideLostFocus()
+{
+	if (!IsValid(MainInterfaceReference) && !IsValid(ClassicMediaPlayerReference))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("MainInterfaceReference ClassicMediaPlayerReference error"));
+		return;
+	}
+
+	FConfig ConfigData = MainInterfaceReference->ConfigurationData;
+	const int32 ConfigurationDataVolume = ConfigData.volume;
+	const int32 MediaPlayerVolume = ClassicMediaPlayerReference->GetMasterVolume();
+
+	if (MediaPlayerVolume == ConfigurationDataVolume)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("MediaPlayerVolume %d ConfigurationDataVolume %d are equal"), MediaPlayerVolume, ConfigurationDataVolume);
+		return;
+	}
+
+	FString RootDir = UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
+	ConfigData.pathmedia = (RootDir == ConfigData.pathmedia) ? TEXT("$(remove)") : ConfigData.pathmedia;
+	ConfigData.volume = MediaPlayerVolume;
+	FString XmlConfig = UClassicFunctionLibrary::CreateXMLConfigFile(ConfigData);
+	XmlConfig = XmlConfig.Replace(TEXT("$(remove)"), TEXT(""), ESearchCase::IgnoreCase);
+	const FString PathToSave = UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("config");
+	MainInterfaceReference->ConfigurationData = ConfigData;
+	const bool Saved = (UClassicFunctionLibrary::SaveStringToFile(PathToSave, TEXT("config.xml"), XmlConfig, true, false));
+
+	UE_LOG(LogTemp, Warning, TEXT("%s"), (Saved) ? TEXT("Saved File") : TEXT("Not Saved File"));
 }
 
 void UClassicConfigurations::OnClickUpdate(int32 Value)
@@ -75,7 +109,7 @@ void UClassicConfigurations::OnClickUpdate(int32 Value)
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Cannot Delete Save"));
+		UE_LOG(LogTemp, Warning, TEXT("MainInterfaceReference or ClassicMediaPlayerReference references error"));
 	}
 
 }
@@ -107,41 +141,37 @@ void UClassicConfigurations::CloseModal()
 
 void UClassicConfigurations::SetIndexFocus(EButtonsGame Input)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("bDelayInput %s"), (bDelayInput)? TEXT("true") : TEXT("false"));
-	if (!bFocus && !bDelayInput)
+	if (bFocus || bDelayInput) return;
+
+	if (Input == EButtonsGame::UP || Input == EButtonsGame::DOWN)
 	{
-
-		if (Input == EButtonsGame::UP || Input == EButtonsGame::DOWN)
+		bDelayInput = true;
+		if (Input == EButtonsGame::DOWN)
 		{
-			bDelayInput = true;
-			if (Input == EButtonsGame::DOWN)
-			{
-				IndexSelect = FMath::Clamp(IndexSelect + 1, 0, 3);
-			}
-			else if(Input == EButtonsGame::UP)
-			{
-				IndexSelect = FMath::Clamp(IndexSelect - 1, 0, 3);
-			}
-			SetFocusSelect();	
-			GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &UClassicConfigurations::Delay, 0.18f, false, -1);
+			IndexSelect = FMath::Clamp(IndexSelect + 1, 0, 3);
 		}
-
-		const int32 SlideValue = SlideVolume->SlideValue;
-
-		UE_LOG(LogTemp, Warning, TEXT("slidevalue %d"), SlideValue);
-
-		if (IndexSelect == 0)
+		else if (Input == EButtonsGame::UP)
 		{
-			if (Input == EButtonsGame::LEFT)
-			{
-				SlideVolume->SetSlideValue(SlideValue - 1);
-			}
-			else if (Input == EButtonsGame::RIGHT)
-			{
-				SlideVolume->SetSlideValue(SlideValue + 1);
-			}
+			IndexSelect = FMath::Clamp(IndexSelect - 1, 0, 3);
+		}
+		SetFocusSelect();
+		GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &UClassicConfigurations::Delay, 0.18f, false, -1);
+	}
+
+	const int32 SlideValue = SlideVolume->SlideValue;
+
+	if (IndexSelect == 0)
+	{
+		if (Input == EButtonsGame::LEFT)
+		{
+			SlideVolume->SetSlideValue(SlideValue - 1);
+		}
+		else if (Input == EButtonsGame::RIGHT)
+		{
+			SlideVolume->SetSlideValue(SlideValue + 1);
 		}
 	}
+
 }
 
 void UClassicConfigurations::SetFocusSelect()
@@ -174,8 +204,5 @@ void UClassicConfigurations::Delay()
 void UClassicConfigurations::RestartMap()
 {
 	UGameplayStatics::OpenLevel(this, FName("map"), true);
-	//MainInterfaceReference->RestartWidget();
-	//MainInterfaceReference->CloseBackMenu();
-	//CloseModal();
 }
 
