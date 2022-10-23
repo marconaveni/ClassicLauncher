@@ -211,12 +211,16 @@ struct FConfig
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool rendering;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 volume;
+
 	//construtor
 	FConfig()
 	{
 		pathmedia = TEXT("");
 		defaultstartsystem = TEXT("");
-		rendering = true;	
+		rendering = true;
+		volume = 80;
 	}
 
 };

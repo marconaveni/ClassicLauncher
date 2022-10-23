@@ -18,6 +18,12 @@ public:
 
 protected:
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
+	class USoundClass* MasterSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
+	class USoundMix* MasterSoundMix;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess = "true"))
 	class UMediaSoundComponent* ClassicPlayerMusic;
 
@@ -33,10 +39,16 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Media|Variables")
 	int32 Random;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Media|Variables")
+	int32 MasterVolume;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Reference")
+	class UMainInterface* MainInterfaceReference;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -62,4 +74,7 @@ public:
 	void OnEndMusic();
 	UFUNCTION(BlueprintCallable, Category = "Media|Functions")
 	void OnEndVideo();
+
+	UFUNCTION(BlueprintCallable, Category = "Media|Functions")
+	void ChangeMasterVolume(int32 Volume);
 };

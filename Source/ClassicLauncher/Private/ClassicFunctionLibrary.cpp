@@ -353,6 +353,7 @@ void UClassicFunctionLibrary::SetConfig(UEasyXMLElement* Element, FConfig& Confi
 	Config.defaultstartsystem = Element->ReadString(TEXT("defaultstartsystem"));
 	Config.pathmedia = Element->ReadString(TEXT("pathmedia"));
 	Config.rendering = Element->ReadBool(TEXT("rendering"));
+	Config.volume = Element->ReadInt(TEXT("volume"));
 }
 
 void UClassicFunctionLibrary::SetConfigSystem(TArray<UEasyXMLElement*>  Elements, TArray<FConfigSystem>& ConfigSystems)

@@ -32,6 +32,8 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Components/CanvasPanel.h"
 #include "EngineUtils.h"
+#include "MessageBalloon.h"
+
 
 
 UMainInterface::UMainInterface(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -120,6 +122,10 @@ void UMainInterface::NativeOnInitialized()
 		UE_LOG(LogTemp, Warning, TEXT("Reference AClassicLibretroTV Founds: %s "), *ClassicLibretroTVReference->GetName());
 	}
 
+	ClassicMediaPlayerReference->MainInterfaceReference = this;
+	ClassicMediaPlayerReference->SetMusics(TEXT(""));
+
+
 	GetWorld()->GetTimerManager().SetTimer(TickTimerHandle, this, &UMainInterface::TimerTick, 0.015f, true, -1);
 	GetWorld()->GetTimerManager().SetTimer(TriggerTimerHandle, this, &UMainInterface::TriggerTick, TriggerDelayPressed, false, -1);
 
@@ -128,7 +134,6 @@ void UMainInterface::NativeOnInitialized()
 
 void UMainInterface::TimerTick()
 {
-
 }
 
 void UMainInterface::TriggerTick()
@@ -149,7 +154,7 @@ void UMainInterface::TriggerTick()
 	}
 	else if (bKeyPressed && PositionY == EPositionY::CENTRAL)
 	{
-		SpeedScroll = FMath::Clamp(SpeedScroll + 0.2f , 28.0f, 38.0f);
+		SpeedScroll = FMath::Clamp(SpeedScroll + 0.2f, 28.0f, 38.0f);
 	}
 	else
 	{
@@ -200,7 +205,6 @@ void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	}
 
 	ScrollCards();
-
 }
 
 void UMainInterface::RestartWidget()
@@ -234,6 +238,7 @@ void UMainInterface::LoadConfigurationNative()
 		UClassicFunctionLibrary::SetConfig(UClassicFunctionLibrary::LoadXMLSingle(ConfigResult, TEXT("config")), ConfigurationData);
 		UGameplayStatics::SetEnableWorldRendering(this, ConfigurationData.rendering);
 		ConfigurationData.pathmedia = (ConfigurationData.pathmedia != TEXT("")) ? ConfigurationData.pathmedia + TEXT("\\media") : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
+		WBPClassicConfigurationsInterface->SlideVolume->SetSlideValue(FMath::Clamp(ConfigurationData.volume , 0, 100));
 		LoadConfigSystemsNative();
 	}
 	else
@@ -592,8 +597,9 @@ void UMainInterface::CreateGameSystems()
 		UClassicButtonSystem* ButtonSystem = nullptr;
 		for (int32 i = 0; i < Systems.Num(); i++) {
 			ButtonSystem = CreateWidget<UClassicButtonSystem>(GetOwningPlayer(), buttonSystemClass);
-			ButtonSystem->SetText(Systems[i].SystemLabel, i);
 			ButtonSystem->OnClickTrigger.AddDynamic(this, &UMainInterface::OnNativeClickSystem);
+			ButtonSystem->SetText(Systems[i].SystemLabel);
+			ButtonSystem->SetCount(i);
 			ButtonSystemReferences.Add(ButtonSystem);
 			WBPSystemsList->ScrollBoxSystems->AddChild(ButtonSystem);
 		}
@@ -618,8 +624,9 @@ void UMainInterface::OnNativeNavigationGame(EButtonsGame Navigate)
 		{
 			OnNavigationGame(Navigate); //Call Event Blueprint
 			if (Focus == EFocus::MAIN) { OnNativeNavigationMain(Navigate); }
-			if (Focus == EFocus::SYSTEM) { OnNativeNavigationSystem(Navigate); }
-			if (Focus == EFocus::INFO) { OnNativeNavigationInfo(Navigate); }
+			else if (Focus == EFocus::SYSTEM) { OnNativeNavigationSystem(Navigate); }
+			else if (Focus == EFocus::INFO) { OnNativeNavigationInfo(Navigate); }
+			else if (Focus == EFocus::CONFIG) { OnNativeNavigationConfiguration(Navigate); }
 		}
 	}
 }
@@ -664,7 +671,6 @@ void UMainInterface::OnNativeNavigationSystem(EButtonsGame Navigate)
 	else if (ENavigationButton == EButtonsGame::DOWN)
 	{
 		CountLocationY = FMath::Clamp(CountLocationY + 1, 0, ButtonSystemReferences.Num() - 1);
-		UE_LOG(LogTemp, Warning, TEXT("The integer value is: %d"), CountLocationY);
 	}
 
 	if (ButtonSystemReferences.IsValidIndex(CountLocationY))
@@ -686,6 +692,12 @@ void UMainInterface::OnNativeNavigationInfo(EButtonsGame Navigate)
 	{
 		WBPInfo->Scrolled(CurrentOffSet + 200);
 	}
+}
+
+void UMainInterface::OnNativeNavigationConfiguration(EButtonsGame Navigate)
+{
+	//PressedDelayNavigation(0.13f);
+	WBPClassicConfigurationsInterface->SetIndexFocus(Navigate);
 }
 
 void UMainInterface::OnNavigationFocus(UCard* Card)
@@ -946,7 +958,8 @@ void UMainInterface::OnNativeClickSystem(int32 Value)
 {
 	if (bInputEnable)
 	{
-		CountSystem = Value;
+		UE_LOG(LogTemp, Warning, TEXT("The OnNativeClickSystem parameter value is: %d"), Value);
+		CountSystem = Value;   //CountSystem = CountLocationY;
 		ResetCards(true, true);
 
 		//this function is BlueprintImplementableEvent
@@ -1115,6 +1128,7 @@ void UMainInterface::SetFavoriteToSave()
 			SaveGameList();
 
 			SetButtonsIconInterfaces(EPositionY::CENTRAL);
+			ShowMessage((ToggleFavorite ? TEXT("Add game to favorite") : TEXT("Remove game to favorite")), 3.5f);
 		}
 	}
 }
@@ -1241,7 +1255,6 @@ void UMainInterface::ResetCards(bool bAnimationBarTop, bool bAnimationShowSystem
 	}
 
 	SetButtonsIconInterfaces(EPositionY::CENTRAL);
-
 	GetWorld()->GetTimerManager().SetTimer(DelayPressedTimerHandle, this, &UMainInterface::LoadListNative, 0.3f, false, -1);
 
 }
@@ -1362,18 +1375,22 @@ void UMainInterface::AnimationFrameToTop(UWidgetAnimation* Animation1, UWidgetAn
 
 }
 
+
 //bind buttons
+
 
 void UMainInterface::OnFocusSelectSystem()
 {
 	PositionTopX = 1;
 	SetToolTip(WBPToolTipSystem);
 	WBPToolTipSystem->SetToolTipVisibility(ESlateVisibility::Visible);
+	const int32 FramePosition = ImgFrame->RenderTransform.Translation.Y;
+	UE_LOG(LogTemp, Warning, TEXT("Position Frame Y %d"), FramePosition);
 	if (ENavigationButton == EButtonsGame::LEFT)
 	{
 		UUserWidget::PlayAnimationReverse(FrameAnimationXTop1);
 	}
-	else if (ENavigationButton == EButtonsGame::UP)
+	else if (ENavigationButton == EButtonsGame::UP && FramePosition == 0)
 	{
 		AnimationFrameToTop(FrameAnimationY1ToSystems, FrameAnimationY2ToSystems, FrameAnimationY3ToSystems, FrameAnimationY4ToSystems, false);
 	}
@@ -1384,6 +1401,8 @@ void UMainInterface::OnFocusConfigurations()
 	PositionTopX = 2;
 	SetToolTip(WBPToolTipConfiguration);
 	WBPToolTipConfiguration->SetToolTipVisibility(ESlateVisibility::Visible);
+	const int32 FramePosition = ImgFrame->RenderTransform.Translation.Y;
+	UE_LOG(LogTemp, Warning, TEXT("Position Frame Y %d"), FramePosition);
 	if (ENavigationButton == EButtonsGame::LEFT)
 	{
 		UUserWidget::PlayAnimationReverse(FrameAnimationXTop2);
@@ -1392,7 +1411,7 @@ void UMainInterface::OnFocusConfigurations()
 	{
 		UUserWidget::PlayAnimationForward(FrameAnimationXTop1);
 	}
-	else if (ENavigationButton == EButtonsGame::UP)
+	else if (ENavigationButton == EButtonsGame::UP && FramePosition == 0)
 	{
 		AnimationFrameToTop(FrameAnimationY1ToConfig, FrameAnimationY2ToConfig, FrameAnimationY3ToConfig, FrameAnimationY4ToConfig, false);
 	}
@@ -1403,6 +1422,8 @@ void UMainInterface::OnFocusFavorites()
 	PositionTopX = 3;
 	SetToolTip(WBPToolTipFavorites);
 	WBPToolTipFavorites->SetToolTipVisibility(ESlateVisibility::Visible);
+	const int32 FramePosition = ImgFrame->RenderTransform.Translation.Y;
+	UE_LOG(LogTemp, Warning, TEXT("Position Frame Y %d"), FramePosition);
 	if (ENavigationButton == EButtonsGame::LEFT)
 	{
 		UUserWidget::PlayAnimationReverse(FrameAnimationXTop3);
@@ -1411,7 +1432,7 @@ void UMainInterface::OnFocusFavorites()
 	{
 		UUserWidget::PlayAnimationForward(FrameAnimationXTop2);
 	}
-	else if (ENavigationButton == EButtonsGame::UP)
+	else if (ENavigationButton == EButtonsGame::UP && FramePosition == 0)
 	{
 		AnimationFrameToTop(FrameAnimationY1ToFavorite, FrameAnimationY2ToFavorite, FrameAnimationY3ToFavorite, FrameAnimationY4ToFavorite, false);
 	}
@@ -1423,11 +1444,13 @@ void UMainInterface::OnFocusInfo()
 	PositionTopX = 4;
 	SetToolTip(WBPToolTipInfo);
 	WBPToolTipInfo->SetToolTipVisibility(ESlateVisibility::Visible);
+	const int32 FramePosition = ImgFrame->RenderTransform.Translation.Y;
+	UE_LOG(LogTemp, Warning, TEXT("Position Frame Y %d"), FramePosition);
 	if (ENavigationButton == EButtonsGame::RIGHT)
 	{
 		UUserWidget::PlayAnimationForward(FrameAnimationXTop3);
 	}
-	else if (ENavigationButton == EButtonsGame::UP)
+	else if (ENavigationButton == EButtonsGame::UP && FramePosition == 0)
 	{
 		AnimationFrameToTop(FrameAnimationY1ToInfo, FrameAnimationY2ToInfo, FrameAnimationY3ToInfo, FrameAnimationY4ToInfo, false);
 	}
@@ -1495,21 +1518,10 @@ void UMainInterface::OnClickSelectSystem()
 
 void UMainInterface::OnClickConfigurations()
 {
-	//Widget is UObject 
-	for (TObjectIterator<UClassicConfigurations> ObjectIterator; ObjectIterator; ++ObjectIterator)
-	{
-		ClassicConfigurationsReference = *ObjectIterator;
-		UE_LOG(LogTemp, Warning, TEXT("Reference UClassicConfigurations Founds: %s "), *ClassicConfigurationsReference->GetName());
-		if (ClassicConfigurationsReference)
-		{
-			break;
-		}
-	}
-	if (ClassicConfigurationsReference)
-	{
-		ClassicConfigurationsReference->ShowConfiguration();
-		ClassicConfigurationsReference->SlideVolume->SetFocusSlide();
-	}
+	Focus = EFocus::CONFIG;
+	ENavigationButton = EButtonsGame::NONE;
+	UUserWidget::PlayAnimationForward(AnimationShowConfiguration);
+	WBPClassicConfigurationsInterface->SetFocusSelect();
 }
 
 void UMainInterface::OnClickFavorites()
@@ -1521,6 +1533,7 @@ void UMainInterface::OnClickFavorites()
 		UUserWidget::PlayAnimationReverse(BarTop);
 		BtnFavorites->SetFocusButton(false);
 		ResetCards(false, false);
+		ShowMessage(TEXT("Show all games"), 3.5f);
 	}
 	else
 	{
@@ -1532,6 +1545,11 @@ void UMainInterface::OnClickFavorites()
 			UUserWidget::PlayAnimationReverse(BarTop);
 			BtnFavorites->SetFocusButton(false);
 			ResetCards(false, false);
+			ShowMessage(TEXT("Show only favorites"), 3.5f);
+		}
+		else
+		{
+			ShowMessage(TEXT("No favorites to show"), 3.5f);
 		}
 	}
 }
@@ -1573,12 +1591,26 @@ void UMainInterface::CloseMenus()
 {
 	const float TranslationSystemSelect = CanvasPanelSystemSelect->RenderTransform.Translation.Y;
 	const float TranslationInfo = CanvasPanelInfo->RenderTransform.Translation.Y;
+	const float TranslationConfiguration = CanvasPanelConfiguration->RenderTransform.Translation.Y;
 
 	if (TranslationSystemSelect == 0)
 	{
 		UUserWidget::PlayAnimationReverse(ShowSystem);
 		BtnSelectSystem->BtButton->SetKeyboardFocus();
 		Focus = EFocus::MAIN;
+	}
+	else if (TranslationConfiguration == 0)
+	{
+		ENavigationButton = EButtonsGame::NONE;
+		if (WBPClassicConfigurationsInterface->bFocus)
+		{
+			WBPClassicConfigurationsInterface->CloseModal();
+		}
+		else
+		{	
+			GetWorld()->GetTimerManager().SetTimer(BackButtonTimerHandle, this, &UMainInterface::CloseBackMenu, 0.1f, false, -1);
+			Focus = EFocus::MAIN;
+		}
 	}
 	else if (TranslationInfo == 0)
 	{
@@ -1588,8 +1620,19 @@ void UMainInterface::CloseMenus()
 	}
 	else
 	{
-		SetNavigationFocusDownBottom();	
+		SetNavigationFocusDownBottom();
 	}
+}
+
+void UMainInterface::CloseBackMenu()
+{
+	UUserWidget::PlayAnimationReverse(AnimationShowConfiguration);
+	BtnConfigurations->BtButton->SetKeyboardFocus();
+}
+
+void UMainInterface::ShowMessage(FString Message, float InRate)
+{
+	MessageDisplay->ShowMessage(Message, InRate);
 }
 
 void UMainInterface::CreateFolders()
@@ -1654,7 +1697,7 @@ void UMainInterface::ScrollCards()
 				HbNewPosition = FMath::Clamp(HbGetPosition - SpeedScroll, Min, Max); //min
 				HBListGame->SetRenderTranslation(FVector2D(HbNewPosition, 0));
 				bScroll = HbGetPosition != HbNewPosition;
-				UE_LOG(LogTemp, Warning, TEXT("Min %d HbNewPosition %d Max %d"), Min, HbNewPosition, Max);
+				//UE_LOG(LogTemp, Warning, TEXT("Min %d HbNewPosition %d Max %d"), Min, HbNewPosition, Max);
 
 			}
 			else if (ENavigationScroll == EButtonsGame::LEFT)
@@ -1665,7 +1708,7 @@ void UMainInterface::ScrollCards()
 				HbNewPosition = FMath::Clamp(HbGetPosition + SpeedScroll, Min, Max); //max
 				HBListGame->SetRenderTranslation(FVector2D(HbNewPosition, 0));
 				bScroll = HbGetPosition != HbNewPosition;
-				UE_LOG(LogTemp, Warning, TEXT("Min %d HbNewPosition %d Max %d"), Min, HbNewPosition, Max);
+				//UE_LOG(LogTemp, Warning, TEXT("Min %d HbNewPosition %d Max %d"), Min, HbNewPosition, Max);
 			}
 
 		}

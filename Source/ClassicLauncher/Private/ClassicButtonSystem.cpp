@@ -52,15 +52,19 @@ bool UClassicButtonSystem::Initialize()
 
 void UClassicButtonSystem::NativePreConstruct()
 {
-	SetText(ButtonText, 0);
+	SetText(ButtonText);
 	Super::NativePreConstruct();
 }
 
-void UClassicButtonSystem::SetText(FString NewText, int32 CountSystem_)
+void UClassicButtonSystem::SetText(FString NewText)
 {
 	Text->SetText(FText::FromString(NewText));
-	CountSystem = CountSystem_;
 	ButtonText = NewText;
+}
+
+void UClassicButtonSystem::SetCount(int32 NewValue)
+{
+	CountSystem = NewValue;
 }
 
 void UClassicButtonSystem::ButtonClick()

@@ -11,34 +11,36 @@
 void AClassicGameMode::BeginPlay()
 {
 	Super::BeginPlay();
-	if (MainInterfaceClass && ClassicConfigurationsClass) // Check if the Asset is assigned in the blueprint.
+	if (MainInterfaceClass) // Check if the Asset is assigned in the blueprint.
 	{
 		APlayerController* GameplayStatics = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 		// Create the widget and store it.
 		MainInterfaceReference = CreateWidget<UMainInterface>(GameplayStatics, MainInterfaceClass);
-		ClassicConfigurationsReference = CreateWidget<UClassicConfigurations>(GameplayStatics, ClassicConfigurationsClass);
 
-		if (MainInterfaceReference && ClassicConfigurationsReference)
+		if (MainInterfaceReference /*&& ClassicConfigurationsReference*/)
 		{
 			//let add it to the view port
 			MainInterfaceReference->AddToViewport(0);
-			ClassicConfigurationsReference->AddToViewport(1);
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("MainInterfaceReference or ClassicConfigurationsReference Not Found or Null"));
+			UE_LOG(LogTemp, Warning, TEXT("MainInterfaceReference Not Found or Null"));
 		}
 	
 		//Show the Cursor.
 		GameplayStatics->bShowMouseCursor = false;
+		
 
 		//Input mode settings. 
 		FInputModeGameAndUI InputMode;
 		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-		InputMode.SetHideCursorDuringCapture(true);
+		InputMode.SetHideCursorDuringCapture(true);	
 
 		//set input mode
 		GameplayStatics->SetInputMode(InputMode);
+
+		//Mouse focus mode 
+		UGameplayStatics::SetViewportMouseCaptureMode(GameplayStatics, EMouseCaptureMode::CaptureDuringRightMouseDown);
 	}
 	else
 	{

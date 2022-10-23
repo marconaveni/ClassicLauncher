@@ -47,7 +47,10 @@ public:
 	virtual void NativePreConstruct() override;
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicButtonSystem|Functions")
-	void SetText(FString NewText, int32 CountSystem_);
+	void SetText(FString NewText);
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicButtonSystem|Functions")
+	void SetCount(int32 NewValue);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicButtonSystem|Functions")
 	void ButtonClick();

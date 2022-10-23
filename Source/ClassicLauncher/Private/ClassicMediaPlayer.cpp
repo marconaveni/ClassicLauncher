@@ -6,7 +6,7 @@
 #include "Runtime/MediaAssets/Public/MediaPlayer.h"
 #include "ClassicFunctionLibrary.h"
 #include "MainInterface.h"
-
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AClassicMediaPlayer::AClassicMediaPlayer()
@@ -28,6 +28,20 @@ AClassicMediaPlayer::AClassicMediaPlayer()
 void AClassicMediaPlayer::BeginPlay()
 {
 	Super::BeginPlay();
+
+	FConfig ConfigurationData;
+	FString ConfigResult;
+	const FString GameRoot = UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("config\\config.xml");
+
+	if (bool IsValidConfig = UClassicFunctionLibrary::LoadStringFile(ConfigResult, GameRoot))
+	{
+		UClassicFunctionLibrary::SetConfig(UClassicFunctionLibrary::LoadXMLSingle(ConfigResult, TEXT("config")), ConfigurationData);
+		ChangeMasterVolume(ConfigurationData.volume);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s Not Found"), *GameRoot);
+	}
 
 	ClassicPlayerVideo->GetMediaPlayer()->OnEndReached.AddDynamic(this, &AClassicMediaPlayer::OnEndVideo);
 	ClassicPlayerMusic->GetMediaPlayer()->OnEndReached.AddDynamic(this, &AClassicMediaPlayer::OnEndMusic);
@@ -62,8 +76,13 @@ void AClassicMediaPlayer::PlayMusic()
 
 		UE_LOG(LogTemp, Warning, TEXT("File name is %s"), *File);
 
+
 		if (ClassicPlayerMusic->GetMediaPlayer()->CanPlayUrl(File))
 		{
+			if (MainInterfaceReference != nullptr)
+			{
+				MainInterfaceReference->ShowMessage(TEXT("Playing ") + MediaFiles[Random], 3.5f);
+			}
 			PauseVideo();
 			ClassicPlayerMusic->GetMediaPlayer()->OpenUrl(File);
 		}
@@ -113,5 +132,15 @@ void AClassicMediaPlayer::OnEndVideo()
 		ObjectIterator->SetImageBottom();
 	}
 	ResumeMusic();
+}
+
+void AClassicMediaPlayer::ChangeMasterVolume(int32 Volume)
+{
+	if (MasterSoundMix != nullptr && MasterSound != nullptr)
+	{
+		MasterVolume = Volume;
+		const float NewVolume = FMath::Clamp(Volume * 0.01f, 0.01f, 1.0f);
+		UGameplayStatics::SetSoundMixClassOverride(this, MasterSoundMix, MasterSound, Volume * 0.01f, 1.0f, 0.0f, true);
+	}
 }
 

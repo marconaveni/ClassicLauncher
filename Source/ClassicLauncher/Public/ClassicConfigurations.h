@@ -16,14 +16,18 @@ class CLASSICLAUNCHER_API UClassicConfigurations : public UUserWidget
 	
 public:
 
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual void NativeOnInitialized() override;
 	virtual FReply NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
 	class UMainInterface* MainInterfaceReference;
-
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* ShowConfigurations;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicConfigurations|Variables")
+	bool bFocus;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicConfigurations|Variables")
+	bool bDelayInput;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicConfigurations|Variables")
+	int32 IndexSelect;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* Background;
@@ -35,7 +39,37 @@ public:
 	class UClassicButtonSystem* BtnDeviceInfo;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UClassicButtonSystem* BtnLicenseInfo;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UWidgetSwitcher* WSButtons;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UWidgetSwitcher* WSDeviceInfo;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UWidgetSwitcher* WSDeviceLicense;
 
-	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Functions")
-	void ShowConfiguration();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
+	class AClassicMediaPlayer* ClassicMediaPlayerReference;
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
+	void OnSlideVolume(int32 Value);
+	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
+	void OnClickUpdate(int32 Value);
+	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
+	void OnClickDevice(int32 Value);
+	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
+	void OnClickLicense(int32 Value);
+	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
+	void CloseModal();
+	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
+	void SetIndexFocus(EButtonsGame Input);
+	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
+	void SetFocusSelect();
+	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
+	void Delay();
+	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
+	void RestartMap();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicConfigurations|Timers")
+	FTimerHandle RestartMapTimerHandle;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicConfigurations|Timers")
+	FTimerHandle DelayTimerHandle;
 };
