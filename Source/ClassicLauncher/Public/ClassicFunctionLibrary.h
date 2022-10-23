@@ -48,6 +48,7 @@ enum class EButtonsGame : uint8
 	SELECT		UMETA(DisplayName = "Select(Back) / Alt"),
 	SCROLLUP	UMETA(DisplayName = "Stick Right Up / Mouse Scroll Up"),
 	SCROLLDOWN	UMETA(DisplayName = "Stick Right Down / Mouse Scroll Down"),
+	M			UMETA(DisplayName = "Stick Right Button / M"),
 	NONE		UMETA(DisplayName = "No Input")
 };
 

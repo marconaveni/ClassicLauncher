@@ -413,7 +413,6 @@ FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const
 	if (bInputEnable)
 	{
 		KeyEvent = InKeyEvent;
-
 		const EButtonsGame Input = UClassicFunctionLibrary::GetInputButton(InKeyEvent);
 
 		bKeyPressed = (Input != EButtonsGame::A && Input != EButtonsGame::NONE);
@@ -456,6 +455,9 @@ FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const
 
 FReply UMainInterface::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
+	KeyEvent = InKeyEvent;
+	const EButtonsGame Input = UClassicFunctionLibrary::GetInputButton(InKeyEvent);
+
 	if (bInputEnable)
 	{
 		KeyEvent = InKeyEvent;
@@ -465,10 +467,15 @@ FReply UMainInterface::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEven
 		bKeyTriggerLeft = false;
 		bKeyTriggerRight = false;
 
-		if (ENavigationButton == EButtonsGame::B)
+		if (Input == EButtonsGame::B)
 		{
 			OnClickBackAction();
 		}
+		if (Input == EButtonsGame::M)
+		{
+			ClassicMediaPlayerReference->PlayMusic();
+		}
+		
 	}
 	else
 	{
