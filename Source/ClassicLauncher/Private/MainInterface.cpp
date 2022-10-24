@@ -83,8 +83,6 @@ void UMainInterface::NativeConstruct()
 {
 	ClassicGameInstance = Cast<UClassicGameInstance>(GetGameInstance());
 
-	//UGameplayStatics::GetActorOfClass
-
 	SetRenderOpacityList();
 	LoadConfigurationNative();
 	GameSettingsInit();
