@@ -23,7 +23,7 @@ void UClassicButtonsIcons::SetButtons(TArray<FButtonsIcons> ButtonsIcon)
 
 	TArray<UTexture2D*> BgTextures;
 	TArray<UTexture2D*> Textures;
-	TArray<FString> Texts;
+	TArray<FText> Texts;
 	TArray<ESlateVisibility> EVisibility;
 	if (ButtonsIcon.IsValidIndex(5)) {
 
@@ -39,9 +39,9 @@ void UClassicButtonsIcons::SetButtons(TArray<FButtonsIcons> ButtonsIcon)
 		SetButtonsText(Texts);
 		SetButtonsVisibility(EVisibility);
 		SetColorsText(TextColor);
-
 	}
-	else {
+	else 
+	{
 		UE_LOG(LogTemp, Warning, TEXT("The lenght of Array ButtonsIcon is: %d to set 6 values in editor"), ButtonsIcon.Num());
 	}
 
@@ -69,15 +69,15 @@ void UClassicButtonsIcons::SetButtonsStyle(TArray<UTexture2D*> BgTextures, TArra
 
 }
 
-void UClassicButtonsIcons::SetButtonsText(TArray<FString> ButtonsText)
+void UClassicButtonsIcons::SetButtonsText(TArray<FText> ButtonsText)
 {
 	if (ButtonsText.IsValidIndex(5)) {
-		TextBlock1->SetText(FText::FromString(ButtonsText[0]));
-		TextBlock2->SetText(FText::FromString(ButtonsText[1]));
-		TextBlock3->SetText(FText::FromString(ButtonsText[2]));
-		TextBlock4->SetText(FText::FromString(ButtonsText[3]));
-		TextBlock5->SetText(FText::FromString(ButtonsText[4]));
-		TextBlock6->SetText(FText::FromString(ButtonsText[5]));
+		TextBlock1->SetText(ButtonsText[0]);
+		TextBlock2->SetText(ButtonsText[1]);
+		TextBlock3->SetText(ButtonsText[2]);
+		TextBlock4->SetText(ButtonsText[3]);
+		TextBlock5->SetText(ButtonsText[4]);
+		TextBlock6->SetText(ButtonsText[5]);
 	}
 
 }

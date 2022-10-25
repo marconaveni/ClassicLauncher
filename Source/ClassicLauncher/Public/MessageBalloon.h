@@ -31,7 +31,7 @@ protected:
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "MessageBalloon|Functions")
-	void ShowMessage(FString Message, float InRate);
+	void ShowMessage(FText Message, float InRate);
 
 private:
 

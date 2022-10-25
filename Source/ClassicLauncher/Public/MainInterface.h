@@ -509,9 +509,9 @@ public:
 private:
 
 	UPROPERTY()
-	TArray<FString> TextTop;
+	TArray<FText> TextTop;
 	UPROPERTY()
-	TArray<FString> TextCenter;
+	TArray<FText> TextCenter;
 	UPROPERTY()
 	TArray<ESlateVisibility> IconTop;
 	UPROPERTY()
@@ -584,6 +584,6 @@ public:
 	void CloseBackMenu();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void ShowMessage(FString Message, float InRate);
+	void ShowMessage(FText Message, float InRate);
 
 };

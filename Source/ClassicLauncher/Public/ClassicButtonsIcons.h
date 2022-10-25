@@ -25,13 +25,13 @@ struct FButtonsIcons
 	UTexture2D* BgButtonTexture;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString ButtonText;
+	FText ButtonText;
 
 
 	//construtor
 	FButtonsIcons()
 	{
-		ButtonText = TEXT("");
+		ButtonText = FText::FromString(TEXT(""));
 	}
 };
 
@@ -118,7 +118,7 @@ public:
 	void SetButtonsStyle(TArray<UTexture2D*> BgTextures , TArray<UTexture2D*> Textures);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicButton")
-	void SetButtonsText(TArray<FString> ButtonsText);
+	void SetButtonsText(TArray<FText> ButtonsText);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicButton")
 	void SetColorsText(FSlateColor newColor);

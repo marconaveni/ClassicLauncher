@@ -15,6 +15,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "ClassicFunctionLibrary.h"
+#include "Kismet/KismetInternationalizationLibrary.h"
 
 void UClassicConfigurations::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
@@ -29,11 +30,14 @@ void UClassicConfigurations::NativeOnInitialized()
 	bFocus = false;
 	IndexSelect = 0;
 
+	GetLanguageText();
+
 	SlideVolume->OnSlide.AddDynamic(this, &UClassicConfigurations::OnSlideVolume);
 	SlideVolume->OnFocusLostTriggerSlide.AddDynamic(this, &UClassicConfigurations::OnSlideLostFocus);
 	BtnUpdateGameList->OnClickTrigger.AddDynamic(this, &UClassicConfigurations::OnClickUpdate);
 	BtnDeviceInfo->OnClickTrigger.AddDynamic(this, &UClassicConfigurations::OnClickDevice);
 	BtnLicenseInfo->OnClickTrigger.AddDynamic(this, &UClassicConfigurations::OnClickLicense);
+	BtnLanguage->OnClickTrigger.AddDynamic(this, &UClassicConfigurations::OnClickLanguage);
 
 	for (TObjectIterator<UMainInterface> ObjectIterator; ObjectIterator; ++ObjectIterator)
 	{
@@ -130,6 +134,36 @@ void UClassicConfigurations::OnClickLicense(int32 Value)
 	UE_LOG(LogTemp, Warning, TEXT("OnClickLicense"));
 }
 
+void UClassicConfigurations::OnClickLanguage(int32 Value)
+{
+	const FString CurrentLanguage = UKismetInternationalizationLibrary::GetCurrentCulture();
+
+	if (CurrentLanguage == TEXT("en"))
+	{
+		UKismetInternationalizationLibrary::SetCurrentCulture(TEXT("pt-BR"), true);
+		GetLanguageText();
+	}
+	else
+	{
+		UKismetInternationalizationLibrary::SetCurrentCulture(TEXT("en"), true);
+		GetLanguageText();
+	}
+}
+
+void UClassicConfigurations::GetLanguageText()
+{
+	const FString CurrentLanguage = UKismetInternationalizationLibrary::GetCurrentCulture();
+
+	if (CurrentLanguage == TEXT("en"))
+	{
+		BtnLanguage->SetText(TEXT("English"));
+	}
+	else
+	{
+		BtnLanguage->SetText(TEXT("Portuguese"));
+	}
+}
+
 void UClassicConfigurations::CloseModal()
 {
 	bFocus = false;
@@ -148,11 +182,11 @@ void UClassicConfigurations::SetIndexFocus(EButtonsGame Input)
 		bDelayInput = true;
 		if (Input == EButtonsGame::DOWN)
 		{
-			IndexSelect = FMath::Clamp(IndexSelect + 1, 0, 3);
+			IndexSelect = FMath::Clamp(IndexSelect + 1, 0, 4);
 		}
 		else if (Input == EButtonsGame::UP)
 		{
-			IndexSelect = FMath::Clamp(IndexSelect - 1, 0, 3);
+			IndexSelect = FMath::Clamp(IndexSelect - 1, 0, 4);
 		}
 		SetFocusSelect();
 		GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &UClassicConfigurations::Delay, 0.18f, false, -1);
@@ -189,6 +223,9 @@ void UClassicConfigurations::SetFocusSelect()
 		break;
 	case 3:
 		BtnLicenseInfo->Click->SetKeyboardFocus();
+		break;
+	case 4:
+		BtnLanguage->Click->SetKeyboardFocus();
 		break;
 	default:
 		break;

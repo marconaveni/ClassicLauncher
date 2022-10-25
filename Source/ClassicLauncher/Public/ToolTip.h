@@ -35,7 +35,7 @@ public:
 	virtual void NativeConstruct() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ToolTip|Variables")
-	FString Text;
+	FText Text;
 
 	UFUNCTION(BlueprintCallable, Category = "ToolTip|Functions")
 	void SetToolTipVisibility(ESlateVisibility Visible);

@@ -7,6 +7,9 @@
 #include "ClassicFunctionLibrary.h"
 #include "MainInterface.h"
 #include "Kismet/GameplayStatics.h"
+#include "Internationalization/StringTableRegistry.h"
+
+#define LOCTEXT_NAMESPACE "PlayerMusic"
 
 // Sets default values
 AClassicMediaPlayer::AClassicMediaPlayer()
@@ -81,7 +84,10 @@ void AClassicMediaPlayer::PlayMusic()
 		{
 			if (MainInterfaceReference != nullptr)
 			{
-				MainInterfaceReference->ShowMessage(TEXT("Playing ") + MediaFiles[Random], 3.5f);
+				FText TextPlayerMusic = FText::FromString(MediaFiles[Random]);
+				FFormatNamedArguments Args;
+				Args.Add("TextPlayerMusic", TextPlayerMusic);
+				MainInterfaceReference->ShowMessage(FText::Format(LOCTEXT("Play", "Playing {TextPlayerMusic}"), Args), 3.5f);
 			}
 			PauseVideo();
 			ClassicPlayerMusic->GetMediaPlayer()->OpenUrl(File);
@@ -149,3 +155,4 @@ int32 AClassicMediaPlayer::GetMasterVolume()
 	return MasterVolume;
 }
 
+#undef LOCTEXT_NAMESPACE

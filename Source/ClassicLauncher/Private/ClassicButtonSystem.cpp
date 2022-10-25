@@ -52,14 +52,14 @@ bool UClassicButtonSystem::Initialize()
 
 void UClassicButtonSystem::NativePreConstruct()
 {
-	SetText(ButtonText);
+	Text->SetText(ButtonText);
 	Super::NativePreConstruct();
 }
 
 void UClassicButtonSystem::SetText(FString NewText)
 {
 	Text->SetText(FText::FromString(NewText));
-	ButtonText = NewText;
+	ButtonText = FText::FromString(NewText);
 }
 
 void UClassicButtonSystem::SetCount(int32 NewValue)

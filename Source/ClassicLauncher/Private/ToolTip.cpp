@@ -8,13 +8,13 @@
 
 UToolTip::UToolTip(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	Text = TEXT("");
+	
 }
 
 void UToolTip::NativePreConstruct()
 {
 	Super::NativePreConstruct();
-	TextBlock->SetText(FText::FromString(Text));
+	TextBlock->SetText(Text);
 }
 
 void UToolTip::NativeConstruct()

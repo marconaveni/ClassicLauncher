@@ -8,11 +8,11 @@
 #include "Engine/World.h"
 
 
-void UMessageBalloon::ShowMessage(FString Message, float InRate)
+void UMessageBalloon::ShowMessage(FText Message, float InRate)
 {
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 	UUserWidget::PlayAnimationForward(AnimationShowMessage);
-	TextMessage->SetText(FText::FromString(Message));
+	TextMessage->SetText(Message);
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UMessageBalloon::EndMessage, InRate, false, -1);
 }
 

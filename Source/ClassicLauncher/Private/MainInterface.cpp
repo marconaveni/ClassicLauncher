@@ -33,27 +33,29 @@
 #include "Components/CanvasPanel.h"
 #include "EngineUtils.h"
 #include "MessageBalloon.h"
+#include "Internationalization/StringTableRegistry.h"
 
-
+#define LOCTEXT_NAMESPACE "ButtonsSelection"
 
 UMainInterface::UMainInterface(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	Clear();
 
-	TextTop.Add(TEXT(""));
-	TextTop.Add(TEXT("Game List"));
-	TextTop.Add(TEXT("Select"));
-	TextTop.Add(TEXT("Ok"));
-	TextTop.Add(TEXT("Back"));
-	TextTop.Add(TEXT(""));
+	TextTop.Add(FText::FromString(TEXT("")));
+	TextTop.Add(LOCTEXT("buttonGameList", "Game List"));
+	TextTop.Add(LOCTEXT("buttonSelect", "Select"));
+	TextTop.Add(LOCTEXT("buttonOk", "Ok"));
+	TextTop.Add(LOCTEXT("buttonBack", "Back"));
+	TextTop.Add(FText::FromString(TEXT("")));
+
 	TextTop.Shrink();
 
-	TextCenter.Add(TEXT("Menu"));
-	TextCenter.Add(TEXT("Details"));
-	TextCenter.Add(TEXT("Select"));
-	TextCenter.Add(TEXT("Start Game"));
-	TextCenter.Add(TEXT("Exit"));
-	TextCenter.Add(TEXT("Favorite"));
+	TextCenter.Add(LOCTEXT("buttonMenu", "Menu"));
+	TextCenter.Add(LOCTEXT("buttonDetails", "Details"));
+	TextCenter.Add(LOCTEXT("buttonSelect", "Select"));
+	TextCenter.Add(LOCTEXT("buttonStartGame", "Start Game"));
+	TextCenter.Add(LOCTEXT("buttonExit", "Exit"));
+	TextCenter.Add(LOCTEXT("buttonFavorite", "Favorite"));
 	TextCenter.Shrink();
 
 	IconTop.Add(ESlateVisibility::Collapsed);
@@ -73,6 +75,7 @@ UMainInterface::UMainInterface(const FObjectInitializer& ObjectInitializer) : Su
 	IconCenter.Shrink();
 
 }
+
 
 void UMainInterface::NativePreConstruct()
 {
@@ -473,7 +476,7 @@ FReply UMainInterface::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEven
 		{
 			ClassicMediaPlayerReference->PlayMusic();
 		}
-		
+
 	}
 	else
 	{
@@ -1021,14 +1024,11 @@ void UMainInterface::SetButtonsIconInterfaces(EPositionY GetPosition)
 	}
 	else if (GetPosition == EPositionY::CENTRAL)
 	{
-		if (GameData.IsValidIndex(IndexCard))
+		if (GameData.IsValidIndex(IndexCard) && TextCenter.IsValidIndex(5))
 		{
-			TextCenter[5] = (GameData[IndexCard].favorite) ? TEXT("Remove Favorite") : TEXT("Add Favorite");
+			TextCenter[5] = (GameData[IndexCard].favorite) ? LOCTEXT("buttonRemoveFavorite", "Remove Favorite") : LOCTEXT("buttonRemoveFavoriteAddFavorite", "Add Favorite");
 		}
-		else
-		{
-			TextCenter[5] = TEXT("Favorite");
-		}
+
 		WBPButtonsIconsInterfaces->SetButtonsText(TextCenter);
 		WBPButtonsIconsInterfaces->SetButtonsVisibility(IconCenter);
 	}
@@ -1172,7 +1172,7 @@ void UMainInterface::SetFavoriteToSave()
 			SaveGameList();
 
 			SetButtonsIconInterfaces(EPositionY::CENTRAL);
-			ShowMessage((ToggleFavorite ? TEXT("Add game to favorite") : TEXT("Remove game to favorite")), 3.5f);
+			ShowMessage( (ToggleFavorite) ? LOCTEXT("MessageAddFavorite", "Add game to favorite") : LOCTEXT("RemoveFavorite", "Remove game to favorite"), 3.5f);
 		}
 	}
 }
@@ -1577,7 +1577,7 @@ void UMainInterface::OnClickFavorites()
 		UUserWidget::PlayAnimationReverse(BarTop);
 		BtnFavorites->SetFocusButton(false);
 		ResetCards(false, false);
-		ShowMessage(TEXT("Show all games"), 3.5f);
+		ShowMessage(LOCTEXT("MessageAllGames", "Show all games"), 3.5f);
 	}
 	else
 	{
@@ -1589,11 +1589,11 @@ void UMainInterface::OnClickFavorites()
 			UUserWidget::PlayAnimationReverse(BarTop);
 			BtnFavorites->SetFocusButton(false);
 			ResetCards(false, false);
-			ShowMessage(TEXT("Show only favorites"), 3.5f);
+			ShowMessage(LOCTEXT("MessageOnlyFavorites", "Show only favorites"), 3.5f);
 		}
 		else
 		{
-			ShowMessage(TEXT("No favorites to show"), 3.5f);
+			ShowMessage(LOCTEXT("MessageNoFavorites", "No favorites to show"), 3.5f);
 		}
 	}
 }
@@ -1674,7 +1674,7 @@ void UMainInterface::CloseBackMenu()
 	BtnConfigurations->BtButton->SetKeyboardFocus();
 }
 
-void UMainInterface::ShowMessage(FString Message, float InRate)
+void UMainInterface::ShowMessage(FText Message, float InRate)
 {
 	MessageDisplay->ShowMessage(Message, InRate);
 }
@@ -1794,4 +1794,4 @@ void UMainInterface::SetImageBottom()
 
 }
 
-
+#undef LOCTEXT_NAMESPACE

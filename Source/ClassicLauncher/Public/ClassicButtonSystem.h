@@ -59,7 +59,7 @@ public:
 	int32 CountSystem;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButtonSystem|Variables")
-	FString ButtonText;
+	FText ButtonText;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButtonSystem|Variables")
 	class USoundBase* SoundSelect;
