@@ -35,6 +35,7 @@
 #include "MessageBalloon.h"
 #include "Internationalization/StringTableRegistry.h"
 
+ 
 #define LOCTEXT_NAMESPACE "ButtonsSelection"
 
 UMainInterface::UMainInterface(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -155,12 +156,14 @@ void UMainInterface::TriggerTick()
 	}
 	else if (bKeyPressed && PositionY == EPositionY::CENTRAL)
 	{
-		SpeedScroll = FMath::Clamp(SpeedScroll + 0.2f, 28.0f, 38.0f);
+		const float NewSpeedScroll = 28 * (60 *  UGameplayStatics::GetWorldDeltaSeconds(this));
+		//UE_LOG(LogTemp, Warning, TEXT("Min %f HbNewPosition %f Max %f"), Min, HbNewPosition, Max);
+		SpeedScroll	=  FMath::Clamp(SpeedScroll + 0.2f, NewSpeedScroll, NewSpeedScroll + 10.0f);
 	}
 	else
 	{
 		TriggerDelayPressed = 0.15f;
-		SpeedScroll = 28.0f;
+		SpeedScroll = 28 * (60 * UGameplayStatics::GetWorldDeltaSeconds(this));
 	}
 
 	GetWorld()->GetTimerManager().SetTimer(TriggerTimerHandle, this, &UMainInterface::TriggerTick, TriggerDelayPressed, false, -1);
@@ -1172,7 +1175,7 @@ void UMainInterface::SetFavoriteToSave()
 			SaveGameList();
 
 			SetButtonsIconInterfaces(EPositionY::CENTRAL);
-			ShowMessage( (ToggleFavorite) ? LOCTEXT("MessageAddFavorite", "Add game to favorite") : LOCTEXT("RemoveFavorite", "Remove game to favorite"), 3.5f);
+			ShowMessage((ToggleFavorite) ? LOCTEXT("MessageAddFavorite", "Add game to favorite") : LOCTEXT("RemoveFavorite", "Remove game to favorite"), 3.5f);
 		}
 	}
 }
@@ -1728,10 +1731,10 @@ void UMainInterface::ScrollCards()
 		if ((PositionCenterX == 1 || PositionCenterX == 4) && (FrameX == 0 || FrameX == 1155))
 		{
 			//bScroll = false;
-			const int32 HbGetPosition = HBListGame->RenderTransform.Translation.X;
-			int32 HbNewPosition = 0;
-			int32 Min = 0;
-			int32 Max = 0;
+			const float HbGetPosition = HBListGame->RenderTransform.Translation.X;
+			float HbNewPosition = 0;
+			float Min = 0;
+			float Max = 0;
 			if (ENavigationScroll == EButtonsGame::RIGHT)
 			{
 				Min = (IndexCard - PositionCenterX) * -385;
@@ -1741,7 +1744,7 @@ void UMainInterface::ScrollCards()
 				HbNewPosition = FMath::Clamp(HbGetPosition - SpeedScroll, Min, Max); //min
 				HBListGame->SetRenderTranslation(FVector2D(HbNewPosition, 0));
 				bScroll = HbGetPosition != HbNewPosition;
-				//UE_LOG(LogTemp, Warning, TEXT("Min %d HbNewPosition %d Max %d"), Min, HbNewPosition, Max);
+				//UE_LOG(LogTemp, Warning, TEXT("Min %f HbNewPosition %f Max %f"), Min, HbNewPosition, Max);
 
 			}
 			else if (ENavigationScroll == EButtonsGame::LEFT)
@@ -1752,7 +1755,7 @@ void UMainInterface::ScrollCards()
 				HbNewPosition = FMath::Clamp(HbGetPosition + SpeedScroll, Min, Max); //max
 				HBListGame->SetRenderTranslation(FVector2D(HbNewPosition, 0));
 				bScroll = HbGetPosition != HbNewPosition;
-				//UE_LOG(LogTemp, Warning, TEXT("Min %d HbNewPosition %d Max %d"), Min, HbNewPosition, Max);
+				//UE_LOG(LogTemp, Warning, TEXT("Min %f HbNewPosition %f Max %f"), Min, HbNewPosition, Max);
 			}
 
 		}
