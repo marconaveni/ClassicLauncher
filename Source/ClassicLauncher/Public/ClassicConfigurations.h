@@ -40,6 +40,8 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UClassicButtonSystem* BtnLicenseInfo;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UClassicButtonSystem* BtnLanguage;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UWidgetSwitcher* WSButtons;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UWidgetSwitcher* WSDeviceInfo;
@@ -59,6 +61,10 @@ public:
 	void OnClickDevice(int32 Value);
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void OnClickLicense(int32 Value);
+	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
+	void OnClickLanguage(int32 Value);
+	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
+	void GetLanguageText();
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void CloseModal();
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
