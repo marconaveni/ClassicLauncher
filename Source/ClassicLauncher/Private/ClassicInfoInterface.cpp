@@ -28,14 +28,14 @@ void UClassicInfoInterface::ScrollTopEnd(EButtonsGame Navigate)
 	{
 		if (CurrentOffSet == 0)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::White, TEXT("top"));
+			//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::White, TEXT("top"));
 		}
 	}
 	else if(Navigate == EButtonsGame::DOWN)
 	{
 		if (CurrentOffSet >= ScrollBox->GetScrollOffsetOfEnd())
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::White, TEXT("down"));
+			//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::White, TEXT("down"));
 		}
 	}
 }

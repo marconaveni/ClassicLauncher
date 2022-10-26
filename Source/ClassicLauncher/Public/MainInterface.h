@@ -244,6 +244,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	EButtonsGame ENavigationA;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	EButtonsGame ENavigationLB;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	EButtonsGame ENavigationRB;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	EPositionY PositionY;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	EFocus Focus;
@@ -328,11 +332,9 @@ public:
 	void RestartWidget();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void OnErrorMessage(const FString& ErrorMessage);
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void SetDebugMessage(const FString Message);
+	void SetTextErrorMessage(const FText Message);
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnError(const FString& ErrorMessage);
+	void OnError(const FText& ErrorMessage);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void LoadConfigurationNative();
@@ -417,7 +419,7 @@ public:
 	void OnNativeClickSystem(int32 Value);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnClickPathEvent(const FString& ValuePath);
+	void OnClickPath(const FString& ValuePath);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnClickSystem(const int32 Value);

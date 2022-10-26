@@ -17,10 +17,11 @@
 #include "ClassicFunctionLibrary.h"
 #include "Kismet/KismetInternationalizationLibrary.h"
 
+#define LOCTEXT_NAMESPACE "ButtonsConfiguration"
+
 void UClassicConfigurations::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
-
 }
 
 void UClassicConfigurations::NativeOnInitialized()
@@ -39,8 +40,13 @@ void UClassicConfigurations::NativeOnInitialized()
 	BtnLicenseInfo->OnClickTrigger.AddDynamic(this, &UClassicConfigurations::OnClickLicense);
 	BtnLanguage->OnClickTrigger.AddDynamic(this, &UClassicConfigurations::OnClickLanguage);
 
+	
 	for (TObjectIterator<UMainInterface> ObjectIterator; ObjectIterator; ++ObjectIterator)
 	{
+		if (ObjectIterator->GetWorld() != GetWorld())
+		{
+			continue;
+		}
 		MainInterfaceReference = *ObjectIterator;
 		UE_LOG(LogTemp, Warning, TEXT("Reference UMainInterface Founds: %s "), *MainInterfaceReference->GetName());
 	}
@@ -115,7 +121,6 @@ void UClassicConfigurations::OnClickUpdate(int32 Value)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("MainInterfaceReference or ClassicMediaPlayerReference references error"));
 	}
-
 }
 
 void UClassicConfigurations::OnClickDevice(int32 Value)
@@ -153,15 +158,8 @@ void UClassicConfigurations::OnClickLanguage(int32 Value)
 void UClassicConfigurations::GetLanguageText()
 {
 	const FString CurrentLanguage = UKismetInternationalizationLibrary::GetCurrentCulture();
-
-	if (CurrentLanguage == TEXT("en"))
-	{
-		BtnLanguage->SetText(TEXT("English"));
-	}
-	else
-	{
-		BtnLanguage->SetText(TEXT("Portuguese"));
-	}
+	FText TextLanguage = (CurrentLanguage == TEXT("en")) ? LOCTEXT("LogLanguageen", "English") : LOCTEXT("LogLanguageptbr", "Portuguese");
+	BtnLanguage->SetText(TextLanguage.ToString());
 }
 
 void UClassicConfigurations::CloseModal()
@@ -170,7 +168,6 @@ void UClassicConfigurations::CloseModal()
 	WSButtons->SetVisibility(ESlateVisibility::Visible);
 	WSDeviceInfo->SetVisibility(ESlateVisibility::Hidden);
 	WSDeviceLicense->SetVisibility(ESlateVisibility::Hidden);
-
 }
 
 void UClassicConfigurations::SetIndexFocus(EButtonsGame Input)
@@ -243,3 +240,4 @@ void UClassicConfigurations::RestartMap()
 	UGameplayStatics::OpenLevel(this, FName("map"), true);
 }
 
+#undef LOCTEXT_NAMESPACE

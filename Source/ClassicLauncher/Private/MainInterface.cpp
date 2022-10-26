@@ -35,7 +35,7 @@
 #include "MessageBalloon.h"
 #include "Internationalization/StringTableRegistry.h"
 
- 
+
 #define LOCTEXT_NAMESPACE "ButtonsSelection"
 
 UMainInterface::UMainInterface(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -74,9 +74,7 @@ UMainInterface::UMainInterface(const FObjectInitializer& ObjectInitializer) : Su
 	IconCenter.Add(ESlateVisibility::Visible);
 	IconCenter.Add(ESlateVisibility::Visible);
 	IconCenter.Shrink();
-
 }
-
 
 void UMainInterface::NativePreConstruct()
 {
@@ -156,9 +154,9 @@ void UMainInterface::TriggerTick()
 	}
 	else if (bKeyPressed && PositionY == EPositionY::CENTRAL)
 	{
-		const float NewSpeedScroll = 28 * (60 *  UGameplayStatics::GetWorldDeltaSeconds(this));
+		const float NewSpeedScroll = 28 * (60 * UGameplayStatics::GetWorldDeltaSeconds(this));
 		//UE_LOG(LogTemp, Warning, TEXT("Min %f HbNewPosition %f Max %f"), Min, HbNewPosition, Max);
-		SpeedScroll	=  FMath::Clamp(SpeedScroll + 0.2f, NewSpeedScroll, NewSpeedScroll + 10.0f);
+		SpeedScroll = FMath::Clamp(SpeedScroll + 0.2f, NewSpeedScroll, NewSpeedScroll + 10.0f);
 	}
 	else
 	{
@@ -220,16 +218,11 @@ void UMainInterface::RestartWidget()
 	LoadConfigSystemsNative();
 }
 
-void UMainInterface::OnErrorMessage(const FString& ErrorMessage)
-{
-	SetDebugMessage(ErrorMessage);
-	OnError(ErrorMessage);
-}
-
-void UMainInterface::SetDebugMessage(const FString Message)
+void UMainInterface::SetTextErrorMessage(const FText Message)
 {
 	TxtDebug->SetVisibility(ESlateVisibility::Visible);
-	TxtDebug->SetText(FText::FromString(Message));
+	TxtDebug->SetText(Message);
+	OnError(Message);
 }
 
 void UMainInterface::LoadConfigurationNative()
@@ -247,10 +240,11 @@ void UMainInterface::LoadConfigurationNative()
 	}
 	else
 	{
-		OnErrorMessage(GameRoot + TEXT(" Not Found"));
+		FFormatNamedArguments Args;
+		Args.Add("GameRoot", FText::FromString(GameRoot));
+		SetTextErrorMessage(FText::Format(LOCTEXT("LogNotFound", "{GameRoot} Not Found"), Args));
 		UE_LOG(LogTemp, Warning, TEXT("%s Not Found"), *GameRoot);
 	}
-
 }
 
 void UMainInterface::LoadConfigSystemsNative()
@@ -278,11 +272,11 @@ void UMainInterface::LoadConfigSystemsNative()
 	}
 	else
 	{
-		SetDebugMessage(TEXT("Creating games list, loading..."));
+
+		SetTextErrorMessage(LOCTEXT("LogUpdateGameList", "Update game list, loading"));
 		//create and save GameSystems
 		GetWorld()->GetTimerManager().SetTimer(DelayCreateGameListTimerHandle, this, &UMainInterface::CreateGameListNative, 0.5f, false, -1);
 	}
-
 }
 
 void UMainInterface::LoadListNative()
@@ -327,15 +321,16 @@ void UMainInterface::LoadListNative()
 	{
 		if (bFilterFavorites)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("No Favorites"));
+			//if no favorites
 		}
 		else
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("No GameList"));
-			SetDebugMessage(TEXT("gamelist.xml not found in " + GameSystems[CountSystem].RomPath));
+			//if No gamelist
+			FFormatNamedArguments Args;
+			Args.Add("GameRoot", FText::FromString(GameSystems[CountSystem].RomPath));
+			SetTextErrorMessage(FText::Format(LOCTEXT("LogGameListNotFound", "gamelist.xml not found in {GameRoot}"), Args));
 		}
 	}
-
 }
 
 void UMainInterface::ViewList()
@@ -380,18 +375,16 @@ void UMainInterface::CreateGameListNative()
 			}
 			else
 			{
-				OnErrorMessage(GameRoot + TEXT(" Not Found"));
 				UE_LOG(LogTemp, Warning, TEXT("%s Not Found"), *GameRoot);
 			}
 		}
 		ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave = GameSystems;
 		SaveGame();
-		SetDebugMessage(TEXT("Game list created successfully wait..."));
+		SetTextErrorMessage(LOCTEXT("LogSuccessfullyGameList", "Game list update successfully wait..."));
 		GetWorld()->GetTimerManager().SetTimer(DelayReloadTimerHandle, this, &UMainInterface::RestartWidget, 3.0f, false, -1);
 	}
 	else
 	{
-		OnErrorMessage(GameRoot + TEXT(" Not Found"));
 		UE_LOG(LogTemp, Warning, TEXT("%s Not Found"), *GameRoot);
 	}
 
@@ -452,6 +445,8 @@ FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const
 		{
 		case EButtonsGame::SELECT: ENavigationBack = EButtonsGame::SELECT; break;
 		case EButtonsGame::A: ENavigationA = EButtonsGame::A; break;
+		case EButtonsGame::LB: ENavigationLB = EButtonsGame::LB; break;
+		case EButtonsGame::RB: ENavigationRB = EButtonsGame::RB; break;
 		}
 	}
 	return Super::NativeOnPreviewKeyDown(InGeometry, InKeyEvent);
@@ -479,12 +474,13 @@ FReply UMainInterface::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEven
 		{
 			ClassicMediaPlayerReference->PlayMusic();
 		}
-
 	}
 	else
 	{
 		ENavigationBack = EButtonsGame::NONE;
 		ENavigationA = EButtonsGame::NONE;
+		ENavigationLB = EButtonsGame::NONE;
+		ENavigationRB = EButtonsGame::NONE;
 	}
 	return Super::NativeOnKeyUp(InGeometry, InKeyEvent);
 }
@@ -522,7 +518,6 @@ void UMainInterface::OnAnimationFinishedPlaying(UUMGSequencePlayer& Player)
 	{
 		ImgFrame->SetBrushFromTexture(ImageFrameTop);
 	}
-
 	const UWidgetAnimation* AnimationGet = Player.GetAnimation();
 }
 
@@ -653,7 +648,6 @@ void UMainInterface::CreateGameSystems()
 	}
 	else
 	{
-		OnErrorMessage(TEXT("buttonSystemClass Not Found"));
 		UE_LOG(LogTemp, Warning, TEXT("buttonSystemClass Not Found"));
 	}
 }
@@ -750,14 +744,8 @@ void UMainInterface::OnNavigationFocus(UCard* Card)
 	IndexCard = cardReference.Find(Card);
 
 	const FString Title = GameData[IndexCard].nameFormated;
-	if (Title.Len() > 51)
-	{
-		TxtTitleGame->SetJustification(ETextJustify::Left);
-	}
-	else
-	{
-		TxtTitleGame->SetJustification(ETextJustify::Center);
-	}
+	TxtTitleGame->SetJustification(ETextJustify::Left);
+	TxtTitleGame->SetJustification((Title.Len() > 51) ? ETextJustify::Left : ETextJustify::Center);
 	TxtTitleGame->SetText(FText::FromString(Title));
 	TxtDescription->SetText(FText::FromString(GameData[IndexCard].descFormated));
 	ScrollListGame->ScrollWidgetIntoView(coverReference[IndexCard], true, EDescendantScrollDestination::Center, 0);
@@ -954,7 +942,7 @@ void UMainInterface::OnNativeClick(FString RomPath)
 
 	}
 	//this function is BlueprintImplementableEvent
-	OnClickPathEvent(RomPath);
+	OnClickPath(RomPath);
 }
 
 void UMainInterface::ClassicLaunch()
@@ -1044,7 +1032,7 @@ void UMainInterface::ForceGarbageCollectionBP(float Count)
 		if (GEngine) {
 			GEngine->ForceGarbageCollection(true);
 			CountGarbageCollection = 0;
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, "Collect Garbage collection");
+			//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, "Collect Garbage collection");
 		}
 	}
 }
@@ -1449,7 +1437,6 @@ void UMainInterface::OnFocusConfigurations()
 	SetToolTip(WBPToolTipConfiguration);
 	WBPToolTipConfiguration->SetToolTipVisibility(ESlateVisibility::Visible);
 	const int32 FramePosition = ImgFrame->RenderTransform.Translation.Y;
-	UE_LOG(LogTemp, Warning, TEXT("Position Frame Y %d"), FramePosition);
 	if (ENavigationButton == EButtonsGame::LEFT)
 	{
 		UUserWidget::PlayAnimationReverse(FrameAnimationXTop2);
@@ -1470,7 +1457,6 @@ void UMainInterface::OnFocusFavorites()
 	SetToolTip(WBPToolTipFavorites);
 	WBPToolTipFavorites->SetToolTipVisibility(ESlateVisibility::Visible);
 	const int32 FramePosition = ImgFrame->RenderTransform.Translation.Y;
-	UE_LOG(LogTemp, Warning, TEXT("Position Frame Y %d"), FramePosition);
 	if (ENavigationButton == EButtonsGame::LEFT)
 	{
 		UUserWidget::PlayAnimationReverse(FrameAnimationXTop3);
@@ -1492,7 +1478,6 @@ void UMainInterface::OnFocusInfo()
 	SetToolTip(WBPToolTipInfo);
 	WBPToolTipInfo->SetToolTipVisibility(ESlateVisibility::Visible);
 	const int32 FramePosition = ImgFrame->RenderTransform.Translation.Y;
-	UE_LOG(LogTemp, Warning, TEXT("Position Frame Y %d"), FramePosition);
 	if (ENavigationButton == EButtonsGame::RIGHT)
 	{
 		UUserWidget::PlayAnimationForward(FrameAnimationXTop3);
@@ -1739,7 +1724,7 @@ void UMainInterface::ScrollCards()
 			{
 				Min = (IndexCard - PositionCenterX) * -385;
 				Max = (IndexCard - PositionCenterX - 1) * -385;
-				//UE_LOG(LogTemp, Warning, TEXT("Min %d  Max %d"), Min, Max);
+				//UE_LOG(LogTemp, Warning, TEXT("Min %f  Max %f"), Min, Max);
 
 				HbNewPosition = FMath::Clamp(HbGetPosition - SpeedScroll, Min, Max); //min
 				HBListGame->SetRenderTranslation(FVector2D(HbNewPosition, 0));
