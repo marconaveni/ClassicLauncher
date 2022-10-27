@@ -25,6 +25,15 @@ protected:
 	class UImage* BgBackground;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* Icon;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* ArrowUP;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* ArrowDown;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UScrollBox* ScrollBox;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
@@ -74,6 +83,8 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UStar* WBPStar;
+
+
 
 private:
 
