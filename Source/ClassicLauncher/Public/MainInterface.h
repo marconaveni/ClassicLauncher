@@ -402,9 +402,9 @@ public:
 	void SetNavigationFocusDownBottom();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void SetFocusCardToLeft();
+	void SetFocusCardToLeft(int32 IndexChange);
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void SetFocusCardToRight();
+	void SetFocusCardToRight(int32 IndexChange);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnNativeClick(FString RomPath);

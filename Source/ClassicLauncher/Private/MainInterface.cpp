@@ -145,11 +145,11 @@ void UMainInterface::TriggerTick()
 
 		if (ENavigationButton == EButtonsGame::LB && !bKeyTriggerRight && !bScroll)
 		{
-			SetFocusCardToLeft();
+			SetFocusCardToLeft(1);
 		}
 		else if (ENavigationButton == EButtonsGame::RB && !bKeyTriggerLeft && !bScroll)
 		{
-			SetFocusCardToRight();
+			SetFocusCardToRight(1);
 		}
 	}
 	else if (bKeyPressed && PositionY == EPositionY::CENTRAL)
@@ -791,11 +791,11 @@ void UMainInterface::SetNavigationFocusMain()
 {
 	if (ENavigationButton == EButtonsGame::LEFT)
 	{
-		SetFocusCardToLeft();
+		SetFocusCardToLeft(1);
 	}
 	else if (ENavigationButton == EButtonsGame::RIGHT)
 	{
-		SetFocusCardToRight();
+		SetFocusCardToRight(1);
 	}
 }
 
@@ -893,16 +893,16 @@ void UMainInterface::SetNavigationFocusDownBottom()
 	}
 }
 
-void UMainInterface::SetFocusCardToLeft()
+void UMainInterface::SetFocusCardToLeft(int32 IndexChange)
 {
 	int32 Index = IndexCard - 1;
 	if (cardReference.IsValidIndex(Index))
 	{
 		cardReference[Index]->SetFocusCard(true);
-		PositionCenterX = FMath::Clamp(PositionCenterX - 1, 1, MaxFrameMove);
+		PositionCenterX = FMath::Clamp(PositionCenterX - IndexChange, 1, MaxFrameMove);
 		AnimationFrameMoveLeft();
 		OnNavigationFocus(cardReference[Index]);
-		Index += 1;
+		Index += IndexChange;
 		if (cardReference.IsValidIndex(Index))
 		{
 			cardReference[Index]->SetFocusCard(false);
@@ -910,16 +910,16 @@ void UMainInterface::SetFocusCardToLeft()
 	}
 }
 
-void UMainInterface::SetFocusCardToRight()
+void UMainInterface::SetFocusCardToRight(int32 IndexChange)
 {
-	int32 Index = IndexCard + 1;
+	int32 Index = IndexCard + IndexChange;
 	if (cardReference.IsValidIndex(Index))
 	{
 		cardReference[Index]->SetFocusCard(true);
-		PositionCenterX = FMath::Clamp(PositionCenterX + 1, 1, MaxFrameMove);
+		PositionCenterX = FMath::Clamp(PositionCenterX + IndexChange, 1, MaxFrameMove);
 		AnimationFrameMoveRight();
 		OnNavigationFocus(cardReference[Index]);
-		Index -= 1;
+		Index -= IndexChange;
 		if (cardReference.IsValidIndex(Index))
 		{
 			cardReference[Index]->SetFocusCard(false);
@@ -1410,10 +1410,7 @@ void UMainInterface::AnimationFrameToTop(UWidgetAnimation* Animation1, UWidgetAn
 
 }
 
-
 //bind buttons
-
-
 void UMainInterface::OnFocusSelectSystem()
 {
 	PositionTopX = 1;
