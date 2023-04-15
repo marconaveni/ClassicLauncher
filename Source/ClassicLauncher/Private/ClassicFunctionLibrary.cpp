@@ -603,7 +603,16 @@ UTexture2D* UClassicFunctionLibrary::LoadTexture(const FString& FilePath)
 {
 	int32 Width = 0;
 	int32 Height = 0;
-	return  LoadTexture2DFromFile(FilePath, EClassicImageFormat::PNG, Width, Height);
+	EClassicImageFormat ImageFormat;
+	if (FilePath.Contains("png"))
+	{
+		ImageFormat = EClassicImageFormat::PNG;
+	}
+	else
+	{
+		ImageFormat = EClassicImageFormat::JPG;
+	}
+	return  LoadTexture2DFromFile(FilePath, ImageFormat, Width, Height);
 
 }
 
