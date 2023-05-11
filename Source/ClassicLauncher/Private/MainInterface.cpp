@@ -947,7 +947,7 @@ void UMainInterface::OnNativeClick(FString RomPath)
 
 void UMainInterface::ClassicLaunch()
 {
-	const FString PathRomFormated = UClassicFunctionLibrary::HomeDirectoryReplace(GameData[IndexCard].PathFormated);
+	FString PathRomFormated = UClassicFunctionLibrary::HomeDirectoryReplace(GameData[IndexCard].PathFormated);
 	FString ExecutablePath = (GameData[IndexCard].Executable == TEXT("")) ? GameSystems[CountSystem].Executable : GameData[IndexCard].Executable;
 	FString Arguments = (GameData[IndexCard].Arguments == TEXT("")) ? GameSystems[CountSystem].Arguments : GameData[IndexCard].Arguments;
 	bool CanUnzip = false;
@@ -961,9 +961,12 @@ void UMainInterface::ClassicLaunch()
 	else
 	{
 		TArray<FString> Commands;
-		Commands.Add(UClassicFunctionLibrary::HomeDirectoryReplace(Arguments));
-		Commands.Add(UClassicFunctionLibrary::HomeDirectoryReplace(PathRomFormated));
-
+		if (!Arguments.IsEmpty()) {
+			Commands.Add(UClassicFunctionLibrary::HomeDirectoryReplace(Arguments));
+		}
+		if (!Arguments.IsEmpty()) {
+			Commands.Add(UClassicFunctionLibrary::HomeDirectoryReplace(PathRomFormated));
+		}
 		OpenExternalProcess(ExecutablePath, Commands);
 		UE_LOG(LogTemp, Warning, TEXT("OpenExternalProcess: %s %s %s"), *ExecutablePath, *Arguments, *PathRomFormated);
 	}

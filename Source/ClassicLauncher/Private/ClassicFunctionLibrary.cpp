@@ -198,7 +198,7 @@ FString UClassicFunctionLibrary::CoreReplace(FString Core)
 FString UClassicFunctionLibrary::HomeDirectoryReplace(FString Directory)
 {
 	FString RootDirectory = GetGameRootDirectory();
-	return Directory.Replace(TEXT("$(home"), *RootDirectory, ESearchCase::IgnoreCase);
+	return Directory.Replace(TEXT("$(home)"), *RootDirectory, ESearchCase::IgnoreCase);
 }
 
 bool UClassicFunctionLibrary::SwitchOnDefaultLibreto(FString Core, FString& CoreFormated, bool& CanUnzip)
