@@ -179,7 +179,7 @@ void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		}
 	}
 
-	if (ENavigationBack == EButtonsGame::SELECT && ENavigationA == EButtonsGame::A && ProcessID != 0)
+	if (ENavigationBack == EButtonsGame::SELECT && ENavigationA == EButtonsGame::A && ENavigationLB == EButtonsGame::LB && ENavigationRB == EButtonsGame::RB && ProcessID != 0)
 	{
 		TArray<FString> TextArguments;
 		TextArguments.Add(TEXT("  /PID   "));
@@ -234,7 +234,7 @@ void UMainInterface::LoadConfigurationNative()
 	{
 		UClassicFunctionLibrary::SetConfig(UClassicFunctionLibrary::LoadXMLSingle(ConfigResult, TEXT("config")), ConfigurationData);
 		UGameplayStatics::SetEnableWorldRendering(this, ConfigurationData.rendering);
-		ConfigurationData.pathmedia = (ConfigurationData.pathmedia != TEXT("")) ? ConfigurationData.pathmedia + TEXT("\\media") : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
+		ConfigurationData.pathmedia = (ConfigurationData.pathmedia != TEXT("")) ? ConfigurationData.pathmedia  : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
 		WBPClassicConfigurationsInterface->SlideVolume->SetSlideValue(FMath::Clamp(ConfigurationData.volume, 0, 100));
 		LoadConfigSystemsNative();
 	}
@@ -261,6 +261,7 @@ void UMainInterface::LoadConfigSystemsNative()
 			if (Systems[i].SystemName == ConfigurationData.defaultstartsystem)
 			{
 				CountSystem = i;
+				UE_LOG(LogTemp, Warning, TEXT("%s ConfigurationData"), *ConfigurationData.defaultstartsystem);
 			}
 		}
 
@@ -310,6 +311,17 @@ void UMainInterface::LoadListNative()
 
 		ImgFrame->SetBrushFromTexture(ImageFrameCenter);
 		cardReference[0]->SetFocusCard(true);
+
+
+		ConfigurationData.defaultstartsystem = GameSystems[CountSystem].SystemName;
+		FString XmlConfig = UClassicFunctionLibrary::CreateXMLConfigFile(ConfigurationData);
+		XmlConfig = XmlConfig.Replace(TEXT("$(remove)"), TEXT(""), ESearchCase::IgnoreCase);
+		const FString PathToSave = UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("config");
+		const bool Saved = (UClassicFunctionLibrary::SaveStringToFile(PathToSave, TEXT("config.xml"), XmlConfig, true, false));
+
+		UE_LOG(LogTemp, Warning, TEXT("%s"), (Saved) ? TEXT("Saved File") : TEXT("Not Saved File"));
+
+
 
 		//Timer
 		GetWorld()->GetTimerManager().SetTimer(DelayLoadListTimerHandle, this, &UMainInterface::ViewList, 0.25f, false, -1);
@@ -1322,6 +1334,7 @@ void UMainInterface::Clear()
 	bScroll = false;
 	bFilterFavorites = false;
 	bDelayFavoriteClick = false;
+	bDelayQuit = false;
 	bHover = false;
 	TimerDelayAnimation = 0.18f;
 	TriggerDelayPressed = 0.15f;
@@ -1600,7 +1613,12 @@ void UMainInterface::OnClickBackAction()
 		CloseMenus();
 		break;
 	case EPositionY::CENTRAL:
-		UKismetSystemLibrary::QuitGame(this, GetOwningPlayer(), EQuitPreference::Quit, false);
+		if (bDelayQuit) {
+			UKismetSystemLibrary::QuitGame(this, GetOwningPlayer(), EQuitPreference::Quit, false);
+		}
+		GetWorld()->GetTimerManager().SetTimer(DelayQuitTimerHandle, this, &UMainInterface::QuitGame, 3.f, false, -1);
+		ShowMessage(LOCTEXT("PressAgainToQuit", "Press Again To Quit"), 3);
+		bDelayQuit = true;
 		break;
 	case EPositionY::BOTTOM:
 		SetNavigationFocusUpBottom();
@@ -1608,6 +1626,11 @@ void UMainInterface::OnClickBackAction()
 	default:
 		break;
 	}
+}
+
+void UMainInterface::QuitGame()
+{
+	bDelayQuit = false;
 }
 
 void UMainInterface::OnClickFavorite()
@@ -1670,7 +1693,7 @@ void UMainInterface::ShowMessage(FText Message, float InRate)
 
 void UMainInterface::CreateFolders()
 {
-	const FString PathMedia = (ConfigurationData.pathmedia != TEXT("")) ? ConfigurationData.pathmedia + TEXT("\\media") : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
+	const FString PathMedia = (ConfigurationData.pathmedia != TEXT("")) ? ConfigurationData.pathmedia  : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
 
 	UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia);
 
@@ -1746,6 +1769,13 @@ void UMainInterface::ScrollCards()
 		}
 	}
 
+}
+
+void UMainInterface::SetVisibiltyDebugButton(UButton* button)
+{
+#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
+	button->SetVisibility(ESlateVisibility::Visible);
+#endif
 }
 
 void UMainInterface::SetImageBottom()

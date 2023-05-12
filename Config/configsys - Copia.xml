@@ -1,0 +1,332 @@
+<?xml version="1.0"?>
+<config>
+
+	<!-- Teste Systems -->
+	<system>
+		<executable>D:\Emulators\emulators\retroarch\retroarch.exe</executable>
+		<arguments>-L  "D:\Emulators\emulators\retroarch\cores\bsnes2014_accuracy_libretro.dll"  </arguments>
+		<rompath>E:\snes\usa</rompath>
+		<systemname>teste</systemname>
+		<systemlabel>A teste</systemlabel>
+		<imagex>340</imagex>
+		<imagey>235</imagey>
+	</system>
+
+
+	
+	<system>
+		<executable>D:\Emulators\emulators\retroarch\retroarch.exe</executable>
+		<arguments>-L  "D:\Emulators\emulators\retroarch\cores\nestopia_libretro.dll"  </arguments>
+		<rompath>H:\nes</rompath>
+		<systemname>nes</systemname>
+		<systemlabel>Nintendo Pen Drive</systemlabel>
+		<imagex>215</imagex><!--  -->
+		<imagey>306</imagey>
+	</system>
+	
+
+	<system>
+		<executable>D:\Emulators\emulators\retroarch\retroarch.exe</executable>
+		<arguments>-L  "D:\Emulators\emulators\retroarch\cores\stella_libretro.dll"  </arguments>
+		<rompath>D:\Emulators\roms\atari2600</rompath><!--  -->
+		<systemname>atari2600</systemname>
+		<systemlabel>Atari 2600</systemlabel>
+		<imagex>217</imagex><!--  -->
+		<imagey>306</imagey>
+	</system>
+	<!-- Sega Systems -->
+	<system>
+		<executable>D:\Emulators\emulators\retroarch\retroarch.exe</executable>
+		<arguments>-L  "D:\Emulators\emulators\retroarch\cores\flycast_libretro.dll"  </arguments>
+		<rompath>D:\Emulators\roms\dreamcast</rompath><!--  -->
+		<systemname>dreamcast</systemname>
+		<systemlabel>Dreamcast</systemlabel>
+		<imagex>306</imagex><!--  -->
+		<imagey>306</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\retroarch\retroarch.exe</executable>
+		<arguments>-L  "D:\Emulators\emulators\retroarch\cores\genesis_plus_gx_libretro.dll"  </arguments>
+		<rompath>D:\Emulators\roms\megadrive\usa</rompath><!--  -->
+		<systemname>genesis</systemname>
+		<systemlabel>Mega Drive</systemlabel>
+		<imagex>217</imagex><!--  -->
+		<imagey>306</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\retroarch\retroarch.exe</executable>
+		<arguments>-L  "D:\Emulators\emulators\retroarch\cores\genesis_plus_gx_libretro.dll"  </arguments>
+		<rompath>D:\Emulators\roms\segacd</rompath>
+		<systemname>segacd</systemname>
+		<systemlabel>Sega CD</systemlabel>
+		<imagex>217</imagex><!--  -->
+		<imagey>306</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\retroarch\retroarch.exe</executable>
+		<arguments>-L  "D:\Emulators\emulators\retroarch\cores\genesis_plus_gx_libretro.dll"  </arguments>
+		<rompath>D:\Emulators\roms\sega32x</rompath>
+		<systemname>sega32x</systemname>
+		<systemlabel>Sega 32X</systemlabel>
+		<imagex>217</imagex><!--  -->
+		<imagey>306</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\retroarch\retroarch.exe</executable>
+		<arguments>-L  "D:\Emulators\emulators\retroarch\cores\genesis_plus_gx_libretro.dll"  </arguments>
+		<rompath>D:\Emulators\roms\gamegear\usa</rompath>
+		<systemname>gamegear</systemname>
+		<systemlabel>Game Gear</systemlabel>
+		<imagex>217</imagex><!--  -->
+		<imagey>306</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\retroarch\retroarch.exe</executable>
+		<arguments>-L  "D:\Emulators\emulators\retroarch\cores\smsplus_libretro.dll"  </arguments>
+		<rompath>D:\Emulators\roms\mastersystem\usa</rompath>
+		<systemname>mastersystem</systemname>
+		<systemlabel>Sega Master System</systemlabel>
+		<imagex>217</imagex>
+		<imagey>306</imagey>
+	</system>
+	<!-- Nintendo Systems -->
+	<system>
+		<executable>D:\Emulators\emulators\retroarch\retroarch.exe</executable>
+		<arguments>-L  "D:\Emulators\emulators\retroarch\cores\vba_next_libretro.dll"  </arguments>
+		<rompath>D:\Emulators\roms\gba\usa</rompath>
+		<systemname>gba</systemname>
+		<systemlabel>Game Boy Advanced</systemlabel>
+		<imagex>306</imagex><!--  -->
+		<imagey>306</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\Nintendo3DS\Citra\citra-qt.exe</executable>
+		<arguments>  </arguments>
+		<rompath>D:\Emulators\roms\3ds</rompath>
+		<systemname>3ds</systemname>
+		<systemlabel>Nintendo 3DS</systemlabel>
+		<imagex>306</imagex><!--  -->
+		<imagey>306</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\retroarch\retroarch.exe</executable>
+		<arguments>-L  "D:\Emulators\emulators\retroarch\cores\gearboy_libretro.dll"  </arguments>
+		<rompath>D:\Emulators\roms\gbc\usa</rompath>
+		<systemname>gbc</systemname>
+		<systemlabel>Game Boy Color</systemlabel>
+		<imagex>306</imagex><!--  -->
+		<imagey>306</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\retroarch\retroarch.exe</executable>
+		<arguments>-L  "D:\Emulators\emulators\retroarch\cores\gearboy_libretro.dll"  </arguments>
+		<rompath>D:\Emulators\roms\gb\usa</rompath>
+		<systemname>gb</systemname>
+		<systemlabel>Game Boy</systemlabel>
+		<imagex>306</imagex><!--  -->
+		<imagey>306</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\retroarch\retroarch.exe</executable>
+		<arguments>-L  "D:\Emulators\emulators\retroarch\cores\nestopia_libretro.dll"  </arguments>
+		<rompath>D:\Emulators\roms\nes\usa</rompath>
+		<systemname>nes</systemname>
+		<systemlabel>Nintendo</systemlabel>
+		<imagex>215</imagex><!--  -->
+		<imagey>306</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\retroarch\retroarch.exe</executable>
+		<arguments>-L  "D:\Emulators\emulators\retroarch\cores\nestopia_libretro.dll"  </arguments>
+		<rompath>D:\Emulators\roms\famicom</rompath>
+		<systemname>famicom</systemname>
+		<systemlabel>Famicom</systemlabel>
+		<imagex>215</imagex><!--  -->
+		<imagey>306</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\retroarch\retroarch.exe</executable>
+		<arguments>-L  "D:\Emulators\emulators\retroarch\cores\nestopia_libretro.dll"  </arguments>
+		<rompath>D:\Emulators\roms\fds</rompath>
+		<systemname>fds</systemname>
+		<systemlabel>Famicom Disk System</systemlabel>
+		<imagex>306</imagex><!--  -->
+		<imagey>306</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\retroarch\retroarch.exe</executable>
+		<arguments>-L  "D:\Emulators\emulators\retroarch\cores\bsnes2014_accuracy_libretro.dll"  </arguments>
+		<rompath>D:\Emulators\roms\snes\usa</rompath>
+		<systemname>snes</systemname>
+		<systemlabel>Super Nintendo</systemlabel>
+		<imagex>340</imagex>
+		<imagey>235</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\retroarch\retroarch.exe</executable>
+		<arguments>-L  "D:\Emulators\emulators\retroarch\cores\bsnes2014_accuracy_libretro.dll"  </arguments>
+		<rompath>D:\Emulators\roms\superfamicom</rompath>
+		<systemname>superfamicom</systemname>
+		<systemlabel>Super Famicom</systemlabel>
+		<imagex>215</imagex>
+		<imagey>306</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\retroarch\retroarch.exe</executable>
+		<arguments>-L  "D:\Emulators\emulators\retroarch\cores\mupen64plus_next_libretro.dll"  </arguments>
+		<rompath>D:\Emulators\roms\n64\usa</rompath>
+		<systemname>n64</systemname>
+		<systemlabel>Nintendo 64</systemlabel>
+		<imagex>350</imagex>
+		<imagey>250</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\GameCubeWii\Dolphin\Dolphin.exe</executable>
+		<!--<arguments>-L  "D:\Emulators\emulators\retroarch\cores\dolphin_libretro.dll"  </arguments>-->
+		<arguments> -b -e </arguments>
+		<rompath>D:\Emulators\roms\gamecube</rompath>
+		<systemname>gamecube</systemname>
+		<systemlabel>Nintendo GameCube</systemlabel>
+		<imagex>215</imagex>
+		<imagey>306</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\GameCubeWii\Dolphin\Dolphin.exe</executable>
+		<!--<arguments>-L  "D:\Emulators\emulators\retroarch\cores\dolphin_libretro.dll"  </arguments>-->
+		<arguments> -b -e </arguments>
+		<rompath>D:\Emulators\roms\wii\wii</rompath>
+		<systemname>wii</systemname>
+		<systemlabel>Nintendo Wii</systemlabel>
+		<imagex>215</imagex>
+		<imagey>306</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\GameCubeWii\Dolphin\Dolphin.exe</executable>
+		<!--<arguments>-L  "D:\Emulators\emulators\retroarch\cores\dolphin_libretro.dll"  </arguments>-->
+		<arguments> -b -e </arguments>
+		<rompath>D:\Emulators\roms\wii\wiiware</rompath>
+		<systemname>wiiware</systemname>
+		<systemlabel>Nintendo Wiiware</systemlabel>
+		<imagex>215</imagex>
+		<imagey>306</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\GameCubeWii\Dolphin\Dolphin.exe</executable>
+		<!--<arguments>-L  "D:\Emulators\emulators\retroarch\cores\dolphin_libretro.dll"  </arguments>-->
+		<arguments> -b -e </arguments>
+		<rompath>D:\Emulators\roms\wii\virtualconsole</rompath>
+		<systemname>virtualconsole</systemname>
+		<systemlabel>Nintendo Wii Virtual Console</systemlabel>
+		<imagex>215</imagex>
+		<imagey>306</imagey>
+	</system>
+	<!--  Playstation Systems-->
+	<system>
+		<executable>D:\Emulators\emulators\retroarch\retroarch.exe</executable>
+		<arguments>-L  "D:\Emulators\emulators\retroarch\cores\duckstation_libretro.dll"  </arguments>
+		<rompath>D:\Emulators\roms\psx</rompath>
+		<systemname>psx</systemname>
+		<systemlabel>Sony PlayStation</systemlabel>
+		<imagex>342</imagex>
+		<imagey>294</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\Playstation2\pcsx2\pcsx2-qtx64-avx2.exe</executable>
+		<arguments> -fullscreen </arguments>
+		<rompath>D:\Emulators\roms\ps2</rompath>
+		<systemname>ps2</systemname>
+		<systemlabel>Sony PlayStation 2</systemlabel>
+		<imagex>215</imagex>
+		<imagey>306</imagey>
+	</system>
+	<!-- Mame -->
+	<system>
+		<executable>D:\Emulators\emulators\retroarch\retroarch.exe</executable>
+		<arguments>-L  "D:\Emulators\emulators\retroarch\cores\fbneo_libretro.dll"  </arguments>
+		<rompath>D:\Emulators\roms\neogeo</rompath>
+		<systemname>neogeo</systemname>
+		<systemlabel>NEO GEO MVS</systemlabel>
+		<imagex>215</imagex>
+		<imagey>306</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\retroarch\retroarch.exe</executable>
+		<arguments>-L  "D:\Emulators\emulators\retroarch\cores\mame_libretro.dll"  </arguments>
+		<rompath>D:\Emulators\roms\mame</rompath>
+		<systemname>mame</systemname>
+		<systemlabel>MAME Arcade</systemlabel>
+		<imagex>215</imagex>
+		<imagey>306</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\retroarch\retroarch.exe</executable>
+		<arguments>-L  "D:\Emulators\emulators\retroarch\cores\mame2003_libretro.dll"  </arguments>
+		<rompath>D:\Emulators\roms\mame2003</rompath>
+		<systemname>mame2003</systemname>
+		<systemlabel>MAME 2003 Arcade</systemlabel>
+		<imagex>215</imagex>
+		<imagey>306</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\Playstation3\rpcs3\rpcs3.exe</executable>
+		<arguments> --no-gui </arguments>
+		<rompath>D:\Emulators\roms\ps3</rompath>
+		<systemname>ps3</systemname>
+		<systemlabel>Sony Playstation 3</systemlabel>
+		<imagex>260</imagex>
+		<imagey>351</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\Xbox360\xenia_canary\xenia_canary.exe</executable>
+		<arguments> --fullscreen </arguments>
+		<rompath>D:\Emulators\roms\xbox360</rompath>
+		<systemname>xbox360</systemname>
+		<systemlabel>Xbox 360</systemlabel>
+		<imagex>215</imagex>
+		<imagey>306</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\NintendoSwitch\ryujinx\Ryujinx.exe</executable>
+		<arguments></arguments>
+		<rompath>D:\Emulators\roms\switch</rompath>
+		<systemname>switch</systemname>
+		<systemlabel>Nintendo Switch</systemlabel>
+		<imagex>180</imagex>
+		<imagey>347</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\WiiU\cemu\Cemu.exe</executable>
+		<arguments> -g </arguments>
+		<rompath>D:\Emulators\roms\wiiu\wiiu</rompath>
+		<systemname>wiiu</systemname>
+		<systemlabel>Nintendo Wii U</systemlabel>
+		<imagex>215</imagex>
+		<imagey>306</imagey>
+	</system>
+	<system>
+		<rompath>D:\Emulators\roms\windows</rompath>
+		<systemname>windows</systemname>
+		<systemlabel>PC Windows</systemlabel>
+		<imagex>215</imagex>
+		<imagey>306</imagey>
+	</system>
+	<system>
+		<executable>D:\Emulators\emulators\retroarch\retroarch.exe</executable>
+		<arguments>-L  "D:\Emulators\emulators\retroarch\cores\mednafen_vb_libretro.dll"  </arguments>
+		<rompath>D:\Emulators\roms\virtualboy</rompath>
+		<systemname>virtualboy</systemname>
+		<systemlabel>Virtual Boy</systemlabel>
+		<imagex>306</imagex>
+		<imagey>306</imagey>
+	</system>
+
+	<system>
+		<rompath>D:\Emulators\roms\systems</rompath>
+		<systemname>systems</systemname>
+		<systemlabel>Systems</systemlabel>
+		<imagex>306</imagex>
+		<imagey>306</imagey>
+	</system>
+
+</config>
+

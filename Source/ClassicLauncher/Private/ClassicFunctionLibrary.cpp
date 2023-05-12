@@ -34,7 +34,7 @@ EButtonsGame UClassicFunctionLibrary::GetInputButton(const FKeyEvent& InKeyEvent
 	else if (KeyEvent == "Up" || KeyEvent == "Gamepad_DPad_Up" || KeyEvent == "Gamepad_LeftStick_Up")	return EButtonsGame::UP;
 	else if (KeyEvent == "Down" || KeyEvent == "Gamepad_DPad_Down" || KeyEvent == "Gamepad_LeftStick_Down")	return EButtonsGame::DOWN;
 	else if (KeyEvent == "Enter" || KeyEvent == "Gamepad_FaceButton_Bottom")	return EButtonsGame::A;
-	else if (KeyEvent == "Backspace" || KeyEvent == "Gamepad_FaceButton_Right")	return EButtonsGame::B;
+	else if (KeyEvent == "Backspace" || KeyEvent == "Escape" || KeyEvent == "Gamepad_FaceButton_Right")	return EButtonsGame::B;
 	else if (KeyEvent == "F" || KeyEvent == "Gamepad_FaceButton_Top")	return EButtonsGame::Y;
 	else if (KeyEvent == "S" || KeyEvent == "Gamepad_FaceButton_Left")	return EButtonsGame::X;
 	else if (KeyEvent == "Q" || KeyEvent == "Gamepad_LeftShoulder")	return EButtonsGame::LB;
@@ -231,6 +231,7 @@ bool UClassicFunctionLibrary::SwitchOnDefaultLibreto(FString Core, FString& Core
 */
 FString UClassicFunctionLibrary::ReplaceMedia(FString OriginalPathMedia, FString PathMedia, FString PathRom, FString RomName, FString SystemName, FString TypeMedia, FString Format)
 {
+
 	FString NewImage = ReplacePath(OriginalPathMedia, PathRom);
 
 	FString Rom = RomName.Replace(TEXT("./"), TEXT("\\"), ESearchCase::IgnoreCase);
@@ -238,6 +239,8 @@ FString UClassicFunctionLibrary::ReplaceMedia(FString OriginalPathMedia, FString
 
 	if (!FPaths::FileExists(NewImage))
 	{
+		if (RomName.IsEmpty()) return TEXT("");
+
 		for (int32 StartIndex = Rom.Len(); StartIndex >= 0; StartIndex--)
 		{
 			if (Rom.Mid(StartIndex, 1) == TEXT("\\"))

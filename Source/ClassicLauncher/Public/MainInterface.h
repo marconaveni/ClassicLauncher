@@ -272,6 +272,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	bool bDelayFavoriteClick;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	bool bDelayQuit;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	bool bHover;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	float TimerDelayAnimation;
@@ -315,6 +317,8 @@ public:
 	FTimerHandle DelayPressedTimerHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle DelayFavoriteTimerHandle;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
+	FTimerHandle DelayQuitTimerHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle TriggerTimerHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
@@ -562,6 +566,9 @@ private:
 	void OnClickBackAction();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
+	void QuitGame();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickFavorite();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
@@ -573,6 +580,9 @@ private:
 	//macros ticks
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void ScrollCards();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void SetVisibiltyDebugButton(UButton* button);
 
 public:
 

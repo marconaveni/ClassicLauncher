@@ -93,11 +93,9 @@ void UClassicConfigurations::OnSlideLostFocus()
 		return;
 	}
 
-	FString RootDir = UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
-	ConfigData.pathmedia = (RootDir == ConfigData.pathmedia) ? TEXT("$(remove)") : ConfigData.pathmedia;
+	ConfigData.pathmedia = ConfigData.pathmedia;
 	ConfigData.volume = MediaPlayerVolume;
 	FString XmlConfig = UClassicFunctionLibrary::CreateXMLConfigFile(ConfigData);
-	XmlConfig = XmlConfig.Replace(TEXT("$(remove)"), TEXT(""), ESearchCase::IgnoreCase);
 	const FString PathToSave = UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("config");
 	MainInterfaceReference->ConfigurationData = ConfigData;
 	const bool Saved = (UClassicFunctionLibrary::SaveStringToFile(PathToSave, TEXT("config.xml"), XmlConfig, true, false));
