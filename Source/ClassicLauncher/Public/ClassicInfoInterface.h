@@ -92,8 +92,6 @@ private:
 
 	virtual FReply NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 
-
-
 public:	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InfoInterface|Variables")
 	float CurrentOffSet;
@@ -107,6 +105,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "InfoInterface")
 	void Scrolled(float NewValue);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicSystemListInterface|Variables")
+	UTexture2D* ArrowIcon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicSystemListInterface|Variables")
+	UTexture2D* ArrowIconOutline;
 
 	
 };

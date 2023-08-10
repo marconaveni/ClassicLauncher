@@ -352,6 +352,14 @@ void UMainInterface::ViewList()
 	ScrollListGame->ScrollWidgetIntoView(coverReference[IndexCard], false, EDescendantScrollDestination::Center, 0);
 	OnNavigationFocus(cardReference[IndexCard]);
 	bInputEnable = true;
+	PrepareThemes();
+}
+
+void UMainInterface::PrepareThemes()
+{
+	CountLocationY = CountSystem;
+	ButtonSystemReferences[CountLocationY]->Click->SetKeyboardFocus();
+	Themes();
 }
 
 void UMainInterface::SetPaddingCovers()
@@ -424,6 +432,11 @@ FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const
 		KeyEvent = InKeyEvent;
 		const EButtonsGame Input = UClassicFunctionLibrary::GetInputButton(InKeyEvent);
 
+		if (ENavigationLastButton == EButtonsGame::NONE)
+		{
+			ENavigationLastButton = Input;
+		}
+
 		bKeyPressed = (Input != EButtonsGame::A && Input != EButtonsGame::NONE);
 
 		if (!bScroll && !bKeyTriggerLeft && !bKeyTriggerRight)
@@ -439,12 +452,12 @@ FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const
 			}
 		}
 
-		if (Input == EButtonsGame::LB)
+		if (Input == EButtonsGame::LB && bKeyTriggerRight == false)
 		{
 			ENavigationButton = Input;
 			bKeyTriggerLeft = true;
 		}
-		else if (Input == EButtonsGame::RB)
+		else if (Input == EButtonsGame::RB && bKeyTriggerLeft == false)
 		{
 			ENavigationButton = Input;
 			bKeyTriggerRight = true;
@@ -468,6 +481,7 @@ FReply UMainInterface::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEven
 {
 	KeyEvent = InKeyEvent;
 	const EButtonsGame Input = UClassicFunctionLibrary::GetInputButton(InKeyEvent);
+	ENavigationLastButton = EButtonsGame::NONE;
 
 	if (bInputEnable)
 	{

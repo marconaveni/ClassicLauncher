@@ -29,7 +29,13 @@ protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* ArrowDown;
 
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UClassicButtonsIcons* WBPButtonsIconsInterfaces;
+
 public:
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* TextSelectSystem;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UScrollBox* ScrollBoxSystems;
@@ -44,10 +50,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicSystemListInterface|Variables")
 	EButtonsGame Input;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicSystemListInterface|Variables")
+	UTexture2D* ArrowIcon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicSystemListInterface|Variables")
+	UTexture2D* ArrowIconOutline;
+
 	UFUNCTION(BlueprintCallable, Category = "ClassicSystemListInterface|Events")
 	void SetScrollArrowIcons(const EButtonsGame Navigate);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicSystemListInterface|Events")
 	void OnUserScrolled(float CurrentOffset);
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicSystemListInterface|Events")
+	void SetIconArrow();
 
 };

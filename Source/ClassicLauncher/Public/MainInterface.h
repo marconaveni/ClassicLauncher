@@ -238,6 +238,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	EButtonsGame ENavigationButton;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	EButtonsGame ENavigationLastButton;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	EButtonsGame ENavigationScroll;	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	EButtonsGame ENavigationBack;
@@ -357,6 +359,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void ViewList();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void PrepareThemes();
+	UFUNCTION(BlueprintImplementableEvent)
+	void Themes();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetPaddingCovers();
@@ -597,5 +604,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void ShowMessage(FText Message, float InRate);
+
 
 };

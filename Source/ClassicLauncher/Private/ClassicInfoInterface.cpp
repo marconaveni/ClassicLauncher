@@ -28,6 +28,8 @@ void UClassicInfoInterface::ScrollTopEnd(EButtonsGame Navigate)
 	{
 		if (CurrentOffSet == 0)
 		{
+			ArrowUP->SetBrushFromTexture(ArrowIconOutline);
+			ArrowDown->SetBrushFromTexture(ArrowIcon);
 			//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::White, TEXT("top"));
 		}
 	}
@@ -35,6 +37,8 @@ void UClassicInfoInterface::ScrollTopEnd(EButtonsGame Navigate)
 	{
 		if (CurrentOffSet >= ScrollBox->GetScrollOffsetOfEnd())
 		{
+			ArrowUP->SetBrushFromTexture(ArrowIcon);
+			ArrowDown->SetBrushFromTexture(ArrowIconOutline);
 			//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::White, TEXT("down"));
 		}
 	}

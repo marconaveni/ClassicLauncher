@@ -722,3 +722,13 @@ FString UClassicFunctionLibrary::FormatDateToXml()
 	FDateTime DateTime = FDateTime::Now();
 	return DateTime.ToString(TEXT("%Y%m%dT%H%M%S"));
 }
+
+FColor UClassicFunctionLibrary::HexToColor(FString HexString)
+{
+	return FColor::FromHex(HexString);
+}
+
+FString UClassicFunctionLibrary::ColorToHex(FColor Color)
+{
+	return Color.ToHex();
+}

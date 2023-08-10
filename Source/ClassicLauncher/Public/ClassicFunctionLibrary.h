@@ -230,4 +230,11 @@ public:
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Date")
 	static FString FormatDateToXml();
 
+	/** Converts hex string to color. Supports formats RGB, RRGGBB, RRGGBBAA, RGB, #RRGGBB, #RRGGBBAA */
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|Color")
+	static FColor HexToColor(FString HexString);
+
+	/** Converts color to hex string */
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|Color")
+	static FString ColorToHex(FColor Color);
 };
