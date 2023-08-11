@@ -63,7 +63,11 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* BgTopBarIcon;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* BgBackground;
+	class UImage* BgBackground1;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* BgBackground2;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* BgBackground3;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* BgTitle;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))

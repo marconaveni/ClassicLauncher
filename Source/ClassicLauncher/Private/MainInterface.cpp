@@ -234,7 +234,7 @@ void UMainInterface::LoadConfigurationNative()
 	{
 		UClassicFunctionLibrary::SetConfig(UClassicFunctionLibrary::LoadXMLSingle(ConfigResult, TEXT("config")), ConfigurationData);
 		UGameplayStatics::SetEnableWorldRendering(this, ConfigurationData.rendering);
-		ConfigurationData.pathmedia = (ConfigurationData.pathmedia != TEXT("")) ? ConfigurationData.pathmedia  : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
+		ConfigurationData.pathmedia = (ConfigurationData.pathmedia != TEXT("")) ? ConfigurationData.pathmedia : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
 		WBPClassicConfigurationsInterface->SlideVolume->SetSlideValue(FMath::Clamp(ConfigurationData.volume, 0, 100));
 		LoadConfigSystemsNative();
 	}
@@ -310,7 +310,7 @@ void UMainInterface::LoadListNative()
 		SetPaddingCovers();
 
 		ImgFrame->SetBrushFromTexture(ImageFrameCenter);
-		cardReference[0]->SetFocusCard(true);
+		//cardReference[0]->SetFocusCard(true);
 
 
 		ConfigurationData.defaultstartsystem = GameSystems[CountSystem].SystemName;
@@ -350,6 +350,9 @@ void UMainInterface::ViewList()
 	UUserWidget::PlayAnimationForward(LoadListGame);
 	ImgFrame->SetRenderOpacity(1.0f);
 	ScrollListGame->ScrollWidgetIntoView(coverReference[IndexCard], false, EDescendantScrollDestination::Center, 0);
+	CountLocationY = CountSystem;
+	ButtonSystemReferences[CountLocationY]->Click->SetKeyboardFocus();
+	cardReference[0]->SetFocusCard(true);
 	OnNavigationFocus(cardReference[IndexCard]);
 	bInputEnable = true;
 	PrepareThemes();
@@ -357,8 +360,6 @@ void UMainInterface::ViewList()
 
 void UMainInterface::PrepareThemes()
 {
-	CountLocationY = CountSystem;
-	ButtonSystemReferences[CountLocationY]->Click->SetKeyboardFocus();
 	Themes();
 }
 
@@ -1707,7 +1708,7 @@ void UMainInterface::ShowMessage(FText Message, float InRate)
 
 void UMainInterface::CreateFolders()
 {
-	const FString PathMedia = (ConfigurationData.pathmedia != TEXT("")) ? ConfigurationData.pathmedia  : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
+	const FString PathMedia = (ConfigurationData.pathmedia != TEXT("")) ? ConfigurationData.pathmedia : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
 
 	UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia);
 
