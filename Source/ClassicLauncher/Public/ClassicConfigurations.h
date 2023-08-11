@@ -58,6 +58,10 @@ public:
 	class UClassicButtonsIcons* WBPButtonsIconsInterfaces;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* TextConfiguration;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UClassicDeviceInfo* WBPDeviceInfo;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UClassicLicenseInfo* WBPLicenseInfo;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
 	class AClassicMediaPlayer* ClassicMediaPlayerReference;
