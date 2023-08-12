@@ -310,7 +310,6 @@ void UMainInterface::LoadListNative()
 		SetPaddingCovers();
 
 		ImgFrame->SetBrushFromTexture(ImageFrameCenter);
-		//cardReference[0]->SetFocusCard(true);
 
 
 		ConfigurationData.defaultstartsystem = GameSystems[CountSystem].SystemName;
@@ -351,7 +350,6 @@ void UMainInterface::ViewList()
 	ImgFrame->SetRenderOpacity(1.0f);
 	ScrollListGame->ScrollWidgetIntoView(coverReference[IndexCard], false, EDescendantScrollDestination::Center, 0);
 	CountLocationY = CountSystem;
-	ButtonSystemReferences[CountLocationY]->Click->SetKeyboardFocus();
 	cardReference[0]->SetFocusCard(true);
 	OnNavigationFocus(cardReference[IndexCard]);
 	bInputEnable = true;
@@ -1573,7 +1571,13 @@ void UMainInterface::OnClickSelectSystem()
 	UUserWidget::PlayAnimationForward(ShowSystem);
 	PositionY = EPositionY::TOP;
 	ButtonSystemReferences[CountLocationY]->Click->SetKeyboardFocus();
+	GetWorld()->GetTimerManager().SetTimer(SetArrowsTimerHandle, this, &UMainInterface::SetArrows, 0.02f, false, -1);
 	Focus = EFocus::SYSTEM;
+}
+
+void UMainInterface::SetArrows()
+{
+	WBPSystemsList->SetIconArrow();
 }
 
 void UMainInterface::OnClickConfigurations()

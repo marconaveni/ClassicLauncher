@@ -331,6 +331,8 @@ public:
 	FTimerHandle LauncherTimerHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle BackButtonTimerHandle;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
+	FTimerHandle SetArrowsTimerHandle;
 
 	//Functions
 
@@ -609,5 +611,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void ShowMessage(FText Message, float InRate);
 
-
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void SetArrows();
 };
