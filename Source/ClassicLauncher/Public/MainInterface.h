@@ -422,6 +422,8 @@ public:
 	void SetFocusCardToLeft(int32 IndexChange);
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetFocusCardToRight(int32 IndexChange);
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void SetFocusCardToCustomPosition(int32 IndexChange);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnNativeClick(FString RomPath);
@@ -461,6 +463,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void LoadImages();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void ClearAllVisibilityCards();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void ChangeVisibilityCards(int32 Index);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetImagesCard(UTexture2D* Texture, UCard* Card, int32 Index);

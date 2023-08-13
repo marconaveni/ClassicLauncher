@@ -7,6 +7,7 @@
 #include "GameData.h"
 #include "EasyXMLElement.h"
 #include "RuntimeImageReader.h"
+#include "Engine/Texture2DDynamic.h"
 #include "Card.h"
 #include "ClassicFunctionLibrary.generated.h"
 
@@ -237,4 +238,6 @@ public:
 	/** Converts color to hex string */
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|Color")
 	static FString ColorToHex(FColor Color);
+
+
 };

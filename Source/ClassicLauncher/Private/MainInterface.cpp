@@ -952,6 +952,17 @@ void UMainInterface::SetFocusCardToRight(int32 IndexChange)
 	}
 }
 
+void UMainInterface::SetFocusCardToCustomPosition(int32 IndexChange)
+{
+	int32 Index = IndexChange;
+	if (cardReference.IsValidIndex(Index))
+	{
+		cardReference[Index]->SetFocusCard(true);
+		OnNavigationFocus(cardReference[Index]);
+		LoadImages();
+	}
+}
+
 //end navigate area
 ///////////////////////////////////////////////////
 
@@ -1082,8 +1093,8 @@ void UMainInterface::LoadFirstImages()
 	const int32 Length = FMath::Clamp(GameData.Num(), 0, 15);
 	for (int32 i = 0; i < Length; i++)
 	{
-		ImageCard = UClassicFunctionLibrary::LoadTexture(GameData[i].imageFormated);
-		AddImagesCardCover(ImageCard, i);
+		//ImageCard = UClassicFunctionLibrary::LoadTexture(GameData[i].imageFormated);
+		//AddImagesCardCover(ImageCard, i);
 		coverReference[i]->SetVisibility(ESlateVisibility::Visible);
 		cardReference[i]->SetVisibility(ESlateVisibility::Visible);
 		LastIndex = i;
@@ -1113,7 +1124,7 @@ void UMainInterface::LoadImages()
 		{
 			if (IndexAsyncImage <= LastIndex)
 			{
-				ASyncLoadCard(GameData[IndexCard].imageFormated, LastIndex);
+				//ASyncLoadCard(GameData[IndexCard].imageFormated, LastIndex);
 				LoadImageSync(LastIndex);
 			}
 			else
@@ -1130,6 +1141,26 @@ void UMainInterface::LoadImages()
 		}
 	}
 
+}
+
+void UMainInterface::ClearAllVisibilityCards()
+{
+	for (int32 i = 0; i < GameData.Num(); i++)
+	{
+		coverReference[i]->SetVisibility(ESlateVisibility::Hidden);
+		cardReference[i]->SetVisibility(ESlateVisibility::Hidden);
+	}
+}
+
+void UMainInterface::ChangeVisibilityCards(int32 Index)
+{
+	for (int32 i = Index - 14; i < Index + 14; i++)
+	{
+		if (cardReference.IsValidIndex(i)) {
+			coverReference[i]->SetVisibility(ESlateVisibility::Visible);
+			cardReference[i]->SetVisibility(ESlateVisibility::Visible);
+		}
+	}
 }
 
 void UMainInterface::SetImagesCard(UTexture2D* Texture, UCard* Card, int32 Index)

@@ -11,7 +11,7 @@
 #include "Misc/DateTime.h"
 #include "EasyXMLParseManager.h"
 
-
+#include "DynamicRHI.h"
 
 EUINavigation UClassicFunctionLibrary::GetInputnavigation(const FKeyEvent& InKeyEvent)
 {
@@ -566,7 +566,7 @@ UTexture2D* UClassicFunctionLibrary::LoadTexture2DFromFile(const FString& FilePa
 				}
 				else if (BitDepth == 8)
 				{
-					PixelFormat = PF_B8G8R8A8;
+					PixelFormat = PF_B8G8R8A8;  
 					RGBFormat = ERGBFormat::BGRA;
 				}
 				else
@@ -732,3 +732,5 @@ FString UClassicFunctionLibrary::ColorToHex(FColor Color)
 {
 	return Color.ToHex();
 }
+
+
