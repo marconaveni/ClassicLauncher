@@ -18,9 +18,7 @@ UArrow::UArrow(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitia
 void UArrow::NativePreConstruct()
 {
 	Super::NativePreConstruct();
-	BgImage->SetRenderTransformAngle(Angle);
-	BgImage->SetBrushTintColor(ArrowColor);
-	BgImage->SetDesiredSizeOverride(ArrowSize);
+	SetTheme();
 }
 
 void UArrow::NativeConstruct()
@@ -31,7 +29,7 @@ void UArrow::NativeConstruct()
 
 void UArrow::Animate()
 {
-	if (ArrowIndex == 2)
+	if (ArrowIndex == ArrowTextures.Num() - 1)
 	{
 		ArrowIndex = 0;
 	}
@@ -49,4 +47,11 @@ void UArrow::SetFrame()
 		BgImage->SetBrushFromTexture(ArrowTextures[ArrowIndex]);
 	}
 	GetWorld()->GetTimerManager().SetTimer(FrameTimerHandle, this, &UArrow::Animate , DelayAnimation , false, -1);
+}
+
+void UArrow::SetTheme()
+{
+	BgImage->SetRenderTransformAngle(Angle);
+	BgImage->SetBrushTintColor(ArrowColor);
+	BgImage->SetDesiredSizeOverride(ArrowSize);
 }

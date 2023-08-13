@@ -16,6 +16,9 @@ class CLASSICLAUNCHER_API UClassicConfigurations : public UUserWidget
 	
 public:
 
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* Icon;
+
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual void NativeOnInitialized() override;
 	virtual FReply NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
@@ -47,6 +50,18 @@ public:
 	class UWidgetSwitcher* WSDeviceInfo;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UWidgetSwitcher* WSDeviceLicense;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* DeviceInfo;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* DeviceLicense;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UClassicButtonsIcons* WBPButtonsIconsInterfaces;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* TextConfiguration;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UClassicDeviceInfo* WBPDeviceInfo;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UClassicLicenseInfo* WBPLicenseInfo;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
 	class AClassicMediaPlayer* ClassicMediaPlayerReference;

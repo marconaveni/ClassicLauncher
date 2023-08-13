@@ -53,5 +53,8 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Arrow|Functions")
 	void SetFrame();
+
+	UFUNCTION(BlueprintCallable, Category = "Themes|Arrow|Functions")
+	void SetTheme();
 	
 };

@@ -63,7 +63,11 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* BgTopBarIcon;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* BgBackground;
+	class UImage* BgBackground1;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* BgBackground2;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* BgBackground3;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* BgTitle;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
@@ -238,6 +242,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	EButtonsGame ENavigationButton;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	EButtonsGame ENavigationLastButton;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	EButtonsGame ENavigationScroll;	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	EButtonsGame ENavigationBack;
@@ -325,6 +331,8 @@ public:
 	FTimerHandle LauncherTimerHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle BackButtonTimerHandle;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
+	FTimerHandle SetArrowsTimerHandle;
 
 	//Functions
 
@@ -357,6 +365,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void ViewList();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void PrepareThemes();
+	UFUNCTION(BlueprintImplementableEvent)
+	void Themes();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetPaddingCovers();
@@ -409,6 +422,8 @@ public:
 	void SetFocusCardToLeft(int32 IndexChange);
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetFocusCardToRight(int32 IndexChange);
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void SetFocusCardToCustomPosition(int32 IndexChange);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnNativeClick(FString RomPath);
@@ -448,6 +463,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void LoadImages();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void ClearAllVisibilityCards();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void ChangeVisibilityCards(int32 Index);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetImagesCard(UTexture2D* Texture, UCard* Card, int32 Index);
@@ -598,4 +619,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void ShowMessage(FText Message, float InRate);
 
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void SetArrows();
 };

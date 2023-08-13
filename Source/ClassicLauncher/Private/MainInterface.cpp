@@ -234,7 +234,7 @@ void UMainInterface::LoadConfigurationNative()
 	{
 		UClassicFunctionLibrary::SetConfig(UClassicFunctionLibrary::LoadXMLSingle(ConfigResult, TEXT("config")), ConfigurationData);
 		UGameplayStatics::SetEnableWorldRendering(this, ConfigurationData.rendering);
-		ConfigurationData.pathmedia = (ConfigurationData.pathmedia != TEXT("")) ? ConfigurationData.pathmedia  : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
+		ConfigurationData.pathmedia = (ConfigurationData.pathmedia != TEXT("")) ? ConfigurationData.pathmedia : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
 		WBPClassicConfigurationsInterface->SlideVolume->SetSlideValue(FMath::Clamp(ConfigurationData.volume, 0, 100));
 		LoadConfigSystemsNative();
 	}
@@ -310,7 +310,6 @@ void UMainInterface::LoadListNative()
 		SetPaddingCovers();
 
 		ImgFrame->SetBrushFromTexture(ImageFrameCenter);
-		cardReference[0]->SetFocusCard(true);
 
 
 		ConfigurationData.defaultstartsystem = GameSystems[CountSystem].SystemName;
@@ -350,8 +349,16 @@ void UMainInterface::ViewList()
 	UUserWidget::PlayAnimationForward(LoadListGame);
 	ImgFrame->SetRenderOpacity(1.0f);
 	ScrollListGame->ScrollWidgetIntoView(coverReference[IndexCard], false, EDescendantScrollDestination::Center, 0);
+	CountLocationY = CountSystem;
+	cardReference[0]->SetFocusCard(true);
 	OnNavigationFocus(cardReference[IndexCard]);
 	bInputEnable = true;
+	PrepareThemes();
+}
+
+void UMainInterface::PrepareThemes()
+{
+	Themes();
 }
 
 void UMainInterface::SetPaddingCovers()
@@ -424,6 +431,11 @@ FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const
 		KeyEvent = InKeyEvent;
 		const EButtonsGame Input = UClassicFunctionLibrary::GetInputButton(InKeyEvent);
 
+		if (ENavigationLastButton == EButtonsGame::NONE)
+		{
+			ENavigationLastButton = Input;
+		}
+
 		bKeyPressed = (Input != EButtonsGame::A && Input != EButtonsGame::NONE);
 
 		if (!bScroll && !bKeyTriggerLeft && !bKeyTriggerRight)
@@ -439,12 +451,12 @@ FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const
 			}
 		}
 
-		if (Input == EButtonsGame::LB)
+		if (Input == EButtonsGame::LB && bKeyTriggerRight == false)
 		{
 			ENavigationButton = Input;
 			bKeyTriggerLeft = true;
 		}
-		else if (Input == EButtonsGame::RB)
+		else if (Input == EButtonsGame::RB && bKeyTriggerLeft == false)
 		{
 			ENavigationButton = Input;
 			bKeyTriggerRight = true;
@@ -468,6 +480,7 @@ FReply UMainInterface::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEven
 {
 	KeyEvent = InKeyEvent;
 	const EButtonsGame Input = UClassicFunctionLibrary::GetInputButton(InKeyEvent);
+	ENavigationLastButton = EButtonsGame::NONE;
 
 	if (bInputEnable)
 	{
@@ -939,6 +952,17 @@ void UMainInterface::SetFocusCardToRight(int32 IndexChange)
 	}
 }
 
+void UMainInterface::SetFocusCardToCustomPosition(int32 IndexChange)
+{
+	int32 Index = IndexChange;
+	if (cardReference.IsValidIndex(Index))
+	{
+		cardReference[Index]->SetFocusCard(true);
+		OnNavigationFocus(cardReference[Index]);
+		LoadImages();
+	}
+}
+
 //end navigate area
 ///////////////////////////////////////////////////
 
@@ -1069,8 +1093,8 @@ void UMainInterface::LoadFirstImages()
 	const int32 Length = FMath::Clamp(GameData.Num(), 0, 15);
 	for (int32 i = 0; i < Length; i++)
 	{
-		ImageCard = UClassicFunctionLibrary::LoadTexture(GameData[i].imageFormated);
-		AddImagesCardCover(ImageCard, i);
+		//ImageCard = UClassicFunctionLibrary::LoadTexture(GameData[i].imageFormated);
+		//AddImagesCardCover(ImageCard, i);
 		coverReference[i]->SetVisibility(ESlateVisibility::Visible);
 		cardReference[i]->SetVisibility(ESlateVisibility::Visible);
 		LastIndex = i;
@@ -1100,7 +1124,7 @@ void UMainInterface::LoadImages()
 		{
 			if (IndexAsyncImage <= LastIndex)
 			{
-				ASyncLoadCard(GameData[IndexCard].imageFormated, LastIndex);
+				//ASyncLoadCard(GameData[IndexCard].imageFormated, LastIndex);
 				LoadImageSync(LastIndex);
 			}
 			else
@@ -1117,6 +1141,26 @@ void UMainInterface::LoadImages()
 		}
 	}
 
+}
+
+void UMainInterface::ClearAllVisibilityCards()
+{
+	for (int32 i = 0; i < GameData.Num(); i++)
+	{
+		coverReference[i]->SetVisibility(ESlateVisibility::Hidden);
+		cardReference[i]->SetVisibility(ESlateVisibility::Hidden);
+	}
+}
+
+void UMainInterface::ChangeVisibilityCards(int32 Index)
+{
+	for (int32 i = Index - 14; i < Index + 14; i++)
+	{
+		if (cardReference.IsValidIndex(i)) {
+			coverReference[i]->SetVisibility(ESlateVisibility::Visible);
+			cardReference[i]->SetVisibility(ESlateVisibility::Visible);
+		}
+	}
 }
 
 void UMainInterface::SetImagesCard(UTexture2D* Texture, UCard* Card, int32 Index)
@@ -1558,7 +1602,13 @@ void UMainInterface::OnClickSelectSystem()
 	UUserWidget::PlayAnimationForward(ShowSystem);
 	PositionY = EPositionY::TOP;
 	ButtonSystemReferences[CountLocationY]->Click->SetKeyboardFocus();
+	GetWorld()->GetTimerManager().SetTimer(SetArrowsTimerHandle, this, &UMainInterface::SetArrows, 0.02f, false, -1);
 	Focus = EFocus::SYSTEM;
+}
+
+void UMainInterface::SetArrows()
+{
+	WBPSystemsList->SetIconArrow();
 }
 
 void UMainInterface::OnClickConfigurations()
@@ -1693,7 +1743,7 @@ void UMainInterface::ShowMessage(FText Message, float InRate)
 
 void UMainInterface::CreateFolders()
 {
-	const FString PathMedia = (ConfigurationData.pathmedia != TEXT("")) ? ConfigurationData.pathmedia  : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
+	const FString PathMedia = (ConfigurationData.pathmedia != TEXT("")) ? ConfigurationData.pathmedia : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
 
 	UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia);
 
