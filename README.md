@@ -10,7 +10,7 @@ There is still no documentation on how to configure Classic Launcher.
 
 ## Features planned to be added in the future
 
-- [ ] Theme support.
+- [x] Theme support.
 - [ ] Scraper support to download missing information.
 - [ ] Screen to edit information about the roms.
 - [ ] View System Information.
