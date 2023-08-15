@@ -81,22 +81,33 @@ void UCard::SetThemeCard(UTexture2D* texture)
 
 void UCard::SetFavorite(bool favorite, bool AnimateIcon)
 {
-	if (AnimateIcon) {	
-		Favorite->SetVisibility(ESlateVisibility::Visible);
+	if (favorite == false && Favorite->GetVisibility() == ESlateVisibility::Hidden) return;
+	
+	Favorite->SetVisibility(ESlateVisibility::Visible);
+
+	if (AnimateIcon == false) 
+	{	
 		if (favorite) {
-			UUserWidget::PlayAnimationForward(FadeFavorite);
+			FrameMain->RenderOpacity = 0.0f;
+			BackgroundMain->RenderOpacity = 0.0f;
+			FrameFavorite->RenderOpacity = 1.0f;
+			BackgroundFavorite->RenderOpacity = 1.0f;
+			Favorite->RenderOpacity = 1.0f;
 		}
 		else {
-			UUserWidget::PlayAnimationReverse(FadeFavorite);
+			FrameMain->RenderOpacity = 1.0f;
+			BackgroundMain->RenderOpacity = 1.0f;
+			FrameFavorite->RenderOpacity = 0.0f;
+			BackgroundFavorite->RenderOpacity = 0.0f;
+			Favorite->RenderOpacity = 0.0f;
 		}
 	}
 	else {
+
 		if (favorite) {
-			Favorite->SetVisibility(ESlateVisibility::Visible);
 			UUserWidget::PlayAnimationForward(FadeFavorite);
 		}
 		else {
-			Favorite->SetVisibility(ESlateVisibility::Hidden);
 			UUserWidget::PlayAnimationReverse(FadeFavorite);
 		}
 	}
