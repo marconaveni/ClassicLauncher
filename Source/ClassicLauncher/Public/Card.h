@@ -26,7 +26,6 @@ public:
 
 	UCard(const FObjectInitializer& ObjectInitializer);
 
-	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual void NativePreConstruct() override;
 	virtual bool Initialize() override;
 	virtual FReply NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
@@ -61,6 +60,7 @@ public:
 	UFUNCTION(BlueprintCallable,  Category = "Card|Functions")
 	void ButtonClick();
 
+	UFUNCTION(BlueprintCallable, Category = "Card|Functions")
 	void AnimationFade();
 
 	UFUNCTION(BlueprintImplementableEvent)
@@ -76,20 +76,16 @@ public:
 	class UImage* BackgroundFavorite;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* FrameFavorite;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* BackgroundMain;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* FrameMain;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* BackgroundSelected;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* FrameSelected;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* PlayerIcon;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* Favorite;
 

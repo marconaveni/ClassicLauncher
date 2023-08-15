@@ -5,6 +5,7 @@
 #include "Components/Button.h"
 #include "Components/Image.h"
 #include "Animation/WidgetAnimation.h"
+#include "Styling/SlateBrush.h"
 
 UCard::UCard(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -12,10 +13,6 @@ UCard::UCard(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitiali
 	IndexCard = 0;
 }
 
-void UCard::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
-{
-	Super::NativeTick(MyGeometry, InDeltaTime);
-}
 
 void UCard::NativePreConstruct()
 {
@@ -25,10 +22,10 @@ void UCard::NativePreConstruct()
 bool UCard::Initialize()
 {
 	bool Success = Super::Initialize();
-	if (BtnClick)
-	{
-		BtnClick->OnClicked.AddDynamic(this, &UCard::ButtonClick);
-	}
+	//if (BtnClick)
+	//{
+	//	BtnClick->OnClicked.AddDynamic(this, &UCard::ButtonClick);
+	//}
 	return false;
 }
 
@@ -67,7 +64,7 @@ void UCard::SetFocusCard(bool enable)
 {
 	if (enable) {
 		UUserWidget::PlayAnimationForward(ChangeColor);
-		BtnClick->SetKeyboardFocus();
+		//BtnClick->SetKeyboardFocus();
 	}
 	else {
 		UUserWidget::PlayAnimationReverse(ChangeColor);
@@ -115,8 +112,11 @@ void UCard::SetFavorite(bool favorite, bool AnimateIcon)
 
 void UCard::LoadImageCard(UTexture2D* texture, int32 width, int32 height)
 {
-	Cover->SetDesiredSizeOverride(FVector2D(FMath::Clamp(width, 32, 342), FMath::Clamp(height,32, 306)));
-	Cover->SetBrushFromTexture(texture);
+	//Cover->SetDesiredSizeOverride(FVector2D(FMath::Clamp(width, 32, 342), FMath::Clamp(height,32, 306)));
+	FSlateBrush NewBrush;
+	NewBrush.SetImageSize(FVector2D(width, height));
+	NewBrush.SetResourceObject(texture);
+	Cover->SetBrush(NewBrush);
 }
 
 void UCard::ButtonClick()
