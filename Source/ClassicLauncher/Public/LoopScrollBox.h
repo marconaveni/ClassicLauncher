@@ -56,6 +56,9 @@ public:
 	int32 IndexFocusCard;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	bool UnlockInput;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables|Debug")
+	bool Debug = false;
+
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UScrollBox* ScrollBox;
@@ -112,7 +115,7 @@ public:
 	void OnOpenCard();
 
 	UFUNCTION(BlueprintPure, Category = "LoopScrollBox|Functions")
-	void GetCardReferences(int32 Index, class UCard*& Left, class UCard*& Right);
+	void GetCardReferences(int32 Index, class UCard*& Left, class UCard*& Center);
 
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
 	void AddCardsHorizontalBox( TArray<FGameData> GameData, int32 IndexFocus);
