@@ -36,7 +36,7 @@ FReply UCard::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEven
 
 void UCard::SetPath(FString value)
 {
-	Path = value;		
+	Path = value;
 }
 
 void UCard::SetPlayers(FString value)
@@ -72,6 +72,19 @@ void UCard::SetFocusCard(bool enable)
 
 }
 
+void UCard::DisableFocusCard()
+{
+	if (BackgroundSelected->GetRenderOpacity() < 1.0f) return;
+
+	DisableFocusCardForce();
+}
+
+void UCard::DisableFocusCardForce()
+{
+	BackgroundSelected->SetRenderOpacity(0.0f);
+	FrameSelected->SetRenderOpacity(0.0f);
+}
+
 void UCard::SetThemeCard(UTexture2D* texture)
 {
 }
@@ -79,11 +92,11 @@ void UCard::SetThemeCard(UTexture2D* texture)
 void UCard::SetFavorite(bool favorite, bool AnimateIcon)
 {
 	if (favorite == false && Favorite->GetVisibility() == ESlateVisibility::Hidden) return;
-	
+
 	Favorite->SetVisibility(ESlateVisibility::Visible);
 
-	if (AnimateIcon == false) 
-	{	
+	if (AnimateIcon == false)
+	{
 		if (favorite) {
 			FrameMain->RenderOpacity = 0.0f;
 			BackgroundMain->RenderOpacity = 0.0f;
@@ -120,7 +133,7 @@ void UCard::LoadImageCard(UTexture2D* texture, int32 width, int32 height)
 }
 
 void UCard::ButtonClick()
-{	
+{
 	ClickButton();
 	OnClickTrigger.Broadcast(Path);
 }

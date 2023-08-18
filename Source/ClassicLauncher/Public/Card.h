@@ -48,6 +48,12 @@ public:
 	UFUNCTION(BlueprintCallable,  Category = "Card|Functions")
 	void SetFocusCard(bool enable);
 
+	UFUNCTION(BlueprintCallable, Category = "Card|Functions")
+	void DisableFocusCard();
+
+	UFUNCTION(BlueprintCallable, Category = "Card|Functions")
+	void DisableFocusCardForce();
+
 	UFUNCTION(BlueprintCallable,  Category = "Card|Functions")
 	void SetThemeCard(UTexture2D* texture);
 

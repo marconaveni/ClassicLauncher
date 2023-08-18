@@ -112,11 +112,16 @@ public:
 	class UClassicButton* BtnInfo;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UMessageBalloon* MessageDisplay;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class ULoopScrollBox* LoopScroll;
 
 	//animations WidgetBind
 
 protected:
-
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FrameAnimationLeft;
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FrameAnimationRight;
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationX1;
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
@@ -445,6 +450,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnNavigationFocus(UCard* Card);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
+	void SetTitle(int32 Index);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetButtonsIconInterfaces(EPositionY GetPosition);

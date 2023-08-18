@@ -13,6 +13,13 @@
 
 void ULoopScrollBox::NativeOnInitialized()
 {
+	BtnClick->OnPressed.AddDynamic(this, &ULoopScrollBox::OnClickButton);
+	PrepareScrollBox();
+	Super::NativeOnInitialized();
+}
+
+void ULoopScrollBox::Clear()
+{
 	Offset = 0.0f;
 	Speed = 30.0f;
 	Time = 0.0f;
@@ -23,11 +30,6 @@ void ULoopScrollBox::NativeOnInitialized()
 	PositionOffsetFocus = 1;
 	IndexFocusCard = 0;
 	UnlockInput = true;
-
-	BtnClick->OnPressed.AddDynamic(this, &ULoopScrollBox::OnClickButton);
-
-	PrepareScrollBox();
-	Super::NativeOnInitialized();
 }
 
 void ULoopScrollBox::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -87,19 +89,21 @@ void ULoopScrollBox::OpenCard()
 void ULoopScrollBox::SetValuesCard(UCard* Card, FString Players, bool Favorite)
 {
 	Card->SetPlayers(Players);
-	Card->SetFavorite(Favorite,false);
+	Card->SetFavorite(Favorite, false);
+	Card->DisableFocusCard();
 }
 
 void ULoopScrollBox::OnClickButton()
 {
 }
 
-void ULoopScrollBox::GetCardReferences(int32 Index, UCard*& Left, UCard*& Center)
+void ULoopScrollBox::GetCardReferences(int32 Index, UCard*& Left, UCard*& Center , class UCard*& Right)
 {
 	if (CardReferenceLeft.IsValidIndex(Index) && CardReferenceCenter.IsValidIndex(Index))
 	{
 		Left = CardReferenceLeft[Index];
 		Center = CardReferenceCenter[Index];
+		Right = CardReferenceRight[Index];
 	}
 }
 
@@ -113,35 +117,38 @@ void ULoopScrollBox::AddCardsHorizontalBox(TArray<FGameData> GameData, int32 Ind
 	float SizeX;
 	float SizeY;
 
-	IndexFocusCard = FMath::Clamp(IndexFocus, 0, NumElements);
+	HorizontalBoxLeft->ClearChildren();
+	HorizontalBoxCenter->ClearChildren();
+	HorizontalBoxRight->ClearChildren();
 
-	if (ChildrenCount > 0)
-	{
-		HorizontalBoxLeft->ClearChildren();
-		HorizontalBoxCenter->ClearChildren();
-		ChildrenCount = 0;
-	}
+	Clear();
+	IndexFocusCard = FMath::Clamp(IndexFocus, 0, NumElements);
 
 	for (int32 i = 0; i <= NumElements; i++)
 	{
-		 Players = GameData[i].players;
-		 Favorite = GameData[i].favorite;
-		 SizeX =  GameData[i].ImageX;
-		 SizeY = GameData[i].ImageY;
+		Players = GameData[i].players;
+		Favorite = GameData[i].favorite;
+		SizeX = GameData[i].ImageX;
+		SizeY = GameData[i].ImageY;
 
-		 CardReferenceLeft.Add(CreateWidget<UCard>(GetOwningPlayer(), CardClassReference));
-		 CardReferenceCenter.Add(CreateWidget<UCard>(GetOwningPlayer(), CardClassReference));
+		CardReferenceLeft.Add(CreateWidget<UCard>(GetOwningPlayer(), CardClassReference));
+		CardReferenceCenter.Add(CreateWidget<UCard>(GetOwningPlayer(), CardClassReference));
+		CardReferenceRight.Add(CreateWidget<UCard>(GetOwningPlayer(), CardClassReference));
 
-		 SetValuesCard(CardReferenceCenter[i], Players, Favorite);
-		 HorizontalBoxLeft->AddChild(CardReferenceLeft[i]);
-		 HorizontalBoxCenter->AddChild(CardReferenceCenter[i]);
+		SetValuesCard(CardReferenceLeft[i], Players, Favorite);
+		SetValuesCard(CardReferenceCenter[i], Players, Favorite);
+		SetValuesCard(CardReferenceRight[i], Players, Favorite);
+		HorizontalBoxLeft->AddChild(CardReferenceLeft[i]);
+		HorizontalBoxCenter->AddChild(CardReferenceCenter[i]);
+		HorizontalBoxRight->AddChild(CardReferenceRight[i]);
 
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
-		 if (Debug)
-		 {
-			 CardReferenceLeft[i]->SetColorAndOpacity(FLinearColor(1.0f, 0.384006f, 0.423825f, 1.0f));
-			 CardReferenceCenter[i]->SetColorAndOpacity(FLinearColor(0.446118f, 1.0f, 0.431361f, 1.0f));
-		 }
+		if (Debug)
+		{
+			CardReferenceLeft[i]->SetColorAndOpacity(FLinearColor(1.0f, 0.384006f, 0.423825f, 1.0f));
+			CardReferenceCenter[i]->SetColorAndOpacity(FLinearColor(0.446118f, 1.0f, 0.431361f, 1.0f));
+			CardReferenceRight[i]->SetColorAndOpacity(FLinearColor(0.446118f, 0.431361f, 1.0f, 1.0f));
+		}
 #endif
 	}
 
@@ -152,7 +159,9 @@ void ULoopScrollBox::AddImagesCards(UTexture2D* NewTexture, int32 Width, int32 H
 {
 	UCard* Left;
 	UCard* Center;
-	GetCardReferences(Index, Left, Center);
+	UCard* Right;
+	GetCardReferences(Index, Left, Center,Right);
 	Left->LoadImageCard(NewTexture, Width, Height);
 	Center->LoadImageCard(NewTexture, Width, Height);
+	Right->LoadImageCard(NewTexture, Width, Height);
 }

@@ -115,7 +115,7 @@ public:
 	void OnOpenCard();
 
 	UFUNCTION(BlueprintPure, Category = "LoopScrollBox|Functions")
-	void GetCardReferences(int32 Index, class UCard*& Left, class UCard*& Center);
+	void GetCardReferences(int32 Index, class UCard*& Left, class UCard*& Center, class UCard*& Right);
 
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
 	void AddCardsHorizontalBox( TArray<FGameData> GameData, int32 IndexFocus);
@@ -126,5 +126,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
 	void SetValuesCard(class UCard* Card, FString Players ,bool Favorite);
 	
+	UFUNCTION()
 	void OnClickButton();
+
+	UFUNCTION()
+	void Clear();
 };

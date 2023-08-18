@@ -34,6 +34,7 @@
 #include "EngineUtils.h"
 #include "MessageBalloon.h"
 #include "Internationalization/StringTableRegistry.h"
+#include "LoopScrollBox.h"
 
 
 #define LOCTEXT_NAMESPACE "ButtonsSelection"
@@ -145,11 +146,13 @@ void UMainInterface::TriggerTick()
 
 		if (ENavigationButton == EButtonsGame::LB && !bKeyTriggerRight && !bScroll)
 		{
-			SetFocusCardToLeft(1);
+			//SetFocusCardToLeft(1);
+			//LoopScroll->StartScrollTo(EButtonsGame::LEFT);
 		}
 		else if (ENavigationButton == EButtonsGame::RB && !bKeyTriggerLeft && !bScroll)
 		{
-			SetFocusCardToRight(1);
+			//SetFocusCardToRight(1);
+			//LoopScroll->StartScrollTo(EButtonsGame::RIGHT);
 		}
 	}
 	else if (bKeyPressed && PositionY == EPositionY::CENTRAL)
@@ -350,8 +353,8 @@ void UMainInterface::ViewList()
 	ImgFrame->SetRenderOpacity(1.0f);
 	ScrollListGame->ScrollWidgetIntoView(coverReference[IndexCard], false, EDescendantScrollDestination::Center, 0);
 	CountLocationY = CountSystem;
-	cardReference[0]->SetFocusCard(true);
-	OnNavigationFocus(cardReference[IndexCard]);
+	//cardReference[0]->SetFocusCard(true);
+	//OnNavigationFocus(cardReference[IndexCard]);
 	bInputEnable = true;
 	PrepareThemes();
 }
@@ -481,6 +484,7 @@ FReply UMainInterface::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEven
 	KeyEvent = InKeyEvent;
 	const EButtonsGame Input = UClassicFunctionLibrary::GetInputButton(InKeyEvent);
 	ENavigationLastButton = EButtonsGame::NONE;
+	LoopScroll->CancelScroll();
 
 	if (bInputEnable)
 	{
@@ -562,10 +566,7 @@ void UMainInterface::OnPreventLoseFocus()
 		}
 		else
 		{
-			if (cardReference.IsValidIndex(IndexCard))
-			{
-				cardReference[IndexCard]->BtnClick->SetKeyboardFocus();
-			}
+			LoopScroll->BtnClick->SetKeyboardFocus();
 		}
 	}
 	else if (Focus == EFocus::SYSTEM || Focus == EFocus::INFO)
@@ -637,20 +638,17 @@ void UMainInterface::CreateCardsCoversWidget(int32 Min, int32 Max)
 void UMainInterface::CreateCardCoverWidget(FGameData Data)
 {
 	UCover* Cover = CreateWidget<UCover>(GetOwningPlayer(), coverClass);
-	UCard* Card = CreateWidget<UCard>(GetOwningPlayer(), cardClass);
-
-	Card->SetPlayers(Data.players);
-	Card->SetPath(Data.PathFormated);
-	Card->SetFavorite(Data.favorite, false);
-	Card->OnClickTrigger.AddDynamic(this, &UMainInterface::OnNativeClick);
-
-	cardReference.Add(Card);
+	ScrollListGame->AddChild(Cover);
 	coverReference.Add(Cover);
 
-	HBListGame->AddChild(Card);
-	ScrollListGame->AddChild(Cover);
-
-	Cover->SetVisibility(ESlateVisibility::Hidden);
+	//Card->SetPlayers(Data.players);
+	//Card->SetPath(Data.PathFormated);
+	//Card->SetFavorite(Data.favorite, false);
+	//Card->OnClickTrigger.AddDynamic(this, &UMainInterface::OnNativeClick);
+	//HBListGame->AddChild(Card);
+	//Cover->SetVisibility(ESlateVisibility::Hidden);
+	UCard* Card = CreateWidget<UCard>(GetOwningPlayer(), cardClass);
+	cardReference.Add(Card);
 	Card->SetVisibility(ESlateVisibility::Hidden);
 
 }
@@ -689,10 +687,18 @@ void UMainInterface::OnNativeNavigationGame(EButtonsGame Navigate)
 		if (!bScroll && bInputEnable && bDelayPressed && bUpDownPressed && !bKeyTriggerLeft && !bKeyTriggerRight)
 		{
 			OnNavigationGame(Navigate); //Call Event Blueprint
-			if (Focus == EFocus::MAIN) { OnNativeNavigationMain(Navigate); }
-			else if (Focus == EFocus::SYSTEM) { OnNativeNavigationSystem(Navigate); }
-			else if (Focus == EFocus::INFO) { OnNativeNavigationInfo(Navigate); }
-			else if (Focus == EFocus::CONFIG) { OnNativeNavigationConfiguration(Navigate); }
+			if (Focus == EFocus::MAIN) {
+				OnNativeNavigationMain(Navigate);
+			}
+			else if (Focus == EFocus::SYSTEM) {
+				OnNativeNavigationSystem(Navigate);
+			}
+			else if (Focus == EFocus::INFO) {
+				OnNativeNavigationInfo(Navigate);
+			}
+			else if (Focus == EFocus::CONFIG) {
+				OnNativeNavigationConfiguration(Navigate);
+			}
 		}
 	}
 }
@@ -709,7 +715,7 @@ void UMainInterface::OnNativeNavigationMain(EButtonsGame Navigate)
 		}
 		else if (PositionY == EPositionY::CENTRAL)
 		{
-			SetNavigationFocusMain();
+			LoopScroll->StartScrollTo(ENavigationButton);
 		}
 	}
 	else if (ENavigationButton == EButtonsGame::UP)
@@ -766,7 +772,21 @@ void UMainInterface::OnNativeNavigationConfiguration(EButtonsGame Navigate)
 
 void UMainInterface::OnNavigationFocus(UCard* Card)
 {
-	IndexCard = cardReference.Find(Card);
+	//IndexCard = cardReference.Find(Card);
+
+	//const FString Title = GameData[IndexCard].nameFormated;
+	//TxtTitleGame->SetJustification(ETextJustify::Left);
+	//TxtTitleGame->SetJustification((Title.Len() > 51) ? ETextJustify::Left : ETextJustify::Center);
+	//TxtTitleGame->SetText(FText::FromString(Title));
+	//TxtDescription->SetText(FText::FromString(GameData[IndexCard].descFormated));
+	//ScrollListGame->ScrollWidgetIntoView(coverReference[IndexCard], true, EDescendantScrollDestination::Center, 0);
+	//SetButtonsIconInterfaces(PositionY);
+	//LoadImages();
+}
+
+void UMainInterface::SetTitle(int32 Index)
+{
+	IndexCard = Index;
 
 	const FString Title = GameData[IndexCard].nameFormated;
 	TxtTitleGame->SetJustification(ETextJustify::Left);
@@ -775,7 +795,6 @@ void UMainInterface::OnNavigationFocus(UCard* Card)
 	TxtDescription->SetText(FText::FromString(GameData[IndexCard].descFormated));
 	ScrollListGame->ScrollWidgetIntoView(coverReference[IndexCard], true, EDescendantScrollDestination::Center, 0);
 	SetButtonsIconInterfaces(PositionY);
-	LoadImages();
 }
 
 void UMainInterface::SetNavigationFocusTop()
@@ -814,14 +833,7 @@ void UMainInterface::SetNavigationFocusTop()
 
 void UMainInterface::SetNavigationFocusMain()
 {
-	if (ENavigationButton == EButtonsGame::LEFT)
-	{
-		SetFocusCardToLeft(1);
-	}
-	else if (ENavigationButton == EButtonsGame::RIGHT)
-	{
-		SetFocusCardToRight(1);
-	}
+	//class to remove
 }
 
 void UMainInterface::SetNavigationFocusUpBottom()
@@ -911,7 +923,8 @@ void UMainInterface::SetNavigationFocusDownBottom()
 		if (cardReference.IsValidIndex(IndexCard))
 		{
 			PositionY = EPositionY::CENTRAL;
-			cardReference[IndexCard]->BtnClick->SetKeyboardFocus();
+			LoopScroll->BtnClick->SetKeyboardFocus();
+			//cardReference[IndexCard]->BtnClick->SetKeyboardFocus();
 			UUserWidget::PlayAnimationReverse(BarTop);
 			SetButtonsIconInterfaces(PositionY);
 		}
@@ -1317,7 +1330,7 @@ void UMainInterface::ResetCards(bool bAnimationBarTop, bool bAnimationShowSystem
 	ImgFrame->SetRenderOpacity(0.f);
 	UUserWidget::PlayAnimationReverse(LoadListGame);
 
-	HBListGame->ClearChildren();
+	//HBListGame->ClearChildren();
 	HBListGame->SetRenderTranslation(FVector2D(385.0f, 0.f));
 
 	ScrollListGame->ClearChildren();
@@ -1773,6 +1786,7 @@ void UMainInterface::SetScrollDescription(EButtonsGame Scroll)
 
 void UMainInterface::ScrollCards()
 {
+	return;
 	if (PositionY == EPositionY::CENTRAL && HBListGame->RenderTransform.Translation.Y == 0)
 	{
 		const float FrameX = ImgFrame->RenderTransform.Translation.X;
