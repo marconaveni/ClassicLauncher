@@ -34,7 +34,7 @@ void AClassicGameMode::BeginPlay()
 		//Input mode settings. 
 		FInputModeGameAndUI InputMode;
 		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-		InputMode.SetHideCursorDuringCapture(true);	
+		InputMode.SetHideCursorDuringCapture(false);	
 
 		//set input mode
 		GameplayStatics->SetInputMode(InputMode);

@@ -149,6 +149,12 @@ void ULoopScrollBox::AddCardsHorizontalBox(TArray<FGameData> GameData, int32 Ind
 			CardReferenceCenter[i]->SetColorAndOpacity(FLinearColor(0.446118f, 1.0f, 0.431361f, 1.0f));
 			CardReferenceRight[i]->SetColorAndOpacity(FLinearColor(0.446118f, 0.431361f, 1.0f, 1.0f));
 		}
+		else
+		{
+			CardReferenceLeft[i]->SetColorAndOpacity(FLinearColor(1.0f, 1.0f, 1.0f, 1.0f));
+			CardReferenceCenter[i]->SetColorAndOpacity(FLinearColor(1.0f, 1.0f, 1.0f, 1.0f));
+			CardReferenceRight[i]->SetColorAndOpacity(FLinearColor(1.0f, 1.0f, 1.0f, 1.0f));
+		}
 #endif
 	}
 

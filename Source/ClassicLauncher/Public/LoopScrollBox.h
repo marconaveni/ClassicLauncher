@@ -36,8 +36,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	float Offset;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
-	float Speed;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	float Time;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	int32 IndexScroll;
@@ -50,6 +48,8 @@ protected:
 
 public:
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
+	float Speed;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	int32 PositionOffsetFocus;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")

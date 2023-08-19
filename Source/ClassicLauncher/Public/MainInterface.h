@@ -187,15 +187,11 @@ protected:
 	//subclass and references
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
-	TSubclassOf<class UCard> cardClass;
+	TSubclassOf<class UCover> CoverClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
-	TSubclassOf<class UCover> coverClass;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
-	TSubclassOf<class UClassicButtonSystem> buttonSystemClass;
+	TSubclassOf<class UClassicButtonSystem> ButtonSystemClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
-	TArray<class UCard*> cardReference;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
-	TArray<class UCover*> coverReference;
+	TArray<class UCover*> CoverReference;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
 	TArray<class UClassicButtonSystem*> ButtonSystemReferences;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
@@ -291,8 +287,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	float TriggerDelayPressed;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	float SpeedScroll;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	float DescriptionScrollScale;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	int32 CountSystem;
@@ -300,8 +294,6 @@ public:
 	int32 CountLocationY;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	int32 MaxFrameMove;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	int32 CountGarbageCollection;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	TArray<UTexture2D*> ImageCards;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
@@ -316,8 +308,6 @@ public:
 	class UClassicGameInstance* ClassicGameInstance;
 
 	//timers
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
-	FTimerHandle TickTimerHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle DelayCreateGameListTimerHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
@@ -341,10 +331,6 @@ public:
 
 	//Functions
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void TimerTick();
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void TriggerTick();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void RestartWidget();
 
@@ -417,21 +403,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void SetNavigationFocusTop();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void SetNavigationFocusMain();
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void SetNavigationFocusUpBottom();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void SetNavigationFocusDownBottom();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void SetFocusCardToLeft(int32 IndexChange);
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void SetFocusCardToRight(int32 IndexChange);
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void SetFocusCardToCustomPosition(int32 IndexChange);
-
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void OnNativeClick(FString RomPath);
+	void OnNativeClick();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void ClassicLaunch();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
@@ -443,28 +420,16 @@ public:
 	void OnNativeClickSystem(int32 Value);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnClickPath(const FString& ValuePath);
+	void OnClickPath();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnClickSystem(const int32 Value);
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void OnNavigationFocus(UCard* Card);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void SetTitle(int32 Index);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetButtonsIconInterfaces(EPositionY GetPosition);
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions", meta = (count = "150.0"))
-	void ForceGarbageCollectionBP(float Count = 150.0f);
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void ImageOut(UTexture2D* TextureOut, int32 Index);
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void ASyncLoadCard(FString PathImage, int32 Index);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void LoadFirstImages();
@@ -473,19 +438,10 @@ public:
 	void LoadImages();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void ClearAllVisibilityCards();
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void ChangeVisibilityCards(int32 Index);
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void SetImagesCard(UTexture2D* Texture, UCard* Card, int32 Index);
+	void ClearAllVisibilityCovers();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetImagesCover(UTexture2D* Texture,UCover* Cover, int32 Index);
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void AddImagesCardCover(UTexture2D* Texture, int32 Index);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Save")
 	void SetCountPlayerToSave();
@@ -605,10 +561,6 @@ private:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetScrollDescription(EButtonsGame Scroll);
-
-	//macros ticks
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void ScrollCards();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetVisibiltyDebugButton(UButton* button);
