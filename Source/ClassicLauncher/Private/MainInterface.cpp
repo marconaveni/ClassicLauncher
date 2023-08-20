@@ -35,6 +35,7 @@
 #include "MessageBalloon.h"
 #include "Internationalization/StringTableRegistry.h"
 #include "LoopScrollBox.h"
+#include "Frame.h"
 
 
 #define LOCTEXT_NAMESPACE "ButtonsSelection"
@@ -173,7 +174,6 @@ void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 
 void UMainInterface::RestartWidget()
 {
-	//UGameplayStatics::OpenLevel(this, FName("map"), true);
 	TxtDebug->SetVisibility(ESlateVisibility::Hidden);
 	TxtDebug->SetText(FText::FromString(""));
 	Clear();
@@ -312,6 +312,7 @@ void UMainInterface::ViewList()
 	ScrollListGame->ScrollWidgetIntoView(CoverReference[IndexCard], false, EDescendantScrollDestination::Center, 0);
 	CountLocationY = CountSystem;
 	bInputEnable = true;
+	WBPFrame->SettingParameters(0.75f, GameData.Num());
 	PrepareThemes();
 }
 
@@ -644,16 +645,14 @@ void UMainInterface::OnNativeNavigationMain(EButtonsGame Navigate)
 		}
 		else if (PositionY == EPositionY::CENTRAL)
 		{
-			LoopScroll->Speed = 30.0f;
-			LoopScroll->StartScrollTo(ENavigationButton);
+			SetDirection(ENavigationButton, 30.0f);
 		}
 	}
 	else if (ENavigationButton == EButtonsGame::LB || ENavigationButton == EButtonsGame::RB)
 	{
 		if (PositionY == EPositionY::CENTRAL)
 		{
-			LoopScroll->Speed = 80.0f;
-			LoopScroll->StartScrollTo(ENavigationButton);
+			SetDirection(ENavigationButton, 80.0f);
 		}
 	}
 	else if (ENavigationButton == EButtonsGame::UP)
@@ -719,6 +718,20 @@ void UMainInterface::SetTitle(int32 Index)
 	TxtDescription->SetText(FText::FromString(GameData[IndexCard].descFormated));
 	ScrollListGame->ScrollWidgetIntoView(CoverReference[IndexCard], true, EDescendantScrollDestination::Center, 0);
 	SetButtonsIconInterfaces(PositionY);
+}
+
+void UMainInterface::SetDirection(EButtonsGame Navigate, float Speed)
+{
+	LoopScroll->Speed = Speed;
+	if (Navigate == EButtonsGame::RIGHT || Navigate == EButtonsGame::RB)
+	{
+		WBPFrame->DirectionRight();
+	}
+	else if (Navigate == EButtonsGame::LEFT  || Navigate == EButtonsGame::LB)
+	{
+		WBPFrame->DirectionLeft();
+	}
+	LoopScroll->StartScrollTo(Navigate);
 }
 
 void UMainInterface::SetNavigationFocusTop()
@@ -1307,11 +1320,11 @@ void UMainInterface::OnFocusSelectSystem()
 	UE_LOG(LogTemp, Warning, TEXT("Position Frame Y %d"), FramePosition);
 	if (ENavigationButton == EButtonsGame::LEFT)
 	{
-		UUserWidget::PlayAnimationReverse(FrameAnimationXTop1);
+		WBPFrame->UUserWidget::PlayAnimationReverse(WBPFrame->MoveLeftRightTop1);
 	}
 	else if (ENavigationButton == EButtonsGame::UP && FramePosition == 0)
 	{
-		AnimationFrameToTop(FrameAnimationY1ToSystems, FrameAnimationY2ToSystems, FrameAnimationY3ToSystems, FrameAnimationY4ToSystems, false);
+		WBPFrame->AnimationToTopDown(EFocusTop::SYSTEM, false);
 	}
 }
 
@@ -1323,15 +1336,15 @@ void UMainInterface::OnFocusConfigurations()
 	const int32 FramePosition = ImgFrame->RenderTransform.Translation.Y;
 	if (ENavigationButton == EButtonsGame::LEFT)
 	{
-		UUserWidget::PlayAnimationReverse(FrameAnimationXTop2);
+		WBPFrame->UUserWidget::PlayAnimationReverse(WBPFrame->MoveLeftRightTop2);
 	}
 	else if (ENavigationButton == EButtonsGame::RIGHT)
 	{
-		UUserWidget::PlayAnimationForward(FrameAnimationXTop1);
+		WBPFrame->UUserWidget::PlayAnimationForward(WBPFrame->MoveLeftRightTop1);
 	}
 	else if (ENavigationButton == EButtonsGame::UP && FramePosition == 0)
 	{
-		AnimationFrameToTop(FrameAnimationY1ToConfig, FrameAnimationY2ToConfig, FrameAnimationY3ToConfig, FrameAnimationY4ToConfig, false);
+		WBPFrame->AnimationToTopDown(EFocusTop::CONFIG, false);
 	}
 }
 
@@ -1343,15 +1356,15 @@ void UMainInterface::OnFocusFavorites()
 	const int32 FramePosition = ImgFrame->RenderTransform.Translation.Y;
 	if (ENavigationButton == EButtonsGame::LEFT)
 	{
-		UUserWidget::PlayAnimationReverse(FrameAnimationXTop3);
+		WBPFrame->UUserWidget::PlayAnimationReverse(WBPFrame->MoveLeftRightTop3);
 	}
 	else if (ENavigationButton == EButtonsGame::RIGHT)
 	{
-		UUserWidget::PlayAnimationForward(FrameAnimationXTop2);
+		WBPFrame->UUserWidget::PlayAnimationForward(WBPFrame->MoveLeftRightTop2);
 	}
 	else if (ENavigationButton == EButtonsGame::UP && FramePosition == 0)
 	{
-		AnimationFrameToTop(FrameAnimationY1ToFavorite, FrameAnimationY2ToFavorite, FrameAnimationY3ToFavorite, FrameAnimationY4ToFavorite, false);
+		WBPFrame->AnimationToTopDown(EFocusTop::FAVORITE, false);
 	}
 }
 
@@ -1364,11 +1377,11 @@ void UMainInterface::OnFocusInfo()
 	const int32 FramePosition = ImgFrame->RenderTransform.Translation.Y;
 	if (ENavigationButton == EButtonsGame::RIGHT)
 	{
-		UUserWidget::PlayAnimationForward(FrameAnimationXTop3);
+		WBPFrame->UUserWidget::PlayAnimationForward(WBPFrame->MoveLeftRightTop3);
 	}
 	else if (ENavigationButton == EButtonsGame::UP && FramePosition == 0)
 	{
-		AnimationFrameToTop(FrameAnimationY1ToInfo, FrameAnimationY2ToInfo, FrameAnimationY3ToInfo, FrameAnimationY4ToInfo, false);
+		WBPFrame->AnimationToTopDown(EFocusTop::INFO, false);
 	}
 }
 
@@ -1393,7 +1406,7 @@ void UMainInterface::OnLostFocusSelectSystem()
 	WBPToolTipSystem->SetToolTipVisibility(ESlateVisibility::Collapsed);
 	if (ENavigationButton == EButtonsGame::DOWN || ENavigationButton == EButtonsGame::B)
 	{
-		AnimationFrameToTop(FrameAnimationY1ToSystems, FrameAnimationY2ToSystems, FrameAnimationY3ToSystems, FrameAnimationY4ToSystems, true);
+		WBPFrame->AnimationToTopDown(EFocusTop::SYSTEM, true);
 	}
 }
 
@@ -1402,7 +1415,7 @@ void UMainInterface::OnLostFocusConfigurations()
 	WBPToolTipConfiguration->SetToolTipVisibility(ESlateVisibility::Collapsed);
 	if (ENavigationButton == EButtonsGame::DOWN || ENavigationButton == EButtonsGame::B)
 	{
-		AnimationFrameToTop(FrameAnimationY1ToConfig, FrameAnimationY2ToConfig, FrameAnimationY3ToConfig, FrameAnimationY4ToConfig, true);
+		WBPFrame->AnimationToTopDown(EFocusTop::CONFIG, true);
 	}
 }
 
@@ -1411,7 +1424,7 @@ void UMainInterface::OnLostFocusFavorites()
 	WBPToolTipFavorites->SetToolTipVisibility(ESlateVisibility::Collapsed);
 	if (ENavigationButton == EButtonsGame::DOWN || ENavigationButton == EButtonsGame::B)
 	{
-		AnimationFrameToTop(FrameAnimationY1ToFavorite, FrameAnimationY2ToFavorite, FrameAnimationY3ToFavorite, FrameAnimationY4ToFavorite, true);
+		WBPFrame->AnimationToTopDown(EFocusTop::FAVORITE, true);
 	}
 }
 
@@ -1420,7 +1433,7 @@ void UMainInterface::OnLostFocusInfo()
 	WBPToolTipInfo->SetToolTipVisibility(ESlateVisibility::Collapsed);
 	if (ENavigationButton == EButtonsGame::DOWN || ENavigationButton == EButtonsGame::B)
 	{
-		AnimationFrameToTop(FrameAnimationY1ToInfo, FrameAnimationY2ToInfo, FrameAnimationY3ToInfo, FrameAnimationY4ToInfo, true);
+		WBPFrame->AnimationToTopDown(EFocusTop::INFO, true);
 	}
 }
 

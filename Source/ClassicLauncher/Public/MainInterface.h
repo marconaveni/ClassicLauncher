@@ -103,6 +103,8 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UClassicButtonsIcons* WBPButtonsIconsInterfaces;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UFrame* WBPFrame;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UClassicButton* BtnSelectSystem;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UClassicButton* BtnConfigurations;
@@ -129,6 +131,7 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationX3;
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+
 	class UWidgetAnimation* FrameAnimationY1ToSystems;
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationY2ToSystems;
@@ -160,6 +163,7 @@ protected:
 	class UWidgetAnimation* FrameAnimationY3ToInfo;
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationY4ToInfo;
+
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FrameAnimationXTop1;
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
@@ -400,6 +404,8 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnNavigationGame(EButtonsGame Navigate);
 
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
+	void SetDirection(EButtonsGame Navigate,float Speed);
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void SetNavigationFocusTop();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
