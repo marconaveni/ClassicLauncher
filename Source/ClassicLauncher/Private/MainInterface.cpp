@@ -257,20 +257,10 @@ void UMainInterface::LoadListNative()
 
 	if (GameData.Num() > 0)
 	{
-		if (GameData.Num() < 4)
-		{
-			MaxFrameMove = GameData.Num();
-		}
-		else
-		{
-			MaxFrameMove = 4; //to remove
-		}
 		SetPaddingCovers();
 		CreateCardsCoversWidget(0, GameData.Num());
 		LoadFirstImages();
 		SetPaddingCovers();
-
-		ImgFrame->SetBrushFromTexture(ImageFrameCenter);
 
 
 		ConfigurationData.defaultstartsystem = GameSystems[CountSystem].SystemName;
@@ -308,7 +298,7 @@ void UMainInterface::LoadListNative()
 void UMainInterface::ViewList()
 {
 	UUserWidget::PlayAnimationForward(LoadListGame);
-	ImgFrame->SetRenderOpacity(1.0f);
+	WBPFrame->SetRenderOpacity(1.0f);
 	ScrollListGame->ScrollWidgetIntoView(CoverReference[IndexCard], false, EDescendantScrollDestination::Center, 0);
 	CountLocationY = CountSystem;
 	bInputEnable = true;
@@ -1089,7 +1079,7 @@ void UMainInterface::RunningGame(bool IsRun)
 	if (IsRun)
 	{
 		ClassicMediaPlayerReference->PauseMusic();
-		HBListGame->SetVisibility(ESlateVisibility::Hidden);
+		LoopScroll->SetVisibility(ESlateVisibility::Hidden);
 		BtnSelectSystem->SetVisibility(ESlateVisibility::Hidden);
 		BtnConfigurations->SetVisibility(ESlateVisibility::Hidden);
 		BtnFavorites->SetVisibility(ESlateVisibility::Hidden);
@@ -1099,7 +1089,7 @@ void UMainInterface::RunningGame(bool IsRun)
 	else
 	{
 		ClassicMediaPlayerReference->PlayMusic();
-		HBListGame->SetVisibility(ESlateVisibility::Visible);
+		LoopScroll->SetVisibility(ESlateVisibility::Visible);
 		BtnSelectSystem->SetVisibility(ESlateVisibility::Visible);
 		BtnConfigurations->SetVisibility(ESlateVisibility::Visible);
 		BtnFavorites->SetVisibility(ESlateVisibility::Visible);
@@ -1132,8 +1122,7 @@ void UMainInterface::SetRenderOpacityList() {
 	TxtTitleGame->SetRenderOpacity(0.f);
 	BgTitle->SetRenderOpacity(0.f);
 	ScrollListGame->SetRenderOpacity(0.f);
-	ImgFrame->SetRenderOpacity(0.f);
-	HBListGame->SetRenderOpacity(0.f);
+	LoopScroll->SetRenderOpacity(0.f);
 	WBPArrow->SetRenderOpacity(0.f);
 	TxtDebug->SetVisibility(ESlateVisibility::Hidden);
 	TxtDebug->SetText(FText::FromString(""));
@@ -1146,7 +1135,7 @@ void UMainInterface::ResetCards(bool bAnimationBarTop, bool bAnimationShowSystem
 	TxtDebug->SetVisibility(ESlateVisibility::Hidden);
 	TxtDebug->SetText(FText::FromString(""));
 
-	ImgFrame->SetRenderOpacity(0.f);
+	WBPFrame->SetRenderOpacity(0.f);
 	UUserWidget::PlayAnimationReverse(LoadListGame);
 
 	ScrollListGame->ClearChildren();
@@ -1164,9 +1153,7 @@ void UMainInterface::ResetCards(bool bAnimationBarTop, bool bAnimationShowSystem
 	bUpDownPressed = true;
 	bDelayPressed = true;
 
-	//ImgFrame->SetBrushFromTexture(ImageFrameCenter);
 	WBPFrame->SetDefaultValues(1, FRAME_SPEED);
-	AnimationFrameMoveLeft();
 
 	if (bAnimationBarTop)
 	{
@@ -1211,101 +1198,11 @@ void UMainInterface::Clear()
 	TriggerDelayPressed = 0.15f;
 	CountSystem = 0;
 	CountLocationY = 0;
-	MaxFrameMove = 4;
 	DescriptionScrollScale = 0.f;
 
 	CoverReference.Empty();
 	GameData.Empty();
 	NewGameData.Empty();
-}
-
-//Animations
-void UMainInterface::AnimationFrameMoveRight()
-{
-	FrameMoveRight();
-
-	if (GameData.Num() < 5) return;
-
-	const float TranslationFrame = ImgFrame->RenderTransform.Translation.X;
-
-	switch (PositionCenterX)
-	{
-	case 2:
-		if (TranslationFrame != 385)
-		{
-			UUserWidget::PlayAnimationForward(FrameAnimationX1);
-		}
-		break;
-	case 3:
-		if (TranslationFrame != 770)
-		{
-			UUserWidget::PlayAnimationForward(FrameAnimationX2);
-		}
-		break;
-	case 4:
-		if (TranslationFrame != 1155)
-		{
-			UUserWidget::PlayAnimationForward(FrameAnimationX3);
-		}
-		break;
-	}
-
-}
-
-void UMainInterface::AnimationFrameMoveLeft()
-{
-	FrameMoveLeft();
-
-	if (GameData.Num() < 5) return;
-	
-	const float TranslationFrame = ImgFrame->RenderTransform.Translation.X;
-	switch (PositionCenterX)
-	{
-	case 1:
-		if (TranslationFrame != 0)
-		{
-			UUserWidget::PlayAnimationReverse(FrameAnimationX1);
-		}
-		break;
-	case 2:
-		if (TranslationFrame != 385)
-		{
-			UUserWidget::PlayAnimationReverse(FrameAnimationX2);
-		}
-		break;
-	case 3:
-		if (TranslationFrame != 770)
-		{
-			UUserWidget::PlayAnimationReverse(FrameAnimationX3);
-		}
-		break;
-	}
-}
-
-void UMainInterface::AnimationFrameToTop(UWidgetAnimation* Animation1, UWidgetAnimation* Animation2,
-	UWidgetAnimation* Animation3, UWidgetAnimation* Animation4, bool Reverse)
-{
-	if (Reverse)
-	{
-		switch (PositionCenterX)
-		{
-		case 1: UUserWidget::PlayAnimationReverse(Animation1); break;
-		case 2: UUserWidget::PlayAnimationReverse(Animation2); break;
-		case 3: UUserWidget::PlayAnimationReverse(Animation3); break;
-		case 4: UUserWidget::PlayAnimationReverse(Animation4); break;
-		}
-	}
-	else
-	{
-		switch (PositionCenterX)
-		{
-		case 1: UUserWidget::PlayAnimationForward(Animation1); break;
-		case 2:	UUserWidget::PlayAnimationForward(Animation2); break;
-		case 3: UUserWidget::PlayAnimationForward(Animation3); break;
-		case 4: UUserWidget::PlayAnimationForward(Animation4); break;
-		}
-	}
-
 }
 
 //bind buttons

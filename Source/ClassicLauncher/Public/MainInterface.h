@@ -41,8 +41,6 @@ class CLASSICLAUNCHER_API UMainInterface : public UUserWidget
 public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UHorizontalBox* HBListGame;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UScrollBox* ScrollListGame;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* TxtTitleGame;
@@ -70,8 +68,6 @@ public:
 	class UImage* BgBackground3;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* BgTitle;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* ImgFrame;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* ImgPreventClickMouse;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
@@ -120,56 +116,7 @@ public:
 	//animations WidgetBind
 
 protected:
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationLeft;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationRight;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationX1;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationX2;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationX3;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 
-	class UWidgetAnimation* FrameAnimationY1ToSystems;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY2ToSystems;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY3ToSystems;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY4ToSystems;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY1ToConfig;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY2ToConfig;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY3ToConfig;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY4ToConfig;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY1ToFavorite;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY2ToFavorite;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY3ToFavorite;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY4ToFavorite;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY1ToInfo;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY2ToInfo;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY3ToInfo;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY4ToInfo;
-
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationXTop1;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationXTop2;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationXTop3;
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* ShowDescBottomInfo;
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
@@ -296,8 +243,6 @@ public:
 	int32 CountSystem;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	int32 CountLocationY;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	int32 MaxFrameMove;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	TArray<UTexture2D*> ImageCards;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
@@ -490,18 +435,6 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnLoopResumeAsyncImage();
 
-	//Animation
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Animations")
-	void AnimationFrameMoveRight();
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Animations")
-	void AnimationFrameMoveLeft();
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Animations")
-	void AnimationFrameToTop(UWidgetAnimation* Animation1, UWidgetAnimation* Animation2, UWidgetAnimation* Animation3, UWidgetAnimation* Animation4, bool Reverse);
-	UFUNCTION(BlueprintImplementableEvent)
-	void FrameMoveRight();
-	UFUNCTION(BlueprintImplementableEvent)
-	void FrameMoveLeft();
 
 private:
 
