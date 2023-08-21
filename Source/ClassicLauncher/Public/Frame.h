@@ -9,6 +9,7 @@
 UENUM(BlueprintType, Category = "Navigation")
 enum class EFocusTop : uint8
 {
+	NONE		  UMETA(DisplayName = "None"),
 	SYSTEM        UMETA(DisplayName = "System"),
 	CONFIG        UMETA(DisplayName = "Configuration"),
 	FAVORITE      UMETA(DisplayName = "Favorite"),
@@ -16,7 +17,7 @@ enum class EFocusTop : uint8
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDelegateAnimationStartFrame);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDelegateAnimationEndFrame, int32, IndexCenter, int32 , IndexTop);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDelegateAnimationEndFrame);
 /**
  * 
  */
@@ -85,37 +86,41 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
 	int32 FrameIndexCenter;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
-	int32 FrameIndexTop;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
 	int32 MaxFrameLimit;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
 	bool bIsNotAnimated;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
-	bool bIsLoopFrame;
+	bool bAtRight;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
+	bool bAtLeft;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
+	float EndAtTime;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
 	float StartTime;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
 	float PlaybackSpeed;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
 	UTexture2D* TextureFrameTop;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
 	UTexture2D* TextureFrameCenter;
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnDirectionLeft();
+	void OnDirectionLeft(const int32& Frame, const int32& Limit);
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnDirectionRight();
+	void OnDirectionRight(const int32& Frame,const int32& Limit);
 
 	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
 	void Clear();
 	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
+	void SetDefaultValues(int32 MaxFrameRightLimit, float MaxSpeed);
+	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
 	void ChangeTexture(bool ToUp);
 	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
-	void SettingParameters(float AnimationSpeed, int32 MaxFrame);
+	void SetFramePosition(int32 PositionCenter, EFocusTop FocusTop);
 	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
-	void DirectionRight();
+	void DirectionRight(int32 Frame, int32 Limit);
 	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
-	void DirectionLeft();
+	void DirectionLeft(int32 Frame, int32 Limit);
 	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
 	void AnimationToTopDown(EFocusTop Focus, bool Forward);
 	UFUNCTION(BlueprintCallable, Category = "Frame|Animations")

@@ -37,7 +37,7 @@
 #include "LoopScrollBox.h"
 #include "Frame.h"
 
-
+#define FRAME_SPEED 1.4f
 #define LOCTEXT_NAMESPACE "ButtonsSelection"
 
 UMainInterface::UMainInterface(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -263,7 +263,7 @@ void UMainInterface::LoadListNative()
 		}
 		else
 		{
-			MaxFrameMove = 4;
+			MaxFrameMove = 4; //to remove
 		}
 		SetPaddingCovers();
 		CreateCardsCoversWidget(0, GameData.Num());
@@ -312,7 +312,6 @@ void UMainInterface::ViewList()
 	ScrollListGame->ScrollWidgetIntoView(CoverReference[IndexCard], false, EDescendantScrollDestination::Center, 0);
 	CountLocationY = CountSystem;
 	bInputEnable = true;
-	WBPFrame->SettingParameters(0.75f, GameData.Num());
 	PrepareThemes();
 }
 
@@ -478,7 +477,7 @@ void UMainInterface::OnAnimationStartedPlaying(UUMGSequencePlayer& Player)
 	Super::OnAnimationStartedPlaying(Player);
 	if (PositionY == EPositionY::CENTRAL)
 	{
-		ImgFrame->SetBrushFromTexture(ImageFrameCenter);
+		WBPFrame->ChangeTexture(false);
 	}
 	const UWidgetAnimation* AnimationGet = Player.GetAnimation();
 }
@@ -488,7 +487,7 @@ void UMainInterface::OnAnimationFinishedPlaying(UUMGSequencePlayer& Player)
 	Super::OnAnimationFinishedPlaying(Player);
 	if (PositionY == EPositionY::TOP)
 	{
-		ImgFrame->SetBrushFromTexture(ImageFrameTop);
+		WBPFrame->ChangeTexture(true);
 	}
 	const UWidgetAnimation* AnimationGet = Player.GetAnimation();
 }
@@ -725,13 +724,12 @@ void UMainInterface::SetDirection(EButtonsGame Navigate, float Speed)
 	LoopScroll->Speed = Speed;
 	if (Navigate == EButtonsGame::RIGHT || Navigate == EButtonsGame::RB)
 	{
-		WBPFrame->DirectionRight();
+		LoopScroll->StartScrollTo(EButtonsGame::RIGHT);
 	}
 	else if (Navigate == EButtonsGame::LEFT  || Navigate == EButtonsGame::LB)
 	{
-		WBPFrame->DirectionLeft();
+		LoopScroll->StartScrollTo(EButtonsGame::LEFT);
 	}
-	LoopScroll->StartScrollTo(Navigate);
 }
 
 void UMainInterface::SetNavigationFocusTop()
@@ -871,7 +869,6 @@ void UMainInterface::OnNativeClick()
 		SetCountPlayerToSave();
 		LoopScroll->OpenCard();
 		GetWorld()->GetTimerManager().SetTimer(LauncherTimerHandle, this, &UMainInterface::ClassicLaunch, 1.0f, false, -1);
-
 	}
 	//this function is BlueprintImplementableEvent
 	OnClickPath();
@@ -1167,7 +1164,8 @@ void UMainInterface::ResetCards(bool bAnimationBarTop, bool bAnimationShowSystem
 	bUpDownPressed = true;
 	bDelayPressed = true;
 
-	ImgFrame->SetBrushFromTexture(ImageFrameCenter);
+	//ImgFrame->SetBrushFromTexture(ImageFrameCenter);
+	WBPFrame->SetDefaultValues(1, FRAME_SPEED);
 	AnimationFrameMoveLeft();
 
 	if (bAnimationBarTop)
@@ -1316,7 +1314,7 @@ void UMainInterface::OnFocusSelectSystem()
 	PositionTopX = 1;
 	SetToolTip(WBPToolTipSystem);
 	WBPToolTipSystem->SetToolTipVisibility(ESlateVisibility::Visible);
-	const int32 FramePosition = ImgFrame->RenderTransform.Translation.Y;
+	const int32 FramePosition = WBPFrame->ImageFrame->RenderTransform.Translation.Y;
 	UE_LOG(LogTemp, Warning, TEXT("Position Frame Y %d"), FramePosition);
 	if (ENavigationButton == EButtonsGame::LEFT)
 	{
@@ -1333,7 +1331,7 @@ void UMainInterface::OnFocusConfigurations()
 	PositionTopX = 2;
 	SetToolTip(WBPToolTipConfiguration);
 	WBPToolTipConfiguration->SetToolTipVisibility(ESlateVisibility::Visible);
-	const int32 FramePosition = ImgFrame->RenderTransform.Translation.Y;
+	const int32 FramePosition = WBPFrame->ImageFrame->RenderTransform.Translation.Y;
 	if (ENavigationButton == EButtonsGame::LEFT)
 	{
 		WBPFrame->UUserWidget::PlayAnimationReverse(WBPFrame->MoveLeftRightTop2);
@@ -1353,7 +1351,7 @@ void UMainInterface::OnFocusFavorites()
 	PositionTopX = 3;
 	SetToolTip(WBPToolTipFavorites);
 	WBPToolTipFavorites->SetToolTipVisibility(ESlateVisibility::Visible);
-	const int32 FramePosition = ImgFrame->RenderTransform.Translation.Y;
+	const int32 FramePosition = WBPFrame->ImageFrame->RenderTransform.Translation.Y;
 	if (ENavigationButton == EButtonsGame::LEFT)
 	{
 		WBPFrame->UUserWidget::PlayAnimationReverse(WBPFrame->MoveLeftRightTop3);
@@ -1374,7 +1372,7 @@ void UMainInterface::OnFocusInfo()
 	PositionTopX = 4;
 	SetToolTip(WBPToolTipInfo);
 	WBPToolTipInfo->SetToolTipVisibility(ESlateVisibility::Visible);
-	const int32 FramePosition = ImgFrame->RenderTransform.Translation.Y;
+	const int32 FramePosition = WBPFrame->ImageFrame->RenderTransform.Translation.Y;
 	if (ENavigationButton == EButtonsGame::RIGHT)
 	{
 		WBPFrame->UUserWidget::PlayAnimationForward(WBPFrame->MoveLeftRightTop3);
@@ -1402,11 +1400,12 @@ void UMainInterface::SetToolTip(UToolTip* ToolTip)
 }
 
 void UMainInterface::OnLostFocusSelectSystem()
-{
+{	
 	WBPToolTipSystem->SetToolTipVisibility(ESlateVisibility::Collapsed);
-	if (ENavigationButton == EButtonsGame::DOWN || ENavigationButton == EButtonsGame::B)
+	if (ENavigationButton == EButtonsGame::DOWN || ENavigationButton == EButtonsGame::B && Focus == EFocus::MAIN)
 	{
 		WBPFrame->AnimationToTopDown(EFocusTop::SYSTEM, true);
+		UE_LOG(LogTemp, Warning, TEXT("(MainInterface)(OnLostFocusSelectSystem)"));
 	}
 }
 
@@ -1439,11 +1438,11 @@ void UMainInterface::OnLostFocusInfo()
 
 void UMainInterface::OnClickSelectSystem()
 {
+	Focus = EFocus::SYSTEM;
 	UUserWidget::PlayAnimationForward(ShowSystem);
 	PositionY = EPositionY::TOP;
 	ButtonSystemReferences[CountLocationY]->Click->SetKeyboardFocus();
 	GetWorld()->GetTimerManager().SetTimer(SetArrowsTimerHandle, this, &UMainInterface::SetArrows, 0.02f, false, -1);
-	Focus = EFocus::SYSTEM;
 }
 
 void UMainInterface::SetArrows()

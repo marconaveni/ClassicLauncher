@@ -122,7 +122,7 @@ void ULoopScrollBox::AddCardsHorizontalBox(TArray<FGameData> GameData, int32 Ind
 	HorizontalBoxRight->ClearChildren();
 
 	Clear();
-	IndexFocusCard = FMath::Clamp(IndexFocus, 0, NumElements);
+	IndexFocusCard = (NumElements > 4) ? FMath::Clamp(IndexFocus, 0, NumElements) : 0;
 
 	for (int32 i = 0; i <= NumElements; i++)
 	{
