@@ -239,6 +239,14 @@ public:
 	float TriggerDelayPressed;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	float DescriptionScrollScale;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables", meta = (ClampMin = "1", UIMin = "1", UIMax = "100", SliderExponent = 1) )
+	float MultiplySpeed;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MainInterface|Variables");
+	float Multiply;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	float SpeedScroll;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	float FrameSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	int32 CountSystem;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
@@ -446,6 +454,7 @@ private:
 	TArray<ESlateVisibility> IconTop;
 	UPROPERTY()
 	TArray<ESlateVisibility> IconCenter;
+
 
 
 	//bindbuttons

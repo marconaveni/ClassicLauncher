@@ -37,7 +37,8 @@
 #include "LoopScrollBox.h"
 #include "Frame.h"
 
-#define FRAME_SPEED 1.4f
+#define FRAME_SPEED 1.8f
+#define DEFAULT_SPEED_SCROLL 30.0f
 #define LOCTEXT_NAMESPACE "ButtonsSelection"
 
 UMainInterface::UMainInterface(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -141,6 +142,17 @@ void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		{
 			WBPInfo->ScrollTopEnd(UClassicFunctionLibrary::GetInputButton(KeyEvent));
 		}
+	}
+
+	if (bKeyPressed && PositionY == EPositionY::CENTRAL && (ENavigationLastButton == EButtonsGame::LEFT || ENavigationLastButton == EButtonsGame::RIGHT))
+	{
+		Multiply = FMath::Clamp(Multiply + (MultiplySpeed / 100000) , 1, 2.0f);
+		SpeedScroll = FMath::Clamp((SpeedScroll * Multiply) , DEFAULT_SPEED_SCROLL, DEFAULT_SPEED_SCROLL + 50.0f);
+	}
+	else
+	{
+		Multiply = 1.0f;
+		SpeedScroll = DEFAULT_SPEED_SCROLL;
 	}
 
 	if (ENavigationBack == EButtonsGame::SELECT && ENavigationA == EButtonsGame::A && ENavigationLB == EButtonsGame::LB && ENavigationRB == EButtonsGame::RB && ProcessID != 0)
@@ -298,6 +310,7 @@ void UMainInterface::LoadListNative()
 void UMainInterface::ViewList()
 {
 	UUserWidget::PlayAnimationForward(LoadListGame);
+	WBPFrame->SetDefaultValues(1, FRAME_SPEED);
 	WBPFrame->SetRenderOpacity(1.0f);
 	ScrollListGame->ScrollWidgetIntoView(CoverReference[IndexCard], false, EDescendantScrollDestination::Center, 0);
 	CountLocationY = CountSystem;
@@ -634,14 +647,14 @@ void UMainInterface::OnNativeNavigationMain(EButtonsGame Navigate)
 		}
 		else if (PositionY == EPositionY::CENTRAL)
 		{
-			SetDirection(ENavigationButton, 30.0f);
+			SetDirection(ENavigationButton, SpeedScroll);
 		}
 	}
 	else if (ENavigationButton == EButtonsGame::LB || ENavigationButton == EButtonsGame::RB)
 	{
 		if (PositionY == EPositionY::CENTRAL)
 		{
-			SetDirection(ENavigationButton, 80.0f);
+			SetDirection(ENavigationButton, SpeedScroll + 50.0f);
 		}
 	}
 	else if (ENavigationButton == EButtonsGame::UP)
@@ -1153,7 +1166,6 @@ void UMainInterface::ResetCards(bool bAnimationBarTop, bool bAnimationShowSystem
 	bUpDownPressed = true;
 	bDelayPressed = true;
 
-	WBPFrame->SetDefaultValues(1, FRAME_SPEED);
 
 	if (bAnimationBarTop)
 	{
@@ -1199,6 +1211,7 @@ void UMainInterface::Clear()
 	CountSystem = 0;
 	CountLocationY = 0;
 	DescriptionScrollScale = 0.f;
+	SpeedScroll = DEFAULT_SPEED_SCROLL;
 
 	CoverReference.Empty();
 	GameData.Empty();
