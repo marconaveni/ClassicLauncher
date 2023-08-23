@@ -37,8 +37,7 @@
 #include "LoopScrollBox.h"
 #include "Frame.h"
 
-#define FRAME_SPEED 1.8f
-#define DEFAULT_SPEED_SCROLL 30.0f
+
 #define LOCTEXT_NAMESPACE "ButtonsSelection"
 
 UMainInterface::UMainInterface(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -89,7 +88,7 @@ void UMainInterface::NativeConstruct()
 	ClassicGameInstance = Cast<UClassicGameInstance>(GetGameInstance());
 
 	SetRenderOpacityList();
-	LoadConfigurationNative();
+	LoadConfiguration();
 	GameSettingsInit();
 
 	Super::NativeConstruct();
@@ -128,7 +127,6 @@ void UMainInterface::NativeOnInitialized()
 	ClassicMediaPlayerReference->MainInterfaceReference = this;
 	ClassicMediaPlayerReference->SetMusics(TEXT(""));
 
-
 	Super::NativeOnInitialized();
 }
 
@@ -137,7 +135,7 @@ void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
 	if (bKeyPressed) {
-		OnNativeNavigationGame(UClassicFunctionLibrary::GetInputButton(KeyEvent));
+		NavigationGame(UClassicFunctionLibrary::GetInputButton(KeyEvent));
 		if (PositionY == EPositionY::TOP)
 		{
 			WBPInfo->ScrollTopEnd(UClassicFunctionLibrary::GetInputButton(KeyEvent));
@@ -147,12 +145,12 @@ void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	if (bKeyPressed && PositionY == EPositionY::CENTRAL && (ENavigationLastButton == EButtonsGame::LEFT || ENavigationLastButton == EButtonsGame::RIGHT))
 	{
 		Multiply = FMath::Clamp(Multiply + (MultiplySpeed / 100000) , 1, 2.0f);
-		SpeedScroll = FMath::Clamp((SpeedScroll * Multiply) , DEFAULT_SPEED_SCROLL, DEFAULT_SPEED_SCROLL + 50.0f);
+		SpeedScroll = FMath::Clamp((SpeedScroll * Multiply) , DefaultSpeedScroll, DefaultSpeedScroll + 50.0f);
 	}
 	else
 	{
 		Multiply = 1.0f;
-		SpeedScroll = DEFAULT_SPEED_SCROLL;
+		SpeedScroll = DefaultSpeedScroll;
 	}
 
 	if (ENavigationBack == EButtonsGame::SELECT && ENavigationA == EButtonsGame::A && ENavigationLB == EButtonsGame::LB && ENavigationRB == EButtonsGame::RB && ProcessID != 0)
@@ -186,20 +184,20 @@ void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 
 void UMainInterface::RestartWidget()
 {
-	TxtDebug->SetVisibility(ESlateVisibility::Hidden);
-	TxtDebug->SetText(FText::FromString(""));
+	MessageCenter->SetVisibility(ESlateVisibility::Hidden);
+	MessageCenter->SetText(FText::FromString(""));
 	Clear();
-	LoadConfigSystemsNative();
+	LoadConfigSystems();
 }
 
-void UMainInterface::SetTextErrorMessage(const FText Message)
+void UMainInterface::SetCenterText(const FText Message)
 {
-	TxtDebug->SetVisibility(ESlateVisibility::Visible);
-	TxtDebug->SetText(Message);
-	OnError(Message);
+	MessageCenter->SetVisibility(ESlateVisibility::Visible);
+	MessageCenter->SetText(Message);
+	OnSetCenterText(Message);
 }
 
-void UMainInterface::LoadConfigurationNative()
+void UMainInterface::LoadConfiguration()
 {
 	FString ConfigResult;
 	const FString GameRoot = UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("config\\config.xml");
@@ -210,25 +208,24 @@ void UMainInterface::LoadConfigurationNative()
 		UGameplayStatics::SetEnableWorldRendering(this, ConfigurationData.rendering);
 		ConfigurationData.pathmedia = (ConfigurationData.pathmedia != TEXT("")) ? ConfigurationData.pathmedia : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
 		WBPClassicConfigurationsInterface->SlideVolume->SetSlideValue(FMath::Clamp(ConfigurationData.volume, 0, 100));
-		LoadConfigSystemsNative();
+		LoadConfigSystems();
 	}
 	else
 	{
 		FFormatNamedArguments Args;
 		Args.Add("GameRoot", FText::FromString(GameRoot));
-		SetTextErrorMessage(FText::Format(LOCTEXT("LogNotFound", "{GameRoot} Not Found"), Args));
+		SetCenterText(FText::Format(LOCTEXT("LogNotFound", "{GameRoot} Not Found"), Args));
 		UE_LOG(LogTemp, Warning, TEXT("%s Not Found"), *GameRoot);
 	}
 }
 
-void UMainInterface::LoadConfigSystemsNative()
+void UMainInterface::LoadConfigSystems()
 {
 
 	const TArray<FConfigSystem> Systems = ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave;
 	if (Systems.Num() > 0)
 	{
-		//LoadGameSystems
-		CreateGameSystems();
+		AddSystems();
 
 		for (int32 i = 0; i < Systems.Num(); i++)
 		{
@@ -239,21 +236,43 @@ void UMainInterface::LoadConfigSystemsNative()
 			}
 		}
 
-		LoadListNative();
+		LoadGamesList();
 		CreateFolders();
 
 		//BlueprintImplementableEvent
-		LoadConfigSystems();
+		OnLoadConfigSystems();
 	}
 	else
 	{
-		SetTextErrorMessage(LOCTEXT("LogUpdateGameList", "Update game list, loading"));
-		//create and save GameSystems
-		GetWorld()->GetTimerManager().SetTimer(DelayCreateGameListTimerHandle, this, &UMainInterface::CreateGameListNative, 0.5f, false, -1);
+		SetCenterText(LOCTEXT("LogUpdateGameList", "Update game list, loading"));
+		//create new list game and save GameSystems internal
+		GetWorld()->GetTimerManager().SetTimer(DelayCreateGameListTimerHandle, this, &UMainInterface::CreateNewGameList, 0.5f, false, -1);
 	}
 }
 
-void UMainInterface::LoadListNative()
+void UMainInterface::AddSystems()
+{
+	TArray<FConfigSystem> Systems = ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave;
+
+	if (ButtonSystemClass != nullptr)
+	{
+		UClassicButtonSystem* ButtonSystem = nullptr;
+		for (int32 i = 0; i < Systems.Num(); i++) {
+			ButtonSystem = CreateWidget<UClassicButtonSystem>(GetOwningPlayer(), ButtonSystemClass);
+			ButtonSystem->OnClickTrigger.AddDynamic(this, &UMainInterface::OnClickSystem);
+			ButtonSystem->SetText(Systems[i].SystemLabel);
+			ButtonSystem->SetCount(i);
+			ButtonSystemReferences.Add(ButtonSystem);
+			WBPSystemsList->ScrollBoxSystems->AddChild(ButtonSystem);
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("buttonSystemClass Not Found"));
+	}
+}
+
+void UMainInterface::LoadGamesList()
 {
 	GameSystems = ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave;
 	const TArray<FGameData> Data = UClassicFunctionLibrary::FilterFavoriteGameData(GameSystems[CountSystem].GameDatas, bFilterFavorites);
@@ -270,10 +289,9 @@ void UMainInterface::LoadListNative()
 	if (GameData.Num() > 0)
 	{
 		SetPaddingCovers();
-		CreateCardsCoversWidget(0, GameData.Num());
-		LoadFirstImages();
+		CreateCoversWidget(0, GameData.Num());
+		ChangeCoversVisibilitys(10);
 		SetPaddingCovers();
-
 
 		ConfigurationData.defaultstartsystem = GameSystems[CountSystem].SystemName;
 		FString XmlConfig = UClassicFunctionLibrary::CreateXMLConfigFile(ConfigurationData);
@@ -283,34 +301,28 @@ void UMainInterface::LoadListNative()
 
 		UE_LOG(LogTemp, Warning, TEXT("%s"), (Saved) ? TEXT("Saved File") : TEXT("Not Saved File"));
 
-
-
 		//Timer
-		GetWorld()->GetTimerManager().SetTimer(DelayLoadListTimerHandle, this, &UMainInterface::ViewList, 0.25f, false, -1);
+		GetWorld()->GetTimerManager().SetTimer(DelayLoadListTimerHandle, this, &UMainInterface::ShowGames, 0.25f, false, -1);
 
 		//BlueprintImplementableEvent
-		LoadList();
+		OnLoadGamesList();
 	}
 	else
 	{
-		if (bFilterFavorites)
-		{
-			//if no favorites
-		}
-		else
+		if (!bFilterFavorites)
 		{
 			//if No gamelist
 			FFormatNamedArguments Args;
 			Args.Add("GameRoot", FText::FromString(GameSystems[CountSystem].RomPath));
-			SetTextErrorMessage(FText::Format(LOCTEXT("LogGameListNotFound", "gamelist.xml not found in {GameRoot}"), Args));
+			SetCenterText(FText::Format(LOCTEXT("LogGameListNotFound", "gamelist.xml not found in {GameRoot}"), Args));
 		}
 	}
 }
 
-void UMainInterface::ViewList()
+void UMainInterface::ShowGames()
 {
 	UUserWidget::PlayAnimationForward(LoadListGame);
-	WBPFrame->SetDefaultValues(1, FRAME_SPEED);
+	WBPFrame->SetDefaultValues(1, DefaultFrameSpeed);
 	WBPFrame->SetRenderOpacity(1.0f);
 	ScrollListGame->ScrollWidgetIntoView(CoverReference[IndexCard], false, EDescendantScrollDestination::Center, 0);
 	CountLocationY = CountSystem;
@@ -320,20 +332,11 @@ void UMainInterface::ViewList()
 
 void UMainInterface::PrepareThemes()
 {
-	Themes();
-}
-
-void UMainInterface::SetPaddingCovers()
-{
-	for (int32 i = 0; i < 15; i++) {
-		UCover* Cover = CreateWidget<UCover>(GetOwningPlayer(), CoverClass);
-		Cover->SetVisibility(ESlateVisibility::Hidden);
-		ScrollListGame->AddChild(Cover);
-	}
+	OnPrepareThemes();
 }
 
 //timer DelayCreateGameListTimerHandle
-void UMainInterface::CreateGameListNative()
+void UMainInterface::CreateNewGameList()
 {
 	FString ConfigResult;
 	FString GameRoot = UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("config\\configsys.xml");
@@ -361,7 +364,7 @@ void UMainInterface::CreateGameListNative()
 		}
 		ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave = GameSystems;
 		SaveGame();
-		SetTextErrorMessage(LOCTEXT("LogSuccessfullyGameList", "Game list update successfully wait..."));
+		SetCenterText(LOCTEXT("LogSuccessfullyGameList", "Game list update successfully wait..."));
 		GetWorld()->GetTimerManager().SetTimer(DelayReloadTimerHandle, this, &UMainInterface::RestartWidget, 3.0f, false, -1);
 	}
 	else
@@ -370,7 +373,7 @@ void UMainInterface::CreateGameListNative()
 	}
 
 	//BlueprintImplementableEvent
-	CreateGameList();
+	OnCreateNewGameList();
 }
 
 void UMainInterface::SaveGame()
@@ -384,7 +387,6 @@ void UMainInterface::SaveGame()
 		UE_LOG(LogTemp, Warning, TEXT("Not Saved"));
 	}
 }
-
 
 FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
@@ -412,7 +414,6 @@ FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const
 				SetScrollDescription(Input);
 			}
 		}
-
 	}
 	else
 	{
@@ -478,20 +479,12 @@ FReply UMainInterface::NativeOnMouseWheel(const FGeometry& InGeometry, const FPo
 void UMainInterface::OnAnimationStartedPlaying(UUMGSequencePlayer& Player)
 {
 	Super::OnAnimationStartedPlaying(Player);
-	if (PositionY == EPositionY::CENTRAL)
-	{
-		WBPFrame->ChangeTexture(false);
-	}
 	const UWidgetAnimation* AnimationGet = Player.GetAnimation();
 }
 
 void UMainInterface::OnAnimationFinishedPlaying(UUMGSequencePlayer& Player)
 {
 	Super::OnAnimationFinishedPlaying(Player);
-	if (PositionY == EPositionY::TOP)
-	{
-		WBPFrame->ChangeTexture(true);
-	}
 	const UWidgetAnimation* AnimationGet = Player.GetAnimation();
 }
 
@@ -565,7 +558,18 @@ void UMainInterface::GameSettingsRunningInternal()
 	Settings->SaveSettings();
 }
 
-void UMainInterface::CreateCardsCoversWidget(int32 Min, int32 Max)
+#pragma region CoverFunctions
+
+void UMainInterface::SetPaddingCovers()
+{
+	for (int32 i = 0; i < 15; i++) {
+		UCover* Cover = CreateWidget<UCover>(GetOwningPlayer(), CoverClass);
+		Cover->SetVisibility(ESlateVisibility::Hidden);
+		ScrollListGame->AddChild(Cover);
+	}
+}
+
+void UMainInterface::CreateCoversWidget(int32 Min, int32 Max)
 {
 	for (int32 i = Min; i < Max; i++)
 	{
@@ -573,44 +577,46 @@ void UMainInterface::CreateCardsCoversWidget(int32 Min, int32 Max)
 		{
 			break;
 		}
-		CreateCardCoverWidget(GameData[i]);
-
+		AddCoverWidget(GameData[i]);
 	}
 }
 
-void UMainInterface::CreateCardCoverWidget(FGameData Data)
+void UMainInterface::AddCoverWidget(FGameData Data)
 {
 	UCover* Cover = CreateWidget<UCover>(GetOwningPlayer(), CoverClass);
+	Cover->SetVisibility(ESlateVisibility::Hidden);
 	ScrollListGame->AddChild(Cover);
 	CoverReference.Add(Cover);
 }
 
-void UMainInterface::CreateGameSystems()
+void UMainInterface::ChangeCoversVisibilitys(int32 Size)
 {
-	TArray<FConfigSystem> Systems = ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave;
-
-	if (ButtonSystemClass != nullptr)
+	const int32 Length = FMath::Clamp(GameData.Num(), 0, Size);
+	for (int32 i = 0; i < Length; i++)
 	{
-		UClassicButtonSystem* ButtonSystem = nullptr;
-		for (int32 i = 0; i < Systems.Num(); i++) {
-			ButtonSystem = CreateWidget<UClassicButtonSystem>(GetOwningPlayer(), ButtonSystemClass);
-			ButtonSystem->OnClickTrigger.AddDynamic(this, &UMainInterface::OnNativeClickSystem);
-			ButtonSystem->SetText(Systems[i].SystemLabel);
-			ButtonSystem->SetCount(i);
-			ButtonSystemReferences.Add(ButtonSystem);
-			WBPSystemsList->ScrollBoxSystems->AddChild(ButtonSystem);
+		if (CoverReference.IsValidIndex(i))
+		{
+			CoverReference[i]->SetVisibility(ESlateVisibility::Visible);
+			LastIndex = i;
 		}
 	}
-	else
+	for (int32 i = GameData.Num() - 1; i > GameData.Num() - Size; i--)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("buttonSystemClass Not Found"));
+		if (CoverReference.IsValidIndex(i))
+		{
+			CoverReference[i]->SetVisibility(ESlateVisibility::Visible);
+			FirstIndex = i;
+		}
 	}
 }
+
+#pragma endregion CoverFunctions
+
 
 /////////////////////////////////////////////////
 ///navigation area
 
-void UMainInterface::OnNativeNavigationGame(EButtonsGame Navigate)
+void UMainInterface::NavigationGame(EButtonsGame Navigate)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("broadcast navigate"));	
 
@@ -620,22 +626,22 @@ void UMainInterface::OnNativeNavigationGame(EButtonsGame Navigate)
 		{
 			OnNavigationGame(Navigate); //Call Event Blueprint
 			if (Focus == EFocus::MAIN) {
-				OnNativeNavigationMain(Navigate);
+				NavigationMain(Navigate);
 			}
 			else if (Focus == EFocus::SYSTEM) {
-				OnNativeNavigationSystem(Navigate);
+				NavigationSystem(Navigate);
 			}
 			else if (Focus == EFocus::INFO) {
-				OnNativeNavigationInfo(Navigate);
+				NavigationInfo(Navigate);
 			}
 			else if (Focus == EFocus::CONFIG) {
-				OnNativeNavigationConfiguration(Navigate);
+				NavigationConfiguration(Navigate);
 			}
 		}
 	}
 }
 
-void UMainInterface::OnNativeNavigationMain(EButtonsGame Navigate)
+void UMainInterface::NavigationMain(EButtonsGame Navigate)
 {
 	PressedDelayNavigation(TimerDelayAnimation);
 	ENavigationButton = Navigate;
@@ -667,10 +673,9 @@ void UMainInterface::OnNativeNavigationMain(EButtonsGame Navigate)
 		bUpDownPressed = false;
 		SetNavigationFocusDownBottom();
 	}
-
 }
 
-void UMainInterface::OnNativeNavigationSystem(EButtonsGame Navigate)
+void UMainInterface::NavigationSystem(EButtonsGame Navigate)
 {
 	PressedDelayNavigation(0.18f);
 	ENavigationButton = Navigate;
@@ -689,7 +694,7 @@ void UMainInterface::OnNativeNavigationSystem(EButtonsGame Navigate)
 	}
 }
 
-void UMainInterface::OnNativeNavigationInfo(EButtonsGame Navigate)
+void UMainInterface::NavigationInfo(EButtonsGame Navigate)
 {
 	PressedDelayNavigation(0.18f);
 	ENavigationButton = Navigate;
@@ -704,7 +709,7 @@ void UMainInterface::OnNativeNavigationInfo(EButtonsGame Navigate)
 	}
 }
 
-void UMainInterface::OnNativeNavigationConfiguration(EButtonsGame Navigate)
+void UMainInterface::NavigationConfiguration(EButtonsGame Navigate)
 {
 	WBPClassicConfigurationsInterface->SetIndexFocus(Navigate);
 }
@@ -864,20 +869,18 @@ void UMainInterface::SetNavigationFocusDownBottom()
 //end navigate area
 ///////////////////////////////////////////////////
 
-void UMainInterface::OnNativeClick()
+void UMainInterface::OnClickLaunch()
 {
 	if (PositionY == EPositionY::CENTRAL && bInputEnable)
 	{
-		UUserWidget::PlayAnimationForward(FadeStartSystem);
 		SetCountPlayerToSave();
 		LoopScroll->OpenCard();
-		GetWorld()->GetTimerManager().SetTimer(LauncherTimerHandle, this, &UMainInterface::ClassicLaunch, 1.0f, false, -1);
+		UUserWidget::PlayAnimationForward(FadeStartSystem);
+		GetWorld()->GetTimerManager().SetTimer(LauncherTimerHandle, this, &UMainInterface::AppLaunch, 1.0f, false, -1);
 	}
-	//this function is BlueprintImplementableEvent
-	OnClickPath();
 }
 
-void UMainInterface::ClassicLaunch()
+void UMainInterface::AppLaunch()
 {
 	FString PathRomFormated = UClassicFunctionLibrary::HomeDirectoryReplace(GameData[IndexCard].PathFormated);
 	FString ExecutablePath = (GameData[IndexCard].Executable == TEXT("")) ? GameSystems[CountSystem].Executable : GameData[IndexCard].Executable;
@@ -925,16 +928,13 @@ void UMainInterface::OpenExternalProcess(FString ExecutablePath, TArray<FString>
 	GameSettingsRunning();
 }
 
-void UMainInterface::OnNativeClickSystem(int32 Value)
+void UMainInterface::OnClickSystem(int32 Value)
 {
 	if (bInputEnable)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("The OnNativeClickSystem parameter value is: %d"), Value);
 		CountSystem = Value;   //CountSystem = CountLocationY;
 		ResetCards(true, true);
-
-		//this function is BlueprintImplementableEvent
-		OnClickSystem(Value);
 	}
 }
 
@@ -958,21 +958,7 @@ void UMainInterface::SetButtonsIconInterfaces(EPositionY GetPosition)
 	}
 }
 
-void UMainInterface::LoadFirstImages()
-{
-	const int32 Length = FMath::Clamp(GameData.Num(), 0, 15);
-	for (int32 i = 0; i < Length; i++)
-	{
-		//ImageCard = UClassicFunctionLibrary::LoadTexture(GameData[i].imageFormated);
-		//AddImagesCardCover(ImageCard, i);
-		CoverReference[i]->SetVisibility(ESlateVisibility::Visible);
-		LastIndex = i;
-	}
-
-	OnLoopStartAsyncImage(LastIndex);
-}
-
-void UMainInterface::LoadImages()
+void UMainInterface::ChangeCoverVisibility()
 {
 
 	if (ENavigationButton == EButtonsGame::RIGHT || ENavigationButton == EButtonsGame::RB || ENavigationButton == EButtonsGame::LEFT || ENavigationButton == EButtonsGame::LB)
@@ -990,27 +976,14 @@ void UMainInterface::LoadImages()
 
 		if (GameData.IsValidIndex(LastIndex))
 		{
-			//ASyncLoadCard(GameData[IndexCard].imageFormated, LastIndex);
-			LoadImageSync(LastIndex);
-
 			CoverReference[LastIndex]->SetVisibility(ESlateVisibility::Visible);
 		}
-
-		if (CoverReference.IsValidIndex(FirstIndex)) {
+		if (CoverReference.IsValidIndex(FirstIndex)) 
+		{
 			CoverReference[FirstIndex]->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
-
 }
-
-void UMainInterface::ClearAllVisibilityCovers()
-{
-	for (int32 i = 0; i < GameData.Num(); i++)
-	{
-		CoverReference[i]->SetVisibility(ESlateVisibility::Hidden);
-	}
-}
-
 
 void UMainInterface::SetImagesCover(UTexture2D* Texture, UCover* Cover, int32 Index)
 {
@@ -1137,16 +1110,16 @@ void UMainInterface::SetRenderOpacityList() {
 	ScrollListGame->SetRenderOpacity(0.f);
 	LoopScroll->SetRenderOpacity(0.f);
 	WBPArrow->SetRenderOpacity(0.f);
-	TxtDebug->SetVisibility(ESlateVisibility::Hidden);
-	TxtDebug->SetText(FText::FromString(""));
+	MessageCenter->SetVisibility(ESlateVisibility::Hidden);
+	MessageCenter->SetText(FText::FromString(""));
 }
 
 void UMainInterface::ResetCards(bool bAnimationBarTop, bool bAnimationShowSystem)
 {
 	bInputEnable = false;
 
-	TxtDebug->SetVisibility(ESlateVisibility::Hidden);
-	TxtDebug->SetText(FText::FromString(""));
+	MessageCenter->SetVisibility(ESlateVisibility::Hidden);
+	MessageCenter->SetText(FText::FromString(""));
 
 	WBPFrame->SetRenderOpacity(0.f);
 	UUserWidget::PlayAnimationReverse(LoadListGame);
@@ -1166,7 +1139,6 @@ void UMainInterface::ResetCards(bool bAnimationBarTop, bool bAnimationShowSystem
 	bUpDownPressed = true;
 	bDelayPressed = true;
 
-
 	if (bAnimationBarTop)
 	{
 		UUserWidget::PlayAnimationReverse(BarTop);
@@ -1177,8 +1149,7 @@ void UMainInterface::ResetCards(bool bAnimationBarTop, bool bAnimationShowSystem
 	}
 
 	SetButtonsIconInterfaces(EPositionY::CENTRAL);
-	GetWorld()->GetTimerManager().SetTimer(DelayPressedTimerHandle, this, &UMainInterface::LoadListNative, 0.3f, false, -1);
-
+	GetWorld()->GetTimerManager().SetTimer(DelayPressedTimerHandle, this, &UMainInterface::LoadGamesList, 0.3f, false, -1);
 }
 
 void UMainInterface::Clear()
@@ -1211,7 +1182,7 @@ void UMainInterface::Clear()
 	CountSystem = 0;
 	CountLocationY = 0;
 	DescriptionScrollScale = 0.f;
-	SpeedScroll = DEFAULT_SPEED_SCROLL;
+	SpeedScroll = DefaultSpeedScroll;
 
 	CoverReference.Empty();
 	GameData.Empty();
@@ -1224,7 +1195,7 @@ void UMainInterface::OnFocusSelectSystem()
 	PositionTopX = 1;
 	SetToolTip(WBPToolTipSystem);
 	WBPToolTipSystem->SetToolTipVisibility(ESlateVisibility::Visible);
-	const int32 FramePosition = WBPFrame->ImageFrame->RenderTransform.Translation.Y;
+	const int32 FramePosition = WBPFrame->ImageFrameCenter->RenderTransform.Translation.Y;
 	UE_LOG(LogTemp, Warning, TEXT("Position Frame Y %d"), FramePosition);
 	if (ENavigationButton == EButtonsGame::LEFT)
 	{
@@ -1241,7 +1212,7 @@ void UMainInterface::OnFocusConfigurations()
 	PositionTopX = 2;
 	SetToolTip(WBPToolTipConfiguration);
 	WBPToolTipConfiguration->SetToolTipVisibility(ESlateVisibility::Visible);
-	const int32 FramePosition = WBPFrame->ImageFrame->RenderTransform.Translation.Y;
+	const int32 FramePosition = WBPFrame->ImageFrameCenter->RenderTransform.Translation.Y;
 	if (ENavigationButton == EButtonsGame::LEFT)
 	{
 		WBPFrame->UUserWidget::PlayAnimationReverse(WBPFrame->MoveLeftRightTop2);
@@ -1261,7 +1232,7 @@ void UMainInterface::OnFocusFavorites()
 	PositionTopX = 3;
 	SetToolTip(WBPToolTipFavorites);
 	WBPToolTipFavorites->SetToolTipVisibility(ESlateVisibility::Visible);
-	const int32 FramePosition = WBPFrame->ImageFrame->RenderTransform.Translation.Y;
+	const int32 FramePosition = WBPFrame->ImageFrameCenter->RenderTransform.Translation.Y;
 	if (ENavigationButton == EButtonsGame::LEFT)
 	{
 		WBPFrame->UUserWidget::PlayAnimationReverse(WBPFrame->MoveLeftRightTop3);
@@ -1282,7 +1253,7 @@ void UMainInterface::OnFocusInfo()
 	PositionTopX = 4;
 	SetToolTip(WBPToolTipInfo);
 	WBPToolTipInfo->SetToolTipVisibility(ESlateVisibility::Visible);
-	const int32 FramePosition = WBPFrame->ImageFrame->RenderTransform.Translation.Y;
+	const int32 FramePosition = WBPFrame->ImageFrameCenter->RenderTransform.Translation.Y;
 	if (ENavigationButton == EButtonsGame::RIGHT)
 	{
 		WBPFrame->UUserWidget::PlayAnimationForward(WBPFrame->MoveLeftRightTop3);
@@ -1373,7 +1344,7 @@ void UMainInterface::OnClickFavorites()
 	if (bFilterFavorites)
 	{
 		bFilterFavorites = false;
-		OnNativeNavigationGame(EButtonsGame::DOWN);
+		NavigationGame(EButtonsGame::DOWN);
 		UUserWidget::PlayAnimationReverse(BarTop);
 		BtnFavorites->SetFocusButton(false);
 		ResetCards(false, false);
@@ -1385,7 +1356,7 @@ void UMainInterface::OnClickFavorites()
 		if (Length > 0)
 		{
 			bFilterFavorites = true;
-			OnNativeNavigationGame(EButtonsGame::DOWN);
+			NavigationGame(EButtonsGame::DOWN);
 			UUserWidget::PlayAnimationReverse(BarTop);
 			BtnFavorites->SetFocusButton(false);
 			ResetCards(false, false);

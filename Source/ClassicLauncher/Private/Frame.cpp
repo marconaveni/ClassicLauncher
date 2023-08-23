@@ -46,57 +46,48 @@ void UFrame::SetDefaultValues(int32 MaxFrameRightLimit, float MaxSpeed)
 	SetFramePosition(1, EFocusTop::NONE);
 }
 
-void UFrame::ChangeTexture(bool ToUp)
-{
-	if (ToUp)
-	{
-		ImageFrame->SetBrushFromTexture(TextureFrameTop);
-	}
-	else
-	{
-		ImageFrame->SetBrushFromTexture(TextureFrameCenter);
-	}
-}
 
 void UFrame::SetFramePosition(int32 PositionCenter, EFocusTop FocusTop)
 {
 	if (FocusTop == EFocusTop::NONE)
 	{
-		ChangeTexture(false);
-		ImageFrame->SetRenderScale(FVector2D(1.0f, 1.0f));
+		ImageFrameCenter->SetRenderScale(FVector2D(1.0f, 1.0f));
+		ImageFrameCenter->SetVisibility(ESlateVisibility::Visible);
+		ImageFrameTop->SetVisibility(ESlateVisibility::Hidden);
 		switch (PositionCenter)
 		{
 		case 1:
-			ImageFrame->SetRenderTranslation(FVector2D(0, 0));
+			ImageFrameCenter->SetRenderTranslation(FVector2D(0, 0));
 			break;
 		case 2:
-			ImageFrame->SetRenderTranslation(FVector2D(385, 0));
+			ImageFrameCenter->SetRenderTranslation(FVector2D(385, 0));
 			break;
 		case 3:
-			ImageFrame->SetRenderTranslation(FVector2D(770, 0));
+			ImageFrameCenter->SetRenderTranslation(FVector2D(770, 0));
 			break;
 		case 4:
-			ImageFrame->SetRenderTranslation(FVector2D(1155, 0));
+			ImageFrameCenter->SetRenderTranslation(FVector2D(1155, 0));
 			break;
 		}
 		return;
 	}
 
-	ChangeTexture(true);
-	ImageFrame->SetRenderScale(FVector2D(0.352f, 0.288f));
+	ImageFrameCenter->SetRenderScale(FVector2D(0.352f, 0.288f));
+	ImageFrameCenter->SetVisibility(ESlateVisibility::Hidden);
+	ImageFrameTop->SetVisibility(ESlateVisibility::Visible);
 	switch (FocusTop)
 	{
 	case EFocusTop::SYSTEM:
-		ImageFrame->SetRenderTranslation(FVector2D(379.0f, -442.0f));
+		//ImageFrameCenter->SetRenderTranslation(FVector2D(379.0f, -442.0f));
 		break;
 	case EFocusTop::CONFIG:
-		ImageFrame->SetRenderTranslation(FVector2D(522.599976f, -442.0f));
+		//ImageFrameCenter->SetRenderTranslation(FVector2D(522.599976f, -442.0f));
 		break;
 	case EFocusTop::FAVORITE:
-		ImageFrame->SetRenderTranslation(FVector2D(662.0f, -442.0f));
+		//ImageFrameCenter->SetRenderTranslation(FVector2D(662.0f, -442.0f));
 		break;
 	case EFocusTop::INFO:
-		ImageFrame->SetRenderTranslation(FVector2D(798.0f, -442.0f));
+		//ImageFrameCenter->SetRenderTranslation(FVector2D(798.0f, -442.0f));
 		break;
 	}
 }

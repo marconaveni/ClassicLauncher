@@ -9,6 +9,8 @@
 #include "LoopScrollBox.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateCard, int32, Index);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateIndexStart, int32, Index);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateIndexFinal, int32, Index);
 /**
  * 
  */
@@ -21,6 +23,10 @@ public:
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FDelegateCard GetCardIndex;
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FDelegateIndexStart StartIndexToFinal;
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FDelegateIndexFinal FinalIndexToStart;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Subclass")
 	TSubclassOf<class UCard> CardClassReference;

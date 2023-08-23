@@ -45,8 +45,6 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* TxtTitleGame;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TxtDebug;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UMultiLineEditableTextBox* TxtDescription;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UScrollBox* ScrollDescription;
@@ -110,6 +108,8 @@ public:
 	class UClassicButton* BtnInfo;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UMessageBalloon* MessageDisplay;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* MessageCenter;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class ULoopScrollBox* LoopScroll;
 
@@ -248,6 +248,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	float FrameSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	float DefaultFrameSpeed = 1.6f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	float DefaultSpeedScroll = 30.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	int32 CountSystem;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	int32 CountLocationY;
@@ -292,40 +296,42 @@ public:
 	void RestartWidget();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void SetTextErrorMessage(const FText Message);
+	void SetCenterText(const FText Message);
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnError(const FText& ErrorMessage);
+	void OnSetCenterText(const FText& ErrorMessage);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void LoadConfigurationNative();
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCosmetic, Category = "Teste")
 	void LoadConfiguration();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCosmetic, Category = "On Load Configuration")
+	void OnLoadConfiguration();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void LoadConfigSystemsNative();
-	UFUNCTION(BlueprintImplementableEvent)
 	void LoadConfigSystems();
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void LoadListNative();
 	UFUNCTION(BlueprintImplementableEvent)
-	void LoadList();
+	void OnLoadConfigSystems();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void ViewList();
+	void LoadGamesList();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnLoadGamesList();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void ShowGames();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnShowGames();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void PrepareThemes();
 	UFUNCTION(BlueprintImplementableEvent)
-	void Themes();
+	void OnPrepareThemes();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetPaddingCovers();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void CreateGameListNative();
+	void CreateNewGameList();
 	UFUNCTION(BlueprintImplementableEvent)
-	void CreateGameList();
+	void OnCreateNewGameList();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SaveGame();
@@ -337,22 +343,22 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void GameSettingsRunningInternal();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void CreateCardsCoversWidget(int32 Min, int32 Max);
+	void CreateCoversWidget(int32 Min, int32 Max);
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void CreateCardCoverWidget(FGameData Data);
+	void AddCoverWidget(FGameData Data);
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void CreateGameSystems();
+	void AddSystems();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void OnNativeNavigationGame(EButtonsGame Navigate);
+	void NavigationGame(EButtonsGame Navigate);
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void OnNativeNavigationMain(EButtonsGame Navigate);
+	void NavigationMain(EButtonsGame Navigate);
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void OnNativeNavigationSystem(EButtonsGame Navigate);
+	void NavigationSystem(EButtonsGame Navigate);
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void OnNativeNavigationInfo(EButtonsGame Navigate);
+	void NavigationInfo(EButtonsGame Navigate);
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void OnNativeNavigationConfiguration(EButtonsGame Navigate);
+	void NavigationConfiguration(EButtonsGame Navigate);
 	
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnNavigationGame(EButtonsGame Navigate);
@@ -367,22 +373,16 @@ public:
 	void SetNavigationFocusDownBottom();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void OnNativeClick();
+	void OnClickLaunch();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void ClassicLaunch();
+	void AppLaunch();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void OpenLibretro(FString CorePath ,FString RomPath, bool CanUnzip);
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void OpenExternalProcess( FString ExecutablePath, TArray<FString> CommandArgs);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void OnNativeClickSystem(int32 Value);
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnClickPath();
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnClickSystem(const int32 Value);
+	void OnClickSystem(int32 Value);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void SetTitle(int32 Index);
@@ -391,13 +391,10 @@ public:
 	void SetButtonsIconInterfaces(EPositionY GetPosition);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void LoadFirstImages();
+	void ChangeCoversVisibilitys(int32 Size);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void LoadImages();
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void ClearAllVisibilityCovers();
+	void ChangeCoverVisibility();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetImagesCover(UTexture2D* Texture,UCover* Cover, int32 Index);
@@ -417,13 +414,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void RunningGame(bool IsRun);
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void LoadImageAsync(const int32& Index);
-	UFUNCTION(BlueprintImplementableEvent)
-	void LoadImageSync(const int32& Index);
-
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void PressedDelayNavigation(float Delay);
+
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void PressedTimerNavigation();
 
@@ -436,8 +429,6 @@ public:
 	UFUNCTION()
 	void Clear();
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnLoopStartAsyncImage(const int32& Index);
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnLoopPauseAsyncImage();
 	UFUNCTION(BlueprintImplementableEvent)

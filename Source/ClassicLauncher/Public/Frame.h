@@ -81,7 +81,9 @@ public:
 	class UWidgetAnimation* FrameAnimationY4ToInfo;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* ImageFrame;
+	class UImage* ImageFrameCenter;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* ImageFrameTop;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
 	int32 FrameIndexCenter;
@@ -113,8 +115,6 @@ public:
 	void Clear();
 	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
 	void SetDefaultValues(int32 MaxFrameRightLimit, float MaxSpeed);
-	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
-	void ChangeTexture(bool ToUp);
 	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
 	void SetFramePosition(int32 PositionCenter, EFocusTop FocusTop);
 	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")

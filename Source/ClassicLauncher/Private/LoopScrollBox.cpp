@@ -50,16 +50,6 @@ void ULoopScrollBox::SetAnimatedScrollOffset()
 	OnSetAnimatedScrollOffset();
 }
 
-void ULoopScrollBox::DirectionRight()
-{
-	OnDirectionRight();
-}
-
-void ULoopScrollBox::DirectionLeft()
-{
-	OnDirectionLeft();
-}
-
 void ULoopScrollBox::PrepareScrollBox()
 {
 	OnPrepareScrollBox();
@@ -170,4 +160,14 @@ void ULoopScrollBox::AddImagesCards(UTexture2D* NewTexture, int32 Width, int32 H
 	Left->LoadImageCard(NewTexture, Width, Height);
 	Center->LoadImageCard(NewTexture, Width, Height);
 	Right->LoadImageCard(NewTexture, Width, Height);
+}
+
+void ULoopScrollBox::DirectionRight()
+{
+	OnDirectionRight();
+}
+
+void ULoopScrollBox::DirectionLeft()
+{
+	OnDirectionLeft();
 }
