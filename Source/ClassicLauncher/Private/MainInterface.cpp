@@ -128,12 +128,12 @@ void UMainInterface::NativeOnInitialized()
 	ClassicMediaPlayerReference->SetMusics(TEXT(""));
 
 	Super::NativeOnInitialized();
+
+	GetWorld()->GetTimerManager().SetTimer(TickTimerHandle, this, &UMainInterface::TimerTick, 0.015f, true, -1);
 }
 
-void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+void UMainInterface::TimerTick()
 {
-	Super::NativeTick(MyGeometry, InDeltaTime);
-
 	if (bKeyPressed) {
 		NavigationGame(UClassicFunctionLibrary::GetInputButton(KeyEvent));
 		if (PositionY == EPositionY::TOP)
@@ -141,15 +141,16 @@ void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 			WBPInfo->ScrollTopEnd(UClassicFunctionLibrary::GetInputButton(KeyEvent));
 		}
 	}
+}
+
+void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+
+
 
 	if (bKeyPressed && PositionY == EPositionY::CENTRAL && (ENavigationLastButton == EButtonsGame::LEFT || ENavigationLastButton == EButtonsGame::RIGHT))
 	{
-		Multiply = FMath::Clamp(Multiply + (MultiplySpeed / 100000) , 1, 2.0f);
-		SpeedScroll = FMath::Clamp((SpeedScroll * Multiply) , DefaultSpeedScroll, DefaultSpeedScroll + 50.0f);
-	}
-	else
-	{
-		Multiply = 1.0f;
 		SpeedScroll = DefaultSpeedScroll;
 	}
 
@@ -290,8 +291,7 @@ void UMainInterface::LoadGamesList()
 	{
 		SetPaddingCovers();
 		CreateCoversWidget(0, GameData.Num());
-		ChangeCoversVisibilitys(10);
-		SetPaddingCovers();
+		//ChangeCoversVisibilitys(15);
 
 		ConfigurationData.defaultstartsystem = GameSystems[CountSystem].SystemName;
 		FString XmlConfig = UClassicFunctionLibrary::CreateXMLConfigFile(ConfigurationData);
@@ -324,7 +324,7 @@ void UMainInterface::ShowGames()
 	UUserWidget::PlayAnimationForward(LoadListGame);
 	WBPFrame->SetDefaultValues(1, DefaultFrameSpeed);
 	WBPFrame->SetRenderOpacity(1.0f);
-	ScrollListGame->ScrollWidgetIntoView(CoverReference[IndexCard], false, EDescendantScrollDestination::Center, 0);
+	ScrollListGame->ScrollWidgetIntoView(CoverReference[IndexCard], false, EDescendantScrollDestination::IntoView, 0);
 	CountLocationY = CountSystem;
 	bInputEnable = true;
 	PrepareThemes();
@@ -562,7 +562,10 @@ void UMainInterface::GameSettingsRunningInternal()
 
 void UMainInterface::SetPaddingCovers()
 {
-	for (int32 i = 0; i < 15; i++) {
+	if (GameData.Num() > 30) return;
+	int32 PaddingSize = (30 - GameData.Num()) / 2;
+
+	for (int32 i = 0; i < PaddingSize + 1; i++) {
 		UCover* Cover = CreateWidget<UCover>(GetOwningPlayer(), CoverClass);
 		Cover->SetVisibility(ESlateVisibility::Hidden);
 		ScrollListGame->AddChild(Cover);
@@ -584,7 +587,7 @@ void UMainInterface::CreateCoversWidget(int32 Min, int32 Max)
 void UMainInterface::AddCoverWidget(FGameData Data)
 {
 	UCover* Cover = CreateWidget<UCover>(GetOwningPlayer(), CoverClass);
-	Cover->SetVisibility(ESlateVisibility::Hidden);
+	//Cover->SetVisibility(ESlateVisibility::Hidden);
 	ScrollListGame->AddChild(Cover);
 	CoverReference.Add(Cover);
 }
@@ -600,7 +603,7 @@ void UMainInterface::ChangeCoversVisibilitys(int32 Size)
 			LastIndex = i;
 		}
 	}
-	for (int32 i = GameData.Num() - 1; i > GameData.Num() - Size; i--)
+	for (int32 i = GameData.Num() - 1; i >= GameData.Num() - Size; i--)
 	{
 		if (CoverReference.IsValidIndex(i))
 		{
@@ -660,7 +663,7 @@ void UMainInterface::NavigationMain(EButtonsGame Navigate)
 	{
 		if (PositionY == EPositionY::CENTRAL)
 		{
-			SetDirection(ENavigationButton, SpeedScroll + 50.0f);
+			SetDirection(ENavigationButton, SpeedScroll - 0.1f);
 		}
 	}
 	else if (ENavigationButton == EButtonsGame::UP)
@@ -723,8 +726,21 @@ void UMainInterface::SetTitle(int32 Index)
 	TxtTitleGame->SetJustification((Title.Len() > 51) ? ETextJustify::Left : ETextJustify::Center);
 	TxtTitleGame->SetText(FText::FromString(Title));
 	TxtDescription->SetText(FText::FromString(GameData[IndexCard].descFormated));
-	ScrollListGame->ScrollWidgetIntoView(CoverReference[IndexCard], true, EDescendantScrollDestination::Center, 0);
 	SetButtonsIconInterfaces(PositionY);
+
+	if (CoverReference.IsValidIndex(IndexCard))
+	{
+		ScrollListGame->ScrollWidgetIntoView(CoverReference[IndexCard], false, EDescendantScrollDestination::Center, 0);
+		CoverReference[IndexCard]->FocusCover(true);
+	}
+	if (CoverReference.IsValidIndex(IndexCard + 1))
+	{
+		CoverReference[IndexCard + 1]->FocusCover(false);
+	}
+	if (CoverReference.IsValidIndex(IndexCard - 1))
+	{
+		CoverReference[IndexCard - 1]->FocusCover(false);
+	}
 }
 
 void UMainInterface::SetDirection(EButtonsGame Navigate, float Speed)
@@ -934,7 +950,8 @@ void UMainInterface::OnClickSystem(int32 Value)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("The OnNativeClickSystem parameter value is: %d"), Value);
 		CountSystem = Value;   //CountSystem = CountLocationY;
-		ResetCards(true, true);
+		OnClickOnSystem();
+		//ResetCards(true, true);
 	}
 }
 
@@ -976,11 +993,11 @@ void UMainInterface::ChangeCoverVisibility()
 
 		if (GameData.IsValidIndex(LastIndex))
 		{
-			CoverReference[LastIndex]->SetVisibility(ESlateVisibility::Visible);
+			//CoverReference[LastIndex]->SetVisibility(ESlateVisibility::Visible);
 		}
 		if (CoverReference.IsValidIndex(FirstIndex)) 
 		{
-			CoverReference[FirstIndex]->SetVisibility(ESlateVisibility::Hidden);
+			//CoverReference[FirstIndex]->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
 }

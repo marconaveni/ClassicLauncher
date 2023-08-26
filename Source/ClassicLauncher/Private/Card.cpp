@@ -6,6 +6,7 @@
 #include "Components/Image.h"
 #include "Animation/WidgetAnimation.h"
 #include "Styling/SlateBrush.h"
+#include "Components/CanvasPanelSlot.h"
 
 UCard::UCard(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -62,27 +63,26 @@ void UCard::SetPlayers(FString value)
 
 void UCard::SetFocusCard(bool enable)
 {
-	if (enable) {
+	if (enable) 
+	{
 		UUserWidget::PlayAnimationForward(ChangeColor);
-		//BtnClick->SetKeyboardFocus();
 	}
-	else {
+	else 
+	{
 		UUserWidget::PlayAnimationReverse(ChangeColor);
 	}
-
+	UCanvasPanelSlot* CanvasFrameSelected = Cast<UCanvasPanelSlot>(FrameSelected->Slot);
+	UCanvasPanelSlot* CanvasBackgroundSelected = Cast<UCanvasPanelSlot>(BackgroundSelected->Slot);
+	CanvasFrameSelected->SetZOrder(2);
+	CanvasBackgroundSelected->SetZOrder(-1);
 }
 
-void UCard::DisableFocusCard()
+void UCard::SelectedFrameToBackground()
 {
-	if (BackgroundSelected->GetRenderOpacity() < 1.0f) return;
-
-	DisableFocusCardForce();
-}
-
-void UCard::DisableFocusCardForce()
-{
-	BackgroundSelected->SetRenderOpacity(0.0f);
-	FrameSelected->SetRenderOpacity(0.0f);
+	UCanvasPanelSlot* CanvasFrameSelected = Cast<UCanvasPanelSlot>(FrameSelected->Slot);
+	UCanvasPanelSlot* CanvasBackgroundSelected = Cast<UCanvasPanelSlot>(BackgroundSelected->Slot);
+	CanvasFrameSelected->SetZOrder(-99);
+	CanvasBackgroundSelected->SetZOrder(-99);
 }
 
 void UCard::SetThemeCard(UTexture2D* texture)

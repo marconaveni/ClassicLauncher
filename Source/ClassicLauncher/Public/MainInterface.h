@@ -289,11 +289,16 @@ public:
 	FTimerHandle BackButtonTimerHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle SetArrowsTimerHandle;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
+	FTimerHandle TickTimerHandle;
 
 	//Functions
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void RestartWidget();
+
+	UFUNCTION()
+	void TimerTick();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetCenterText(const FText Message);
@@ -383,6 +388,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickSystem(int32 Value);
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnClickOnSystem();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void SetTitle(int32 Index);

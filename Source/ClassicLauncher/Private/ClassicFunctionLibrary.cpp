@@ -10,7 +10,7 @@
 #include "Kismet/KismetStringLibrary.h"
 #include "Misc/DateTime.h"
 #include "EasyXMLParseManager.h"
-
+#include "ImageUtils.h"
 #include "DynamicRHI.h"
 
 EUINavigation UClassicFunctionLibrary::GetInputnavigation(const FKeyEvent& InKeyEvent)
@@ -590,6 +590,10 @@ UTexture2D* UClassicFunctionLibrary::LoadTexture2DFromFile(const FString& FilePa
 
 					// Copy texture and update
 					NewTexture->GetPlatformData()->Mips[0].BulkData.Unlock();
+					//NewTexture->OodleTextureSdkVersion = TEXT("2.9.5");
+					//NewTexture->SRGB = 0;
+					//NewTexture->CompressionSettings = TextureCompressionSettings::TC_VectorDisplacementmap; 
+					NewTexture->Filter = TextureFilter::TF_Nearest;
 					NewTexture->UpdateResource();
 				}
 			}

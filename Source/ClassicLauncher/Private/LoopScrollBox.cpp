@@ -80,7 +80,17 @@ void ULoopScrollBox::SetValuesCard(UCard* Card, FString Players, bool Favorite)
 {
 	Card->SetPlayers(Players);
 	Card->SetFavorite(Favorite, false);
-	Card->DisableFocusCard();
+	Card->SelectedFrameToBackground();
+}
+
+void ULoopScrollBox::SetFocusCard(bool Enable)
+{
+	if (CardReferenceLeft.IsValidIndex(IndexFocusCard) && CardReferenceCenter.IsValidIndex(IndexFocusCard))
+	{
+		CardReferenceLeft[IndexFocusCard]->SetFocusCard(Enable);
+		CardReferenceCenter[IndexFocusCard]->SetFocusCard(Enable);
+		CardReferenceRight[IndexFocusCard]->SetFocusCard(Enable);
+	}
 }
 
 void ULoopScrollBox::OnClickButton()

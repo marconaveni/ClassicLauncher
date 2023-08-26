@@ -75,8 +75,6 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UHorizontalBox* HorizontalBoxRight;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* SizeStrech;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UButton* BtnClick;
 
 	virtual void NativeOnInitialized() override;
@@ -131,6 +129,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
 	void SetValuesCard(class UCard* Card, FString Players ,bool Favorite);
+
+	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
+	void SetFocusCard(bool Enable);
 	
 	UFUNCTION()
 	void OnClickButton();

@@ -3,6 +3,19 @@
 
 #include "Cover.h"
 #include "Components/Image.h"
+#include "Arrow.h"
+
+void UCover::FocusCover(bool Enable)
+{
+	if (Enable)
+	{
+		WBPFocusArrow->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		WBPFocusArrow->SetVisibility(ESlateVisibility::Hidden);
+	}
+}
 
 void UCover::LoadCoverImage(UTexture2D* texture, int32 width, int32 height)
 {
