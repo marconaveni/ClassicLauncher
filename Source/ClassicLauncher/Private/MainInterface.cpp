@@ -1002,14 +1002,6 @@ void UMainInterface::ChangeCoverVisibility()
 	}
 }
 
-void UMainInterface::SetImagesCover(UTexture2D* Texture, UCover* Cover, int32 Index)
-{
-	if (CoverReference.IsValidIndex(Index))
-	{
-		Cover->LoadCoverImage(Texture, GameData[Index].ImageX, GameData[Index].ImageY);
-	}
-}
-
 void UMainInterface::SetCountPlayerToSave()
 {
 	int32 Find;

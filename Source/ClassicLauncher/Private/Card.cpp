@@ -123,11 +123,10 @@ void UCard::SetFavorite(bool favorite, bool AnimateIcon)
 	}
 }
 
-void UCard::LoadImageCard(UTexture2D* texture, int32 width, int32 height)
+void UCard::SetCardImage(UTexture2D* texture, int32 width, int32 height)
 {
-	//Cover->SetDesiredSizeOverride(FVector2D(FMath::Clamp(width, 32, 342), FMath::Clamp(height,32, 306)));
 	FSlateBrush NewBrush;
-	NewBrush.SetImageSize(FVector2D(width, height));
+	NewBrush.SetImageSize(FVector2D(width * 2, height * 2));
 	NewBrush.SetResourceObject(texture);
 	Cover->SetBrush(NewBrush);
 }

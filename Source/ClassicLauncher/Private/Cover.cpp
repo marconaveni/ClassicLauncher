@@ -17,10 +17,13 @@ void UCover::FocusCover(bool Enable)
 	}
 }
 
-void UCover::LoadCoverImage(UTexture2D* texture, int32 width, int32 height)
+void UCover::SetCoverImage(UTexture2D* Texture, int32 Width, int32 Height)
 {
-	if (texture != nullptr) {
-		ImgBackGround->SetDesiredSizeOverride(FVector2D(FMath::Clamp(width, 32, 363), FMath::Clamp(height, 32, 306)));
-		ImgBackGround->SetBrushFromTexture(texture);
+	if (Texture != nullptr) 
+	{
+		FSlateBrush NewBrush;
+		NewBrush.SetImageSize(FVector2D(Width, Height));
+		NewBrush.SetResourceObject(Texture);
+		ImgBackGround->SetBrush(NewBrush);
 	}
 }

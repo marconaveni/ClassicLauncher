@@ -167,9 +167,9 @@ void ULoopScrollBox::AddImagesCards(UTexture2D* NewTexture, int32 Width, int32 H
 	UCard* Center;
 	UCard* Right;
 	GetCardReferences(Index, Left, Center,Right);
-	Left->LoadImageCard(NewTexture, Width, Height);
-	Center->LoadImageCard(NewTexture, Width, Height);
-	Right->LoadImageCard(NewTexture, Width, Height);
+	Left->SetCardImage(NewTexture, Width, Height);
+	Center->SetCardImage(NewTexture, Width, Height);
+	Right->SetCardImage(NewTexture, Width, Height);
 }
 
 void ULoopScrollBox::DirectionRight()

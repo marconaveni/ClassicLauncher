@@ -58,7 +58,7 @@ public:
 	void SetFavorite(bool favorite, bool AnimateIcon);
 
 	UFUNCTION(BlueprintCallable, Category = "Card|Functions")
-	void LoadImageCard(UTexture2D* texture, int32 width, int32 height);
+	void SetCardImage(UTexture2D* texture, int32 width, int32 height);
 
 	UFUNCTION(BlueprintCallable,  Category = "Card|Functions")
 	void ButtonClick();

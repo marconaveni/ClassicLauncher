@@ -26,6 +26,6 @@ public:
 	void FocusCover(bool Enable);
 
 	UFUNCTION(BlueprintCallable, category = "Cover|Functions")
-	void LoadCoverImage(UTexture2D* texture, int32 width, int32 height);
+	void SetCoverImage(UTexture2D* Texture, int32 width, int32 height);
 	
 };

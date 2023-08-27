@@ -403,9 +403,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void ChangeCoverVisibility();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void SetImagesCover(UTexture2D* Texture,UCover* Cover, int32 Index);
-
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Save")
 	void SetCountPlayerToSave();
 
