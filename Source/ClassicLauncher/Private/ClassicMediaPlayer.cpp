@@ -6,6 +6,7 @@
 #include "Runtime/MediaAssets/Public/MediaPlayer.h"
 #include "ClassicFunctionLibrary.h"
 #include "MainInterface.h"
+#include "Components/Image.h"
 #include "Kismet/GameplayStatics.h"
 #include "Internationalization/StringTableRegistry.h"
 
@@ -23,7 +24,7 @@ AClassicMediaPlayer::AClassicMediaPlayer()
 	Random = -1;
 
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 }
 
@@ -53,28 +54,40 @@ void AClassicMediaPlayer::BeginPlay()
 // Called every frame
 void AClassicMediaPlayer::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
 
+	if (ClassicPlayerVideo->GetMediaPlayer()->IsPlaying() && MainInterfaceReference != nullptr)
+	{
+		if (DoOnceIsPlayVideo.Execute())
+		{
+			FIntPoint VideoDimensions = ClassicPlayerVideo->GetMediaPlayer()->GetVideoTrackDimensions(0,0);
+			MainInterfaceReference->ImgVideo->Brush.ImageSize = FVector2D(VideoDimensions.X, VideoDimensions.Y);
+		}
+	}
+	else
+	{
+		DoOnceIsPlayVideo.Reset();
+	}
+	Super::Tick(DeltaTime);
 }
 
 void AClassicMediaPlayer::SetMusics(const FString NewMediaPath)
 {
 	MediaPath = (NewMediaPath != TEXT("")) ? TEXT("file://") + NewMediaPath : TEXT("file://") + UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("musics");
 	UClassicFunctionLibrary::VerifyOrCreateDirectory(MediaPath);
-	const FString Path = (NewMediaPath != TEXT("")) ?  NewMediaPath + TEXT("\\") :  UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("musics");;
+	const FString Path = (NewMediaPath != TEXT("")) ? NewMediaPath + TEXT("\\") : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("musics");;
 	MediaFiles.Empty();
 	if (UClassicFunctionLibrary::ClassicGetFiles(MediaFiles, Path, TEXT("wav")))
-	{ 
+	{
 		PlayMusic();
 	}
 }
 
 void AClassicMediaPlayer::PlayMusic()
 {
-	
-	if(MediaFiles.Num() > 0)
+
+	if (MediaFiles.Num() > 0)
 	{
-		Random = UClassicFunctionLibrary::GenerateNumberWithoutRepeat(Random , 0 , MediaFiles.Num() -1);
+		Random = UClassicFunctionLibrary::GenerateNumberWithoutRepeat(Random, 0, MediaFiles.Num() - 1);
 		const FString File = MediaPath + TEXT("\\") + MediaFiles[Random];
 
 		UE_LOG(LogTemp, Warning, TEXT("File name is %s"), *File);
@@ -124,6 +137,16 @@ void AClassicMediaPlayer::ResumeMusic()
 void AClassicMediaPlayer::ResumeVideo()
 {
 	ClassicPlayerVideo->GetMediaPlayer()->Play();
+}
+
+void AClassicMediaPlayer::StopMusic()
+{
+	ClassicPlayerMusic->GetMediaPlayer()->Close();
+}
+
+void AClassicMediaPlayer::StopVideo()
+{
+	ClassicPlayerVideo->GetMediaPlayer()->Close();
 }
 
 void AClassicMediaPlayer::OnEndMusic()

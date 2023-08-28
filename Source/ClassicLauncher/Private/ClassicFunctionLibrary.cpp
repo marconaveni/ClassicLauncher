@@ -12,6 +12,7 @@
 #include "EasyXMLParseManager.h"
 #include "ImageUtils.h"
 #include "DynamicRHI.h"
+#include "Misc/ConfigCacheIni.h"
 
 EUINavigation UClassicFunctionLibrary::GetInputnavigation(const FKeyEvent& InKeyEvent)
 {
@@ -204,17 +205,39 @@ FString UClassicFunctionLibrary::HomeDirectoryReplace(FString Directory)
 bool UClassicFunctionLibrary::SwitchOnDefaultLibreto(FString Core, FString& CoreFormated, bool& CanUnzip)
 {
 	CanUnzip = true;
-	if (Core == TEXT("$(fbneo_libretro.dll)")) { CoreFormated = CoreReplace(Core); CanUnzip = false; }
-	else if (Core == TEXT("$(gearboy_libretro.dll)")) { CoreFormated = CoreReplace(Core); }
-	else if (Core == TEXT("$(genesis_plus_gx_libretro.dll)")) { CoreFormated = CoreReplace(Core); }
-	else if (Core == TEXT("$(mame2003_libretro.dll)")) { CoreFormated = CoreReplace(Core); CanUnzip = false; }
-	else if (Core == TEXT("$(mupen64plus_next_libretro.dll)")) { CoreFormated = CoreReplace(Core); }
-	else if (Core == TEXT("$(nestopia_libretro.dll)")) { CoreFormated = CoreReplace(Core); }
-	else if (Core == TEXT("$(smsplus_libretro.dll)")) { CoreFormated = CoreReplace(Core); }
-	else if (Core == TEXT("$(snes9x_libretro.dll)")) { CoreFormated = CoreReplace(Core); }
-	else if (Core == TEXT("$(stella_libretro.dll)")) { CoreFormated = CoreReplace(Core); }
-	else if (Core == TEXT("$(vbam_libretro.dll)")) { CoreFormated = CoreReplace(Core); }
-	else { return false; }
+	if (Core == TEXT("$(fbneo_libretro.dll)")) {
+		CoreFormated = CoreReplace(Core); CanUnzip = false;
+	}
+	else if (Core == TEXT("$(gearboy_libretro.dll)")) {
+		CoreFormated = CoreReplace(Core);
+	}
+	else if (Core == TEXT("$(genesis_plus_gx_libretro.dll)")) {
+		CoreFormated = CoreReplace(Core);
+	}
+	else if (Core == TEXT("$(mame2003_libretro.dll)")) {
+		CoreFormated = CoreReplace(Core); CanUnzip = false;
+	}
+	else if (Core == TEXT("$(mupen64plus_next_libretro.dll)")) {
+		CoreFormated = CoreReplace(Core);
+	}
+	else if (Core == TEXT("$(nestopia_libretro.dll)")) {
+		CoreFormated = CoreReplace(Core);
+	}
+	else if (Core == TEXT("$(smsplus_libretro.dll)")) {
+		CoreFormated = CoreReplace(Core);
+	}
+	else if (Core == TEXT("$(snes9x_libretro.dll)")) {
+		CoreFormated = CoreReplace(Core);
+	}
+	else if (Core == TEXT("$(stella_libretro.dll)")) {
+		CoreFormated = CoreReplace(Core);
+	}
+	else if (Core == TEXT("$(vbam_libretro.dll)")) {
+		CoreFormated = CoreReplace(Core);
+	}
+	else {
+		return false;
+	}
 	return true;
 }
 
@@ -326,7 +349,7 @@ FString UClassicFunctionLibrary::CreateXMLConfigFile(FConfig ConfigData)
 	NewConfigXml += TEXT("<config>\n");
 	NewConfigXml += GenerateXmlTag(TEXT("pathmedia"), ConfigData.pathmedia);
 	NewConfigXml += GenerateXmlTag(TEXT("defaultstartsystem"), ConfigData.defaultstartsystem);
-	NewConfigXml += GenerateXmlTag(TEXT("rendering"), (ConfigData.rendering) ? TEXT("true"): TEXT("false"));
+	NewConfigXml += GenerateXmlTag(TEXT("rendering"), (ConfigData.rendering) ? TEXT("true") : TEXT("false"));
 	NewConfigXml += GenerateXmlTag(TEXT("volume"), FString::SanitizeFloat(ConfigData.volume, 0));
 	NewConfigXml += TEXT("</config>\n");
 
@@ -566,7 +589,7 @@ UTexture2D* UClassicFunctionLibrary::LoadTexture2DFromFile(const FString& FilePa
 				}
 				else if (BitDepth == 8)
 				{
-					PixelFormat = PF_B8G8R8A8;  
+					PixelFormat = PF_B8G8R8A8;
 					RGBFormat = ERGBFormat::BGRA;
 				}
 				else
@@ -590,9 +613,6 @@ UTexture2D* UClassicFunctionLibrary::LoadTexture2DFromFile(const FString& FilePa
 
 					// Copy texture and update
 					NewTexture->GetPlatformData()->Mips[0].BulkData.Unlock();
-					//NewTexture->OodleTextureSdkVersion = TEXT("2.9.5");
-					//NewTexture->SRGB = 0;
-					//NewTexture->CompressionSettings = TextureCompressionSettings::TC_VectorDisplacementmap; 
 					NewTexture->Filter = TextureFilter::TF_Nearest;
 					NewTexture->UpdateResource();
 				}
@@ -606,21 +626,10 @@ UTexture2D* UClassicFunctionLibrary::LoadTexture2DFromFile(const FString& FilePa
 	return NewTexture;
 }
 
-UTexture2D* UClassicFunctionLibrary::LoadTexture(const FString& FilePath)
+UTexture2D* UClassicFunctionLibrary::LoadTexture(const FString& FilePath, int32& Width, int32& Height)
 {
-	int32 Width = 0;
-	int32 Height = 0;
-	EClassicImageFormat ImageFormat;
-	if (FilePath.Contains("png"))
-	{
-		ImageFormat = EClassicImageFormat::PNG;
-	}
-	else
-	{
-		ImageFormat = EClassicImageFormat::JPG;
-	}
+	EClassicImageFormat ImageFormat = (FilePath.Contains("png")) ? ImageFormat = EClassicImageFormat::PNG : ImageFormat = EClassicImageFormat::JPG;
 	return  LoadTexture2DFromFile(FilePath, ImageFormat, Width, Height);
-
 }
 
 void UClassicFunctionLibrary::CreateProcess(int32& ProcessId, FString FullPath, TArray<FString> CommandlineArgs, bool Detach, bool Hidden, int32 Priority, FString OptionalWorkingDirectory)
@@ -658,13 +667,14 @@ void UClassicFunctionLibrary::CreateProcess(int32& ProcessId, FString FullPath, 
 void UClassicFunctionLibrary::AsyncLoadTexture2DFromFile(FLoadImageDelegate Out, const FString FullFilePath, int32 Index)
 {
 	AsyncTask(ENamedThreads::GameThread_Local, [Out, FullFilePath, Index]()
+	{
+		//UTexture2D* Texture /*= LoadTexture(FullFilePath)*/;
+		UTexture2D* Texture = nullptr;
+		if (Texture != nullptr)
 		{
-			UTexture2D* Texture = LoadTexture(FullFilePath);
-			if (Texture != nullptr)
-			{
-				Out.ExecuteIfBound(Texture, Index);
-			}
-		});
+			Out.ExecuteIfBound(Texture, Index);
+		}
+	});
 
 }
 
@@ -735,6 +745,35 @@ FColor UClassicFunctionLibrary::HexToColor(FString HexString)
 FString UClassicFunctionLibrary::ColorToHex(FColor Color)
 {
 	return Color.ToHex();
+}
+
+FString UClassicFunctionLibrary::GetProjectVersion()
+{
+	if (!GConfig) return "";
+
+	FString AppVersion;
+	GConfig->GetString(
+		TEXT("/Script/EngineSettings.GeneralProjectSettings"),
+		TEXT("ProjectVersion"),
+		AppVersion,
+		GGameIni
+	);
+
+	return AppVersion;
+}
+
+void UClassicFunctionLibrary::SetProjectVersion(FString NewVersion)
+{
+	if (!GConfig) return;
+
+	GConfig->SetString(
+		TEXT("/Script/EngineSettings.GeneralProjectSettings"), //section
+		TEXT("ProjectVersion"), //Setting Name
+		TEXT("teste"), //Value
+		GEngineIni //file to save
+	);
+	GConfig->Flush(true, GEngineIni); // Save the config file
+	UE_LOG(LogConfig, Warning, TEXT("New version is %s"), *GetProjectVersion());
 }
 
 

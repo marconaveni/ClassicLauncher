@@ -323,7 +323,7 @@ void UMainInterface::ShowGames()
 {
 	UUserWidget::PlayAnimationForward(LoadListGame);
 	WBPFrame->SetDefaultValues(1, DefaultFrameSpeed);
-	WBPFrame->SetRenderOpacity(1.0f);
+	WBPFrame->ImageFrameCenter->SetRenderOpacity(1.0f);
 	ScrollListGame->ScrollWidgetIntoView(CoverReference[IndexCard], false, EDescendantScrollDestination::IntoView, 0);
 	CountLocationY = CountSystem;
 	bInputEnable = true;
@@ -750,7 +750,7 @@ void UMainInterface::SetDirection(EButtonsGame Navigate, float Speed)
 	{
 		LoopScroll->StartScrollTo(EButtonsGame::RIGHT);
 	}
-	else if (Navigate == EButtonsGame::LEFT  || Navigate == EButtonsGame::LB)
+	else if (Navigate == EButtonsGame::LEFT || Navigate == EButtonsGame::LB)
 	{
 		LoopScroll->StartScrollTo(EButtonsGame::LEFT);
 	}
@@ -794,11 +794,12 @@ void UMainInterface::SetNavigationFocusUpBottom()
 {
 	if (PositionY == EPositionY::BOTTOM)
 	{
-		if (ImgVideo->RenderTransform.Translation.X == 0)
+		if (BackgroundVideo->RenderOpacity == 0)
 		{
+			GetWorld()->GetTimerManager().ClearTimer(StartVideoTimerHandle);
 			UUserWidget::PlayAnimationReverse(ShowDescBottomInfo);
 			PositionY = EPositionY::CENTRAL;
-			ClassicMediaPlayerReference->PauseVideo();
+			ClassicMediaPlayerReference->StopVideo();
 			ClassicMediaPlayerReference->ResumeMusic();
 			UE_LOG(LogTemp, Warning, TEXT("Close frame bottom"));
 		}
@@ -814,6 +815,37 @@ void UMainInterface::SetNavigationFocusUpBottom()
 		SetButtonsIconInterfaces(PositionY);
 
 		SetTopButtonFocus();
+	}
+}
+
+void UMainInterface::SetNavigationFocusDownBottom()
+{
+	if (PositionY == EPositionY::CENTRAL)
+	{
+		if (PositionY != EPositionY::BOTTOM)
+		{
+			GetWorld()->GetTimerManager().ClearTimer(StartVideoTimerHandle);
+			StartVideoTimerHandle.Invalidate();
+			PositionY = EPositionY::BOTTOM;
+			SetImageBottom();
+			UUserWidget::PlayAnimationForward(ShowDescBottomInfo);
+			UE_LOG(LogTemp, Warning, TEXT("Open frame bottom"));
+			GetWorld()->GetTimerManager().SetTimer(StartVideoTimerHandle, this, &UMainInterface::StartVideo, 5.0f, false, -1);
+		}
+	}
+	else if (PositionY == EPositionY::BOTTOM)
+	{
+		if (BackgroundVideo->RenderOpacity == 0)
+		{
+			UUserWidget::PlayAnimationForward(VideoAnimation);
+		}
+	}
+	else
+	{
+		PositionY = EPositionY::CENTRAL;
+		LoopScroll->BtnClick->SetKeyboardFocus();
+		UUserWidget::PlayAnimationReverse(BarTop);
+		SetButtonsIconInterfaces(PositionY);
 	}
 }
 
@@ -835,49 +867,6 @@ void UMainInterface::SetTopButtonFocus()
 		break;
 	default:
 		break;
-	}
-}
-
-void UMainInterface::SetNavigationFocusDownBottom()
-{
-	if (PositionY == EPositionY::CENTRAL)
-	{
-		if (PositionY != EPositionY::BOTTOM)
-		{
-			PositionY = EPositionY::BOTTOM;
-			UE_LOG(LogTemp, Warning, TEXT("Open frame bottom"));
-			UUserWidget::PlayAnimationForward(ShowDescBottomInfo);
-
-			if (GameData.IsValidIndex(IndexCard))
-			{
-				const FString PathVideo = GameData[IndexCard].videoFormated;
-				if (FPaths::FileExists(PathVideo))
-				{
-					ImgVideo->SetVisibility(ESlateVisibility::Visible);
-					ImgImageBottom->SetVisibility(ESlateVisibility::Hidden);
-					ClassicMediaPlayerReference->PlayVideo(PathVideo);
-				}
-				else
-				{
-					SetImageBottom();
-				}
-			}
-
-		}
-	}
-	else if (PositionY == EPositionY::BOTTOM)
-	{
-		if (ImgVideo->RenderTransform.Translation.X == 0)
-		{
-			UUserWidget::PlayAnimationForward(VideoAnimation);
-		}
-	}
-	else
-	{
-		PositionY = EPositionY::CENTRAL;
-		LoopScroll->BtnClick->SetKeyboardFocus();
-		UUserWidget::PlayAnimationReverse(BarTop);
-		SetButtonsIconInterfaces(PositionY);
 	}
 }
 
@@ -995,7 +984,7 @@ void UMainInterface::ChangeCoverVisibility()
 		{
 			//CoverReference[LastIndex]->SetVisibility(ESlateVisibility::Visible);
 		}
-		if (CoverReference.IsValidIndex(FirstIndex)) 
+		if (CoverReference.IsValidIndex(FirstIndex))
 		{
 			//CoverReference[FirstIndex]->SetVisibility(ESlateVisibility::Hidden);
 		}
@@ -1119,6 +1108,7 @@ void UMainInterface::SetRenderOpacityList() {
 	ScrollListGame->SetRenderOpacity(0.f);
 	LoopScroll->SetRenderOpacity(0.f);
 	WBPArrow->SetRenderOpacity(0.f);
+	WBPFrame->ImageFrameCenter->SetRenderOpacity(0.f);
 	MessageCenter->SetVisibility(ESlateVisibility::Hidden);
 	MessageCenter->SetText(FText::FromString(""));
 }
@@ -1130,7 +1120,7 @@ void UMainInterface::ResetCards(bool bAnimationBarTop, bool bAnimationShowSystem
 	MessageCenter->SetVisibility(ESlateVisibility::Hidden);
 	MessageCenter->SetText(FText::FromString(""));
 
-	WBPFrame->SetRenderOpacity(0.f);
+	WBPFrame->ImageFrameCenter->SetRenderOpacity(0.f);
 	UUserWidget::PlayAnimationReverse(LoadListGame);
 
 	ScrollListGame->ClearChildren();
@@ -1290,7 +1280,7 @@ void UMainInterface::SetToolTip(UToolTip* ToolTip)
 }
 
 void UMainInterface::OnLostFocusSelectSystem()
-{	
+{
 	WBPToolTipSystem->SetToolTipVisibility(ESlateVisibility::Collapsed);
 	if (ENavigationButton == EButtonsGame::DOWN || ENavigationButton == EButtonsGame::B && Focus == EFocus::MAIN)
 	{
@@ -1469,7 +1459,6 @@ void UMainInterface::ShowMessage(FText Message, float InRate)
 	MessageDisplay->ShowMessage(Message, InRate);
 }
 
-
 void UMainInterface::CreateFolders()
 {
 	const FString PathMedia = (ConfigurationData.pathmedia != TEXT("")) ? ConfigurationData.pathmedia : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
@@ -1512,8 +1501,15 @@ void UMainInterface::SetImageBottom()
 
 	if (ImgVideo == nullptr || ImgImageBottom == nullptr) return;
 
-	ImgVideo->SetVisibility(ESlateVisibility::Hidden);
-	ImgImageBottom->SetVisibility(ESlateVisibility::Visible);
+	const float TranslationPanelBottom = CanvasPanelBottom->RenderTransform.Translation.Y;
+	if (TranslationPanelBottom != 0)
+	{
+		UUserWidget::PlayAnimationReverse(FadeChangeImageToVideo);
+	}
+	else
+	{
+		UUserWidget::PlayAnimationForward(ChangeVideoToImage);
+	}
 
 	if (!GameData.IsValidIndex(IndexCard)) return;
 
@@ -1521,24 +1517,47 @@ void UMainInterface::SetImageBottom()
 
 	if (FPaths::FileExists(ImagePath))
 	{
-		int32 Size = 32;
+		int32 Width = 640;
+		int32 Height = 480;
 		bool IsValidTexture = false;
-		UTexture2D* ImageLoaded = UClassicFunctionLibrary::LoadTexture(ImagePath);
+		UTexture2D* ImageLoaded = UClassicFunctionLibrary::LoadTexture(ImagePath, Width, Height);
 
 		if (ImageLoaded != nullptr)
 		{
-			ImgImageBottom->SetBrushFromTexture(ImageLoaded);
+			FSlateBrush NewBrush;
+			NewBrush.SetImageSize(FVector2D(Width * 2, Height * 2));
+			NewBrush.SetResourceObject(ImageLoaded);
+			ImgImageBottom->SetBrush(NewBrush);
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Image not Loaded"));
+			UE_LOG(LogTemp, Warning, TEXT("Image not Loaded nullptr"));
 		}
 	}
 	else
 	{
-		ImgImageBottom->SetBrushFromTexture(ImageNull);
+		FSlateBrush NewBrush;
+		NewBrush.SetImageSize(FVector2D(640, 480));
+		NewBrush.SetResourceObject(ImageBottomDefault);
+		ImgImageBottom->SetBrush(NewBrush);
+		UE_LOG(LogTemp, Warning, TEXT("Image not exists in %s"), *ImagePath);
 	}
 
+}
+
+void UMainInterface::StartVideo()
+{
+	if (PositionY != EPositionY::BOTTOM) return;
+
+	if (GameData.IsValidIndex(IndexCard))
+	{
+		const FString PathVideo = GameData[IndexCard].videoFormated;
+		if (FPaths::FileExists(PathVideo))
+		{
+			UUserWidget::PlayAnimationForward(FadeChangeImageToVideo);
+			ClassicMediaPlayerReference->PlayVideo(PathVideo);
+		}
+	}
 }
 
 #undef LOCTEXT_NAMESPACE

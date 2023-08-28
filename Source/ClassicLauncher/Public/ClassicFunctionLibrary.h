@@ -201,11 +201,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|LoadTexture")
 	static UTexture2D* LoadTexture2DFromFile(const FString& FilePath, EClassicImageFormat ImageFormat, int32& Width, int32& Height);
 
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|LoadTexture", meta = (DisplayName = "AsyncLoadTexture", Keywords = "asyncloadtexture"))
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|LoadTexture", meta = (DisplayName = "Async Load Texture", Keywords = "loadtexture"))
 	static void AsyncLoadTexture2DFromFile(FLoadImageDelegate Out, const FString FullFilePath, int32 Index);
 
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|LoadTexture", meta = (DisplayName = "LoadTexture", Keywords = "loadtexture" , ReturnDisplayName = "TextureOut"))
-	static UTexture2D* LoadTexture(const FString& FilePath);
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|LoadTexture", meta = (DisplayName = "Load Texture", Keywords = "loadtexture" , ReturnDisplayName = "TextureOut"))
+	static UTexture2D* LoadTexture(const FString& FilePath, int32& Width, int32& Height);
 
 	//function credits Rama VictoryBPFunctionLibrary
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|System")
@@ -239,5 +239,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|Color")
 	static FString ColorToHex(FColor Color);
 
+	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|ProjectVersion")
+	static FString GetProjectVersion();
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|ProjectVersion")
+	static void SetProjectVersion(FString NewVersion);
 
 };

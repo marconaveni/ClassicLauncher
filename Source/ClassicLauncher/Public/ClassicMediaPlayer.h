@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "DoOnce.h"
 #include "GameFramework/Actor.h"
 #include "ClassicMediaPlayer.generated.h"
 
@@ -42,6 +43,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Media|Variables")
 	int32 MasterVolume;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Media|Variables")
+	FDoOnce DoOnceIsPlayVideo;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -69,6 +73,11 @@ public:
 	void ResumeMusic();
 	UFUNCTION(BlueprintCallable, Category = "Media|Functions")
 	void ResumeVideo();
+
+	UFUNCTION(BlueprintCallable, Category = "Media|Functions")
+	void StopMusic();
+	UFUNCTION(BlueprintCallable, Category = "Media|Functions")
+	void StopVideo();
 
 	UFUNCTION(BlueprintCallable, Category = "Media|Functions")
 	void OnEndMusic();

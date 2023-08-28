@@ -69,6 +69,8 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* ImgPreventClickMouse;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* BackgroundVideo;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* BgBottom;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UCanvasPanel* CanvasPanelSystemSelect;
@@ -133,7 +135,10 @@ protected:
 	class UWidgetAnimation* LoadListGame;
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* VideoAnimation;
-
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* FadeChangeImageToVideo;
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* ChangeVideoToImage;
 
 	//subclass and references
 
@@ -239,7 +244,7 @@ public:
 	float TriggerDelayPressed;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	float DescriptionScrollScale;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables", meta = (ClampMin = "1", UIMin = "1", UIMax = "100", SliderExponent = 1) )
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	float MultiplySpeed;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MainInterface|Variables");
 	float Multiply;
@@ -258,7 +263,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	TArray<UTexture2D*> ImageCards;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	UTexture2D* ImageCard;
+	UTexture2D* ImageBottomDefault;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	UTexture2D* ImageNull;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
@@ -291,6 +296,8 @@ public:
 	FTimerHandle SetArrowsTimerHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle TickTimerHandle;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
+	FTimerHandle StartVideoTimerHandle;
 
 	//Functions
 
@@ -367,6 +374,9 @@ public:
 	
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnNavigationGame(EButtonsGame Navigate);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
+	void StartVideo();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void SetDirection(EButtonsGame Navigate,float Speed);
