@@ -236,12 +236,12 @@ void UMainInterface::LoadConfigSystems()
 				UE_LOG(LogTemp, Warning, TEXT("%s ConfigurationData"), *ConfigurationData.defaultstartsystem);
 			}
 		}
+		CountLocationY = CountSystem;
 
 		LoadGamesList();
 		CreateFolders();
 
-		//BlueprintImplementableEvent
-		OnLoadConfigSystems();
+		OnLoadConfigSystems(); //BlueprintImplementableEvent
 	}
 	else
 	{
@@ -291,7 +291,6 @@ void UMainInterface::LoadGamesList()
 	{
 		SetPaddingCovers();
 		CreateCoversWidget(0, GameData.Num());
-		//ChangeCoversVisibilitys(15);
 
 		ConfigurationData.defaultstartsystem = GameSystems[CountSystem].SystemName;
 		FString XmlConfig = UClassicFunctionLibrary::CreateXMLConfigFile(ConfigurationData);
@@ -302,10 +301,9 @@ void UMainInterface::LoadGamesList()
 		UE_LOG(LogTemp, Warning, TEXT("%s"), (Saved) ? TEXT("Saved File") : TEXT("Not Saved File"));
 
 		//Timer
-		GetWorld()->GetTimerManager().SetTimer(DelayLoadListTimerHandle, this, &UMainInterface::ShowGames, 0.25f, false, -1);
+		//GetWorld()->GetTimerManager().SetTimer(DelayLoadListTimerHandle, this, &UMainInterface::ShowGames, 0.25f, false, -1);
 
-		//BlueprintImplementableEvent
-		OnLoadGamesList();
+		OnLoadGamesList(); //BlueprintImplementableEvent
 	}
 	else
 	{
@@ -323,16 +321,15 @@ void UMainInterface::ShowGames()
 {
 	UUserWidget::PlayAnimationForward(LoadListGame);
 	WBPFrame->SetDefaultValues(1, DefaultFrameSpeed);
-	WBPFrame->ImageFrameCenter->SetRenderOpacity(1.0f);
 	ScrollListGame->ScrollWidgetIntoView(CoverReference[IndexCard], false, EDescendantScrollDestination::IntoView, 0);
-	CountLocationY = CountSystem;
 	bInputEnable = true;
 	PrepareThemes();
+	OnShowGames(); //BlueprintImplementableEvent
 }
 
 void UMainInterface::PrepareThemes()
 {
-	OnPrepareThemes();
+	OnPrepareThemes(); //BlueprintImplementableEvent
 }
 
 //timer DelayCreateGameListTimerHandle
@@ -372,8 +369,7 @@ void UMainInterface::CreateNewGameList()
 		UE_LOG(LogTemp, Warning, TEXT("%s Not Found"), *GameRoot);
 	}
 
-	//BlueprintImplementableEvent
-	OnCreateNewGameList();
+	OnCreateNewGameList(); //BlueprintImplementableEvent
 }
 
 void UMainInterface::SaveGame()
@@ -801,9 +797,10 @@ void UMainInterface::SetNavigationFocusUpBottom()
 			PositionY = EPositionY::CENTRAL;
 			ClassicMediaPlayerReference->StopVideo();
 			ClassicMediaPlayerReference->ResumeMusic();
+			UUserWidget::StopAnimation(FadeChangeImageToVideo);
 			UE_LOG(LogTemp, Warning, TEXT("Close frame bottom"));
 		}
-		else
+		else 
 		{
 			UUserWidget::PlayAnimationReverse(VideoAnimation);
 		}
@@ -1108,7 +1105,7 @@ void UMainInterface::SetRenderOpacityList() {
 	ScrollListGame->SetRenderOpacity(0.f);
 	LoopScroll->SetRenderOpacity(0.f);
 	WBPArrow->SetRenderOpacity(0.f);
-	WBPFrame->ImageFrameCenter->SetRenderOpacity(0.f);
+	WBPFrame->SetRenderOpacity(0.f);
 	MessageCenter->SetVisibility(ESlateVisibility::Hidden);
 	MessageCenter->SetText(FText::FromString(""));
 }
@@ -1120,7 +1117,6 @@ void UMainInterface::ResetCards(bool bAnimationBarTop, bool bAnimationShowSystem
 	MessageCenter->SetVisibility(ESlateVisibility::Hidden);
 	MessageCenter->SetText(FText::FromString(""));
 
-	WBPFrame->ImageFrameCenter->SetRenderOpacity(0.f);
 	UUserWidget::PlayAnimationReverse(LoadListGame);
 
 	ScrollListGame->ClearChildren();
