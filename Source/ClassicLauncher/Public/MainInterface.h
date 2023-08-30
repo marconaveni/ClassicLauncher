@@ -45,10 +45,6 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* TxtTitleGame;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UMultiLineEditableTextBox* TxtDescription;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UScrollBox* ScrollDescription;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* BgBottomMenu;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* ImgImageBottom;
@@ -114,6 +110,8 @@ public:
 	class UTextBlock* MessageCenter;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class ULoopScrollBox* LoopScroll;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UTextBoxScroll* WBPTextBoxScroll;
 
 	//animations WidgetBind
 
@@ -237,7 +235,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	bool bDelayQuit;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	bool bHover;
+	bool bIsRunning;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	float TimerDelayAnimation;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
@@ -407,12 +405,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetButtonsIconInterfaces(EPositionY GetPosition);
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void ChangeCoversVisibilitys(int32 Size);
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void ChangeCoverVisibility();
-
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Save")
 	void SetCountPlayerToSave();
 
@@ -420,13 +412,13 @@ public:
 	void SetFavoriteToSave();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Save")
-	bool SaveGameListXML(FString& GameListPath, TArray<FGameData>& NewGameDatas);
+	bool SaveGameListXML(FString& GameListPath, TArray<FGameData>& NewGames);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Save")
 	bool SaveGameList();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void RunningGame(bool IsRun);
+	void RunningGame(bool bIsRun);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void PressedDelayNavigation(float Delay);
@@ -460,15 +452,16 @@ private:
 	UPROPERTY()
 	TArray<ESlateVisibility> IconCenter;
 
-
-
 	//bindbuttons
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnFocusSelectSystem();
+
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnFocusConfigurations();
+
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnFocusFavorites();
+
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnFocusInfo();
 
@@ -513,10 +506,7 @@ private:
 	void CreateFolders();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void SetScrollDescription(EButtonsGame Scroll);
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void SetVisibiltyDebugButton(UButton* button);
+	void SetVisibiltyDebugButton(UButton* Button);
 
 public:
 

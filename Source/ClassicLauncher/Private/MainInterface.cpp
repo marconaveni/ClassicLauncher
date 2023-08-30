@@ -36,6 +36,7 @@
 #include "Internationalization/StringTableRegistry.h"
 #include "LoopScrollBox.h"
 #include "Frame.h"
+#include "TextBoxScroll.h"
 
 
 #define LOCTEXT_NAMESPACE "ButtonsSelection"
@@ -134,11 +135,17 @@ void UMainInterface::NativeOnInitialized()
 
 void UMainInterface::TimerTick()
 {
-	if (bKeyPressed) {
-		NavigationGame(UClassicFunctionLibrary::GetInputButton(KeyEvent));
+	if (bKeyPressed)
+	{
+		NavigationGame(ENavigationLastButton);
+
 		if (PositionY == EPositionY::TOP)
 		{
-			WBPInfo->ScrollTopEnd(UClassicFunctionLibrary::GetInputButton(KeyEvent));
+			WBPInfo->ScrollTopEnd(ENavigationLastButton);
+		}
+		if (PositionY == EPositionY::BOTTOM)
+		{
+			WBPTextBoxScroll->SetNewScroll(ENavigationLastButton, 0.0025f);
 		}
 	}
 }
@@ -146,8 +153,6 @@ void UMainInterface::TimerTick()
 void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
-
-
 
 	if (bKeyPressed && PositionY == EPositionY::CENTRAL && (ENavigationLastButton == EButtonsGame::LEFT || ENavigationLastButton == EButtonsGame::RIGHT))
 	{
@@ -165,20 +170,20 @@ void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 
 	if (UClassicFunctionLibrary::ClassicIsApplicationRunning(ProcessID))
 	{
-		if (!bHover)
+		if (!bIsRunning)
 		{
 			UClassicFunctionLibrary::PauseProcess(1.5f);
 			RunningGame(true);
 		}
-		bHover = true;
+		bIsRunning = true;
 	}
 	else
 	{
-		if (bHover)
+		if (bIsRunning)
 		{
 			RunningGame(false);
 		}
-		bHover = false;
+		bIsRunning = false;
 	}
 
 }
@@ -246,8 +251,7 @@ void UMainInterface::LoadConfigSystems()
 	else
 	{
 		SetCenterText(LOCTEXT("LogUpdateGameList", "Update game list, loading"));
-		//create new list game and save GameSystems internal
-		GetWorld()->GetTimerManager().SetTimer(DelayCreateGameListTimerHandle, this, &UMainInterface::CreateNewGameList, 0.5f, false, -1);
+		GetWorld()->GetTimerManager().SetTimer(DelayCreateGameListTimerHandle, this, &UMainInterface::CreateNewGameList, 0.5f, false, -1); //create new list game and save GameSystems internal
 	}
 }
 
@@ -300,16 +304,12 @@ void UMainInterface::LoadGamesList()
 
 		UE_LOG(LogTemp, Warning, TEXT("%s"), (Saved) ? TEXT("Saved File") : TEXT("Not Saved File"));
 
-		//Timer
-		//GetWorld()->GetTimerManager().SetTimer(DelayLoadListTimerHandle, this, &UMainInterface::ShowGames, 0.25f, false, -1);
-
 		OnLoadGamesList(); //BlueprintImplementableEvent
 	}
 	else
 	{
-		if (!bFilterFavorites)
+		if (!bFilterFavorites) //if No game list
 		{
-			//if No gamelist
 			FFormatNamedArguments Args;
 			Args.Add("GameRoot", FText::FromString(GameSystems[CountSystem].RomPath));
 			SetCenterText(FText::Format(LOCTEXT("LogGameListNotFound", "gamelist.xml not found in {GameRoot}"), Args));
@@ -391,7 +391,7 @@ FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const
 		KeyEvent = InKeyEvent;
 		const EButtonsGame Input = UClassicFunctionLibrary::GetInputButton(InKeyEvent);
 
-		if (ENavigationLastButton == EButtonsGame::NONE)
+		if (ENavigationLastButton == EButtonsGame::NONE && Input != EButtonsGame::A)
 		{
 			ENavigationLastButton = Input;
 		}
@@ -404,10 +404,6 @@ FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const
 			{
 				ENavigationButton = Input;
 				OnClickFavorite();
-			}
-			if (Input == EButtonsGame::SCROLLDOWN || Input == EButtonsGame::SCROLLUP)
-			{
-				SetScrollDescription(Input);
 			}
 		}
 	}
@@ -459,15 +455,18 @@ FReply UMainInterface::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEven
 FReply UMainInterface::NativeOnMouseWheel(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	const float ScrollScale = InMouseEvent.GetWheelDelta();
-	if (ScrollScale > 0)
-	{
-		SetScrollDescription(EButtonsGame::SCROLLUP);
-	}
-	else if (ScrollScale < 0)
-	{
-		SetScrollDescription(EButtonsGame::SCROLLDOWN);
-	}
 
+	if (PositionY == EPositionY::BOTTOM)
+	{
+		if (ScrollScale > 0)
+		{
+			WBPTextBoxScroll->SetNewScroll(EButtonsGame::SCROLLUP, 0.0025f * 4);
+		}
+		else if (ScrollScale < 0)
+		{
+			WBPTextBoxScroll->SetNewScroll(EButtonsGame::SCROLLDOWN, 0.0025f * 4);
+		}
+	}
 	return Super::NativeOnMouseWheel(InGeometry, InMouseEvent);
 }
 
@@ -559,7 +558,7 @@ void UMainInterface::GameSettingsRunningInternal()
 void UMainInterface::SetPaddingCovers()
 {
 	if (GameData.Num() > 30) return;
-	int32 PaddingSize = (30 - GameData.Num()) / 2;
+	const int32 PaddingSize = (30 - GameData.Num()) / 2;
 
 	for (int32 i = 0; i < PaddingSize + 1; i++) {
 		UCover* Cover = CreateWidget<UCover>(GetOwningPlayer(), CoverClass);
@@ -583,30 +582,8 @@ void UMainInterface::CreateCoversWidget(int32 Min, int32 Max)
 void UMainInterface::AddCoverWidget(FGameData Data)
 {
 	UCover* Cover = CreateWidget<UCover>(GetOwningPlayer(), CoverClass);
-	//Cover->SetVisibility(ESlateVisibility::Hidden);
 	ScrollListGame->AddChild(Cover);
 	CoverReference.Add(Cover);
-}
-
-void UMainInterface::ChangeCoversVisibilitys(int32 Size)
-{
-	const int32 Length = FMath::Clamp(GameData.Num(), 0, Size);
-	for (int32 i = 0; i < Length; i++)
-	{
-		if (CoverReference.IsValidIndex(i))
-		{
-			CoverReference[i]->SetVisibility(ESlateVisibility::Visible);
-			LastIndex = i;
-		}
-	}
-	for (int32 i = GameData.Num() - 1; i >= GameData.Num() - Size; i--)
-	{
-		if (CoverReference.IsValidIndex(i))
-		{
-			CoverReference[i]->SetVisibility(ESlateVisibility::Visible);
-			FirstIndex = i;
-		}
-	}
 }
 
 #pragma endregion CoverFunctions
@@ -623,7 +600,7 @@ void UMainInterface::NavigationGame(EButtonsGame Navigate)
 	{
 		if (!bScroll && bInputEnable && bDelayPressed && bUpDownPressed)
 		{
-			OnNavigationGame(Navigate); //Call Event Blueprint
+			OnNavigationGame(Navigate); //BlueprintImplementableEvent
 			if (Focus == EFocus::MAIN) {
 				NavigationMain(Navigate);
 			}
@@ -721,7 +698,7 @@ void UMainInterface::SetTitle(int32 Index)
 	TxtTitleGame->SetJustification(ETextJustify::Left);
 	TxtTitleGame->SetJustification((Title.Len() > 51) ? ETextJustify::Left : ETextJustify::Center);
 	TxtTitleGame->SetText(FText::FromString(Title));
-	TxtDescription->SetText(FText::FromString(GameData[IndexCard].descFormated));
+	WBPTextBoxScroll->SetTextString(GameData[IndexCard].descFormated);
 	SetButtonsIconInterfaces(PositionY);
 
 	if (CoverReference.IsValidIndex(IndexCard))
@@ -797,10 +774,11 @@ void UMainInterface::SetNavigationFocusUpBottom()
 			PositionY = EPositionY::CENTRAL;
 			ClassicMediaPlayerReference->StopVideo();
 			ClassicMediaPlayerReference->ResumeMusic();
+			WBPTextBoxScroll->CancelAutoScroll();
 			UUserWidget::StopAnimation(FadeChangeImageToVideo);
 			UE_LOG(LogTemp, Warning, TEXT("Close frame bottom"));
 		}
-		else 
+		else
 		{
 			UUserWidget::PlayAnimationReverse(VideoAnimation);
 		}
@@ -825,6 +803,7 @@ void UMainInterface::SetNavigationFocusDownBottom()
 			StartVideoTimerHandle.Invalidate();
 			PositionY = EPositionY::BOTTOM;
 			SetImageBottom();
+			WBPTextBoxScroll->StartScroll();
 			UUserWidget::PlayAnimationForward(ShowDescBottomInfo);
 			UE_LOG(LogTemp, Warning, TEXT("Open frame bottom"));
 			GetWorld()->GetTimerManager().SetTimer(StartVideoTimerHandle, this, &UMainInterface::StartVideo, 5.0f, false, -1);
@@ -885,15 +864,15 @@ void UMainInterface::OnClickLaunch()
 void UMainInterface::AppLaunch()
 {
 	FString PathRomFormated = UClassicFunctionLibrary::HomeDirectoryReplace(GameData[IndexCard].PathFormated);
-	FString ExecutablePath = (GameData[IndexCard].Executable == TEXT("")) ? GameSystems[CountSystem].Executable : GameData[IndexCard].Executable;
-	FString Arguments = (GameData[IndexCard].Arguments == TEXT("")) ? GameSystems[CountSystem].Arguments : GameData[IndexCard].Arguments;
+	const FString ExecutablePath = (GameData[IndexCard].Executable == TEXT("")) ? GameSystems[CountSystem].Executable : GameData[IndexCard].Executable;
+	const FString Arguments = (GameData[IndexCard].Arguments == TEXT("")) ? GameSystems[CountSystem].Arguments : GameData[IndexCard].Arguments;
 	bool CanUnzip = false;
-	FString CoreFormated;
+	FString FormatedCore;
 
-	if (UClassicFunctionLibrary::SwitchOnDefaultLibreto(ExecutablePath, CoreFormated, CanUnzip))
+	if (UClassicFunctionLibrary::SwitchOnDefaultLibreto(ExecutablePath, FormatedCore, CanUnzip))
 	{
-		OpenLibretro(CoreFormated, PathRomFormated, CanUnzip);
-		UE_LOG(LogTemp, Warning, TEXT("RomPath %s , CorePath %s , CanUnzip %s"), *PathRomFormated, *CoreFormated, (CanUnzip ? TEXT("true") : TEXT("false")));
+		OpenLibretro(FormatedCore, PathRomFormated, CanUnzip);
+		UE_LOG(LogTemp, Warning, TEXT("RomPath %s , CorePath %s , CanUnzip %s"), *PathRomFormated, *FormatedCore, (CanUnzip ? TEXT("true") : TEXT("false")));
 	}
 	else
 	{
@@ -937,7 +916,6 @@ void UMainInterface::OnClickSystem(int32 Value)
 		UE_LOG(LogTemp, Warning, TEXT("The OnNativeClickSystem parameter value is: %d"), Value);
 		CountSystem = Value;   //CountSystem = CountLocationY;
 		OnClickOnSystem();
-		//ResetCards(true, true);
 	}
 }
 
@@ -961,32 +939,6 @@ void UMainInterface::SetButtonsIconInterfaces(EPositionY GetPosition)
 	}
 }
 
-void UMainInterface::ChangeCoverVisibility()
-{
-
-	if (ENavigationButton == EButtonsGame::RIGHT || ENavigationButton == EButtonsGame::RB || ENavigationButton == EButtonsGame::LEFT || ENavigationButton == EButtonsGame::LB)
-	{
-		if (ENavigationButton == EButtonsGame::RIGHT || ENavigationButton == EButtonsGame::RB)
-		{
-			LastIndex = FMath::Clamp(IndexCard + 14, 0, GameData.Num());//14
-			FirstIndex = FMath::Clamp(IndexCard - 15, -1, GameData.Num());//15
-		}
-		else
-		{
-			LastIndex = FMath::Clamp(IndexCard - 14, -1, GameData.Num());//14
-			FirstIndex = FMath::Clamp(IndexCard + 15, 0, GameData.Num());//15
-		}
-
-		if (GameData.IsValidIndex(LastIndex))
-		{
-			//CoverReference[LastIndex]->SetVisibility(ESlateVisibility::Visible);
-		}
-		if (CoverReference.IsValidIndex(FirstIndex))
-		{
-			//CoverReference[FirstIndex]->SetVisibility(ESlateVisibility::Hidden);
-		}
-	}
-}
 
 void UMainInterface::SetCountPlayerToSave()
 {
@@ -1035,13 +987,13 @@ void UMainInterface::SetFavoriteToSave()
 	}
 }
 
-bool UMainInterface::SaveGameListXML(FString& GameListPath, TArray<FGameData>& NewGameDatas)
+bool UMainInterface::SaveGameListXML(FString& GameListPath, TArray<FGameData>& NewGames)
 {
 	if (FPaths::FileExists(GameListPath + TEXT("\\gamelist.xml")))
 	{
 		const int32 ImageX = GameSystems[CountSystem].ImageX;
 		const int32 ImageY = GameSystems[CountSystem].ImageY;
-		const FString NewXMLFile = UClassicFunctionLibrary::CreateXMLGameFile(NewGameDatas, FVector2D(ImageX, ImageY));
+		const FString NewXMLFile = UClassicFunctionLibrary::CreateXMLGameFile(NewGames, FVector2D(ImageX, ImageY));
 		return UClassicFunctionLibrary::SaveStringToFile(GameListPath, TEXT("gamelist.xml"), NewXMLFile, true, false);
 	}
 	else
@@ -1055,9 +1007,9 @@ bool UMainInterface::SaveGameList()
 	return UGameplayStatics::SaveGameToSlot(ClassicGameInstance->ClassicSaveGameInstance, ClassicGameInstance->SlotGame, 0);
 }
 
-void UMainInterface::RunningGame(bool IsRun)
+void UMainInterface::RunningGame(bool bIsRun)
 {
-	if (IsRun)
+	if (bIsRun)
 	{
 		ClassicMediaPlayerReference->PauseMusic();
 		LoopScroll->SetVisibility(ESlateVisibility::Hidden);
@@ -1171,7 +1123,7 @@ void UMainInterface::Clear()
 	bFilterFavorites = false;
 	bDelayFavoriteClick = false;
 	bDelayQuit = false;
-	bHover = false;
+	bIsRunning = false;
 	TimerDelayAnimation = 0.18f;
 	TriggerDelayPressed = 0.15f;
 	CountSystem = 0;
@@ -1468,27 +1420,12 @@ void UMainInterface::CreateFolders()
 		UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia + TEXT("\\") + ConfigElement.SystemName + TEXT("\\screenshots"));
 		UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia + TEXT("\\") + ConfigElement.SystemName + TEXT("\\videos"));
 	}
-
 }
 
-void UMainInterface::SetScrollDescription(EButtonsGame Scroll)
-{
-	if (Scroll == EButtonsGame::SCROLLUP)
-	{
-		DescriptionScrollScale = FMath::Clamp(DescriptionScrollScale - 25.0f, 0, ScrollDescription->GetScrollOffsetOfEnd());
-		ScrollDescription->SetScrollOffset(DescriptionScrollScale);
-	}
-	else if (Scroll == EButtonsGame::SCROLLDOWN)
-	{
-		DescriptionScrollScale = FMath::Clamp(DescriptionScrollScale + 25.0f, 0, ScrollDescription->GetScrollOffsetOfEnd());
-		ScrollDescription->SetScrollOffset(DescriptionScrollScale);
-	}
-}
-
-void UMainInterface::SetVisibiltyDebugButton(UButton* button)
+void UMainInterface::SetVisibiltyDebugButton(UButton* Button)
 {
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
-	button->SetVisibility(ESlateVisibility::Visible);
+	Button->SetVisibility(ESlateVisibility::Visible);
 #endif
 }
 

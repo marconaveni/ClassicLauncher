@@ -7,15 +7,24 @@
 
 UTextBoxScroll::UTextBoxScroll(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-
+	bAutoScroll = true;
+	DelayWaitRestart = 5.0f;
+	ScrollOffset = 0;
+	SpeedScroll = 0.00015f;
+	TextColor = FLinearColor(1.0f, 1.0f, 1.0f);
+	TextSize = 17;
 }
 
 void UTextBoxScroll::NativePreConstruct()
 {
 	Super::NativePreConstruct();
-	bAutoScroll = true;
-	DelayWaitRestart = 2.5f;
-	ScrollOffset = 0;
+	SetText(Text);
+	SetTextAppearance(TextColor, TextSize);
+}
+
+void UTextBoxScroll::NativeConstruct()
+{
+	Super::NativeConstruct();
 }
 
 void UTextBoxScroll::StartScroll(float DelayStart)
@@ -36,8 +45,9 @@ void UTextBoxScroll::ScrollTick()
 
 	if (GetScrollOffset <= GetScrollOffsetOfEnd)
 	{
+		const float Min = FMath::Clamp(GetScrollOffsetOfEnd, 2000, GetScrollOffsetOfEnd + 2000);
 		ScrollOffset += SpeedScroll;
-		Scroll->SetScrollOffset(FMath::Lerp(0, GetScrollOffsetOfEnd, ScrollOffset));
+		Scroll->SetScrollOffset(FMath::Lerp(0, Min, ScrollOffset));
 	}
 	else
 	{
@@ -51,13 +61,20 @@ void UTextBoxScroll::RestartScroll()
 {
 	Scroll->SetScrollOffset(0);
 	ScrollOffset = 0;
-	GetWorld()->GetTimerManager().SetTimer(TickTimerHandle, this, &UTextBoxScroll::ScrollTick, 0.016f, false, DelayWaitRestart);
+	GetWorld()->GetTimerManager().SetTimer(TickTimerHandle, this, &UTextBoxScroll::ScrollTick, 0.016f, true, DelayWaitRestart);
 }
 
 void UTextBoxScroll::CancelAutoScroll()
 {
+	Scroll->SetScrollOffset(0);
 	bAutoScroll = true;
 	ScrollOffset = 0;
+	GetWorld()->GetTimerManager().ClearTimer(TickTimerHandle);
+	GetWorld()->GetTimerManager().ClearTimer(RestartTimerHandle);
+}
+
+void UTextBoxScroll::PauseAutoScroll()
+{
 	GetWorld()->GetTimerManager().ClearTimer(TickTimerHandle);
 	GetWorld()->GetTimerManager().ClearTimer(RestartTimerHandle);
 }
@@ -70,4 +87,38 @@ void UTextBoxScroll::SetText(FText NewText)
 void UTextBoxScroll::SetTextString(FString NewText)
 {
 	Description->SetText(FText::FromString(NewText));
+}
+
+void UTextBoxScroll::SetTextAppearance(FLinearColor NewTextColor, int32 NewTextSize)
+{
+	const uint16 Size = FMath::Clamp(NewTextSize, 0, 1000);
+	FTextBlockStyle Style;
+	Style.SetFont(Description->TextStyle.Font);
+	Style.SetColorAndOpacity(FSlateColor(NewTextColor));
+	Style.SetFontSize(Size);
+	Description->SetTextStyle(Style);
+}
+
+void UTextBoxScroll::SetNewScroll(EButtonsGame Input, float NewScroll)
+{
+	if (Input == EButtonsGame::SCROLLUP || Input == EButtonsGame::SCROLLDOWN)
+	{
+		PauseAutoScroll();
+		StartScroll(5.0f);
+
+		const float GetScrollOffset = Scroll->GetScrollOffset();
+		const float GetScrollOffsetOfEnd = Scroll->GetScrollOffsetOfEnd();
+		const float Min = FMath::Clamp(GetScrollOffsetOfEnd, 2000, GetScrollOffsetOfEnd + 2000);
+
+		if (Input == EButtonsGame::SCROLLUP && GetScrollOffset > 0)
+		{
+			ScrollOffset -= NewScroll;
+			Scroll->SetScrollOffset(FMath::Lerp(0, Min, ScrollOffset));
+		}
+		else if (Input == EButtonsGame::SCROLLDOWN && GetScrollOffset <= GetScrollOffsetOfEnd)
+		{
+			ScrollOffset += NewScroll;
+			Scroll->SetScrollOffset(FMath::Lerp(0, Min, ScrollOffset));
+		}
+	}
 }

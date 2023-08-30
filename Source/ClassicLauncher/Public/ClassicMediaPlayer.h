@@ -43,7 +43,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Media|Variables")
 	int32 MasterVolume;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Media|Variables")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Media|Variables")
 	FDoOnce DoOnceIsPlayVideo;
 
 	// Called when the game starts or when spawned

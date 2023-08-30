@@ -156,9 +156,10 @@ void AClassicMediaPlayer::OnEndMusic()
 
 void AClassicMediaPlayer::OnEndVideo()
 {
-	for (TObjectIterator<UMainInterface> ObjectIterator; ObjectIterator; ++ObjectIterator)
+	if (MainInterfaceReference != nullptr)
 	{
-		ObjectIterator->SetImageBottom();
+		MainInterfaceReference->SetImageBottom();
+		UE_LOG(LogTemp, Warning, TEXT("Call Function MainInterface in Classic Media Player"));
 	}
 	ResumeMusic();
 }
