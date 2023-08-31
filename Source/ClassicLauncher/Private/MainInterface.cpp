@@ -151,10 +151,12 @@ void UMainInterface::TimerTick()
 	if (bKeyPressed && PositionY == EPositionY::CENTRAL && (ENavigationLastButton == EButtonsGame::LEFT || ENavigationLastButton == EButtonsGame::RIGHT))
 	{
 		SpeedScroll = FMath::Clamp(SpeedScroll - 0.001f, 0.1f, DefaultSpeedScroll);
+		LoopScroll->Speed = SpeedScroll;
 	}
 	else
 	{
 		SpeedScroll = DefaultSpeedScroll;
+		LoopScroll->Speed = SpeedScroll;
 	}
 }
 
@@ -721,7 +723,6 @@ void UMainInterface::SetTitle(int32 Index)
 
 void UMainInterface::SetDirection(EButtonsGame Navigate, float Speed)
 {
-	LoopScroll->Speed = Speed;
 	if (Navigate == EButtonsGame::RIGHT || Navigate == EButtonsGame::RB)
 	{
 		LoopScroll->StartScrollTo(EButtonsGame::RIGHT);

@@ -75,7 +75,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void OnClickLanguage(int32 Value);
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
-	void GetLanguageText();
+	void GetLanguageText(bool bShowMessage);
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void CloseModal();
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")

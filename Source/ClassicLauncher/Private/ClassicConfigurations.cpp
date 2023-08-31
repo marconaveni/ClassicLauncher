@@ -31,8 +31,6 @@ void UClassicConfigurations::NativeOnInitialized()
 	bFocus = false;
 	IndexSelect = 0;
 
-	GetLanguageText();
-
 	SlideVolume->OnSlide.AddDynamic(this, &UClassicConfigurations::OnSlideVolume);
 	SlideVolume->OnFocusLostTriggerSlide.AddDynamic(this, &UClassicConfigurations::OnSlideLostFocus);
 	BtnUpdateGameList->OnClickTrigger.AddDynamic(this, &UClassicConfigurations::OnClickUpdate);
@@ -55,6 +53,8 @@ void UClassicConfigurations::NativeOnInitialized()
 		ClassicMediaPlayerReference = *ActorIterator;
 		UE_LOG(LogTemp, Warning, TEXT("Reference AClassicMediaPlayer classicconfigurations Founds: %s "), *ClassicMediaPlayerReference->GetName());
 	}
+
+	GetLanguageText(false);
 }
 
 FReply UClassicConfigurations::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
@@ -144,20 +144,24 @@ void UClassicConfigurations::OnClickLanguage(int32 Value)
 	if (CurrentLanguage == TEXT("en"))
 	{
 		UKismetInternationalizationLibrary::SetCurrentCulture(TEXT("pt-BR"), true);
-		GetLanguageText();
+		GetLanguageText(true);
 	}
 	else
 	{
 		UKismetInternationalizationLibrary::SetCurrentCulture(TEXT("en"), true);
-		GetLanguageText();
+		GetLanguageText(true);
 	}
 }
 
-void UClassicConfigurations::GetLanguageText()
+void UClassicConfigurations::GetLanguageText(bool bShowMessage)
 {
 	const FString CurrentLanguage = UKismetInternationalizationLibrary::GetCurrentCulture();
-	FText TextLanguage = (CurrentLanguage == TEXT("en")) ? LOCTEXT("LogLanguageen", "English") : LOCTEXT("LogLanguageptbr", "Portuguese");
-	BtnLanguage->SetText(TextLanguage.ToString());
+	const FText TextCurrentLanguage = (CurrentLanguage == TEXT("en")) ? LOCTEXT("LogLanguageen", "English") : LOCTEXT("LogLanguageptbr", "Portuguese (Brazil)");
+	const FText Message = FText::Format(LOCTEXT("ChangeLanguageTo", "Change language to {0}"), TextCurrentLanguage);
+	if (bShowMessage && MainInterfaceReference != nullptr)
+	{
+		MainInterfaceReference->ShowMessage(Message, 2.5f);
+	}
 }
 
 void UClassicConfigurations::CloseModal()
