@@ -51,10 +51,6 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UWidgetSwitcher* WSDeviceLicense;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* DeviceInfo;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* DeviceLicense;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UClassicButtonsIcons* WBPButtonsIconsInterfaces;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* TextConfiguration;

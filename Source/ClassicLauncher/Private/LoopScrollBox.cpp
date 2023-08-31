@@ -81,6 +81,7 @@ void ULoopScrollBox::SetValuesCard(UCard* Card, FString Players, bool Favorite)
 	Card->SetPlayers(Players);
 	Card->SetFavorite(Favorite, false);
 	Card->SelectedFrameToBackground();
+	Card->SetCardImage(ImageCardDefault, 204, 204);
 }
 
 void ULoopScrollBox::SetFocusCard(bool Enable)
@@ -114,8 +115,6 @@ void ULoopScrollBox::AddCardsHorizontalBox(TArray<FGameData> GameData, int32 Ind
 	const int32 NumElements = GameData.Num() - 1;
 	FString Players;
 	bool Favorite;
-	float SizeX;
-	float SizeY;
 
 	HorizontalBoxLeft->ClearChildren();
 	HorizontalBoxCenter->ClearChildren();
@@ -128,8 +127,6 @@ void ULoopScrollBox::AddCardsHorizontalBox(TArray<FGameData> GameData, int32 Ind
 	{
 		Players = GameData[i].players;
 		Favorite = GameData[i].favorite;
-		SizeX = GameData[i].ImageX;
-		SizeY = GameData[i].ImageY;
 
 		CardReferenceLeft.Add(CreateWidget<UCard>(GetOwningPlayer(), CardClassReference));
 		CardReferenceCenter.Add(CreateWidget<UCard>(GetOwningPlayer(), CardClassReference));

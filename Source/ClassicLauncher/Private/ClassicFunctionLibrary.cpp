@@ -301,35 +301,35 @@ FString UClassicFunctionLibrary::CreateXMLGameFile(TArray<FGameData> gameData, F
 
 	NewGameData += TEXT("<?xml version=\"1.0\"?>\n<gameList>\n");
 
-	for (FGameData& data : gameData)
+	for (FGameData& Data : gameData)
 	{
 		NewGameData += TEXT("<game>\n");
-		NewGameData += GenerateXmlTag(TEXT("path"), data.Path);
-		NewGameData += GenerateXmlTag(TEXT("name"), data.name);
-		NewGameData += GenerateXmlTag(TEXT("desc"), data.desc);
-		NewGameData += GenerateXmlTag(TEXT("rating"), data.rating);
-		NewGameData += GenerateXmlTag(TEXT("releasedate"), data.releasedate);
-		NewGameData += GenerateXmlTag(TEXT("developer"), data.developer);
-		NewGameData += GenerateXmlTag(TEXT("publisher"), data.publisher);
-		NewGameData += GenerateXmlTag(TEXT("genre"), data.genre);
-		NewGameData += GenerateXmlTag(TEXT("players"), data.players);
-		NewGameData += GenerateXmlTag(TEXT("hash"), data.hash);
-		NewGameData += GenerateXmlTag(TEXT("image"), data.image);
-		NewGameData += GenerateXmlTag(TEXT("thumbnail"), data.thumbnail);
-		NewGameData += GenerateXmlTag(TEXT("video"), data.video);
-		NewGameData += GenerateXmlTag(TEXT("genreid"), data.genreid);
-		NewGameData += GenerateXmlTag(TEXT("favorite"), (data.favorite) ? TEXT("true") : TEXT("false"));
-		NewGameData += GenerateXmlTag(TEXT("playcount"), FString::SanitizeFloat(data.playcount, 0));
-		NewGameData += GenerateXmlTag(TEXT("lastplayed"), data.lastplayed);
-		NewGameData += GenerateXmlTag(TEXT("executable"), data.Executable);
-		NewGameData += GenerateXmlTag(TEXT("arguments"), data.Arguments);
-		if (data.ImageX != IgnoreImageSize.X)
+		NewGameData += GenerateXmlTag(TEXT("path"), Data.Path);
+		NewGameData += GenerateXmlTag(TEXT("name"), Data.name);
+		NewGameData += GenerateXmlTag(TEXT("desc"), Data.desc);
+		NewGameData += GenerateXmlTag(TEXT("rating"), Data.rating);
+		NewGameData += GenerateXmlTag(TEXT("releasedate"), Data.releasedate);
+		NewGameData += GenerateXmlTag(TEXT("developer"), Data.developer);
+		NewGameData += GenerateXmlTag(TEXT("publisher"), Data.publisher);
+		NewGameData += GenerateXmlTag(TEXT("genre"), Data.genre);
+		NewGameData += GenerateXmlTag(TEXT("players"), Data.players);
+		NewGameData += GenerateXmlTag(TEXT("hash"), Data.hash);
+		NewGameData += GenerateXmlTag(TEXT("image"), Data.image);
+		NewGameData += GenerateXmlTag(TEXT("thumbnail"), Data.thumbnail);
+		NewGameData += GenerateXmlTag(TEXT("video"), Data.video);
+		NewGameData += GenerateXmlTag(TEXT("genreid"), Data.genreid);
+		NewGameData += GenerateXmlTag(TEXT("favorite"), (Data.favorite) ? TEXT("true") : TEXT("false"));
+		NewGameData += GenerateXmlTag(TEXT("playcount"), FString::SanitizeFloat(Data.playcount, 0));
+		NewGameData += GenerateXmlTag(TEXT("lastplayed"), Data.lastplayed);
+		NewGameData += GenerateXmlTag(TEXT("executable"), Data.Executable);
+		NewGameData += GenerateXmlTag(TEXT("arguments"), Data.Arguments);
+		if (Data.ImageX != IgnoreImageSize.X)
 		{
-			NewGameData += GenerateXmlTag(TEXT("imagex"), FString::SanitizeFloat(data.ImageX, 0));
+			NewGameData += GenerateXmlTag(TEXT("imagex"), FString::SanitizeFloat(Data.ImageX, 0));
 		}
-		if (data.ImageX != IgnoreImageSize.X)
+		if (Data.ImageX != IgnoreImageSize.X)
 		{
-			NewGameData += GenerateXmlTag(TEXT("imagey"), FString::SanitizeFloat(data.ImageY, 0));
+			NewGameData += GenerateXmlTag(TEXT("imagey"), FString::SanitizeFloat(Data.ImageY, 0));
 		}
 
 		NewGameData += TEXT("</game>\n");

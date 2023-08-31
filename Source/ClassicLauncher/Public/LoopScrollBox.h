@@ -62,8 +62,11 @@ public:
 	int32 IndexFocusCard;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	bool UnlockInput;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
+	UTexture2D* ImageCardDefault;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables|Debug")
 	bool Debug = false;
+
 
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))

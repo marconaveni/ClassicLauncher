@@ -23,10 +23,6 @@ void UCard::NativePreConstruct()
 bool UCard::Initialize()
 {
 	bool Success = Super::Initialize();
-	//if (BtnClick)
-	//{
-	//	BtnClick->OnClicked.AddDynamic(this, &UCard::ButtonClick);
-	//}
 	return false;
 }
 
@@ -125,10 +121,13 @@ void UCard::SetFavorite(bool favorite, bool AnimateIcon)
 
 void UCard::SetCardImage(UTexture2D* texture, int32 width, int32 height)
 {
-	FSlateBrush NewBrush;
-	NewBrush.SetImageSize(FVector2D(width * 2, height * 2));
-	NewBrush.SetResourceObject(texture);
-	Cover->SetBrush(NewBrush);
+	if (texture != nullptr)
+	{
+		FSlateBrush NewBrush;
+		NewBrush.SetImageSize(FVector2D(width * 2, height * 2));
+		NewBrush.SetResourceObject(texture);
+		Cover->SetBrush(NewBrush);
+	}
 }
 
 void UCard::ButtonClick()

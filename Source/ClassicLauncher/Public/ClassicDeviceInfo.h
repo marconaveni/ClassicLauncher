@@ -19,6 +19,11 @@ public:
 	virtual void NativeOnInitialized() override;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* TextDeviceInfo;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* TextAppInfo;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* TextCPU;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* TextCpuCore;
@@ -28,6 +33,10 @@ public:
 	class UTextBlock* TextGpuName;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* TextSystemOS;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* TextAppName;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* TextAppVersion;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* TxtCPU;
@@ -39,4 +48,8 @@ public:
 	class UTextBlock* TxtGpuName;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* TxtSystemOS;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* TxtAppName;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* TxtAppVersion;
 };

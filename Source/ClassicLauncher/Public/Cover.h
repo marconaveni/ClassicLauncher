@@ -16,16 +16,21 @@ class CLASSICLAUNCHER_API UCover : public UUserWidget
 
 public:
 
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget), category = "Classic Launcher|Components")
 	class UImage* ImgBackGround;
 
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget), category = "Classic Launcher|Components")
 	class UArrow* WBPFocusArrow;
 
-	UFUNCTION(BlueprintCallable, category = "Cover|Functions")
-	void FocusCover(bool Enable);
+	UFUNCTION(BlueprintCallable, category = "Classic Launcher|Functions")
+	void FocusCover(bool bEnable);
 
-	UFUNCTION(BlueprintCallable, category = "Cover|Functions")
-	void SetCoverImage(UTexture2D* Texture, int32 width, int32 height);
-	
+	UFUNCTION(BlueprintCallable, category = "Classic Launcher|Functions")
+	void SetCoverImage(UTexture2D* Texture, int32 Width, int32 Height);
+
+	UFUNCTION(BlueprintCallable, category = "Classic Launcher|Functions")
+	bool GetPositionCover();
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim), category = "Classic Launcher|Animations")
+	UWidgetAnimation* FadeInImage;
 };

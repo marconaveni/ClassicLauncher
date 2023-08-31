@@ -148,16 +148,19 @@ void UMainInterface::TimerTick()
 			WBPTextBoxScroll->SetNewScroll(ENavigationLastButton, 0.0025f);
 		}
 	}
+	if (bKeyPressed && PositionY == EPositionY::CENTRAL && (ENavigationLastButton == EButtonsGame::LEFT || ENavigationLastButton == EButtonsGame::RIGHT))
+	{
+		SpeedScroll = FMath::Clamp(SpeedScroll - 0.001f, 0.1f, DefaultSpeedScroll);
+	}
+	else
+	{
+		SpeedScroll = DefaultSpeedScroll;
+	}
 }
 
 void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
-
-	if (bKeyPressed && PositionY == EPositionY::CENTRAL && (ENavigationLastButton == EButtonsGame::LEFT || ENavigationLastButton == EButtonsGame::RIGHT))
-	{
-		SpeedScroll = DefaultSpeedScroll;
-	}
 
 	if (ENavigationBack == EButtonsGame::SELECT && ENavigationA == EButtonsGame::A && ENavigationLB == EButtonsGame::LB && ENavigationRB == EButtonsGame::RB && ProcessID != 0)
 	{
@@ -321,7 +324,7 @@ void UMainInterface::ShowGames()
 {
 	UUserWidget::PlayAnimationForward(LoadListGame);
 	WBPFrame->SetDefaultValues(1, DefaultFrameSpeed);
-	ScrollListGame->ScrollWidgetIntoView(CoverReference[IndexCard], false, EDescendantScrollDestination::IntoView, 0);
+	ScrollListGame->ScrollWidgetIntoView(CoverReference[IndexCard], false, EDescendantScrollDestination::Center, 0);
 	bInputEnable = true;
 	PrepareThemes();
 	OnShowGames(); //BlueprintImplementableEvent
@@ -880,7 +883,7 @@ void UMainInterface::AppLaunch()
 		if (!Arguments.IsEmpty()) {
 			Commands.Add(UClassicFunctionLibrary::HomeDirectoryReplace(Arguments));
 		}
-		if (!Arguments.IsEmpty()) {
+		if (!ExecutablePath.IsEmpty()) {
 			Commands.Add(UClassicFunctionLibrary::HomeDirectoryReplace(PathRomFormated));
 		}
 		OpenExternalProcess(ExecutablePath, Commands);
@@ -1196,8 +1199,8 @@ void UMainInterface::OnFocusFavorites()
 
 void UMainInterface::OnFocusInfo()
 {
-	WBPInfo->SetGameInfo(GameData[IndexCard]);
 	PositionTopX = 4;
+	WBPInfo->SetGameInfo(GameData[IndexCard]);
 	SetToolTip(WBPToolTipInfo);
 	WBPToolTipInfo->SetToolTipVisibility(ESlateVisibility::Visible);
 	const int32 FramePosition = WBPFrame->ImageFrameCenter->RenderTransform.Translation.Y;

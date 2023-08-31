@@ -4,10 +4,11 @@
 #include "Cover.h"
 #include "Components/Image.h"
 #include "Arrow.h"
+#include "Blueprint/SlateBlueprintLibrary.h"
 
-void UCover::FocusCover(bool Enable)
+void UCover::FocusCover(bool bEnable)
 {
-	if (Enable)
+	if (bEnable)
 	{
 		WBPFocusArrow->SetVisibility(ESlateVisibility::Visible);
 	}
@@ -21,9 +22,25 @@ void UCover::SetCoverImage(UTexture2D* Texture, int32 Width, int32 Height)
 {
 	if (Texture != nullptr) 
 	{
+		if(GetPositionCover())
+		{
+			PlayAnimationForward(FadeInImage);
+		}
 		FSlateBrush NewBrush;
 		NewBrush.SetImageSize(FVector2D(Width, Height));
 		NewBrush.SetResourceObject(Texture);
 		ImgBackGround->SetBrush(NewBrush);
 	}
+}
+
+bool UCover::GetPositionCover()
+{
+	const FGeometry& Geometry = GetCachedGeometry();
+	FVector2D PixelPosition, ViewportPosition;
+	USlateBlueprintLibrary::LocalToViewport(this, Geometry, FVector2D(0,0), PixelPosition,ViewportPosition);
+	if(PixelPosition.X > 90 && PixelPosition.X < 1800)
+	{
+		return true;
+	}
+	return false;
 }
