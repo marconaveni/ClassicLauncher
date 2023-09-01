@@ -57,8 +57,7 @@ void ULoopScrollBox::PrepareScrollBox()
 
 void ULoopScrollBox::StartScrollTo(EButtonsGame LeftRight)
 {
-	EButtonsGame Input = LeftRight;
-	OnStartScrollTo(Input);
+	OnStartScrollTo(LeftRight);
 }
 
 void ULoopScrollBox::CancelScroll()
@@ -114,7 +113,6 @@ void ULoopScrollBox::AddCardsHorizontalBox(TArray<FGameData> GameData, int32 Ind
 
 	const int32 NumElements = GameData.Num() - 1;
 	FString Players;
-	bool Favorite;
 
 	HorizontalBoxLeft->ClearChildren();
 	HorizontalBoxCenter->ClearChildren();
@@ -125,16 +123,13 @@ void ULoopScrollBox::AddCardsHorizontalBox(TArray<FGameData> GameData, int32 Ind
 
 	for (int32 i = 0; i <= NumElements; i++)
 	{
-		Players = GameData[i].players;
-		Favorite = GameData[i].favorite;
-
 		CardReferenceLeft.Add(CreateWidget<UCard>(GetOwningPlayer(), CardClassReference));
 		CardReferenceCenter.Add(CreateWidget<UCard>(GetOwningPlayer(), CardClassReference));
 		CardReferenceRight.Add(CreateWidget<UCard>(GetOwningPlayer(), CardClassReference));
 
-		SetValuesCard(CardReferenceLeft[i], Players, Favorite);
-		SetValuesCard(CardReferenceCenter[i], Players, Favorite);
-		SetValuesCard(CardReferenceRight[i], Players, Favorite);
+		SetValuesCard(CardReferenceLeft[i], GameData[i].players, GameData[i].favorite);
+		SetValuesCard(CardReferenceCenter[i], GameData[i].players, GameData[i].favorite);
+		SetValuesCard(CardReferenceRight[i], GameData[i].players, GameData[i].favorite);
 		HorizontalBoxLeft->AddChild(CardReferenceLeft[i]);
 		HorizontalBoxCenter->AddChild(CardReferenceCenter[i]);
 		HorizontalBoxRight->AddChild(CardReferenceRight[i]);

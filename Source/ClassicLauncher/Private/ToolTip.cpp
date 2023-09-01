@@ -2,7 +2,8 @@
 
 
 #include "ToolTip.h"
-#include "Animation/WidgetAnimation.h"
+
+#include "Components/Image.h"
 #include "Components/TextBlock.h"
 
 
@@ -20,15 +21,23 @@ void UToolTip::NativePreConstruct()
 void UToolTip::NativeConstruct()
 {
 	Super::NativeConstruct();
-	UUserWidget::PlayAnimationForward(AnimationSetToInvisibility);
+}
+
+void UToolTip::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+	BgImage->SetVisibility(ESlateVisibility::Hidden);
+	TextBlock->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UToolTip::SetToolTipVisibility(ESlateVisibility Visible)
 {
-	if (Visible == ESlateVisibility::Visible) {
-		UUserWidget::PlayAnimationForward(AnimationSetToVisibility);
+	if (Visible == ESlateVisibility::Visible) 
+	{
+		PlayAnimationForward(AnimationSetToVisibility);
 	}
-	else {
-		UUserWidget::PlayAnimationForward(AnimationSetToInvisibility);
+	else 
+	{
+		PlayAnimationForward(AnimationSetToInvisibility);
 	}
 }

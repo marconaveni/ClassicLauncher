@@ -31,8 +31,8 @@ public:
 	class UImage* BgImage;
 
 	virtual void NativePreConstruct() override;
-
 	virtual void NativeConstruct() override;
+	virtual void NativeOnInitialized() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ToolTip|Variables")
 	FText Text;

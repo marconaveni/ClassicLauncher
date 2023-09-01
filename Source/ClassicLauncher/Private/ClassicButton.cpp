@@ -60,12 +60,12 @@ void UClassicButton::SetFocusButton(bool Focus)
 		BtButton->SetKeyboardFocus();
 		BgImage->SetVisibility(ESlateVisibility::Visible);	
 		UGameplayStatics::PlaySound2D(this, SoundSelect);
-		UUserWidget::PlayAnimationForward(FocusButton);
+		PlayAnimationForward(FocusButton);
 	}
 	else
 	{
 		BgImage->SetVisibility(ESlateVisibility::Hidden);
-		UUserWidget::PlayAnimationReverse(FocusButton);
+		PlayAnimationReverse(FocusButton);
 		OnFocusLostTrigger.Broadcast();
 	}
 }

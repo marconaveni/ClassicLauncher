@@ -4,9 +4,7 @@
 #include "ClassicGameMode.h"
 #include "Blueprint/UserWidget.h"
 #include "MainInterface.h"
-#include "ClassicConfigurations.h"
 #include "Kismet/GameplayStatics.h"
-#include "Blueprint/WidgetBlueprintLibrary.h"
 
 void AClassicGameMode::BeginPlay()
 {

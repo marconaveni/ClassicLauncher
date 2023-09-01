@@ -6,10 +6,6 @@
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 
-UClassicButtonsIcons::UClassicButtonsIcons(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
-{
-	
-}
 
 void UClassicButtonsIcons::NativePreConstruct()
 {
@@ -20,12 +16,12 @@ void UClassicButtonsIcons::NativePreConstruct()
 
 void UClassicButtonsIcons::SetButtons(TArray<FButtonsIcons> ButtonsIcon)
 {
-
-	TArray<UTexture2D*> BgTextures;
-	TArray<UTexture2D*> Textures;
-	TArray<FText> Texts;
-	TArray<ESlateVisibility> EVisibility;
-	if (ButtonsIcon.IsValidIndex(5)) {
+	if (ButtonsIcon.IsValidIndex(5)) 
+	{
+		TArray<UTexture2D*> BgTextures;
+		TArray<UTexture2D*> Textures;
+		TArray<FText> Texts;
+		TArray<ESlateVisibility> EVisibility;
 
 		for (int32 i = 0; i < 6; i++)
 		{
@@ -44,8 +40,6 @@ void UClassicButtonsIcons::SetButtons(TArray<FButtonsIcons> ButtonsIcon)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("The lenght of Array ButtonsIcon is: %d to set 6 values in editor"), ButtonsIcon.Num());
 	}
-
-	
 }
 
 void UClassicButtonsIcons::SetButtonsStyle(TArray<UTexture2D*> BgTextures, TArray<UTexture2D*> Textures)
@@ -66,7 +60,6 @@ void UClassicButtonsIcons::SetButtonsStyle(TArray<UTexture2D*> BgTextures, TArra
 		Icon5->SetBrushFromTexture(Textures[4]);
 		Icon6->SetBrushFromTexture(Textures[5]);
 	}
-
 }
 
 void UClassicButtonsIcons::SetButtonsText(TArray<FText> ButtonsText)
@@ -79,7 +72,6 @@ void UClassicButtonsIcons::SetButtonsText(TArray<FText> ButtonsText)
 		TextBlock5->SetText(ButtonsText[4]);
 		TextBlock6->SetText(ButtonsText[5]);
 	}
-
 }
 
 void UClassicButtonsIcons::SetColorsText(FSlateColor newColor)

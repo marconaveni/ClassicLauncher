@@ -474,10 +474,10 @@ bool UClassicFunctionLibrary::FindGameData(TArray<FGameData> datas, FGameData Da
 
 	if (DataElement.MapIndex == -1) return false;
 
-	for (FGameData& data : datas)
+	for (FGameData& Data : datas)
 	{
 		Index++;
-		if (data.MapIndex == DataElement.MapIndex)
+		if (Data.MapIndex == DataElement.MapIndex)
 		{
 			return true;
 		}
@@ -525,7 +525,7 @@ bool UClassicFunctionLibrary::ClassicGetFiles(TArray<FString>& Files, FString Ro
 		}
 	}
 
-	FString FinalPath = RootFolderFullPath + "/" + Ext;
+	const FString FinalPath = RootFolderFullPath + "/" + Ext;
 
 	FileManager.FindFiles(Files, *FinalPath, true, false);
 	return true;
@@ -733,7 +733,7 @@ FString UClassicFunctionLibrary::FormatDateTimeToView(FString DateXml)
 
 FString UClassicFunctionLibrary::FormatDateToXml()
 {
-	FDateTime DateTime = FDateTime::Now();
+	const FDateTime DateTime = FDateTime::Now();
 	return DateTime.ToString(TEXT("%Y%m%dT%H%M%S"));
 }
 

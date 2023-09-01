@@ -14,7 +14,6 @@ UCard::UCard(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitiali
 	IndexCard = 0;
 }
 
-
 void UCard::NativePreConstruct()
 {
 	Super::NativePreConstruct();
@@ -61,11 +60,11 @@ void UCard::SetFocusCard(bool enable)
 {
 	if (enable) 
 	{
-		UUserWidget::PlayAnimationForward(ChangeColor);
+		PlayAnimationForward(ChangeColor);
 	}
 	else 
 	{
-		UUserWidget::PlayAnimationReverse(ChangeColor);
+		PlayAnimationReverse(ChangeColor);
 	}
 	UCanvasPanelSlot* CanvasFrameSelected = Cast<UCanvasPanelSlot>(FrameSelected->Slot);
 	UCanvasPanelSlot* CanvasBackgroundSelected = Cast<UCanvasPanelSlot>(BackgroundSelected->Slot);
@@ -111,10 +110,10 @@ void UCard::SetFavorite(bool favorite, bool AnimateIcon)
 	else {
 
 		if (favorite) {
-			UUserWidget::PlayAnimationForward(FadeFavorite);
+			PlayAnimationForward(FadeFavorite);
 		}
 		else {
-			UUserWidget::PlayAnimationReverse(FadeFavorite);
+			PlayAnimationReverse(FadeFavorite);
 		}
 	}
 }
@@ -138,5 +137,5 @@ void UCard::ButtonClick()
 
 void UCard::AnimationFade()
 {
-	UUserWidget::PlayAnimationForward(StartSystem, 1.0f, true);
+	PlayAnimationForward(StartSystem, 1.0f, true);
 }

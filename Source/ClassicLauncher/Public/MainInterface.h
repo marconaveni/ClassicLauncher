@@ -1,9 +1,10 @@
-// Copyright 2022 Marco Naveni. All Rights Reserved.
+// Copyright 2023 Marco Naveni. All Rights Reserved.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "ClassicFunctionLibrary.h"
+#include "Frame.h"
 #include "Blueprint/UserWidget.h"
 #include "GameData.h"
 #include "MainInterface.generated.h"
@@ -14,7 +15,7 @@ UENUM(BlueprintType, Category = "Navigation")
 enum class EPositionY : uint8
 {
 	TOP        UMETA(DisplayName = "Top"),
-	CENTRAL    UMETA(DisplayName = "Center"),
+	CENTER    UMETA(DisplayName = "Center"),
 	BOTTOM     UMETA(DisplayName = "Bottom")
 };
 
@@ -154,7 +155,7 @@ protected:
 	class AClassicLibretroTV* ClassicLibretroTVReference;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
 	class USoundBase* SoundSelect;
-
+	
 public:
 
 	UMainInterface(const FObjectInitializer& ObjectInitializer);
@@ -183,17 +184,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	int32 IndexCard;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	int32 FirstIndex;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	int32 LastIndex;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	int32 IndexAsyncImage;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	int32 ProcessID;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	int32 PositionCenterX;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	int32 PositionTopX;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	EButtonsGame ENavigationButton;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
@@ -221,10 +212,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	bool bUpDownPressed;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	bool bKeyTriggerLeft;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	bool bKeyTriggerRight;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	bool bInputEnable;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	bool bScroll;
@@ -237,15 +224,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	bool bIsRunning;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	float TimerDelayAnimation;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	float TriggerDelayPressed;
+	float TimerDelayNavigation;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	float DescriptionScrollScale;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	float MultiplySpeed;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MainInterface|Variables");
-	float Multiply;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	float SpeedScroll;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
@@ -253,7 +236,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	float DefaultFrameSpeed = 1.6f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	float DefaultSpeedScroll = 30.0f;
+	float DefaultSpeedScroll = 0.2f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	float DefaultMinSpeedScroll = 0.1f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	int32 CountSystem;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
@@ -264,10 +249,6 @@ public:
 	UTexture2D* ImageBottomDefault;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	UTexture2D* ImageNull;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	UTexture2D* ImageFrameTop;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	UTexture2D* ImageFrameCenter;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Components")
 	class UClassicGameInstance* ClassicGameInstance;
 
@@ -344,7 +325,7 @@ public:
 	void OnCreateNewGameList();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void SaveGame();
+	void SaveGame() const;
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void GameSettingsInit();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
@@ -353,9 +334,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void GameSettingsRunningInternal();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void CreateCoversWidget(int32 Min, int32 Max);
+	void CreateCoversWidget(const int32 Min,const int32 Max);
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void AddCoverWidget(FGameData Data);
+	void AddCoverWidget();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void AddSystems();
 
@@ -390,9 +371,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void AppLaunch();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void OpenLibretro(FString CorePath ,FString RomPath, bool CanUnzip);
+	void OpenLibretro(const FString CorePath, const FString RomPath, const bool CanUnzip);
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void OpenExternalProcess( FString ExecutablePath, TArray<FString> CommandArgs);
+	void OpenExternalProcess(FString ExecutablePath, TArray<FString> CommandArgs);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickSystem(int32 Value);
@@ -430,15 +411,10 @@ public:
 	void SetRenderOpacityList();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void ResetCards(bool bAnimationBarTop, bool bAnimationShowSystem);
+	void ResetCards(const bool bAnimationBarTop, const bool bAnimationShowSystem);
 
 	UFUNCTION()
 	void Clear();
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnLoopPauseAsyncImage();
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnLoopResumeAsyncImage();
 
 
 private:
@@ -455,17 +431,20 @@ private:
 	//bindbuttons
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnFocusSelectSystem();
-
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnFocusConfigurations();
-
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnFocusFavorites();
-
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnFocusInfo();
 
-	void SetToolTip(UToolTip* ToolTip);
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
+	void FocusButtonsTop(const int32 PositionTopX, UToolTip* ToolTip, UWidgetAnimation* Left, UWidgetAnimation* Right, const EFocusTop FocusTop);
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
+	void LostFocusButtonsTop(UToolTip* ToolTip, const EFocusTop FocusTop);
+	UFUNCTION()
+	void SetZOrderToolTips(const UToolTip* ToolTip);
+
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnLostFocusSelectSystem();
@@ -520,7 +499,7 @@ public:
 	void CloseBackMenu();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void ShowMessage(FText Message, float InRate);
+	void ShowMessage(const FText Message,const float InRate);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetArrows();

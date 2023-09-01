@@ -4,7 +4,6 @@
 #include "ClassicConfigurations.h"
 #include "MainInterface.h"
 #include "EngineUtils.h"
-#include "ClassicButton.h"
 #include "ClassicSlide.h"
 #include "ClassicButtonSystem.h"
 #include "Components/Button.h"
@@ -93,9 +92,8 @@ void UClassicConfigurations::OnSlideLostFocus()
 		return;
 	}
 
-	ConfigData.pathmedia = ConfigData.pathmedia;
 	ConfigData.volume = MediaPlayerVolume;
-	FString XmlConfig = UClassicFunctionLibrary::CreateXMLConfigFile(ConfigData);
+	const FString XmlConfig = UClassicFunctionLibrary::CreateXMLConfigFile(ConfigData);
 	const FString PathToSave = UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("config");
 	MainInterfaceReference->ConfigurationData = ConfigData;
 	const bool Saved = (UClassicFunctionLibrary::SaveStringToFile(PathToSave, TEXT("config.xml"), XmlConfig, true, false));
@@ -106,7 +104,7 @@ void UClassicConfigurations::OnSlideLostFocus()
 void UClassicConfigurations::OnClickUpdate(int32 Value)
 {
 	bFocus = true;
-	UClassicGameInstance* ClassicGameInstance = Cast<UClassicGameInstance>(GetGameInstance());
+	const UClassicGameInstance* ClassicGameInstance = Cast<UClassicGameInstance>(GetGameInstance());
 
 	if (UGameplayStatics::DeleteGameInSlot(ClassicGameInstance->SlotGame, 0))
 	{

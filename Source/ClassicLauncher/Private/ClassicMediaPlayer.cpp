@@ -59,7 +59,7 @@ void AClassicMediaPlayer::Tick(float DeltaTime)
 	{
 		if (DoOnceIsPlayVideo.Execute())
 		{
-			FIntPoint VideoDimensions = ClassicPlayerVideo->GetMediaPlayer()->GetVideoTrackDimensions(0,0);
+			const FIntPoint VideoDimensions = ClassicPlayerVideo->GetMediaPlayer()->GetVideoTrackDimensions(0,0);
 			MainInterfaceReference->ImgVideo->Brush.ImageSize = FVector2D(VideoDimensions.X, VideoDimensions.Y);
 		}
 	}
@@ -97,7 +97,7 @@ void AClassicMediaPlayer::PlayMusic()
 		{
 			if (MainInterfaceReference != nullptr)
 			{
-				FText TextPlayerMusic = FText::FromString(MediaFiles[Random]);
+				const FText TextPlayerMusic = FText::FromString(MediaFiles[Random]);
 				FFormatNamedArguments Args;
 				Args.Add("TextPlayerMusic", TextPlayerMusic);
 				MainInterfaceReference->ShowMessage(FText::Format(LOCTEXT("Play", "Playing {TextPlayerMusic}"), Args), 3.5f);

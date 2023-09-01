@@ -8,6 +8,7 @@ UArrow::UArrow(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitia
 {
 	Angle = 0.0f;
 	DelayAnimation = 0.16f;
+	ArrowIndex = 0;
 	ArrowSize = FVector2D(45.0f,28.0f);
 	ArrowTextures.Add(nullptr);
 	ArrowTextures.Add(nullptr);

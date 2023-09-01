@@ -2,21 +2,19 @@
 
 
 #include "MessageBalloon.h"
-#include "Animation/WidgetAnimation.h"
 #include "Components/TextBlock.h"
-#include "Components/Image.h"
 #include "Engine/World.h"
 
 
 void UMessageBalloon::ShowMessage(FText Message, float InRate)
 {
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
-	UUserWidget::PlayAnimationForward(AnimationShowMessage);
+	PlayAnimationForward(AnimationShowMessage);
 	TextMessage->SetText(Message);
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UMessageBalloon::EndMessage, InRate, false, -1);
 }
 
 void UMessageBalloon::EndMessage()
 {
-	UUserWidget::PlayAnimationReverse(AnimationShowMessage);
+	PlayAnimationReverse(AnimationShowMessage);
 }

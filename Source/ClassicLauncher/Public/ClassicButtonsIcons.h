@@ -47,7 +47,6 @@ class CLASSICLAUNCHER_API UClassicButtonsIcons : public UUserWidget
 
 public:
 
-	UClassicButtonsIcons(const FObjectInitializer& ObjectInitializer);
 
 	virtual void NativePreConstruct() override;
 

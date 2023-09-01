@@ -59,6 +59,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	int32 PositionOffsetFocus;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
+	int32 PositionTopX = 1 ;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	int32 IndexFocusCard;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	bool UnlockInput;

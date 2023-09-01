@@ -68,6 +68,8 @@ void UFrame::SetFramePosition(int32 PositionCenter, EFocusTop FocusTop)
 		case 4:
 			ImageFrameCenter->SetRenderTranslation(FVector2D(1155, 0));
 			break;
+		default: 
+			break;
 		}
 		return;
 	}
@@ -75,21 +77,7 @@ void UFrame::SetFramePosition(int32 PositionCenter, EFocusTop FocusTop)
 	ImageFrameCenter->SetRenderScale(FVector2D(0.352f, 0.288f));
 	ImageFrameCenter->SetVisibility(ESlateVisibility::Hidden);
 	ImageFrameTop->SetVisibility(ESlateVisibility::Visible);
-	switch (FocusTop)
-	{
-	case EFocusTop::SYSTEM:
-		//ImageFrameCenter->SetRenderTranslation(FVector2D(379.0f, -442.0f));
-		break;
-	case EFocusTop::CONFIG:
-		//ImageFrameCenter->SetRenderTranslation(FVector2D(522.599976f, -442.0f));
-		break;
-	case EFocusTop::FAVORITE:
-		//ImageFrameCenter->SetRenderTranslation(FVector2D(662.0f, -442.0f));
-		break;
-	case EFocusTop::INFO:
-		//ImageFrameCenter->SetRenderTranslation(FVector2D(798.0f, -442.0f));
-		break;
-	}
+
 }
 
 void UFrame::DirectionRight(int32 Frame, int32 Limit)
@@ -118,6 +106,8 @@ void UFrame::AnimationToTopDown(EFocusTop Focus, bool Forward)
 	case EFocusTop::INFO:
 		AnimationFrameToTop(FrameAnimationY1ToInfo, FrameAnimationY2ToInfo, FrameAnimationY3ToInfo, FrameAnimationY4ToInfo, Forward);
 		break;
+	default: 
+		break;
 	}
 }
 
@@ -128,16 +118,18 @@ void UFrame::AnimationFrameToTop(UWidgetAnimation* Animation1, UWidgetAnimation*
 		switch (FrameIndexCenter)
 		{
 		case 1:
-			UUserWidget::PlayAnimationReverse(Animation1, PlaybackSpeed);
+			PlayAnimationReverse(Animation1, PlaybackSpeed);
 			break;
 		case 2:
-			UUserWidget::PlayAnimationReverse(Animation2, PlaybackSpeed);
+			PlayAnimationReverse(Animation2, PlaybackSpeed);
 			break;
 		case 3:
-			UUserWidget::PlayAnimationReverse(Animation3, PlaybackSpeed);
+			PlayAnimationReverse(Animation3, PlaybackSpeed);
 			break;
 		case 4:
-			UUserWidget::PlayAnimationReverse(Animation4, PlaybackSpeed);
+			PlayAnimationReverse(Animation4, PlaybackSpeed);
+			break;
+		default:
 			break;
 		}
 	}
@@ -146,16 +138,18 @@ void UFrame::AnimationFrameToTop(UWidgetAnimation* Animation1, UWidgetAnimation*
 		switch (FrameIndexCenter)
 		{
 		case 1:
-			UUserWidget::PlayAnimationForward(Animation1, PlaybackSpeed);
+			PlayAnimationForward(Animation1, PlaybackSpeed);
 			break;
 		case 2:
-			UUserWidget::PlayAnimationForward(Animation2, PlaybackSpeed);
+			PlayAnimationForward(Animation2, PlaybackSpeed);
 			break;
 		case 3:
-			UUserWidget::PlayAnimationForward(Animation3, PlaybackSpeed);
+			PlayAnimationForward(Animation3, PlaybackSpeed);
 			break;
 		case 4:
-			UUserWidget::PlayAnimationForward(Animation4, PlaybackSpeed);
+			PlayAnimationForward(Animation4, PlaybackSpeed);
+			break;
+		default:
 			break;
 		}
 	}
