@@ -30,6 +30,7 @@ void UTextBoxScroll::NativeConstruct()
 
 void UTextBoxScroll::StartScroll(float DelayStart)
 {
+	DescriptionEnchanted->UpdateRender();
 	GetWorld()->GetTimerManager().SetTimer(TickTimerHandle, this, &UTextBoxScroll::ScrollTick, 0.016f, true, DelayStart + DelayWaitRestart);
 }
 
