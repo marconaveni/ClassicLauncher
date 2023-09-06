@@ -14,6 +14,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "ClassicFunctionLibrary.h"
+#include "TextImageBlock.h"
 #include "Kismet/KismetInternationalizationLibrary.h"
 
 #define LOCTEXT_NAMESPACE "ButtonsConfiguration"
@@ -148,6 +149,17 @@ void UClassicConfigurations::OnClickLanguage(int32 Value)
 	{
 		UKismetInternationalizationLibrary::SetCurrentCulture(TEXT("en"), true);
 		GetLanguageText(true);
+	}
+
+
+	for (TObjectIterator<UTextImageBlock> ObjectIterator; ObjectIterator; ++ObjectIterator)
+	{
+		if (ObjectIterator->GetWorld() != GetWorld())
+		{
+			continue;
+		}
+		ObjectIterator->UpdateText();
+		UE_LOG(LogTemp, Warning, TEXT("Attemped text update %s"), *ObjectIterator->GetName());
 	}
 }
 

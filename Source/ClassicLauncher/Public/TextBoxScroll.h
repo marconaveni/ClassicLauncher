@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "TextImageBlock.h"
 #include "ClassicFunctionLibrary.h"
 #include "TextBoxScroll.generated.h"
 
@@ -25,7 +26,7 @@ public:
 	class UScrollBox* Scroll;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget), Category = "Classic Launcher|Components")
-	class UMultiLineEditableTextBox* Description;
+	class UTextImageBlock* DescriptionEnchanted;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Classic Launcher|Timer")
 	FTimerHandle TickTimerHandle;
@@ -33,14 +34,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Classic Launcher|Timer")
 	FTimerHandle RestartTimerHandle;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Classic Launcher|Text Appearance")
-	FText Text;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Classic Launcher|Timer")
+	FTimerHandle DelaySetText;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Classic Launcher|Text Appearance")
-	FLinearColor TextColor;
+	FString Text;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Classic Launcher|Text Appearance" , meta = (UIMin = 0, UIMax = 100))
-	int32 TextSize;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Classic Launcher|Text Appearance")
+	FTextStyle TextStyle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Classic Launcher|Scroll Parameters")
 	float SpeedScroll;
@@ -50,6 +51,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Classic Launcher|Scroll Parameters")
 	float DelayWaitRestart;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Classic Launcher|Scroll Parameters")
+	float DelayTextAppear;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Classic Launcher|Scroll Parameters")
 	bool bAutoScroll;
@@ -65,19 +69,24 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Classic Launcher|Functions")
 	void PauseAutoScroll();
-	
-	UFUNCTION(BlueprintCallable, Category = "Classic Launcher|Functions")
-	void SetText(FText NewText);
 
 	UFUNCTION(BlueprintCallable, Category = "Classic Launcher|Functions")
-	void SetTextString(FString NewText);
+	void SetText(FString NewText);
+
+	UFUNCTION()
+	void RenderText();
 
 	UFUNCTION(BlueprintCallable, Category = "Classic Launcher|Functions")
-	void SetTextAppearance(FLinearColor NewTextColor, int32 NewTextSize);
+	void SetTextAppearance(FTextStyle NewTextStyle);
+
+	UFUNCTION(BlueprintCallable, Category = "Classic Launcher|Functions")
+	void AlternateToTextImage(bool bEnable, float Size = 24);
 
 	UFUNCTION(BlueprintCallable, Category = "Classic Launcher|Functions")
 	void SetNewScroll(EButtonsGame Input, float NewScroll = 0.015f);
 
 	UFUNCTION()
 	void ScrollTick();
+
+
 };

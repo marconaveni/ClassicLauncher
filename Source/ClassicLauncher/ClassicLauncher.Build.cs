@@ -20,6 +20,7 @@ public class ClassicLauncher : ModuleRules
 		PrivateDependencyModuleNames.AddRange(new string[] { "UnrealLibretro" });
 		PrivateDependencyModuleNames.AddRange(new string[] { "RuntimeImageLoader" });
 		PrivateDependencyModuleNames.AddRange(new string[] { "VictoryBPLibrary" }); 
+		PrivateDependencyModuleNames.AddRange(new string[] { "TextImageBox" }); 
 
 		// Uncomment if you are using Slate UI
 		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

@@ -2,112 +2,118 @@
 
 
 #include "ClassicButtonsIcons.h"
-#include "Components/Button.h"
 #include "Components/Image.h"
-#include "Components/TextBlock.h"
+#include "TextImageBlock.h"
 
 
 void UClassicButtonsIcons::NativePreConstruct()
 {
 	Super::NativePreConstruct();
-	SetButtons(ButtonsIcons);
+
+	SetButtonsIcons(ButtonsIcons);
 
 }
 
-void UClassicButtonsIcons::SetButtons(TArray<FButtonsIcons> ButtonsIcon)
+void UClassicButtonsIcons::SetComponents(TArray<FButtonsIcons>& ButtonsIcon)
 {
-	if (ButtonsIcon.IsValidIndex(5)) 
+	ButtonsIcons.SetNum(6);
+	ButtonsIcons[0].IconReference = Icon1;
+	ButtonsIcons[1].IconReference = Icon2;
+	ButtonsIcons[2].IconReference = Icon3;
+	ButtonsIcons[3].IconReference = Icon4;
+	ButtonsIcons[4].IconReference = Icon5;
+	ButtonsIcons[5].IconReference = Icon6;
+	ButtonsIcons[0].IconBackgroundReference = IconB1;
+	ButtonsIcons[1].IconBackgroundReference = IconB2;
+	ButtonsIcons[2].IconBackgroundReference = IconB3;
+	ButtonsIcons[3].IconBackgroundReference = IconB4;
+	ButtonsIcons[4].IconBackgroundReference = IconB5;
+	ButtonsIcons[5].IconBackgroundReference = IconB6;
+	ButtonsIcons[0].TextImageBlockReference = TextBlock1;
+	ButtonsIcons[1].TextImageBlockReference = TextBlock2;
+	ButtonsIcons[2].TextImageBlockReference = TextBlock3;
+	ButtonsIcons[3].TextImageBlockReference = TextBlock4;
+	ButtonsIcons[4].TextImageBlockReference = TextBlock5;
+	ButtonsIcons[5].TextImageBlockReference = TextBlock6;
+}
+
+
+void UClassicButtonsIcons::SetButtonsIcons(TArray<FButtonsIcons> ButtonsIcon)
+{
+	ButtonsIcons = ButtonsIcon;
+
+	SetComponents(ButtonsIcons);
+
+	for (int32 i = 0; i < ButtonsIcons.Num(); i++)
 	{
-		TArray<UTexture2D*> BgTextures;
-		TArray<UTexture2D*> Textures;
-		TArray<FText> Texts;
-		TArray<ESlateVisibility> EVisibility;
+		ButtonsIcons[i].IconBackgroundReference->SetBrushFromTexture(ButtonsIcons[i].BgButtonTexture);
+		ButtonsIcons[i].IconReference->SetBrushFromTexture(ButtonsIcons[i].ButtonTexture);
 
-		for (int32 i = 0; i < 6; i++)
-		{
-			BgTextures.Add(ButtonsIcon[i].BgButtonTexture);
-			Textures.Add(ButtonsIcon[i].ButtonTexture);
-			Texts.Add(ButtonsIcon[i].ButtonText);
-			EVisibility.Add(ButtonsIcon[i].EVisibility);
-		}
+		ButtonsIcons[i].TextImageBlockReference->SetFText(ButtonsIcons[i].ButtonText);
+		ButtonsIcons[i].TextImageBlockReference->SetTextStyle(ButtonsIcons[i].TextStyle);
 
-		SetButtonsStyle(BgTextures,Textures);
-		SetButtonsText(Texts);
-		SetButtonsVisibility(EVisibility);
-		SetColorsText(TextColor);
+		ButtonsIcons[i].IconBackgroundReference->SetVisibility(ButtonsIcons[i].EVisibility);
+		ButtonsIcons[i].IconReference->SetVisibility(ButtonsIcons[i].EVisibility);
+		ButtonsIcons[i].TextImageBlockReference->SetVisibility(ButtonsIcons[i].EVisibility);
+
+		ButtonsIcons[i].TextImageBlockReference->DefaultToImageText(ButtonsIcons[i].DefaultToImageText);
+		ButtonsIcons[i].TextImageBlockReference->SetTextStyle(ButtonsIcons[i].TextStyle);
+
 	}
-	else 
+}
+
+void UClassicButtonsIcons::SetIconsStyle(TArray<UTexture2D*> BgTextures, TArray<UTexture2D*> Textures)
+{
+	for (int32 i = 0; i < ButtonsIcons.Num(); i++)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("The lenght of Array ButtonsIcon is: %d to set 6 values in editor"), ButtonsIcon.Num());
+		ButtonsIcons[i].IconBackgroundReference->SetBrushFromTexture(BgTextures[i]);
+		ButtonsIcons[i].IconReference->SetBrushFromTexture(Textures[i]);
 	}
 }
 
-void UClassicButtonsIcons::SetButtonsStyle(TArray<UTexture2D*> BgTextures, TArray<UTexture2D*> Textures)
+void UClassicButtonsIcons::SetTexts(TArray<FText> ButtonsText)
 {
-	if (BgTextures.IsValidIndex(5) && Textures.IsValidIndex(5)) {
-
-		IconB1->SetBrushFromTexture(BgTextures[0]);
-		IconB2->SetBrushFromTexture(BgTextures[1]);
-		IconB3->SetBrushFromTexture(BgTextures[2]);
-		IconB4->SetBrushFromTexture(BgTextures[3]);
-		IconB5->SetBrushFromTexture(BgTextures[4]);
-		IconB6->SetBrushFromTexture(BgTextures[5]);
-
-		Icon1->SetBrushFromTexture(Textures[0]);
-		Icon2->SetBrushFromTexture(Textures[1]);
-		Icon3->SetBrushFromTexture(Textures[2]);
-		Icon4->SetBrushFromTexture(Textures[3]);
-		Icon5->SetBrushFromTexture(Textures[4]);
-		Icon6->SetBrushFromTexture(Textures[5]);
+	for (int32 i = 0; i < ButtonsIcons.Num(); i++)
+	{
+		ButtonsIcons[i].TextImageBlockReference->SetFText(ButtonsText[i]);
 	}
 }
 
-void UClassicButtonsIcons::SetButtonsText(TArray<FText> ButtonsText)
+void UClassicButtonsIcons::SetColorsText(FSlateColor NewColor)
 {
-	if (ButtonsText.IsValidIndex(5)) {
-		TextBlock1->SetText(ButtonsText[0]);
-		TextBlock2->SetText(ButtonsText[1]);
-		TextBlock3->SetText(ButtonsText[2]);
-		TextBlock4->SetText(ButtonsText[3]);
-		TextBlock5->SetText(ButtonsText[4]);
-		TextBlock6->SetText(ButtonsText[5]);
+	for (int32 i = 0; i < ButtonsIcons.Num(); i++)
+	{
+		FTextStyle Style = ButtonsIcons[i].TextStyle;
+		Style.Color = NewColor;
+		ButtonsIcons[i].TextImageBlockReference->SetTextStyle(Style);
 	}
 }
 
-void UClassicButtonsIcons::SetColorsText(FSlateColor newColor)
+void UClassicButtonsIcons::SetTextDefaultStyle(FTextStyle TextStyle)
 {
-	TextBlock1->SetColorAndOpacity(newColor);
-	TextBlock2->SetColorAndOpacity(newColor);
-	TextBlock3->SetColorAndOpacity(newColor);
-	TextBlock4->SetColorAndOpacity(newColor);
-	TextBlock5->SetColorAndOpacity(newColor);
-	TextBlock6->SetColorAndOpacity(newColor);
+	for (int32 i = 0; i < ButtonsIcons.Num(); i++)
+	{
+		ButtonsIcons[i].TextImageBlockReference->SetTextStyle(TextStyle);
+	}
 }
-
 
 void UClassicButtonsIcons::SetButtonsVisibility(TArray<ESlateVisibility> EVisibility)
 {
-	if (EVisibility.IsValidIndex(5)) {
-		IconB1->SetVisibility(EVisibility[0]);
-		IconB2->SetVisibility(EVisibility[1]);
-		IconB3->SetVisibility(EVisibility[2]);
-		IconB4->SetVisibility(EVisibility[3]);
-		IconB5->SetVisibility(EVisibility[4]);
-		IconB6->SetVisibility(EVisibility[5]);
+	for (int32 i = 0; i < ButtonsIcons.Num(); i++)
+	{
+		ButtonsIcons[i].IconBackgroundReference->SetVisibility(EVisibility[i]);
+		ButtonsIcons[i].IconReference->SetVisibility(EVisibility[i]);
+		ButtonsIcons[i].TextImageBlockReference->SetVisibility(EVisibility[i]);
+	}
+}
 
-		Icon1->SetVisibility(EVisibility[0]);
-		Icon2->SetVisibility(EVisibility[1]);
-		Icon3->SetVisibility(EVisibility[2]);
-		Icon4->SetVisibility(EVisibility[3]);
-		Icon5->SetVisibility(EVisibility[4]);
-		Icon6->SetVisibility(EVisibility[5]);
-
-		TextBlock1->SetVisibility(EVisibility[0]);
-		TextBlock2->SetVisibility(EVisibility[1]);
-		TextBlock3->SetVisibility(EVisibility[2]);
-		TextBlock4->SetVisibility(EVisibility[3]);
-		TextBlock5->SetVisibility(EVisibility[4]);
-		TextBlock6->SetVisibility(EVisibility[5]);
+void UClassicButtonsIcons::AlternateToTextImage(bool bEnable, float Size)
+{
+	for (int32 i = 0; i < ButtonsIcons.Num(); i++)
+	{
+		ButtonsIcons[i].TextImageBlockReference->DefaultToImageText(bEnable);
+		ButtonsIcons[i].TextImageBlockReference->SetTextImageSize(Size);
+		ButtonsIcons[i].TextImageBlockReference->UpdateText();
 	}
 }
 

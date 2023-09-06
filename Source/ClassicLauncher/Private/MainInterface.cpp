@@ -33,6 +33,7 @@
 #include "LoopScrollBox.h"
 #include "Frame.h"
 #include "TextBoxScroll.h"
+#include "TextImageBlock.h"
 
 
 #define LOCTEXT_NAMESPACE "ButtonsSelection"
@@ -122,10 +123,8 @@ void UMainInterface::NativeOnInitialized()
 	}
 
 	ClassicMediaPlayerReference->MainInterfaceReference = this;
-
-	Super::NativeOnInitialized();
-
 	GetWorld()->GetTimerManager().SetTimer(TickTimerHandle, this, &UMainInterface::TimerTick, 0.015f, true, -1);
+	Super::NativeOnInitialized();
 }
 
 void UMainInterface::TimerTick()
@@ -697,10 +696,8 @@ void UMainInterface::SetTitle(int32 Index)
 	IndexCard = Index;
 
 	const FString Title = GameData[IndexCard].nameFormated;
-	TxtTitleGame->SetJustification(ETextJustify::Left);
-	TxtTitleGame->SetJustification((Title.Len() > 51) ? ETextJustify::Left : ETextJustify::Center);
-	TxtTitleGame->SetText(FText::FromString(Title));
-	WBPTextBoxScroll->SetTextString(GameData[IndexCard].descFormated);
+	TextTitleGame->SetText((Title.Len() < TextTitleMax) ? Title : Title.Left(TextTitleMax) + TEXT("..."));
+	WBPTextBoxScroll->SetText(GameData[IndexCard].descFormated);
 	SetButtonsIconInterfaces(PositionY);
 
 	if (CoverReference.IsValidIndex(IndexCard))
@@ -924,7 +921,7 @@ void UMainInterface::SetButtonsIconInterfaces(EPositionY GetPosition)
 {
 	if (GetPosition == EPositionY::TOP)
 	{
-		WBPButtonsIconsInterfaces->SetButtonsText(TextTop);
+		WBPButtonsIconsInterfaces->SetTexts(TextTop);
 		WBPButtonsIconsInterfaces->SetButtonsVisibility(IconTop);
 	}
 	else if (GetPosition == EPositionY::CENTER)
@@ -934,7 +931,7 @@ void UMainInterface::SetButtonsIconInterfaces(EPositionY GetPosition)
 			TextCenter[5] = (GameData[IndexCard].favorite) ? LOCTEXT("buttonRemoveFavorite", "Remove Favorite") : LOCTEXT("buttonRemoveFavoriteAddFavorite", "Add Favorite");
 		}
 
-		WBPButtonsIconsInterfaces->SetButtonsText(TextCenter);
+		WBPButtonsIconsInterfaces->SetTexts(TextCenter);
 		WBPButtonsIconsInterfaces->SetButtonsVisibility(IconCenter);
 	}
 }
@@ -1050,11 +1047,10 @@ void UMainInterface::PressedTimerNavigation()
 
 void UMainInterface::SetRenderOpacityList() {
 
-	TxtTitleGame->SetRenderOpacity(0.f);
+	TextTitleGame->SetRenderOpacity(0.f);
 	BgTitle->SetRenderOpacity(0.f);
 	ScrollListGame->SetRenderOpacity(0.f);
 	LoopScroll->SetRenderOpacity(0.f);
-	WBPArrow->SetRenderOpacity(0.f);
 	WBPFrame->SetRenderOpacity(0.f);
 	MessageCenter->SetVisibility(ESlateVisibility::Hidden);
 	MessageCenter->SetText(FText::FromString(""));

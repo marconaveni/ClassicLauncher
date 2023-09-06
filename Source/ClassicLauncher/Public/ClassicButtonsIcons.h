@@ -4,8 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "TextImageBlock.h"
 #include "ClassicButtonsIcons.generated.h"
 
+class UImage;
+class UTextImageBlock;
 
 /**
  *
@@ -27,15 +30,27 @@ struct FButtonsIcons
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText ButtonText;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FTextStyle TextStyle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool DefaultToImageText;
+
+	UPROPERTY()
+	UImage* IconReference;
+	UPROPERTY()
+	UImage* IconBackgroundReference;
+	UPROPERTY()
+	UTextImageBlock* TextImageBlockReference;
 
 	//construtor
 	FButtonsIcons()
 	{
+		EVisibility = ESlateVisibility::Visible;
 		ButtonText = FText::FromString(TEXT(""));
+		DefaultToImageText = false;
 	}
 };
-
-
 
 /**
  * 
@@ -51,58 +66,58 @@ public:
 	virtual void NativePreConstruct() override;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* Icon1;
+	UImage* Icon1;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* IconB1;
+	UImage* IconB1;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* Icon2;
+	UImage* Icon2;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* IconB2;
+	UImage* IconB2;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* Icon3;
+	UImage* Icon3;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* IconB3;
+	UImage* IconB3;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* Icon4;
+	UImage* Icon4;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* IconB4;
+	UImage* IconB4;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* Icon5;
+	UImage* Icon5;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* IconB5;
+	UImage* IconB5;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* Icon6;
+	UImage* Icon6;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* IconB6;
+	UImage* IconB6;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextBlock1;
+	UTextImageBlock* TextBlock1;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextBlock2;
+	UTextImageBlock* TextBlock2;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextBlock3;
+	UTextImageBlock* TextBlock3;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextBlock4;
+	UTextImageBlock* TextBlock4;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextBlock5;
+	UTextImageBlock* TextBlock5;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextBlock6;
+	UTextImageBlock* TextBlock6;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButton|Variables")
 	TArray<FButtonsIcons> ButtonsIcons;
@@ -110,18 +125,28 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButton|Variables")
 	FSlateColor TextColor;
 
-	UFUNCTION(BlueprintCallable, Category = "ClassicButton")
-	void SetButtons(TArray<FButtonsIcons> ButtonsIcon);
+
+	UFUNCTION()
+	void SetComponents(TArray<FButtonsIcons>& ButtonsIcon);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicButton")
-	void SetButtonsStyle(TArray<UTexture2D*> BgTextures , TArray<UTexture2D*> Textures);
+	void SetButtonsIcons(TArray<FButtonsIcons> ButtonsIcon);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicButton")
-	void SetButtonsText(TArray<FText> ButtonsText);
+	void SetIconsStyle(TArray<UTexture2D*> BgTextures , TArray<UTexture2D*> Textures);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicButton")
-	void SetColorsText(FSlateColor newColor);
+	void SetTexts(TArray<FText> ButtonsText);
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicButton")
+	void SetColorsText(FSlateColor NewColor);
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicButton")
+	void SetTextDefaultStyle(FTextStyle TextStyle);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicButton")
 	void SetButtonsVisibility(TArray<ESlateVisibility> EVisibility);
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicButton")
+	void AlternateToTextImage(bool bEnable,float Size = 24);
 };

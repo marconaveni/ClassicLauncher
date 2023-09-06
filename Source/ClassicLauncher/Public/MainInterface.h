@@ -44,7 +44,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UScrollBox* ScrollListGame;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TxtTitleGame;
+	class UTextImageBlock* TextTitleGame;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* BgBottomMenu;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
@@ -77,8 +77,6 @@ public:
 	class UCanvasPanel* CanvasPanelConfiguration;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UCanvasPanel* CanvasPanelBottom;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UArrow* WBPArrow;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UToolTip* WBPToolTipConfiguration;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
@@ -243,6 +241,8 @@ public:
 	int32 CountSystem;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	int32 CountLocationY;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	int32 TextTitleMax;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	TArray<UTexture2D*> ImageCards;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")

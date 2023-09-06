@@ -2,24 +2,25 @@
 
 
 #include "TextBoxScroll.h"
+
+#include "TextImageBlock.h"
+#include "TimerManager.h"
 #include "Components/Scrollbox.h"
-#include "Components/MultiLineEditableTextBox.h"
 
 UTextBoxScroll::UTextBoxScroll(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	bAutoScroll = true;
 	DelayWaitRestart = 5.0f;
+	DelayTextAppear = 0.35f;
 	ScrollOffset = 0;
 	SpeedScroll = 0.00015f;
-	TextColor = FLinearColor(1.0f, 1.0f, 1.0f);
-	TextSize = 17;
 }
 
 void UTextBoxScroll::NativePreConstruct()
 {
 	Super::NativePreConstruct();
-	SetText(Text);
-	SetTextAppearance(TextColor, TextSize);
+	DescriptionEnchanted->SetText(Text);
+	SetTextAppearance(TextStyle);
 }
 
 void UTextBoxScroll::NativeConstruct()
@@ -79,24 +80,28 @@ void UTextBoxScroll::PauseAutoScroll()
 	GetWorld()->GetTimerManager().ClearTimer(RestartTimerHandle);
 }
 
-void UTextBoxScroll::SetText(FText NewText)
+void UTextBoxScroll::SetText(FString NewText)
 {
-	Description->SetText(NewText);
+	Text = NewText;
+	GetWorld()->GetTimerManager().ClearTimer(DelaySetText);
+	GetWorld()->GetTimerManager().SetTimer(DelaySetText, this, &UTextBoxScroll::RenderText, 0.016f, false, DelayTextAppear);
 }
 
-void UTextBoxScroll::SetTextString(FString NewText)
+void UTextBoxScroll::RenderText()
 {
-	Description->SetText(FText::FromString(NewText));
+	DescriptionEnchanted->SetText(Text);
 }
 
-void UTextBoxScroll::SetTextAppearance(FLinearColor NewTextColor, int32 NewTextSize)
+void UTextBoxScroll::SetTextAppearance(FTextStyle NewTextStyle)
 {
-	const uint16 Size = FMath::Clamp(NewTextSize, 0, 1000);
-	FTextBlockStyle Style;
-	Style.SetFont(Description->TextStyle.Font);
-	Style.SetColorAndOpacity(FSlateColor(NewTextColor));
-	Style.SetFontSize(Size);
-	Description->SetTextStyle(Style);
+	DescriptionEnchanted->SetTextStyle(NewTextStyle);
+}
+
+void UTextBoxScroll::AlternateToTextImage(bool bEnable, float Size)
+{
+	DescriptionEnchanted->DefaultToImageText(bEnable);
+	DescriptionEnchanted->SetTextImageSize(Size);
+	DescriptionEnchanted->UpdateText();
 }
 
 void UTextBoxScroll::SetNewScroll(EButtonsGame Input, float NewScroll)
