@@ -695,8 +695,9 @@ void UMainInterface::SetTitle(int32 Index)
 {
 	IndexCard = Index;
 
-	const FString Title = GameData[IndexCard].nameFormated;
-	TextTitleGame->SetText((Title.Len() < TextTitleMax) ? Title : Title.Left(TextTitleMax) + TEXT("..."));
+	FString Title = GameData[IndexCard].nameFormated;
+	Title = (Title.Len() < TextTitleMax) ? Title : Title.Left(TextTitleMax) + TEXT("...");
+	TextTitleGame->SetText(FText::FromString(Title));
 	WBPTextBoxScroll->SetText(GameData[IndexCard].descFormated);
 	SetButtonsIconInterfaces(PositionY);
 
@@ -1150,6 +1151,7 @@ void UMainInterface::FocusButtonsTop(const int32 PositionTopX, UToolTip* ToolTip
 	LoopScroll->PositionTopX = PositionTopX;
 	SetZOrderToolTips(ToolTip);
 	ToolTip->SetToolTipVisibility(ESlateVisibility::Visible);
+	ToolTip->SetVisibility(ESlateVisibility::Visible);
 	if (ENavigationButton == EButtonsGame::LEFT && Left != nullptr)
 	{
 		WBPFrame->PlayAnimationReverse(Left);

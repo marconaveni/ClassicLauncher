@@ -5,8 +5,8 @@
 #include "Components/Slider.h"
 #include "Components/Image.h"
 #include "Arrow.h"
+#include "TextImageBlock.h"
 #include "Kismet/GameplayStatics.h"
-#include "Components/TextBlock.h"
 
 void UClassicSlide::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
@@ -73,6 +73,17 @@ void UClassicSlide::SetSlideValue(float Value)
 void UClassicSlide::SetTextLabel(FText NewText)
 {
 	TxtLabel->SetText(NewText);
+}
+
+void UClassicSlide::SetTextAppearance(FTextStyle NewTextStyle)
+{
+	TxtLabel->SetTextStyle(NewTextStyle);
+}
+
+void UClassicSlide::AlternateToTextImage(bool bEnable, float Size)
+{
+	TxtLabel->SetTextImageSize(Size);
+	TxtLabel->DefaultToImageText(bEnable, true);
 }
 
 

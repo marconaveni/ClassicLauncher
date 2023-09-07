@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "TextImageBlock.h"
 #include "ToolTip.generated.h"
 
 /**
@@ -19,13 +20,10 @@ public:
 	UToolTip(const FObjectInitializer& ObjectInitializer);
 
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* AnimationSetToInvisibility;
-
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* AnimationSetToVisibility;
+	class UWidgetAnimation* FadeInFadeOutAnimation;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextBlock;
+	class UTextImageBlock* TextBlock;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* BgImage;
@@ -40,7 +38,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ToolTip|Functions")
 	void SetToolTipVisibility(ESlateVisibility Visible);
 
+	UFUNCTION(BlueprintCallable, Category = "Classic Launcher|Functions")
+	void SetTextAppearance(FTextStyle NewTextStyle);
 
+	UFUNCTION(BlueprintCallable, Category = "Classic Launcher|Functions")
+	void AlternateToTextImage(bool bEnable, float Size = 24);
 
 	
 };

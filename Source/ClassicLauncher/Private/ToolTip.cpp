@@ -2,9 +2,7 @@
 
 
 #include "ToolTip.h"
-
 #include "Components/Image.h"
-#include "Components/TextBlock.h"
 
 
 UToolTip::UToolTip(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -14,8 +12,8 @@ UToolTip::UToolTip(const FObjectInitializer& ObjectInitializer) : Super(ObjectIn
 
 void UToolTip::NativePreConstruct()
 {
-	Super::NativePreConstruct();
 	TextBlock->SetText(Text);
+	Super::NativePreConstruct();
 }
 
 void UToolTip::NativeConstruct()
@@ -26,18 +24,27 @@ void UToolTip::NativeConstruct()
 void UToolTip::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-	BgImage->SetVisibility(ESlateVisibility::Hidden);
-	TextBlock->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UToolTip::SetToolTipVisibility(ESlateVisibility Visible)
 {
 	if (Visible == ESlateVisibility::Visible) 
 	{
-		PlayAnimationForward(AnimationSetToVisibility);
+		PlayAnimationForward(FadeInFadeOutAnimation);
 	}
 	else 
 	{
-		PlayAnimationForward(AnimationSetToInvisibility);
+		PlayAnimationReverse(FadeInFadeOutAnimation);
 	}
+}
+
+void UToolTip::SetTextAppearance(FTextStyle NewTextStyle)
+{
+	TextBlock->SetTextStyle(NewTextStyle);
+}
+
+void UToolTip::AlternateToTextImage(bool bEnable, float Size)
+{
+	TextBlock->SetTextImageSize(Size);
+	TextBlock->DefaultToImageText(bEnable, true);
 }

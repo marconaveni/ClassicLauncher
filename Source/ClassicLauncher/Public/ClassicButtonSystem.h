@@ -4,11 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "TextImageBlock.h"
 #include "ClassicButtonSystem.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDelegateFocus);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDelegateFocusLost);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateClick, int32, value);
+
+
 /**
  * 
  */
@@ -38,7 +41,7 @@ public:
 	class UImage* BgBackground;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* Text;
+	class UTextImageBlock* Text;
 	
 	UClassicButtonSystem(const FObjectInitializer& ObjectInitializer);
 
@@ -67,6 +70,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButtonSystem|Variables")
 	class USoundBase* SoundClick;
 
+	UFUNCTION(BlueprintCallable, Category = "Classic Launcher|Functions")
+	void SetTextAppearance(FTextStyle NewTextStyle);
+
+	UFUNCTION(BlueprintCallable, Category = "Classic Launcher|Functions")
+	void AlternateToTextImage(bool bEnable, float Size = 24);
 
 
 private:

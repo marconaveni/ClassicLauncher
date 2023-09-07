@@ -5,7 +5,6 @@
 #include "Components/Button.h"
 #include "Components/Image.h"
 #include "Arrow.h"
-#include "Components/TextBlock.h"
 #include "Kismet/GameplayStatics.h"
 
 UClassicButtonSystem::UClassicButtonSystem(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -71,4 +70,15 @@ void UClassicButtonSystem::ButtonClick()
 {
 	OnClickTrigger.Broadcast(CountSystem);
 	UGameplayStatics::PlaySound2D(this, SoundClick);
+}
+
+void UClassicButtonSystem::SetTextAppearance(FTextStyle NewTextStyle)
+{
+	Text->SetTextStyle(NewTextStyle);
+}
+
+void UClassicButtonSystem::AlternateToTextImage(bool bEnable, float Size)
+{
+	Text->SetTextImageSize(Size);
+	Text->DefaultToImageText(bEnable, true);
 }

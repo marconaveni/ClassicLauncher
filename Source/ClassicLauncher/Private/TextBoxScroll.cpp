@@ -19,7 +19,7 @@ UTextBoxScroll::UTextBoxScroll(const FObjectInitializer& ObjectInitializer) : Su
 void UTextBoxScroll::NativePreConstruct()
 {
 	Super::NativePreConstruct();
-	DescriptionEnchanted->SetText(Text);
+	DescriptionEnchanted->SetText(FText::FromString(Text));
 	SetTextAppearance(TextStyle);
 }
 
@@ -90,7 +90,7 @@ void UTextBoxScroll::SetText(FString NewText)
 
 void UTextBoxScroll::RenderText()
 {
-	DescriptionEnchanted->SetText(Text);
+	DescriptionEnchanted->SetText(FText::FromString(Text));
 }
 
 void UTextBoxScroll::SetTextAppearance(FTextStyle NewTextStyle)
@@ -100,9 +100,8 @@ void UTextBoxScroll::SetTextAppearance(FTextStyle NewTextStyle)
 
 void UTextBoxScroll::AlternateToTextImage(bool bEnable, float Size)
 {
-	DescriptionEnchanted->DefaultToImageText(bEnable);
 	DescriptionEnchanted->SetTextImageSize(Size);
-	DescriptionEnchanted->UpdateText();
+	DescriptionEnchanted->DefaultToImageText(bEnable,true);
 }
 
 void UTextBoxScroll::SetNewScroll(EButtonsGame Input, float NewScroll)

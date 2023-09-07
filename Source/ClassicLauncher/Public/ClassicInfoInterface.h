@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "GameData.h"
+#include "TextImageBlock.h"
 #include "ClassicFunctionLibrary.h"
 #include "ClassicInfoInterface.generated.h"
 
@@ -50,64 +51,64 @@ public:
 	class UClassicButtonsIcons* WBPButtonsIconsInterfaces;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextDeveloper;
+	class UTextImageBlock* TextDeveloper;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextFavorite;
+	class UTextImageBlock* TextFavorite;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextGenre;
+	class UTextImageBlock* TextGenre;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextLastPlayed;
+	class UTextImageBlock* TextLastPlayed;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextName;
+	class UTextImageBlock* TextName;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextPath;
+	class UTextImageBlock* TextPath;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextPathImage;
+	class UTextImageBlock* TextPathImage;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextPathThumbnail;
+	class UTextImageBlock* TextPathThumbnail;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextPathVideos;
+	class UTextImageBlock* TextPathVideos;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextPlayCount;
+	class UTextImageBlock* TextPlayCount;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextPublisher;
+	class UTextImageBlock* TextPublisher;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextRating;
+	class UTextImageBlock* TextRating;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextReleaseDate;
+	class UTextImageBlock* TextReleaseDate;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextPlayers;
+	class UTextImageBlock* TextPlayers;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TxtDeveloper;
+	class UTextImageBlock* TxtDeveloper;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TxtFavorite;
+	class UTextImageBlock* TxtFavorite;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TxtGenre;
+	class UTextImageBlock* TxtGenre;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TxtImage;
+	class UTextImageBlock* TxtImage;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TxtLastPlayed;
+	class UTextImageBlock* TxtLastPlayed;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TxtMoreInformation;
+	class UTextImageBlock* TxtMoreInformation;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TxtPath;
+	class UTextImageBlock* TxtPath;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TxtPlayCount;
+	class UTextImageBlock* TxtPlayCount;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TxtPlayers;
+	class UTextImageBlock* TxtPlayers;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TxtPublisher;
+	class UTextImageBlock* TxtPublisher;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TxtRating;
+	class UTextImageBlock* TxtRating;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TxtReleaseDate;
+	class UTextImageBlock* TxtReleaseDate;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TxtThumbnail;
+	class UTextImageBlock* TxtThumbnail;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TxtTitle;
+	class UTextImageBlock* TxtTitle;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TxtVideo;
+	class UTextImageBlock* TxtVideo;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InfoInterface|Variables")
 	float CurrentOffSet;

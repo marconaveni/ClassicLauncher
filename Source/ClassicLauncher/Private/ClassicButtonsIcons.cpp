@@ -49,9 +49,6 @@ void UClassicButtonsIcons::SetButtonsIcons(TArray<FButtonsIcons> ButtonsIcon)
 		ButtonsIcons[i].IconBackgroundReference->SetBrushFromTexture(ButtonsIcons[i].BgButtonTexture);
 		ButtonsIcons[i].IconReference->SetBrushFromTexture(ButtonsIcons[i].ButtonTexture);
 
-		ButtonsIcons[i].TextImageBlockReference->SetFText(ButtonsIcons[i].ButtonText);
-		ButtonsIcons[i].TextImageBlockReference->SetTextStyle(ButtonsIcons[i].TextStyle);
-
 		ButtonsIcons[i].IconBackgroundReference->SetVisibility(ButtonsIcons[i].EVisibility);
 		ButtonsIcons[i].IconReference->SetVisibility(ButtonsIcons[i].EVisibility);
 		ButtonsIcons[i].TextImageBlockReference->SetVisibility(ButtonsIcons[i].EVisibility);
@@ -59,6 +56,8 @@ void UClassicButtonsIcons::SetButtonsIcons(TArray<FButtonsIcons> ButtonsIcon)
 		ButtonsIcons[i].TextImageBlockReference->DefaultToImageText(ButtonsIcons[i].DefaultToImageText);
 		ButtonsIcons[i].TextImageBlockReference->SetTextStyle(ButtonsIcons[i].TextStyle);
 
+		ButtonsIcons[i].TextImageBlockReference->SetTextStyle(ButtonsIcons[i].TextStyle);
+		ButtonsIcons[i].TextImageBlockReference->SetText(ButtonsIcons[i].ButtonText);
 	}
 }
 

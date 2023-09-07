@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "TextImageBlock.h"
 #include "ClassicSlide.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDelegateFocusSlide);
@@ -37,7 +38,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* BgBackground;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TxtLabel;
+	class UTextImageBlock* TxtLabel;
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicSlide|Functions")
 	void SetFocusSlide();
@@ -47,6 +48,12 @@ public:
 	void SetSlideValue(float Value);
 	UFUNCTION(BlueprintCallable, Category = "ClassicSlide|Functions")
 	void SetTextLabel(FText NewText);
+
+	UFUNCTION(BlueprintCallable, Category = "Classic Launcher|Functions")
+	void SetTextAppearance(FTextStyle NewTextStyle);
+
+	UFUNCTION(BlueprintCallable, Category = "Classic Launcher|Functions")
+	void AlternateToTextImage(bool bEnable, float Size = 24);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicSlide|Variables")
 	class USoundBase* SoundSelect;
