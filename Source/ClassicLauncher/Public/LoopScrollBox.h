@@ -51,7 +51,6 @@ protected:
 	int32 ChildrenCount;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	EButtonsGame InputDirection;
-
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")

@@ -122,6 +122,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "InfoInterface")
 	void Scrolled(float NewValue);
 
+	UFUNCTION(BlueprintCallable, Category = "Classic Launcher|Functions")
+	void SetTextAppearance(FTextStyle NewTextStyle);
+
+	UFUNCTION(BlueprintCallable, Category = "Classic Launcher|Functions")
+	void AlternateToTextImage(bool bEnable, float Size = 24);
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InfoInterface|Variables")
 	UTexture2D* ArrowIcon;
 

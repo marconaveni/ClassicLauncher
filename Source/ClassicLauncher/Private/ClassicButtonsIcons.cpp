@@ -3,7 +3,9 @@
 
 #include "ClassicButtonsIcons.h"
 #include "Components/Image.h"
+#include "Components/HorizontalBoxSlot.h"
 #include "TextImageBlock.h"
+#include "Components/Spacer.h"
 
 
 void UClassicButtonsIcons::NativePreConstruct()
@@ -11,7 +13,28 @@ void UClassicButtonsIcons::NativePreConstruct()
 	Super::NativePreConstruct();
 
 	SetButtonsIcons(ButtonsIcons);
+	SetJustification(Justification);
+}
 
+void UClassicButtonsIcons::SetJustification(ETextJustify::Type Justify)
+{
+	switch (Justify)
+	{
+	case ETextJustify::Center:
+		SpacerLeft->SetVisibility(ESlateVisibility::Visible);
+		SpacerRight->SetVisibility(ESlateVisibility::Visible);
+		break;
+	case ETextJustify::Left:
+		SpacerLeft->SetVisibility(ESlateVisibility::Collapsed);
+		SpacerRight->SetVisibility(ESlateVisibility::Visible);
+		break;
+	case ETextJustify::Right:
+		SpacerLeft->SetVisibility(ESlateVisibility::Visible);
+		SpacerRight->SetVisibility(ESlateVisibility::Collapsed);
+		break;
+	default:
+		break;
+	}
 }
 
 void UClassicButtonsIcons::SetComponents(TArray<FButtonsIcons>& ButtonsIcon)

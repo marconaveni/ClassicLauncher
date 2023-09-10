@@ -9,6 +9,7 @@
 
 class UImage;
 class UTextImageBlock;
+class USpacer;
 
 /**
  *
@@ -119,12 +120,28 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UTextImageBlock* TextBlock6;
 
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	USpacer* SpacerLeft;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	USpacer* SpacerRight;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButton|Variables")
 	TArray<FButtonsIcons> ButtonsIcons;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButton|Variables")
 	FSlateColor TextColor;
 
+	/** alignment text  */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButton|Default Values")
+	TEnumAsByte<ETextJustify::Type>Justification = ETextJustify::Center;
+
+	/**
+	*  determines the alignment bar icons
+	*  @param Justify Bar alignment 
+	*/
+	UFUNCTION(BlueprintCallable, Category = "TextImageBlock|Functions")
+	void SetJustification(ETextJustify::Type Justify);
 
 	UFUNCTION()
 	void SetComponents(TArray<FButtonsIcons>& ButtonsIcon);

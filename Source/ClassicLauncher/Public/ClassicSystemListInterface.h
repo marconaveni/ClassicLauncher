@@ -35,7 +35,7 @@ protected:
 public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextSelectSystem;
+	class UTextImageBlock* TextSelectSystem;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UScrollBox* ScrollBoxSystems;

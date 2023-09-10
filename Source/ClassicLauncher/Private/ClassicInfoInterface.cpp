@@ -2,7 +2,6 @@
 
 
 #include "ClassicInfoInterface.h"
-#include "Components/TextBlock.h"
 #include "Components/Image.h"
 #include "Star.h"
 #include "Components/ScrollBox.h"
@@ -72,6 +71,34 @@ void UClassicInfoInterface::Scrolled(float NewValue)
 {
 	ScrollBox->SetScrollOffset(FMath::Clamp(NewValue, 0, ScrollBox->GetScrollOffsetOfEnd()) );
 	CurrentOffSet = ScrollBox->GetScrollOffset();
+}
+
+void UClassicInfoInterface::SetTextAppearance(FTextStyle NewTextStyle)
+{
+	for (TObjectIterator<UTextImageBlock> ObjectIterator; ObjectIterator; ++ObjectIterator)
+	{
+		if (ObjectIterator->GetWorld() != GetWorld())
+		{
+			continue;
+		}
+		ObjectIterator->SetTextStyle(NewTextStyle);
+		UE_LOG(LogTemp, Warning, TEXT("Attemped text update %s"), *ObjectIterator->GetName());
+	}
+}
+
+void UClassicInfoInterface::AlternateToTextImage(bool bEnable, float Size)
+{
+	for (TObjectIterator<UTextImageBlock> ObjectIterator; ObjectIterator; ++ObjectIterator)
+	{
+		if (ObjectIterator->GetWorld() != GetWorld())
+		{
+			continue;
+		}
+		ObjectIterator->SetTextImageSize(Size);
+		ObjectIterator->DefaultToImageText(bEnable, true);
+		UE_LOG(LogTemp, Warning, TEXT("Attemped text update %s"), *ObjectIterator->GetName());
+	}
+
 }
 
 

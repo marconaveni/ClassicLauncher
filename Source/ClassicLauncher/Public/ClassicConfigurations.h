@@ -53,7 +53,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UClassicButtonsIcons* WBPButtonsIconsInterfaces;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextConfiguration;
+	class UTextImageBlock* TextConfiguration;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UClassicDeviceInfo* WBPDeviceInfo;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))

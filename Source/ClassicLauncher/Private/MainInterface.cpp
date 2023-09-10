@@ -696,7 +696,7 @@ void UMainInterface::SetTitle(int32 Index)
 	IndexCard = Index;
 
 	FString Title = GameData[IndexCard].nameFormated;
-	Title = (Title.Len() < TextTitleMax) ? Title : Title.Left(TextTitleMax) + TEXT("...");
+	//Title = (Title.Len() < TextTitleMax) ? Title : Title.Left(TextTitleMax) + TEXT("...");
 	TextTitleGame->SetText(FText::FromString(Title));
 	WBPTextBoxScroll->SetText(GameData[IndexCard].descFormated);
 	SetButtonsIconInterfaces(PositionY);
