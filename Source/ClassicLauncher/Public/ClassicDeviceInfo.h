@@ -6,6 +6,9 @@
 #include "Blueprint/UserWidget.h"
 #include "ClassicDeviceInfo.generated.h"
 
+
+class UTextImageBlock;
+
 /**
  * 
  */
@@ -18,38 +21,51 @@ public:
 
 	virtual void NativeOnInitialized() override;
 
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextDeviceInfo;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextAppInfo;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget) , Category="Classic Launcher|Components")
+	UTextImageBlock* TextAppName;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget) , Category="Classic Launcher|Components")
+	UTextImageBlock* TextCpuCore;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget) , Category="Classic Launcher|Components")
+	UTextImageBlock* TextCpuName;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget) , Category="Classic Launcher|Components")
+	UTextImageBlock* TextDriver;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget), Category = "Classic Launcher|Components")
+	UTextImageBlock* TextGpuName;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget) , Category="Classic Launcher|Components")
+	UTextImageBlock* TextGpuBrand;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget) , Category="Classic Launcher|Components")
+	UTextImageBlock* TextMemory;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget) , Category="Classic Launcher|Components")
+	UTextImageBlock* TextStorage;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget) , Category="Classic Launcher|Components")
+	UTextImageBlock* TextSystemOS;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget) , Category="Classic Launcher|Components")
+	UTextImageBlock* TextVersion;
 
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextCPU;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextCpuCore;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextGpuDriver;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextGpuName;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextSystemOS;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextAppName;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextAppVersion;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TxtCPU;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TxtCpuCore;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TxtGpuDriver;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TxtGpuName;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TxtSystemOS;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TxtAppName;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TxtAppVersion;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget) , Category="Classic Launcher|Components")
+	UTextImageBlock* TxtAppInfo;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget) , Category="Classic Launcher|Components")
+	UTextImageBlock* TxtSystem;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget) , Category="Classic Launcher|Components")
+	UTextImageBlock* TxtVideo;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget) , Category="Classic Launcher|Components")
+	UTextImageBlock* TxtAppName;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget) , Category="Classic Launcher|Components")
+	UTextImageBlock* TxtCpuCore;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget) , Category="Classic Launcher|Components")
+	UTextImageBlock* TxtCpuName;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget) , Category="Classic Launcher|Components")
+	UTextImageBlock* TxtDriver;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget) , Category="Classic Launcher|Components")
+	UTextImageBlock* TxtGpuBrand;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget) , Category="Classic Launcher|Components")
+	UTextImageBlock* TxtGpuName;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget) , Category="Classic Launcher|Components")
+	UTextImageBlock* TxtMemory;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget) , Category="Classic Launcher|Components")
+	UTextImageBlock* TxtStorage;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget) , Category="Classic Launcher|Components")
+	UTextImageBlock* TxtSystemOS;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget) , Category="Classic Launcher|Components")
+	UTextImageBlock* TxtVersion;
 };

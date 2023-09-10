@@ -6,9 +6,6 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "GameData.h"
 #include "EasyXMLElement.h"
-#include "RuntimeImageReader.h"
-#include "Engine/Texture2DDynamic.h"
-#include "Card.h"
 #include "ClassicFunctionLibrary.generated.h"
 
 
@@ -239,10 +236,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|Color")
 	static FString ColorToHex(FColor Color);
 
-	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|ProjectVersion")
+	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|GeneralProjectSettings")
 	static FString GetProjectVersion();
 
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|ProjectVersion")
-	static void SetProjectVersion(FString NewVersion);
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GeneralProjectSettings")
+	static FString GetProjectName();
+
 
 };

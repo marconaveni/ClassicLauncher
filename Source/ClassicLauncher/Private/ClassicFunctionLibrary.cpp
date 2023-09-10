@@ -762,18 +762,20 @@ FString UClassicFunctionLibrary::GetProjectVersion()
 	return AppVersion;
 }
 
-void UClassicFunctionLibrary::SetProjectVersion(FString NewVersion)
+FString UClassicFunctionLibrary::GetProjectName()
 {
-	if (!GConfig) return;
+	if (!GConfig) return "";
 
-	GConfig->SetString(
-		TEXT("/Script/EngineSettings.GeneralProjectSettings"), //section
-		TEXT("ProjectVersion"), //Setting Name
-		TEXT("teste"), //Value
-		GEngineIni //file to save
+	FString AppVersion;
+	GConfig->GetString(
+		TEXT("/Script/EngineSettings.GeneralProjectSettings"),
+		TEXT("ProjectName"),
+		AppVersion,
+		GGameIni
 	);
-	GConfig->Flush(true, GEngineIni); // Save the config file
-	UE_LOG(LogConfig, Warning, TEXT("New version is %s"), *GetProjectVersion());
+
+	return AppVersion;
 }
+
 
 
