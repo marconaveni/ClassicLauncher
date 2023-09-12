@@ -277,6 +277,8 @@ public:
 	FTimerHandle TickTimerHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle StartVideoTimerHandle;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
+	FTimerHandle LoadImagesTimerHandle;
 
 	//Functions
 

@@ -693,10 +693,10 @@ void UMainInterface::NavigationConfiguration(EButtonsGame Navigate)
 
 void UMainInterface::SetTitle(int32 Index)
 {
-	IndexCard = Index;
+	if (!GameData.IsValidIndex(IndexCard)) return;
 
-	FString Title = GameData[IndexCard].nameFormated;
-	//Title = (Title.Len() < TextTitleMax) ? Title : Title.Left(TextTitleMax) + TEXT("...");
+	IndexCard = Index;
+	const FString Title = GameData[IndexCard].nameFormated;
 	TextTitleGame->SetText(FText::FromString(Title));
 	WBPTextBoxScroll->SetText(GameData[IndexCard].descFormated);
 	SetButtonsIconInterfaces(PositionY);
@@ -971,9 +971,14 @@ void UMainInterface::SetFavoriteToSave()
 
 			GameData[IndexCard].favorite = ToggleFavorite;
 
-			LoopScroll->CardReferenceLeft[IndexCard]->SetFavorite(ToggleFavorite, true);
-			LoopScroll->CardReferenceCenter[IndexCard]->SetFavorite(ToggleFavorite, true);
-			LoopScroll->CardReferenceRight[IndexCard]->SetFavorite(ToggleFavorite, true);
+			UCard* Left;
+			UCard* Center;
+			UCard* Right;
+			LoopScroll->GetCardReferences(IndexCard, Left, Center, Right);
+
+			Left->SetFavorite(ToggleFavorite, true);
+			Center->SetFavorite(ToggleFavorite, true);
+			Right->SetFavorite(ToggleFavorite, true);
 
 			FString Path = ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].RomPath;
 			SaveGameListXML(Path, ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave[CountSystem].GameDatas);

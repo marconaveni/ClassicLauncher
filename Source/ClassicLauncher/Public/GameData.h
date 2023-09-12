@@ -224,3 +224,16 @@ struct FConfig
 	}
 
 };
+
+USTRUCT(BlueprintType)
+struct FImages
+{
+	GENERATED_BODY()
+
+	/** Game data index */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<bool> Cached;
+	/** Textures loaded*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<UTexture2D*> TexturesCache;
+};
