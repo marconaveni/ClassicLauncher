@@ -468,8 +468,15 @@ void UClassicFunctionLibrary::FormatGameData(TArray<FGameData>& GameDatas, FConf
 	}
 }
 
-bool UClassicFunctionLibrary::FindGameData(TArray<FGameData> datas, FGameData DataElement, int32& Index)
+bool UClassicFunctionLibrary::FindGameData(TArray<FGameData> datas, FGameData DataElement, int32& Index, int32 Find)
 {
+
+	if(Find == DataElement.MapIndex)
+	{
+		Index = DataElement.MapIndex;
+		return true;
+	}
+
 	Index = -1;
 
 	if (DataElement.MapIndex == -1) return false;

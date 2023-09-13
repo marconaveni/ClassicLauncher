@@ -34,6 +34,7 @@
 #include "Frame.h"
 #include "TextBoxScroll.h"
 #include "TextImageBlock.h"
+#include "Misc/OutputDeviceNull.h"
 
 
 #define LOCTEXT_NAMESPACE "ButtonsSelection"
@@ -122,6 +123,7 @@ void UMainInterface::NativeOnInitialized()
 		UE_LOG(LogTemp, Warning, TEXT("Reference AClassicLibretroTV Founds: %s "), *ClassicLibretroTVReference->GetName());
 	}
 
+	WBPFrame->SetDefaultValues(1, DefaultFrameSpeed);
 	ClassicMediaPlayerReference->MainInterfaceReference = this;
 	GetWorld()->GetTimerManager().SetTimer(TickTimerHandle, this, &UMainInterface::TimerTick, 0.015f, true, -1);
 	Super::NativeOnInitialized();
@@ -149,7 +151,7 @@ void UMainInterface::TimerTick()
 	}
 	else if (bKeyPressed && PositionY == EPositionY::CENTER && (ENavigationLastButton == EButtonsGame::LB || ENavigationLastButton == EButtonsGame::RB))
 	{
-		LoopScroll->Speed = DefaultMinSpeedScroll;
+		LoopScroll->Speed = DefaultTriggerSpeedScroll;
 	}
 	else
 	{
@@ -323,7 +325,7 @@ void UMainInterface::LoadGamesList()
 void UMainInterface::ShowGames()
 {
 	PlayAnimationForward(LoadListGame);
-	WBPFrame->SetDefaultValues(1, DefaultFrameSpeed);
+	//WBPFrame->SetDefaultValues(1, DefaultFrameSpeed);
 	ScrollListGame->ScrollWidgetIntoView(CoverReference[IndexCard], false, EDescendantScrollDestination::Center, 0);
 	bInputEnable = true;
 	PrepareThemes();
@@ -637,7 +639,7 @@ void UMainInterface::NavigationMain(EButtonsGame Navigate)
 	{
 		if (PositionY == EPositionY::CENTER)
 		{
-			SetDirection(ENavigationButton, SpeedScroll - 0.1f);
+			SetDirection(ENavigationButton, SpeedScroll);
 		}
 	}
 	else if (ENavigationButton == EButtonsGame::UP)
@@ -911,8 +913,20 @@ void UMainInterface::OnClickSystem(int32 Value)
 {
 	if (bInputEnable)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("The OnNativeClickSystem parameter value is: %d"), Value);
+		UE_LOG(LogTemp, Warning, TEXT("The OnClickSystem parameter value is: %d"), Value);
+		if(CountSystem == Value)
+		{
+			PlayAnimationReverse(ShowSystem);
+			Focus = EFocus::MAIN;
+			PositionY = EPositionY::CENTER;
+			LoopScroll->BtnClick->SetKeyboardFocus();
+			PlayAnimationReverse(BarTop);
+			SetButtonsIconInterfaces(PositionY);
+			WBPFrame->SetFramePosition(WBPFrame->FrameIndexCenter, EFocusTop::NONE);
+			return;
+		}
 		CountSystem = Value;   //CountSystem = CountLocationY;
+		ResetCards(true, true);
 		OnClickOnSystem();
 	}
 }
@@ -986,6 +1000,9 @@ void UMainInterface::SetFavoriteToSave()
 
 			SetButtonsIconInterfaces(EPositionY::CENTER);
 			ShowMessage((ToggleFavorite) ? LOCTEXT("MessageAddFavorite", "Add game to favorite") : LOCTEXT("RemoveFavorite", "Remove game to favorite"), 3.5f);
+
+			FOutputDeviceNull OutputDeviceNull;
+			this->CallFunctionByNameWithArguments(TEXT("ResetCache"), OutputDeviceNull, nullptr, true);
 		}
 	}
 }

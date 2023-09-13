@@ -230,6 +230,12 @@ struct FImages
 {
 	GENERATED_BODY()
 
+	/** Last focus card */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 LastFocus;
+	/** Last index offset */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 LastIndexOffSet;
 	/** Game data index */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<bool> Cached;

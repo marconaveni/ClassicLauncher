@@ -175,7 +175,8 @@ public:
 	static void FormatGameData(TArray<FGameData>& GameDatas, FConfig Config, FConfigSystem ConfigSystem);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static bool FindGameData(TArray<FGameData> datas, FGameData  DataElement, int32& Index);
+	static bool FindGameData(TArray<FGameData> datas, FGameData  DataElement, int32& Index , int32 Find = -1);
+
 
 	//Return filter GameDatas Array favorites are true
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
