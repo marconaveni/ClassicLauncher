@@ -2,13 +2,18 @@
 
 
 #include "LoopScrollBox.h"
+
+#include "Arrow.h"
 #include "ClassicFunctionLibrary.h"
 #include "GameData.h"
 #include "Card.h"
+#include "Cover.h"
 #include "Blueprint/WidgetTree.h"
 #include "Components/Button.h"
+#include "Components/CanvasPanelSlot.h"
 #include "Components/HorizontalBox.h"
 #include "Components/Image.h"
+#include "Components/Scrollbox.h"
 
 
 void ULoopScrollBox::NativeOnInitialized()
@@ -88,6 +93,23 @@ void ULoopScrollBox::SetFocusCard(bool Enable)
 	}
 }
 
+void ULoopScrollBox::SetFocusCover()
+{
+	if (CoverReference.IsValidIndex(IndexFocusCard))
+	{
+		ScrollBoxBottom->ScrollWidgetIntoView(CoverReference[IndexFocusCard], false, EDescendantScrollDestination::Center, 0);
+		CoverReference[IndexFocusCard]->FocusCover(true);
+	}
+	if (CoverReference.IsValidIndex(IndexFocusCard + 1))
+	{
+		CoverReference[IndexFocusCard + 1]->FocusCover(false);
+	}
+	if (CoverReference.IsValidIndex(IndexFocusCard - 1))
+	{
+		CoverReference[IndexFocusCard - 1]->FocusCover(false);
+	}
+}
+
 void ULoopScrollBox::OnClickButton()
 {
 }
@@ -124,7 +146,12 @@ void ULoopScrollBox::AddCardsHorizontalBox(TArray<FGameData> GameData, int32 Ind
 	CardReferenceCenter.Empty();
 	CardReferenceRight.Empty();
 
+	ScrollBoxBottom->ClearChildren();
+	CoverReference.Empty();
+
 	Clear();
+
+	SetPaddingCovers(GameData.Num());
 
 	IndexFocusCard = (NumElements > 4) ? FMath::Clamp(IndexFocus, 0, NumElements) : 0;
 
@@ -141,6 +168,7 @@ void ULoopScrollBox::AddCardsHorizontalBox(TArray<FGameData> GameData, int32 Ind
 	{
 		CardReferenceLeft.Add(ConstructCard(HorizontalBoxLeft, GameData[i]));
 		CardReferenceCenter.Add(ConstructCard(HorizontalBoxCenter, GameData[i]));
+		ConstructCover(GameData[i].Texture);
 
 		if (NumElements <= 10)
 		{
@@ -189,6 +217,34 @@ UCard* ULoopScrollBox::ConstructCard(UHorizontalBox* HorizontalBox, FGameData Ga
 	}
 	HorizontalBox->AddChild(Card);
 	return Card;
+}
+
+void ULoopScrollBox::ConstructCover(UTexture2D* Texture)
+{
+	UCover* Cover = CreateWidget<UCover>(GetOwningPlayer(), CoverClass);
+	ScrollBoxBottom->AddChild(Cover);
+	if (Texture != nullptr)
+	{
+		Cover->SetCoverImage(Texture, Texture->GetSizeX(), Texture->GetSizeY());
+	}
+	else
+	{
+		Cover->SetCoverImage(ImageCardDefault, 204, 204);
+	}
+	CoverReference.Add(Cover);
+}
+
+void ULoopScrollBox::SetPaddingCovers(int32 GameDataNum)
+{
+	//if (GameDataNum > 30) return;
+
+	//UCover* Cover = CreateWidget<UCover>(GetOwningPlayer(), CoverClass);
+	//Cover->SetVisibility(ESlateVisibility::Hidden);
+	//ScrollBoxBottom->AddChild(Cover);
+	//UCanvasPanelSlot* ToolTipCover = Cast<UCanvasPanelSlot>(Cover->WBPFocusArrow->Slot);
+	//const FVector2D CoverSize = ToolTipCover->GetSize();
+	//const int32 PaddingSize = (30 - GameDataNum) / 2;
+	//ToolTipCover->SetSize(FVector2D(CoverSize.X * PaddingSize, CoverSize.Y));
 }
 
 void ULoopScrollBox::AddImagesCards(UTexture2D* NewTexture, int32 Width, int32 Height, int32 Index)

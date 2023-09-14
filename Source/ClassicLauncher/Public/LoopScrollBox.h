@@ -30,12 +30,16 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Subclass")
 	TSubclassOf<class UCard> CardClassReference;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Subclass")
+	TSubclassOf<class UCover> CoverClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	TArray<class UCard*> CardReferenceLeft;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	TArray<class UCard*> CardReferenceCenter;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	TArray<class UCard*> CardReferenceRight;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
+	TArray<class UCover*> CoverReference;
 
 protected:
 
@@ -72,6 +76,8 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UScrollBox* ScrollBox;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UScrollBox* ScrollBoxBottom;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UHorizontalBox* HorizontalBoxLeft;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
@@ -131,12 +137,21 @@ public:
 	UFUNCTION()
 	UCard* ConstructCard(UHorizontalBox* HorizontalBox, FGameData GameData);
 
+	UFUNCTION()
+	void ConstructCover(UTexture2D* Texture);
+
+	UFUNCTION()
+	void SetPaddingCovers(int32 GameDataNum);
+
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
 	void AddImagesCards(UTexture2D* NewTexture, int32 Width, int32 Height,int32 Index);
 
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
 	void SetFocusCard(bool Enable);
-	
+
+	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
+	void SetFocusCover();
+
 	UFUNCTION()
 	void OnClickButton();
 
