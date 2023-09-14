@@ -128,11 +128,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
 	void AddCardsHorizontalBox( TArray<FGameData> GameData, int32 IndexFocus);
 
-	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
-	void AddImagesCards(UTexture2D* NewTexture, int32 Width, int32 Height,int32 Index);
+	UFUNCTION()
+	UCard* ConstructCard(UHorizontalBox* HorizontalBox, FGameData GameData);
 
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
-	void SetValuesCard(class UCard* Card, FString Players ,bool Favorite);
+	void AddImagesCards(UTexture2D* NewTexture, int32 Width, int32 Height,int32 Index);
 
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
 	void SetFocusCard(bool Enable);

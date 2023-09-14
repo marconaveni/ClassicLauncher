@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameData.generated.h"
 
+
 /**
  *
  */
@@ -82,6 +83,12 @@ struct FGameData
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 ImageY;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UTexture2D* Texture;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool CacheTexture;
+
 	//formated 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -131,6 +138,7 @@ struct FGameData
 		Arguments = TEXT("");
 		ImageX = 0;
 		ImageY = 0;
+		Texture = nullptr;
 
 		//formated
 		PathFormated = TEXT("");
@@ -142,12 +150,39 @@ struct FGameData
 	}
 };
 
+USTRUCT(BlueprintType)
+struct FIndexPositions
+{
+	GENERATED_BODY()
+
+	/** Last focus card */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 LastIndexFocus;
+	/** Index Scroll */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Index;
+	/** Offset scroll */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float OffSet;
+	/** Last index offset */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 LastIndexOffSet;
+
+	FIndexPositions()
+	{
+		LastIndexFocus = 0;
+		Index = 0;
+		OffSet = 0;
+		LastIndexOffSet = 1;
+	}
+};
+
 /**
  *
  */
  //Use USTRUCT(BlueprintType) if you would like to include your Struct in Blueprints
 USTRUCT(BlueprintType)
-struct FConfigSystem
+struct FGameSystem
 {
 	GENERATED_BODY()
 
@@ -176,9 +211,12 @@ struct FConfigSystem
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FGameData> GameDatas;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FIndexPositions Positions;
+
 
 	//construtor
-	FConfigSystem()
+	FGameSystem()
 	{
 		Executable = TEXT("");
 		Arguments = TEXT("");
@@ -225,21 +263,3 @@ struct FConfig
 
 };
 
-USTRUCT(BlueprintType)
-struct FImages
-{
-	GENERATED_BODY()
-
-	/** Last focus card */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 LastFocus;
-	/** Last index offset */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 LastIndexOffSet;
-	/** Game data index */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<bool> Cached;
-	/** Textures loaded*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<UTexture2D*> TexturesCache;
-};

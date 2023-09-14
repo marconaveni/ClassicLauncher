@@ -18,7 +18,7 @@ class CLASSICLAUNCHER_API UClassicSaveGame : public USaveGame
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SaveGame)
-	TArray<FConfigSystem> ConfigSystemsSave;
+	TArray<FGameSystem> GameSystemsSave;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SaveGame)
 	FGameData GameDataHistorySave;

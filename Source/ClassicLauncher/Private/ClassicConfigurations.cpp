@@ -109,7 +109,7 @@ void UClassicConfigurations::OnClickUpdate(int32 Value)
 
 	if (UGameplayStatics::DeleteGameInSlot(ClassicGameInstance->SlotGame, 0))
 	{
-		ClassicGameInstance->ClassicSaveGameInstance->ConfigSystemsSave.Empty();
+		ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave.Empty();
 		UE_LOG(LogTemp, Warning, TEXT("Deleted Saved"));
 		MainInterfaceReference->bInputEnable = false;
 		GetWorld()->GetTimerManager().SetTimer(RestartMapTimerHandle, this, &UClassicConfigurations::RestartMap, 2.5f, false, -1);

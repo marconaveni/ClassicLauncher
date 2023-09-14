@@ -72,11 +72,11 @@ public:
 
 	///** Sort a GameData.name array alphabetically!  */
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static void SortGameDate(TArray<FGameData>& GameDatas);
+	static void SortGameDate(UPARAM(ref) TArray<FGameData>& GameDatas);
 
 	///** Sort a GameData.name array alphabetically!  */
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static TArray<FConfigSystem> SortConfigSystem(TArray<FConfigSystem> configData);
+	static TArray<FGameSystem> SortConfigSystem(TArray<FGameSystem> configData);
 
 	/** InstallDir/GameName */
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|File IO")
@@ -165,14 +165,14 @@ public:
 	static void SetConfig(UEasyXMLElement* Element, FConfig& Config);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static void SetConfigSystem(TArray<UEasyXMLElement*>  Elements, TArray<FConfigSystem>& ConfigSystems);
+	static void SetConfigSystem(TArray<UEasyXMLElement*>  Elements, TArray<FGameSystem>& ConfigSystems);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static void SetGameData(TArray<UEasyXMLElement*>  Elements, TArray<FGameData>& GameDatas);
+	static void SetGameData(TArray<UEasyXMLElement*>  Elements, TArray<FGameData>& GameDatas, UTexture2D* Texture);
 
 	//format the array game data with correct path system
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static void FormatGameData(TArray<FGameData>& GameDatas, FConfig Config, FConfigSystem ConfigSystem);
+	static void FormatGameData(TArray<FGameData>& GameDatas, FConfig Config, FGameSystem ConfigSystem);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
 	static bool FindGameData(TArray<FGameData> datas, FGameData  DataElement, int32& Index , int32 Find = -1);

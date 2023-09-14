@@ -20,6 +20,8 @@ void UTextBoxScroll::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 	DescriptionEnchanted->SetText(FText::FromString(Text));
+	AlternateToTextImage(false, 17);
+	TextStyle.bWrap = true;
 	SetTextAppearance(TextStyle);
 }
 

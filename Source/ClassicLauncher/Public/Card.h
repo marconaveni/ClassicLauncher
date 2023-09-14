@@ -11,6 +11,10 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDelegateTrigger, EUINavigation, va
 /**
  * 
  */
+
+class UImage;
+class UButton;
+
 UCLASS()
 class CLASSICLAUNCHER_API UCard : public UUserWidget
 {
@@ -31,10 +35,10 @@ public:
 	virtual FReply NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card|Variables")
-	FString Path;
+	FString PathImage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card|Variables")
-	int32 IndexCard;
+	int32 MapIndex;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card|Variables")
 	TArray<FSlateBrush> playersImage;
@@ -70,36 +74,36 @@ public:
 	void ClickButton();
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* BtnClick;
+	UButton* BtnClick;
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* Cover;
+	UImage* Cover;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* BackgroundFavorite;
+	UImage* BackgroundFavorite;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* FrameFavorite;
+	UImage* FrameFavorite;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* BackgroundMain;
+	UImage* BackgroundMain;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* FrameMain;
+	UImage* FrameMain;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* BackgroundSelected;
+	UImage* BackgroundSelected;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* FrameSelected;
+	UImage* FrameSelected;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* PlayerIcon;
+	UImage* PlayerIcon;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* Favorite;
-
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* ChangeColor;
+	UImage* Favorite;
 
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FadeFavorite;
+	UWidgetAnimation* ChangeColor;
 
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* StartSystem;
+	UWidgetAnimation* FadeFavorite;
+
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	UWidgetAnimation* StartSystem;
 
 
 

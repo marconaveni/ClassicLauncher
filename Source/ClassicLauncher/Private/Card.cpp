@@ -4,14 +4,13 @@
 #include "Card.h"
 #include "Components/Button.h"
 #include "Components/Image.h"
-#include "Animation/WidgetAnimation.h"
 #include "Styling/SlateBrush.h"
 #include "Components/CanvasPanelSlot.h"
 
 UCard::UCard(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	Path = TEXT("");
-	IndexCard = 0;
+	PathImage = TEXT("");
+	MapIndex = 0;
 }
 
 void UCard::NativePreConstruct()
@@ -32,7 +31,7 @@ FReply UCard::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEven
 
 void UCard::SetPath(FString value)
 {
-	Path = value;
+	PathImage = value;
 }
 
 void UCard::SetPlayers(FString value)
@@ -132,7 +131,7 @@ void UCard::SetCardImage(UTexture2D* texture, int32 width, int32 height)
 void UCard::ButtonClick()
 {
 	ClickButton();
-	OnClickTrigger.Broadcast(Path);
+	OnClickTrigger.Broadcast(PathImage);
 }
 
 void UCard::AnimationFade()

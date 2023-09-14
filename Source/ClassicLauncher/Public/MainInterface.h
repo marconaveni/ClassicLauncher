@@ -174,9 +174,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	TArray<FGameData> GameData;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	TArray<FGameData> NewGameData;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	TArray<FConfigSystem> GameSystems;
+	TArray<FGameSystem> GameSystems;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	FConfig ConfigurationData;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
@@ -329,7 +327,7 @@ public:
 	void OnCreateNewGameList();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void SaveGame() const;
+	bool SaveGame() const;
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void GameSettingsInit();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")

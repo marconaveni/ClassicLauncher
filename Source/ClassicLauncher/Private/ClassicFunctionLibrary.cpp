@@ -13,6 +13,8 @@
 #include "ImageUtils.h"
 #include "DynamicRHI.h"
 #include "Misc/ConfigCacheIni.h"
+#include "HAL/Runnable.h"
+#include "LambdaRunnable.h"
 
 EUINavigation UClassicFunctionLibrary::GetInputnavigation(const FKeyEvent& InKeyEvent)
 {
@@ -69,6 +71,7 @@ void UClassicFunctionLibrary::SortGameDate(TArray<FGameData>& GameDatas)
 			if (GameData.name == Name && GameData.name != TEXT("null_value")) {
 				NewGameData.Add(GameData);
 				GameData.name = TEXT("null_value");
+				break;
 			}
 		}
 	}
@@ -77,19 +80,19 @@ void UClassicFunctionLibrary::SortGameDate(TArray<FGameData>& GameDatas)
 	GameDatas.Shrink();
 }
 
-TArray<FConfigSystem> UClassicFunctionLibrary::SortConfigSystem(TArray<FConfigSystem> configData)
+TArray<FGameSystem> UClassicFunctionLibrary::SortConfigSystem(TArray<FGameSystem> configData)
 {
 	TArray<FString> Names;
-	TArray<FConfigSystem> NewConfigData;
+	TArray<FGameSystem> NewConfigData;
 
-	for (FConfigSystem& data : configData)
+	for (FGameSystem& data : configData)
 	{
 		Names.Add(data.SystemLabel);
 	}
 	Names.Sort();
 	for (FString& name : Names)
 	{
-		for (FConfigSystem& data : configData)
+		for (FGameSystem& data : configData)
 		{
 			if (data.SystemLabel == name && data.SystemLabel != TEXT("null_value")) {
 				NewConfigData.Add(data);
@@ -399,9 +402,9 @@ void UClassicFunctionLibrary::SetConfig(UEasyXMLElement* Element, FConfig& Confi
 	Config.volume = Element->ReadInt(TEXT("volume"));
 }
 
-void UClassicFunctionLibrary::SetConfigSystem(TArray<UEasyXMLElement*>  Elements, TArray<FConfigSystem>& ConfigSystems)
+void UClassicFunctionLibrary::SetConfigSystem(TArray<UEasyXMLElement*>  Elements, TArray<FGameSystem>& ConfigSystems)
 {
-	FConfigSystem  ConfigSystem;
+	FGameSystem  ConfigSystem;
 
 	for (UEasyXMLElement* Element : Elements)
 	{
@@ -416,7 +419,7 @@ void UClassicFunctionLibrary::SetConfigSystem(TArray<UEasyXMLElement*>  Elements
 	}
 }
 
-void UClassicFunctionLibrary::SetGameData(TArray<UEasyXMLElement*> Elements, TArray<FGameData>& GameDatas)
+void UClassicFunctionLibrary::SetGameData(TArray<UEasyXMLElement*> Elements, TArray<FGameData>& GameDatas, UTexture2D* Texture)
 {
 
 	FGameData  GameData;
@@ -446,13 +449,14 @@ void UClassicFunctionLibrary::SetGameData(TArray<UEasyXMLElement*> Elements, TAr
 		GameData.Arguments = Element->ReadString(TEXT("arguments"));
 		GameData.ImageX = Element->ReadInt(TEXT("imagex"));
 		GameData.ImageY = Element->ReadInt(TEXT("imagey"));
+		//GameData.Texture = Texture;
 		GameDatas.Add(GameData);
 
 		Index += 1;
 	}
 }
 
-void UClassicFunctionLibrary::FormatGameData(TArray<FGameData>& GameDatas, FConfig Config, FConfigSystem ConfigSystem)
+void UClassicFunctionLibrary::FormatGameData(TArray<FGameData>& GameDatas, FConfig Config, FGameSystem ConfigSystem)
 {
 	for (FGameData& GameData : GameDatas)
 	{
@@ -471,7 +475,7 @@ void UClassicFunctionLibrary::FormatGameData(TArray<FGameData>& GameDatas, FConf
 bool UClassicFunctionLibrary::FindGameData(TArray<FGameData> datas, FGameData DataElement, int32& Index, int32 Find)
 {
 
-	if(Find == DataElement.MapIndex)
+	if (Find == DataElement.MapIndex)
 	{
 		Index = DataElement.MapIndex;
 		return true;
@@ -496,19 +500,29 @@ bool UClassicFunctionLibrary::FindGameData(TArray<FGameData> datas, FGameData Da
 
 TArray<FGameData> UClassicFunctionLibrary::FilterFavoriteGameData(TArray<FGameData> GameDatas, bool FilterFavorites)
 {
-	if (FilterFavorites) {
-		TArray<FGameData> FilterGameData;
-		for (FGameData& data : GameDatas)
-		{
-			if (data.favorite) {
-				FilterGameData.Add(data);
-			}
-		}
-		return FilterGameData;
-	}
-	else {
+	if (!FilterFavorites)
+	{
 		return GameDatas;
 	}
+
+	TArray<FGameData> FilterGameDataFavorite;
+	TArray<FGameData> FilterGameData;
+
+	for (FGameData& Data : GameDatas)
+	{
+		if (Data.favorite)
+		{
+			FilterGameDataFavorite.Add(Data);
+			continue;
+		}
+		FilterGameData.Add(Data);
+	}
+	for (FGameData& Data : FilterGameData)
+	{
+		FilterGameDataFavorite.Add(Data);
+	}
+
+	return FilterGameDataFavorite;
 
 }
 
@@ -631,6 +645,7 @@ UTexture2D* UClassicFunctionLibrary::LoadTexture2DFromFile(const FString& FilePa
 		}
 	}
 	return NewTexture;
+	
 }
 
 UTexture2D* UClassicFunctionLibrary::LoadTexture(const FString& FilePath, int32& Width, int32& Height)
