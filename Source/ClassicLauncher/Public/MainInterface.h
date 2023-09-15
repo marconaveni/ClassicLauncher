@@ -4,12 +4,29 @@
 
 #include "CoreMinimal.h"
 #include "ClassicFunctionLibrary.h"
-#include "Frame.h"
 #include "Blueprint/UserWidget.h"
 #include "GameData.h"
 #include "MainInterface.generated.h"
 
-
+class UImage;
+class UTextImageBlock;
+class UCanvasPanel;
+class UToolTip;
+class UClassicButton;
+class UFrame;
+class UClassicInfoInterface;
+class UClassicSystemListInterface;
+class UClassicConfigurations;
+class UClassicButtonsIcons;
+class UMessageBalloon;
+class UTextBlock;
+class ULoopScrollBox;
+class UTextBoxScroll;
+class UCover;
+class UClassicGameInstance;
+class UClassicButtonSystem;
+class AClassicMediaPlayer;
+class AClassicLibretroTV;
 
 UENUM(BlueprintType, Category = "Navigation")
 enum class EPositionY : uint8
@@ -41,118 +58,113 @@ class CLASSICLAUNCHER_API UMainInterface : public UUserWidget
 
 public:
 
+
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UScrollBox* ScrollListGame;
+	UTextImageBlock* TextTitleGame;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextImageBlock* TextTitleGame;
+	UImage* BgBottomMenu;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* BgBottomMenu;
+	UImage* ImgImageBottom;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* ImgImageBottom;
+	UImage* ImgVideo;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* ImgVideo;
+	UImage* BgTopBar;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* BgTopBar;
+	UImage* BgTopBarIcon;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* BgTopBarIcon;
+	UImage* BgBackground1;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* BgBackground1;
+	UImage* BgBackground2;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* BgBackground2;
+	UImage* BgBackground3;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* BgBackground3;
+	UImage* BgTitle;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* BgTitle;
+	UImage* ImgPreventClickMouse;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* ImgPreventClickMouse;
+	UImage* BackgroundVideo;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* BackgroundVideo;
+	UImage* BgBottom;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* BgBottom;
+	UCanvasPanel* CanvasPanelSystemSelect;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UCanvasPanel* CanvasPanelSystemSelect;
+	UCanvasPanel* CanvasPanelInfo;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UCanvasPanel* CanvasPanelInfo;
+	UCanvasPanel* CanvasPanelConfiguration;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UCanvasPanel* CanvasPanelConfiguration;
+	UCanvasPanel* CanvasPanelBottom;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UCanvasPanel* CanvasPanelBottom;
+	UToolTip* WBPToolTipConfiguration;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UToolTip* WBPToolTipConfiguration;
+	UToolTip* WBPToolTipFavorites;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UToolTip* WBPToolTipFavorites;
+	UToolTip* WBPToolTipInfo;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UToolTip* WBPToolTipInfo;
+	UToolTip* WBPToolTipSystem;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UToolTip* WBPToolTipSystem;
+	UClassicInfoInterface* WBPInfo;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UClassicInfoInterface* WBPInfo;
+	UClassicSystemListInterface* WBPSystemsList;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UClassicSystemListInterface* WBPSystemsList;
+	UClassicConfigurations* WBPClassicConfigurationsInterface;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UClassicConfigurations* WBPClassicConfigurationsInterface;
+	UClassicButtonsIcons* WBPButtonsIconsInterfaces;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UClassicButtonsIcons* WBPButtonsIconsInterfaces;
+	UFrame* WBPFrame;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UFrame* WBPFrame;
+	UClassicButton* BtnSelectSystem;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UClassicButton* BtnSelectSystem;
+	UClassicButton* BtnConfigurations;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UClassicButton* BtnConfigurations;
+	UClassicButton* BtnFavorites;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UClassicButton* BtnFavorites;
+	UClassicButton* BtnInfo;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UClassicButton* BtnInfo;
+	UMessageBalloon* MessageDisplay;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UMessageBalloon* MessageDisplay;
+	UTextBlock* MessageCenter;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* MessageCenter;
+	ULoopScrollBox* LoopScroll;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class ULoopScrollBox* LoopScroll;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBoxScroll* WBPTextBoxScroll;
+	UTextBoxScroll* WBPTextBoxScroll;
 
 	//animations WidgetBind
 
 protected:
 
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* ShowDescBottomInfo;
+	UWidgetAnimation* ShowDescBottomInfo;
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* ShowSystem;
+	UWidgetAnimation* ShowSystem;
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* AnimationShowConfiguration;
+	UWidgetAnimation* AnimationShowConfiguration;
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* BarTop;
+	UWidgetAnimation* BarTop;
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FadeStartSystem;
+	UWidgetAnimation* FadeStartSystem;
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* ShowInfo;
+	UWidgetAnimation* ShowInfo;
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* LoadListGame;
+	UWidgetAnimation* LoadListGame;
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* VideoAnimation;
+	UWidgetAnimation* VideoAnimation;
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FadeChangeImageToVideo;
+	UWidgetAnimation* FadeChangeImageToVideo;
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* ChangeVideoToImage;
+	UWidgetAnimation* ChangeVideoToImage;
 
 	//subclass and references
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
-	TSubclassOf<class UCover> CoverClass;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
-	TSubclassOf<class UClassicButtonSystem> ButtonSystemClass;
+	TSubclassOf<UClassicButtonSystem> ButtonSystemClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
-	TArray<class UCover*> CoverReference;
+	TArray<UClassicButtonSystem*> ButtonSystemReferences;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
-	TArray<class UClassicButtonSystem*> ButtonSystemReferences;
+	AClassicMediaPlayer* ClassicMediaPlayerReference;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
-	class AClassicMediaPlayer* ClassicMediaPlayerReference;
+	AClassicLibretroTV* ClassicLibretroTVReference;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
-	class AClassicLibretroTV* ClassicLibretroTVReference;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
-	class USoundBase* SoundSelect;
+	USoundBase* SoundSelect;
 	
 public:
 
@@ -173,6 +185,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	TArray<FGameData> GameData;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	TArray<FGameData> GameDataIndex;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	TArray<FGameSystem> GameSystems;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
@@ -242,15 +256,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	int32 CountLocationY;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	int32 TextTitleMax;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	TArray<UTexture2D*> ImageCards;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	UTexture2D* ImageBottomDefault;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	UTexture2D* ImageNull;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Components")
-	class UClassicGameInstance* ClassicGameInstance;
+	UClassicGameInstance* ClassicGameInstance;
 
 	//timers
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
@@ -319,9 +331,6 @@ public:
 	void OnPrepareThemes();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void SetPaddingCovers();
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void CreateNewGameList();
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnCreateNewGameList();
@@ -335,10 +344,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void GameSettingsRunningInternal();
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void CreateCoversWidget(const int32 Min,const int32 Max);
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void AddCoverWidget();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void AddSystems();
 
@@ -396,9 +401,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Save")
 	bool SaveGameListXML(FString& GameListPath, TArray<FGameData>& NewGames);
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Save")
-	bool SaveGameList();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void RunningGame(bool bIsRun);

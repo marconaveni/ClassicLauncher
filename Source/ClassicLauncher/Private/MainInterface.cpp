@@ -3,7 +3,6 @@
 
 #include "MainInterface.h"
 #include "Card.h"
-#include "Cover.h"
 #include "ClassicButtonSystem.h"
 #include "ClassicSlide.h"
 #include "Components/Scrollbox.h"
@@ -13,7 +12,6 @@
 #include "ClassicFunctionLibrary.h"
 #include "ClassicGameinstance.h"
 #include "ClassicSaveGame.h"
-#include "Arrow.h"
 #include "ClassicButton.h"
 #include "ClassicButtonsIcons.h"
 #include "ClassicInfoInterface.h"
@@ -300,9 +298,6 @@ void UMainInterface::LoadGamesList()
 
 	if (GameData.Num() > 0)
 	{
-		SetPaddingCovers();
-		CreateCoversWidget(0, GameData.Num());
-
 		ConfigurationData.defaultstartsystem = Systems[CountSystem].SystemName;
 		FString XmlConfig = UClassicFunctionLibrary::CreateXMLConfigFile(ConfigurationData);
 		XmlConfig = XmlConfig.Replace(TEXT("$(remove)"), TEXT(""), ESearchCase::IgnoreCase);
@@ -310,7 +305,6 @@ void UMainInterface::LoadGamesList()
 		const bool Saved = (UClassicFunctionLibrary::SaveStringToFile(PathToSave, TEXT("config.xml"), XmlConfig, true, false));
 
 		UE_LOG(LogTemp, Warning, TEXT("%s"), (Saved) ? TEXT("Saved File") : TEXT("Not Saved File"));
-
 		OnLoadGamesList(); //BlueprintImplementableEvent
 	}
 	else
@@ -327,8 +321,6 @@ void UMainInterface::LoadGamesList()
 void UMainInterface::ShowGames()
 {
 	PlayAnimationForward(LoadListGame);
-	//WBPFrame->SetDefaultValues(1, DefaultFrameSpeed);
-	ScrollListGame->ScrollWidgetIntoView(CoverReference[IndexCard], false, EDescendantScrollDestination::Center, 0);
 	bInputEnable = true;
 	PrepareThemes();
 	OnShowGames(); //BlueprintImplementableEvent
@@ -348,7 +340,6 @@ void UMainInterface::CreateNewGameList()
 
 	if (UClassicFunctionLibrary::LoadStringFile(ConfigResult, GameRoot))
 	{
-
 		UClassicFunctionLibrary::SetConfigSystem(UClassicFunctionLibrary::LoadXML(ConfigResult, TEXT("config.system")), Systems);
 		Systems = UClassicFunctionLibrary::SortConfigSystem(Systems);
 		for (int32 i = 0; i < Systems.Num(); i++)
@@ -368,9 +359,15 @@ void UMainInterface::CreateNewGameList()
 			}
 		}
 		ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave = Systems;
-		SaveGame();
-		SetCenterText(LOCTEXT("LogSuccessfullyGameList", "Game list update successfully wait..."));
-		GetWorld()->GetTimerManager().SetTimer(DelayReloadTimerHandle, this, &UMainInterface::RestartWidget, 3.0f, false, -1);
+		if(SaveGame())
+		{
+			SetCenterText(LOCTEXT("LogSuccessfullyGameList", "Game list update successfully wait..."));
+			GetWorld()->GetTimerManager().SetTimer(DelayReloadTimerHandle, this, &UMainInterface::RestartWidget, 3.0f, false, -1);
+		}
+		else
+		{
+			SetCenterText(LOCTEXT("LogErrorGameList", "Game list not save"));
+		}
 	}
 	else
 	{
@@ -386,6 +383,7 @@ bool UMainInterface::SaveGame() const
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Saved"));
 		return true;
+
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Not Saved"));
 	return false;	
@@ -560,41 +558,7 @@ void UMainInterface::GameSettingsRunningInternal()
 	Settings->SaveSettings();
 }
 
-#pragma region CoverFunctions
-
-void UMainInterface::SetPaddingCovers()
-{
-	if (GameData.Num() > 30) return;
-	UCover* Cover = CreateWidget<UCover>(GetOwningPlayer(), CoverClass);
-	UCanvasPanelSlot* ToolTipCover = Cast<UCanvasPanelSlot>(Cover->WBPFocusArrow->Slot);
-	const FVector2D CoverSize = ToolTipCover->GetSize();
-	const int32 PaddingSize = (30 - GameData.Num()) / 2;
-	ToolTipCover->SetSize(FVector2D(CoverSize.X * PaddingSize, CoverSize.Y));
-	Cover->SetVisibility(ESlateVisibility::Hidden);
-	ScrollListGame->AddChild(Cover);
-}
-
-void UMainInterface::CreateCoversWidget(const int32 Min, const int32 Max)
-{
-	for (int32 i = Min; i < Max; i++)
-	{
-		if (!GameData.IsValidIndex(i))
-		{
-			break;
-		}
-		AddCoverWidget();
-	}
-}
-
-void UMainInterface::AddCoverWidget()
-{
-	UCover* Cover = CreateWidget<UCover>(GetOwningPlayer(), CoverClass);
-	ScrollListGame->AddChild(Cover);
-	CoverReference.Add(Cover);
-}
-
-#pragma endregion CoverFunctions
-
+#pragma region NavigationArea
 
 /////////////////////////////////////////////////
 ///navigation area
@@ -658,7 +622,7 @@ void UMainInterface::NavigationMain(EButtonsGame Navigate)
 
 void UMainInterface::NavigationSystem(EButtonsGame Navigate)
 {
-	PressedDelayNavigation(0.18f);
+	PressedDelayNavigation(TimerDelayNavigation);
 	ENavigationButton = Navigate;
 	if (ENavigationButton == EButtonsGame::UP)
 	{
@@ -677,7 +641,7 @@ void UMainInterface::NavigationSystem(EButtonsGame Navigate)
 
 void UMainInterface::NavigationInfo(EButtonsGame Navigate)
 {
-	PressedDelayNavigation(0.18f);
+	PressedDelayNavigation(TimerDelayNavigation);
 	ENavigationButton = Navigate;
 	const float CurrentOffSet = WBPInfo->CurrentOffSet;
 	if (ENavigationButton == EButtonsGame::UP)
@@ -704,20 +668,6 @@ void UMainInterface::SetTitle(int32 Index)
 		TextTitleGame->SetText(FText::FromString(Title));
 		WBPTextBoxScroll->SetText(GameData[IndexCard].descFormated);
 		SetButtonsIconInterfaces(PositionY);
-
-		if (CoverReference.IsValidIndex(IndexCard))
-		{
-			ScrollListGame->ScrollWidgetIntoView(CoverReference[IndexCard], false, EDescendantScrollDestination::Center, 0);
-			CoverReference[IndexCard]->FocusCover(true);
-		}
-		if (CoverReference.IsValidIndex(IndexCard + 1))
-		{
-			CoverReference[IndexCard + 1]->FocusCover(false);
-		}
-		if (CoverReference.IsValidIndex(IndexCard - 1))
-		{
-			CoverReference[IndexCard - 1]->FocusCover(false);
-		}
 	}
 }
 
@@ -853,6 +803,8 @@ void UMainInterface::SetTopButtonFocus()
 //end navigate area
 ///////////////////////////////////////////////////
 
+#pragma endregion NavigationArea
+
 void UMainInterface::OnClickLaunch()
 {
 	if (PositionY == EPositionY::CENTER && bInputEnable)
@@ -967,10 +919,16 @@ void UMainInterface::SetCountPlayerToSave()
 
 		GameData[IndexCard].playcount++;
 		GameData[IndexCard].lastplayed = UClassicFunctionLibrary::FormatDateToXml();
+		GameDataIndex[Find].playcount++;
+		GameDataIndex[Find].lastplayed = GameData[IndexCard].lastplayed;
 
 		FString Path = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].RomPath;
 		SaveGameListXML(Path, ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas);
-		SaveGame();
+
+		if (SaveGame())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("CountedSaved"));
+		}
 	}
 }
 
@@ -987,6 +945,7 @@ void UMainInterface::SetFavoriteToSave()
 			ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas[Find].favorite = ToggleFavorite;
 
 			GameData[IndexCard].favorite = ToggleFavorite;
+			GameDataIndex[Find].favorite = ToggleFavorite;
 
 			UCard* Left;
 			UCard* Center;
@@ -999,13 +958,14 @@ void UMainInterface::SetFavoriteToSave()
 
 			FString Path = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].RomPath;
 			SaveGameListXML(Path, ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas);
-			SaveGame();
-
 			SetButtonsIconInterfaces(EPositionY::CENTER);
-			ShowMessage((ToggleFavorite) ? LOCTEXT("MessageAddFavorite", "Add game to favorite") : LOCTEXT("RemoveFavorite", "Remove game to favorite"), 3.5f);
 
-			FOutputDeviceNull OutputDeviceNull;
-			this->CallFunctionByNameWithArguments(TEXT("ResetCache"), OutputDeviceNull, nullptr, true);
+			if (SaveGame())
+			{
+				ShowMessage((ToggleFavorite) ? LOCTEXT("MessageAddFavorite", "Add game to favorite") : LOCTEXT("RemoveFavorite", "Remove game to favorite"), 3.5f);
+			}
+			//FOutputDeviceNull OutputDeviceNull;
+			//this->CallFunctionByNameWithArguments(TEXT("ResetCache"), OutputDeviceNull, nullptr, true);
 		}
 	}
 }
@@ -1021,12 +981,6 @@ bool UMainInterface::SaveGameListXML(FString& GameListPath, TArray<FGameData>& N
 	}
 
 	return false;
-}
-
-bool UMainInterface::SaveGameList()
-{
-	//deprecated 
-	return UGameplayStatics::SaveGameToSlot(ClassicGameInstance->ClassicSaveGameInstance, ClassicGameInstance->SlotGame, 0);
 }
 
 void UMainInterface::RunningGame(bool bIsRun)
@@ -1076,7 +1030,6 @@ void UMainInterface::SetRenderOpacityList() {
 
 	TextTitleGame->SetRenderOpacity(0.f);
 	BgTitle->SetRenderOpacity(0.f);
-	ScrollListGame->SetRenderOpacity(0.f);
 	LoopScroll->SetRenderOpacity(0.f);
 	WBPFrame->SetRenderOpacity(0.f);
 	MessageCenter->SetVisibility(ESlateVisibility::Hidden);
@@ -1092,11 +1045,7 @@ void UMainInterface::ResetCards(const bool bAnimationBarTop, const bool bAnimati
 
 	PlayAnimationReverse(LoadListGame);
 
-	ScrollListGame->ClearChildren();
-	ScrollListGame->ScrollToStart();
-
 	Focus = EFocus::MAIN;
-	CoverReference.Empty();
 	GameData.Empty();
 	IndexCard = 0;
 	PositionY = EPositionY::CENTER;
@@ -1144,13 +1093,14 @@ void UMainInterface::Clear()
 	DescriptionScrollScale = 0.f;
 	SpeedScroll = DefaultSpeedScroll;
 
-	CoverReference.Empty();
 	GameData.Empty();
+	GameDataIndex.Empty();
 }
 
 //bind buttons
 void UMainInterface::OnFocusSelectSystem()
 {
+	ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas = GameDataIndex;
 	FocusButtonsTop(1, WBPToolTipSystem, WBPFrame->MoveLeftRightTop1, nullptr, EFocusTop::SYSTEM);
 }
 
@@ -1161,6 +1111,7 @@ void UMainInterface::OnFocusConfigurations()
 
 void UMainInterface::OnFocusFavorites()
 {
+	ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas = GameDataIndex;
 	FocusButtonsTop(3, WBPToolTipFavorites, WBPFrame->MoveLeftRightTop3, WBPFrame->MoveLeftRightTop2, EFocusTop::FAVORITE);
 }
 
@@ -1276,7 +1227,7 @@ void UMainInterface::OnClickFavorites()
 			PlayAnimationReverse(BarTop);
 			BtnFavorites->SetFocusButton(false);
 			ResetCards(false, false);
-			ShowMessage(LOCTEXT("MessageOnlyFavorites", "Show only favorites"), 3.5f);
+			ShowMessage(LOCTEXT("MessageOnlyFavorites", "Show favorites first"), 3.5f);
 		}
 		else
 		{
@@ -1301,7 +1252,7 @@ void UMainInterface::OnClickBackAction()
 	{
 		if (bDelayQuit)
 		{
-			if (SaveGameList())
+			if (SaveGame())
 			{
 				UKismetSystemLibrary::QuitGame(this, GetOwningPlayer(), EQuitPreference::Quit, false);
 			}
