@@ -1,8 +1,8 @@
-// Copyright 2022 Marco Naveni. All Rights Reserved.
+// Copyright 2023 Marco Naveni. All Rights Reserved.
 
 
 #include "MessageBalloon.h"
-#include "Components/TextBlock.h"
+#include "TextImageBlock.h"
 #include "Engine/World.h"
 
 

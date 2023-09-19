@@ -2,6 +2,9 @@
 
 
 #include "ClassicGameMode.h"
+
+#include "ClassicMediaPlayer.h"
+#include "EngineUtils.h"
 #include "Blueprint/UserWidget.h"
 #include "MainInterface.h"
 #include "Kismet/GameplayStatics.h"
@@ -19,6 +22,15 @@ void AClassicGameMode::BeginPlay()
 		{
 			//let add it to the view port
 			MainInterfaceReference->AddToViewport(0);
+
+			//for (TActorIterator<AClassicMediaPlayer> ActorIterator(GetWorld()); ActorIterator; ++ActorIterator)
+			//{
+			//	MainInterfaceReference->ClassicMediaPlayerReference = *ActorIterator;
+			//	UE_LOG(LogTemp, Warning, TEXT("Reference AClassicMediaPlayer Founds: %s "), *MainInterfaceReference->ClassicMediaPlayerReference->GetName());
+			//}
+
+
+
 		}
 		else
 		{

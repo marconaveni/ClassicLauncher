@@ -140,8 +140,8 @@ public:
 	UFUNCTION()
 	void ConstructCover(UTexture2D* Texture);
 
-	UFUNCTION()
-	void SetPaddingCovers(int32 GameDataNum);
+	UFUNCTION(BlueprintPure, Category = "LoopScrollBox|Functions")
+	FIndexPositions GetScrollOffSet();
 
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
 	void AddImagesCards(UTexture2D* NewTexture, int32 Width, int32 Height,int32 Index);

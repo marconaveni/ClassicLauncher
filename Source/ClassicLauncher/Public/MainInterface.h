@@ -27,6 +27,7 @@ class UClassicGameInstance;
 class UClassicButtonSystem;
 class AClassicMediaPlayer;
 class AClassicLibretroTV;
+class UCanvasPanelSlot;
 
 UENUM(BlueprintType, Category = "Navigation")
 enum class EPositionY : uint8
@@ -122,7 +123,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UMessageBalloon* MessageDisplay;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UTextBlock* MessageCenter;
+	UTextImageBlock* MessageCenter;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	ULoopScrollBox* LoopScroll;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
@@ -154,7 +155,7 @@ protected:
 	UWidgetAnimation* ChangeVideoToImage;
 
 	//subclass and references
-
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
 	TSubclassOf<UClassicButtonSystem> ButtonSystemClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
@@ -226,8 +227,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	bool bScroll;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	bool bFilterFavorites;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	bool bDelayFavoriteClick;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	bool bDelayQuit;
@@ -256,13 +255,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	int32 CountLocationY;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	TArray<UTexture2D*> ImageCards;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	UTexture2D* ImageBottomDefault;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	UTexture2D* ImageNull;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Components")
 	UClassicGameInstance* ClassicGameInstance;
+	UPROPERTY()
+	UCanvasPanelSlot* SlotToolTipSystem;
+	UPROPERTY()
+	UCanvasPanelSlot* SlotToolTipConfiguration;
+	UPROPERTY()
+	UCanvasPanelSlot* SlotToolTipFavorites;
+	UPROPERTY()
+	UCanvasPanelSlot* SlotToolTipInfo;
 
 	//timers
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
@@ -284,9 +289,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle BackButtonTimerHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
-	FTimerHandle SetArrowsTimerHandle;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle TickTimerHandle;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
+	FTimerHandle InitializeTimerHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle StartVideoTimerHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
@@ -319,6 +324,8 @@ public:
 	void LoadGamesList();
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnLoadGamesList();
+
+
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void ShowGames();
@@ -365,7 +372,7 @@ public:
 	void StartVideo();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void SetDirection(EButtonsGame Navigate,float Speed);
+	void SetDirection(EButtonsGame Navigate);
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void SetNavigationFocusTop();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
@@ -443,11 +450,11 @@ private:
 	void OnFocusInfo();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void FocusButtonsTop(const int32 PositionTopX, UToolTip* ToolTip, UWidgetAnimation* Left, UWidgetAnimation* Right, const EFocusTop FocusTop);
+	void FocusButtonsTop(const int32 PositionTopX, UToolTip* ToolTip, UCanvasPanelSlot* ToolTipSlot, UWidgetAnimation* Left, UWidgetAnimation* Right, const EFocusTop FocusTop);
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void LostFocusButtonsTop(UToolTip* ToolTip, const EFocusTop FocusTop);
 	UFUNCTION()
-	void SetZOrderToolTips(const UToolTip* ToolTip);
+	void SetZOrderToolTips(UCanvasPanelSlot* ToolTipSlot) const;
 
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
@@ -486,9 +493,6 @@ private:
 	void OnClickFavorite();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void CreateFolders();
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetVisibiltyDebugButton(UButton* Button);
 
 public:
@@ -506,5 +510,5 @@ public:
 	void ShowMessage(const FText Message,const float InRate);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void SetArrows();
+	void SetLastPositions(bool bResetPositions);
 };

@@ -7,6 +7,9 @@
 #include "ClassicFunctionLibrary.h"
 #include "ClassicSystemListInterface.generated.h"
 
+
+class UClassicButtonSystem;
+
 /**
  * 
  */
@@ -33,6 +36,12 @@ protected:
 	class UClassicButtonsIcons* WBPButtonsIconsInterfaces;
 
 public:
+
+	UPROPERTY()
+	int32 IndexFocus;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Timers")
+	FTimerHandle ArrowTimerHandle;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextImageBlock* TextSelectSystem;
@@ -65,4 +74,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ClassicSystemListInterface|Events")
 	void SetIconArrow();
 
+	UFUNCTION(BlueprintCallable, Category = "ClassicSystemListInterface|Events")
+	void SetFocusItem(const EButtonsGame Navigate,UPARAM(ref) int32& Index, TArray<UClassicButtonSystem*> ButtonSystemReferences);
 };

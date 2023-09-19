@@ -6,6 +6,8 @@
 #include "Blueprint/UserWidget.h"
 #include "MessageBalloon.generated.h"
 
+
+class UTextImageBlock;
 /**
  * 
  */
@@ -20,7 +22,7 @@ protected:
 	class UWidgetAnimation* AnimationShowMessage;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* TextMessage;
+	class UTextImageBlock* TextMessage;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* Background;

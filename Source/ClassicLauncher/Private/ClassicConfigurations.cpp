@@ -83,23 +83,11 @@ void UClassicConfigurations::OnSlideLostFocus()
 		return;
 	}
 
-	FConfig ConfigData = MainInterfaceReference->ConfigurationData;
-	const int32 ConfigurationDataVolume = ConfigData.volume;
-	const int32 MediaPlayerVolume = ClassicMediaPlayerReference->GetMasterVolume();
-
-	if (MediaPlayerVolume == ConfigurationDataVolume)
+	if (MainInterfaceReference->ConfigurationData.Volume != ClassicMediaPlayerReference->GetMasterVolume())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("MediaPlayerVolume %d ConfigurationDataVolume %d are equal"), MediaPlayerVolume, ConfigurationDataVolume);
-		return;
+		MainInterfaceReference->ConfigurationData.Volume = ClassicMediaPlayerReference->GetMasterVolume();
+		UClassicFunctionLibrary::SaveConfig(MainInterfaceReference->ConfigurationData);
 	}
-
-	ConfigData.volume = MediaPlayerVolume;
-	const FString XmlConfig = UClassicFunctionLibrary::CreateXMLConfigFile(ConfigData);
-	const FString PathToSave = UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("config");
-	MainInterfaceReference->ConfigurationData = ConfigData;
-	const bool Saved = (UClassicFunctionLibrary::SaveStringToFile(PathToSave, TEXT("config.xml"), XmlConfig, true, false));
-
-	UE_LOG(LogTemp, Warning, TEXT("%s"), (Saved) ? TEXT("Saved File") : TEXT("Not Saved File"));
 }
 
 void UClassicConfigurations::OnClickUpdate(int32 Value)
@@ -112,7 +100,12 @@ void UClassicConfigurations::OnClickUpdate(int32 Value)
 		ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave.Empty();
 		UE_LOG(LogTemp, Warning, TEXT("Deleted Saved"));
 		MainInterfaceReference->bInputEnable = false;
-		GetWorld()->GetTimerManager().SetTimer(RestartMapTimerHandle, this, &UClassicConfigurations::RestartMap, 2.5f, false, -1);
+		GetWorld()->GetTimerManager().SetTimer(RestartMapTimerHandle, this, &UClassicConfigurations::RestartMap, 3.0f, false, -1);
+		if (MainInterfaceReference != nullptr)
+		{
+			const FText Message = LOCTEXT("UpdateGame", "Update game wait");
+			MainInterfaceReference->ShowMessage(Message, 2.5f);
+		}
 	}
 	else
 	{
@@ -191,11 +184,13 @@ void UClassicConfigurations::SetIndexFocus(EButtonsGame Input)
 		bDelayInput = true;
 		if (Input == EButtonsGame::DOWN)
 		{
-			IndexSelect = FMath::Clamp(IndexSelect + 1, 0, 4);
+			IndexSelect++;
+			IndexSelect = (IndexSelect > 4) ? 0 : IndexSelect;
 		}
 		else if (Input == EButtonsGame::UP)
 		{
-			IndexSelect = FMath::Clamp(IndexSelect - 1, 0, 4);
+			IndexSelect--;
+			IndexSelect = (IndexSelect < 0) ? 4 : IndexSelect;
 		}
 		SetFocusSelect();
 		GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &UClassicConfigurations::Delay, 0.18f, false, -1);

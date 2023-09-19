@@ -4,6 +4,7 @@
 #include "ClassicSystemListInterface.h"
 #include "Components/Scrollbox.h"
 #include "ClassicButtonSystem.h"
+#include "Components/Button.h"
 #include "Components/Image.h"
 
 void UClassicSystemListInterface::NativeOnInitialized()
@@ -34,44 +35,73 @@ void UClassicSystemListInterface::SetScrollArrowIcons(const EButtonsGame Navigat
 
 void UClassicSystemListInterface::OnUserScrolled(float CurrentOffset)
 {
-	if (Input == EButtonsGame::DOWN && CurrentOffset < ScrollCurrentOffSet + 11)
-	{
-		ScrollBoxSystems->SetScrollOffset(ScrollCurrentOffSet);
-		return;
-	}
-	ScrollCurrentOffSet = CurrentOffset;
-	ScrollBoxSystems->SetScrollOffset(ScrollCurrentOffSet);
-	UE_LOG(LogTemp, Warning, TEXT("ScrollCurrentOffSet value: %f "), ScrollCurrentOffSet);
+
 }
 
 void UClassicSystemListInterface::SetIconArrow()
 {
+	ScrollCurrentOffSet = ScrollBoxSystems->GetScrollOffset();
+
 	if (ScrollBoxSystems->GetAllChildren().Num() <= 5)
 	{
 		ArrowUP->SetBrushFromTexture(ArrowIconOutline);
 		ArrowDown->SetBrushFromTexture(ArrowIconOutline);
-		UE_LOG(LogTemp, Warning, TEXT("ScrollBoxSystems->GetAllChildren().Num() = %d"), ScrollBoxSystems->GetAllChildren().Num());
 		return;
 	}
 
-	if (ScrollCurrentOffSet >= ScrollBoxSystems->GetScrollOffsetOfEnd() - 11.0f)
+	if (ScrollCurrentOffSet >= ScrollBoxSystems->GetScrollOffsetOfEnd() - 2)
 	{
 		//set ArrowDown
 		ArrowUP->SetBrushFromTexture(ArrowIcon);
 		ArrowDown->SetBrushFromTexture(ArrowIconOutline);
-		UE_LOG(LogTemp, Warning, TEXT("ArrowDown"));
 		return;
 	}
-	if (ScrollCurrentOffSet == 0)
+	if (ScrollCurrentOffSet <= 1)
 	{
 		//set ArrowUP
 		ArrowUP->SetBrushFromTexture(ArrowIconOutline);
 		ArrowDown->SetBrushFromTexture(ArrowIcon);
-		UE_LOG(LogTemp, Warning, TEXT("ArrowUP"));
 		return;
 	}
 
 	ArrowUP->SetBrushFromTexture(ArrowIcon);
 	ArrowDown->SetBrushFromTexture(ArrowIcon);
 
+}
+
+void UClassicSystemListInterface::SetFocusItem(const EButtonsGame Navigate, int32& Index, TArray<UClassicButtonSystem*> ButtonSystemReferences)
+{
+	const int32 NumChildren = ScrollBoxSystems->GetChildrenCount() - 1;
+	if (Navigate == EButtonsGame::UP)
+	{
+		Index--;
+		if (Index < 0)
+		{
+			Index = NumChildren;
+		}
+	}
+	else if (Navigate == EButtonsGame::DOWN)
+	{
+		Index++;
+		if (Index > NumChildren)
+		{
+			Index = 0;
+			ScrollBoxSystems->SetScrollOffset(0);
+		}
+	}
+
+	if (ButtonSystemReferences.IsValidIndex(Index))
+	{
+		ButtonSystemReferences[Index]->Click->SetKeyboardFocus();
+		if (Index != ButtonSystemReferences.Num() - 1)
+		{
+			ScrollBoxSystems->ScrollWidgetIntoView(ButtonSystemReferences[Index], false, EDescendantScrollDestination::IntoView, 150);
+		}
+		else
+		{
+			ScrollBoxSystems->SetScrollOffset(ScrollBoxSystems->GetScrollOffsetOfEnd() - 1);
+		}
+	}
+	IndexFocus = Index;
+	GetWorld()->GetTimerManager().SetTimer(ArrowTimerHandle, this, &UClassicSystemListInterface::SetIconArrow, 0.016f, false, 0.1f);
 }

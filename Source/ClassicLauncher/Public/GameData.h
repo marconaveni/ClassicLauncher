@@ -5,6 +5,13 @@
 #include "CoreMinimal.h"
 #include "GameData.generated.h"
 
+UENUM(BlueprintType)
+enum class EGamesFilter : uint8
+{
+	DEFAULT		    UMETA(DisplayName = "Default"),
+	FAVORITES_FIRST	UMETA(DisplayName = "Favorites First"),
+	FAVORITES_ONLY	UMETA(DisplayName = "Favorites Only")
+};
 
 /**
  *
@@ -139,6 +146,7 @@ struct FGameData
 		ImageX = 0;
 		ImageY = 0;
 		Texture = nullptr;
+		CacheTexture = false;
 
 		//formated
 		PathFormated = TEXT("");
@@ -168,12 +176,27 @@ struct FIndexPositions
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 LastIndexOffSet;
 
-	FIndexPositions()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EGamesFilter OrderBy;
+
+	FIndexPositions() { DefaultValues(); }
+
+	void DefaultValues()
 	{
+		OrderBy = EGamesFilter::DEFAULT;
 		LastIndexFocus = 0;
 		Index = 0;
 		OffSet = 0;
 		LastIndexOffSet = 1;
+	}
+	void ChangeFilter()
+	{
+		if (OrderBy == EGamesFilter::DEFAULT)
+			OrderBy = EGamesFilter::FAVORITES_FIRST;
+		else if (OrderBy == EGamesFilter::FAVORITES_FIRST)
+			OrderBy = EGamesFilter::FAVORITES_ONLY;
+		else
+			OrderBy = EGamesFilter::DEFAULT;
 	}
 };
 
@@ -230,6 +253,7 @@ struct FGameSystem
 };
 
 
+
 /**
  *
  */
@@ -239,26 +263,25 @@ struct FConfig
 {
 	GENERATED_BODY()
 
-		// Use UPROPERTY() to decorate member variables as they allow for easier integration with network replication as well as potential garbage collection processing
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString pathmedia;
+	FString PathMedia;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString defaultstartsystem;
+	FString DefaultStartSystem;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool rendering;
+	bool Rendering;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 volume;
+	int32 Volume;
 
-	//construtor
+
 	FConfig()
 	{
-		pathmedia = TEXT("");
-		defaultstartsystem = TEXT("");
-		rendering = true;
-		volume = 80;
+		PathMedia = TEXT("");
+		DefaultStartSystem = TEXT("");
+		Rendering = true;
+		Volume = 80;
 	}
 
 };

@@ -32,7 +32,7 @@
 #include "Frame.h"
 #include "TextBoxScroll.h"
 #include "TextImageBlock.h"
-#include "Misc/OutputDeviceNull.h"
+//#include "Misc/OutputDeviceNull.h"
 
 
 #define LOCTEXT_NAMESPACE "ButtonsSelection"
@@ -82,17 +82,21 @@ void UMainInterface::NativePreConstruct()
 
 void UMainInterface::NativeConstruct()
 {
-	ClassicGameInstance = Cast<UClassicGameInstance>(GetGameInstance());
-
-	SetRenderOpacityList();
-	LoadConfiguration();
-	GameSettingsInit();
-
 	Super::NativeConstruct();
 }
 
 void UMainInterface::NativeOnInitialized()
 {
+	Super::NativeOnInitialized();
+
+
+	ClassicGameInstance = Cast<UClassicGameInstance>(GetGameInstance());
+
+	SlotToolTipSystem = Cast<UCanvasPanelSlot>(WBPToolTipSystem->Slot);
+	SlotToolTipConfiguration = Cast<UCanvasPanelSlot>(WBPToolTipConfiguration->Slot);
+	SlotToolTipFavorites = Cast<UCanvasPanelSlot>(WBPToolTipFavorites->Slot);
+	SlotToolTipInfo = Cast<UCanvasPanelSlot>(WBPToolTipInfo->Slot);
+
 	BtnSelectSystem->OnFocusTrigger.AddDynamic(this, &UMainInterface::OnFocusSelectSystem);
 	BtnSelectSystem->OnFocusLostTrigger.AddDynamic(this, &UMainInterface::OnLostFocusSelectSystem);
 	BtnSelectSystem->OnClickTrigger.AddDynamic(this, &UMainInterface::OnClickSelectSystem);
@@ -124,7 +128,10 @@ void UMainInterface::NativeOnInitialized()
 	WBPFrame->SetDefaultValues(1, DefaultFrameSpeed);
 	ClassicMediaPlayerReference->MainInterfaceReference = this;
 	GetWorld()->GetTimerManager().SetTimer(TickTimerHandle, this, &UMainInterface::TimerTick, 0.015f, true, -1);
-	Super::NativeOnInitialized();
+
+	SetRenderOpacityList();
+	GameSettingsInit();
+	LoadConfiguration();
 }
 
 void UMainInterface::TimerTick()
@@ -214,9 +221,9 @@ void UMainInterface::LoadConfiguration()
 	if (UClassicFunctionLibrary::LoadStringFile(ConfigResult, GameRoot))
 	{
 		UClassicFunctionLibrary::SetConfig(UClassicFunctionLibrary::LoadXMLSingle(ConfigResult, TEXT("config")), ConfigurationData);
-		UGameplayStatics::SetEnableWorldRendering(this, ConfigurationData.rendering);
-		ConfigurationData.pathmedia = (ConfigurationData.pathmedia != TEXT("")) ? ConfigurationData.pathmedia : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
-		WBPClassicConfigurationsInterface->SlideVolume->SetSlideValue(FMath::Clamp(ConfigurationData.volume, 0, 100));
+		UGameplayStatics::SetEnableWorldRendering(this, ConfigurationData.Rendering);
+		ConfigurationData.PathMedia = (ConfigurationData.PathMedia != TEXT("")) ? ConfigurationData.PathMedia : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
+		WBPClassicConfigurationsInterface->SlideVolume->SetSlideValue(FMath::Clamp(ConfigurationData.Volume, 0, 100));
 		LoadConfigSystems();
 	}
 	else
@@ -238,17 +245,16 @@ void UMainInterface::LoadConfigSystems()
 
 		for (int32 i = 0; i < Systems.Num(); i++)
 		{
-			if (Systems[i].SystemName == ConfigurationData.defaultstartsystem)
+			if (Systems[i].SystemName == ConfigurationData.DefaultStartSystem)
 			{
 				CountSystem = i;
-				UE_LOG(LogTemp, Warning, TEXT("%s ConfigurationData"), *ConfigurationData.defaultstartsystem);
+				UE_LOG(LogTemp, Warning, TEXT("%s ConfigurationData"), *ConfigurationData.DefaultStartSystem);
 			}
 		}
 		CountLocationY = CountSystem;
 		ClassicMediaPlayerReference->SetMusics(TEXT(""));
+		UClassicFunctionLibrary::CreateFolders(ConfigurationData.PathMedia, GameSystems);
 		LoadGamesList();
-		CreateFolders();
-
 		OnLoadConfigSystems(); //BlueprintImplementableEvent
 	}
 	else
@@ -265,7 +271,7 @@ void UMainInterface::AddSystems()
 	if (ButtonSystemClass != nullptr)
 	{
 		UClassicButtonSystem* ButtonSystem = nullptr;
-		for (int32 i = 0; i < Systems.Num(); i++) 
+		for (int32 i = 0; i < Systems.Num(); i++)
 		{
 			ButtonSystem = CreateWidget<UClassicButtonSystem>(GetOwningPlayer(), ButtonSystemClass);
 			ButtonSystem->OnClickTrigger.AddDynamic(this, &UMainInterface::OnClickSystem);
@@ -285,36 +291,32 @@ void UMainInterface::AddSystems()
 void UMainInterface::LoadGamesList()
 {
 	TArray<FGameSystem>Systems = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave;
-	const TArray<FGameData> Data = UClassicFunctionLibrary::FilterFavoriteGameData(Systems[CountSystem].GameDatas, bFilterFavorites);
-	if (Data.Num() > 0)
+
+	int32 NumFavorites = 0;
+	GameData = UClassicFunctionLibrary::FilterGameData(Systems[CountSystem].GameDatas, Systems[CountSystem].Positions.OrderBy, NumFavorites);
+	if (NumFavorites == 0)
 	{
-		GameData = Data;
-	}
-	else
-	{
-		GameData = Systems[CountSystem].GameDatas;
-		bFilterFavorites = false; //Instance GameData is not filtered by favorite so set bFilterFavorites to false
+		UE_LOG(LogTemp, Warning, TEXT("Retry load filter game data with order default"));
+
+		Systems[CountSystem].Positions.DefaultValues();
+		GameData = UClassicFunctionLibrary::FilterGameData(Systems[CountSystem].GameDatas, Systems[CountSystem].Positions.OrderBy, NumFavorites);
 	}
 
 	if (GameData.Num() > 0)
 	{
-		ConfigurationData.defaultstartsystem = Systems[CountSystem].SystemName;
-		FString XmlConfig = UClassicFunctionLibrary::CreateXMLConfigFile(ConfigurationData);
-		XmlConfig = XmlConfig.Replace(TEXT("$(remove)"), TEXT(""), ESearchCase::IgnoreCase);
-		const FString PathToSave = UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("config");
-		const bool Saved = (UClassicFunctionLibrary::SaveStringToFile(PathToSave, TEXT("config.xml"), XmlConfig, true, false));
-
-		UE_LOG(LogTemp, Warning, TEXT("%s"), (Saved) ? TEXT("Saved File") : TEXT("Not Saved File"));
-		OnLoadGamesList(); //BlueprintImplementableEvent
+		ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave = Systems;
+		ConfigurationData.DefaultStartSystem = Systems[CountSystem].SystemName;
+		UClassicFunctionLibrary::SaveConfig(ConfigurationData);
+		GameDataIndex = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas;
+		//OnLoadGamesList(); //BlueprintImplementableEvent
+		GetWorld()->GetTimerManager().SetTimer(InitializeTimerHandle, this, &UMainInterface::OnLoadGamesList, 0.5f, false, -1);
+		
 	}
 	else
 	{
-		if (!bFilterFavorites) //if No game list
-		{
-			FFormatNamedArguments Args;
-			Args.Add("GameRoot", FText::FromString(Systems[CountSystem].RomPath));
-			SetCenterText(FText::Format(LOCTEXT("LogGameListNotFound", "gamelist.xml not found in {GameRoot}"), Args));
-		}
+		FFormatNamedArguments Args;
+		Args.Add("GameRoot", FText::FromString(Systems[CountSystem].RomPath));
+		SetCenterText(FText::Format(LOCTEXT("LogGameListNotFound", "gamelist.xml not found in {GameRoot}"), Args));
 	}
 }
 
@@ -336,11 +338,11 @@ void UMainInterface::CreateNewGameList()
 {
 	FString ConfigResult;
 	FString GameRoot = UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("config\\configsys.xml");
-	TArray<FGameSystem>Systems;
 
 	if (UClassicFunctionLibrary::LoadStringFile(ConfigResult, GameRoot))
 	{
-		UClassicFunctionLibrary::SetConfigSystem(UClassicFunctionLibrary::LoadXML(ConfigResult, TEXT("config.system")), Systems);
+		TArray<FGameSystem>Systems;
+		UClassicFunctionLibrary::SetGameSystem(UClassicFunctionLibrary::LoadXML(ConfigResult, TEXT("config.system")), Systems);
 		Systems = UClassicFunctionLibrary::SortConfigSystem(Systems);
 		for (int32 i = 0; i < Systems.Num(); i++)
 		{
@@ -359,7 +361,7 @@ void UMainInterface::CreateNewGameList()
 			}
 		}
 		ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave = Systems;
-		if(SaveGame())
+		if (SaveGame())
 		{
 			SetCenterText(LOCTEXT("LogSuccessfullyGameList", "Game list update successfully wait..."));
 			GetWorld()->GetTimerManager().SetTimer(DelayReloadTimerHandle, this, &UMainInterface::RestartWidget, 3.0f, false, -1);
@@ -386,7 +388,7 @@ bool UMainInterface::SaveGame() const
 
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Not Saved"));
-	return false;	
+	return false;
 }
 
 FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
@@ -558,10 +560,12 @@ void UMainInterface::GameSettingsRunningInternal()
 	Settings->SaveSettings();
 }
 
-#pragma region NavigationArea
-
 /////////////////////////////////////////////////
 ///navigation area
+
+#pragma region NavigationArea
+
+
 
 void UMainInterface::NavigationGame(EButtonsGame Navigate)
 {
@@ -598,14 +602,14 @@ void UMainInterface::NavigationMain(EButtonsGame Navigate)
 		}
 		else if (PositionY == EPositionY::CENTER)
 		{
-			SetDirection(ENavigationButton, SpeedScroll);
+			SetDirection(ENavigationButton);
 		}
 	}
 	else if (ENavigationButton == EButtonsGame::LB || ENavigationButton == EButtonsGame::RB)
 	{
 		if (PositionY == EPositionY::CENTER)
 		{
-			SetDirection(ENavigationButton, SpeedScroll);
+			SetDirection(ENavigationButton);
 		}
 	}
 	else if (ENavigationButton == EButtonsGame::UP)
@@ -624,34 +628,12 @@ void UMainInterface::NavigationSystem(EButtonsGame Navigate)
 {
 	PressedDelayNavigation(TimerDelayNavigation);
 	ENavigationButton = Navigate;
-	if (ENavigationButton == EButtonsGame::UP)
-	{
-		CountLocationY = FMath::Clamp(CountLocationY - 1, 0, ButtonSystemReferences.Num() - 1);
-	}
-	else if (ENavigationButton == EButtonsGame::DOWN)
-	{
-		CountLocationY = FMath::Clamp(CountLocationY + 1, 0, ButtonSystemReferences.Num() - 1);
-	}
-
-	if (ButtonSystemReferences.IsValidIndex(CountLocationY))
-	{
-		ButtonSystemReferences[CountLocationY]->Click->SetKeyboardFocus();
-	}
+	WBPSystemsList->SetFocusItem(ENavigationButton, CountLocationY, ButtonSystemReferences);
 }
 
 void UMainInterface::NavigationInfo(EButtonsGame Navigate)
 {
 	PressedDelayNavigation(TimerDelayNavigation);
-	ENavigationButton = Navigate;
-	const float CurrentOffSet = WBPInfo->CurrentOffSet;
-	if (ENavigationButton == EButtonsGame::UP)
-	{
-		WBPInfo->Scrolled(CurrentOffSet - 200);
-	}
-	else if (ENavigationButton == EButtonsGame::DOWN)
-	{
-		WBPInfo->Scrolled(CurrentOffSet + 200);
-	}
 }
 
 void UMainInterface::NavigationConfiguration(EButtonsGame Navigate)
@@ -671,7 +653,7 @@ void UMainInterface::SetTitle(int32 Index)
 	}
 }
 
-void UMainInterface::SetDirection(EButtonsGame Navigate, float Speed)
+void UMainInterface::SetDirection(EButtonsGame Navigate)
 {
 	if (Navigate == EButtonsGame::RIGHT || Navigate == EButtonsGame::RB)
 	{
@@ -869,7 +851,7 @@ void UMainInterface::OnClickSystem(int32 Value)
 	if (bInputEnable)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("The OnClickSystem parameter value is: %d"), Value);
-		if(CountSystem == Value)
+		if (CountSystem == Value)
 		{
 			PlayAnimationReverse(ShowSystem);
 			Focus = EFocus::MAIN;
@@ -880,12 +862,12 @@ void UMainInterface::OnClickSystem(int32 Value)
 			WBPFrame->SetFramePosition(WBPFrame->FrameIndexCenter, EFocusTop::NONE);
 			return;
 		}
+		SetLastPositions(false);
 		CountSystem = Value;   //CountSystem = CountLocationY;
 		ResetCards(true, true);
 		OnClickOnSystem();
 	}
 }
-
 
 void UMainInterface::SetButtonsIconInterfaces(EPositionY GetPosition)
 {
@@ -905,7 +887,6 @@ void UMainInterface::SetButtonsIconInterfaces(EPositionY GetPosition)
 		WBPButtonsIconsInterfaces->SetButtonsVisibility(IconCenter);
 	}
 }
-
 
 void UMainInterface::SetCountPlayerToSave()
 {
@@ -1083,7 +1064,6 @@ void UMainInterface::Clear()
 	bUpDownPressed = true;
 	bInputEnable = false;
 	bScroll = false;
-	bFilterFavorites = false;
 	bDelayFavoriteClick = false;
 	bDelayQuit = false;
 	bIsRunning = false;
@@ -1101,30 +1081,30 @@ void UMainInterface::Clear()
 void UMainInterface::OnFocusSelectSystem()
 {
 	ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas = GameDataIndex;
-	FocusButtonsTop(1, WBPToolTipSystem, WBPFrame->MoveLeftRightTop1, nullptr, EFocusTop::SYSTEM);
+	FocusButtonsTop(1, WBPToolTipSystem, SlotToolTipSystem, WBPFrame->MoveLeftRightTop1, nullptr, EFocusTop::SYSTEM);
 }
 
 void UMainInterface::OnFocusConfigurations()
 {
-	FocusButtonsTop(2, WBPToolTipConfiguration, WBPFrame->MoveLeftRightTop2, WBPFrame->MoveLeftRightTop1, EFocusTop::CONFIG);
+	FocusButtonsTop(2, WBPToolTipConfiguration, SlotToolTipConfiguration, WBPFrame->MoveLeftRightTop2, WBPFrame->MoveLeftRightTop1, EFocusTop::CONFIG);
 }
 
 void UMainInterface::OnFocusFavorites()
 {
 	ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas = GameDataIndex;
-	FocusButtonsTop(3, WBPToolTipFavorites, WBPFrame->MoveLeftRightTop3, WBPFrame->MoveLeftRightTop2, EFocusTop::FAVORITE);
+	FocusButtonsTop(3, WBPToolTipFavorites, SlotToolTipFavorites, WBPFrame->MoveLeftRightTop3, WBPFrame->MoveLeftRightTop2, EFocusTop::FAVORITE);
 }
 
 void UMainInterface::OnFocusInfo()
 {
-	FocusButtonsTop(4, WBPToolTipInfo, nullptr, WBPFrame->MoveLeftRightTop3, EFocusTop::INFO);
 	WBPInfo->SetGameInfo(GameData[IndexCard]);
+	FocusButtonsTop(4, WBPToolTipInfo, SlotToolTipInfo, nullptr, WBPFrame->MoveLeftRightTop3, EFocusTop::INFO);
 }
 
-void UMainInterface::FocusButtonsTop(const int32 PositionTopX, UToolTip* ToolTip, UWidgetAnimation* Left, UWidgetAnimation* Right, const EFocusTop FocusTop)
+void UMainInterface::FocusButtonsTop(const int32 PositionTopX, UToolTip* ToolTip, UCanvasPanelSlot* ToolTipSlot, UWidgetAnimation* Left, UWidgetAnimation* Right, const EFocusTop FocusTop)
 {
 	LoopScroll->PositionTopX = PositionTopX;
-	SetZOrderToolTips(ToolTip);
+	SetZOrderToolTips(ToolTipSlot);
 	ToolTip->SetToolTipVisibility(ESlateVisibility::Visible);
 	ToolTip->SetVisibility(ESlateVisibility::Visible);
 	if (ENavigationButton == EButtonsGame::LEFT && Left != nullptr)
@@ -1150,18 +1130,12 @@ void UMainInterface::LostFocusButtonsTop(UToolTip* ToolTip, const EFocusTop Focu
 	}
 }
 
-void UMainInterface::SetZOrderToolTips(const UToolTip* ToolTip)
+void UMainInterface::SetZOrderToolTips(UCanvasPanelSlot* ToolTipSlot) const
 {
-	UCanvasPanelSlot* SlotToolTipSystem = Cast<UCanvasPanelSlot>(WBPToolTipSystem->Slot);
-	UCanvasPanelSlot* ToolTipConfiguration = Cast<UCanvasPanelSlot>(WBPToolTipConfiguration->Slot);
-	UCanvasPanelSlot* ToolTipFavorites = Cast<UCanvasPanelSlot>(WBPToolTipFavorites->Slot);
-	UCanvasPanelSlot* ToolTipInfo = Cast<UCanvasPanelSlot>(WBPToolTipInfo->Slot);
 	SlotToolTipSystem->SetZOrder(50);
-	ToolTipConfiguration->SetZOrder(50);
-	ToolTipFavorites->SetZOrder(50);
-	ToolTipInfo->SetZOrder(50);
-
-	UCanvasPanelSlot* ToolTipSlot = Cast<UCanvasPanelSlot>(ToolTip->Slot);
+	SlotToolTipConfiguration->SetZOrder(50);
+	SlotToolTipFavorites->SetZOrder(50);
+	SlotToolTipInfo->SetZOrder(50);
 	ToolTipSlot->SetZOrder(51);
 }
 
@@ -1190,13 +1164,20 @@ void UMainInterface::OnClickSelectSystem()
 	Focus = EFocus::SYSTEM;
 	PlayAnimationForward(ShowSystem);
 	PositionY = EPositionY::TOP;
-	ButtonSystemReferences[CountLocationY]->Click->SetKeyboardFocus();
-	GetWorld()->GetTimerManager().SetTimer(SetArrowsTimerHandle, this, &UMainInterface::SetArrows, 0.02f, false, -1);
+	WBPSystemsList->SetFocusItem(EButtonsGame::NONE, CountLocationY, ButtonSystemReferences);
 }
 
-void UMainInterface::SetArrows()
+void UMainInterface::SetLastPositions(bool bResetPositions)
 {
-	WBPSystemsList->SetIconArrow();
+	FIndexPositions Positions = LoopScroll->GetScrollOffSet();
+	Positions.OrderBy = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].Positions.OrderBy;
+	if (bResetPositions || Positions.OrderBy != EGamesFilter::DEFAULT)
+	{
+		ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].Positions.DefaultValues();
+		ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].Positions.OrderBy = Positions.OrderBy;
+		return;
+	}
+	ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].Positions = Positions;
 }
 
 void UMainInterface::OnClickConfigurations()
@@ -1209,31 +1190,37 @@ void UMainInterface::OnClickConfigurations()
 
 void UMainInterface::OnClickFavorites()
 {
-	if (bFilterFavorites)
+	const int32 NumFavorites = UClassicFunctionLibrary::CountFavorites(GameData);
+
+	FText Message = LOCTEXT("MessageNoFavorites", "No favorites to show");
+
+	ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].Positions.ChangeFilter();
+	const EGamesFilter Filter = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].Positions.OrderBy;
+
+	if (NumFavorites != 0 && Filter == EGamesFilter::FAVORITES_FIRST)
 	{
-		bFilterFavorites = false;
-		NavigationGame(EButtonsGame::DOWN);
-		PlayAnimationReverse(BarTop);
-		BtnFavorites->SetFocusButton(false);
-		ResetCards(false, false);
-		ShowMessage(LOCTEXT("MessageAllGames", "Show all games"), 3.5f);
+		Message = LOCTEXT("MessageFavoritesFirst", "Show favorites first");
+	}
+	else if (NumFavorites != 0 && Filter == EGamesFilter::FAVORITES_ONLY)
+	{
+		Message = LOCTEXT("MessageOnlyFavorites", "Show only favorites");
+	}
+	else if (Filter == EGamesFilter::DEFAULT)
+	{
+		Message = LOCTEXT("MessageAllGames", "Show all games");
 	}
 	else
 	{
-		if (UClassicFunctionLibrary::FilterFavoriteGameData(GameData, true).Num() > 0)
-		{
-			bFilterFavorites = true;
-			NavigationGame(EButtonsGame::DOWN);
-			PlayAnimationReverse(BarTop);
-			BtnFavorites->SetFocusButton(false);
-			ResetCards(false, false);
-			ShowMessage(LOCTEXT("MessageOnlyFavorites", "Show favorites first"), 3.5f);
-		}
-		else
-		{
-			ShowMessage(LOCTEXT("MessageNoFavorites", "No favorites to show"), 3.5f);
-		}
+		Message = LOCTEXT("MessageAllGames", "Show all games");
 	}
+
+	ShowMessage(Message, 3.5f);
+
+	NavigationGame(EButtonsGame::DOWN);
+	SetLastPositions(true);
+	PlayAnimationReverse(BarTop);
+	BtnFavorites->SetFocusButton(false);
+	ResetCards(false, false);
 }
 
 void UMainInterface::OnClickInfo()
@@ -1252,6 +1239,7 @@ void UMainInterface::OnClickBackAction()
 	{
 		if (bDelayQuit)
 		{
+			SetLastPositions(false);
 			if (SaveGame())
 			{
 				UKismetSystemLibrary::QuitGame(this, GetOwningPlayer(), EQuitPreference::Quit, false);
@@ -1329,21 +1317,6 @@ void UMainInterface::ShowMessage(const FText Message, const float InRate)
 	MessageDisplay->ShowMessage(Message, InRate);
 }
 
-void UMainInterface::CreateFolders()
-{
-	const FString PathMedia = (ConfigurationData.pathmedia != TEXT("")) ? ConfigurationData.pathmedia : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
-
-	UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia);
-
-	for (FGameSystem& ConfigElement : GameSystems)
-	{
-		UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia + TEXT("\\") + ConfigElement.SystemName);
-		UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia + TEXT("\\") + ConfigElement.SystemName + TEXT("\\covers"));
-		UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia + TEXT("\\") + ConfigElement.SystemName + TEXT("\\screenshots"));
-		UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia + TEXT("\\") + ConfigElement.SystemName + TEXT("\\videos"));
-	}
-}
-
 void UMainInterface::SetVisibiltyDebugButton(UButton* Button)
 {
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
@@ -1373,7 +1346,8 @@ void UMainInterface::SetImageBottom()
 	{
 		int32 Width = 640;
 		int32 Height = 480;
-		UTexture2D* ImageLoaded = UClassicFunctionLibrary::LoadTexture(ImagePath, Width, Height);
+		const EClassicImageFormat Format = UClassicFunctionLibrary::GetFormatImage(ImagePath);
+		UTexture2D* ImageLoaded = UClassicFunctionLibrary::LoadTexture2DFromFile(ImagePath, Format, EClassicTextureFilter::DEFAULT, Width, Height);
 
 		if (ImageLoaded != nullptr)
 		{
@@ -1395,7 +1369,6 @@ void UMainInterface::SetImageBottom()
 		ImgImageBottom->SetBrush(NewBrush);
 		UE_LOG(LogTemp, Warning, TEXT("Image not exists in %s"), *ImagePath);
 	}
-
 }
 
 void UMainInterface::StartVideo()

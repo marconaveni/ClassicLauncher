@@ -40,7 +40,7 @@ void AClassicMediaPlayer::BeginPlay()
 	if (bool IsValidConfig = UClassicFunctionLibrary::LoadStringFile(ConfigResult, GameRoot))
 	{
 		UClassicFunctionLibrary::SetConfig(UClassicFunctionLibrary::LoadXMLSingle(ConfigResult, TEXT("config")), ConfigurationData);
-		ChangeMasterVolume(ConfigurationData.volume);
+		ChangeMasterVolume(ConfigurationData.Volume);
 	}
 	else
 	{
@@ -91,7 +91,6 @@ void AClassicMediaPlayer::PlayMusic()
 		const FString File = MediaPath + TEXT("\\") + MediaFiles[Random];
 
 		UE_LOG(LogTemp, Warning, TEXT("File name is %s"), *File);
-
 
 		if (ClassicPlayerMusic->GetMediaPlayer()->CanPlayUrl(File))
 		{

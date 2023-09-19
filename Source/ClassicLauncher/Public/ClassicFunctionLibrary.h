@@ -8,20 +8,28 @@
 #include "EasyXMLElement.h"
 #include "ClassicFunctionLibrary.generated.h"
 
-
-
 //~~~~~~~~~~~~~~~~~~~~~~
 //			Format
 //~~~~~~~~~~~~~~~~~~~~~~
 UENUM(BlueprintType)
 enum class EClassicImageFormat : uint8
 {
-	JPG		UMETA(DisplayName = "JPG        "),
-	PNG		UMETA(DisplayName = "PNG        "),
-	BMP		UMETA(DisplayName = "BMP        "),
-	ICO		UMETA(DisplayName = "ICO        "),
-	EXR		UMETA(DisplayName = "EXR        "),
-	ICNS	UMETA(DisplayName = "ICNS       ")
+	JPG  UMETA(DisplayName = "JPG"),
+	PNG  UMETA(DisplayName = "PNG"),
+	BMP	 UMETA(DisplayName = "BMP"),
+	ICO	 UMETA(DisplayName = "ICO"),
+	EXR	 UMETA(DisplayName = "EXR"),
+	ICNS UMETA(DisplayName = "ICNS")
+};
+
+UENUM(BlueprintType)
+enum class EClassicTextureFilter : uint8
+{
+	NEAREST UMETA(DisplayName = "Nearest"),
+	BILINEAR UMETA(DisplayName = "Bi-linear"),
+	TRILINEAR UMETA(DisplayName = "Tri-linear"),
+	DEFAULT UMETA(DisplayName = "Default (from Texture Group)"),
+	MAX
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~
@@ -50,7 +58,8 @@ enum class EButtonsGame : uint8
 	M			UMETA(DisplayName = "Stick Right Button / M")
 };
 
-DECLARE_DYNAMIC_DELEGATE_TwoParams(FLoadImageDelegate, UTexture2D*, TextureOut, int32 , Index);
+DECLARE_DYNAMIC_DELEGATE_ThreeParams(FLoadImageDelegate, UTexture2D*, TextureOut, int32, Index, bool, Sucesseful);
+
 /**
  * 
  */
@@ -77,6 +86,9 @@ public:
 	///** Sort a GameData.name array alphabetically!  */
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
 	static TArray<FGameSystem> SortConfigSystem(TArray<FGameSystem> configData);
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|Configuration")
+	static void SaveConfig(const FConfig ConfigurationData);
 
 	/** InstallDir/GameName */
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|File IO")
@@ -141,7 +153,7 @@ public:
 	*@return   Return new path EX: "c:\classiclauncher\media\covers\game.png"
 	*/
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Strings")
-	static FString ReplaceMedia(FString OriginalPathMedia, FString PathMedia, FString PathRom, FString RomName, FString SystemName, FString TypeMedia, FString Format);
+	static FString ReplaceMedia(FString OriginalPathMedia, FString PathMedia, FString PathRom, FString RomName, FString SystemName, FString TypeMedia, FString Format, FString RomFormated);
 
 	//create a file gamelist.xml for save 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData|XML")
@@ -165,22 +177,29 @@ public:
 	static void SetConfig(UEasyXMLElement* Element, FConfig& Config);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static void SetConfigSystem(TArray<UEasyXMLElement*>  Elements, TArray<FGameSystem>& ConfigSystems);
+	static void SetGameSystem(TArray<UEasyXMLElement*>  Elements, TArray<FGameSystem>& ConfigSystems);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
 	static void SetGameData(TArray<UEasyXMLElement*>  Elements, TArray<FGameData>& GameDatas, UTexture2D* Texture);
 
 	//format the array game data with correct path system
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static void FormatGameData(TArray<FGameData>& GameDatas, FConfig Config, FGameSystem ConfigSystem);
+	static void FormatGameData(TArray<FGameData>& GameDatas, FConfig Config, FGameSystem GameSystem);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
 	static bool FindGameData(TArray<FGameData> datas, FGameData  DataElement, int32& Index , int32 Find = -1);
 
 
-	//Return filter GameDatas Array favorites are true
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static TArray<FGameData> FilterFavoriteGameData(TArray<FGameData> GameData, bool FilterFavorites);
+	static TArray<FGameData> FilterGameData(TArray<FGameData> GameData, EGamesFilter Filter , int32& Num);
+
+	//Return filter GameDatas Array favorites are true
+	UFUNCTION()
+	static int32 FilterFavoriteGameData(TArray<FGameData>& GameData, bool bOnlyFavorites);
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
+	static int32 CountFavorites(TArray<FGameData> GameData);
+
 
 	///////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////
@@ -195,15 +214,20 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|File IO")
 	static bool LoadStringFile(FString& Result, FString FullFilePath);
 
-	//function credits Rama VictoryBPFunctionLibrary
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|LoadTexture")
-	static UTexture2D* LoadTexture2DFromFile(const FString& FilePath, EClassicImageFormat ImageFormat, int32& Width, int32& Height);
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|File IO")
+	static void CreateFolders(FString PathMedia, TArray<FGameSystem> GameSystems);
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|LoadTexture", meta = (DisplayName = "Load Texture", Keywords = "loadtexture", ReturnDisplayName = "TextureOut"))
+	static UTexture2D* LoadTexture2DFromFile(const FString& FullFilePath, EClassicImageFormat ImageFormat, EClassicTextureFilter Filter, int32& Width, int32& Height);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|LoadTexture", meta = (DisplayName = "Async Load Texture", Keywords = "loadtexture"))
-	static void AsyncLoadTexture2DFromFile(FLoadImageDelegate Out, const FString FullFilePath, int32 Index);
+	static void AsyncLoadTexture2DFromFile(FLoadImageDelegate Out, const FString FullFilePath, int32 Index, EClassicImageFormat ImageFormat, EClassicTextureFilter Filter = EClassicTextureFilter::NEAREST);
 
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|LoadTexture", meta = (DisplayName = "Load Texture", Keywords = "loadtexture" , ReturnDisplayName = "TextureOut"))
-	static UTexture2D* LoadTexture(const FString& FilePath, int32& Width, int32& Height);
+	UFUNCTION()
+	static UTexture2D* CreateUniqueTransient(int32 InSizeX, int32 InSizeY, EPixelFormat InFormat = PF_B8G8R8A8, const FName InName = NAME_None);
+
+	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|LoadTexture")
+	static EClassicImageFormat GetFormatImage(const FString& FullFilePath);
 
 	//function credits Rama VictoryBPFunctionLibrary
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|System")
