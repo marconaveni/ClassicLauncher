@@ -20,5 +20,5 @@ void UClassicGameInstance::Init()
 
 UClassicGameInstance::UClassicGameInstance()
 {
-	SlotGame = TEXT("save_c");
+	SlotGame = TEXT("save_c1");
 }

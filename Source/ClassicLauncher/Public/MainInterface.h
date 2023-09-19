@@ -297,6 +297,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle LoadImagesTimerHandle;
 
+
+	//TempVariables
+	UPROPERTY()
+	int32 FirstIndex;
+	UPROPERTY()
+	int32 LastIndex;
+
+
 	//Functions
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
@@ -325,7 +333,11 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnLoadGamesList();
 
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void LoadImages(const int32 DistanceIndex = 15);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnLoadImages(const int32& Index, const FString& Path);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void ShowGames();

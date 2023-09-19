@@ -710,6 +710,13 @@ UTexture2D* UClassicFunctionLibrary::LoadTexture2DFromFile(const FString& FullFi
 
 void UClassicFunctionLibrary::AsyncLoadTexture2DFromFile(FLoadImageDelegate Out, const FString FullFilePath, int32 Index, EClassicImageFormat ImageFormat, EClassicTextureFilter Filter)
 {
+	if (!FPaths::FileExists(FullFilePath)) 
+	{
+		Out.ExecuteIfBound(nullptr, Index, false);
+		UE_LOG(LogTemp, Warning, TEXT("File Not Exists. %s"), *FullFilePath);
+		return;
+	}
+
 	AsyncTask(ENamedThreads::AnyThread, [=]()
 	{
 		IImageWrapperModule& ImageWrapperModule = FModuleManager::Get().LoadModuleChecked<IImageWrapperModule>(TEXT("ImageWrapper"));
@@ -764,10 +771,10 @@ void UClassicFunctionLibrary::AsyncLoadTexture2DFromFile(FLoadImageDelegate Out,
 					AsyncTask(ENamedThreads::GameThread, [=]()
 					{
 						const FString& BaseFilename = FPaths::GetBaseFilename(FullFilePath);
+						bool bSuccessfull = false;
 
 						// Load texture
 						UTexture2D* NewTexture = CreateUniqueTransient(Width, Height, PixelFormat, *BaseFilename);
-
 						if (NewTexture)
 						{
 
@@ -782,29 +789,18 @@ void UClassicFunctionLibrary::AsyncLoadTexture2DFromFile(FLoadImageDelegate Out,
 							// Copy texture set parameters and update
 							NewTexture->Filter = GetTextureFilter(Filter);
 							NewTexture->UpdateResource();
+							bSuccessfull = true;
 						}
-						Out.ExecuteIfBound(NewTexture, Index, true);
+						// execute function 
+						Out.ExecuteIfBound(NewTexture, Index, bSuccessfull);
 						
 					});
-
-				}
-				else
-				{
-					UE_LOG(LogTemp, Warning, TEXT("the data is not the expected format"));
-					Out.ExecuteIfBound(nullptr, Index, false);
+					return; // early return successful!!
 				}
 			}
-			else
-			{
-				UE_LOG(LogTemp, Warning, TEXT("Error creating texture. Couldn't determine the file format"));
-				Out.ExecuteIfBound(nullptr, Index, false);
-			}
 		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Not Receives the contents of the file"));
-			Out.ExecuteIfBound(nullptr, Index, false);
-		}
+		// execute function
+		Out.ExecuteIfBound(nullptr, Index, false);
 	});
 }
 

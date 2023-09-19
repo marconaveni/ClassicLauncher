@@ -6,7 +6,6 @@
 #include "ClassicButtonSystem.h"
 #include "ClassicSlide.h"
 #include "Components/Scrollbox.h"
-#include "Components/TextBlock.h"
 #include "Components/Image.h"
 #include "Components/Button.h"
 #include "ClassicFunctionLibrary.h"
@@ -22,6 +21,7 @@
 #include "ClassicMediaPlayer.h"
 #include "ClassicLibretroTV.h"
 #include "ClassicConfigurations.h"
+#include "Cover.h"
 #include "ToolTip.h"
 #include "Animation/UMGSequencePlayer.h"
 #include "Components/CanvasPanelSlot.h"
@@ -310,13 +310,64 @@ void UMainInterface::LoadGamesList()
 		GameDataIndex = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas;
 		//OnLoadGamesList(); //BlueprintImplementableEvent
 		GetWorld()->GetTimerManager().SetTimer(InitializeTimerHandle, this, &UMainInterface::OnLoadGamesList, 0.5f, false, -1);
-		
+
 	}
 	else
 	{
 		FFormatNamedArguments Args;
 		Args.Add("GameRoot", FText::FromString(Systems[CountSystem].RomPath));
 		SetCenterText(FText::Format(LOCTEXT("LogGameListNotFound", "gamelist.xml not found in {GameRoot}"), Args));
+	}
+}
+
+void UMainInterface::LoadImages(const int32 DistanceIndex)
+{
+	if ((ENavigationButton == EButtonsGame::RIGHT || ENavigationButton == EButtonsGame::RB ||
+		ENavigationButton == EButtonsGame::LEFT || ENavigationButton == EButtonsGame::LB) &&
+		DistanceIndex > 0 && GameData.Num() >= 64)
+	{
+		if (ENavigationButton == EButtonsGame::RIGHT || ENavigationButton == EButtonsGame::RB)
+		{
+			FirstIndex = IndexCard - DistanceIndex;
+			LastIndex = IndexCard + (DistanceIndex - 1);
+		}
+		else if (ENavigationButton == EButtonsGame::LEFT || ENavigationButton == EButtonsGame::LB)
+		{
+			FirstIndex = IndexCard - (DistanceIndex - 1);
+			LastIndex = IndexCard + DistanceIndex;
+		}
+
+		if (FirstIndex < 0)
+		{
+			FirstIndex = GameData.Num() - FMath::Abs(FirstIndex);
+		}
+		if (LastIndex >= GameData.Num())
+		{
+			LastIndex = LastIndex - GameData.Num();
+		}
+
+		FirstIndex = FMath::Clamp(FirstIndex, 0, GameData.Num() - 1);
+		LastIndex = FMath::Clamp(LastIndex, 0, GameData.Num() - 1);
+
+		int32 IndexLoad = -1, IndexUnLoad = -1;
+		if (ENavigationButton == EButtonsGame::RIGHT || ENavigationButton == EButtonsGame::RB)
+		{
+			IndexUnLoad = FirstIndex;
+			IndexLoad = LastIndex;
+		}
+		else if (ENavigationButton == EButtonsGame::LEFT || ENavigationButton == EButtonsGame::LB)
+		{
+			IndexUnLoad = LastIndex;
+			IndexLoad = FirstIndex;
+		}
+		if (IndexLoad != -1 && IndexUnLoad != -1)
+		{
+			LoopScroll->AddImagesCards(ImageNull, 1, 1, IndexUnLoad);
+			LoopScroll->CoverReference[IndexUnLoad]->SetCoverImage(ImageNull, 1, 1);
+			OnLoadImages(IndexLoad, GameData[IndexLoad].imageFormated);
+			UE_LOG(LogTemp, Warning, TEXT("FirstIndex %d  IndexCard %d LastIndex %d"), FirstIndex, IndexCard, LastIndex);
+		}
+
 	}
 }
 
@@ -1335,6 +1386,7 @@ void UMainInterface::SetImageBottom()
 	}
 	else
 	{
+		//Change visibility ScaleBoxImage and ScaleBoxVideo
 		PlayAnimationForward(ChangeVideoToImage);
 	}
 
