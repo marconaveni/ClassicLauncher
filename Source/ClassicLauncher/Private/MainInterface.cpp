@@ -89,9 +89,6 @@ void UMainInterface::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-
-	ClassicGameInstance = Cast<UClassicGameInstance>(GetGameInstance());
-
 	SlotToolTipSystem = Cast<UCanvasPanelSlot>(WBPToolTipSystem->Slot);
 	SlotToolTipConfiguration = Cast<UCanvasPanelSlot>(WBPToolTipConfiguration->Slot);
 	SlotToolTipFavorites = Cast<UCanvasPanelSlot>(WBPToolTipFavorites->Slot);
@@ -131,7 +128,6 @@ void UMainInterface::NativeOnInitialized()
 
 	SetRenderOpacityList();
 	GameSettingsInit();
-	LoadConfiguration();
 }
 
 void UMainInterface::TimerTick()
@@ -215,58 +211,17 @@ void UMainInterface::SetCenterText(const FText Message)
 
 void UMainInterface::LoadConfiguration()
 {
-	FString ConfigResult;
-	const FString GameRoot = UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("config\\config.xml");
-
-	if (UClassicFunctionLibrary::LoadStringFile(ConfigResult, GameRoot))
-	{
-		UClassicFunctionLibrary::SetConfig(UClassicFunctionLibrary::LoadXMLSingle(ConfigResult, TEXT("config")), ConfigurationData);
-		UGameplayStatics::SetEnableWorldRendering(this, ConfigurationData.Rendering);
-		ConfigurationData.PathMedia = (ConfigurationData.PathMedia != TEXT("")) ? ConfigurationData.PathMedia : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
-		WBPClassicConfigurationsInterface->SlideVolume->SetSlideValue(FMath::Clamp(ConfigurationData.Volume, 0, 100));
-		LoadConfigSystems();
-	}
-	else
-	{
-		FFormatNamedArguments Args;
-		Args.Add("GameRoot", FText::FromString(GameRoot));
-		SetCenterText(FText::Format(LOCTEXT("LogNotFound", "{GameRoot} Not Found"), Args));
-		UE_LOG(LogTemp, Warning, TEXT("%s Not Found"), *GameRoot);
-	}
 }
 
 void UMainInterface::LoadConfigSystems()
 {
-
-	const TArray<FGameSystem> Systems = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave;
-	if (Systems.Num() > 0)
-	{
-		AddSystems();
-
-		for (int32 i = 0; i < Systems.Num(); i++)
-		{
-			if (Systems[i].SystemName == ConfigurationData.DefaultStartSystem)
-			{
-				CountSystem = i;
-				UE_LOG(LogTemp, Warning, TEXT("%s ConfigurationData"), *ConfigurationData.DefaultStartSystem);
-			}
-		}
-		CountLocationY = CountSystem;
-		ClassicMediaPlayerReference->SetMusics(TEXT(""));
-		UClassicFunctionLibrary::CreateFolders(ConfigurationData.PathMedia, GameSystems);
-		LoadGamesList();
-		OnLoadConfigSystems(); //BlueprintImplementableEvent
-	}
-	else
-	{
-		SetCenterText(LOCTEXT("LogUpdateGameList", "Update game list, loading"));
-		GetWorld()->GetTimerManager().SetTimer(DelayCreateGameListTimerHandle, this, &UMainInterface::CreateNewGameList, 0.5f, false, -1); //create new list game and save GameSystems internal
-	}
 }
 
-void UMainInterface::AddSystems()
+void UMainInterface::AddSystems(TArray<FGameSystem> Systems)
 {
-	TArray<FGameSystem> Systems = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave;
+	WBPSystemsList->ScrollBoxSystems->ClearChildren();
+	GameSystems.Empty();
+	ButtonSystemReferences.Empty();
 
 	if (ButtonSystemClass != nullptr)
 	{
@@ -280,7 +235,7 @@ void UMainInterface::AddSystems()
 			ButtonSystemReferences.Add(ButtonSystem);
 			WBPSystemsList->ScrollBoxSystems->AddChild(ButtonSystem);
 		}
-		GameSystems = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave;
+		GameSystems = Systems;
 	}
 	else
 	{
@@ -290,7 +245,7 @@ void UMainInterface::AddSystems()
 
 void UMainInterface::LoadGamesList()
 {
-	TArray<FGameSystem>Systems = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave;
+	TArray<FGameSystem>Systems = ClassicGameInstance->GetSystemSave();
 
 	int32 NumFavorites = 0;
 	GameData = UClassicFunctionLibrary::FilterGameData(Systems[CountSystem].GameDatas, Systems[CountSystem].Positions.OrderBy, NumFavorites);
@@ -304,13 +259,12 @@ void UMainInterface::LoadGamesList()
 
 	if (GameData.Num() > 0)
 	{
-		ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave = Systems;
-		ConfigurationData.DefaultStartSystem = Systems[CountSystem].SystemName;
+		ClassicGameInstance->SetSystemSave(Systems);
+		ConfigurationData.DefaultStartSystem = FString::FromInt(CountSystem);
 		UClassicFunctionLibrary::SaveConfig(ConfigurationData);
-		GameDataIndex = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas;
+		GameDataIndex = ClassicGameInstance->GetSystemSave()[CountSystem].GameDatas;
 		//OnLoadGamesList(); //BlueprintImplementableEvent
-		GetWorld()->GetTimerManager().SetTimer(InitializeTimerHandle, this, &UMainInterface::OnLoadGamesList, 0.5f, false, -1);
-
+		GetWorld()->GetTimerManager().SetTimer(InitializeTimerHandle, this, &UMainInterface::OnLoadGamesList, 0.1f, false, -1);
 	}
 	else
 	{
@@ -318,6 +272,12 @@ void UMainInterface::LoadGamesList()
 		Args.Add("GameRoot", FText::FromString(Systems[CountSystem].RomPath));
 		SetCenterText(FText::Format(LOCTEXT("LogGameListNotFound", "gamelist.xml not found in {GameRoot}"), Args));
 	}
+}
+
+
+void UMainInterface::LoadedData()
+{
+	Loaded.Broadcast();
 }
 
 void UMainInterface::LoadImages(const int32 DistanceIndex)
@@ -411,7 +371,7 @@ void UMainInterface::CreateNewGameList()
 				UE_LOG(LogTemp, Warning, TEXT("%s Not Found"), *GameRoot);
 			}
 		}
-		ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave = Systems;
+		ClassicGameInstance->SetSystemSave(Systems);
 		if (SaveGame())
 		{
 			SetCenterText(LOCTEXT("LogSuccessfullyGameList", "Game list update successfully wait..."));
@@ -943,19 +903,19 @@ void UMainInterface::SetCountPlayerToSave()
 {
 	int32 Find;
 
-	if (UClassicFunctionLibrary::FindGameData(ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas, GameData[IndexCard], Find))
+	if (UClassicFunctionLibrary::FindGameData(ClassicGameInstance->GetSystemSave()[CountSystem].GameDatas, GameData[IndexCard], Find))
 	{
 		// Find = return inline found index
-		ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas[Find].playcount++;
-		ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas[Find].lastplayed = UClassicFunctionLibrary::FormatDateToXml();
+		ClassicGameInstance->GetSystemSave()[CountSystem].GameDatas[Find].playcount++;
+		ClassicGameInstance->GetSystemSave()[CountSystem].GameDatas[Find].lastplayed = UClassicFunctionLibrary::FormatDateToXml();
 
 		GameData[IndexCard].playcount++;
 		GameData[IndexCard].lastplayed = UClassicFunctionLibrary::FormatDateToXml();
 		GameDataIndex[Find].playcount++;
 		GameDataIndex[Find].lastplayed = GameData[IndexCard].lastplayed;
 
-		FString Path = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].RomPath;
-		SaveGameListXML(Path, ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas);
+		FString Path = ClassicGameInstance->GetSystemSave()[CountSystem].RomPath;
+		SaveGameListXML(Path, ClassicGameInstance->GetSystemSave()[CountSystem].GameDatas);
 
 		if (SaveGame())
 		{
@@ -970,11 +930,11 @@ void UMainInterface::SetFavoriteToSave()
 	{
 		int32 Find;
 
-		if (UClassicFunctionLibrary::FindGameData(ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas, GameData[IndexCard], Find))
+		if (UClassicFunctionLibrary::FindGameData(ClassicGameInstance->GetSystemSave()[CountSystem].GameDatas, GameData[IndexCard], Find))
 		{
 			// Find = return inline found index
-			const bool ToggleFavorite = !ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas[Find].favorite;
-			ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas[Find].favorite = ToggleFavorite;
+			const bool ToggleFavorite = !ClassicGameInstance->GetSystemSave()[CountSystem].GameDatas[Find].favorite;
+			ClassicGameInstance->GetSystemSave()[CountSystem].GameDatas[Find].favorite = ToggleFavorite;
 
 			GameData[IndexCard].favorite = ToggleFavorite;
 			GameDataIndex[Find].favorite = ToggleFavorite;
@@ -988,8 +948,8 @@ void UMainInterface::SetFavoriteToSave()
 			Center->SetFavorite(ToggleFavorite, true);
 			Right->SetFavorite(ToggleFavorite, true);
 
-			FString Path = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].RomPath;
-			SaveGameListXML(Path, ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas);
+			FString Path = ClassicGameInstance->GetSystemSave()[CountSystem].RomPath;
+			SaveGameListXML(Path, ClassicGameInstance->GetSystemSave()[CountSystem].GameDatas);
 			SetButtonsIconInterfaces(EPositionY::CENTER);
 
 			if (SaveGame())
@@ -1131,7 +1091,7 @@ void UMainInterface::Clear()
 //bind buttons
 void UMainInterface::OnFocusSelectSystem()
 {
-	ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas = GameDataIndex;
+	ClassicGameInstance->GetSystemSave()[CountSystem].GameDatas = GameDataIndex;
 	FocusButtonsTop(1, WBPToolTipSystem, SlotToolTipSystem, WBPFrame->MoveLeftRightTop1, nullptr, EFocusTop::SYSTEM);
 }
 
@@ -1142,7 +1102,7 @@ void UMainInterface::OnFocusConfigurations()
 
 void UMainInterface::OnFocusFavorites()
 {
-	ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas = GameDataIndex;
+	ClassicGameInstance->GetSystemSave()[CountSystem].GameDatas = GameDataIndex;
 	FocusButtonsTop(3, WBPToolTipFavorites, SlotToolTipFavorites, WBPFrame->MoveLeftRightTop3, WBPFrame->MoveLeftRightTop2, EFocusTop::FAVORITE);
 }
 
@@ -1221,14 +1181,14 @@ void UMainInterface::OnClickSelectSystem()
 void UMainInterface::SetLastPositions(bool bResetPositions)
 {
 	FIndexPositions Positions = LoopScroll->GetScrollOffSet();
-	Positions.OrderBy = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].Positions.OrderBy;
+	Positions.OrderBy = ClassicGameInstance->GetSystemSave()[CountSystem].Positions.OrderBy;
 	if (bResetPositions || Positions.OrderBy != EGamesFilter::DEFAULT)
 	{
-		ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].Positions.DefaultValues();
-		ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].Positions.OrderBy = Positions.OrderBy;
+		ClassicGameInstance->GetSystemSave()[CountSystem].Positions.DefaultValues();
+		ClassicGameInstance->GetSystemSave()[CountSystem].Positions.OrderBy = Positions.OrderBy;
 		return;
 	}
-	ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].Positions = Positions;
+	ClassicGameInstance->GetSystemSave()[CountSystem].Positions = Positions;
 }
 
 void UMainInterface::OnClickConfigurations()
@@ -1245,8 +1205,8 @@ void UMainInterface::OnClickFavorites()
 
 	FText Message = LOCTEXT("MessageNoFavorites", "No favorites to show");
 
-	ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].Positions.ChangeFilter();
-	const EGamesFilter Filter = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].Positions.OrderBy;
+	ClassicGameInstance->GetSystemSave()[CountSystem].Positions.ChangeFilter();
+	const EGamesFilter Filter = ClassicGameInstance->GetSystemSave()[CountSystem].Positions.OrderBy;
 
 	if (NumFavorites != 0 && Filter == EGamesFilter::FAVORITES_FIRST)
 	{

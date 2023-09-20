@@ -46,7 +46,7 @@ enum class EFocus : uint8
 	CONFIG   UMETA(DisplayName = "Configuration")
 };
 
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FLoadedDelegate);
 
 /**
  * 
@@ -59,6 +59,8 @@ class CLASSICLAUNCHER_API UMainInterface : public UUserWidget
 
 public:
 
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FLoadedDelegate Loaded;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UTextImageBlock* TextTitleGame;
@@ -131,7 +133,7 @@ public:
 
 	//animations WidgetBind
 
-protected:
+public:
 
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	UWidgetAnimation* ShowDescBottomInfo;
@@ -333,6 +335,10 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnLoadGamesList();
 
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void LoadedData();
+
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void LoadImages(const int32 DistanceIndex = 15);
 
@@ -364,7 +370,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void GameSettingsRunningInternal();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void AddSystems();
+	void AddSystems(TArray<FGameSystem> Systems);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void NavigationGame(EButtonsGame Navigate);

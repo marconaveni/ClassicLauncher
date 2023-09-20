@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "GameData.h"
 #include "ClassicGameInstance.generated.h"
 
 /**
@@ -25,5 +26,11 @@ public:
 	FString SlotGame;
 
 	UClassicGameInstance();
+
+	UFUNCTION()
+	TArray<FGameSystem> GetSystemSave();
+
+	UFUNCTION()
+	void SetSystemSave(TArray<FGameSystem> Systems);
 	
 };

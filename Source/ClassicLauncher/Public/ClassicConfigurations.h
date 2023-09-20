@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ClassicFunctionLibrary.h"
 #include "Blueprint/UserWidget.h"
 #include "ClassicConfigurations.generated.h"
 

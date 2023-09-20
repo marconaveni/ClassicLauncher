@@ -14,6 +14,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "ClassicFunctionLibrary.h"
+#include "ClassicGameMode.h"
+#include "LoadingGameData.h"
 #include "TextImageBlock.h"
 #include "Kismet/KismetInternationalizationLibrary.h"
 
@@ -93,11 +95,11 @@ void UClassicConfigurations::OnSlideLostFocus()
 void UClassicConfigurations::OnClickUpdate(int32 Value)
 {
 	bFocus = true;
-	const UClassicGameInstance* ClassicGameInstance = Cast<UClassicGameInstance>(GetGameInstance());
+	UClassicGameInstance* ClassicGameInstance = Cast<UClassicGameInstance>(GetGameInstance());
+	ClassicGameInstance->GetSystemSave().Empty();
 
 	if (UGameplayStatics::DeleteGameInSlot(ClassicGameInstance->SlotGame, 0))
 	{
-		ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave.Empty();
 		UE_LOG(LogTemp, Warning, TEXT("Deleted Saved"));
 		MainInterfaceReference->bInputEnable = false;
 		GetWorld()->GetTimerManager().SetTimer(RestartMapTimerHandle, this, &UClassicConfigurations::RestartMap, 3.0f, false, -1);
@@ -244,7 +246,9 @@ void UClassicConfigurations::Delay()
 
 void UClassicConfigurations::RestartMap()
 {
-	UGameplayStatics::OpenLevel(this, FName("map"), true);
+	const AClassicGameMode* GameMode = Cast<AClassicGameMode>(UGameplayStatics::GetGameMode(this));
+	GameMode->Data->SetToRestartWidgets();
+	//UGameplayStatics::OpenLevel(this, FName("map"), true);
 }
 
 #undef LOCTEXT_NAMESPACE

@@ -16,11 +16,23 @@ class CLASSICLAUNCHER_API AClassicGameMode : public AGameModeBase
 	
 public:
 
-	UPROPERTY()
-	class UMainInterface* MainInterfaceReference;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	class ULoadingGameData* Data;
+
+	//UPROPERTY()
+	//class UMainInterface* MainInterfaceReference;
+
+	//UPROPERTY()
+	//class ULoadingScreen* LoadingScreenReference;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
 	TSubclassOf<class UMainInterface> MainInterfaceClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
+	TSubclassOf<class ULoadingScreen> LoadingScreenClass;
+
 	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+	void Init();
 };

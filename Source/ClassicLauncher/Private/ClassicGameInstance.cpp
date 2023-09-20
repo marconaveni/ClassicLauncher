@@ -1,4 +1,4 @@
-// Copyright 2022 Marco Naveni. All Rights Reserved.
+// Copyright 2023 Marco Naveni. All Rights Reserved.
 
 
 #include "ClassicGameInstance.h"
@@ -8,10 +8,12 @@
 void UClassicGameInstance::Init()
 {
 
-	if (UGameplayStatics::DoesSaveGameExist(SlotGame, 0)) {
+	if (UGameplayStatics::DoesSaveGameExist(SlotGame, 0)) 
+	{
 		ClassicSaveGameInstance = Cast<UClassicSaveGame>(UGameplayStatics::LoadGameFromSlot(SlotGame, 0));
 	}
-	else {
+	else 
+	{
 		ClassicSaveGameInstance = Cast<UClassicSaveGame>(UGameplayStatics::CreateSaveGameObject(UClassicSaveGame::StaticClass()) );
 	}
 	Super::Init();
@@ -21,4 +23,14 @@ void UClassicGameInstance::Init()
 UClassicGameInstance::UClassicGameInstance()
 {
 	SlotGame = TEXT("save_c1");
+}
+
+TArray<FGameSystem> UClassicGameInstance::GetSystemSave()
+{
+	return ClassicSaveGameInstance->GameSystemsSave;
+}
+
+void UClassicGameInstance::SetSystemSave(TArray<FGameSystem> Systems)
+{
+	ClassicSaveGameInstance->GameSystemsSave = Systems;
 }
