@@ -1,4 +1,4 @@
-// Copyright 2022 Marco Naveni. All Rights Reserved.
+// Copyright 2023 Marco Naveni. All Rights Reserved.
 
 
 #include "ClassicSystemListInterface.h"
@@ -35,7 +35,10 @@ void UClassicSystemListInterface::SetScrollArrowIcons(const EButtonsGame Navigat
 
 void UClassicSystemListInterface::OnUserScrolled(float CurrentOffset)
 {
-
+	if (CurrentOffset >= ScrollBoxSystems->GetScrollOffsetOfEnd() - 2)
+	{
+		ScrollBoxSystems->SetScrollOffset(ScrollBoxSystems->GetScrollOffsetOfEnd() - 1);
+	}
 }
 
 void UClassicSystemListInterface::SetIconArrow()
@@ -93,14 +96,7 @@ void UClassicSystemListInterface::SetFocusItem(const EButtonsGame Navigate, int3
 	if (ButtonSystemReferences.IsValidIndex(Index))
 	{
 		ButtonSystemReferences[Index]->Click->SetKeyboardFocus();
-		if (Index != ButtonSystemReferences.Num() - 1)
-		{
-			ScrollBoxSystems->ScrollWidgetIntoView(ButtonSystemReferences[Index], false, EDescendantScrollDestination::IntoView, 150);
-		}
-		else
-		{
-			ScrollBoxSystems->SetScrollOffset(ScrollBoxSystems->GetScrollOffsetOfEnd() - 1);
-		}
+		ScrollBoxSystems->ScrollWidgetIntoView(ButtonSystemReferences[Index], false, EDescendantScrollDestination::Center, 0);
 	}
 	IndexFocus = Index;
 	GetWorld()->GetTimerManager().SetTimer(ArrowTimerHandle, this, &UClassicSystemListInterface::SetIconArrow, 0.016f, false, 0.1f);

@@ -71,6 +71,9 @@ public:
 	void CreateNewGameList();
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
+	void PrepareToSaveNewGameList();
+
+	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void LoadGameSystems();
 
 	UFUNCTION()
@@ -81,6 +84,9 @@ public:
 
 	UFUNCTION()
 	void AddLoadingScreenToViewPort();
+
+	UFUNCTION()
+	void RemoveLoadingScreenToParent();
 
 	UFUNCTION()
 	void SetToRestartWidgets();

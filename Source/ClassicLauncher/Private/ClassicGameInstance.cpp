@@ -25,10 +25,6 @@ UClassicGameInstance::UClassicGameInstance()
 	SlotGame = TEXT("save_c1");
 }
 
-TArray<FGameSystem> UClassicGameInstance::GetSystemSave()
-{
-	return ClassicSaveGameInstance->GameSystemsSave;
-}
 
 void UClassicGameInstance::SetSystemSave(TArray<FGameSystem> Systems)
 {

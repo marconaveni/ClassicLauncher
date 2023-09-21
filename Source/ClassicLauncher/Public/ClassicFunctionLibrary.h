@@ -87,6 +87,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
 	static TArray<FGameSystem> SortConfigSystem(TArray<FGameSystem> configData);
 
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
+	static bool SaveGameListXML(FString& GameListPath, TArray<FGameData>& NewGames);
+
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|Configuration")
 	static void SaveConfig(const FConfig ConfigurationData);
 
@@ -99,11 +102,15 @@ public:
 	static void PauseProcess(float timer);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|File IO")
-	static bool SaveStringToFile(FString SaveDirectory, FString JoyfulFileName, FString SaveText, bool AllowOverWriting, bool AllowAppend);
+	static bool SaveStringToFile(FString SaveDirectory, FString FileName, FString SaveText, bool AllowOverWriting, bool AllowAppend);
 
 	//verify if not exists folder and create
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|File IO")
 	static bool VerifyOrCreateDirectory(const FString& TestDir);
+
+	//verify if not exists folder and create
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|File IO")
+	static bool VerifyDirectory(const FString& TestDir);
 
 	//delete file if exists in folder 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|File IO")
@@ -157,7 +164,7 @@ public:
 
 	//create a file gamelist.xml for save 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData|XML")
-	static FString CreateXMLGameFile(TArray<FGameData> gameData, FVector2D IgnoreImageSize);
+	static FString CreateXMLGameFile(TArray<FGameData> GameData);
 
 	//create a file config.xml for save 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData|XML")

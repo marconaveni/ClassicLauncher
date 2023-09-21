@@ -60,7 +60,7 @@ void ULoadingGameData::LoadConfiguration()
 
 void ULoadingGameData::LoadGameSystems()
 {
-	Systems = ClassicGameInstance->GetSystemSave();
+	Systems = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave;
 	UClassicFunctionLibrary::CreateFolders(ConfigurationData.PathMedia, Systems);
 
 	LoadingScreenReference->ShowMessage(FText::FromString(TEXT("Loading Systems...")));
@@ -97,56 +97,73 @@ void ULoadingGameData::SetMainInterfaceData()
 	MainInterfaceReference->WBPClassicConfigurationsInterface->SlideVolume->SetSlideValue(FMath::Clamp(ConfigurationData.Volume, 0, 100));
 }
 
-
 void ULoadingGameData::CreateNewGameList()
 {
 	Systems.Empty();
-	const FText Message = LOCTEXT("UpdateGame", "Update game wait");
-	LoadingScreenReference->ShowMessage(Message);
-	
+
 	FString ConfigResult;
 	FString ConfigRoot = UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("config\\configsys.xml");
 
 	if (UClassicFunctionLibrary::LoadStringFile(ConfigResult, ConfigRoot))
 	{
-		
-		UClassicFunctionLibrary::SetGameSystem(UClassicFunctionLibrary::LoadXML(ConfigResult, TEXT("config.system")), Systems);
-		Systems = UClassicFunctionLibrary::SortConfigSystem(Systems);
-
-		for (int32 i = 0; i < Systems.Num(); i++)
+		// check if is empty to avoid error in UEasyXMLElement*
+		if (ConfigResult.IsEmpty())
 		{
-			ConfigRoot = Systems[i].RomPath + TEXT("\\gamelist.xml");
+			MessageShow.Broadcast(FText::FromString(TEXT("configsys.xml is Empty")));
+			return;
+		}
+
+		TArray<FGameSystem> TempSystems;
+		UClassicFunctionLibrary::SetGameSystem(UClassicFunctionLibrary::LoadXML(ConfigResult, TEXT("config.system")), TempSystems);
+
+		TempSystems = UClassicFunctionLibrary::SortConfigSystem(TempSystems);
+		for (int32 i = 0; i < TempSystems.Num(); i++)
+		{
+			ConfigRoot = TempSystems[i].RomPath + TEXT("\\gamelist.xml");
 			if (UClassicFunctionLibrary::LoadStringFile(ConfigResult, ConfigRoot))
 			{
-				UClassicFunctionLibrary::SetGameData(UClassicFunctionLibrary::LoadXML(ConfigResult, TEXT("gameList.game")), Systems[i].GameDatas, nullptr);
+				if (ConfigResult.IsEmpty()) continue; // check if is empty to avoid error in UEasyXMLElement*
+
+				UClassicFunctionLibrary::SetGameData(UClassicFunctionLibrary::LoadXML(ConfigResult, TEXT("gameList.game")), TempSystems[i].GameDatas, nullptr);
+				if (TempSystems[i].GameDatas.Num() > 0)
+				{
+					Systems.Add(TempSystems[i]);
+				}
 			}
+		}
+		TempSystems.Empty();
+		if (Systems.Num() == 0)
+		{
+			MessageShow.Broadcast(FText::FromString(TEXT("Systems not found")));
+			return;
 		}
 	}
 	else
 	{
+		MessageShow.Broadcast(FText::FromString(TEXT("configsys.xml not found")));
 		return;
 	}
 
+	PrepareToSaveNewGameList();
+}
+
+void ULoadingGameData::PrepareToSaveNewGameList()
+{
 	AsyncTask(ENamedThreads::AnyThread, [=]()
 	{
-		//FString GameResult;
+
 		for (int32 i = 0; i < Systems.Num(); i++)
 		{
 			FString GameResult;
 			FString GameRoot = Systems[i].RomPath + TEXT("\\gamelist.xml");
-			if (UClassicFunctionLibrary::LoadStringFile(GameResult, GameRoot))
+
+			UClassicFunctionLibrary::SortGameDate(Systems[i].GameDatas);
+			UClassicFunctionLibrary::FormatGameData(Systems[i].GameDatas, ConfigurationData, Systems[i]);
+			AsyncTask(ENamedThreads::GameThread, [=]()
 			{
-				UClassicFunctionLibrary::SortGameDate(Systems[i].GameDatas);
-				UClassicFunctionLibrary::FormatGameData(Systems[i].GameDatas, ConfigurationData, Systems[i]);
-				AsyncTask(ENamedThreads::GameThread, [=]()
-				{
-					MessageShow.Broadcast(FText::FromString(TEXT("Loading ") + Systems[i].SystemLabel ));
-				});
-			}
-			else
-			{
-				UE_LOG(LogTemp, Warning, TEXT("%s Not Found"), *GameRoot);
-			}
+				MessageShow.Broadcast(FText::FromString(TEXT("Loading ") + Systems[i].SystemLabel));
+			});
+
 		}
 		ClassicGameInstance->SetSystemSave(Systems);
 		if (UGameplayStatics::SaveGameToSlot(ClassicGameInstance->ClassicSaveGameInstance, ClassicGameInstance->SlotGame, 0))
@@ -155,7 +172,7 @@ void ULoadingGameData::CreateNewGameList()
 			AsyncTask(ENamedThreads::GameThread, [=]()
 			{
 				MainInterfaceReference->RemoveFromParent();
-				LoadingScreenReference->ShowMessage(LOCTEXT("LogSuccessfullyGameList", "Game list update successfully wait..."));
+				MessageShow.Broadcast(LOCTEXT("LogSuccessfullyGameList", "Game list update successfully wait..."));
 				GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &ULoadingGameData::LoadGameSystems, 0.1f, false, DELAY + 3.0f);
 			});
 		}
@@ -163,26 +180,21 @@ void ULoadingGameData::CreateNewGameList()
 		{
 			AsyncTask(ENamedThreads::GameThread, [=]()
 			{
-				LoadingScreenReference->ShowMessage(LOCTEXT("LogErrorGameList", "Game list not save"));
+				MessageShow.Broadcast(LOCTEXT("LogErrorGameList", "Game list not save"));
 			});
-			UE_LOG(LogTemp, Warning, TEXT("Not Saved"));
 		}
-
-
 
 	});
 }
 
 void ULoadingGameData::AddMainInterfaceToViewPort()
 {
-	if (LoadingScreenReference != nullptr)
-	{
-		LoadingScreenReference->RemoveFromParent();
-	}
+
 	if (MainInterfaceReference != nullptr)
 	{
 		//let add it to the view port
 		MainInterfaceReference->AddToViewport(0);
+		//Loading Game list in main interface
 		MainInterfaceReference->LoadGamesList();
 		//Show the Cursor.
 		GameplayStatics->bShowMouseCursor = false;
@@ -206,13 +218,21 @@ void ULoadingGameData::AddMainInterfaceToViewPort()
 
 void ULoadingGameData::AddLoadingScreenToViewPort()
 {
-	if (LoadingScreenReference)
+	if (LoadingScreenReference != nullptr)
 	{
 		LoadingScreenReference->AddToViewport(1);
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("LoadingScreenReference Not Found or Null"));
+	}
+}
+
+void ULoadingGameData::RemoveLoadingScreenToParent()
+{
+	if (LoadingScreenReference != nullptr)
+	{
+		LoadingScreenReference->RemoveFromParent();
 	}
 }
 
@@ -224,11 +244,13 @@ void ULoadingGameData::SetToRestartWidgets()
 	MainInterfaceReference->PlayAnimationReverse(MainInterfaceReference->BarTop);
 	MainInterfaceReference->WBPFrame->SetFramePosition(1, EFocusTop::NONE);
 	GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &ULoadingGameData::RestartWidgets, 0.1f, false, DELAY + 1.0f);
+	AddLoadingScreenToViewPort();
+	const FText Message = LOCTEXT("UpdateGame", "Update game wait");
+	LoadingScreenReference->ShowMessage(Message);
 }
 
 void ULoadingGameData::RestartWidgets()
 {
-	AddLoadingScreenToViewPort();
 	CreateNewGameList();
 }
 

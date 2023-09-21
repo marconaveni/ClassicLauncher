@@ -96,7 +96,7 @@ void UClassicConfigurations::OnClickUpdate(int32 Value)
 {
 	bFocus = true;
 	UClassicGameInstance* ClassicGameInstance = Cast<UClassicGameInstance>(GetGameInstance());
-	ClassicGameInstance->GetSystemSave().Empty();
+	ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave.Empty();
 
 	if (UGameplayStatics::DeleteGameInSlot(ClassicGameInstance->SlotGame, 0))
 	{
@@ -183,7 +183,7 @@ void UClassicConfigurations::SetIndexFocus(EButtonsGame Input)
 
 	if (Input == EButtonsGame::UP || Input == EButtonsGame::DOWN)
 	{
-		bDelayInput = true;
+		//bDelayInput = true;
 		if (Input == EButtonsGame::DOWN)
 		{
 			IndexSelect++;
@@ -195,7 +195,7 @@ void UClassicConfigurations::SetIndexFocus(EButtonsGame Input)
 			IndexSelect = (IndexSelect < 0) ? 4 : IndexSelect;
 		}
 		SetFocusSelect();
-		GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &UClassicConfigurations::Delay, 0.18f, false, -1);
+		//GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &UClassicConfigurations::Delay, 0.18f, false, -1);
 	}
 
 	const int32 SlideValue = SlideVolume->SlideValue;
@@ -250,7 +250,7 @@ void UClassicConfigurations::RestartMap()
 	IndexSelect = 0;
 	bFocus = false;
 	bDelayInput = false;
-	GameMode->Data->SetToRestartWidgets();
+	GameMode->LoadingGameData->SetToRestartWidgets();
 	//UGameplayStatics::OpenLevel(this, FName("map"), true);
 }
 

@@ -27,8 +27,6 @@ public:
 
 	UClassicGameInstance();
 
-	UFUNCTION()
-	TArray<FGameSystem> GetSystemSave();
 
 	UFUNCTION()
 	void SetSystemSave(TArray<FGameSystem> Systems);

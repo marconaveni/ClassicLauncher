@@ -101,6 +101,12 @@ TArray<FGameSystem> UClassicFunctionLibrary::SortConfigSystem(TArray<FGameSystem
 	return NewConfigData;
 }
 
+bool UClassicFunctionLibrary::SaveGameListXML(FString& GameListPath, TArray<FGameData>& NewGames)
+{
+	const FString NewXMLFile = CreateXMLGameFile(NewGames);
+	return SaveStringToFile(GameListPath, TEXT("gamelist.xml"), NewXMLFile, true, false);
+}
+
 void UClassicFunctionLibrary::SaveConfig(const FConfig ConfigurationData)
 {
 	FString XmlConfig = CreateXMLConfigFile(ConfigurationData);
@@ -122,7 +128,7 @@ void UClassicFunctionLibrary::PauseProcess(float timer)
 	FPlatformProcess::Sleep(timer);
 }
 
-bool UClassicFunctionLibrary::SaveStringToFile(FString SaveDirectory, FString JoyfulFileName, FString SaveText, bool AllowOverWriting, bool AllowAppend)
+bool UClassicFunctionLibrary::SaveStringToFile(FString SaveDirectory, FString FileName, FString SaveText, bool AllowOverWriting, bool AllowAppend)
 {
 	if (!FPlatformFileManager::Get().GetPlatformFile().CreateDirectoryTree(*SaveDirectory))
 	{
@@ -133,7 +139,7 @@ bool UClassicFunctionLibrary::SaveStringToFile(FString SaveDirectory, FString Jo
 
 	//get complete file path
 	SaveDirectory += "\\";
-	SaveDirectory += JoyfulFileName;
+	SaveDirectory += FileName;
 
 	//No over-writing?
 	if (!AllowOverWriting)
@@ -170,6 +176,12 @@ bool UClassicFunctionLibrary::VerifyOrCreateDirectory(const FString& TestDir)
 		}
 	}
 	return true;
+}
+
+bool UClassicFunctionLibrary::VerifyDirectory(const FString& TestDir)
+{
+	IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
+	return PlatformFile.DirectoryExists(*TestDir);
 }
 
 int32 UClassicFunctionLibrary::GenerateNumberWithoutRepeat(int32 value, int32 min, int32 max)
@@ -276,13 +288,13 @@ FString UClassicFunctionLibrary::ReplaceMedia(FString OriginalPathMedia, FString
 
 }
 
-FString UClassicFunctionLibrary::CreateXMLGameFile(TArray<FGameData> gameData, FVector2D IgnoreImageSize)
+FString UClassicFunctionLibrary::CreateXMLGameFile(TArray<FGameData> GameData)
 {
 	FString NewGameData;
 
 	NewGameData += TEXT("<?xml version=\"1.0\"?>\n<gameList>\n");
 
-	for (FGameData& Data : gameData)
+	for (FGameData& Data : GameData)
 	{
 		NewGameData += TEXT("<game>\n");
 		NewGameData += GenerateXmlTag(TEXT("path"), Data.Path);
@@ -304,14 +316,6 @@ FString UClassicFunctionLibrary::CreateXMLGameFile(TArray<FGameData> gameData, F
 		NewGameData += GenerateXmlTag(TEXT("lastplayed"), Data.lastplayed);
 		NewGameData += GenerateXmlTag(TEXT("executable"), Data.Executable);
 		NewGameData += GenerateXmlTag(TEXT("arguments"), Data.Arguments);
-		//if (Data.ImageX != IgnoreImageSize.X)
-		//{
-		//	NewGameData += GenerateXmlTag(TEXT("imagex"), FString::SanitizeFloat(Data.ImageX, 0));
-		//}
-		//if (Data.ImageX != IgnoreImageSize.X)
-		//{
-		//	NewGameData += GenerateXmlTag(TEXT("imagey"), FString::SanitizeFloat(Data.ImageY, 0));
-		//}
 
 		NewGameData += TEXT("</game>\n");
 
@@ -360,7 +364,7 @@ TArray<UEasyXMLElement*> UClassicFunctionLibrary::LoadXML(FString XMLString, FSt
 	FString ErrorMessage;
 	UEasyXMLElement* ElementXML = UEasyXMLParseManager::LoadFromString(XMLString, Result, ErrorMessage);
 	EEasyXMLParserFound Results;
-	return ElementXML->ReadElements(AccessString, Results);
+	return  ElementXML->ReadElements(AccessString, Results);
 }
 
 UEasyXMLElement* UClassicFunctionLibrary::LoadXMLSingle(FString XMLString, FString AccessString)
@@ -383,17 +387,17 @@ void UClassicFunctionLibrary::SetConfig(UEasyXMLElement* Element, FConfig& Confi
 void UClassicFunctionLibrary::SetGameSystem(TArray<UEasyXMLElement*>  Elements, TArray<FGameSystem>& ConfigSystems)
 {
 	FGameSystem  ConfigSystem;
-
 	for (UEasyXMLElement* Element : Elements)
 	{
+		ConfigSystem.RomPath = Element->ReadString(TEXT("rompath"));
 		ConfigSystem.Arguments = Element->ReadString(TEXT("arguments"));
 		ConfigSystem.Executable = Element->ReadString(TEXT("executable"));
-		//ConfigSystem.ImageX = Element->ReadInt(TEXT("imagex"));
-		//ConfigSystem.ImageY = Element->ReadInt(TEXT("imagey"));
-		ConfigSystem.RomPath = Element->ReadString(TEXT("rompath"));
 		ConfigSystem.SystemLabel = Element->ReadString(TEXT("systemlabel"));
 		ConfigSystem.SystemName = Element->ReadString(TEXT("systemname"));
-		ConfigSystems.Add(ConfigSystem);
+		if (FPaths::FileExists(ConfigSystem.RomPath + TEXT("\\gamelist.xml")) && VerifyDirectory(ConfigSystem.RomPath))
+		{
+			ConfigSystems.Add(ConfigSystem);
+		}
 	}
 }
 
@@ -711,7 +715,7 @@ UTexture2D* UClassicFunctionLibrary::LoadTexture2DFromFile(const FString& FullFi
 
 void UClassicFunctionLibrary::AsyncLoadTexture2DFromFile(FLoadImageDelegate Out, const FString FullFilePath, int32 Index, EClassicImageFormat ImageFormat, EClassicTextureFilter Filter)
 {
-	if (!FPaths::FileExists(FullFilePath)) 
+	if (!FPaths::FileExists(FullFilePath))
 	{
 		Out.ExecuteIfBound(nullptr, Index, false);
 		UE_LOG(LogTemp, Warning, TEXT("File Not Exists. %s"), *FullFilePath);
@@ -721,7 +725,7 @@ void UClassicFunctionLibrary::AsyncLoadTexture2DFromFile(FLoadImageDelegate Out,
 	AsyncTask(ENamedThreads::AnyThread, [=]()
 	{
 		IImageWrapperModule& ImageWrapperModule = FModuleManager::Get().LoadModuleChecked<IImageWrapperModule>(TEXT("ImageWrapper"));
-		
+
 		TArray64<uint8> Buffer;
 
 		if (FFileHelper::LoadFileToArray(Buffer, *FullFilePath))
@@ -794,7 +798,7 @@ void UClassicFunctionLibrary::AsyncLoadTexture2DFromFile(FLoadImageDelegate Out,
 						}
 						// execute function 
 						Out.ExecuteIfBound(NewTexture, Index, bSuccessfull);
-						
+
 					});
 					return; // early return successful!!
 				}

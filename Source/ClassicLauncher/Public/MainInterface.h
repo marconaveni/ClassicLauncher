@@ -28,6 +28,7 @@ class UClassicButtonSystem;
 class AClassicMediaPlayer;
 class AClassicLibretroTV;
 class UCanvasPanelSlot;
+class AClassicGameMode;
 
 UENUM(BlueprintType, Category = "Navigation")
 enum class EPositionY : uint8
@@ -54,7 +55,6 @@ UCLASS()
 class CLASSICLAUNCHER_API UMainInterface : public UUserWidget
 {
 	GENERATED_BODY()
-
 
 public:
 
@@ -233,6 +233,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	float TimerDelayNavigation;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	float FirstDelayNavigation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	float DescriptionScrollScale;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	float MultiplySpeed;
@@ -258,6 +260,11 @@ public:
 	UTexture2D* ImageNull;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Components")
 	UClassicGameInstance* ClassicGameInstance;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	AClassicGameMode* GameMode;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables|Debug")
+	bool Debug = false;
+
 	UPROPERTY()
 	UCanvasPanelSlot* SlotToolTipSystem;
 	UPROPERTY()
@@ -295,18 +302,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle LoadImagesTimerHandle;
 
-
 	//TempVariables
 	UPROPERTY()
 	int32 FirstIndex;
 	UPROPERTY()
 	int32 LastIndex;
 
-
 	//Functions
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void RestartWidget();
 
 	UFUNCTION()
 	void TimerTick();
@@ -314,17 +316,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetCenterText(const FText Message);
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnSetCenterText(const FText& ErrorMessage);
+	void OnSetCenterText(const FText& Message);
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void LoadConfiguration();
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCosmetic, Category = "On Load Configuration")
-	void OnLoadConfiguration();
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void LoadConfigSystems();
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnLoadConfigSystems();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void LoadGamesList();
@@ -347,20 +340,6 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnPrepareThemes();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void CreateNewGameList();
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnCreateNewGameList();
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	bool SaveGame() const;
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void GameSettingsInit();
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void GameSettingsRunning();
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void GameSettingsRunningInternal();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void AddSystems(TArray<FGameSystem> Systems);
 
@@ -415,9 +394,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Save")
 	void SetFavoriteToSave();
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Save")
-	bool SaveGameListXML(FString& GameListPath, TArray<FGameData>& NewGames);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void RunningGame(bool bIsRun);
