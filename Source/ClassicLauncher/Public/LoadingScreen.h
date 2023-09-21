@@ -6,7 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "LoadingScreen.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMessageDelegate);
+
 
 /**
  * 
@@ -17,10 +17,6 @@ class CLASSICLAUNCHER_API ULoadingScreen : public UUserWidget
 	GENERATED_BODY()
 
 public:
-
-
-	UPROPERTY(BlueprintAssignable, BlueprintCallable)
-	FMessageDelegate MessageShow;
 
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))

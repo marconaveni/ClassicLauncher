@@ -274,12 +274,6 @@ void UMainInterface::LoadGamesList()
 	}
 }
 
-
-void UMainInterface::LoadedData()
-{
-	Loaded.Broadcast();
-}
-
 void UMainInterface::LoadImages(const int32 DistanceIndex)
 {
 	if ((ENavigationButton == EButtonsGame::RIGHT || ENavigationButton == EButtonsGame::RB ||
@@ -347,47 +341,7 @@ void UMainInterface::PrepareThemes()
 //timer DelayCreateGameListTimerHandle
 void UMainInterface::CreateNewGameList()
 {
-	FString ConfigResult;
-	FString GameRoot = UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("config\\configsys.xml");
 
-	if (UClassicFunctionLibrary::LoadStringFile(ConfigResult, GameRoot))
-	{
-		TArray<FGameSystem>Systems;
-		UClassicFunctionLibrary::SetGameSystem(UClassicFunctionLibrary::LoadXML(ConfigResult, TEXT("config.system")), Systems);
-		Systems = UClassicFunctionLibrary::SortConfigSystem(Systems);
-		for (int32 i = 0; i < Systems.Num(); i++)
-		{
-			GameRoot = Systems[i].RomPath + TEXT("\\gamelist.xml");
-			if (UClassicFunctionLibrary::LoadStringFile(ConfigResult, GameRoot))
-			{
-				UClassicFunctionLibrary::SetGameData(UClassicFunctionLibrary::LoadXML(ConfigResult, TEXT("gameList.game")), GameData, ImageNull);
-				UClassicFunctionLibrary::SortGameDate(GameData);
-				UClassicFunctionLibrary::FormatGameData(GameData, ConfigurationData, Systems[i]);
-				Systems[i].GameDatas = GameData;
-				GameData.Empty();
-			}
-			else
-			{
-				UE_LOG(LogTemp, Warning, TEXT("%s Not Found"), *GameRoot);
-			}
-		}
-		ClassicGameInstance->SetSystemSave(Systems);
-		if (SaveGame())
-		{
-			SetCenterText(LOCTEXT("LogSuccessfullyGameList", "Game list update successfully wait..."));
-			GetWorld()->GetTimerManager().SetTimer(DelayReloadTimerHandle, this, &UMainInterface::RestartWidget, 3.0f, false, -1);
-		}
-		else
-		{
-			SetCenterText(LOCTEXT("LogErrorGameList", "Game list not save"));
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("%s Not Found"), *GameRoot);
-	}
-
-	OnCreateNewGameList(); //BlueprintImplementableEvent
 }
 
 bool UMainInterface::SaveGame() const

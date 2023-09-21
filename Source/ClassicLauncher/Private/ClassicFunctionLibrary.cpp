@@ -93,6 +93,7 @@ TArray<FGameSystem> UClassicFunctionLibrary::SortConfigSystem(TArray<FGameSystem
 			if (data.SystemLabel == name && data.SystemLabel != TEXT("null_value")) {
 				NewConfigData.Add(data);
 				data.SystemLabel = TEXT("null_value");
+				break;
 			}
 		}
 	}

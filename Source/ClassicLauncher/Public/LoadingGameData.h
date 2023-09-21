@@ -4,8 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameData.h"
-//#include "UObject/NoExportTypes.h"
 #include "LoadingGameData.generated.h"
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageDelegate, FText, Message);
 
 /**
  * 
@@ -17,6 +18,9 @@ class CLASSICLAUNCHER_API ULoadingGameData : public UObject
 
 
 protected:
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FMessageDelegate MessageShow;
 
 	UPROPERTY()
 	TSubclassOf<class UMainInterface> MainInterfaceClass;
@@ -83,4 +87,7 @@ public:
 
 	UFUNCTION()
 	void RestartWidgets();
+
+	UFUNCTION()
+	void Message(FText Message);
 };

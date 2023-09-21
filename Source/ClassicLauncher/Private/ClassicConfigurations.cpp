@@ -247,6 +247,9 @@ void UClassicConfigurations::Delay()
 void UClassicConfigurations::RestartMap()
 {
 	const AClassicGameMode* GameMode = Cast<AClassicGameMode>(UGameplayStatics::GetGameMode(this));
+	IndexSelect = 0;
+	bFocus = false;
+	bDelayInput = false;
 	GameMode->Data->SetToRestartWidgets();
 	//UGameplayStatics::OpenLevel(this, FName("map"), true);
 }
