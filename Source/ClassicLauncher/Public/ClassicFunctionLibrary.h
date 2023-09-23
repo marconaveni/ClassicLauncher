@@ -189,6 +189,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
 	static void SetGameData(TArray<UEasyXMLElement*>  Elements, TArray<FGameData>& GameDatas, UTexture2D* Texture);
 
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
+	static FGameSystem SetSystemToGameData(TArray<FGameSystem> Systems);
+
+
 	//format the array game data with correct path system
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
 	static void FormatGameData(TArray<FGameData>& GameDatas, FConfig Config, FGameSystem GameSystem);

@@ -226,10 +226,10 @@ struct FGameSystem
 	FString SystemLabel;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 ImageX;
+	FString Image;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 ImageY;
+	FString Description;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FGameData> GameDatas;
@@ -237,8 +237,6 @@ struct FGameSystem
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FIndexPositions Positions;
 
-
-	//construtor
 	FGameSystem()
 	{
 		Executable = TEXT("");
@@ -246,8 +244,8 @@ struct FGameSystem
 		RomPath = TEXT("");
 		SystemName = TEXT("");
 		SystemLabel = TEXT("");
-		ImageX = 200;
-		ImageY = 200;
+		Image = TEXT("");
+		Description = TEXT("");
 	}
 
 };

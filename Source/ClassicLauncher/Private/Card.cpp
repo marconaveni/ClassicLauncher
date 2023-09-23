@@ -2,6 +2,8 @@
 
 
 #include "Card.h"
+
+#include "Blueprint/SlateBlueprintLibrary.h"
 #include "Components/Button.h"
 #include "Components/Image.h"
 #include "Styling/SlateBrush.h"
@@ -136,5 +138,20 @@ void UCard::ButtonClick()
 
 void UCard::AnimationFade()
 {
-	PlayAnimationForward(StartSystem, 1.0f, true);
+	if (GetPositionCover())
+	{
+		PlayAnimationForward(StartSystem, 1.0f, true);
+	}
+}
+
+bool UCard::GetPositionCover()
+{
+	const FGeometry& Geometry = GetCachedGeometry();
+	FVector2D PixelPosition, ViewportPosition;
+	USlateBlueprintLibrary::LocalToViewport(this, Geometry, FVector2D(0, 0), PixelPosition, ViewportPosition);
+	if (PixelPosition.X > 90 && PixelPosition.X < 1800)
+	{
+		return true;
+	}
+	return false;
 }

@@ -88,6 +88,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
 	int32 FrameIndexCenter;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
+	int32 FrameIndexTop = 1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
 	int32 MaxFrameLimit;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
 	bool bIsNotAnimated;
@@ -116,7 +118,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
 	void SetDefaultValues(int32 MaxFrameRightLimit, float MaxSpeed);
 	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
-	void SetFramePosition(int32 PositionCenter, EFocusTop FocusTop);
+	void SetFrameCenterPosition(int32 PositionCenter);
+	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
+	void SetFrameTopPosition(EFocusTop FocusTop);
 	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
 	void DirectionRight(int32 Frame, int32 Limit);
 	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")

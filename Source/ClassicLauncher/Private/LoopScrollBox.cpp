@@ -10,7 +10,6 @@
 #include "Cover.h"
 #include "Blueprint/WidgetTree.h"
 #include "Components/Button.h"
-#include "Components/CanvasPanelSlot.h"
 #include "Components/HorizontalBox.h"
 #include "Components/Image.h"
 #include "Components/Scrollbox.h"

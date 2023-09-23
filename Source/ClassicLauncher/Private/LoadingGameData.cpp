@@ -117,6 +117,8 @@ void ULoadingGameData::CreateNewGameList()
 		UClassicFunctionLibrary::SetGameSystem(UClassicFunctionLibrary::LoadXML(ConfigResult, TEXT("config.system")), TempSystems);
 
 		TempSystems = UClassicFunctionLibrary::SortConfigSystem(TempSystems);
+		Systems.Add(UClassicFunctionLibrary::SetSystemToGameData(TempSystems));
+
 		for (int32 i = 0; i < TempSystems.Num(); i++)
 		{
 			ConfigRoot = TempSystems[i].RomPath + TEXT("\\gamelist.xml");
@@ -131,12 +133,12 @@ void ULoadingGameData::CreateNewGameList()
 				}
 			}
 		}
-		TempSystems.Empty();
-		if (Systems.Num() == 0)
+		if (TempSystems.Num() == 0)
 		{
 			MessageShow.Broadcast(FText::FromString(TEXT("Systems not found")));
 			return;
 		}
+		TempSystems.Empty();
 	}
 	else
 	{
@@ -152,7 +154,7 @@ void ULoadingGameData::PrepareToSaveNewGameList()
 	AsyncTask(ENamedThreads::AnyThread, [=]()
 	{
 
-		for (int32 i = 0; i < Systems.Num(); i++)
+		for (int32 i = 1; i < Systems.Num(); i++)
 		{
 			FString GameResult;
 			FString GameRoot = Systems[i].RomPath + TEXT("\\gamelist.xml");
@@ -242,7 +244,7 @@ void ULoadingGameData::SetToRestartWidgets()
 	MainInterfaceReference->PlayAnimationReverse(MainInterfaceReference->AnimationShowConfiguration);
 	MainInterfaceReference->PlayAnimationReverse(MainInterfaceReference->LoadListGame);
 	MainInterfaceReference->PlayAnimationReverse(MainInterfaceReference->BarTop);
-	MainInterfaceReference->WBPFrame->SetFramePosition(1, EFocusTop::NONE);
+	MainInterfaceReference->WBPFrame->SetFrameCenterPosition(1);
 	GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &ULoadingGameData::RestartWidgets, 0.1f, false, DELAY + 1.0f);
 	AddLoadingScreenToViewPort();
 	const FText Message = LOCTEXT("UpdateGame", "Update game wait");

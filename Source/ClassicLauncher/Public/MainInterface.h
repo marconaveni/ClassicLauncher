@@ -324,6 +324,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnLoadGamesList();
 
+	UFUNCTION()
+	void EnableButtonsTop() const;
+
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void LoadImages(const int32 DistanceIndex = 15);
 
@@ -371,6 +374,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickLaunch();
+	void OpenSystem();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void AppLaunch();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
@@ -421,9 +425,13 @@ private:
 	UPROPERTY()
 	TArray<FText> TextCenter;
 	UPROPERTY()
+	TArray<FText> TextCenterSystem;
+	UPROPERTY()
 	TArray<ESlateVisibility> IconTop;
 	UPROPERTY()
 	TArray<ESlateVisibility> IconCenter;
+	UPROPERTY()
+	TArray<ESlateVisibility> IconCenterSystem;
 
 	//bindbuttons
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")

@@ -49,16 +49,23 @@ UMainInterface::UMainInterface(const FObjectInitializer& ObjectInitializer) : Su
 	TextTop.Add(LOCTEXT("buttonOk", "Ok"));
 	TextTop.Add(LOCTEXT("buttonBack", "Back"));
 	TextTop.Add(FText::FromString(TEXT("")));
-
 	TextTop.Shrink();
 
 	TextCenter.Add(LOCTEXT("buttonMenu", "Menu"));
 	TextCenter.Add(LOCTEXT("buttonDetails", "Details"));
 	TextCenter.Add(LOCTEXT("buttonSelect", "Select"));
 	TextCenter.Add(LOCTEXT("buttonStartGame", "Start Game"));
-	TextCenter.Add(LOCTEXT("buttonExit", "Exit"));
+	TextCenter.Add(LOCTEXT("buttonBack", "Back"));
 	TextCenter.Add(LOCTEXT("buttonFavorite", "Favorite"));
 	TextCenter.Shrink();
+
+	TextCenterSystem.Add(LOCTEXT("buttonMenu", "Menu"));
+	TextCenterSystem.Add(LOCTEXT("buttonDetails", "Details"));
+	TextCenterSystem.Add(LOCTEXT("buttonSelect", "Select"));
+	TextCenterSystem.Add(LOCTEXT("buttonOk", "Ok"));
+	TextCenterSystem.Add(LOCTEXT("buttonExit", "Exit"));
+	TextCenterSystem.Add(FText::FromString(TEXT("")));
+	TextCenterSystem.Shrink();
 
 	IconTop.Add(ESlateVisibility::Collapsed);
 	IconTop.Add(ESlateVisibility::Visible);
@@ -75,6 +82,14 @@ UMainInterface::UMainInterface(const FObjectInitializer& ObjectInitializer) : Su
 	IconCenter.Add(ESlateVisibility::Visible);
 	IconCenter.Add(ESlateVisibility::Visible);
 	IconCenter.Shrink();
+
+	IconCenterSystem.Add(ESlateVisibility::Visible);
+	IconCenterSystem.Add(ESlateVisibility::Visible);
+	IconCenterSystem.Add(ESlateVisibility::Visible);
+	IconCenterSystem.Add(ESlateVisibility::Visible);
+	IconCenterSystem.Add(ESlateVisibility::Visible);
+	IconCenterSystem.Add(ESlateVisibility::Collapsed);
+	IconCenterSystem.Shrink();
 }
 
 void UMainInterface::NativePreConstruct()
@@ -233,10 +248,11 @@ void UMainInterface::AddSystems(TArray<FGameSystem> Systems)
 void UMainInterface::LoadGamesList()
 {
 	TArray<FGameSystem>Systems = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave;
+	EnableButtonsTop();
 
 	int32 NumFavorites = 0;
 	GameData = UClassicFunctionLibrary::FilterGameData(Systems[CountSystem].GameDatas, Systems[CountSystem].Positions.OrderBy, NumFavorites);
-	if (NumFavorites == 0)
+	if (NumFavorites == 0 && Systems[CountSystem].Positions.OrderBy != EGamesFilter::DEFAULT)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Retry load filter game data with order default"));
 
@@ -258,6 +274,20 @@ void UMainInterface::LoadGamesList()
 		Args.Add("GameRoot", FText::FromString(Systems[CountSystem].RomPath));
 		SetCenterText(FText::Format(LOCTEXT("LogGameListNotFound", "gamelist.xml not found in {GameRoot}"), Args));
 	}
+}
+
+void UMainInterface::EnableButtonsTop() const
+{
+	if (CountSystem == 0)
+	{
+		BtnFavorites->SetColorAndOpacity(FLinearColor(1,1,1,0.5f)) ;
+		BtnInfo->SetColorAndOpacity(FLinearColor(1, 1, 1, 0.5f));
+		WBPFrame->SetFrameTopPosition(EFocusTop::SYSTEM);
+		return;
+	}
+	BtnFavorites->SetColorAndOpacity(FLinearColor(1, 1, 1, 1));
+	BtnInfo->SetColorAndOpacity(FLinearColor(1, 1, 1, 1));
+
 }
 
 void UMainInterface::LoadImages(const int32 DistanceIndex)
@@ -593,11 +623,11 @@ void UMainInterface::SetNavigationFocusTop()
 		{
 			BtnConfigurations->BtButton->SetKeyboardFocus();
 		}
-		else if (BtnConfigurations->BtButton->HasKeyboardFocus())
+		else if (BtnConfigurations->BtButton->HasKeyboardFocus() && CountSystem != 0)
 		{
 			BtnFavorites->BtButton->SetKeyboardFocus();
 		}
-		else if (BtnFavorites->BtButton->HasKeyboardFocus())
+		else if (BtnFavorites->BtButton->HasKeyboardFocus() && CountSystem != 0)
 		{
 			BtnInfo->BtButton->SetKeyboardFocus();
 		}
@@ -668,7 +698,7 @@ void UMainInterface::SetNavigationFocusDownBottom()
 
 void UMainInterface::SetTopButtonFocus()
 {
-	switch (LoopScroll->PositionTopX)
+	switch (WBPFrame->FrameIndexTop)
 	{
 	case 1:
 		BtnSelectSystem->BtButton->SetKeyboardFocus();
@@ -696,11 +726,26 @@ void UMainInterface::OnClickLaunch()
 {
 	if (PositionY == EPositionY::CENTER && bInputEnable)
 	{
-		SetCountPlayerToSave();
 		LoopScroll->OpenCard();
-		PlayAnimationForward(FadeStartSystem);
-		GetWorld()->GetTimerManager().SetTimer(LauncherTimerHandle, this, &UMainInterface::AppLaunch, 1.0f, false, -1);
+		if (CountSystem == 0)
+		{
+			ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas = GameDataIndex;
+			SetLastPositions(false);
+			GetWorld()->GetTimerManager().SetTimer(LauncherTimerHandle, this, &UMainInterface::OpenSystem, 0.1f, false, -1);
+		}
+		else
+		{
+			SetCountPlayerToSave();
+			PlayAnimationForward(FadeStartSystem);
+			GetWorld()->GetTimerManager().SetTimer(LauncherTimerHandle, this, &UMainInterface::AppLaunch, 1.0f, false, -1);
+		}
 	}
+}
+
+void UMainInterface::OpenSystem()
+{
+	CountSystem = IndexCard + 1;   //CountSystem = CountLocationY;
+	ResetCards(false, false);
 }
 
 void UMainInterface::AppLaunch()
@@ -764,7 +809,7 @@ void UMainInterface::OnClickSystem(int32 Value)
 			LoopScroll->BtnClick->SetKeyboardFocus();
 			PlayAnimationReverse(BarTop);
 			SetButtonsIconInterfaces(PositionY);
-			WBPFrame->SetFramePosition(WBPFrame->FrameIndexCenter, EFocusTop::NONE);
+			WBPFrame->SetFrameCenterPosition(WBPFrame->FrameIndexCenter);
 			return;
 		}
 		SetLastPositions(false);
@@ -781,7 +826,7 @@ void UMainInterface::SetButtonsIconInterfaces(EPositionY GetPosition)
 		WBPButtonsIconsInterfaces->SetTexts(TextTop);
 		WBPButtonsIconsInterfaces->SetButtonsVisibility(IconTop);
 	}
-	else if (GetPosition == EPositionY::CENTER)
+	else if (GetPosition == EPositionY::CENTER && CountSystem != 0)
 	{
 		if (GameData.IsValidIndex(IndexCard) && TextCenter.IsValidIndex(5))
 		{
@@ -790,6 +835,11 @@ void UMainInterface::SetButtonsIconInterfaces(EPositionY GetPosition)
 
 		WBPButtonsIconsInterfaces->SetTexts(TextCenter);
 		WBPButtonsIconsInterfaces->SetButtonsVisibility(IconCenter);
+	}
+	else
+	{
+		WBPButtonsIconsInterfaces->SetTexts(TextCenterSystem);
+		WBPButtonsIconsInterfaces->SetButtonsVisibility(IconCenterSystem);
 	}
 }
 
@@ -1002,7 +1052,8 @@ void UMainInterface::OnFocusInfo()
 
 void UMainInterface::FocusButtonsTop(const int32 PositionTopX, UToolTip* ToolTip, UCanvasPanelSlot* ToolTipSlot, UWidgetAnimation* Left, UWidgetAnimation* Right, const EFocusTop FocusTop)
 {
-	LoopScroll->PositionTopX = PositionTopX;
+	/*LoopScroll->PositionTopX = PositionTopX;*/
+	WBPFrame->FrameIndexTop = PositionTopX;
 	SetZOrderToolTips(ToolTipSlot);
 	ToolTip->SetToolTipVisibility(ESlateVisibility::Visible);
 	ToolTip->SetVisibility(ESlateVisibility::Visible);
@@ -1140,6 +1191,16 @@ void UMainInterface::OnClickBackAction()
 	}
 	else if (PositionY == EPositionY::CENTER)
 	{
+
+		if (CountSystem != 0)
+		{
+			ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas = GameDataIndex;
+			SetLastPositions(false);
+			CountSystem = 0;
+			ResetCards(false, false);
+			return;
+		}
+
 		if (bDelayQuit)
 		{
 			SetLastPositions(false);

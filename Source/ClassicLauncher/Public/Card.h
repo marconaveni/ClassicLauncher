@@ -69,6 +69,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Card|Functions")
 	void AnimationFade();
+	bool GetPositionCover();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void ClickButton();

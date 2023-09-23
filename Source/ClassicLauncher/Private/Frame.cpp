@@ -43,41 +43,62 @@ void UFrame::SetDefaultValues(int32 MaxFrameRightLimit, float MaxSpeed)
 	bAtRight = false;
 	bAtLeft = true;
 	EndAtTime = 0.0f;
-	SetFramePosition(1, EFocusTop::NONE);
+	SetFrameCenterPosition(1);
 }
 
 
-void UFrame::SetFramePosition(int32 PositionCenter, EFocusTop FocusTop)
+void UFrame::SetFrameCenterPosition(int32 PositionCenter)
 {
-	if (FocusTop == EFocusTop::NONE)
+	ImageFrameCenter->SetRenderScale(FVector2D(1.0f, 1.0f));
+	ImageFrameCenter->SetVisibility(ESlateVisibility::Visible);
+	ImageFrameTop->SetVisibility(ESlateVisibility::Hidden);
+
+	switch (PositionCenter)
 	{
-		ImageFrameCenter->SetRenderScale(FVector2D(1.0f, 1.0f));
-		ImageFrameCenter->SetVisibility(ESlateVisibility::Visible);
-		ImageFrameTop->SetVisibility(ESlateVisibility::Hidden);
-		switch (PositionCenter)
-		{
-		case 1:
-			ImageFrameCenter->SetRenderTranslation(FVector2D(0, 0));
-			break;
-		case 2:
-			ImageFrameCenter->SetRenderTranslation(FVector2D(385, 0));
-			break;
-		case 3:
-			ImageFrameCenter->SetRenderTranslation(FVector2D(770, 0));
-			break;
-		case 4:
-			ImageFrameCenter->SetRenderTranslation(FVector2D(1155, 0));
-			break;
-		default: 
-			break;
-		}
-		return;
+	case 1:
+		ImageFrameCenter->SetRenderTranslation(FVector2D(0, 0));
+		break;
+	case 2:
+		ImageFrameCenter->SetRenderTranslation(FVector2D(385, 0));
+		break;
+	case 3:
+		ImageFrameCenter->SetRenderTranslation(FVector2D(770, 0));
+		break;
+	case 4:
+		ImageFrameCenter->SetRenderTranslation(FVector2D(1155, 0));
+		break;
+	default:
+		break;
 	}
 
+}
+
+void UFrame::SetFrameTopPosition(EFocusTop FocusTop)
+{
 	ImageFrameCenter->SetRenderScale(FVector2D(0.352f, 0.288f));
 	ImageFrameCenter->SetVisibility(ESlateVisibility::Hidden);
 	ImageFrameTop->SetVisibility(ESlateVisibility::Visible);
 
+	if (FocusTop == EFocusTop::SYSTEM)
+	{
+		ImageFrameTop->SetRenderTranslation(FVector2D(0, 0));
+		FrameIndexTop = 1;
+	}
+	else if (FocusTop == EFocusTop::CONFIG)
+	{
+		ImageFrameTop->SetRenderTranslation(FVector2D(145, 0));
+		FrameIndexTop = 2;
+	}
+	else if (FocusTop == EFocusTop::FAVORITE)
+	{
+		ImageFrameCenter->SetRenderTranslation(FVector2D(289, 0));
+		FrameIndexTop = 3;
+	}
+	else if (FocusTop == EFocusTop::INFO)
+	{
+		ImageFrameCenter->SetRenderTranslation(FVector2D(433, 0));
+		FrameIndexTop = 4;
+	}
 }
 
 void UFrame::DirectionRight(int32 Frame, int32 Limit)
@@ -106,7 +127,7 @@ void UFrame::AnimationToTopDown(EFocusTop Focus, bool Forward)
 	case EFocusTop::INFO:
 		AnimationFrameToTop(FrameAnimationY1ToInfo, FrameAnimationY2ToInfo, FrameAnimationY3ToInfo, FrameAnimationY4ToInfo, Forward);
 		break;
-	default: 
+	default:
 		break;
 	}
 }

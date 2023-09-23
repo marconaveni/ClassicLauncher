@@ -394,6 +394,9 @@ void UClassicFunctionLibrary::SetGameSystem(TArray<UEasyXMLElement*>  Elements, 
 		ConfigSystem.Executable = Element->ReadString(TEXT("executable"));
 		ConfigSystem.SystemLabel = Element->ReadString(TEXT("systemlabel"));
 		ConfigSystem.SystemName = Element->ReadString(TEXT("systemname"));
+		const FString ReadImage = Element->ReadString(TEXT("image"));
+		ConfigSystem.Image = (ReadImage.IsEmpty()) ? GetGameRootDirectory() + TEXT("media\\") + ConfigSystem.SystemName + TEXT("\\system.png") : ReadImage;
+		ConfigSystem.Description = Element->ReadString(TEXT("description"));
 		if (FPaths::FileExists(ConfigSystem.RomPath + TEXT("\\gamelist.xml")) && VerifyDirectory(ConfigSystem.RomPath))
 		{
 			ConfigSystems.Add(ConfigSystem);
@@ -429,13 +432,34 @@ void UClassicFunctionLibrary::SetGameData(TArray<UEasyXMLElement*> Elements, TAr
 		GameData.lastplayed = Element->ReadString(TEXT("lastplayed"));
 		GameData.Executable = Element->ReadString(TEXT("executable"));
 		GameData.Arguments = Element->ReadString(TEXT("arguments"));
-		//GameData.ImageX = Element->ReadInt(TEXT("imagex"));
-		//GameData.ImageY = Element->ReadInt(TEXT("imagey"));
-		//GameData.Texture = Texture;
 		GameDatas.Add(GameData);
 
 		Index += 1;
 	}
+}
+
+FGameSystem UClassicFunctionLibrary::SetSystemToGameData(TArray<FGameSystem> Systems)
+{
+	TArray <FGameData> GameDatas;
+	for (int32 i = 0; i < Systems.Num(); i++)
+	{
+		FGameData NewGameData;
+		NewGameData.MapIndex = i;
+		NewGameData.PathFormated = Systems[i].RomPath;
+		NewGameData.nameFormated = Systems[i].SystemLabel;
+		NewGameData.Executable = Systems[i].Executable;
+		NewGameData.imageFormated = Systems[i].Image;  
+		NewGameData.thumbnailFormated = Systems[i].Image;  
+		NewGameData.descFormated = Systems[i].Description;  
+		GameDatas.Add(NewGameData);
+	}
+
+	FGameSystem NewSystem;
+	NewSystem.SystemName = TEXT("${System}");
+	NewSystem.SystemLabel = TEXT("Systems");
+	NewSystem.GameDatas = GameDatas;
+	return NewSystem;
+
 }
 
 void UClassicFunctionLibrary::FormatGameData(TArray<FGameData>& GameDatas, FConfig Config, FGameSystem GameSystem)
@@ -446,8 +470,6 @@ void UClassicFunctionLibrary::FormatGameData(TArray<FGameData>& GameDatas, FConf
 		GameData.PathFormated = TEXT("\"") + GameData.PathFormated + TEXT("\"");
 		GameData.nameFormated = GameData.name.Replace(TEXT("&amp;"), TEXT("&"), ESearchCase::IgnoreCase);
 		GameData.descFormated = GameData.desc.Replace(TEXT("&amp;"), TEXT("&"), ESearchCase::IgnoreCase);
-		//GameData.ImageX = (GameData.ImageX == 0) ? GameSystem.ImageX : GameData.ImageX;
-		//GameData.ImageY = (GameData.ImageY == 0) ? GameSystem.ImageY : GameData.ImageY;
 		GameData.imageFormated = ReplaceMedia(GameData.image, Config.PathMedia, GameSystem.RomPath, GameData.Path, GameSystem.SystemName, TEXT("covers"), TEXT(".png"), GameData.PathFormated);
 		GameData.thumbnailFormated = ReplaceMedia(GameData.thumbnail, Config.PathMedia, GameSystem.RomPath, GameData.Path, GameSystem.SystemName, TEXT("screenshots"), TEXT(".png"), GameData.PathFormated);
 		GameData.videoFormated = ReplaceMedia(GameData.video, Config.PathMedia, GameSystem.RomPath, GameData.Path, GameSystem.SystemName, TEXT("videos"), TEXT(".mp4"), GameData.PathFormated);
@@ -583,6 +605,7 @@ void UClassicFunctionLibrary::CreateFolders(FString Path, TArray<FGameSystem> Ga
 
 	for (FGameSystem& GameSystemElement : GameSystems)
 	{
+		if(GameSystemElement.SystemName.Equals(TEXT("${System}"))) continue; //ignore System
 		VerifyOrCreateDirectory(PathMedia + TEXT("\\") + GameSystemElement.SystemName);
 		VerifyOrCreateDirectory(PathMedia + TEXT("\\") + GameSystemElement.SystemName + TEXT("\\covers"));
 		VerifyOrCreateDirectory(PathMedia + TEXT("\\") + GameSystemElement.SystemName + TEXT("\\screenshots"));
@@ -636,7 +659,11 @@ EClassicImageFormat UClassicFunctionLibrary::GetFormatImage(const FString& FullF
 
 UTexture2D* UClassicFunctionLibrary::LoadTexture2DFromFile(const FString& FullFilePath, EClassicImageFormat ImageFormat, EClassicTextureFilter Filter, int32& Width, int32& Height)
 {
-
+	if (!FPaths::FileExists(FullFilePath))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("File not found. (%s)"), *FullFilePath);
+		return nullptr;
+	}
 	IImageWrapperModule& ImageWrapperModule = FModuleManager::Get().LoadModuleChecked<IImageWrapperModule>(TEXT("ImageWrapper"));
 
 	UTexture2D* NewTexture = nullptr;
