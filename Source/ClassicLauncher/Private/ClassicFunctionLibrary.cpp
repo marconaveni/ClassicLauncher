@@ -742,15 +742,14 @@ UTexture2D* UClassicFunctionLibrary::LoadTexture2DFromFile(const FString& FullFi
 
 void UClassicFunctionLibrary::AsyncLoadTexture2DFromFile(FLoadImageDelegate Out, const FString FullFilePath, int32 Index, EClassicImageFormat ImageFormat, EClassicTextureFilter Filter)
 {
-	if (!FPaths::FileExists(FullFilePath))
-	{
-		Out.ExecuteIfBound(nullptr, Index, false);
-		UE_LOG(LogTemp, Warning, TEXT("File Not Exists. %s"), *FullFilePath);
-		return;
-	}
-
 	AsyncTask(ENamedThreads::AnyThread, [=]()
 	{
+		if (!FPaths::FileExists(FullFilePath))
+		{
+			Out.ExecuteIfBound(nullptr, Index, false);
+			UE_LOG(LogTemp, Warning, TEXT("File Not Exists. %s"), *FullFilePath);
+			return;
+		}
 		IImageWrapperModule& ImageWrapperModule = FModuleManager::Get().LoadModuleChecked<IImageWrapperModule>(TEXT("ImageWrapper"));
 
 		TArray64<uint8> Buffer;

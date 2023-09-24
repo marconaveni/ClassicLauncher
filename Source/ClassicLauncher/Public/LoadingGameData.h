@@ -77,7 +77,7 @@ public:
 	void LoadGameSystems();
 
 	UFUNCTION()
-	void SetMainInterfaceData();
+	void SetMainInterfaceData() const;
 
 	UFUNCTION()
 	void AddMainInterfaceToViewPort();

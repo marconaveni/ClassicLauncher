@@ -63,7 +63,7 @@ void ULoadingGameData::LoadGameSystems()
 	Systems = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave;
 	UClassicFunctionLibrary::CreateFolders(ConfigurationData.PathMedia, Systems);
 
-	LoadingScreenReference->ShowMessage(FText::FromString(TEXT("Loading Systems...")));
+	LoadingScreenReference->ShowMessage(LOCTEXT("Loading", "Loading Games Wait..."));
 	if (Systems.Num() > 0)
 	{
 		MainInterfaceReference->AddSystems(Systems);
@@ -88,7 +88,7 @@ void ULoadingGameData::LoadGameSystems()
 	}
 }
 
-void ULoadingGameData::SetMainInterfaceData()
+void ULoadingGameData::SetMainInterfaceData() const
 {
 	MainInterfaceReference->CountSystem = CountSystem;
 	MainInterfaceReference->CountLocationY = CountSystem;
@@ -109,7 +109,7 @@ void ULoadingGameData::CreateNewGameList()
 		// check if is empty to avoid error in UEasyXMLElement*
 		if (ConfigResult.IsEmpty())
 		{
-			MessageShow.Broadcast(FText::FromString(TEXT("configsys.xml is Empty")));
+			MessageShow.Broadcast(LOCTEXT("configsysempty", "configsys.xml is Empty"));
 			return;
 		}
 
@@ -135,14 +135,14 @@ void ULoadingGameData::CreateNewGameList()
 		}
 		if (TempSystems.Num() == 0)
 		{
-			MessageShow.Broadcast(FText::FromString(TEXT("Systems not found")));
+			MessageShow.Broadcast(LOCTEXT("sysnotfound", "Systems not found"));
 			return;
 		}
 		TempSystems.Empty();
 	}
 	else
 	{
-		MessageShow.Broadcast(FText::FromString(TEXT("configsys.xml not found")));
+		MessageShow.Broadcast(LOCTEXT("configsysnotfound", "configsys.xml not found"));
 		return;
 	}
 
@@ -163,7 +163,8 @@ void ULoadingGameData::PrepareToSaveNewGameList()
 			UClassicFunctionLibrary::FormatGameData(Systems[i].GameDatas, ConfigurationData, Systems[i]);
 			AsyncTask(ENamedThreads::GameThread, [=]()
 			{
-				MessageShow.Broadcast(FText::FromString(TEXT("Loading ") + Systems[i].SystemLabel));
+				const FText Loading = FText::Format(LOCTEXT("loading", "Loading {0}") , FText::FromString(Systems[i].SystemLabel));
+				MessageShow.Broadcast(Loading);
 			});
 
 		}

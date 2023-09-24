@@ -34,12 +34,13 @@
 #include "TextImageBlock.h"
 //#include "Misc/OutputDeviceNull.h"
 
+#define DEFAULTDELAY 0.09f
 #define DEFAULTFIRSTDELAY  0.18f;
 #define LOCTEXT_NAMESPACE "ButtonsSelection"
 
 UMainInterface::UMainInterface(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	TimerDelayNavigation = 0.09f;
+	TimerDelayNavigation = DEFAULTDELAY;
 
 	Clear();
 
@@ -165,7 +166,7 @@ void UMainInterface::TimerTick()
 	}
 	if (bKeyPressed && PositionY == EPositionY::CENTER && (ENavigationLastButton == EButtonsGame::LEFT || ENavigationLastButton == EButtonsGame::RIGHT))
 	{
-		SpeedScroll = FMath::Clamp(SpeedScroll - 0.001f, DefaultMinSpeedScroll, DefaultSpeedScroll);
+		SpeedScroll = FMath::Clamp(SpeedScroll - 0.0005f, DefaultMinSpeedScroll, DefaultSpeedScroll);
 		LoopScroll->Speed = SpeedScroll;
 	}
 	else if (bKeyPressed && PositionY == EPositionY::CENTER && (ENavigationLastButton == EButtonsGame::LB || ENavigationLastButton == EButtonsGame::RB))
@@ -183,7 +184,7 @@ void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	if (ENavigationBack == EButtonsGame::SELECT && ENavigationA == EButtonsGame::A && ENavigationLB == EButtonsGame::LB && ENavigationRB == EButtonsGame::RB && ProcessID != 0)
+	if (MultiInput.CheckInputPressed())
 	{
 		TArray<FString> TextArguments;
 		TextArguments.Add(TEXT("  /PID   "));
@@ -232,7 +233,7 @@ void UMainInterface::AddSystems(TArray<FGameSystem> Systems)
 		{
 			ButtonSystem = CreateWidget<UClassicButtonSystem>(GetOwningPlayer(), ButtonSystemClass);
 			ButtonSystem->OnClickTrigger.AddDynamic(this, &UMainInterface::OnClickSystem);
-			ButtonSystem->SetText(Systems[i].SystemLabel);
+			ButtonSystem->SetText((i == 0) ? LOCTEXT("Systems", "Show Systems") : FText::FromString(Systems[i].SystemLabel));
 			ButtonSystem->SetCount(i);
 			ButtonSystemReferences.Add(ButtonSystem);
 			WBPSystemsList->ScrollBoxSystems->AddChild(ButtonSystem);
@@ -255,7 +256,6 @@ void UMainInterface::LoadGamesList()
 	if (NumFavorites == 0 && Systems[CountSystem].Positions.OrderBy != EGamesFilter::DEFAULT)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Retry load filter game data with order default"));
-
 		Systems[CountSystem].Positions.DefaultValues();
 		GameData = UClassicFunctionLibrary::FilterGameData(Systems[CountSystem].GameDatas, Systems[CountSystem].Positions.OrderBy, NumFavorites);
 	}
@@ -280,7 +280,7 @@ void UMainInterface::EnableButtonsTop() const
 {
 	if (CountSystem == 0)
 	{
-		BtnFavorites->SetColorAndOpacity(FLinearColor(1,1,1,0.5f)) ;
+		BtnFavorites->SetColorAndOpacity(FLinearColor(1, 1, 1, 0.5f));
 		BtnInfo->SetColorAndOpacity(FLinearColor(1, 1, 1, 0.5f));
 		WBPFrame->SetFrameTopPosition(EFocusTop::SYSTEM);
 		return;
@@ -355,7 +355,6 @@ void UMainInterface::PrepareThemes()
 	OnPrepareThemes(); //BlueprintImplementableEvent
 }
 
-
 FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
 	if (bInputEnable)
@@ -378,18 +377,10 @@ FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const
 				OnClickFavorite();
 			}
 		}
+		return Super::NativeOnPreviewKeyDown(InGeometry, InKeyEvent);
 	}
-	else
-	{
-		switch (UClassicFunctionLibrary::GetInputButton(InKeyEvent))
-		{
-		case EButtonsGame::SELECT: ENavigationBack = EButtonsGame::SELECT; break;
-		case EButtonsGame::A: ENavigationA = EButtonsGame::A; break;
-		case EButtonsGame::LB: ENavigationLB = EButtonsGame::LB; break;
-		case EButtonsGame::RB: ENavigationRB = EButtonsGame::RB; break;
-		default: break;
-		}
-	}
+
+	MultiInput.SetInput(UClassicFunctionLibrary::GetInputButton(InKeyEvent));
 	return Super::NativeOnPreviewKeyDown(InGeometry, InKeyEvent);
 }
 
@@ -400,11 +391,11 @@ FReply UMainInterface::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEven
 	ENavigationLastButton = EButtonsGame::NONE;
 	LoopScroll->CancelScroll();
 	FirstDelayNavigation = DEFAULTFIRSTDELAY;
+	PressedTimerNavigation();
 
 	if (bInputEnable)
 	{
 		bKeyPressed = false;
-		bUpDownPressed = true;
 		bDelayFavoriteClick = false;
 
 		if (Input == EButtonsGame::B)
@@ -415,14 +406,10 @@ FReply UMainInterface::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEven
 		{
 			ClassicMediaPlayerReference->PlayMusic();
 		}
+		return Super::NativeOnKeyUp(InGeometry, InKeyEvent);
 	}
-	else
-	{
-		ENavigationBack = EButtonsGame::NONE;
-		ENavigationA = EButtonsGame::NONE;
-		ENavigationLB = EButtonsGame::NONE;
-		ENavigationRB = EButtonsGame::NONE;
-	}
+
+	MultiInput.SetAllNoneInput();
 	return Super::NativeOnKeyUp(InGeometry, InKeyEvent);
 }
 
@@ -443,7 +430,6 @@ FReply UMainInterface::NativeOnMouseWheel(const FGeometry& InGeometry, const FPo
 	}
 	return Super::NativeOnMouseWheel(InGeometry, InMouseEvent);
 }
-
 
 void UMainInterface::OnAnimationStartedPlaying(UUMGSequencePlayer& Player)
 {
@@ -492,16 +478,21 @@ void UMainInterface::OnPreventLoseFocus()
 
 #pragma region NavigationArea
 
-
-
 void UMainInterface::NavigationGame(EButtonsGame Navigate)
 {
-	if (Navigate == EButtonsGame::UP || Navigate == EButtonsGame::DOWN || Navigate == EButtonsGame::LEFT || Navigate == EButtonsGame::RIGHT || Navigate == EButtonsGame::LB || Navigate == EButtonsGame::RB)
+	if (Navigate == EButtonsGame::UP || Navigate == EButtonsGame::DOWN ||
+		Navigate == EButtonsGame::LEFT || Navigate == EButtonsGame::RIGHT ||
+		Navigate == EButtonsGame::LB || Navigate == EButtonsGame::RB)
 	{
-		if (!bScroll && bInputEnable && bDelayPressed && bUpDownPressed)
+		if (!bScroll && bInputEnable && bDelayPressed)
 		{
+			PressedDelayNavigation(TimerDelayNavigation + FirstDelayNavigation);
+			FirstDelayNavigation = 0.0f;
+
 			OnNavigationGame(Navigate); //BlueprintImplementableEvent
+
 			if (Focus == EFocus::MAIN) {
+				//FirstDelayNavigation = 0.08f;
 				NavigationMain(Navigate);
 			}
 			else if (Focus == EFocus::SYSTEM) {
@@ -519,73 +510,48 @@ void UMainInterface::NavigationGame(EButtonsGame Navigate)
 
 void UMainInterface::NavigationMain(EButtonsGame Navigate)
 {
-	PressedDelayNavigation(TimerDelayNavigation + FirstDelayNavigation);
-	FirstDelayNavigation = 0.0f;
 	ENavigationButton = Navigate;
-	if (ENavigationButton == EButtonsGame::LEFT || ENavigationButton == EButtonsGame::RIGHT)
+
+	if (ENavigationButton == EButtonsGame::LEFT || ENavigationButton == EButtonsGame::RIGHT ||
+		ENavigationButton == EButtonsGame::LB || ENavigationButton == EButtonsGame::RB)
 	{
-		if (PositionY == EPositionY::TOP)
-		{
-			SetNavigationFocusTop();
-		}
-		else if (PositionY == EPositionY::CENTER)
-		{
-			SetDirection(ENavigationButton);
-		}
-	}
-	else if (ENavigationButton == EButtonsGame::LB || ENavigationButton == EButtonsGame::RB)
-	{
+
 		if (PositionY == EPositionY::CENTER)
 		{
 			SetDirection(ENavigationButton);
 		}
+		else if (PositionY == EPositionY::TOP)
+		{
+			SetNavigationFocusTop();
+		}
 	}
-	else if (ENavigationButton == EButtonsGame::UP)
+	else if (ENavigationButton == EButtonsGame::UP && bUpDownPressed)
 	{
-		bUpDownPressed = false;
 		SetNavigationFocusUpBottom();
 	}
-	else if (ENavigationButton == EButtonsGame::DOWN)
+	else if (ENavigationButton == EButtonsGame::DOWN && bUpDownPressed)
 	{
-		bUpDownPressed = false;
 		SetNavigationFocusDownBottom();
 	}
 }
 
 void UMainInterface::NavigationSystem(EButtonsGame Navigate)
 {
-	PressedDelayNavigation(TimerDelayNavigation + FirstDelayNavigation);
-	FirstDelayNavigation = 0.0f;
 	ENavigationButton = Navigate;
 	WBPSystemsList->SetFocusItem(ENavigationButton, CountLocationY, ButtonSystemReferences);
 }
 
 void UMainInterface::NavigationInfo(EButtonsGame Navigate)
 {
-	PressedDelayNavigation(TimerDelayNavigation + FirstDelayNavigation);
-	FirstDelayNavigation = 0.0f;
 }
 
 void UMainInterface::NavigationConfiguration(EButtonsGame Navigate)
 {
-	if (Navigate != EButtonsGame::LEFT || Navigate != EButtonsGame::RIGHT)
+	if (Navigate == EButtonsGame::LEFT || Navigate == EButtonsGame::RIGHT)
 	{
-		PressedDelayNavigation(TimerDelayNavigation + FirstDelayNavigation);
-		FirstDelayNavigation = 0.0f;
+		PressedTimerNavigation();
 	}
 	WBPClassicConfigurationsInterface->SetIndexFocus(Navigate);
-}
-
-void UMainInterface::SetTitle(int32 Index)
-{
-	if (GameData.IsValidIndex(Index))
-	{
-		IndexCard = Index;
-		const FString Title = GameData[IndexCard].nameFormated;
-		TextTitleGame->SetText(FText::FromString(Title));
-		WBPTextBoxScroll->SetText(GameData[IndexCard].descFormated);
-		SetButtonsIconInterfaces(PositionY);
-	}
 }
 
 void UMainInterface::SetDirection(EButtonsGame Navigate)
@@ -659,7 +625,6 @@ void UMainInterface::SetNavigationFocusUpBottom()
 		PositionY = EPositionY::TOP;
 		PlayAnimationForward(BarTop);
 		SetButtonsIconInterfaces(PositionY);
-
 		SetTopButtonFocus();
 	}
 }
@@ -717,10 +682,35 @@ void UMainInterface::SetTopButtonFocus()
 	}
 }
 
+//pressed delay
+void UMainInterface::PressedDelayNavigation(float Delay)
+{
+	bDelayPressed = false;
+	GetWorld()->GetTimerManager().SetTimer(DelayPressedTimerHandle, this, &UMainInterface::PressedTimerNavigation, Delay, false, -1);
+}
+//timer
+void UMainInterface::PressedTimerNavigation()
+{
+	bDelayPressed = true;
+}
+
 //end navigate area
 ///////////////////////////////////////////////////
 
 #pragma endregion NavigationArea
+
+
+void UMainInterface::SetTitle(int32 Index)
+{
+	if (GameData.IsValidIndex(Index))
+	{
+		IndexCard = Index;
+		const FString Title = GameData[IndexCard].nameFormated;
+		TextTitleGame->SetText(FText::FromString(Title));
+		WBPTextBoxScroll->SetText(GameData[IndexCard].descFormated);
+		SetButtonsIconInterfaces(PositionY);
+	}
+}
 
 void UMainInterface::OnClickLaunch()
 {
@@ -940,22 +930,6 @@ void UMainInterface::RunningGame(bool bIsRun)
 	}
 }
 
-///////////////////////////////////////////////////////////////////////
-
-//pressed delay
-void UMainInterface::PressedDelayNavigation(float Delay)
-{
-	bDelayPressed = false;
-	GetWorld()->GetTimerManager().SetTimer(DelayPressedTimerHandle, this, &UMainInterface::PressedTimerNavigation, Delay, false, -1);
-}
-//timer
-void UMainInterface::PressedTimerNavigation()
-{
-	bDelayPressed = true;
-}
-
-///////////////////////////////////////////////////////////////////////
-
 void UMainInterface::SetRenderOpacityList() {
 
 	TextTitleGame->SetRenderOpacity(0.f);
@@ -981,7 +955,6 @@ void UMainInterface::ResetCards(const bool bAnimationBarTop, const bool bAnimati
 	PositionY = EPositionY::CENTER;
 	DescriptionScrollScale = 0.f;
 
-	bUpDownPressed = true;
 	bDelayPressed = true;
 
 	if (bAnimationBarTop)
@@ -1003,9 +976,7 @@ void UMainInterface::Clear()
 	ProcessID = 0;
 	ENavigationLastButton = EButtonsGame::NONE;
 	ENavigationButton = EButtonsGame::NONE;
-	ENavigationScroll = EButtonsGame::NONE;
-	ENavigationBack = EButtonsGame::NONE;
-	ENavigationA = EButtonsGame::NONE;
+	MultiInput.SetAllNoneInput();
 	PositionY = EPositionY::CENTER;
 	Focus = EFocus::MAIN;
 	bDelayPressed = true;
@@ -1016,7 +987,6 @@ void UMainInterface::Clear()
 	bDelayFavoriteClick = false;
 	bDelayQuit = false;
 	bIsRunning = false;
-	FirstDelayNavigation = DEFAULTFIRSTDELAY;
 	CountSystem = 0;
 	CountLocationY = 0;
 	DescriptionScrollScale = 0.f;
@@ -1052,7 +1022,6 @@ void UMainInterface::OnFocusInfo()
 
 void UMainInterface::FocusButtonsTop(const int32 PositionTopX, UToolTip* ToolTip, UCanvasPanelSlot* ToolTipSlot, UWidgetAnimation* Left, UWidgetAnimation* Right, const EFocusTop FocusTop)
 {
-	/*LoopScroll->PositionTopX = PositionTopX;*/
 	WBPFrame->FrameIndexTop = PositionTopX;
 	SetZOrderToolTips(ToolTipSlot);
 	ToolTip->SetToolTipVisibility(ESlateVisibility::Visible);
@@ -1312,7 +1281,7 @@ void UMainInterface::SetImageBottom()
 		int32 Width = 640;
 		int32 Height = 480;
 		const EClassicImageFormat Format = UClassicFunctionLibrary::GetFormatImage(ImagePath);
-		UTexture2D* ImageLoaded = UClassicFunctionLibrary::LoadTexture2DFromFile(ImagePath, Format, EClassicTextureFilter::DEFAULT, Width, Height);
+		UTexture2D* ImageLoaded = UClassicFunctionLibrary::LoadTexture2DFromFile(ImagePath, Format, EClassicTextureFilter::NEAREST, Width, Height);
 
 		if (ImageLoaded != nullptr)
 		{

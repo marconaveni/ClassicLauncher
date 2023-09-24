@@ -47,6 +47,49 @@ enum class EFocus : uint8
 	CONFIG   UMETA(DisplayName = "Configuration")
 };
 
+USTRUCT(BlueprintType)
+struct FMultiInput
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EButtonsGame ENavigationBack;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EButtonsGame ENavigationA;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EButtonsGame ENavigationLB;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EButtonsGame ENavigationRB;
+
+	FMultiInput() { SetAllNoneInput(); }
+
+	FORCEINLINE void SetAllNoneInput() 
+	{
+		ENavigationBack = EButtonsGame::NONE;
+		ENavigationA = EButtonsGame::NONE;
+		ENavigationLB = EButtonsGame::NONE;
+		ENavigationRB = EButtonsGame::NONE;
+	}
+
+	FORCEINLINE bool CheckInputPressed() const 
+	{
+		return (ENavigationBack != EButtonsGame::NONE && ENavigationA != EButtonsGame::NONE &&
+				ENavigationLB != EButtonsGame::NONE && ENavigationRB != EButtonsGame::NONE);
+	}
+
+	FORCEINLINE void SetInput(const EButtonsGame Input) 
+	{
+		switch (Input)
+		{
+		case EButtonsGame::SELECT: ENavigationBack = EButtonsGame::SELECT; break;
+		case EButtonsGame::A: ENavigationA = EButtonsGame::A; break;
+		case EButtonsGame::LB: ENavigationLB = EButtonsGame::LB; break;
+		case EButtonsGame::RB: ENavigationRB = EButtonsGame::RB; break;
+		default: break;
+		}
+	}
+};
+
 
 /**
  * 
@@ -57,6 +100,9 @@ class CLASSICLAUNCHER_API UMainInterface : public UUserWidget
 	GENERATED_BODY()
 
 public:
+
+
+
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UTextImageBlock* TextTitleGame;
@@ -198,16 +244,10 @@ public:
 	EButtonsGame ENavigationButton;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	EButtonsGame ENavigationLastButton;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	EButtonsGame ENavigationScroll;	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	EButtonsGame ENavigationBack;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	EButtonsGame ENavigationA;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	EButtonsGame ENavigationLB;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	EButtonsGame ENavigationRB;
+	FMultiInput MultiInput;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	EPositionY PositionY;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")

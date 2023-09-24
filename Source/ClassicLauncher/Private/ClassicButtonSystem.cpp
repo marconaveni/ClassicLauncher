@@ -55,10 +55,10 @@ void UClassicButtonSystem::NativePreConstruct()
 	Super::NativePreConstruct();
 }
 
-void UClassicButtonSystem::SetText(FString NewText)
+void UClassicButtonSystem::SetText(FText NewText)
 {
-	Text->SetText(FText::FromString(NewText));
-	ButtonText = FText::FromString(NewText);
+	Text->SetText(NewText);
+	ButtonText = NewText;
 }
 
 void UClassicButtonSystem::SetCount(int32 NewValue)
