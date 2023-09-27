@@ -53,38 +53,38 @@ struct FMultiInput
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	EButtonsGame ENavigationBack;
+	EButtonsGame ENavigation1;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	EButtonsGame ENavigationA;
+	EButtonsGame ENavigation2;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	EButtonsGame ENavigationLB;
+	EButtonsGame ENavigation3;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	EButtonsGame ENavigationRB;
+	EButtonsGame ENavigation4;
 
 	FMultiInput() { SetAllNoneInput(); }
 
 	FORCEINLINE void SetAllNoneInput() 
 	{
-		ENavigationBack = EButtonsGame::NONE;
-		ENavigationA = EButtonsGame::NONE;
-		ENavigationLB = EButtonsGame::NONE;
-		ENavigationRB = EButtonsGame::NONE;
+		ENavigation1 = EButtonsGame::NONE;
+		ENavigation2 = EButtonsGame::NONE;
+		ENavigation3 = EButtonsGame::NONE;
+		ENavigation4 = EButtonsGame::NONE;
 	}
 
 	FORCEINLINE bool CheckInputPressed() const 
 	{
-		return (ENavigationBack != EButtonsGame::NONE && ENavigationA != EButtonsGame::NONE &&
-				ENavigationLB != EButtonsGame::NONE && ENavigationRB != EButtonsGame::NONE);
+		return (ENavigation1 != EButtonsGame::NONE && ENavigation2 != EButtonsGame::NONE &&
+				ENavigation3 != EButtonsGame::NONE && ENavigation4 != EButtonsGame::NONE);
 	}
 
 	FORCEINLINE void SetInput(const EButtonsGame Input) 
 	{
 		switch (Input)
 		{
-		case EButtonsGame::SELECT: ENavigationBack = EButtonsGame::SELECT; break;
-		case EButtonsGame::A: ENavigationA = EButtonsGame::A; break;
-		case EButtonsGame::LB: ENavigationLB = EButtonsGame::LB; break;
-		case EButtonsGame::RB: ENavigationRB = EButtonsGame::RB; break;
+		case EButtonsGame::SELECT: ENavigation1 = EButtonsGame::SELECT; break;
+		case EButtonsGame::START: ENavigation2 = EButtonsGame::START; break;
+		case EButtonsGame::LT: ENavigation3 = EButtonsGame::LT; break;
+		case EButtonsGame::RT: ENavigation4 = EButtonsGame::RT; break;
 		default: break;
 		}
 	}
@@ -271,6 +271,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	bool bIsRunning;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	bool bIsRunningSteam;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	float TimerDelayNavigation;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	float FirstDelayNavigation;
@@ -316,7 +318,7 @@ public:
 
 	//timers
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
-	FTimerHandle DelayCreateGameListTimerHandle;
+	FTimerHandle DelayLoadSteamListTimerHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle DelayReloadTimerHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
@@ -415,6 +417,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickLaunch();
 	void OpenSystem();
+
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void AppLaunch();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")

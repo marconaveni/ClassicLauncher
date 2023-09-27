@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "AnimationUI.h"
 #include "Card.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegate, FString , value);
@@ -14,6 +15,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDelegateTrigger, EUINavigation, va
 
 class UImage;
 class UButton;
+class UAnimationUI;
 
 UCLASS()
 class CLASSICLAUNCHER_API UCard : public UUserWidget
@@ -28,11 +30,18 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FDelegate OnClickTrigger;
 
+
 	UCard(const FObjectInitializer& ObjectInitializer);
 
 	virtual void NativePreConstruct() override;
 	virtual bool Initialize() override;
 	virtual FReply NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card|Variables")
+	FAnimationIUCurves CurveFavoritesFoward;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card|Variables")
+	FAnimationIUCurves CurveFavoritesReverse;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card|Variables")
 	FString PathImage;
@@ -69,7 +78,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Card|Functions")
 	void AnimationFade();
-	bool GetPositionCover();
+
+	UFUNCTION(BlueprintCallable, Category = "Card|Functions")
+	bool GetPositionCover(int32 Left = 0 , int32 Right = 1800 ); 
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void ClickButton();
@@ -97,14 +108,24 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UImage* Favorite;
 
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	UWidgetAnimation* ChangeColor;
+	UPROPERTY()
+	UAnimationUI* AnimationFrame;
+	UPROPERTY()
+	UAnimationUI* AnimationCard;
+	UPROPERTY()
+	UAnimationUI* AnimationFavorite;
+	UPROPERTY()
+	UAnimationUI* AnimationFadeCard;
 
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	UWidgetAnimation* FadeFavorite;
 
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	UWidgetAnimation* StartSystem;
+	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	//UWidgetAnimation* ChangeColor;
+
+	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	//UWidgetAnimation* FadeFavorite;
+
+	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	//UWidgetAnimation* StartSystem;
 
 
 

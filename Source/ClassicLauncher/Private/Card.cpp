@@ -3,11 +3,9 @@
 
 #include "Card.h"
 
-#include "Blueprint/SlateBlueprintLibrary.h"
 #include "Components/Button.h"
 #include "Components/Image.h"
 #include "Styling/SlateBrush.h"
-#include "Components/CanvasPanelSlot.h"
 
 UCard::UCard(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -22,6 +20,11 @@ void UCard::NativePreConstruct()
 
 bool UCard::Initialize()
 {
+	AnimationFrame = NewObject<UAnimationUI>(this, UAnimationUI::StaticClass());
+	AnimationCard = NewObject<UAnimationUI>(this, UAnimationUI::StaticClass());
+	AnimationFadeCard = NewObject<UAnimationUI>(this, UAnimationUI::StaticClass());
+	AnimationFavorite = NewObject<UAnimationUI>(this, UAnimationUI::StaticClass());
+	
 	bool Success = Super::Initialize();
 	return false;
 }
@@ -59,26 +62,21 @@ void UCard::SetPlayers(FString value)
 
 void UCard::SetFocusCard(bool enable)
 {
-	if (enable) 
+	FWidgetTransform Transform;
+	if (enable)
 	{
-		PlayAnimationForward(ChangeColor);
+		AnimationFrame->PlayAnimation(this->FrameSelected, 0.20f, 60, Transform, 1, false, EEasingFunc::EaseOut);
+		AnimationCard->PlayAnimation(this->BackgroundSelected, 0.20f, 60, Transform, 1, false, EEasingFunc::EaseOut);
 	}
-	else 
+	else
 	{
-		PlayAnimationReverse(ChangeColor);
+		AnimationFrame->PlayAnimation(this->FrameSelected, 0.20f, 60, Transform, 0, false, EEasingFunc::EaseOut);
+		AnimationCard->PlayAnimation(this->BackgroundSelected, 0.20f, 60, Transform, 0, false, EEasingFunc::EaseOut);
 	}
-	UCanvasPanelSlot* CanvasFrameSelected = Cast<UCanvasPanelSlot>(FrameSelected->Slot);
-	UCanvasPanelSlot* CanvasBackgroundSelected = Cast<UCanvasPanelSlot>(BackgroundSelected->Slot);
-	CanvasFrameSelected->SetZOrder(2);
-	CanvasBackgroundSelected->SetZOrder(-1);
 }
 
 void UCard::SelectedFrameToBackground()
 {
-	UCanvasPanelSlot* CanvasFrameSelected = Cast<UCanvasPanelSlot>(FrameSelected->Slot);
-	UCanvasPanelSlot* CanvasBackgroundSelected = Cast<UCanvasPanelSlot>(BackgroundSelected->Slot);
-	CanvasFrameSelected->SetZOrder(-99);
-	CanvasBackgroundSelected->SetZOrder(-99);
 }
 
 void UCard::SetThemeCard(UTexture2D* texture)
@@ -91,30 +89,39 @@ void UCard::SetFavorite(bool favorite, bool AnimateIcon)
 
 	Favorite->SetVisibility(ESlateVisibility::Visible);
 
+	if (favorite)
+	{
+		FrameMain->SetRenderOpacity(0.0f);
+		BackgroundMain->SetRenderOpacity(0.0f);
+		FrameFavorite->SetRenderOpacity(1.0f);
+		BackgroundFavorite->SetRenderOpacity(1.0f);
+	}
+	else
+	{
+		FrameMain->SetRenderOpacity(1.0f);
+		BackgroundMain->SetRenderOpacity(1.0f);
+		FrameFavorite->SetRenderOpacity(0.0f);
+		BackgroundFavorite->SetRenderOpacity(0.0f);
+	}
+
 	if (AnimateIcon == false)
 	{
-		if (favorite) {
-			FrameMain->RenderOpacity = 0.0f;
-			BackgroundMain->RenderOpacity = 0.0f;
-			FrameFavorite->RenderOpacity = 1.0f;
-			BackgroundFavorite->RenderOpacity = 1.0f;
-			Favorite->RenderOpacity = 1.0f;
-		}
-		else {
-			FrameMain->RenderOpacity = 1.0f;
-			BackgroundMain->RenderOpacity = 1.0f;
-			FrameFavorite->RenderOpacity = 0.0f;
-			BackgroundFavorite->RenderOpacity = 0.0f;
-			Favorite->RenderOpacity = 0.0f;
-		}
+		Favorite->SetRenderOpacity((favorite) ? 1.0f : 0.0f);
 	}
-	else {
+	else
+	{
 
-		if (favorite) {
-			PlayAnimationForward(FadeFavorite);
+		FWidgetTransform Transform;
+		if (favorite)
+		{
+			AnimationFavorite->SetCurves(CurveFavoritesFoward);
+			AnimationFavorite->PlayAnimation(this->Favorite, 0.45f, 60, Transform, 1, false, EEasingFunc::EaseOut);
 		}
-		else {
-			PlayAnimationReverse(FadeFavorite);
+		else
+		{
+			AnimationFavorite->SetCurves(CurveFavoritesReverse);
+			AnimationFavorite->PlayAnimation(this->Favorite, 0.45f, 60, Transform, 0, false, EEasingFunc::EaseOut);
+			UE_LOG(LogTemp, Warning, TEXT("aqui"));
 		}
 	}
 }
@@ -138,20 +145,15 @@ void UCard::ButtonClick()
 
 void UCard::AnimationFade()
 {
-	if (GetPositionCover())
+	if (AnimationFavorite != nullptr)
 	{
-		PlayAnimationForward(StartSystem, 1.0f, true);
+		FWidgetTransform Transform;
+		Transform.Scale = FVector2D(1.8f, 1.8f);
+		AnimationFadeCard->PlayAnimation(this, 0.25f, 60, Transform, 0, true, EEasingFunc::EaseOut);
 	}
 }
 
-bool UCard::GetPositionCover()
+bool UCard::GetPositionCover(const int32 Left, const int32 Right)
 {
-	const FGeometry& Geometry = GetCachedGeometry();
-	FVector2D PixelPosition, ViewportPosition;
-	USlateBlueprintLibrary::LocalToViewport(this, Geometry, FVector2D(0, 0), PixelPosition, ViewportPosition);
-	if (PixelPosition.X > 90 && PixelPosition.X < 1800)
-	{
-		return true;
-	}
 	return false;
 }

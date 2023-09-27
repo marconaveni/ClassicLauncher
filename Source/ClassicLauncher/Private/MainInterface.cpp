@@ -184,7 +184,20 @@ void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	if (MultiInput.CheckInputPressed())
+
+	if (bIsRunningSteam)
+	{
+		ProcessID = 0;
+		if (MultiInput.CheckInputPressed())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("passando"));
+			bIsRunningSteam = false;
+			bIsRunning = true;
+		}
+		return;
+	}
+
+	if (MultiInput.CheckInputPressed() && ProcessID != 0)
 	{
 		TArray<FString> TextArguments;
 		TextArguments.Add(TEXT("  /PID   "));
@@ -357,10 +370,11 @@ void UMainInterface::PrepareThemes()
 
 FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
+	const EButtonsGame Input = UClassicFunctionLibrary::GetInputButton(InKeyEvent);
 	if (bInputEnable)
 	{
 		KeyEvent = InKeyEvent;
-		const EButtonsGame Input = UClassicFunctionLibrary::GetInputButton(InKeyEvent);
+		
 
 		if (ENavigationLastButton == EButtonsGame::NONE && Input != EButtonsGame::A)
 		{
@@ -380,7 +394,7 @@ FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const
 		return Super::NativeOnPreviewKeyDown(InGeometry, InKeyEvent);
 	}
 
-	MultiInput.SetInput(UClassicFunctionLibrary::GetInputButton(InKeyEvent));
+	MultiInput.SetInput(Input);
 	return Super::NativeOnPreviewKeyDown(InGeometry, InKeyEvent);
 }
 
@@ -406,7 +420,6 @@ FReply UMainInterface::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEven
 		{
 			ClassicMediaPlayerReference->PlayMusic();
 		}
-		return Super::NativeOnKeyUp(InGeometry, InKeyEvent);
 	}
 
 	MultiInput.SetAllNoneInput();
@@ -721,13 +734,13 @@ void UMainInterface::OnClickLaunch()
 		{
 			ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas = GameDataIndex;
 			SetLastPositions(false);
-			GetWorld()->GetTimerManager().SetTimer(LauncherTimerHandle, this, &UMainInterface::OpenSystem, 0.1f, false, -1);
+			GetWorld()->GetTimerManager().SetTimer(LauncherTimerHandle, this, &UMainInterface::OpenSystem, 0.015f, false, 0.1f);
 		}
 		else
 		{
-			SetCountPlayerToSave();
 			PlayAnimationForward(FadeStartSystem);
-			GetWorld()->GetTimerManager().SetTimer(LauncherTimerHandle, this, &UMainInterface::AppLaunch, 1.0f, false, -1);
+			SetCountPlayerToSave();
+			GetWorld()->GetTimerManager().SetTimer(LauncherTimerHandle, this, &UMainInterface::AppLaunch, 0.015f, false, 1.5f);
 		}
 	}
 }
@@ -740,6 +753,8 @@ void UMainInterface::OpenSystem()
 
 void UMainInterface::AppLaunch()
 {
+	
+
 	const FString PathRomFormated = UClassicFunctionLibrary::HomeDirectoryReplace(GameData[IndexCard].PathFormated);
 	const FString ExecutablePath = (GameData[IndexCard].Executable == TEXT("")) ? GameSystems[CountSystem].Executable : GameData[IndexCard].Executable;
 	const FString Arguments = (GameData[IndexCard].Arguments == TEXT("")) ? GameSystems[CountSystem].Arguments : GameData[IndexCard].Arguments;
@@ -782,8 +797,14 @@ void UMainInterface::OpenLibretro(const FString CorePath, const FString RomPath,
 
 void UMainInterface::OpenExternalProcess(FString ExecutablePath, TArray<FString> CommandArgs)
 {
-	UClassicFunctionLibrary::CreateProcess(ProcessID, ExecutablePath, CommandArgs, false, false);
+	const FString WorkingDirectory = FPaths::GetPath(ExecutablePath);
+	UClassicFunctionLibrary::CreateProcess(ProcessID, ExecutablePath, CommandArgs, false, false, 0, WorkingDirectory);
 	GameMode->GameSettingsRunning();
+	if (GameSystems[CountSystem].Executable.Equals(TEXT("steam")))
+	{
+		bIsRunningSteam = true;
+		RunningGame(true);
+	}
 }
 
 void UMainInterface::OnClickSystem(int32 Value)

@@ -54,7 +54,7 @@ void AClassicGameMode::GameSettingsRunningInternal()
 void AClassicGameMode::GameSettingsRunning()
 {
 	UGameUserSettings* Settings = UGameUserSettings::GetGameUserSettings();
-	Settings->SetFrameRateLimit(1.0f);
+	Settings->SetFrameRateLimit(30.0f);
 	Settings->ApplySettings(true);
 	Settings->SaveSettings();
 }
