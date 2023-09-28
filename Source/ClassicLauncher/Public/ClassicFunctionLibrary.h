@@ -132,7 +132,7 @@ public:
 
 	//Generate a random number without repeating the last one
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Integers")
-	static int32 GenerateNumberWithoutRepeat(int32 value, int32 min, int32 max);
+	static int32 GenerateNumberWithoutRepeat(int32 Value, int32 Min, int32 Max);
 
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Strings")
 	static FString ReplacePath(FString value, FString path);
@@ -241,8 +241,8 @@ public:
 	static EClassicImageFormat GetFormatImage(const FString& FullFilePath);
 
 	//function credits Rama VictoryBPFunctionLibrary
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|System")
-	static void CreateProcess(int32& ProcessId, FString FullPath, TArray<FString> CommandlineArgs, bool Detach, bool Hidden, int32 Priority = 0, FString OptionalWorkingDirectory = "");
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|System", meta = (DisplayName = "Create Process"))
+	static void CreateProc(int32& ProcessId, FString FullPath, TArray<FString> CommandlineArgs, bool Detach, bool Hidden, int32 Priority = 0, FString OptionalWorkingDirectory = "");
 
 	//function credits Rama VictoryBPFunctionLibrary
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|System")
@@ -278,5 +278,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GeneralProjectSettings")
 	static FString GetProjectName();
 
+	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Process")
+	static FString ReadRegistryValue(const FString& KeyName, const FString& ValueName);
 
+	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Process")
+	static bool IsRunningSteamApp(const FString& AppID);
 };

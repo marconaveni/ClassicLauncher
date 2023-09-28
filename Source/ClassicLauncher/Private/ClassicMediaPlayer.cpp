@@ -72,11 +72,15 @@ void AClassicMediaPlayer::Tick(float DeltaTime)
 
 void AClassicMediaPlayer::SetMusics(const FString NewMediaPath)
 {
+
 	MediaPath = (NewMediaPath != TEXT("")) ? TEXT("file://") + NewMediaPath : TEXT("file://") + UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("musics");
 	UClassicFunctionLibrary::VerifyOrCreateDirectory(MediaPath);
 	const FString Path = (NewMediaPath != TEXT("")) ? NewMediaPath + TEXT("\\") : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("musics");;
 	MediaFiles.Empty();
-	if (UClassicFunctionLibrary::ClassicGetFiles(MediaFiles, Path, TEXT("wav")))
+	const bool bWavFound = UClassicFunctionLibrary::ClassicGetFiles(MediaFiles, Path, TEXT("wav"));
+	const bool bOggFound = UClassicFunctionLibrary::ClassicGetFiles(MediaFiles, Path, TEXT("mp3"));
+
+	if(bWavFound || bOggFound)
 	{
 		PlayMusic();
 	}
@@ -96,7 +100,7 @@ void AClassicMediaPlayer::PlayMusic()
 		{
 			if (MainInterfaceReference != nullptr)
 			{
-				const FText TextPlayerMusic = FText::FromString(MediaFiles[Random]);
+				const FText TextPlayerMusic = FText::FromString(FPaths::GetBaseFilename(MediaFiles[Random], false));
 				FFormatNamedArguments Args;
 				Args.Add("TextPlayerMusic", TextPlayerMusic);
 				MainInterfaceReference->ShowMessage(FText::Format(LOCTEXT("Play", "Playing {TextPlayerMusic}"), Args), 3.5f);

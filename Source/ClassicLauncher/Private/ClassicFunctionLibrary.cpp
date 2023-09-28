@@ -11,6 +11,8 @@
 #include "DynamicRHI.h"
 #include "Misc/ConfigCacheIni.h"
 #include "HAL/Runnable.h"
+#include "Windows/AllowWindowsPlatformTypes.h"
+#include <winreg.h>
 
 EUINavigation UClassicFunctionLibrary::GetInputnavigation(const FKeyEvent& InKeyEvent)
 {
@@ -184,18 +186,18 @@ bool UClassicFunctionLibrary::VerifyDirectory(const FString& TestDir)
 	return PlatformFile.DirectoryExists(*TestDir);
 }
 
-int32 UClassicFunctionLibrary::GenerateNumberWithoutRepeat(int32 value, int32 min, int32 max)
+int32 UClassicFunctionLibrary::GenerateNumberWithoutRepeat(int32 Value, int32 Min, int32 Max)
 {
-	int32 NewValue = value;
-	if (max > min) {
+	int32 NewValue = Value;
+	if (Max > Min) {
 		while (true) {
-			NewValue = FMath::RandRange(min, max);
-			if (value != NewValue) {
+			NewValue = FMath::RandRange(Min, Max);
+			if (Value != NewValue) {
 				return NewValue;
 			}
 		}
 	}
-	return NewValue;
+	return FMath::Clamp(NewValue, 0, Max);
 }
 
 
@@ -395,7 +397,9 @@ void UClassicFunctionLibrary::SetGameSystem(TArray<UEasyXMLElement*>  Elements, 
 		ConfigSystem.SystemLabel = Element->ReadString(TEXT("systemlabel"));
 		ConfigSystem.SystemName = Element->ReadString(TEXT("systemname"));
 		const FString ReadImage = Element->ReadString(TEXT("image"));
+		const FString ReadScreenshot = Element->ReadString(TEXT("screenshot"));
 		ConfigSystem.Image = (ReadImage.IsEmpty()) ? GetGameRootDirectory() + TEXT("media\\") + ConfigSystem.SystemName + TEXT("\\system.png") : ReadImage;
+		ConfigSystem.Screenshot = (ReadImage.IsEmpty()) ? GetGameRootDirectory() + TEXT("media\\") + ConfigSystem.SystemName + TEXT("\\screenshot.png") : ReadScreenshot;
 		ConfigSystem.Description = Element->ReadString(TEXT("description"));
 		if (FPaths::FileExists(ConfigSystem.RomPath + TEXT("\\gamelist.xml")) && VerifyDirectory(ConfigSystem.RomPath))
 		{
@@ -448,9 +452,9 @@ FGameSystem UClassicFunctionLibrary::SetSystemToGameData(TArray<FGameSystem> Sys
 		NewGameData.PathFormated = Systems[i].RomPath;
 		NewGameData.nameFormated = Systems[i].SystemLabel;
 		NewGameData.Executable = Systems[i].Executable;
-		NewGameData.imageFormated = Systems[i].Image;  
-		NewGameData.thumbnailFormated = Systems[i].Image;  
-		NewGameData.descFormated = Systems[i].Description;  
+		NewGameData.imageFormated = Systems[i].Image;
+		NewGameData.thumbnailFormated = Systems[i].Screenshot;
+		NewGameData.descFormated = Systems[i].Description;
 		GameDatas.Add(NewGameData);
 	}
 
@@ -605,7 +609,7 @@ void UClassicFunctionLibrary::CreateFolders(FString Path, TArray<FGameSystem> Ga
 
 	for (FGameSystem& GameSystemElement : GameSystems)
 	{
-		if(GameSystemElement.SystemName.Equals(TEXT("${System}"))) continue; //ignore System
+		if (GameSystemElement.SystemName.Equals(TEXT("${System}"))) continue; //ignore System
 		VerifyOrCreateDirectory(PathMedia + TEXT("\\") + GameSystemElement.SystemName);
 		VerifyOrCreateDirectory(PathMedia + TEXT("\\") + GameSystemElement.SystemName + TEXT("\\covers"));
 		VerifyOrCreateDirectory(PathMedia + TEXT("\\") + GameSystemElement.SystemName + TEXT("\\screenshots"));
@@ -865,7 +869,7 @@ UTexture2D* UClassicFunctionLibrary::CreateUniqueTransient(int32 Width, int32 He
 	return nullptr;
 }
 
-void UClassicFunctionLibrary::CreateProcess(int32& ProcessId, FString FullPath, TArray<FString> CommandlineArgs, bool Detach, bool Hidden, int32 Priority, FString OptionalWorkingDirectory)
+void UClassicFunctionLibrary::CreateProc(int32& ProcessId, FString FullPath, TArray<FString> CommandlineArgs, bool Detach, bool Hidden, int32 Priority, FString OptionalWorkingDirectory)
 {
 	FString Args = "";
 	if (CommandlineArgs.Num() > 1)
@@ -999,3 +1003,35 @@ FString UClassicFunctionLibrary::GetProjectName()
 
 
 
+FString UClassicFunctionLibrary::ReadRegistryValue(const FString& KeyName, const FString& ValueName)
+{
+	HKEY hKey;
+	LONG Result = RegOpenKeyExW(HKEY_CURRENT_USER, *KeyName, 0, KEY_READ, &hKey);
+	if (Result != ERROR_SUCCESS)
+	{
+		// Handle error 
+	}
+	TCHAR Buffer[MAX_PATH];
+	DWORD BufferSize = sizeof(Buffer);
+	HRESULT hResult = RegQueryValueEx(hKey, *ValueName, 0, nullptr, reinterpret_cast<LPBYTE>(Buffer), &BufferSize);
+	if (hResult != ERROR_SUCCESS)
+	{
+		// Handle error 
+	}
+	std::wstring Bu = Buffer;
+	FString Value = FString(Bu.c_str());
+	return Value;
+}
+
+bool UClassicFunctionLibrary::IsRunningSteamApp(const FString& AppID)
+{
+	const FString KeyName = TEXT("Software\\Valve\\Steam\\Apps\\") + AppID;
+	const FString ValueName = TEXT("Running");
+	const FString Value = ReadRegistryValue(KeyName, ValueName);
+
+	if (Value.Len() == 0)  return false;
+	if (Value[0] == 1) return true;
+
+	return false;
+
+}

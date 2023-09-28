@@ -146,6 +146,7 @@ void UMainInterface::NativeOnInitialized()
 	ClassicMediaPlayerReference->MainInterfaceReference = this;
 	GetWorld()->GetTimerManager().SetTimer(TickTimerHandle, this, &UMainInterface::TimerTick, 0.015f, true, -1);
 
+
 	SetRenderOpacityList();
 }
 
@@ -180,21 +181,20 @@ void UMainInterface::TimerTick()
 	}
 }
 
-void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+void UMainInterface::SteamRunApp()
 {
-	Super::NativeTick(MyGeometry, InDeltaTime);
-
-
-	if (bIsRunningSteam)
+	if (!UClassicFunctionLibrary::IsRunningSteamApp(GameData[IndexCard].Path))
 	{
-		ProcessID = 0;
-		if (MultiInput.CheckInputPressed())
-		{
-			UE_LOG(LogTemp, Warning, TEXT("passando"));
-			bIsRunningSteam = false;
-			bIsRunning = true;
-		}
-		return;
+		RunningGame(false);
+	}
+	UClassicFunctionLibrary::PauseProcess(0.5f);
+}
+
+void UMainInterface::ExternRunApp()
+{
+	if (!UClassicFunctionLibrary::ClassicIsApplicationRunning(ProcessID))
+	{
+		RunningGame(false);
 	}
 
 	if (MultiInput.CheckInputPressed() && ProcessID != 0)
@@ -203,27 +203,15 @@ void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		TextArguments.Add(TEXT("  /PID   "));
 		TextArguments.Add(FString::FromInt(ProcessID));
 		int32 Proc;
-		UClassicFunctionLibrary::CreateProcess(Proc, TEXT("taskkill  "), TextArguments, false, true, 0, TEXT(""));
+		UClassicFunctionLibrary::CreateProc(Proc, TEXT("taskkill  "), TextArguments, false, true, 0, TEXT(""));
 	}
 
-	if (UClassicFunctionLibrary::ClassicIsApplicationRunning(ProcessID))
-	{
-		if (!bIsRunning)
-		{
-			UClassicFunctionLibrary::PauseProcess(1.5f);
-			RunningGame(true);
-		}
-		bIsRunning = true;
-	}
-	else
-	{
-		if (bIsRunning)
-		{
-			RunningGame(false);
-		}
-		bIsRunning = false;
-	}
+	UClassicFunctionLibrary::PauseProcess(0.125f);
+}
 
+void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
 }
 
 void UMainInterface::SetCenterText(const FText Message)
@@ -374,7 +362,7 @@ FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const
 	if (bInputEnable)
 	{
 		KeyEvent = InKeyEvent;
-		
+
 
 		if (ENavigationLastButton == EButtonsGame::NONE && Input != EButtonsGame::A)
 		{
@@ -753,7 +741,7 @@ void UMainInterface::OpenSystem()
 
 void UMainInterface::AppLaunch()
 {
-	
+
 
 	const FString PathRomFormated = UClassicFunctionLibrary::HomeDirectoryReplace(GameData[IndexCard].PathFormated);
 	const FString ExecutablePath = (GameData[IndexCard].Executable == TEXT("")) ? GameSystems[CountSystem].Executable : GameData[IndexCard].Executable;
@@ -798,12 +786,16 @@ void UMainInterface::OpenLibretro(const FString CorePath, const FString RomPath,
 void UMainInterface::OpenExternalProcess(FString ExecutablePath, TArray<FString> CommandArgs)
 {
 	const FString WorkingDirectory = FPaths::GetPath(ExecutablePath);
-	UClassicFunctionLibrary::CreateProcess(ProcessID, ExecutablePath, CommandArgs, false, false, 0, WorkingDirectory);
+	UClassicFunctionLibrary::CreateProc(ProcessID, ExecutablePath, CommandArgs, false, false, 0, WorkingDirectory);
 	GameMode->GameSettingsRunning();
+	RunningGame(true);
 	if (GameSystems[CountSystem].Executable.Equals(TEXT("steam")))
 	{
-		bIsRunningSteam = true;
-		RunningGame(true);
+		GetWorld()->GetTimerManager().SetTimer(DelayRunAppTimerHandle, this, &UMainInterface::SteamRunApp, 0.016f, true, 10);
+	}
+	else
+	{
+		GetWorld()->GetTimerManager().SetTimer(DelayRunAppTimerHandle, this, &UMainInterface::ExternRunApp, 0.016f, true, 10);
 	}
 }
 
@@ -947,7 +939,8 @@ void UMainInterface::RunningGame(bool bIsRun)
 		bInputEnable = true;
 		ProcessID = 0;
 		PlayAnimationReverse(FadeStartSystem);
-
+		GetWorld()->GetTimerManager().ClearTimer(DelayRunAppTimerHandle);
+		DelayRunAppTimerHandle.Invalidate();
 	}
 }
 
@@ -1007,7 +1000,6 @@ void UMainInterface::Clear()
 	bScroll = false;
 	bDelayFavoriteClick = false;
 	bDelayQuit = false;
-	bIsRunning = false;
 	CountSystem = 0;
 	CountLocationY = 0;
 	DescriptionScrollScale = 0.f;

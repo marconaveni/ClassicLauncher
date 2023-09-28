@@ -61,8 +61,6 @@ public:
 	float Speed;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	int32 PositionOffsetFocus;
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
-	//int32 PositionTopX = 1 ;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	int32 IndexFocusCard;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
@@ -138,7 +136,7 @@ public:
 	UCard* ConstructCard(UHorizontalBox* HorizontalBox, FGameData GameData);
 
 	UFUNCTION()
-	void ConstructCover(UTexture2D* Texture);
+	void ConstructCover();
 
 	UFUNCTION(BlueprintPure, Category = "LoopScrollBox|Functions")
 	FIndexPositions GetScrollOffSet();

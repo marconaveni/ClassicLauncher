@@ -58,14 +58,14 @@ void ULoopScrollBox::PrepareScrollBox()
 	OnPrepareScrollBox();
 }
 
-void ULoopScrollBox::StartScrollTo(EButtonsGame LeftRight)
+void ULoopScrollBox::StartScrollTo(const EButtonsGame LeftRight)
 {
-	OnStartScrollTo(LeftRight);
+	InputDirection = LeftRight;
 }
 
 void ULoopScrollBox::CancelScroll()
 {
-	OnCancelScroll();
+	InputDirection = EButtonsGame::NONE;
 }
 
 void ULoopScrollBox::SelectDirectionScroll()
@@ -113,7 +113,7 @@ void ULoopScrollBox::OnClickButton()
 {
 }
 
-void ULoopScrollBox::GetCardReferences(int32 Index, UCard*& Left, UCard*& Center , UCard*& Right)
+void ULoopScrollBox::GetCardReferences(int32 Index, UCard*& Left, UCard*& Center, UCard*& Right)
 {
 	if (CardReferenceLeft.IsValidIndex(Index) && CardReferenceCenter.IsValidIndex(Index))
 	{
@@ -121,9 +121,9 @@ void ULoopScrollBox::GetCardReferences(int32 Index, UCard*& Left, UCard*& Center
 		Center = CardReferenceCenter[Index];
 		Right = CardReferenceCenter[Index];
 	}
-	if (CardReferenceRight.IsValidIndex(Index)  )
+	if (CardReferenceRight.IsValidIndex(Index))
 	{
-		if(ChildrenCount <= 10)
+		if (ChildrenCount <= 10)
 		{
 			Right = CardReferenceRight[Index];
 		}
@@ -153,7 +153,7 @@ void ULoopScrollBox::AddCardsHorizontalBox(TArray<FGameData> GameData, int32 Ind
 
 	IndexFocusCard = (NumElements > 4) ? FMath::Clamp(IndexFocus, 0, NumElements) : 0;
 
-	if(NumElements > 10)
+	if (NumElements > 10)
 	{
 		UImage* Image = WidgetTree->ConstructWidget<UImage>(UImage::StaticClass());
 		FSlateBrush NewBrush;
@@ -166,7 +166,7 @@ void ULoopScrollBox::AddCardsHorizontalBox(TArray<FGameData> GameData, int32 Ind
 	{
 		CardReferenceLeft.Add(ConstructCard(HorizontalBoxLeft, GameData[i]));
 		CardReferenceCenter.Add(ConstructCard(HorizontalBoxCenter, GameData[i]));
-		ConstructCover(GameData[i].Texture);
+		ConstructCover();
 
 		if (NumElements <= 10)
 		{
@@ -205,30 +205,17 @@ UCard* ULoopScrollBox::ConstructCard(UHorizontalBox* HorizontalBox, FGameData Ga
 	Card->SetPlayers(GameData.players);
 	Card->SetFavorite(GameData.favorite, false);
 	Card->SelectedFrameToBackground();
-	if(GameData.Texture != nullptr)
-	{
-		Card->SetCardImage(GameData.Texture, GameData.Texture->GetSizeX(), GameData.Texture->GetSizeY());
-	}
-	else
-	{
-		Card->SetCardImage(ImageCardDefault, 204, 204);
-	}
+	Card->SetCardImage(ImageCardDefault, ImageCardDefault->GetSizeX(), ImageCardDefault->GetSizeY());
+
 	HorizontalBox->AddChild(Card);
 	return Card;
 }
 
-void ULoopScrollBox::ConstructCover(UTexture2D* Texture)
+void ULoopScrollBox::ConstructCover()
 {
 	UCover* Cover = CreateWidget<UCover>(GetOwningPlayer(), CoverClass);
 	ScrollBoxBottom->AddChild(Cover);
-	if (Texture != nullptr)
-	{
-		Cover->SetCoverImage(Texture, Texture->GetSizeX(), Texture->GetSizeY());
-	}
-	else
-	{
-		Cover->SetCoverImage(ImageCardDefault, 204, 204);
-	}
+	Cover->SetCoverImage(ImageCardDefault, ImageCardDefault->GetSizeX(), ImageCardDefault->GetSizeY());
 	CoverReference.Add(Cover);
 }
 
@@ -248,7 +235,7 @@ void ULoopScrollBox::AddImagesCards(UTexture2D* NewTexture, int32 Width, int32 H
 	UCard* Left;
 	UCard* Center;
 	UCard* Right;
-	GetCardReferences(Index, Left, Center,Right);
+	GetCardReferences(Index, Left, Center, Right);
 	Left->SetCardImage(NewTexture, Width, Height);
 	Center->SetCardImage(NewTexture, Width, Height);
 

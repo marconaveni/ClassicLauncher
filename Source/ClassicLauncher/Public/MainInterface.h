@@ -269,10 +269,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	bool bDelayQuit;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	bool bIsRunning;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	bool bIsRunningSteam;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	float TimerDelayNavigation;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	float FirstDelayNavigation;
@@ -318,7 +314,7 @@ public:
 
 	//timers
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
-	FTimerHandle DelayLoadSteamListTimerHandle;
+	FTimerHandle DelayRunAppTimerHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle DelayReloadTimerHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
@@ -354,6 +350,9 @@ public:
 
 	UFUNCTION()
 	void TimerTick();
+	UFUNCTION()
+	void SteamRunApp();
+	void ExternRunApp();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetCenterText(const FText Message);

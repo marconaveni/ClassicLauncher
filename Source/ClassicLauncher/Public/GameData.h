@@ -84,17 +84,6 @@ struct FGameData
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString Arguments;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 ImageX;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 ImageY;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UTexture2D* Texture;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool CacheTexture;
 
 	//formated 
 
@@ -143,10 +132,6 @@ struct FGameData
 		lastplayed = TEXT("");
 		Executable = TEXT("");
 		Arguments = TEXT("");
-		ImageX = 0;
-		ImageY = 0;
-		Texture = nullptr;
-		CacheTexture = false;
 
 		//formated
 		PathFormated = TEXT("");
@@ -229,6 +214,9 @@ struct FGameSystem
 	FString Image;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString Screenshot;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString Description;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -246,6 +234,7 @@ struct FGameSystem
 		SystemLabel = TEXT("");
 		Image = TEXT("");
 		Description = TEXT("");
+		Screenshot = TEXT("");
 	}
 
 };
