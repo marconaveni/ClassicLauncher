@@ -60,7 +60,10 @@ void AClassicMediaPlayer::Tick(float DeltaTime)
 		if (DoOnceIsPlayVideo.Execute())
 		{
 			const FIntPoint VideoDimensions = ClassicPlayerVideo->GetMediaPlayer()->GetVideoTrackDimensions(0,0);
-			MainInterfaceReference->ImgVideo->Brush.ImageSize = FVector2D(VideoDimensions.X, VideoDimensions.Y);
+			FSlateBrush InBrush = MainInterfaceReference->ImgVideo->GetBrush();
+			InBrush.SetImageSize(FVector2f(VideoDimensions.X, VideoDimensions.Y));
+			MainInterfaceReference->ImgVideo->SetBrush(InBrush);
+			//MainInterfaceReference->ImgVideo->Brush.ImageSize = FVector2D(VideoDimensions.X, VideoDimensions.Y);
 		}
 	}
 	else

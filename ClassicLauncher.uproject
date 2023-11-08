@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "5.0",
+	"EngineAssociation": "5.3",
 	"Category": "",
 	"Description": "",
 	"Modules": [
@@ -24,7 +24,7 @@
 		},
 		{
 			"Name": "EasyFileDialog",
-			"Enabled": true,
+			"Enabled": false,
 			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/bcf64fe2e00c48189d8385a9c39b6e61"
 		},
 		{
@@ -38,12 +38,12 @@
 		},
 		{
 			"Name": "RuntimeImageLoader",
-			"Enabled": true,
+			"Enabled": false,
 			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/e8d4771b882343199acaf995c32a5fea"
 		},
 		{
 			"Name": "VictoryBPLibrary",
-			"Enabled": true
+			"Enabled": false
 		},
 		{
 			"Name": "UnrealLibretro",

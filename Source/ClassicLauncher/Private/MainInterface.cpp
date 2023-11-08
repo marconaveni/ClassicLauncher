@@ -605,7 +605,7 @@ void UMainInterface::SetNavigationFocusUpBottom()
 {
 	if (PositionY == EPositionY::BOTTOM)
 	{
-		if (BackgroundVideo->RenderOpacity == 0)
+		if (BackgroundVideo->GetRenderOpacity() == 0)
 		{
 			GetWorld()->GetTimerManager().ClearTimer(StartVideoTimerHandle);
 			PlayAnimationReverse(ShowDescBottomInfo);
@@ -648,7 +648,7 @@ void UMainInterface::SetNavigationFocusDownBottom()
 	}
 	else if (PositionY == EPositionY::BOTTOM)
 	{
-		if (BackgroundVideo->RenderOpacity == 0)
+		if (BackgroundVideo->GetRenderOpacity() == 0)
 		{
 			PlayAnimationForward(VideoAnimation);
 		}
@@ -873,7 +873,7 @@ void UMainInterface::SetFavoriteToSave()
 	if (bDelayFavoriteClick && ENavigationButton == EButtonsGame::Y && !bScroll)
 	{
 
-		AsyncTask(ENamedThreads::AnyHiPriThreadNormalTask, [=]()
+		AsyncTask(ENamedThreads::AnyHiPriThreadNormalTask, [this]()
 		{
 			int32 Find;
 			if (UClassicFunctionLibrary::FindGameData(ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas, GameData[IndexCard], Find))
@@ -891,7 +891,7 @@ void UMainInterface::SetFavoriteToSave()
 				if (UGameplayStatics::SaveGameToSlot(ClassicGameInstance->ClassicSaveGameInstance, ClassicGameInstance->SlotGame, 0))
 				{
 
-					AsyncTask(ENamedThreads::GameThread, [=]()
+					AsyncTask(ENamedThreads::GameThread, [this, ToggleFavorite]()
 					{
 
 						UCard* Left;
@@ -1047,7 +1047,7 @@ void UMainInterface::FocusButtonsTop(const int32 PositionTopX, UToolTip* ToolTip
 	{
 		WBPFrame->PlayAnimationForward(Right);
 	}
-	else if (ENavigationButton == EButtonsGame::UP && WBPFrame->ImageFrameCenter->RenderTransform.Translation.Y == 0)
+	else if (ENavigationButton == EButtonsGame::UP && WBPFrame->ImageFrameCenter->GetRenderTransform().Translation.Y == 0)
 	{
 		WBPFrame->AnimationToTopDown(FocusTop, false);
 	}
@@ -1157,7 +1157,7 @@ void UMainInterface::OnClickFavorites()
 
 void UMainInterface::OnClickInfo()
 {
-	const float TranslationInfo = CanvasPanelInfo->RenderTransform.Translation.Y;
+	const float TranslationInfo = CanvasPanelInfo->GetRenderTransform().Translation.Y;
 	if (TranslationInfo != 0)
 	{
 		PlayAnimationForward(ShowInfo);
@@ -1217,9 +1217,9 @@ void UMainInterface::OnClickFavorite()
 
 void UMainInterface::CloseMenus()
 {
-	const float TranslationSystemSelect = CanvasPanelSystemSelect->RenderTransform.Translation.Y;
-	const float TranslationInfo = CanvasPanelInfo->RenderTransform.Translation.Y;
-	const float TranslationConfiguration = CanvasPanelConfiguration->RenderTransform.Translation.Y;
+	const float TranslationSystemSelect = CanvasPanelSystemSelect->GetRenderTransform().Translation.Y;
+	const float TranslationInfo = CanvasPanelInfo->GetRenderTransform().Translation.Y;
+	const float TranslationConfiguration = CanvasPanelConfiguration->GetRenderTransform().Translation.Y;
 
 	if (TranslationSystemSelect == 0)
 	{
@@ -1274,7 +1274,7 @@ void UMainInterface::SetImageBottom()
 {
 	if (ImgVideo == nullptr || ImgImageBottom == nullptr) return;
 
-	const float TranslationPanelBottom = CanvasPanelBottom->RenderTransform.Translation.Y;
+	const float TranslationPanelBottom = CanvasPanelBottom->GetRenderTransform().Translation.Y;
 	if (TranslationPanelBottom != 0)
 	{
 		PlayAnimationReverse(FadeChangeImageToVideo);

@@ -151,7 +151,7 @@ void ULoadingGameData::CreateNewGameList()
 
 void ULoadingGameData::PrepareToSaveNewGameList()
 {
-	AsyncTask(ENamedThreads::AnyThread, [=]()
+	AsyncTask(ENamedThreads::AnyThread, [this]()
 	{
 
 		for (int32 i = 1; i < Systems.Num(); i++)
@@ -161,7 +161,7 @@ void ULoadingGameData::PrepareToSaveNewGameList()
 
 			UClassicFunctionLibrary::SortGameDate(Systems[i].GameDatas);
 			UClassicFunctionLibrary::FormatGameData(Systems[i].GameDatas, ConfigurationData, Systems[i]);
-			AsyncTask(ENamedThreads::GameThread, [=]()
+			AsyncTask(ENamedThreads::GameThread, [this,i]()
 			{
 				const FText Loading = FText::Format(LOCTEXT("loading", "Loading {0}") , FText::FromString(Systems[i].SystemLabel));
 				MessageShow.Broadcast(Loading);
@@ -172,7 +172,7 @@ void ULoadingGameData::PrepareToSaveNewGameList()
 		if (UGameplayStatics::SaveGameToSlot(ClassicGameInstance->ClassicSaveGameInstance, ClassicGameInstance->SlotGame, 0))
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Saved"));
-			AsyncTask(ENamedThreads::GameThread, [=]()
+			AsyncTask(ENamedThreads::GameThread, [this]()
 			{
 				MainInterfaceReference->RemoveFromParent();
 				MessageShow.Broadcast(LOCTEXT("LogSuccessfullyGameList", "Game list update successfully wait..."));
@@ -181,7 +181,7 @@ void ULoadingGameData::PrepareToSaveNewGameList()
 		}
 		else
 		{
-			AsyncTask(ENamedThreads::GameThread, [=]()
+			AsyncTask(ENamedThreads::GameThread, [this]()
 			{
 				MessageShow.Broadcast(LOCTEXT("LogErrorGameList", "Game list not save"));
 			});

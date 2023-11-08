@@ -15,7 +15,7 @@ void UAnimationUI::PlayAnimation(UWidget* Target, float Time, int32 FPS, FWidget
 	FramesPerSeconds = static_cast<float>(1) / static_cast<float>(FPS);
 	Frames = Time * FPS;
 	InitialRenderOpacity = Target->GetRenderOpacity();
-	InitialPosition = Target->RenderTransform;
+	InitialPosition = Target->GetRenderTransform();
 
 
 	GetWorld()->GetTimerManager().SetTimer(AnimationTimerHandle, this, &UAnimationUI::Animation, FramesPerSeconds, false, -1);

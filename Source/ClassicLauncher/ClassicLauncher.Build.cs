@@ -5,8 +5,9 @@ using UnrealBuildTool;
 public class ClassicLauncher : ModuleRules
 {
 	public ClassicLauncher(ReadOnlyTargetRules Target) : base(Target)
-	{
-		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+    {
+
+        PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		// dir dependecys
 		RuntimeDependencies.Add("$(ProjectDir)/7zip/*");
@@ -18,8 +19,7 @@ public class ClassicLauncher : ModuleRules
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "EasyXMLParser"});
 		PrivateDependencyModuleNames.AddRange(new string[] { "UnrealLibretro" });
-		PrivateDependencyModuleNames.AddRange(new string[] { "RuntimeImageLoader" });
-		PrivateDependencyModuleNames.AddRange(new string[] { "VictoryBPLibrary" }); 
+		//PrivateDependencyModuleNames.AddRange(new string[] { "VictoryBPLibrary" }); 
 		PrivateDependencyModuleNames.AddRange(new string[] { "TextImageBox" }); 
 
 		// Uncomment if you are using Slate UI

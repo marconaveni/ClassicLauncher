@@ -14,6 +14,8 @@
 #include "Windows/AllowWindowsPlatformTypes.h"
 #include <winreg.h>
 
+#include "Blueprint/UserWidget.h"
+
 EUINavigation UClassicFunctionLibrary::GetInputnavigation(const FKeyEvent& InKeyEvent)
 {
 	const FString KeyEvent = InKeyEvent.GetKey().ToString();
@@ -1034,4 +1036,53 @@ bool UClassicFunctionLibrary::IsRunningSteamApp(const FString& AppID)
 
 	return false;
 
+}
+
+UUserWidget* UClassicFunctionLibrary::GetFirstWidgetOfClass(UObject* WorldContextObject, TSubclassOf<UUserWidget> WidgetClass, bool TopLevelOnly)
+{
+	if (!WidgetClass || !WorldContextObject)
+	{
+		return nullptr;
+	}
+
+	const UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::ReturnNull);
+	if (!World)
+	{
+		return nullptr;
+	}
+
+	UUserWidget* ResultWidget = nullptr;
+	for (TObjectIterator<UUserWidget> Itr; Itr; ++Itr)
+	{
+		UUserWidget* LiveWidget = *Itr;
+
+		// Skip any widget that's not in the current world context.
+		if (LiveWidget->GetWorld() != World)
+		{
+			continue;
+		}
+
+		// Skip any widget that is not a child of the class specified.
+		if (!LiveWidget->GetClass()->IsChildOf(WidgetClass))
+		{
+			continue;
+		}
+
+		if (TopLevelOnly)
+		{
+			//only add top level widgets
+			if (LiveWidget->IsInViewport())
+			{
+				ResultWidget = LiveWidget;
+				break;
+			}
+		}
+		else
+		{
+			ResultWidget = LiveWidget;
+			break;
+		}
+	}
+
+	return ResultWidget;
 }
