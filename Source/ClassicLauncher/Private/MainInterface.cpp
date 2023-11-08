@@ -17,7 +17,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "Misc/Paths.h"
 #include "ClassicMediaPlayer.h"
-#include "ClassicLibretroTV.h"
 #include "ClassicConfigurations.h"
 #include "ClassicGameMode.h"
 #include "Cover.h"
@@ -134,12 +133,6 @@ void UMainInterface::NativeOnInitialized()
 	{
 		ClassicMediaPlayerReference = *ActorIterator;
 		UE_LOG(LogTemp, Warning, TEXT("Reference AClassicMediaPlayer Founds: %s "), *ClassicMediaPlayerReference->GetName());
-	}
-
-	for (TActorIterator<AClassicLibretroTV> ActorIterator(GetWorld()); ActorIterator; ++ActorIterator)
-	{
-		ClassicLibretroTVReference = *ActorIterator;
-		UE_LOG(LogTemp, Warning, TEXT("Reference AClassicLibretroTV Founds: %s "), *ClassicLibretroTVReference->GetName());
 	}
 
 	WBPFrame->SetDefaultValues(1, DefaultFrameSpeed);
@@ -441,7 +434,6 @@ void UMainInterface::OnAnimationStartedPlaying(UUMGSequencePlayer& Player)
 void UMainInterface::OnAnimationFinishedPlaying(UUMGSequencePlayer& Player)
 {
 	Super::OnAnimationFinishedPlaying(Player);
-	//const UWidgetAnimation* AnimationGet = Player.GetAnimation();
 }
 
 FReply UMainInterface::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
@@ -746,41 +738,19 @@ void UMainInterface::AppLaunch()
 	const FString PathRomFormated = UClassicFunctionLibrary::HomeDirectoryReplace(GameData[IndexCard].PathFormated);
 	const FString ExecutablePath = (GameData[IndexCard].Executable == TEXT("")) ? GameSystems[CountSystem].Executable : GameData[IndexCard].Executable;
 	const FString Arguments = (GameData[IndexCard].Arguments == TEXT("")) ? GameSystems[CountSystem].Arguments : GameData[IndexCard].Arguments;
-	bool CanUnzip = false;
-	FString FormatedCore;
+	TArray<FString> Commands;
 
-	if (UClassicFunctionLibrary::SwitchOnDefaultLibreto(ExecutablePath, FormatedCore, CanUnzip))
+	if (!Arguments.IsEmpty()) 
 	{
-		OpenLibretro(FormatedCore, PathRomFormated, CanUnzip);
-		UE_LOG(LogTemp, Warning, TEXT("RomPath %s , CorePath %s , CanUnzip %s"), *PathRomFormated, *FormatedCore, (CanUnzip ? TEXT("true") : TEXT("false")));
+		Commands.Add(UClassicFunctionLibrary::HomeDirectoryReplace(Arguments));
 	}
-	else
+	if (!ExecutablePath.IsEmpty())
 	{
-		TArray<FString> Commands;
-		if (!Arguments.IsEmpty()) {
-			Commands.Add(UClassicFunctionLibrary::HomeDirectoryReplace(Arguments));
-		}
-		if (!ExecutablePath.IsEmpty()) {
-			Commands.Add(UClassicFunctionLibrary::HomeDirectoryReplace(PathRomFormated));
-		}
-		OpenExternalProcess(ExecutablePath, Commands);
-		UE_LOG(LogTemp, Warning, TEXT("OpenExternalProcess: %s %s %s"), *ExecutablePath, *Arguments, *PathRomFormated);
+		Commands.Add(UClassicFunctionLibrary::HomeDirectoryReplace(PathRomFormated));
 	}
-}
+	OpenExternalProcess(ExecutablePath, Commands);
+	UE_LOG(LogTemp, Warning, TEXT("OpenExternalProcess: %s %s %s"), *ExecutablePath, *Arguments, *PathRomFormated);
 
-void UMainInterface::OpenLibretro(const FString CorePath, const FString RomPath, const bool CanUnzip)
-{
-	if (ClassicLibretroTVReference != nullptr)
-	{
-		ClassicLibretroTVReference->OnNativeLoadRom(CorePath, RomPath, CanUnzip);
-		SetVisibility(ESlateVisibility::Hidden);
-		GameMode->GameSettingsRunningInternal();
-		RunningGame(true);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Error ClassicLibretroTVReference is null"));
-	}
 }
 
 void UMainInterface::OpenExternalProcess(FString ExecutablePath, TArray<FString> CommandArgs)
