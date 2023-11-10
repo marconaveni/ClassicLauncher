@@ -23,7 +23,6 @@ void UAnimationUI::PlayAnimation(UWidget* Target, float Time, int32 FPS, FWidget
 
 void UAnimationUI::Animation()
 {
-	UE_LOG(LogTemp, Warning, TEXT("animando"));
 
 	Alpha += static_cast<float>(1) / Frames;
 
