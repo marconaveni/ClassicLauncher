@@ -207,8 +207,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
 	AClassicMediaPlayer* ClassicMediaPlayerReference;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
-	AClassicLibretroTV* ClassicLibretroTVReference;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
 	USoundBase* SoundSelect;
 	
 public:
@@ -419,8 +417,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void AppLaunch();
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void OpenLibretro(const FString CorePath, const FString RomPath, const bool CanUnzip);
+
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void OpenExternalProcess(FString ExecutablePath, TArray<FString> CommandArgs);
 

@@ -17,7 +17,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "Misc/Paths.h"
 #include "ClassicMediaPlayer.h"
-#include "ClassicLibretroTV.h"
 #include "ClassicConfigurations.h"
 #include "ClassicGameMode.h"
 #include "Cover.h"
@@ -134,12 +133,6 @@ void UMainInterface::NativeOnInitialized()
 	{
 		ClassicMediaPlayerReference = *ActorIterator;
 		UE_LOG(LogTemp, Warning, TEXT("Reference AClassicMediaPlayer Founds: %s "), *ClassicMediaPlayerReference->GetName());
-	}
-
-	for (TActorIterator<AClassicLibretroTV> ActorIterator(GetWorld()); ActorIterator; ++ActorIterator)
-	{
-		ClassicLibretroTVReference = *ActorIterator;
-		UE_LOG(LogTemp, Warning, TEXT("Reference AClassicLibretroTV Founds: %s "), *ClassicLibretroTVReference->GetName());
 	}
 
 	WBPFrame->SetDefaultValues(1, DefaultFrameSpeed);
@@ -441,7 +434,6 @@ void UMainInterface::OnAnimationStartedPlaying(UUMGSequencePlayer& Player)
 void UMainInterface::OnAnimationFinishedPlaying(UUMGSequencePlayer& Player)
 {
 	Super::OnAnimationFinishedPlaying(Player);
-	//const UWidgetAnimation* AnimationGet = Player.GetAnimation();
 }
 
 FReply UMainInterface::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
@@ -605,7 +597,7 @@ void UMainInterface::SetNavigationFocusUpBottom()
 {
 	if (PositionY == EPositionY::BOTTOM)
 	{
-		if (BackgroundVideo->RenderOpacity == 0)
+		if (BackgroundVideo->GetRenderOpacity() == 0)
 		{
 			GetWorld()->GetTimerManager().ClearTimer(StartVideoTimerHandle);
 			PlayAnimationReverse(ShowDescBottomInfo);
@@ -648,7 +640,7 @@ void UMainInterface::SetNavigationFocusDownBottom()
 	}
 	else if (PositionY == EPositionY::BOTTOM)
 	{
-		if (BackgroundVideo->RenderOpacity == 0)
+		if (BackgroundVideo->GetRenderOpacity() == 0)
 		{
 			PlayAnimationForward(VideoAnimation);
 		}
@@ -746,41 +738,19 @@ void UMainInterface::AppLaunch()
 	const FString PathRomFormated = UClassicFunctionLibrary::HomeDirectoryReplace(GameData[IndexCard].PathFormated);
 	const FString ExecutablePath = (GameData[IndexCard].Executable == TEXT("")) ? GameSystems[CountSystem].Executable : GameData[IndexCard].Executable;
 	const FString Arguments = (GameData[IndexCard].Arguments == TEXT("")) ? GameSystems[CountSystem].Arguments : GameData[IndexCard].Arguments;
-	bool CanUnzip = false;
-	FString FormatedCore;
+	TArray<FString> Commands;
 
-	if (UClassicFunctionLibrary::SwitchOnDefaultLibreto(ExecutablePath, FormatedCore, CanUnzip))
+	if (!Arguments.IsEmpty()) 
 	{
-		OpenLibretro(FormatedCore, PathRomFormated, CanUnzip);
-		UE_LOG(LogTemp, Warning, TEXT("RomPath %s , CorePath %s , CanUnzip %s"), *PathRomFormated, *FormatedCore, (CanUnzip ? TEXT("true") : TEXT("false")));
+		Commands.Add(UClassicFunctionLibrary::HomeDirectoryReplace(Arguments));
 	}
-	else
+	if (!ExecutablePath.IsEmpty())
 	{
-		TArray<FString> Commands;
-		if (!Arguments.IsEmpty()) {
-			Commands.Add(UClassicFunctionLibrary::HomeDirectoryReplace(Arguments));
-		}
-		if (!ExecutablePath.IsEmpty()) {
-			Commands.Add(UClassicFunctionLibrary::HomeDirectoryReplace(PathRomFormated));
-		}
-		OpenExternalProcess(ExecutablePath, Commands);
-		UE_LOG(LogTemp, Warning, TEXT("OpenExternalProcess: %s %s %s"), *ExecutablePath, *Arguments, *PathRomFormated);
+		Commands.Add(UClassicFunctionLibrary::HomeDirectoryReplace(PathRomFormated));
 	}
-}
+	OpenExternalProcess(ExecutablePath, Commands);
+	UE_LOG(LogTemp, Warning, TEXT("OpenExternalProcess: %s %s %s"), *ExecutablePath, *Arguments, *PathRomFormated);
 
-void UMainInterface::OpenLibretro(const FString CorePath, const FString RomPath, const bool CanUnzip)
-{
-	if (ClassicLibretroTVReference != nullptr)
-	{
-		ClassicLibretroTVReference->OnNativeLoadRom(CorePath, RomPath, CanUnzip);
-		SetVisibility(ESlateVisibility::Hidden);
-		GameMode->GameSettingsRunningInternal();
-		RunningGame(true);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Error ClassicLibretroTVReference is null"));
-	}
 }
 
 void UMainInterface::OpenExternalProcess(FString ExecutablePath, TArray<FString> CommandArgs)
@@ -873,7 +843,7 @@ void UMainInterface::SetFavoriteToSave()
 	if (bDelayFavoriteClick && ENavigationButton == EButtonsGame::Y && !bScroll)
 	{
 
-		AsyncTask(ENamedThreads::AnyHiPriThreadNormalTask, [=]()
+		AsyncTask(ENamedThreads::AnyHiPriThreadNormalTask, [this]()
 		{
 			int32 Find;
 			if (UClassicFunctionLibrary::FindGameData(ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas, GameData[IndexCard], Find))
@@ -891,7 +861,7 @@ void UMainInterface::SetFavoriteToSave()
 				if (UGameplayStatics::SaveGameToSlot(ClassicGameInstance->ClassicSaveGameInstance, ClassicGameInstance->SlotGame, 0))
 				{
 
-					AsyncTask(ENamedThreads::GameThread, [=]()
+					AsyncTask(ENamedThreads::GameThread, [this, ToggleFavorite]()
 					{
 
 						UCard* Left;
@@ -1047,7 +1017,7 @@ void UMainInterface::FocusButtonsTop(const int32 PositionTopX, UToolTip* ToolTip
 	{
 		WBPFrame->PlayAnimationForward(Right);
 	}
-	else if (ENavigationButton == EButtonsGame::UP && WBPFrame->ImageFrameCenter->RenderTransform.Translation.Y == 0)
+	else if (ENavigationButton == EButtonsGame::UP && WBPFrame->ImageFrameCenter->GetRenderTransform().Translation.Y == 0)
 	{
 		WBPFrame->AnimationToTopDown(FocusTop, false);
 	}
@@ -1157,7 +1127,7 @@ void UMainInterface::OnClickFavorites()
 
 void UMainInterface::OnClickInfo()
 {
-	const float TranslationInfo = CanvasPanelInfo->RenderTransform.Translation.Y;
+	const float TranslationInfo = CanvasPanelInfo->GetRenderTransform().Translation.Y;
 	if (TranslationInfo != 0)
 	{
 		PlayAnimationForward(ShowInfo);
@@ -1217,9 +1187,9 @@ void UMainInterface::OnClickFavorite()
 
 void UMainInterface::CloseMenus()
 {
-	const float TranslationSystemSelect = CanvasPanelSystemSelect->RenderTransform.Translation.Y;
-	const float TranslationInfo = CanvasPanelInfo->RenderTransform.Translation.Y;
-	const float TranslationConfiguration = CanvasPanelConfiguration->RenderTransform.Translation.Y;
+	const float TranslationSystemSelect = CanvasPanelSystemSelect->GetRenderTransform().Translation.Y;
+	const float TranslationInfo = CanvasPanelInfo->GetRenderTransform().Translation.Y;
+	const float TranslationConfiguration = CanvasPanelConfiguration->GetRenderTransform().Translation.Y;
 
 	if (TranslationSystemSelect == 0)
 	{
@@ -1274,7 +1244,7 @@ void UMainInterface::SetImageBottom()
 {
 	if (ImgVideo == nullptr || ImgImageBottom == nullptr) return;
 
-	const float TranslationPanelBottom = CanvasPanelBottom->RenderTransform.Translation.Y;
+	const float TranslationPanelBottom = CanvasPanelBottom->GetRenderTransform().Translation.Y;
 	if (TranslationPanelBottom != 0)
 	{
 		PlayAnimationReverse(FadeChangeImageToVideo);

@@ -283,4 +283,7 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Process")
 	static bool IsRunningSteamApp(const FString& AppID);
+
+	UFUNCTION(Category = "Victory BP Library|UMG", BlueprintCallable, BlueprintCosmetic, Meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "WidgetClass"))
+	static UUserWidget* GetFirstWidgetOfClass(UObject* WorldContextObject, TSubclassOf<UUserWidget> WidgetClass, bool TopLevelOnly);
 };
