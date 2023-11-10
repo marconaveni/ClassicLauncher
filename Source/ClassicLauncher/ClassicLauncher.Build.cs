@@ -9,8 +9,7 @@ public class ClassicLauncher : ModuleRules
 
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		// dir dependecys
-		RuntimeDependencies.Add("$(ProjectDir)/7zip/*");
+		// Directories dependencies
 		RuntimeDependencies.Add("$(ProjectDir)/config/configsys.xml"); 
 		RuntimeDependencies.Add("$(ProjectDir)/config/config.xml");
 		RuntimeDependencies.Add("$(ProjectDir)/musics/*");
