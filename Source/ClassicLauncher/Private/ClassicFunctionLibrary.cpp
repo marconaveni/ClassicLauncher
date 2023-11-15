@@ -752,7 +752,10 @@ void UClassicFunctionLibrary::AsyncLoadTexture2DFromFile(FLoadImageDelegate Out,
 	{
 		if (!FPaths::FileExists(FullFilePath))
 		{
-			Out.ExecuteIfBound(nullptr, Index, false);
+			AsyncTask(ENamedThreads::GameThread, [=]()
+			{
+				Out.ExecuteIfBound(nullptr, Index, false);
+			});
 			UE_LOG(LogTemp, Warning, TEXT("File Not Exists. %s"), *FullFilePath);
 			return;
 		}
@@ -797,7 +800,10 @@ void UClassicFunctionLibrary::AsyncLoadTexture2DFromFile(FLoadImageDelegate Out,
 					}
 					else
 					{
-						Out.ExecuteIfBound(nullptr, Index, false);
+						AsyncTask(ENamedThreads::GameThread, [=]()
+						{
+							Out.ExecuteIfBound(nullptr, Index, false);
+						});
 						UE_LOG(LogTemp, Warning, TEXT("Error creating texture. Bit depth is unsupported. (%d)"), BitDepth);
 						return;
 					}
@@ -837,7 +843,10 @@ void UClassicFunctionLibrary::AsyncLoadTexture2DFromFile(FLoadImageDelegate Out,
 			}
 		}
 		// execute function
-		Out.ExecuteIfBound(nullptr, Index, false);
+		AsyncTask(ENamedThreads::GameThread, [=]()
+		{
+			Out.ExecuteIfBound(nullptr, Index, false);
+		});
 	});
 }
 

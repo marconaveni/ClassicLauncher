@@ -534,6 +534,9 @@ public:
 	void SetImageBottom();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void ChangeVisibilityImageVideo();
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void CloseMenus();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")

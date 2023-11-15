@@ -740,7 +740,7 @@ void UMainInterface::AppLaunch()
 	const FString Arguments = (GameData[IndexCard].Arguments == TEXT("")) ? GameSystems[CountSystem].Arguments : GameData[IndexCard].Arguments;
 	TArray<FString> Commands;
 
-	if (!Arguments.IsEmpty()) 
+	if (!Arguments.IsEmpty())
 	{
 		Commands.Add(UClassicFunctionLibrary::HomeDirectoryReplace(Arguments));
 	}
@@ -840,7 +840,9 @@ void UMainInterface::SetCountPlayerToSave()
 
 void UMainInterface::SetFavoriteToSave()
 {
-	if (bDelayFavoriteClick && ENavigationButton == EButtonsGame::Y && !bScroll)
+	if (!GameSystems.IsValidIndex(CountSystem)) return;
+
+	if (bDelayFavoriteClick && ENavigationButton == EButtonsGame::Y && !bScroll && !GameSystems[CountSystem].SystemName.Equals(TEXT("${System}")))
 	{
 
 		AsyncTask(ENamedThreads::AnyHiPriThreadNormalTask, [this]()
@@ -1242,8 +1244,43 @@ void UMainInterface::SetVisibiltyDebugButton(UButton* Button)
 
 void UMainInterface::SetImageBottom()
 {
-	if (ImgVideo == nullptr || ImgImageBottom == nullptr) return;
+	if (ImgVideo == nullptr || ImgImageBottom == nullptr || !GameData.IsValidIndex(IndexCard)) return;
 
+	ChangeVisibilityImageVideo();
+
+	FString ImagePath = TEXT("");
+	UTexture2D* ImageLoaded = ImageBottomDefault;
+	int32 Width = 640;
+	int32 Height = 480;
+
+	if (FPaths::FileExists(GameData[IndexCard].thumbnailFormated))
+	{
+		ImagePath = GameData[IndexCard].thumbnailFormated;
+	}
+	else if (FPaths::FileExists(GameData[IndexCard].imageFormated))
+	{
+		ImagePath = GameData[IndexCard].imageFormated;
+	}
+
+	if(ImagePath != TEXT(""))
+	{
+		const EClassicImageFormat Format = UClassicFunctionLibrary::GetFormatImage(ImagePath);
+		ImageLoaded = UClassicFunctionLibrary::LoadTexture2DFromFile(ImagePath, Format, EClassicTextureFilter::NEAREST, Width, Height);
+
+		if (ImageLoaded == nullptr)
+		{
+			ImageLoaded = ImageBottomDefault;
+		}
+	}
+
+	FSlateBrush NewBrush;
+	NewBrush.SetImageSize(FVector2D(Width * 2, Height * 2));
+	NewBrush.SetResourceObject(ImageLoaded);
+	ImgImageBottom->SetBrush(NewBrush);
+}
+
+void UMainInterface::ChangeVisibilityImageVideo()
+{
 	const float TranslationPanelBottom = CanvasPanelBottom->GetRenderTransform().Translation.Y;
 	if (TranslationPanelBottom != 0)
 	{
@@ -1253,38 +1290,6 @@ void UMainInterface::SetImageBottom()
 	{
 		//Change visibility ScaleBoxImage and ScaleBoxVideo
 		PlayAnimationForward(ChangeVideoToImage);
-	}
-
-	if (!GameData.IsValidIndex(IndexCard)) return;
-
-	const FString ImagePath = GameData[IndexCard].thumbnailFormated;
-
-	if (FPaths::FileExists(ImagePath))
-	{
-		int32 Width = 640;
-		int32 Height = 480;
-		const EClassicImageFormat Format = UClassicFunctionLibrary::GetFormatImage(ImagePath);
-		UTexture2D* ImageLoaded = UClassicFunctionLibrary::LoadTexture2DFromFile(ImagePath, Format, EClassicTextureFilter::NEAREST, Width, Height);
-
-		if (ImageLoaded != nullptr)
-		{
-			FSlateBrush NewBrush;
-			NewBrush.SetImageSize(FVector2D(Width * 2, Height * 2));
-			NewBrush.SetResourceObject(ImageLoaded);
-			ImgImageBottom->SetBrush(NewBrush);
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Image not Loaded nullptr"));
-		}
-	}
-	else
-	{
-		FSlateBrush NewBrush;
-		NewBrush.SetImageSize(FVector2D(640, 480));
-		NewBrush.SetResourceObject(ImageBottomDefault);
-		ImgImageBottom->SetBrush(NewBrush);
-		UE_LOG(LogTemp, Warning, TEXT("Image not exists in %s"), *ImagePath);
 	}
 }
 
