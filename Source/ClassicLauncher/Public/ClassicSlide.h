@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MusicInterface.h"
 #include "Blueprint/UserWidget.h"
 #include "TextImageBlock.h"
 #include "ClassicSlide.generated.h"
@@ -14,7 +15,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateSlide, int32, value);
  * 
  */
 UCLASS()
-class CLASSICLAUNCHER_API UClassicSlide : public UUserWidget
+class CLASSICLAUNCHER_API UClassicSlide : public UUserWidget, public IMusicInterface
 {
 	GENERATED_BODY()
 	
@@ -56,7 +57,7 @@ public:
 	void AlternateToTextImage(bool bEnable, float Size = 24);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicSlide|Variables")
-	class USoundBase* SoundSelect;
+	class USoundBase* SoundNavigation;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicSlide|Variables")
 	FText TxtTextLabel;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicSlide|Variables")
@@ -67,4 +68,8 @@ private:
 
 	UPROPERTY()
 	bool Hover;
+
+public:
+
+	virtual void EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound) override;
 };

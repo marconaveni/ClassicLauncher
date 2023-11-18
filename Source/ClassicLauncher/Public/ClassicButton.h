@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MusicInterface.h"
 #include "Blueprint/UserWidget.h"
 #include "ClassicButton.generated.h"
 
@@ -13,7 +14,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDelegateClickBT);
  * 
  */
 UCLASS()
-class CLASSICLAUNCHER_API UClassicButton : public UUserWidget
+class CLASSICLAUNCHER_API UClassicButton : public UUserWidget, public IMusicInterface
 {
 	GENERATED_BODY()
 
@@ -47,7 +48,7 @@ public:
 	FButtonStyle StyleButton;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButton|Variables")
-	class USoundBase* SoundSelect;
+	class USoundBase* SoundNavigation;
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicButton|Functions")
 	void SetFocusButton(bool Focus);
@@ -59,4 +60,9 @@ private:
 
 	UPROPERTY()
 	bool hover;
+
+public:
+
+	virtual void EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound) override;
+
 };

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MusicInterface.h"
 #include "Blueprint/UserWidget.h"
 #include "TextImageBlock.h"
 #include "ClassicButtonSystem.generated.h"
@@ -16,7 +17,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateClick, int32, value);
  * 
  */
 UCLASS()
-class CLASSICLAUNCHER_API UClassicButtonSystem : public UUserWidget
+class CLASSICLAUNCHER_API UClassicButtonSystem : public UUserWidget, public IMusicInterface
 {
 	GENERATED_BODY()
 
@@ -81,4 +82,8 @@ private:
 
 	UPROPERTY()
 	bool Hover;
+
+public:
+
+	virtual void EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound) override;
 };

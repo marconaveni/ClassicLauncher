@@ -14,6 +14,7 @@
 #include "Windows/AllowWindowsPlatformTypes.h"
 #include <winreg.h>
 
+#include "MusicInterface.h"
 #include "Blueprint/UserWidget.h"
 
 EUINavigation UClassicFunctionLibrary::GetInputnavigation(const FKeyEvent& InKeyEvent)
@@ -1094,4 +1095,23 @@ UUserWidget* UClassicFunctionLibrary::GetFirstWidgetOfClass(UObject* WorldContex
 	}
 
 	return ResultWidget;
+}
+
+void UClassicFunctionLibrary::DefineEffects(USoundBase* SelectSound, USoundBase* NavigateSound)
+{
+	for (TObjectIterator<UUserWidget> Itr; Itr; ++Itr)
+	{
+		UUserWidget* LiveWidget = *Itr;
+
+		if (LiveWidget->GetClass()->ImplementsInterface(UMusicInterface::StaticClass()))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("name class %s "), *LiveWidget->GetName());
+			IMusicInterface* MyInterface = Cast<IMusicInterface>(LiveWidget);
+			if (MyInterface)
+			{
+				MyInterface->EffectSound(SelectSound, NavigateSound);
+			}
+		}
+
+	}
 }

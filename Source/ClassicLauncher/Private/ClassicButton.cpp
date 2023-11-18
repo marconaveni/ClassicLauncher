@@ -1,4 +1,4 @@
-// Copyright 2022 Marco Naveni. All Rights Reserved.
+// Copyright 2023 Marco Naveni. All Rights Reserved.
 
 
 #include "ClassicButton.h"
@@ -59,7 +59,7 @@ void UClassicButton::SetFocusButton(bool Focus)
 		OnFocusTrigger.Broadcast();
 		BtButton->SetKeyboardFocus();
 		BgImage->SetVisibility(ESlateVisibility::Visible);	
-		UGameplayStatics::PlaySound2D(this, SoundSelect);
+		UGameplayStatics::PlaySound2D(this, SoundNavigation);
 		PlayAnimationForward(FocusButton);
 	}
 	else
@@ -73,4 +73,9 @@ void UClassicButton::SetFocusButton(bool Focus)
 void UClassicButton::ButtonClick()
 {
 	OnClickTrigger.Broadcast();
+}
+
+void UClassicButton::EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound)
+{
+	SoundNavigation = NavigateSound;
 }

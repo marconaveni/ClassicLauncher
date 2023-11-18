@@ -19,7 +19,7 @@ void UClassicSlide::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 				BgBackground->SetVisibility(ESlateVisibility::Visible);
 				WBPArrow->SetVisibility(ESlateVisibility::Visible);
 				OnFocusTriggerSlide.Broadcast();
-				UGameplayStatics::PlaySound2D(this, SoundSelect);
+				UGameplayStatics::PlaySound2D(this, SoundNavigation);
 			}
 			Hover = true;
 		}
@@ -84,6 +84,11 @@ void UClassicSlide::AlternateToTextImage(bool bEnable, float Size)
 {
 	TxtLabel->SetTextImageSize(Size);
 	TxtLabel->DefaultToImageText(bEnable, true);
+}
+
+void UClassicSlide::EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound)
+{
+	SoundNavigation = NavigateSound;
 }
 
 

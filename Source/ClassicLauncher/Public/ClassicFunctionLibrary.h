@@ -284,6 +284,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Process")
 	static bool IsRunningSteamApp(const FString& AppID);
 
-	UFUNCTION(Category = "Victory BP Library|UMG", BlueprintCallable, BlueprintCosmetic, Meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "WidgetClass"))
+	UFUNCTION(Category = "ClassicFunctionLibrary|Iterator", BlueprintCallable, BlueprintCosmetic, Meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "WidgetClass"))
 	static UUserWidget* GetFirstWidgetOfClass(UObject* WorldContextObject, TSubclassOf<UUserWidget> WidgetClass, bool TopLevelOnly);
+
+	UFUNCTION(Category = "ClassicFunctionLibrary|Sound", BlueprintCallable, BlueprintCosmetic, Meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "WidgetClass"))
+	static void DefineEffects(USoundBase* SelectSound, USoundBase* NavigateSound);
 };

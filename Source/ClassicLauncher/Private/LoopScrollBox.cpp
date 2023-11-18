@@ -254,3 +254,9 @@ void ULoopScrollBox::DirectionLeft()
 {
 	OnDirectionLeft();
 }
+
+void ULoopScrollBox::EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound)
+{
+	SoundNavigate = NavigateSound;
+	SoundSelect = SelectSound;
+}

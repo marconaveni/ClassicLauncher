@@ -6,16 +6,19 @@
 #include "Blueprint/UserWidget.h"
 #include "ClassicFunctionLibrary.h"
 #include "GameData.h"
+#include "MusicInterface.h"
 #include "LoopScrollBox.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateCard, int32, Index);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateIndexStart, int32, Index);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateIndexFinal, int32, Index);
+
+
 /**
  * 
  */
 UCLASS()
-class CLASSICLAUNCHER_API ULoopScrollBox : public UUserWidget
+class CLASSICLAUNCHER_API ULoopScrollBox : public UUserWidget, public  IMusicInterface
 {
 	GENERATED_BODY()
 
@@ -159,4 +162,8 @@ public:
 
 	UFUNCTION()
 	void Clear();
+
+public:
+
+	virtual void EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound) override;
 };

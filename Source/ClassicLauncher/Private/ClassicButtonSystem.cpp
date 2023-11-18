@@ -82,3 +82,9 @@ void UClassicButtonSystem::AlternateToTextImage(bool bEnable, float Size)
 	Text->SetTextImageSize(Size);
 	Text->DefaultToImageText(bEnable, true);
 }
+
+void UClassicButtonSystem::EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound)
+{
+	SoundClick = SelectSound;
+	SoundSelect = NavigateSound;
+}
