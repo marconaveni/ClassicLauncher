@@ -60,7 +60,9 @@ public:
 	void SetMusics(const FString NewMediaPath);
 
 	UFUNCTION(BlueprintCallable, Category = "Media|Functions")
-	void PlayMusic();
+	void PlaylistMusic(const bool bShowMessage = true);
+	UFUNCTION(BlueprintCallable, Category = "Media|Functions")
+	void PlayMusic(const FString File, const bool bShowMessage = true);
 	UFUNCTION(BlueprintCallable, Category = "Media|Functions")
 	void PlayVideo(const FString File);
 

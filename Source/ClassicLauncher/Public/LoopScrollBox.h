@@ -55,6 +55,7 @@ protected:
 	int32 ChildrenCount;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	EButtonsGame InputDirection;
+
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
@@ -69,7 +70,10 @@ public:
 	UTexture2D* ImageCardDefault;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables|Debug")
 	bool Debug = false;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
+	class USoundBase* SoundNavigate;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
+	class USoundBase* SoundSelect;
 
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))

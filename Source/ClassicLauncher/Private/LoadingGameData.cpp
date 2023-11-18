@@ -56,6 +56,7 @@ void ULoadingGameData::LoadConfiguration()
 		GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &ULoadingGameData::LoadGameSystems, 0.1f, false, DELAY);
 	}
 	MainInterfaceReference->ClassicMediaPlayerReference->SetMusics(TEXT(""));
+	MainInterfaceReference->ClassicMediaPlayerReference->PlaylistMusic(false);
 }
 
 void ULoadingGameData::LoadGameSystems()

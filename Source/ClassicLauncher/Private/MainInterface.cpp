@@ -31,6 +31,7 @@
 #include "LoadingGameData.h"
 #include "TextBoxScroll.h"
 #include "TextImageBlock.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
 //#include "Misc/OutputDeviceNull.h"
 
 #define DEFAULTDELAY 0.09f
@@ -399,7 +400,7 @@ FReply UMainInterface::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEven
 		}
 		if (Input == EButtonsGame::M)
 		{
-			ClassicMediaPlayerReference->PlayMusic();
+			ClassicMediaPlayerReference->PlaylistMusic();
 		}
 	}
 
@@ -733,8 +734,6 @@ void UMainInterface::OpenSystem()
 
 void UMainInterface::AppLaunch()
 {
-
-
 	const FString PathRomFormated = UClassicFunctionLibrary::HomeDirectoryReplace(GameData[IndexCard].PathFormated);
 	const FString ExecutablePath = (GameData[IndexCard].Executable == TEXT("")) ? GameSystems[CountSystem].Executable : GameData[IndexCard].Executable;
 	const FString Arguments = (GameData[IndexCard].Arguments == TEXT("")) ? GameSystems[CountSystem].Arguments : GameData[IndexCard].Arguments;
@@ -901,7 +900,7 @@ void UMainInterface::RunningGame(bool bIsRun)
 	}
 	else
 	{
-		ClassicMediaPlayerReference->PlayMusic();
+		ClassicMediaPlayerReference->PlaylistMusic();
 		LoopScroll->SetVisibility(ESlateVisibility::Visible);
 		BtnSelectSystem->SetVisibility(ESlateVisibility::Visible);
 		BtnConfigurations->SetVisibility(ESlateVisibility::Visible);
@@ -1250,8 +1249,8 @@ void UMainInterface::SetImageBottom()
 
 	FString ImagePath = TEXT("");
 	UTexture2D* ImageLoaded = ImageBottomDefault;
-	int32 Width = 640;
-	int32 Height = 480;
+	int32 Width = ImageBottomDefault->GetSizeX();
+	int32 Height = ImageBottomDefault->GetSizeY();
 
 	if (FPaths::FileExists(GameData[IndexCard].thumbnailFormated))
 	{
@@ -1265,7 +1264,7 @@ void UMainInterface::SetImageBottom()
 	if(ImagePath != TEXT(""))
 	{
 		const EClassicImageFormat Format = UClassicFunctionLibrary::GetFormatImage(ImagePath);
-		ImageLoaded = UClassicFunctionLibrary::LoadTexture2DFromFile(ImagePath, Format, EClassicTextureFilter::NEAREST, Width, Height);
+		ImageLoaded = UClassicFunctionLibrary::LoadTexture2DFromFile(ImagePath, Format, EClassicTextureFilter::DEFAULT, Width, Height);
 
 		if (ImageLoaded == nullptr)
 		{

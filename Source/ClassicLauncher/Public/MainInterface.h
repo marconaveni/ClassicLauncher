@@ -29,6 +29,7 @@ class AClassicMediaPlayer;
 class AClassicLibretroTV;
 class UCanvasPanelSlot;
 class AClassicGameMode;
+class UButton;
 
 UENUM(BlueprintType, Category = "Navigation")
 enum class EPositionY : uint8

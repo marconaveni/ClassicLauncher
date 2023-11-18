@@ -1,4 +1,4 @@
-// Copyright 2022 Marco Naveni. All Rights Reserved.
+// Copyright 2023 Marco Naveni. All Rights Reserved.
 
 
 #include "ClassicMediaPlayer.h"
@@ -8,7 +8,6 @@
 #include "MainInterface.h"
 #include "Components/Image.h"
 #include "Kismet/GameplayStatics.h"
-#include "Internationalization/StringTableRegistry.h"
 
 #define LOCTEXT_NAMESPACE "PlayerMusic"
 
@@ -33,12 +32,12 @@ void AClassicMediaPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FConfig ConfigurationData;
 	FString ConfigResult;
 	const FString GameRoot = UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("config\\config.xml");
 
-	if (bool IsValidConfig = UClassicFunctionLibrary::LoadStringFile(ConfigResult, GameRoot))
+	if (UClassicFunctionLibrary::LoadStringFile(ConfigResult, GameRoot))
 	{
+		FConfig ConfigurationData;
 		UClassicFunctionLibrary::SetConfig(UClassicFunctionLibrary::LoadXMLSingle(ConfigResult, TEXT("config")), ConfigurationData);
 		ChangeMasterVolume(ConfigurationData.Volume);
 	}
@@ -59,11 +58,10 @@ void AClassicMediaPlayer::Tick(float DeltaTime)
 	{
 		if (DoOnceIsPlayVideo.Execute())
 		{
-			const FIntPoint VideoDimensions = ClassicPlayerVideo->GetMediaPlayer()->GetVideoTrackDimensions(0,0);
+			const FIntPoint VideoDimensions = ClassicPlayerVideo->GetMediaPlayer()->GetVideoTrackDimensions(0, 0);
 			FSlateBrush InBrush = MainInterfaceReference->ImgVideo->GetBrush();
 			InBrush.SetImageSize(FVector2f(VideoDimensions.X, VideoDimensions.Y));
 			MainInterfaceReference->ImgVideo->SetBrush(InBrush);
-			//MainInterfaceReference->ImgVideo->Brush.ImageSize = FVector2D(VideoDimensions.X, VideoDimensions.Y);
 		}
 	}
 	else
@@ -75,42 +73,38 @@ void AClassicMediaPlayer::Tick(float DeltaTime)
 
 void AClassicMediaPlayer::SetMusics(const FString NewMediaPath)
 {
-
 	MediaPath = (NewMediaPath != TEXT("")) ? TEXT("file://") + NewMediaPath : TEXT("file://") + UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("musics");
 	UClassicFunctionLibrary::VerifyOrCreateDirectory(MediaPath);
 	const FString Path = (NewMediaPath != TEXT("")) ? NewMediaPath + TEXT("\\") : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("musics");;
 	MediaFiles.Empty();
-	const bool bWavFound = UClassicFunctionLibrary::ClassicGetFiles(MediaFiles, Path, TEXT("wav"));
-	const bool bOggFound = UClassicFunctionLibrary::ClassicGetFiles(MediaFiles, Path, TEXT("mp3"));
-
-	if(bWavFound || bOggFound)
-	{
-		PlayMusic();
-	}
+	UClassicFunctionLibrary::ClassicGetFiles(MediaFiles, Path, TEXT("wav"));
+	UClassicFunctionLibrary::ClassicGetFiles(MediaFiles, Path, TEXT("mp3"));
 }
 
-void AClassicMediaPlayer::PlayMusic()
+void AClassicMediaPlayer::PlaylistMusic(const bool bShowMessage)
 {
-
 	if (MediaFiles.Num() > 0)
 	{
 		Random = UClassicFunctionLibrary::GenerateNumberWithoutRepeat(Random, 0, MediaFiles.Num() - 1);
 		const FString File = MediaPath + TEXT("\\") + MediaFiles[Random];
-
+		PlayMusic(File, bShowMessage);
 		UE_LOG(LogTemp, Warning, TEXT("File name is %s"), *File);
+	}
+}
 
-		if (ClassicPlayerMusic->GetMediaPlayer()->CanPlayUrl(File))
+void AClassicMediaPlayer::PlayMusic(const FString File, const bool bShowMessage)
+{
+	if (ClassicPlayerMusic->GetMediaPlayer()->CanPlayUrl(File))
+	{
+		if (MainInterfaceReference != nullptr && bShowMessage)
 		{
-			if (MainInterfaceReference != nullptr)
-			{
-				const FText TextPlayerMusic = FText::FromString(FPaths::GetBaseFilename(MediaFiles[Random], false));
-				FFormatNamedArguments Args;
-				Args.Add("TextPlayerMusic", TextPlayerMusic);
-				MainInterfaceReference->ShowMessage(FText::Format(LOCTEXT("Play", "Playing {TextPlayerMusic}"), Args), 3.5f);
-			}
-			PauseVideo();
-			ClassicPlayerMusic->GetMediaPlayer()->OpenUrl(File);
+			const FText TextPlayerMusic = FText::FromString(FPaths::GetBaseFilename(File, true));
+			FFormatNamedArguments Args;
+			Args.Add("TextPlayerMusic", TextPlayerMusic);
+			MainInterfaceReference->ShowMessage(FText::Format(LOCTEXT("Play", "Playing {TextPlayerMusic}"), Args), 3.5f);
 		}
+		PauseVideo();
+		ClassicPlayerMusic->GetMediaPlayer()->OpenUrl(File);
 	}
 }
 
@@ -157,7 +151,7 @@ void AClassicMediaPlayer::StopVideo()
 
 void AClassicMediaPlayer::OnEndMusic()
 {
-	PlayMusic();
+	PlaylistMusic();
 }
 
 void AClassicMediaPlayer::OnEndVideo()
