@@ -289,4 +289,10 @@ public:
 
 	UFUNCTION(Category = "ClassicFunctionLibrary|Sound", BlueprintCallable, BlueprintCosmetic, Meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "WidgetClass"))
 	static void DefineEffects(USoundBase* SelectSound, USoundBase* NavigateSound);
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|File IO")
+	static bool GetFolders(TArray<FString>& Folders, FString FullFilePath, const bool Recursive = false);
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|File IO")
+	static bool GetFiles(TArray<FString>& Files, FString FullFilePath, FString Extension, const bool Recursive = false);
 };

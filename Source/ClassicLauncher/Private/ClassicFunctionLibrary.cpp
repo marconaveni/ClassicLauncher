@@ -1115,3 +1115,57 @@ void UClassicFunctionLibrary::DefineEffects(USoundBase* SelectSound, USoundBase*
 
 	}
 }
+
+bool UClassicFunctionLibrary::GetFolders(TArray<FString>& Folders, FString FullFilePath, const bool Recursive)
+{
+	FPaths::NormalizeDirectoryName(FullFilePath);
+	IFileManager& FileManager = IFileManager::Get();
+
+	if (Recursive)
+	{
+		FileManager.FindFilesRecursive(Folders, *FullFilePath, TEXT("*"), false, true);
+	}
+	else
+	{
+		const FString FinalPath = FullFilePath / TEXT("*");
+		FileManager.FindFiles(Folders, *FinalPath, false, true);
+	}
+
+
+	for (int i = 0; i < Folders.Num(); i++)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Folders Found: %s"), *Folders[i]);
+	}
+
+	return Folders.Num() > 0;
+
+}
+
+bool UClassicFunctionLibrary::GetFiles(TArray<FString>& Files, FString FullFilePath, FString Extension, const bool Recursive)
+{
+	FPaths::NormalizeDirectoryName(FullFilePath);
+	IFileManager& FileManager = IFileManager::Get();
+	FString FinalExtension = TEXT("*");
+	if (Extension != TEXT("") && Extension != TEXT("*") && Extension != TEXT("*.*"))
+	{
+		FinalExtension = TEXT("*.") + Extension;
+	}
+
+	if (Recursive)
+	{
+		FileManager.FindFilesRecursive(Files, *FullFilePath, TEXT("*"), true, false);
+	}
+	else
+	{
+		const FString FinalPath = FullFilePath / FinalExtension;
+		FileManager.FindFiles(Files, *FinalPath, true, false);
+	}
+
+
+	for (int i = 0; i < Files.Num(); i++)
+	{
+		UE_LOG(LogTemp, Log, TEXT("File Found: %s"), *Files[i]);
+	}
+
+	return Files.Num() > 0;
+}
