@@ -46,6 +46,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Media|Variables")
 	FDoOnce DoOnceIsPlayVideo;
 
+	UPROPERTY()
+	FString MusicPath;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -90,5 +93,5 @@ public:
 	void ChangeMasterVolume(int32 Volume);
 
 	UFUNCTION(BlueprintPure, Category = "Media|Functions")
-	int32 GetMasterVolume();
+	int32 GetMasterVolume() const;
 };

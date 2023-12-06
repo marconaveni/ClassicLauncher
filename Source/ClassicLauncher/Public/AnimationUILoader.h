@@ -7,8 +7,15 @@
 #include "Subsystems/WorldSubsystem.h"
 #include "AnimationUILoader.generated.h"
 
+
 class UWidget;
 class UAnimationUI;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDelegateStartAnimationUI, UAnimationUI*, Animation, FName, Name);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDelegateFinishAnimationUI, UAnimationUI*, Animation, FName, Name);
+
+
 /**
  * 
  */
@@ -23,12 +30,41 @@ protected:
     virtual bool DoesSupportWorldType(EWorldType::Type WorldType) const override;
 
     UPROPERTY()
-	UAnimationUI* Animation;
+	UAnimationUI* DefaultAnimation;
 
     UPROPERTY()
     TMap<FName, UAnimationUI*> WidgetMap;
 
+    UPROPERTY()
+    FName CurrentNameAnimation;
+
+    UPROPERTY()
+    UAnimationUI* CurrentAnimation;
+
 public:
+
+    UPROPERTY(BlueprintAssignable, BlueprintCallable)
+    FDelegateStartAnimationUI OnStartAnimationTrigger;
+    UPROPERTY(BlueprintAssignable, BlueprintCallable)
+    FDelegateFinishAnimationUI OnFinishAnimationTrigger;
+
+
     UFUNCTION(BlueprintCallable, Category = "AnimationUI|Functions")
-	void PlayAnimation( UWidget* Widget, float Time, int32 FPS, FWidgetTransform ToPosition, float ToOpacity, bool bReset, TEnumAsByte<EEasingFunc::Type> FunctionCurveFName, FAnimationIUCurves Curves ,FName AnimationName = TEXT("None"));
+    void PlayAnimation( UWidget* Widget, float Time, FWidgetTransform ToPosition, float ToOpacity, bool bReset, TEnumAsByte<EEasingFunc::Type> FunctionCurveFName, FAnimationUICurves Curves, FName AnimationName = TEXT("None"), bool ForceUpdateAnimation = true);
+
+    UFUNCTION(BlueprintCallable, Category = "AnimationUI|Functions")
+    UAnimationUI* GetAnimation(FName Name);
+
+    UFUNCTION(BlueprintCallable, Category = "AnimationUI|Functions")
+    void ClearAllAnimations();
+
+    UFUNCTION(BlueprintCallable, Category = "AnimationUI|Functions")
+    void Clear();
+
+protected:
+    UFUNCTION()
+    void StartAnimation();
+    UFUNCTION()
+    void FinishAnimation();
+
 };

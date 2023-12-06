@@ -2,14 +2,15 @@
 
 
 #include "AnimationUILoader.h"
-
 #include "AnimationUI.h"
 
 void UAnimationUILoader::Initialize(FSubsystemCollectionBase& Collection)
 {
-	if (!IsValid(Animation))
+	if (!IsValid(DefaultAnimation))
 	{
-		Animation = NewObject<UAnimationUI>(this);
+		DefaultAnimation = NewObject<UAnimationUI>(this);
+		DefaultAnimation->OnStartAnimationTrigger.AddDynamic(this, &UAnimationUILoader::StartAnimation);
+		DefaultAnimation->OnFinishAnimationTrigger.AddDynamic(this, &UAnimationUILoader::FinishAnimation);
 	}
 }
 
@@ -23,29 +24,65 @@ bool UAnimationUILoader::DoesSupportWorldType(EWorldType::Type WorldType) const
 	return Super::DoesSupportWorldType(WorldType);
 }
 
-void UAnimationUILoader::PlayAnimation( UWidget* Widget, float Time, int32 FPS, FWidgetTransform ToPosition, float ToOpacity, bool bReset, TEnumAsByte<EEasingFunc::Type> FunctionCurve, FAnimationIUCurves Curves, FName AnimationName)
+void UAnimationUILoader::PlayAnimation(UWidget* Widget, float Time, FWidgetTransform ToPosition, float ToOpacity, bool bReset, TEnumAsByte<EEasingFunc::Type> FunctionCurve, FAnimationUICurves Curves, FName AnimationName, bool ForceUpdateAnimation)
 {
-	if (AnimationName.IsEqual("None"))
-	{
-		Animation->SetCurves(Curves);
-		Animation->PlayAnimation(Widget, Time, FPS, ToPosition, ToOpacity, bReset, FunctionCurve);
-	}
-	else
+	CurrentAnimation = DefaultAnimation;
+	if (!AnimationName.IsEqual("None"))
 	{
 		UAnimationUI** FoundValue = WidgetMap.Find(AnimationName);
-		if(FoundValue == nullptr)
+		if (FoundValue == nullptr)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("null"));
-			UAnimationUI* NewAnimation = NewObject<UAnimationUI>(this);
-			WidgetMap.Add(AnimationName, NewAnimation);
-			NewAnimation->SetCurves(Curves);
-			NewAnimation->PlayAnimation(Widget, Time, FPS, ToPosition, ToOpacity, bReset, FunctionCurve);
+			CurrentAnimation = NewObject<UAnimationUI>(this);
+			CurrentAnimation->OnStartAnimationTrigger.AddDynamic(this, &UAnimationUILoader::StartAnimation);
+			CurrentAnimation->OnFinishAnimationTrigger.AddDynamic(this, &UAnimationUILoader::FinishAnimation);
+			WidgetMap.Add(AnimationName, CurrentAnimation);
 		}
 		else
 		{
-			const auto& ValueAssociatedWithKey = *FoundValue;
-			ValueAssociatedWithKey->SetCurves(Curves);
-			ValueAssociatedWithKey->PlayAnimation(Widget, Time, FPS, ToPosition, ToOpacity, bReset, FunctionCurve);
+			CurrentAnimation = *FoundValue;
 		}
 	}
+
+	CurrentNameAnimation = AnimationName;
+	CurrentAnimation->SetCurves(Curves);
+	CurrentAnimation->PlayAnimation(Widget, Time, ToPosition, ToOpacity, bReset, FunctionCurve, ForceUpdateAnimation);
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *CurrentNameAnimation.ToString());
+
+}
+
+UAnimationUI* UAnimationUILoader::GetAnimation(FName Name)
+{
+	for (const auto& Element : WidgetMap)
+	{
+		if(Name == Element.Key)
+		{
+			return Element.Value;
+		}
+	}
+	return DefaultAnimation;
+}
+
+void UAnimationUILoader::ClearAllAnimations()
+{
+	for (const auto& Element : WidgetMap)
+	{
+		Element.Value->ClearAnimation();
+	}
+
+}
+
+void UAnimationUILoader::Clear()
+{
+	WidgetMap.Empty();
+}
+
+void UAnimationUILoader::StartAnimation() 
+{
+	OnStartAnimationTrigger.Broadcast(CurrentAnimation, CurrentNameAnimation);
+}
+
+void UAnimationUILoader::FinishAnimation()
+{
+	OnFinishAnimationTrigger.Broadcast(CurrentAnimation, CurrentNameAnimation);
 }

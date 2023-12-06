@@ -27,15 +27,26 @@ protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* Background;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MessageBalloon|Timers")
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UCanvasPanel* CanvasMessage;
+
+	UPROPERTY()
 	FTimerHandle TimerHandle;
+
+	UPROPERTY()
+	FTimerHandle DelayTimerHandle;
+
+	UPROPERTY()
+	float InRate;
 
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "MessageBalloon|Functions")
-	void ShowMessage(FText Message, float InRate);
+	void ShowMessage(FText Message, float Time = 5.0f);
 
 private:
+	UFUNCTION()
+	void StartMessage();
 
 	UFUNCTION()
 	void EndMessage();

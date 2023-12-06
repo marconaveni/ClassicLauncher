@@ -2,7 +2,6 @@
 
 
 #include "Card.h"
-
 #include "Components/Button.h"
 #include "Components/Image.h"
 #include "Styling/SlateBrush.h"
@@ -24,6 +23,7 @@ bool UCard::Initialize()
 	AnimationCard = NewObject<UAnimationUI>(this, UAnimationUI::StaticClass());
 	AnimationFadeCard = NewObject<UAnimationUI>(this, UAnimationUI::StaticClass());
 	AnimationFavorite = NewObject<UAnimationUI>(this, UAnimationUI::StaticClass());
+
 	
 	bool Success = Super::Initialize();
 	return false;
@@ -65,13 +65,13 @@ void UCard::SetFocusCard(bool enable)
 	FWidgetTransform Transform;
 	if (enable)
 	{
-		AnimationFrame->PlayAnimation(this->FrameSelected, 0.20f, 60, Transform, 1, false, EEasingFunc::EaseOut);
-		AnimationCard->PlayAnimation(this->BackgroundSelected, 0.20f, 60, Transform, 1, false, EEasingFunc::EaseOut);
+		AnimationFrame->PlayAnimation(this->FrameSelected, 0.20f, Transform, 1, false, EEasingFunc::EaseOut);
+		AnimationCard->PlayAnimation(this->BackgroundSelected, 0.20f, Transform, 1, false, EEasingFunc::EaseOut);
 	}
 	else
 	{
-		AnimationFrame->PlayAnimation(this->FrameSelected, 0.20f, 60, Transform, 0, false, EEasingFunc::EaseOut);
-		AnimationCard->PlayAnimation(this->BackgroundSelected, 0.20f, 60, Transform, 0, false, EEasingFunc::EaseOut);
+		AnimationFrame->PlayAnimation(this->FrameSelected, 0.20f, Transform, 0, false, EEasingFunc::EaseOut);
+		AnimationCard->PlayAnimation(this->BackgroundSelected, 0.20f, Transform, 0, false, EEasingFunc::EaseOut);
 	}
 }
 
@@ -115,12 +115,12 @@ void UCard::SetFavorite(bool favorite, bool AnimateIcon)
 		if (favorite)
 		{
 			AnimationFavorite->SetCurves(CurveFavoritesFoward);
-			AnimationFavorite->PlayAnimation(this->Favorite, 0.45f, 60, Transform, 1, false, EEasingFunc::EaseOut);
+			AnimationFavorite->PlayAnimation(this->Favorite, 0.45f, Transform, 1, false, EEasingFunc::EaseOut);
 		}
 		else
 		{
 			AnimationFavorite->SetCurves(CurveFavoritesReverse);
-			AnimationFavorite->PlayAnimation(this->Favorite, 0.45f, 60, Transform, 0, false, EEasingFunc::EaseOut);
+			AnimationFavorite->PlayAnimation(this->Favorite, 0.45f, Transform, 0, false, EEasingFunc::EaseOut);
 			UE_LOG(LogTemp, Warning, TEXT("aqui"));
 		}
 	}
@@ -149,7 +149,7 @@ void UCard::AnimationFade()
 	{
 		FWidgetTransform Transform;
 		Transform.Scale = FVector2D(1.8f, 1.8f);
-		AnimationFadeCard->PlayAnimation(this, 0.25f, 60, Transform, 0, true, EEasingFunc::EaseOut);
+		AnimationFadeCard->PlayAnimation(this, 0.25f, Transform, 0, true, EEasingFunc::EaseOut);
 	}
 }
 

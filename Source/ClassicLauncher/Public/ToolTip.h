@@ -23,14 +23,26 @@ public:
 	class UWidgetAnimation* FadeInFadeOutAnimation;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UOverlay* Overlay;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextImageBlock* TextBlock;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* BgImage;
 
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* BgImageTop;
+
+	UPROPERTY()
+	bool bEnableVisibility = false;
+	UPROPERTY()
+	bool bFocus = false;
+
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
 	virtual void NativeOnInitialized() override;
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ToolTip|Variables")
 	FText Text;

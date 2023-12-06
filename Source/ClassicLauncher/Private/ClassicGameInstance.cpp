@@ -3,7 +3,9 @@
 
 #include "ClassicGameInstance.h"
 #include "ClassicSaveGame.h"
+#include "MainInterface.h"
 #include "Kismet/GameplayStatics.h"
+#include "Misc/OutputDeviceNull.h"
 
 void UClassicGameInstance::Init()
 {
@@ -29,4 +31,23 @@ UClassicGameInstance::UClassicGameInstance()
 void UClassicGameInstance::SetSystemSave(TArray<FGameSystem> Systems)
 {
 	ClassicSaveGameInstance->GameSystemsSave = Systems;
+}
+
+void UClassicGameInstance::UpdateTheme()
+{
+	UE_LOG(LogTemp, Warning, TEXT("ForceUpdateTheme"));
+
+	for (TObjectIterator<UMainInterface> ObjectIterator; ObjectIterator; ++ObjectIterator)
+	{
+		if (ObjectIterator->GetWorld() != GetWorld())
+		{
+			continue;
+		}
+		
+		FOutputDeviceNull OutputDeviceNull;
+		ObjectIterator->CallFunctionByNameWithArguments(TEXT("SetTheme"), OutputDeviceNull, nullptr, true);
+		break;
+	}
+
+
 }

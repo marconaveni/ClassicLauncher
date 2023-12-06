@@ -114,21 +114,11 @@ void UMainInterface::NativeOnInitialized()
 	SlotToolTipFavorites = Cast<UCanvasPanelSlot>(WBPToolTipFavorites->Slot);
 	SlotToolTipInfo = Cast<UCanvasPanelSlot>(WBPToolTipInfo->Slot);
 
-	BtnSelectSystem->OnFocusTrigger.AddDynamic(this, &UMainInterface::OnFocusSelectSystem);
-	BtnSelectSystem->OnFocusLostTrigger.AddDynamic(this, &UMainInterface::OnLostFocusSelectSystem);
 	BtnSelectSystem->OnClickTrigger.AddDynamic(this, &UMainInterface::OnClickSelectSystem);
-
-	BtnConfigurations->OnFocusTrigger.AddDynamic(this, &UMainInterface::OnFocusConfigurations);
-	BtnConfigurations->OnFocusLostTrigger.AddDynamic(this, &UMainInterface::OnLostFocusConfigurations);
 	BtnConfigurations->OnClickTrigger.AddDynamic(this, &UMainInterface::OnClickConfigurations);
-
-	BtnFavorites->OnFocusTrigger.AddDynamic(this, &UMainInterface::OnFocusFavorites);
-	BtnFavorites->OnFocusLostTrigger.AddDynamic(this, &UMainInterface::OnLostFocusFavorites);
 	BtnFavorites->OnClickTrigger.AddDynamic(this, &UMainInterface::OnClickFavorites);
-
-	BtnInfo->OnFocusTrigger.AddDynamic(this, &UMainInterface::OnFocusInfo);
-	BtnInfo->OnFocusLostTrigger.AddDynamic(this, &UMainInterface::OnLostFocusInfo);
 	BtnInfo->OnClickTrigger.AddDynamic(this, &UMainInterface::OnClickInfo);
+
 
 	for (TActorIterator<AClassicMediaPlayer> ActorIterator(GetWorld()); ActorIterator; ++ActorIterator)
 	{
@@ -449,7 +439,7 @@ void UMainInterface::OnPreventLoseFocus()
 	{
 		if (PositionY == EPositionY::TOP)
 		{
-			SetTopButtonFocus();
+			WBPFrame->TopFocus();
 			return;
 		}
 		LoopScroll->BtnClick->SetKeyboardFocus();
@@ -516,7 +506,7 @@ void UMainInterface::NavigationMain(EButtonsGame Navigate)
 		}
 		else if (PositionY == EPositionY::TOP)
 		{
-			SetNavigationFocusTop();
+			WBPFrame->DirectionRightLeftTop(ENavigationButton, CountSystem);
 		}
 	}
 	else if (ENavigationButton == EButtonsGame::UP && bUpDownPressed)
@@ -560,40 +550,6 @@ void UMainInterface::SetDirection(EButtonsGame Navigate)
 	}
 }
 
-void UMainInterface::SetNavigationFocusTop()
-{
-	if (ENavigationButton == EButtonsGame::LEFT)
-	{
-		if (BtnInfo->BtButton->HasKeyboardFocus())
-		{
-			BtnFavorites->BtButton->SetKeyboardFocus();
-		}
-		else if (BtnFavorites->BtButton->HasKeyboardFocus())
-		{
-			BtnConfigurations->BtButton->SetKeyboardFocus();
-		}
-		else if (BtnConfigurations->BtButton->HasKeyboardFocus())
-		{
-			BtnSelectSystem->BtButton->SetKeyboardFocus();
-		}
-	}
-	else if (ENavigationButton == EButtonsGame::RIGHT)
-	{
-		if (BtnSelectSystem->BtButton->HasKeyboardFocus())
-		{
-			BtnConfigurations->BtButton->SetKeyboardFocus();
-		}
-		else if (BtnConfigurations->BtButton->HasKeyboardFocus() && CountSystem != 0)
-		{
-			BtnFavorites->BtButton->SetKeyboardFocus();
-		}
-		else if (BtnFavorites->BtButton->HasKeyboardFocus() && CountSystem != 0)
-		{
-			BtnInfo->BtButton->SetKeyboardFocus();
-		}
-	}
-}
-
 void UMainInterface::SetNavigationFocusUpBottom()
 {
 	if (PositionY == EPositionY::BOTTOM)
@@ -619,7 +575,7 @@ void UMainInterface::SetNavigationFocusUpBottom()
 		PositionY = EPositionY::TOP;
 		PlayAnimationForward(BarTop);
 		SetButtonsIconInterfaces(PositionY);
-		SetTopButtonFocus();
+		WBPFrame->TopFocus();
 	}
 }
 
@@ -652,27 +608,51 @@ void UMainInterface::SetNavigationFocusDownBottom()
 		LoopScroll->BtnClick->SetKeyboardFocus();
 		PlayAnimationReverse(BarTop);
 		SetButtonsIconInterfaces(PositionY);
+		WBPFrame->CenterFocus();
+		SetVisibilityToolTips();
 	}
 }
 
 void UMainInterface::SetTopButtonFocus()
 {
+	UClassicButton* Button = nullptr;
+	UCanvasPanelSlot* CanvasSlotPanel = nullptr;
+	UToolTip* ToolTip = nullptr;
+
 	switch (WBPFrame->FrameIndexTop)
 	{
 	case 1:
-		BtnSelectSystem->BtButton->SetKeyboardFocus();
+		Button = BtnSelectSystem;
+		CanvasSlotPanel = SlotToolTipSystem;
+		ToolTip = WBPToolTipSystem;
+		ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas = GameDataIndex;
 		break;
 	case 2:
-		BtnConfigurations->BtButton->SetKeyboardFocus();
+		Button = BtnConfigurations;
+		CanvasSlotPanel = SlotToolTipConfiguration;
+		ToolTip = WBPToolTipConfiguration;
 		break;
 	case 3:
-		BtnFavorites->BtButton->SetKeyboardFocus();
+		Button = BtnFavorites;
+		CanvasSlotPanel = SlotToolTipFavorites;
+		ToolTip = WBPToolTipFavorites;
+		ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas = GameDataIndex;
 		break;
 	case 4:
-		BtnInfo->BtButton->SetKeyboardFocus();
+		Button = BtnInfo;
+		CanvasSlotPanel = SlotToolTipInfo;
+		ToolTip = WBPToolTipInfo;
+		WBPInfo->SetGameInfo(GameData[IndexCard]);
 		break;
 	default:
 		break;
+	}
+
+	if (Button != nullptr && CanvasSlotPanel != nullptr && ToolTip != nullptr)
+	{
+		Button->BtButton->SetKeyboardFocus();
+		SetZOrderToolTips(CanvasSlotPanel);
+		SetVisibilityToolTips(ToolTip);
 	}
 }
 
@@ -708,7 +688,7 @@ void UMainInterface::SetTitle(int32 Index)
 
 void UMainInterface::OnClickLaunch()
 {
-	if (PositionY == EPositionY::CENTER && bInputEnable)
+	if (PositionY == EPositionY::CENTER && bInputEnable /*&& WBPFrame->bIsNotAnimated*/)
 	{
 		LoopScroll->OpenCard();
 		if (CountSystem == 0)
@@ -720,7 +700,8 @@ void UMainInterface::OnClickLaunch()
 		else
 		{
 			PlayAnimationForward(FadeStartSystem);
-			SetCountPlayerToSave();
+			//SetCountPlayerToSave();
+			AsyncTask(ENamedThreads::AnyHiPriThreadNormalTask, [this] { SetCountPlayerToSave(); });
 			GetWorld()->GetTimerManager().SetTimer(LauncherTimerHandle, this, &UMainInterface::AppLaunch, 0.015f, false, 1.5f);
 		}
 	}
@@ -980,59 +961,6 @@ void UMainInterface::Clear()
 	GameDataIndex.Empty();
 }
 
-//bind buttons
-void UMainInterface::OnFocusSelectSystem()
-{
-	ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas = GameDataIndex;
-	FocusButtonsTop(1, WBPToolTipSystem, SlotToolTipSystem, WBPFrame->MoveLeftRightTop1, nullptr, EFocusTop::SYSTEM);
-}
-
-void UMainInterface::OnFocusConfigurations()
-{
-	FocusButtonsTop(2, WBPToolTipConfiguration, SlotToolTipConfiguration, WBPFrame->MoveLeftRightTop2, WBPFrame->MoveLeftRightTop1, EFocusTop::CONFIG);
-}
-
-void UMainInterface::OnFocusFavorites()
-{
-	ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas = GameDataIndex;
-	FocusButtonsTop(3, WBPToolTipFavorites, SlotToolTipFavorites, WBPFrame->MoveLeftRightTop3, WBPFrame->MoveLeftRightTop2, EFocusTop::FAVORITE);
-}
-
-void UMainInterface::OnFocusInfo()
-{
-	WBPInfo->SetGameInfo(GameData[IndexCard]);
-	FocusButtonsTop(4, WBPToolTipInfo, SlotToolTipInfo, nullptr, WBPFrame->MoveLeftRightTop3, EFocusTop::INFO);
-}
-
-void UMainInterface::FocusButtonsTop(const int32 PositionTopX, UToolTip* ToolTip, UCanvasPanelSlot* ToolTipSlot, UWidgetAnimation* Left, UWidgetAnimation* Right, const EFocusTop FocusTop)
-{
-	WBPFrame->FrameIndexTop = PositionTopX;
-	SetZOrderToolTips(ToolTipSlot);
-	ToolTip->SetToolTipVisibility(ESlateVisibility::Visible);
-	ToolTip->SetVisibility(ESlateVisibility::Visible);
-	if (ENavigationButton == EButtonsGame::LEFT && Left != nullptr)
-	{
-		WBPFrame->PlayAnimationReverse(Left);
-	}
-	else if (ENavigationButton == EButtonsGame::RIGHT && Right != nullptr)
-	{
-		WBPFrame->PlayAnimationForward(Right);
-	}
-	else if (ENavigationButton == EButtonsGame::UP && WBPFrame->ImageFrameCenter->GetRenderTransform().Translation.Y == 0)
-	{
-		WBPFrame->AnimationToTopDown(FocusTop, false);
-	}
-}
-
-void UMainInterface::LostFocusButtonsTop(UToolTip* ToolTip, const EFocusTop FocusTop)
-{
-	ToolTip->SetToolTipVisibility(ESlateVisibility::Collapsed);
-	if (ENavigationButton == EButtonsGame::DOWN || ENavigationButton == EButtonsGame::B && Focus == EFocus::MAIN)
-	{
-		WBPFrame->AnimationToTopDown(FocusTop, true);
-	}
-}
-
 void UMainInterface::SetZOrderToolTips(UCanvasPanelSlot* ToolTipSlot) const
 {
 	SlotToolTipSystem->SetZOrder(50);
@@ -1042,24 +970,16 @@ void UMainInterface::SetZOrderToolTips(UCanvasPanelSlot* ToolTipSlot) const
 	ToolTipSlot->SetZOrder(51);
 }
 
-void UMainInterface::OnLostFocusSelectSystem()
+void UMainInterface::SetVisibilityToolTips(UToolTip* ToolTip)
 {
-	LostFocusButtonsTop(WBPToolTipSystem, EFocusTop::SYSTEM);
-}
-
-void UMainInterface::OnLostFocusConfigurations()
-{
-	LostFocusButtonsTop(WBPToolTipConfiguration, EFocusTop::CONFIG);
-}
-
-void UMainInterface::OnLostFocusFavorites()
-{
-	LostFocusButtonsTop(WBPToolTipFavorites, EFocusTop::FAVORITE);
-}
-
-void UMainInterface::OnLostFocusInfo()
-{
-	LostFocusButtonsTop(WBPToolTipInfo, EFocusTop::INFO);
+	WBPToolTipSystem->SetToolTipVisibility(ESlateVisibility::Hidden);
+	WBPToolTipConfiguration->SetToolTipVisibility(ESlateVisibility::Hidden);
+	WBPToolTipFavorites->SetToolTipVisibility(ESlateVisibility::Hidden);
+	WBPToolTipInfo->SetToolTipVisibility(ESlateVisibility::Hidden);
+	if (ToolTip != nullptr)
+	{
+		ToolTip->SetToolTipVisibility(ESlateVisibility::Visible);
+	}
 }
 
 void UMainInterface::OnClickSelectSystem()
@@ -1261,7 +1181,7 @@ void UMainInterface::SetImageBottom()
 		ImagePath = GameData[IndexCard].imageFormated;
 	}
 
-	if(ImagePath != TEXT(""))
+	if (ImagePath != TEXT(""))
 	{
 		const EClassicImageFormat Format = UClassicFunctionLibrary::GetFormatImage(ImagePath);
 		ImageLoaded = UClassicFunctionLibrary::LoadTexture2DFromFile(ImagePath, Format, EClassicTextureFilter::DEFAULT, Width, Height);

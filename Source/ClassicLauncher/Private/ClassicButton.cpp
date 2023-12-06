@@ -56,7 +56,7 @@ void UClassicButton::SetFocusButton(bool Focus)
 {
 	if(Focus)
 	{
-		OnFocusTrigger.Broadcast();
+		//OnFocusTrigger.Broadcast();
 		BtButton->SetKeyboardFocus();
 		BgImage->SetVisibility(ESlateVisibility::Visible);	
 		UGameplayStatics::PlaySound2D(this, SoundNavigation);
@@ -66,7 +66,7 @@ void UClassicButton::SetFocusButton(bool Focus)
 	{
 		BgImage->SetVisibility(ESlateVisibility::Hidden);
 		PlayAnimationReverse(FocusButton);
-		OnFocusLostTrigger.Broadcast();
+		//OnFocusLostTrigger.Broadcast();
 	}
 }
 

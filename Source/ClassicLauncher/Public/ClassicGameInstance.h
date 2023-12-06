@@ -30,5 +30,7 @@ public:
 
 	UFUNCTION()
 	void SetSystemSave(TArray<FGameSystem> Systems);
-	
+
+	UFUNCTION(Exec)
+	void UpdateTheme();
 };

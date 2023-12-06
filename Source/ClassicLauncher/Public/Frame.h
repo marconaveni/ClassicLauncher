@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ClassicFunctionLibrary.h"
 #include "Blueprint/UserWidget.h"
 #include "Frame.generated.h"
 
@@ -108,10 +109,28 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
 	UTexture2D* TextureFrameCenter;
 
+
+
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnDirectionLeft(const int32& Frame, const int32& Limit);
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnDirectionRight(const int32& Frame,const int32& Limit);
+	void OnDirectionRight(const int32& Frame, const int32& Limit);
+
+	UFUNCTION()
+	void TopFocus();
+	UFUNCTION()
+	void CenterFocus();
+	UFUNCTION()
+	void DirectionRightLeftTop(EButtonsGame Input, int32 IndexLimit);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnTopFocus();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnCenterFocus();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnDirectionRightLeftTop();
 
 	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
 	void Clear();

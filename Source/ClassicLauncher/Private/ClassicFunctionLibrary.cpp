@@ -1116,21 +1116,37 @@ void UClassicFunctionLibrary::DefineEffects(USoundBase* SelectSound, USoundBase*
 	}
 }
 
-bool UClassicFunctionLibrary::GetFolders(TArray<FString>& Folders, FString FullFilePath, const bool Recursive)
+void FindFileFolders(TArray<FString>& Files, FString FullFilePath, FString Extension, const bool Recursive, const bool FilesSearch, const bool FolderSearch)
 {
 	FPaths::NormalizeDirectoryName(FullFilePath);
 	IFileManager& FileManager = IFileManager::Get();
 
+	FString FinalExtension = TEXT("*");
+
+	if (Extension != TEXT("") && Extension != TEXT("*") && Extension != TEXT("*.*") && FilesSearch)
+	{
+		FinalExtension = TEXT("*.") + Extension;
+	}
+
 	if (Recursive)
 	{
-		FileManager.FindFilesRecursive(Folders, *FullFilePath, TEXT("*"), false, true);
+		FileManager.FindFilesRecursive(Files, *FullFilePath, *FinalExtension, FilesSearch, FolderSearch);
+		for (int32 i = 0; i < Files.Num(); i++)
+		{
+			FString Path = FullFilePath + TEXT("/");
+			Files[i] = Files[i].Replace(*Path, TEXT(""));
+		}
 	}
 	else
 	{
-		const FString FinalPath = FullFilePath / TEXT("*");
-		FileManager.FindFiles(Folders, *FinalPath, false, true);
+		const FString FinalPath = FullFilePath / FinalExtension;
+		FileManager.FindFiles(Files, *FinalPath, FilesSearch, FolderSearch);
 	}
+}
 
+bool UClassicFunctionLibrary::GetFolders(TArray<FString>& Folders, FString FullFilePath, const bool Recursive)
+{
+	FindFileFolders(Folders, FullFilePath, TEXT("*"), Recursive, false, true);
 
 	for (int i = 0; i < Folders.Num(); i++)
 	{
@@ -1141,26 +1157,16 @@ bool UClassicFunctionLibrary::GetFolders(TArray<FString>& Folders, FString FullF
 
 }
 
-bool UClassicFunctionLibrary::GetFiles(TArray<FString>& Files, FString FullFilePath, FString Extension, const bool Recursive)
+bool UClassicFunctionLibrary::GetFiles(TArray<FString>& Files, FString FullFilePath, TArray<FString> Extensions, const bool Recursive)
 {
-	FPaths::NormalizeDirectoryName(FullFilePath);
-	IFileManager& FileManager = IFileManager::Get();
-	FString FinalExtension = TEXT("*");
-	if (Extension != TEXT("") && Extension != TEXT("*") && Extension != TEXT("*.*"))
+	for (int32 i = 0; i < Extensions.Num(); i++)
 	{
-		FinalExtension = TEXT("*.") + Extension;
+		TArray<FString> FilesLocal;
+		FindFileFolders(FilesLocal, FullFilePath, Extensions[i], Recursive, true, false);
+		Files.Append(FilesLocal);
 	}
 
-	if (Recursive)
-	{
-		FileManager.FindFilesRecursive(Files, *FullFilePath, TEXT("*"), true, false);
-	}
-	else
-	{
-		const FString FinalPath = FullFilePath / FinalExtension;
-		FileManager.FindFiles(Files, *FinalPath, true, false);
-	}
-
+	Files.Sort();
 
 	for (int i = 0; i < Files.Num(); i++)
 	{
@@ -1168,4 +1174,5 @@ bool UClassicFunctionLibrary::GetFiles(TArray<FString>& Files, FString FullFileP
 	}
 
 	return Files.Num() > 0;
+
 }

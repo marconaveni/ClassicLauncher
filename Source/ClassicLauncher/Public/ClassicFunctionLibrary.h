@@ -294,5 +294,5 @@ public:
 	static bool GetFolders(TArray<FString>& Folders, FString FullFilePath, const bool Recursive = false);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|File IO")
-	static bool GetFiles(TArray<FString>& Files, FString FullFilePath, FString Extension, const bool Recursive = false);
+	static bool GetFiles(TArray<FString>& Files, FString FullFilePath, TArray<FString> Extension, const bool Recursive = false);
 };

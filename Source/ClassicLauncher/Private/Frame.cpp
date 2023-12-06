@@ -24,6 +24,45 @@ void UFrame::OnAnimationFinishedPlaying(UUMGSequencePlayer& Player)
 	Super::OnAnimationFinishedPlaying(Player);
 }
 
+void UFrame::TopFocus()
+{
+	OnTopFocus();
+}
+
+void UFrame::CenterFocus()
+{
+	OnCenterFocus();
+}
+
+void UFrame::DirectionRightLeftTop(EButtonsGame Input, int32 IndexLimit)
+{
+
+	if (!bIsNotAnimated || (Input != EButtonsGame::LEFT && Input != EButtonsGame::RIGHT)) return;
+
+
+	//bIsNotAnimated = true;
+	const int32 Max = (IndexLimit != 0) ? 4 : 2;
+
+	if (Input == EButtonsGame::LEFT)
+	{
+		if(FrameIndexTop - 1 < 1)
+		{
+			FrameIndexTop = Max + 1;
+		}
+		FrameIndexTop = FMath::Clamp(FrameIndexTop - 1, 1, Max);
+	}
+	else if (Input == EButtonsGame::RIGHT)
+	{
+		if (FrameIndexTop + 1 > Max)
+		{
+			FrameIndexTop = 0;
+		}
+		FrameIndexTop = FMath::Clamp(FrameIndexTop + 1, 1, Max);
+	}
+
+	OnDirectionRightLeftTop();
+}
+
 void UFrame::Clear()
 {
 	MaxFrameLimit = 1;

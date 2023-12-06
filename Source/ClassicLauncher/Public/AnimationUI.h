@@ -8,9 +8,13 @@
 #include "UObject/NoExportTypes.h"
 #include "AnimationUI.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDelegateStartAnimation);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDelegateFinishAnimation);
+
 
 USTRUCT(BlueprintType)
-struct FAnimationIUCurves
+struct FAnimationUICurves
 {
 	GENERATED_BODY()
 
@@ -31,19 +35,20 @@ struct FAnimationIUCurves
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCurveFloat* Opacity;
 
-	FAnimationIUCurves()
-	{
-		
-	}
+	FAnimationUICurves(): TranslationX(nullptr), TranslationY(nullptr), ScaleX(nullptr), ScaleY(nullptr),
+	                      ShearX(nullptr), ShearY(nullptr),
+	                      Angle(nullptr),
+	                      Opacity(nullptr)
+	{}
 
-	bool CheckTranslationX() { return TranslationX != nullptr; }
-	bool CheckTranslationY() { return TranslationY != nullptr; }
-	bool CheckScaleX() { return ScaleX != nullptr; }
-	bool CheckScaleY() { return ScaleY != nullptr; }
-	bool CheckShearX() { return ShearX != nullptr; }
-	bool CheckShearY() { return ShearY != nullptr; }
-	bool CheckAngle() { return Angle != nullptr; }
-	bool CheckOpacity() { return Opacity != nullptr; }
+	bool CheckTranslationX() const { return TranslationX != nullptr; }
+	bool CheckTranslationY() const { return TranslationY != nullptr; }
+	bool CheckScaleX() const { return ScaleX != nullptr; }
+	bool CheckScaleY() const { return ScaleY != nullptr; }
+	bool CheckShearX() const { return ShearX != nullptr; }
+	bool CheckShearY() const { return ShearY != nullptr; }
+	bool CheckAngle() const { return Angle != nullptr; }
+	bool CheckOpacity() const { return Opacity != nullptr; }
 };
 
 
@@ -57,6 +62,13 @@ class CLASSICLAUNCHER_API UAnimationUI : public UObject
 	GENERATED_BODY()
 
 
+public:
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FDelegateStartAnimation OnStartAnimationTrigger;
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FDelegateFinishAnimation OnFinishAnimationTrigger;
+
 protected:
 
 	UPROPERTY()
@@ -67,10 +79,6 @@ protected:
 	float RenderOpacity;
 	UPROPERTY()
 	float InitialRenderOpacity;
-	UPROPERTY()
-	int32 Frames;
-	UPROPERTY()
-	int32 FramesCount;
 	UPROPERTY()
 	bool bRelative;
 	UPROPERTY()
@@ -86,7 +94,11 @@ protected:
 	UPROPERTY()
 	FTimerHandle AnimationTimerHandle;
 	UPROPERTY()
-	FAnimationIUCurves AnimationCurves;
+	FAnimationUICurves AnimationCurves;
+	UPROPERTY()
+	float CurrentTime;
+	UPROPERTY()
+	float TimeAnimation;
 
 	UFUNCTION()
 	void Animation();
@@ -99,11 +111,14 @@ protected:
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "AnimationUI|Functions")
-	void SetCurves(const FAnimationIUCurves& Curves);
+	void SetCurves(const FAnimationUICurves& Curves);
 
 	UFUNCTION(BlueprintCallable, Category = "AnimationUI|Functions")
-	void PlayAnimation(UWidget* Target, float Time , int32 FPS , FWidgetTransform ToPosition, float ToOpacity , bool bReset, TEnumAsByte<EEasingFunc::Type> FunctionCurve);
+	void PlayAnimation(UWidget* Target, float Time , FWidgetTransform ToPosition, float ToOpacity , bool bReset, TEnumAsByte<EEasingFunc::Type> FunctionCurve, bool ForceUpdateAnimation = true);
 
 	UFUNCTION(BlueprintCallable, Category = "AnimationUI|Functions")
-	void ClearAnimations();
+	void ClearAnimation();
+
+	UFUNCTION(BlueprintPure, Category = "AnimationUI|Functions")
+	float GetCurrentTimeAnimation() const;
 };

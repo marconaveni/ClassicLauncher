@@ -96,6 +96,8 @@ void AClassicMediaPlayer::PlayMusic(const FString File, const bool bShowMessage)
 {
 	if (ClassicPlayerMusic->GetMediaPlayer()->CanPlayUrl(File))
 	{
+		if(MusicPath.Equals(File)) return;
+
 		if (MainInterfaceReference != nullptr && bShowMessage)
 		{
 			const FText TextPlayerMusic = FText::FromString(FPaths::GetBaseFilename(File, true));
@@ -104,6 +106,7 @@ void AClassicMediaPlayer::PlayMusic(const FString File, const bool bShowMessage)
 			MainInterfaceReference->ShowMessage(FText::Format(LOCTEXT("Play", "Playing {TextPlayerMusic}"), Args), 3.5f);
 		}
 		PauseVideo();
+		MusicPath = File;
 		ClassicPlayerMusic->GetMediaPlayer()->OpenUrl(File);
 	}
 }
@@ -169,12 +172,11 @@ void AClassicMediaPlayer::ChangeMasterVolume(int32 Volume)
 	if (MasterSoundMix != nullptr && MasterSound != nullptr)
 	{
 		MasterVolume = Volume;
-		const float NewVolume = FMath::Clamp(Volume * 0.01f, 0.01f, 1.0f);
-		UGameplayStatics::SetSoundMixClassOverride(this, MasterSoundMix, MasterSound, Volume * 0.01f, 1.0f, 0.0f, true);
+		UGameplayStatics::SetSoundMixClassOverride(this, MasterSoundMix, MasterSound, MasterVolume * 0.01f, 1.0f, 0.0f, true);
 	}
 }
 
-int32 AClassicMediaPlayer::GetMasterVolume()
+int32 AClassicMediaPlayer::GetMasterVolume() const
 {
 	return MasterVolume;
 }

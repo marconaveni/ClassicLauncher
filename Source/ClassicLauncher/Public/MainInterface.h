@@ -405,8 +405,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void SetDirection(EButtonsGame Navigate);
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void SetNavigationFocusTop();
+
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void SetNavigationFocusUpBottom();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
@@ -473,32 +472,14 @@ private:
 	UPROPERTY()
 	TArray<ESlateVisibility> IconCenterSystem;
 
-	//bindbuttons
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void OnFocusSelectSystem();
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void OnFocusConfigurations();
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void OnFocusFavorites();
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void OnFocusInfo();
+	
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void FocusButtonsTop(const int32 PositionTopX, UToolTip* ToolTip, UCanvasPanelSlot* ToolTipSlot, UWidgetAnimation* Left, UWidgetAnimation* Right, const EFocusTop FocusTop);
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void LostFocusButtonsTop(UToolTip* ToolTip, const EFocusTop FocusTop);
 	UFUNCTION()
 	void SetZOrderToolTips(UCanvasPanelSlot* ToolTipSlot) const;
 
+	UFUNCTION()
+	void SetVisibilityToolTips(UToolTip* ToolTip = nullptr);
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void OnLostFocusSelectSystem();
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void OnLostFocusConfigurations();
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void OnLostFocusFavorites();
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void OnLostFocusInfo();
 
 	/**
 	* Function to avoid losing Focus on Widget .
@@ -508,6 +489,7 @@ private:
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void SetTopButtonFocus();
 
+	//bindbuttons
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickSelectSystem();
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")

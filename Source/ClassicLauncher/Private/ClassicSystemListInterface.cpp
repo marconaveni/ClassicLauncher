@@ -37,7 +37,7 @@ void UClassicSystemListInterface::OnUserScrolled(float CurrentOffset)
 {
 	if (CurrentOffset >= ScrollBoxSystems->GetScrollOffsetOfEnd() - 2)
 	{
-		ScrollBoxSystems->SetScrollOffset(ScrollBoxSystems->GetScrollOffsetOfEnd() - 1);
+		//ScrollBoxSystems->SetScrollOffset(ScrollBoxSystems->GetScrollOffsetOfEnd() - 1);
 	}
 }
 

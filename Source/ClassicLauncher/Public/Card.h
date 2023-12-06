@@ -38,10 +38,10 @@ public:
 	virtual FReply NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card|Variables")
-	FAnimationIUCurves CurveFavoritesFoward;
+	FAnimationUICurves CurveFavoritesFoward;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card|Variables")
-	FAnimationIUCurves CurveFavoritesReverse;
+	FAnimationUICurves CurveFavoritesReverse;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card|Variables")
 	FString PathImage;
