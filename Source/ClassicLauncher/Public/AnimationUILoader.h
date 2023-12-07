@@ -35,12 +35,6 @@ protected:
     UPROPERTY()
     TMap<FName, UAnimationUI*> WidgetMap;
 
-    UPROPERTY()
-    FName CurrentNameAnimation;
-
-    UPROPERTY()
-    UAnimationUI* CurrentAnimation;
-
 public:
 
     UPROPERTY(BlueprintAssignable, BlueprintCallable)
@@ -63,8 +57,8 @@ public:
 
 protected:
     UFUNCTION()
-    void StartAnimation();
+    void StartAnimation(UAnimationUI* CurrentAnimation, FName AnimationName);
     UFUNCTION()
-    void FinishAnimation();
+    void FinishAnimation(UAnimationUI* CurrentAnimation, FName AnimationName);
 
 };

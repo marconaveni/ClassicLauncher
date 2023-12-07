@@ -26,28 +26,26 @@ bool UAnimationUILoader::DoesSupportWorldType(EWorldType::Type WorldType) const
 
 void UAnimationUILoader::PlayAnimation(UWidget* Widget, float Time, FWidgetTransform ToPosition, float ToOpacity, bool bReset, TEnumAsByte<EEasingFunc::Type> FunctionCurve, FAnimationUICurves Curves, FName AnimationName, bool ForceUpdateAnimation)
 {
-	CurrentAnimation = DefaultAnimation;
+	UAnimationUI* CurrentAnimate = DefaultAnimation;
 	if (!AnimationName.IsEqual("None"))
 	{
 		UAnimationUI** FoundValue = WidgetMap.Find(AnimationName);
 		if (FoundValue == nullptr)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("null"));
-			CurrentAnimation = NewObject<UAnimationUI>(this);
-			CurrentAnimation->OnStartAnimationTrigger.AddDynamic(this, &UAnimationUILoader::StartAnimation);
-			CurrentAnimation->OnFinishAnimationTrigger.AddDynamic(this, &UAnimationUILoader::FinishAnimation);
-			WidgetMap.Add(AnimationName, CurrentAnimation);
+			CurrentAnimate = NewObject<UAnimationUI>(this);
+			CurrentAnimate->OnStartAnimationTrigger.AddDynamic(this, &UAnimationUILoader::StartAnimation);
+			CurrentAnimate->OnFinishAnimationTrigger.AddDynamic(this, &UAnimationUILoader::FinishAnimation);
+			WidgetMap.Add(AnimationName, CurrentAnimate);
 		}
 		else
 		{
-			CurrentAnimation = *FoundValue;
+			CurrentAnimate = *FoundValue;
 		}
 	}
 
-	CurrentNameAnimation = AnimationName;
-	CurrentAnimation->SetCurves(Curves);
-	CurrentAnimation->PlayAnimation(Widget, Time, ToPosition, ToOpacity, bReset, FunctionCurve, ForceUpdateAnimation);
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *CurrentNameAnimation.ToString());
+	CurrentAnimate->SetCurves(Curves);
+	CurrentAnimate->PlayAnimation(Widget, Time, ToPosition, ToOpacity, bReset, FunctionCurve, ForceUpdateAnimation, AnimationName);
 
 }
 
@@ -55,7 +53,7 @@ UAnimationUI* UAnimationUILoader::GetAnimation(FName Name)
 {
 	for (const auto& Element : WidgetMap)
 	{
-		if(Name == Element.Key)
+		if (Name == Element.Key)
 		{
 			return Element.Value;
 		}
@@ -77,12 +75,12 @@ void UAnimationUILoader::Clear()
 	WidgetMap.Empty();
 }
 
-void UAnimationUILoader::StartAnimation() 
+void UAnimationUILoader::StartAnimation(UAnimationUI* CurrentAnimation, FName AnimationName)
 {
-	OnStartAnimationTrigger.Broadcast(CurrentAnimation, CurrentNameAnimation);
+	OnStartAnimationTrigger.Broadcast(CurrentAnimation, AnimationName);
 }
 
-void UAnimationUILoader::FinishAnimation()
+void UAnimationUILoader::FinishAnimation(UAnimationUI* CurrentAnimation, FName AnimationName)
 {
-	OnFinishAnimationTrigger.Broadcast(CurrentAnimation, CurrentNameAnimation);
+	OnFinishAnimationTrigger.Broadcast(CurrentAnimation, AnimationName);
 }

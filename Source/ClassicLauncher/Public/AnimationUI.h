@@ -8,9 +8,9 @@
 #include "UObject/NoExportTypes.h"
 #include "AnimationUI.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDelegateStartAnimation);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDelegateStartAnimation, UAnimationUI*, CurrentAnimation, FName ,AnimationName);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDelegateFinishAnimation);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDelegateFinishAnimation, UAnimationUI*, CurrentAnimation ,FName, AnimationName);
 
 
 USTRUCT(BlueprintType)
@@ -71,6 +71,8 @@ public:
 
 protected:
 
+	UAnimationUI();
+
 	UPROPERTY()
 	float FramesPerSeconds;
 	UPROPERTY()
@@ -99,6 +101,8 @@ protected:
 	float CurrentTime;
 	UPROPERTY()
 	float TimeAnimation;
+	UPROPERTY()
+	FName NameAnimation;
 
 	UFUNCTION()
 	void Animation();
@@ -114,7 +118,7 @@ public:
 	void SetCurves(const FAnimationUICurves& Curves);
 
 	UFUNCTION(BlueprintCallable, Category = "AnimationUI|Functions")
-	void PlayAnimation(UWidget* Target, float Time , FWidgetTransform ToPosition, float ToOpacity , bool bReset, TEnumAsByte<EEasingFunc::Type> FunctionCurve, bool ForceUpdateAnimation = true);
+	void PlayAnimation(UWidget* Target, float Time , FWidgetTransform ToPosition, float ToOpacity , bool bReset, TEnumAsByte<EEasingFunc::Type> FunctionCurve, bool ForceUpdateAnimation = true, FName CurrentNameAnimation = NAME_None);
 
 	UFUNCTION(BlueprintCallable, Category = "AnimationUI|Functions")
 	void ClearAnimation();

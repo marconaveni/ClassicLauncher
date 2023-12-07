@@ -5,12 +5,18 @@
 #include "Components/Widget.h"
 
 
-void UAnimationUI::PlayAnimation(UWidget* Target, float Time, FWidgetTransform ToPosition, float ToOpacity, bool bReset, TEnumAsByte<EEasingFunc::Type> FunctionCurve, bool ForceUpdateAnimation)
+void UAnimationUI::PlayAnimation(UWidget* Target, float Time, FWidgetTransform ToPosition, float ToOpacity, bool bReset, TEnumAsByte<EEasingFunc::Type> FunctionCurve, bool ForceUpdateAnimation, FName CurrentNameAnimation)
 {
 	if (GetWorld()->GetTimerManager().IsTimerActive(AnimationTimerHandle) && !ForceUpdateAnimation)
 	{
 		return;
 	}
+
+	if (NameAnimation.IsNone() && !CurrentNameAnimation.IsNone())
+	{
+		NameAnimation = CurrentNameAnimation;
+	}
+
 	EasingFunc = FunctionCurve;
 	TimeAnimation = Time;
 	RenderOpacity = ToOpacity;
@@ -21,9 +27,14 @@ void UAnimationUI::PlayAnimation(UWidget* Target, float Time, FWidgetTransform T
 	InitialRenderOpacity = Target->GetRenderOpacity();
 	InitialPosition = Target->GetRenderTransform();
 
-	OnStartAnimationTrigger.Broadcast();
+	OnStartAnimationTrigger.Broadcast(this, NameAnimation);
 	GetWorld()->GetTimerManager().SetTimer(AnimationTimerHandle, this, &UAnimationUI::Animation, FramesPerSeconds, false, -1);
-	
+
+}
+
+UAnimationUI::UAnimationUI()
+{
+	NameAnimation = NAME_None;
 }
 
 void UAnimationUI::Animation()
@@ -61,7 +72,7 @@ void UAnimationUI::Animation()
 		CurrentTime = 0;
 		GetWorld()->GetTimerManager().ClearTimer(AnimationTimerHandle);
 		AnimationTimerHandle.Invalidate();
-		OnFinishAnimationTrigger.Broadcast();
+		OnFinishAnimationTrigger.Broadcast(this, NameAnimation);
 		return;
 	}
 	FramesPerSeconds = GetWorld()->GetDeltaSeconds();
