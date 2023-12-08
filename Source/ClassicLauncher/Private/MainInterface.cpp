@@ -317,7 +317,7 @@ void UMainInterface::LoadImages(const int32 DistanceIndex)
 		}
 		if (IndexLoad != -1 && IndexUnLoad != -1)
 		{
-			LoopScroll->AddImagesCards(ImageNull, 1, 1, IndexUnLoad);
+			//LoopScroll->AddImagesCards(ImageNull, 1, 1, IndexUnLoad);
 			LoopScroll->CoverReference[IndexUnLoad]->SetCoverImage(ImageNull, 1, 1);
 			OnLoadImages(IndexLoad, GameData[IndexLoad].imageFormated);
 			UE_LOG(LogTemp, Warning, TEXT("FirstIndex %d  IndexCard %d LastIndex %d"), FirstIndex, IndexCard, LastIndex);
@@ -846,13 +846,7 @@ void UMainInterface::SetFavoriteToSave()
 					AsyncTask(ENamedThreads::GameThread, [this, ToggleFavorite]()
 					{
 
-						UCard* Left;
-						UCard* Center;
-						UCard* Right;
-						LoopScroll->GetCardReferences(IndexCard, Left, Center, Right);
-						Left->SetFavorite(ToggleFavorite, true);
-						Center->SetFavorite(ToggleFavorite, true);
-						Right->SetFavorite(ToggleFavorite, true);
+						LoopScroll->SetCardFavorite(ToggleFavorite);
 						SetButtonsIconInterfaces(EPositionY::CENTER);
 
 						ShowMessage((ToggleFavorite) ? LOCTEXT("MessageAddFavorite", "Add game to favorite") : LOCTEXT("RemoveFavorite", "Remove game to favorite"), 3.5f);

@@ -22,10 +22,6 @@ void UCover::SetCoverImage(UTexture2D* Texture, int32 Width, int32 Height)
 {
 	if (Texture != nullptr) 
 	{
-		//if(GetPositionCover())
-		//{
-		//	PlayAnimationForward(FadeInImage);
-		//}
 		FSlateBrush NewBrush;
 		NewBrush.SetImageSize(FVector2D(Width, Height));
 		NewBrush.SetResourceObject(Texture);

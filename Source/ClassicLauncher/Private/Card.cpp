@@ -60,18 +60,18 @@ void UCard::SetPlayers(FString value)
 	}
 }
 
-void UCard::SetFocusCard(bool enable)
+void UCard::SetFocusCard(bool bEnable)
 {
-	FWidgetTransform Transform;
-	if (enable)
+	const FWidgetTransform Transform;
+	if (bEnable)
 	{
-		AnimationFrame->PlayAnimation(this->FrameSelected, 0.20f, Transform, 1, false, EEasingFunc::EaseOut);
-		AnimationCard->PlayAnimation(this->BackgroundSelected, 0.20f, Transform, 1, false, EEasingFunc::EaseOut);
+		AnimationFrame->PlayAnimation(this->FrameSelected, 0.12f, Transform, 1, false, EEasingFunc::EaseOut);
+		AnimationCard->PlayAnimation(this->BackgroundSelected, 0.12f, Transform, 1, false, EEasingFunc::EaseOut);
 	}
 	else
 	{
-		AnimationFrame->PlayAnimation(this->FrameSelected, 0.20f, Transform, 0, false, EEasingFunc::EaseOut);
-		AnimationCard->PlayAnimation(this->BackgroundSelected, 0.20f, Transform, 0, false, EEasingFunc::EaseOut);
+		AnimationFrame->PlayAnimation(this->FrameSelected, 0.12f, Transform, 0, false, EEasingFunc::EaseOut);
+		AnimationCard->PlayAnimation(this->BackgroundSelected, 0.12f, Transform, 0, false, EEasingFunc::EaseOut);
 	}
 }
 

@@ -59,7 +59,7 @@ public:
 	void SetPlayers(FString value);
 
 	UFUNCTION(BlueprintCallable,  Category = "Card|Functions")
-	void SetFocusCard(bool enable);
+	void SetFocusCard(bool bEnable);
 
 	UFUNCTION(BlueprintCallable, Category = "Card|Functions")
 	void SelectedFrameToBackground();

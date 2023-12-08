@@ -13,6 +13,11 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateCard, int32, Index);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateIndexStart, int32, Index);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateIndexFinal, int32, Index);
 
+class UCard;
+class UCover;
+class UScrollBox;
+class UHorizontalBox;
+class UButton;
 
 /**
  * 
@@ -32,17 +37,17 @@ public:
 	FDelegateIndexFinal FinalIndexToStart;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Subclass")
-	TSubclassOf<class UCard> CardClassReference;
+	TSubclassOf<UCard> CardClassReference;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Subclass")
-	TSubclassOf<class UCover> CoverClass;
+	TSubclassOf<UCover> CoverClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
-	TArray<class UCard*> CardReferenceLeft;
+	TArray<UCard*> CardReferenceLeft;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
-	TArray<class UCard*> CardReferenceCenter;
+	TArray<UCard*> CardReferenceCenter;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
-	TArray<class UCard*> CardReferenceRight;
+	TArray<UCard*> CardReferenceRight;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
-	TArray<class UCover*> CoverReference;
+	TArray<UCover*> CoverReference;
 
 protected:
 
@@ -74,23 +79,25 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables|Debug")
 	bool Debug = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
-	class USoundBase* SoundNavigate;
+	USoundBase* SoundNavigate;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
-	class USoundBase* SoundSelect;
+	USoundBase* SoundSelect;
 
 
+	//UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	//class UScrollBox* ScrollBox;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UScrollBox* ScrollBox;
+	UScrollBox* ScrollBoxBottom;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UScrollBox* ScrollBoxBottom;
+	UHorizontalBox* HorizontalBoxMain;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UHorizontalBox* HorizontalBoxLeft;
+	UHorizontalBox* HorizontalBoxLeft;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UHorizontalBox* HorizontalBoxCenter;
+	UHorizontalBox* HorizontalBoxCenter;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UHorizontalBox* HorizontalBoxRight;
+	UHorizontalBox* HorizontalBoxRight;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* BtnClick;
+	UButton* BtnClick;
 
 	virtual void NativeOnInitialized() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
@@ -134,13 +141,16 @@ public:
 	void OnOpenCard();
 
 	UFUNCTION(BlueprintPure, Category = "LoopScrollBox|Functions")
-	void GetCardReferences(int32 Index, class UCard*& Left, class UCard*& Center, class UCard*& Right);
+	void GetCardReference(int32 Index, UPARAM(DisplayName = "Card Reference") UCard*& CardRef);
+
+	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions") 
+	void SetCardFavorite(const bool ToggleFavorite);
 
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
 	void AddCardsHorizontalBox( TArray<FGameData> GameData, int32 IndexFocus);
 
-	UFUNCTION()
-	UCard* ConstructCard(UHorizontalBox* HorizontalBox, FGameData GameData);
+	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
+	void SetCardValues(UCard* Card, UPARAM(ref) FGameData& GameData);
 
 	UFUNCTION()
 	void ConstructCover();
