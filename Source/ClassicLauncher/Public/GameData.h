@@ -164,15 +164,22 @@ struct FIndexPositions
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EGamesFilter OrderBy;
 
-	FIndexPositions() { DefaultValues(); }
+	FIndexPositions()
+		: LastIndexFocus(0)
+		, Index(0)
+		, OffSet(0)
+		, LastIndexOffSet(1)
+		, OrderBy(EGamesFilter::DEFAULT)
+	{
+	}
 
 	void DefaultValues()
 	{
-		OrderBy = EGamesFilter::DEFAULT;
 		LastIndexFocus = 0;
 		Index = 0;
 		OffSet = 0;
 		LastIndexOffSet = 1;
+		OrderBy = EGamesFilter::DEFAULT;
 	}
 	void ChangeFilter()
 	{

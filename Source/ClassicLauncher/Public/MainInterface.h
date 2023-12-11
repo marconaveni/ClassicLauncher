@@ -472,14 +472,6 @@ private:
 	UPROPERTY()
 	TArray<ESlateVisibility> IconCenterSystem;
 
-	
-
-	UFUNCTION()
-	void SetZOrderToolTips(UCanvasPanelSlot* ToolTipSlot) const;
-
-	UFUNCTION()
-	void SetVisibilityToolTips(UToolTip* ToolTip = nullptr);
-
 
 	/**
 	* Function to avoid losing Focus on Widget .
@@ -513,6 +505,12 @@ private:
 
 public:
 
+	UFUNCTION()
+	void SetZOrderToolTips(UCanvasPanelSlot* ToolTipSlot) const;
+
+	UFUNCTION()
+	void SetVisibilityToolTips(UToolTip* ToolTip = nullptr) const;
+
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetImageBottom();
 
@@ -529,5 +527,5 @@ public:
 	void ShowMessage(const FText Message,const float InRate);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void SetLastPositions(bool bResetPositions);
+	void SetLastPositions(bool bResetPositions) const;
 };

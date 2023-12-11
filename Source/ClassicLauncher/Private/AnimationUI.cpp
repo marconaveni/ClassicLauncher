@@ -17,6 +17,9 @@ void UAnimationUI::PlayAnimation(UWidget* Target, float Time, FWidgetTransform T
 		NameAnimation = CurrentNameAnimation;
 	}
 
+	Alpha = 0;
+	CurrentTime = 0;
+
 	EasingFunc = FunctionCurve;
 	TimeAnimation = Time;
 	RenderOpacity = ToOpacity;
@@ -32,9 +35,14 @@ void UAnimationUI::PlayAnimation(UWidget* Target, float Time, FWidgetTransform T
 
 }
 
-UAnimationUI::UAnimationUI()
+UAnimationUI::UAnimationUI() : FramesPerSeconds(0), Alpha(0), RenderOpacity(1), InitialRenderOpacity(1),
+bResetPosition(false),
+WidgetTarget(nullptr),
+EasingFunc(EEasingFunc::Linear),
+CurrentTime(0),
+TimeAnimation(0.2f),
+NameAnimation(NAME_None)
 {
-	NameAnimation = NAME_None;
 }
 
 void UAnimationUI::Animation()
@@ -62,17 +70,18 @@ void UAnimationUI::Animation()
 
 	if (Alpha >= 1)
 	{
-		if (bResetPosition)
-		{
-			WidgetTarget->SetRenderTransform(InitialPosition);
-			WidgetTarget->SetRenderOpacity(InitialRenderOpacity);
-		}
+		//if (bResetPosition)
+		//{
+		//	WidgetTarget->SetRenderTransform(InitialPosition);
+		//	WidgetTarget->SetRenderOpacity(InitialRenderOpacity);
+		//}
 
-		Alpha = 0;
-		CurrentTime = 0;
-		GetWorld()->GetTimerManager().ClearTimer(AnimationTimerHandle);
-		AnimationTimerHandle.Invalidate();
-		OnFinishAnimationTrigger.Broadcast(this, NameAnimation);
+		//Alpha = 0;
+		//CurrentTime = 0;
+		//GetWorld()->GetTimerManager().ClearTimer(AnimationTimerHandle);
+		//AnimationTimerHandle.Invalidate();
+		//OnFinishAnimationTrigger.Broadcast(this, NameAnimation);
+		ClearAnimation();
 		return;
 	}
 	FramesPerSeconds = GetWorld()->GetDeltaSeconds();
@@ -97,7 +106,17 @@ void UAnimationUI::SetCurves(const FAnimationUICurves& Curves)
 
 void UAnimationUI::ClearAnimation()
 {
+	if (bResetPosition)
+	{
+		WidgetTarget->SetRenderTransform(InitialPosition);
+		WidgetTarget->SetRenderOpacity(InitialRenderOpacity);
+	}
+
+	Alpha = 0;
+	CurrentTime = 0;
 	GetWorld()->GetTimerManager().ClearTimer(AnimationTimerHandle);
+	AnimationTimerHandle.Invalidate();
+	OnFinishAnimationTrigger.Broadcast(this, NameAnimation);
 }
 
 float UAnimationUI::GetCurrentTimeAnimation() const

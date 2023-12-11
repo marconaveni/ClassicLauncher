@@ -754,6 +754,7 @@ void UMainInterface::OnClickSystem(int32 Value)
 	if (bInputEnable)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("The OnClickSystem parameter value is: %d"), Value);
+		SetVisibilityToolTips();
 		if (CountSystem == Value)
 		{
 			PlayAnimationReverse(ShowSystem);
@@ -861,7 +862,7 @@ void UMainInterface::SetFavoriteToSave()
 }
 
 
-void UMainInterface::RunningGame(bool bIsRun)
+void UMainInterface::RunningGame(const bool bIsRun)
 {
 	if (bIsRun)
 	{
@@ -964,8 +965,15 @@ void UMainInterface::SetZOrderToolTips(UCanvasPanelSlot* ToolTipSlot) const
 	ToolTipSlot->SetZOrder(51);
 }
 
-void UMainInterface::SetVisibilityToolTips(UToolTip* ToolTip)
+void UMainInterface::SetVisibilityToolTips(UToolTip* ToolTip) const
 {
+
+	if (WBPToolTipSystem == nullptr && WBPToolTipConfiguration == nullptr &&
+		WBPToolTipFavorites == nullptr && WBPToolTipInfo)
+	{
+		return;
+	}
+
 	WBPToolTipSystem->SetToolTipVisibility(ESlateVisibility::Hidden);
 	WBPToolTipConfiguration->SetToolTipVisibility(ESlateVisibility::Hidden);
 	WBPToolTipFavorites->SetToolTipVisibility(ESlateVisibility::Hidden);
@@ -984,7 +992,7 @@ void UMainInterface::OnClickSelectSystem()
 	WBPSystemsList->SetFocusItem(EButtonsGame::NONE, CountLocationY, ButtonSystemReferences);
 }
 
-void UMainInterface::SetLastPositions(bool bResetPositions)
+void UMainInterface::SetLastPositions(const bool bResetPositions) const
 {
 	FIndexPositions Positions = LoopScroll->GetScrollOffSet();
 	Positions.OrderBy = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].Positions.OrderBy;

@@ -60,18 +60,24 @@ void UCard::SetPlayers(FString value)
 	}
 }
 
-void UCard::SetFocusCard(bool bEnable)
+void UCard::SetFocusCard(bool bEnable, bool bAnimate , bool bReset, float TimeAnimation)
 {
 	const FWidgetTransform Transform;
-	if (bEnable)
+	const float Time = TimeAnimation;
+	const float Opacity = (bEnable) ? 1 : 0;
+
+	AnimationFrame->ClearAnimation();
+	AnimationCard->ClearAnimation();
+
+	if (bAnimate)
 	{
-		AnimationFrame->PlayAnimation(this->FrameSelected, 0.12f, Transform, 1, false, EEasingFunc::EaseOut);
-		AnimationCard->PlayAnimation(this->BackgroundSelected, 0.12f, Transform, 1, false, EEasingFunc::EaseOut);
+		AnimationFrame->PlayAnimation(FrameSelected, Time, Transform, Opacity, bReset, EEasingFunc::EaseOut,true);
+		AnimationCard->PlayAnimation(BackgroundSelected, Time, Transform, Opacity, bReset, EEasingFunc::EaseOut,true);
 	}
 	else
 	{
-		AnimationFrame->PlayAnimation(this->FrameSelected, 0.12f, Transform, 0, false, EEasingFunc::EaseOut);
-		AnimationCard->PlayAnimation(this->BackgroundSelected, 0.12f, Transform, 0, false, EEasingFunc::EaseOut);
+		FrameSelected->SetRenderOpacity(Opacity);
+		BackgroundSelected->SetRenderOpacity(Opacity);
 	}
 }
 
@@ -111,16 +117,16 @@ void UCard::SetFavorite(bool favorite, bool AnimateIcon)
 	else
 	{
 
-		FWidgetTransform Transform;
+		const FWidgetTransform Transform;
 		if (favorite)
 		{
 			AnimationFavorite->SetCurves(CurveFavoritesFoward);
-			AnimationFavorite->PlayAnimation(this->Favorite, 0.45f, Transform, 1, false, EEasingFunc::EaseOut);
+			AnimationFavorite->PlayAnimation(Favorite, 0.45f, Transform, 1, false, EEasingFunc::EaseOut);
 		}
 		else
 		{
 			AnimationFavorite->SetCurves(CurveFavoritesReverse);
-			AnimationFavorite->PlayAnimation(this->Favorite, 0.45f, Transform, 0, false, EEasingFunc::EaseOut);
+			AnimationFavorite->PlayAnimation(Favorite, 0.45f, Transform, 0, false, EEasingFunc::EaseOut);
 			UE_LOG(LogTemp, Warning, TEXT("aqui"));
 		}
 	}

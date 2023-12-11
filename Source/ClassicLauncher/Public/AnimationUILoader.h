@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AnimationUI.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "AnimationUILoader.generated.h"
@@ -43,8 +44,19 @@ public:
     FDelegateFinishAnimationUI OnFinishAnimationTrigger;
 
 
-    UFUNCTION(BlueprintCallable, Category = "AnimationUI|Functions")
-    void PlayAnimation( UWidget* Widget, float Time, FWidgetTransform ToPosition, float ToOpacity, bool bReset, TEnumAsByte<EEasingFunc::Type> FunctionCurveFName, FAnimationUICurves Curves, FName AnimationName = TEXT("None"), bool ForceUpdateAnimation = true);
+    UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "AnimationUI|Functions", meta = (AdvancedDisplay = "Curves, bBind, bReset"))
+    void PlayAnimation( 
+		UWidget* Widget,
+        float Time, 
+        FWidgetTransform ToPosition, 
+        float ToOpacity, 
+        bool bReset, 
+        TEnumAsByte<EEasingFunc::Type> FunctionCurveFName, 
+        FAnimationUICurves Curves,
+        FName AnimationName = TEXT("None"),
+        bool ForceUpdateAnimation = true,
+        bool bBind = true
+    );
 
     UFUNCTION(BlueprintCallable, Category = "AnimationUI|Functions")
     UAnimationUI* GetAnimation(FName Name);

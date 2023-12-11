@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Slate/WidgetTransform.h"
-#include "UObject/NoExportTypes.h"
 #include "AnimationUI.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDelegateStartAnimation, UAnimationUI*, CurrentAnimation, FName ,AnimationName);
@@ -81,8 +80,6 @@ protected:
 	float RenderOpacity;
 	UPROPERTY()
 	float InitialRenderOpacity;
-	UPROPERTY()
-	bool bRelative;
 	UPROPERTY()
 	bool bResetPosition;
 	UPROPERTY()

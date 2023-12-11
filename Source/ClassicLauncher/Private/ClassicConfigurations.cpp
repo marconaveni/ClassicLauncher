@@ -102,6 +102,7 @@ void UClassicConfigurations::OnClickUpdate(int32 Value)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Deleted Saved"));
 		MainInterfaceReference->bInputEnable = false;
+		MainInterfaceReference->SetVisibilityToolTips();
 		GetWorld()->GetTimerManager().SetTimer(RestartMapTimerHandle, this, &UClassicConfigurations::RestartMap, 3.0f, false, -1);
 		if (MainInterfaceReference != nullptr)
 		{

@@ -59,7 +59,7 @@ public:
 	void SetPlayers(FString value);
 
 	UFUNCTION(BlueprintCallable,  Category = "Card|Functions")
-	void SetFocusCard(bool bEnable);
+	void SetFocusCard(bool bEnable, bool bAnimate = true, bool bReset = false, float TimeAnimation = 0.2f);
 
 	UFUNCTION(BlueprintCallable, Category = "Card|Functions")
 	void SelectedFrameToBackground();

@@ -24,7 +24,7 @@ bool UAnimationUILoader::DoesSupportWorldType(EWorldType::Type WorldType) const
 	return Super::DoesSupportWorldType(WorldType);
 }
 
-void UAnimationUILoader::PlayAnimation(UWidget* Widget, float Time, FWidgetTransform ToPosition, float ToOpacity, bool bReset, TEnumAsByte<EEasingFunc::Type> FunctionCurve, FAnimationUICurves Curves, FName AnimationName, bool ForceUpdateAnimation)
+void UAnimationUILoader::PlayAnimation(UWidget* Widget, float Time, FWidgetTransform ToPosition, float ToOpacity, bool bReset, TEnumAsByte<EEasingFunc::Type> FunctionCurve, FAnimationUICurves Curves, FName AnimationName, bool ForceUpdateAnimation, bool bBind)
 {
 	UAnimationUI* CurrentAnimate = DefaultAnimation;
 	if (!AnimationName.IsEqual("None"))
@@ -34,8 +34,11 @@ void UAnimationUILoader::PlayAnimation(UWidget* Widget, float Time, FWidgetTrans
 		{
 			UE_LOG(LogTemp, Warning, TEXT("null"));
 			CurrentAnimate = NewObject<UAnimationUI>(this);
-			CurrentAnimate->OnStartAnimationTrigger.AddDynamic(this, &UAnimationUILoader::StartAnimation);
-			CurrentAnimate->OnFinishAnimationTrigger.AddDynamic(this, &UAnimationUILoader::FinishAnimation);
+			if (bBind)
+			{
+				CurrentAnimate->OnStartAnimationTrigger.AddDynamic(this, &UAnimationUILoader::StartAnimation);
+				CurrentAnimate->OnFinishAnimationTrigger.AddDynamic(this, &UAnimationUILoader::FinishAnimation);
+			}
 			WidgetMap.Add(AnimationName, CurrentAnimate);
 		}
 		else
@@ -75,12 +78,12 @@ void UAnimationUILoader::Clear()
 	WidgetMap.Empty();
 }
 
-void UAnimationUILoader::StartAnimation(UAnimationUI* CurrentAnimation, FName AnimationName)
+void UAnimationUILoader::StartAnimation(UAnimationUI* CurrentAnimation, const FName AnimationName)
 {
 	OnStartAnimationTrigger.Broadcast(CurrentAnimation, AnimationName);
 }
 
-void UAnimationUILoader::FinishAnimation(UAnimationUI* CurrentAnimation, FName AnimationName)
+void UAnimationUILoader::FinishAnimation(UAnimationUI* CurrentAnimation, const FName AnimationName)
 {
 	OnFinishAnimationTrigger.Broadcast(CurrentAnimation, AnimationName);
 }
