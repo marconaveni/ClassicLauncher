@@ -126,7 +126,7 @@ void UMainInterface::NativeOnInitialized()
 		UE_LOG(LogTemp, Warning, TEXT("Reference AClassicMediaPlayer Founds: %s "), *ClassicMediaPlayerReference->GetName());
 	}
 
-	WBPFrame->SetDefaultValues(1, DefaultFrameSpeed);
+	//WBPFrame->SetDefaultValues(1, DefaultFrameSpeed);
 	ClassicMediaPlayerReference->MainInterfaceReference = this;
 	GetWorld()->GetTimerManager().SetTimer(TickTimerHandle, this, &UMainInterface::TimerTick, 0.015f, true, -1);
 
@@ -267,7 +267,7 @@ void UMainInterface::EnableButtonsTop() const
 	{
 		BtnFavorites->SetColorAndOpacity(FLinearColor(1, 1, 1, 0.5f));
 		BtnInfo->SetColorAndOpacity(FLinearColor(1, 1, 1, 0.5f));
-		WBPFrame->SetFrameTopPosition(EFocusTop::SYSTEM);
+		WBPFrame->FrameIndexTop = 1;
 		return;
 	}
 	BtnFavorites->SetColorAndOpacity(FLinearColor(1, 1, 1, 1));
@@ -317,7 +317,6 @@ void UMainInterface::LoadImages(const int32 DistanceIndex)
 		}
 		if (IndexLoad != -1 && IndexUnLoad != -1)
 		{
-			//LoopScroll->AddImagesCards(ImageNull, 1, 1, IndexUnLoad);
 			LoopScroll->CoverReference[IndexUnLoad]->SetCoverImage(ImageNull, 1, 1);
 			OnLoadImages(IndexLoad, GameData[IndexLoad].imageFormated);
 			UE_LOG(LogTemp, Warning, TEXT("FirstIndex %d  IndexCard %d LastIndex %d"), FirstIndex, IndexCard, LastIndex);
@@ -346,22 +345,16 @@ FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const
 	if (bInputEnable)
 	{
 		KeyEvent = InKeyEvent;
-
+		bKeyPressed = (Input != EButtonsGame::A && Input != EButtonsGame::NONE);
 
 		if (ENavigationLastButton == EButtonsGame::NONE && Input != EButtonsGame::A)
 		{
 			ENavigationLastButton = Input;
 		}
-
-		bKeyPressed = (Input != EButtonsGame::A && Input != EButtonsGame::NONE);
-
-		if (!bScroll)
+		if (Input == EButtonsGame::B || Input == EButtonsGame::Y)
 		{
-			if (Input == EButtonsGame::B || Input == EButtonsGame::Y)
-			{
-				ENavigationButton = Input;
-				OnClickFavorite();
-			}
+			ENavigationButton = Input;
+			OnClickFavorite();
 		}
 		return Super::NativeOnPreviewKeyDown(InGeometry, InKeyEvent);
 	}
@@ -439,7 +432,7 @@ void UMainInterface::OnPreventLoseFocus()
 	{
 		if (PositionY == EPositionY::TOP)
 		{
-			WBPFrame->TopFocus();
+			SetFrame();
 			return;
 		}
 		LoopScroll->BtnClick->SetKeyboardFocus();
@@ -468,7 +461,7 @@ void UMainInterface::NavigationGame(EButtonsGame Navigate)
 		Navigate == EButtonsGame::LEFT || Navigate == EButtonsGame::RIGHT ||
 		Navigate == EButtonsGame::LB || Navigate == EButtonsGame::RB)
 	{
-		if (!bScroll && bInputEnable && bDelayPressed)
+		if (/*!bScroll &&*/ bInputEnable && bDelayPressed)
 		{
 			PressedDelayNavigation(TimerDelayNavigation + FirstDelayNavigation);
 			FirstDelayNavigation = 0.0f;
@@ -476,7 +469,6 @@ void UMainInterface::NavigationGame(EButtonsGame Navigate)
 			OnNavigationGame(Navigate); //BlueprintImplementableEvent
 
 			if (Focus == EFocus::MAIN) {
-				//FirstDelayNavigation = 0.08f;
 				NavigationMain(Navigate);
 			}
 			else if (Focus == EFocus::SYSTEM) {
@@ -506,8 +498,9 @@ void UMainInterface::NavigationMain(EButtonsGame Navigate)
 		}
 		else if (PositionY == EPositionY::TOP)
 		{
-			WBPFrame->DirectionRightLeftTop(ENavigationButton, CountSystem);
+			FirstDelayNavigation = 0.08f;
 		}
+		SetFrame();
 	}
 	else if (ENavigationButton == EButtonsGame::UP && bUpDownPressed)
 	{
@@ -575,7 +568,7 @@ void UMainInterface::SetNavigationFocusUpBottom()
 		PositionY = EPositionY::TOP;
 		PlayAnimationForward(BarTop);
 		SetButtonsIconInterfaces(PositionY);
-		WBPFrame->TopFocus();
+		SetFrame();
 	}
 }
 
@@ -608,7 +601,7 @@ void UMainInterface::SetNavigationFocusDownBottom()
 		LoopScroll->BtnClick->SetKeyboardFocus();
 		PlayAnimationReverse(BarTop);
 		SetButtonsIconInterfaces(PositionY);
-		WBPFrame->CenterFocus();
+		SetFrame();
 		SetVisibilityToolTips();
 	}
 }
@@ -700,8 +693,10 @@ void UMainInterface::OnClickLaunch()
 		else
 		{
 			PlayAnimationForward(FadeStartSystem);
-			//SetCountPlayerToSave();
-			AsyncTask(ENamedThreads::AnyHiPriThreadNormalTask, [this] { SetCountPlayerToSave(); });
+			AsyncTask(ENamedThreads::AnyHiPriThreadNormalTask, [this]
+			{
+				SetCountPlayerToSave();
+			});
 			GetWorld()->GetTimerManager().SetTimer(LauncherTimerHandle, this, &UMainInterface::AppLaunch, 0.015f, false, 1.5f);
 		}
 	}
@@ -730,7 +725,6 @@ void UMainInterface::AppLaunch()
 	}
 	OpenExternalProcess(ExecutablePath, Commands);
 	UE_LOG(LogTemp, Warning, TEXT("OpenExternalProcess: %s %s %s"), *ExecutablePath, *Arguments, *PathRomFormated);
-
 }
 
 void UMainInterface::OpenExternalProcess(FString ExecutablePath, TArray<FString> CommandArgs)
@@ -823,7 +817,7 @@ void UMainInterface::SetFavoriteToSave()
 {
 	if (!GameSystems.IsValidIndex(CountSystem)) return;
 
-	if (bDelayFavoriteClick && ENavigationButton == EButtonsGame::Y && !bScroll && !GameSystems[CountSystem].SystemName.Equals(TEXT("${System}")))
+	if (bDelayFavoriteClick && ENavigationButton == EButtonsGame::Y /*&& !bScroll*/ && !GameSystems[CountSystem].SystemName.Equals(TEXT("${System}")))
 	{
 
 		AsyncTask(ENamedThreads::AnyHiPriThreadNormalTask, [this]()
@@ -967,7 +961,6 @@ void UMainInterface::SetZOrderToolTips(UCanvasPanelSlot* ToolTipSlot) const
 
 void UMainInterface::SetVisibilityToolTips(UToolTip* ToolTip) const
 {
-
 	if (WBPToolTipSystem == nullptr && WBPToolTipConfiguration == nullptr &&
 		WBPToolTipFavorites == nullptr && WBPToolTipInfo)
 	{
@@ -1003,6 +996,17 @@ void UMainInterface::SetLastPositions(const bool bResetPositions) const
 		return;
 	}
 	ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].Positions = Positions;
+}
+
+void UMainInterface::SetFrame()
+{
+	if (PositionY == EPositionY::TOP)
+	{
+		WBPFrame->DirectionRightLeftTop(ENavigationButton, CountSystem);
+		SetTopButtonFocus();
+	}
+	const int32 FrameIndex = LoopScroll->PositionOffsetFocus;
+	WBPFrame->SetFrame(FrameIndex, 4, PositionY);
 }
 
 void UMainInterface::OnClickConfigurations()
@@ -1101,7 +1105,7 @@ void UMainInterface::QuitGame()
 
 void UMainInterface::OnClickFavorite()
 {
-	if (bInputEnable && PositionY == EPositionY::CENTER && !bDelayFavoriteClick && !bScroll)
+	if (bInputEnable && PositionY == EPositionY::CENTER && !bDelayFavoriteClick /*&& !bScroll*/)
 	{
 		bDelayFavoriteClick = true;
 		GetWorld()->GetTimerManager().SetTimer(DelayFavoriteTimerHandle, this, &UMainInterface::SetFavoriteToSave, 0.5f, false, -1);

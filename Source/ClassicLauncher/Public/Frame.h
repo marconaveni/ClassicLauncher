@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ClassicFunctionLibrary.h"
+#include "MainInterface.h"
 #include "Blueprint/UserWidget.h"
 #include "Frame.generated.h"
 
@@ -110,7 +111,11 @@ public:
 	UTexture2D* TextureFrameCenter;
 
 
+	UFUNCTION()
+	void SetFrame(const int32& IndexFrame, const int32& LimitCenter, const EPositionY& Position);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnSetFrame(const int32& IndexFrame, const int32& LimitCenter, const EPositionY& Position);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnDirectionLeft(const int32& Frame, const int32& Limit);

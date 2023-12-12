@@ -35,7 +35,7 @@ void UMessageBalloon::StartMessage()
 		FVector2D(1.0f),
 		FVector2D(0),
 		0.0f);
-	AnimationLoaderUISubSystem->PlayAnimation(CanvasMessage, 0.5f, ToPosition, 1.0f, false, EEasingFunc::EaseOut, Curves, TEXT("MessageShow"));
+	AnimationLoaderUISubSystem->PlayAnimation(CanvasMessage, 0.5f, ToPosition, 1.0f, false, EEasingFunc::EaseOut, Curves, TEXT("MessageShow"), true, false);
 
 
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
@@ -47,6 +47,6 @@ void UMessageBalloon::EndMessage()
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 	UAnimationUILoader* AnimationLoaderUISubSystem = GetWorld()->GetSubsystem<UAnimationUILoader>();
 	const FAnimationUICurves Curves;
-	AnimationLoaderUISubSystem->PlayAnimation(CanvasMessage, 0.5f, FWidgetTransform(), 1.0f, false, EEasingFunc::EaseOut, Curves, TEXT("MessageShow"));
+	AnimationLoaderUISubSystem->PlayAnimation(CanvasMessage, 0.5f, FWidgetTransform(), 1.0f, false, EEasingFunc::EaseOut, Curves, TEXT("MessageShow"), true, false);
 
 }

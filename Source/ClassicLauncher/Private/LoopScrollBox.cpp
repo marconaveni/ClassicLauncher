@@ -11,7 +11,6 @@
 #include "Blueprint/WidgetTree.h"
 #include "Components/Button.h"
 #include "Components/HorizontalBox.h"
-#include "Components/Image.h"
 #include "Components/Scrollbox.h"
 
 
@@ -26,14 +25,14 @@ void ULoopScrollBox::Clear()
 {
 	Offset = 0.0f;
 	Speed = 30.0f;
-	Time = 0.0f;
-	IndexScroll = 0;
-	Move = 0;
+	//Time = 0.0f;
+	//IndexScroll = 0;
+	//Move = 0;
 	ChildrenCount = 0;
 	InputDirection = EButtonsGame::NONE;
 	PositionOffsetFocus = 1;
 	IndexFocusCard = 0;
-	UnlockInput = true;
+	//UnlockInput = true;
 }
 
 void ULoopScrollBox::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -94,11 +93,10 @@ void ULoopScrollBox::SetFocusCard(bool Enable)
 
 void ULoopScrollBox::SetFocusCover()
 {
-
-	if (CoverReference.IsValidIndex(IndexFocusCard) && CoverReference.IsValidIndex(0))
+	if (CoverReference.IsValidIndex(IndexFocusCard) && CoverReference.IsValidIndex(0) && CoverReference.Num() - 1)
 	{
-		//CoverReference[0]->FocusCover(false);
-		//CoverReference[CoverReference.Num()]->FocusCover(false);
+		CoverReference[0]->FocusCover(false);
+		CoverReference[CoverReference.Num() - 1]->FocusCover(false);
 		ScrollBoxBottom->ScrollWidgetIntoView(CoverReference[IndexFocusCard], false, EDescendantScrollDestination::Center, 0);
 		CoverReference[IndexFocusCard]->FocusCover(true);
 	}

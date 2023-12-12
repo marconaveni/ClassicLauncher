@@ -117,9 +117,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
 	void CancelScroll();
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
-	void SelectDirectionScroll();
-	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
 	void OpenCard();
+	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
+	void SelectDirectionScroll();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnScrollMovement();

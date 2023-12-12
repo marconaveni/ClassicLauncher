@@ -24,6 +24,11 @@ void UFrame::OnAnimationFinishedPlaying(UUMGSequencePlayer& Player)
 	Super::OnAnimationFinishedPlaying(Player);
 }
 
+void UFrame::SetFrame(const int32& FrameIndex, const int32& LimitCenter, const EPositionY& Position)
+{
+	OnSetFrame(FrameIndex, LimitCenter, Position);
+}
+
 void UFrame::TopFocus()
 {
 	OnTopFocus();
@@ -37,7 +42,7 @@ void UFrame::CenterFocus()
 void UFrame::DirectionRightLeftTop(EButtonsGame Input, int32 IndexLimit)
 {
 
-	if (!bIsNotAnimated || (Input != EButtonsGame::LEFT && Input != EButtonsGame::RIGHT)) return;
+	//if (!bIsNotAnimated || (Input != EButtonsGame::LEFT && Input != EButtonsGame::RIGHT)) return;
 
 
 	//bIsNotAnimated = true;
@@ -45,7 +50,7 @@ void UFrame::DirectionRightLeftTop(EButtonsGame Input, int32 IndexLimit)
 
 	if (Input == EButtonsGame::LEFT)
 	{
-		if(FrameIndexTop - 1 < 1)
+		if (FrameIndexTop - 1 < 1)
 		{
 			FrameIndexTop = Max + 1;
 		}
@@ -61,6 +66,7 @@ void UFrame::DirectionRightLeftTop(EButtonsGame Input, int32 IndexLimit)
 	}
 
 	OnDirectionRightLeftTop();
+	//SetFrame(FrameIndexCenter, Max, EPositionY::TOP);
 }
 
 void UFrame::Clear()

@@ -528,4 +528,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetLastPositions(bool bResetPositions) const;
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void SetFrame();
 };
