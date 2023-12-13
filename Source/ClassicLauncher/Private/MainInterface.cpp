@@ -1002,11 +1002,11 @@ void UMainInterface::SetFrame()
 {
 	if (PositionY == EPositionY::TOP)
 	{
-		WBPFrame->DirectionRightLeftTop(ENavigationButton, CountSystem);
+		WBPFrame->SetFrameIndexTop(ENavigationButton, CountSystem);
 		SetTopButtonFocus();
 	}
 	const int32 FrameIndex = LoopScroll->PositionOffsetFocus;
-	WBPFrame->SetFrame(FrameIndex, 4, PositionY);
+	WBPFrame->SetFrame(FrameIndex, PositionY);
 }
 
 void UMainInterface::OnClickConfigurations()

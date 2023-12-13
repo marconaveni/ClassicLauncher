@@ -118,11 +118,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UImage* BgTopBarIcon;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UImage* BgBackground1;
+	UImage* BackgroundTopBar;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UImage* BgBackground2;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UImage* BgBackground3;
+	UImage* BackgroundBottomBar;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UImage* BgTitle;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))

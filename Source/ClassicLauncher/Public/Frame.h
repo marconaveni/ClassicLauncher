@@ -41,46 +41,46 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FDelegateAnimationEndFrame OnAnimationEnd;
 
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* MoveLeftRightCenter;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* MoveLeftRightTop1;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* MoveLeftRightTop2;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* MoveLeftRightTop3;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY1ToSystems;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY2ToSystems;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY3ToSystems;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY4ToSystems;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY1ToConfig;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY2ToConfig;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY3ToConfig;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY4ToConfig;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY1ToFavorite;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY2ToFavorite;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY3ToFavorite;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY4ToFavorite;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY1ToInfo;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY2ToInfo;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY3ToInfo;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FrameAnimationY4ToInfo;
+	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	//class UWidgetAnimation* MoveLeftRightCenter;
+	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	//class UWidgetAnimation* MoveLeftRightTop1;
+	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	//class UWidgetAnimation* MoveLeftRightTop2;
+	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	//class UWidgetAnimation* MoveLeftRightTop3;
+	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	//class UWidgetAnimation* FrameAnimationY1ToSystems;
+	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	//class UWidgetAnimation* FrameAnimationY2ToSystems;
+	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	//class UWidgetAnimation* FrameAnimationY3ToSystems;
+	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	//class UWidgetAnimation* FrameAnimationY4ToSystems;
+	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	//class UWidgetAnimation* FrameAnimationY1ToConfig;
+	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	//class UWidgetAnimation* FrameAnimationY2ToConfig;
+	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	//class UWidgetAnimation* FrameAnimationY3ToConfig;
+	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	//class UWidgetAnimation* FrameAnimationY4ToConfig;
+	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	//class UWidgetAnimation* FrameAnimationY1ToFavorite;
+	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	//class UWidgetAnimation* FrameAnimationY2ToFavorite;
+	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	//class UWidgetAnimation* FrameAnimationY3ToFavorite;
+	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	//class UWidgetAnimation* FrameAnimationY4ToFavorite;
+	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	//class UWidgetAnimation* FrameAnimationY1ToInfo;
+	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	//class UWidgetAnimation* FrameAnimationY2ToInfo;
+	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	//class UWidgetAnimation* FrameAnimationY3ToInfo;
+	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	//class UWidgetAnimation* FrameAnimationY4ToInfo;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* ImageFrameCenter;
@@ -91,20 +91,20 @@ public:
 	int32 FrameIndexCenter;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
 	int32 FrameIndexTop = 1;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
-	int32 MaxFrameLimit;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
-	bool bIsNotAnimated;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
-	bool bAtRight;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
-	bool bAtLeft;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
-	float EndAtTime;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
-	float StartTime;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
-	float PlaybackSpeed;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
+	//int32 MaxFrameLimit;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
+	//bool bIsNotAnimated;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
+	//bool bAtRight;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
+	//bool bAtLeft;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
+	//float EndAtTime;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
+	//float StartTime;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
+	//float PlaybackSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
 	UTexture2D* TextureFrameTop;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
@@ -112,30 +112,30 @@ public:
 
 
 	UFUNCTION()
-	void SetFrame(const int32& IndexFrame, const int32& LimitCenter, const EPositionY& Position);
+	void SetFrame(const int32& IndexFrame, const EPositionY& Position);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnSetFrame(const int32& IndexFrame, const int32& LimitCenter, const EPositionY& Position);
+	void OnSetFrame(const int32& IndexFrame, const EPositionY& Position);
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnDirectionLeft(const int32& Frame, const int32& Limit);
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnDirectionRight(const int32& Frame, const int32& Limit);
+	//UFUNCTION(BlueprintImplementableEvent)
+	//void OnDirectionLeft(const int32& Frame, const int32& Limit);
+	//UFUNCTION(BlueprintImplementableEvent)
+	//void OnDirectionRight(const int32& Frame, const int32& Limit);
 
+	//UFUNCTION()
+	//void TopFocus();
+	//UFUNCTION()
+	//void CenterFocus();
 	UFUNCTION()
-	void TopFocus();
-	UFUNCTION()
-	void CenterFocus();
-	UFUNCTION()
-	void DirectionRightLeftTop(EButtonsGame Input, int32 IndexLimit);
+	void SetFrameIndexTop(EButtonsGame Input, int32 IndexLimit);
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnTopFocus();
+	//UFUNCTION(BlueprintImplementableEvent)
+	//void OnTopFocus();
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnCenterFocus();
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnDirectionRightLeftTop();
+	//UFUNCTION(BlueprintImplementableEvent)
+	//void OnCenterFocus();
+	//UFUNCTION(BlueprintImplementableEvent)
+	//void OnDirectionRightLeftTop();
 
 	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
 	void Clear();
@@ -143,16 +143,16 @@ public:
 	void SetDefaultValues(int32 MaxFrameRightLimit, float MaxSpeed);
 	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
 	void SetFrameCenterPosition(int32 PositionCenter);
-	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
-	void SetFrameTopPosition(EFocusTop FocusTop);
-	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
-	void DirectionRight(int32 Frame, int32 Limit);
-	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
-	void DirectionLeft(int32 Frame, int32 Limit);
-	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
+	//UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
+	//void SetFrameTopPosition(EFocusTop FocusTop);
+	//UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
+	//void DirectionRight(int32 Frame, int32 Limit);
+	//UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
+	//void DirectionLeft(int32 Frame, int32 Limit);
+	/*UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
 	void AnimationToTopDown(EFocusTop Focus, bool Forward);
 	UFUNCTION(BlueprintCallable, Category = "Frame|Animations")
-	void AnimationFrameToTop(UWidgetAnimation* Animation1, UWidgetAnimation* Animation2, UWidgetAnimation* Animation3, UWidgetAnimation* Animation4, bool Reverse);
+	void AnimationFrameToTop(UWidgetAnimation* Animation1, UWidgetAnimation* Animation2, UWidgetAnimation* Animation3, UWidgetAnimation* Animation4, bool Reverse);*/
 
 	
 };

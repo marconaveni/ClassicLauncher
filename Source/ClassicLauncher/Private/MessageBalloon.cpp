@@ -25,9 +25,10 @@ void UMessageBalloon::StartMessage()
 {
 	UAnimationUILoader* AnimationLoaderUISubSystem = GetWorld()->GetSubsystem<UAnimationUILoader>();
 
+	const double SizeX = FMath::Clamp(CanvasMessage->GetDesiredSize().X, 350, 1918) * -1;
 	CanvasMessage->SetRenderTransform(FWidgetTransform());
 	FVector2D CanvasSize;
-	CanvasSize.X = CanvasMessage->GetDesiredSize().X * -1;
+	CanvasSize.X = SizeX;
 	CanvasSize.Y = 0;
 	const FAnimationUICurves Curves;
 	const FWidgetTransform ToPosition(
