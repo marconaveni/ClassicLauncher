@@ -6,10 +6,12 @@
 #include "Components/Image.h"
 #include "Styling/SlateBrush.h"
 
-UCard::UCard(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+UCard::UCard(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+	, PathImage(TEXT(""))
+	, MapIndex(0)
+	, bFocus(false)
 {
-	PathImage = TEXT("");
-	MapIndex = 0;
 }
 
 void UCard::NativePreConstruct()
@@ -24,7 +26,7 @@ bool UCard::Initialize()
 	AnimationFadeCard = NewObject<UAnimationUI>(this, UAnimationUI::StaticClass());
 	AnimationFavorite = NewObject<UAnimationUI>(this, UAnimationUI::StaticClass());
 
-	
+
 	bool Success = Super::Initialize();
 	return false;
 }
@@ -39,30 +41,30 @@ void UCard::SetPath(FString value)
 	PathImage = value;
 }
 
-void UCard::SetPlayers(FString value)
+void UCard::SetPlayers(FString NumberPlayers)
 {
-	if (playersImage.Max() > 3) {
-		if (value == TEXT("1") || value == TEXT("")) {
-			PlayerIcon->SetBrush(playersImage[0]);
+	if (PlayersImage.Max() > 3) {
+		if (NumberPlayers == TEXT("1") || NumberPlayers == TEXT("")) {
+			PlayerIcon->SetBrush(PlayersImage[0]);
 		}
-		else if (value == TEXT("2") || value == TEXT("1-2")) {
-			PlayerIcon->SetBrush(playersImage[1]);
+		else if (NumberPlayers == TEXT("2") || NumberPlayers == TEXT("1-2")) {
+			PlayerIcon->SetBrush(PlayersImage[1]);
 		}
-		else if (value == TEXT("3") || value == TEXT("1-3") || value == TEXT("2-3")) {
-			PlayerIcon->SetBrush(playersImage[2]);
+		else if (NumberPlayers == TEXT("3") || NumberPlayers == TEXT("1-3") || NumberPlayers == TEXT("2-3")) {
+			PlayerIcon->SetBrush(PlayersImage[2]);
 		}
-		else if (value == TEXT("4") || value == TEXT("1-4") || value == TEXT("2-4") || value == TEXT("3-4")) {
-			PlayerIcon->SetBrush(playersImage[3]);
+		else if (NumberPlayers == TEXT("4") || NumberPlayers == TEXT("1-4") || NumberPlayers == TEXT("2-4") || NumberPlayers == TEXT("3-4")) {
+			PlayerIcon->SetBrush(PlayersImage[3]);
 		}
 		else {
-			PlayerIcon->SetBrush(playersImage[4]);
+			PlayerIcon->SetBrush(PlayersImage[4]);
 		}
 	}
 }
 
-void UCard::SetFocusCard(bool bEnable, bool bAnimate , bool bReset, float TimeAnimation)
+void UCard::SetFocusCard(bool bEnable, bool bAnimate, bool bReset, float TimeAnimation)
 {
-	const FWidgetTransform Transform;
+	bFocus = bEnable;
 	const float Time = TimeAnimation;
 	const float Opacity = (bEnable) ? 1 : 0;
 
@@ -71,8 +73,9 @@ void UCard::SetFocusCard(bool bEnable, bool bAnimate , bool bReset, float TimeAn
 
 	if (bAnimate)
 	{
-		AnimationFrame->PlayAnimation(FrameSelected, Time, Transform, Opacity, bReset, EEasingFunc::EaseOut,true);
-		AnimationCard->PlayAnimation(BackgroundSelected, Time, Transform, Opacity, bReset, EEasingFunc::EaseOut,true);
+		const FWidgetTransform Transform;
+		AnimationFrame->PlayAnimation(FrameSelected, Time, Transform, Opacity, bReset, EEasingFunc::EaseOut, true);
+		AnimationCard->PlayAnimation(BackgroundSelected, Time, Transform, Opacity, bReset, EEasingFunc::EaseOut, true);
 	}
 	else
 	{
@@ -81,21 +84,17 @@ void UCard::SetFocusCard(bool bEnable, bool bAnimate , bool bReset, float TimeAn
 	}
 }
 
-void UCard::SelectedFrameToBackground()
-{
-}
-
 void UCard::SetThemeCard(UTexture2D* texture)
 {
 }
 
-void UCard::SetFavorite(bool favorite, bool AnimateIcon)
+void UCard::SetFavorite(bool bFavorite, bool bAnimateIcon)
 {
-	if (favorite == false && Favorite->GetVisibility() == ESlateVisibility::Hidden) return;
+	if (bFavorite == false && Favorite->GetVisibility() == ESlateVisibility::Hidden) return;
 
 	Favorite->SetVisibility(ESlateVisibility::Visible);
 
-	if (favorite)
+	if (bFavorite)
 	{
 		FrameMain->SetRenderOpacity(0.0f);
 		BackgroundMain->SetRenderOpacity(0.0f);
@@ -110,15 +109,15 @@ void UCard::SetFavorite(bool favorite, bool AnimateIcon)
 		BackgroundFavorite->SetRenderOpacity(0.0f);
 	}
 
-	if (AnimateIcon == false)
+	if (bAnimateIcon == false)
 	{
-		Favorite->SetRenderOpacity((favorite) ? 1.0f : 0.0f);
+		Favorite->SetRenderOpacity((bFavorite) ? 1.0f : 0.0f);
 	}
 	else
 	{
 
 		const FWidgetTransform Transform;
-		if (favorite)
+		if (bFavorite)
 		{
 			AnimationFavorite->SetCurves(CurveFavoritesFoward);
 			AnimationFavorite->PlayAnimation(Favorite, 0.45f, Transform, 1, false, EEasingFunc::EaseOut);
@@ -127,7 +126,6 @@ void UCard::SetFavorite(bool favorite, bool AnimateIcon)
 		{
 			AnimationFavorite->SetCurves(CurveFavoritesReverse);
 			AnimationFavorite->PlayAnimation(Favorite, 0.45f, Transform, 0, false, EEasingFunc::EaseOut);
-			UE_LOG(LogTemp, Warning, TEXT("aqui"));
 		}
 	}
 }
@@ -159,7 +157,8 @@ void UCard::AnimationFade()
 	}
 }
 
-bool UCard::GetPositionCover(const int32 Left, const int32 Right)
+bool UCard::HasFocusCard() const
 {
-	return false;
+	return bFocus;
 }
+

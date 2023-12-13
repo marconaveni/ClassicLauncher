@@ -8,7 +8,7 @@
 #include "Card.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegate, FString , value);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDelegateTrigger, EUINavigation, value, UCard*, selfCard);
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDelegateTrigger, EUINavigation, value, UCard*, selfCard);
 /**
  * 
  */
@@ -24,8 +24,8 @@ class CLASSICLAUNCHER_API UCard : public UUserWidget
 
 public:
 
-	UPROPERTY(BlueprintAssignable, BlueprintCallable)
-	FDelegateTrigger OnNavigate;
+	//UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	//FDelegateTrigger OnNavigate;
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FDelegate OnClickTrigger;
@@ -50,25 +50,23 @@ public:
 	int32 MapIndex;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card|Variables")
-	TArray<FSlateBrush> playersImage;
+	TArray<FSlateBrush> PlayersImage;
 
 	UFUNCTION(BlueprintCallable,  Category = "Card|Functions")
 	void SetPath(FString value);
 	
 	UFUNCTION(BlueprintCallable,  Category = "Card|Functions")
-	void SetPlayers(FString value);
+	void SetPlayers(FString NumberPlayers);
 
 	UFUNCTION(BlueprintCallable,  Category = "Card|Functions")
 	void SetFocusCard(bool bEnable, bool bAnimate = true, bool bReset = false, float TimeAnimation = 0.2f);
 
-	UFUNCTION(BlueprintCallable, Category = "Card|Functions")
-	void SelectedFrameToBackground();
 
 	UFUNCTION(BlueprintCallable,  Category = "Card|Functions")
 	void SetThemeCard(UTexture2D* texture);
 
 	UFUNCTION(BlueprintCallable,  Category = "Card|Functions")
-	void SetFavorite(bool favorite, bool AnimateIcon);
+	void SetFavorite(bool bFavorite, bool bAnimateIcon);
 
 	UFUNCTION(BlueprintCallable, Category = "Card|Functions")
 	void SetCardImage(UTexture2D* texture, int32 width, int32 height);
@@ -79,8 +77,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Card|Functions")
 	void AnimationFade();
 
-	UFUNCTION(BlueprintCallable, Category = "Card|Functions")
-	bool GetPositionCover(int32 Left = 0 , int32 Right = 1800 ); 
+	UFUNCTION(BlueprintPure, Category = "Card|Functions")
+	bool HasFocusCard() const; 
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void ClickButton();
@@ -117,18 +115,10 @@ public:
 	UPROPERTY()
 	UAnimationUI* AnimationFadeCard;
 
+private:
 
-	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	//UWidgetAnimation* ChangeColor;
-
-	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	//UWidgetAnimation* FadeFavorite;
-
-	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	//UWidgetAnimation* StartSystem;
-
-
-
+	UPROPERTY()
+	bool bFocus;
 
 };
 

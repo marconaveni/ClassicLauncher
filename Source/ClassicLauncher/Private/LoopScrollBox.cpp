@@ -10,6 +10,8 @@
 #include "Cover.h"
 #include "Blueprint/WidgetTree.h"
 #include "Components/Button.h"
+#include "Components/CanvasPanel.h"
+#include "Components/CanvasPanelSlot.h"
 #include "Components/HorizontalBox.h"
 #include "Components/Scrollbox.h"
 
@@ -38,18 +40,18 @@ void ULoopScrollBox::Clear()
 void ULoopScrollBox::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
-	SetAnimatedScrollOffset();
-	ScrollMovement();
 }
 
-void ULoopScrollBox::ScrollMovement()
+void ULoopScrollBox::NativePreConstruct()
 {
-	OnScrollMovement();
+	Super::NativePreConstruct();
+	ConstructCards();
 }
 
-void ULoopScrollBox::SetAnimatedScrollOffset()
+void ULoopScrollBox::NativeConstruct()
 {
-	OnSetAnimatedScrollOffset();
+	Super::NativeConstruct();
+
 }
 
 void ULoopScrollBox::PrepareScrollBox()
@@ -77,20 +79,6 @@ void ULoopScrollBox::OpenCard()
 	OnOpenCard();
 }
 
-
-void ULoopScrollBox::SetFocusCard(bool Enable)
-{
-	//if (CardReferenceLeft.IsValidIndex(IndexFocusCard) && CardReferenceCenter.IsValidIndex(IndexFocusCard))
-	//{
-	//	CardReferenceLeft[IndexFocusCard]->SetFocusCard(Enable);
-	//	CardReferenceCenter[IndexFocusCard]->SetFocusCard(Enable);
-	//	if (ChildrenCount <= 10)
-	//	{
-	//		CardReferenceRight[IndexFocusCard]->SetFocusCard(Enable);
-	//	}
-	//}
-}
-
 void ULoopScrollBox::SetFocusCover()
 {
 	if (CoverReference.IsValidIndex(IndexFocusCard) && CoverReference.IsValidIndex(0) && CoverReference.Num() - 1)
@@ -114,19 +102,36 @@ void ULoopScrollBox::OnClickButton()
 {
 }
 
-void ULoopScrollBox::GetCardReference(int32 Index, UCard*& CardRef)
+void ULoopScrollBox::GetCardReference(UCard*& CardRef, const int32 Index, const int32 StartIndex)
 {
-	if (CardReferenceCenter.IsValidIndex(Index))
+	if (CardReference.IsValidIndex(Index + StartIndex))
 	{
-		CardRef = CardReferenceCenter[Index];
+		CardRef = CardReference[Index + StartIndex];
 	}
 }
 
 void ULoopScrollBox::SetCardFavorite(const bool ToggleFavorite)
 {
-	if (CardReferenceCenter.IsValidIndex(PositionOffsetFocus - 1))
+	const int32 Position = PositionOffsetFocus + 5;
+	if (CardReference.IsValidIndex(Position))
 	{
-		CardReferenceCenter[PositionOffsetFocus - 1]->SetFavorite(ToggleFavorite, true);
+		CardReference[Position]->SetFavorite(ToggleFavorite, true);
+	}
+}
+
+void ULoopScrollBox::SetZOrderCard()
+{
+	for (int32 i = 6; i < 10; i++)
+	{
+		if (!CardReference.IsValidIndex(i)) continue;
+
+		UCanvasPanelSlot* SlotCard = Cast<UCanvasPanelSlot>(CardReference[i]->Slot);
+		if (CardReference[i]->HasFocusCard())
+		{
+			SlotCard->SetZOrder(1);
+			continue;
+		}
+		SlotCard->SetZOrder(0);
 	}
 }
 
@@ -135,12 +140,6 @@ void ULoopScrollBox::AddCardsHorizontalBox(TArray<FGameData> GameData, int32 Ind
 	if (GameData.IsEmpty()) return;
 
 	CoverReference.Empty();
-	CardReferenceLeft.Empty();
-	CardReferenceCenter.Empty();
-	CardReferenceRight.Empty();
-	HorizontalBoxLeft->ClearChildren();
-	HorizontalBoxCenter->ClearChildren();
-	HorizontalBoxRight->ClearChildren();
 	ScrollBoxBottom->ClearChildren();
 	Clear();
 
@@ -152,15 +151,6 @@ void ULoopScrollBox::AddCardsHorizontalBox(TArray<FGameData> GameData, int32 Ind
 		ConstructCover();
 	}
 
-	for (int32 i = 0; i < 5; i++)
-	{
-		CardReferenceLeft.Add(CreateWidget<UCard>(GetOwningPlayer(), CardClassReference));
-		CardReferenceCenter.Add(CreateWidget<UCard>(GetOwningPlayer(), CardClassReference));
-		CardReferenceRight.Add(CreateWidget<UCard>(GetOwningPlayer(), CardClassReference));
-		HorizontalBoxLeft->AddChild(CardReferenceLeft[i]);
-		HorizontalBoxCenter->AddChild(CardReferenceCenter[i]);
-		HorizontalBoxRight->AddChild(CardReferenceRight[i]);
-	}
 	PrepareScrollBox();
 }
 
@@ -172,16 +162,46 @@ void ULoopScrollBox::SetCardValues(UCard* Card, FGameData& GameData)
 		Card->PathImage = GameData.imageFormated;
 		Card->SetPlayers(GameData.players);
 		Card->SetFavorite(GameData.favorite, false);
-		Card->SelectedFrameToBackground();
 	}
 }
 
 void ULoopScrollBox::ConstructCover()
 {
-	UCover* Cover = CreateWidget<UCover>(GetOwningPlayer(), CoverClass);
+	if (CoverClass == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("CoverClass is Empty"));
+		return;
+	}
+
+	UCover* Cover = WidgetTree->ConstructWidget<UCover>(CoverClass);
 	ScrollBoxBottom->AddChild(Cover);
 	Cover->SetCoverImage(ImageCardDefault, ImageCardDefault->GetSizeX(), ImageCardDefault->GetSizeY());
 	CoverReference.Add(Cover);
+}
+
+void ULoopScrollBox::ConstructCards()
+{
+	if (CardClassReference == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("CardClassReference is Empty"));
+		return;
+	}
+
+	CardReference.Empty();
+	CanvasCards->ClearChildren();
+
+	for (int32 i = 0; i < 16; i++)
+	{
+		UCard* Card = WidgetTree->ConstructWidget<UCard>(CardClassReference);
+		CardReference.Add(Card);
+		CanvasCards->AddChild(Card);
+		UCanvasPanelSlot* CanvasCard = Cast<UCanvasPanelSlot>(Card->Slot);
+		const int32 Position = i * 385;
+		CanvasCard->SetAutoSize(true);
+		CanvasCard->SetPosition(FVector2D(Position, 0));
+	}
+
+
 }
 
 FIndexPositions ULoopScrollBox::GetScrollOffSet()
@@ -189,25 +209,8 @@ FIndexPositions ULoopScrollBox::GetScrollOffSet()
 	FIndexPositions Position;
 	Position.LastIndexFocus = IndexFocusCard;
 	Position.Index = IndexScroll;
-	//Position.OffSet = ScrollBox->GetScrollOffset();
 	Position.LastIndexOffSet = PositionOffsetFocus;
 	return Position;
-}
-
-
-void ULoopScrollBox::AddImagesCards(UTexture2D* NewTexture, int32 Width, int32 Height, int32 Index)
-{
-	//UCard* Left;
-	//UCard* Center;
-	//UCard* Right;
-	//GetCardReferences(Index, Left, Center, Right);
-	//Left->SetCardImage(NewTexture, Width, Height);
-	//Center->SetCardImage(NewTexture, Width, Height);
-
-	//if (ChildrenCount <= 10)
-	//{
-	//	Right->SetCardImage(NewTexture, Width, Height);
-	//}
 }
 
 void ULoopScrollBox::DirectionRight()
