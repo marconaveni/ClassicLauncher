@@ -196,20 +196,21 @@ void UClassicConfigurations::SetIndexFocus(EButtonsGame Input)
 			IndexSelect = (IndexSelect < 0) ? 4 : IndexSelect;
 		}
 		SetFocusSelect();
-		//GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &UClassicConfigurations::Delay, 0.18f, false, -1);
 	}
 
-	const int32 SlideValue = SlideVolume->SlideValue;
+	const float SlideValue = static_cast<float>(SlideVolume->SlideValue);
+	const float SlideTo = 60.0f * GetWorld()->GetDeltaSeconds();
 
 	if (IndexSelect == 0)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("slide %f") , SlideValue + SlideTo);
 		if (Input == EButtonsGame::LEFT)
 		{
-			SlideVolume->SetSlideValue(SlideValue - 1);
+			SlideVolume->SetSlideValue(SlideValue - SlideTo);
 		}
 		else if (Input == EButtonsGame::RIGHT)
 		{
-			SlideVolume->SetSlideValue(SlideValue + 1);
+			SlideVolume->SetSlideValue(SlideValue + SlideTo);
 		}
 	}
 
@@ -252,7 +253,6 @@ void UClassicConfigurations::RestartMap()
 	bFocus = false;
 	bDelayInput = false;
 	GameMode->LoadingGameData->SetToRestartWidgets();
-	//UGameplayStatics::OpenLevel(this, FName("map"), true);
 }
 
 #undef LOCTEXT_NAMESPACE

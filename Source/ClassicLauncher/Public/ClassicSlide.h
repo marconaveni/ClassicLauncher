@@ -61,7 +61,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicSlide|Variables")
 	FText TxtTextLabel;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicSlide|Variables")
-	int32 SlideValue;
+	float SlideValue;
 
 
 private:
