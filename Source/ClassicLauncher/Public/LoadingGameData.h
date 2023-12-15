@@ -77,6 +77,9 @@ public:
 	void LoadGameSystems();
 
 	UFUNCTION()
+	void AddSystems();
+
+	UFUNCTION()
 	void SetMainInterfaceData() const;
 
 	UFUNCTION()

@@ -3,15 +3,18 @@
 
 #include "LoadingGameData.h"
 
+#include "ClassicButtonSystem.h"
 #include "ClassicConfigurations.h"
 #include "ClassicGameinstance.h"
 #include "ClassicMediaPlayer.h"
 #include "ClassicSaveGame.h"
 #include "ClassicSlide.h"
+#include "ClassicSystemListInterface.h"
 #include "Frame.h"
 #include "MainInterface.h"
 #include "LoadingScreen.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/Scrollbox.h"
 #include "Kismet/GameplayStatics.h"
 
 #define DELAY 1.0f
@@ -67,7 +70,8 @@ void ULoadingGameData::LoadGameSystems()
 	LoadingScreenReference->ShowMessage(LOCTEXT("Loading", "Loading Games Wait..."));
 	if (Systems.Num() > 0)
 	{
-		MainInterfaceReference->AddSystems(Systems);
+		//MainInterfaceReference->AddSystems(Systems);
+		AddSystems();
 
 		for (int32 i = 0; i < Systems.Num(); i++)
 		{
@@ -86,6 +90,32 @@ void ULoadingGameData::LoadGameSystems()
 	{
 		//create new list game and save GameSystems internal
 		GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &ULoadingGameData::CreateNewGameList, 0.1f, false, DELAY);
+	}
+}
+
+void ULoadingGameData::AddSystems()
+{
+	MainInterfaceReference->WBPSystemsList->ScrollBoxSystems->ClearChildren();
+	MainInterfaceReference->GameSystems.Empty();
+	MainInterfaceReference->ButtonSystemReferences.Empty();
+
+	if (MainInterfaceReference->ButtonSystemClass != nullptr)
+	{
+		UClassicButtonSystem* ButtonSystem = nullptr;
+		for (int32 i = 0; i < Systems.Num(); i++)
+		{
+			ButtonSystem = CreateWidget<UClassicButtonSystem>(MainInterfaceReference->GetOwningPlayer(), MainInterfaceReference->ButtonSystemClass);
+			ButtonSystem->OnClickTrigger.AddDynamic(MainInterfaceReference , &UMainInterface::OnClickSystem);
+			ButtonSystem->SetText((i == 0) ? LOCTEXT("Systems", "Show Systems") : FText::FromString(Systems[i].SystemLabel));
+			ButtonSystem->SetCount(i);
+			MainInterfaceReference->ButtonSystemReferences.Add(ButtonSystem);
+			MainInterfaceReference->WBPSystemsList->ScrollBoxSystems->AddChild(ButtonSystem);
+		}
+		MainInterfaceReference->GameSystems = Systems;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("buttonSystemClass Not Found"));
 	}
 }
 

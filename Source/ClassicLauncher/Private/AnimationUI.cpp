@@ -70,17 +70,6 @@ void UAnimationUI::Animation()
 
 	if (Alpha >= 1)
 	{
-		//if (bResetPosition)
-		//{
-		//	WidgetTarget->SetRenderTransform(InitialPosition);
-		//	WidgetTarget->SetRenderOpacity(InitialRenderOpacity);
-		//}
-
-		//Alpha = 0;
-		//CurrentTime = 0;
-		//GetWorld()->GetTimerManager().ClearTimer(AnimationTimerHandle);
-		//AnimationTimerHandle.Invalidate();
-		//OnFinishAnimationTrigger.Broadcast(this, NameAnimation);
 		ClearAnimation();
 		return;
 	}

@@ -10,6 +10,7 @@ UCard::UCard(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 	, PathImage(TEXT(""))
 	, MapIndex(0)
+	, Favorite(nullptr)
 	, bFocus(false)
 {
 }
@@ -88,46 +89,25 @@ void UCard::SetThemeCard(UTexture2D* texture)
 {
 }
 
-void UCard::SetFavorite(bool bFavorite, bool bAnimateIcon)
+void UCard::SetFavorite(bool bEnable, bool bAnimateIcon)
 {
-	if (bFavorite == false && Favorite->GetVisibility() == ESlateVisibility::Hidden) return;
 
-	Favorite->SetVisibility(ESlateVisibility::Visible);
-
-	if (bFavorite)
-	{
-		FrameMain->SetRenderOpacity(0.0f);
-		BackgroundMain->SetRenderOpacity(0.0f);
-		FrameFavorite->SetRenderOpacity(1.0f);
-		BackgroundFavorite->SetRenderOpacity(1.0f);
-	}
-	else
-	{
-		FrameMain->SetRenderOpacity(1.0f);
-		BackgroundMain->SetRenderOpacity(1.0f);
-		FrameFavorite->SetRenderOpacity(0.0f);
-		BackgroundFavorite->SetRenderOpacity(0.0f);
-	}
-
+	FrameMain->SetRenderOpacity((bEnable) ? 0.0f : 1.0f);
+	BackgroundMain->SetRenderOpacity((bEnable) ? 0.0f : 1.0f);
+	FrameFavorite->SetRenderOpacity((bEnable) ? 1.0f : 0.0f);
+	BackgroundFavorite->SetRenderOpacity((bEnable) ? 1.0f : 0.0f);
+	const float ToOpacity = ((bEnable) ? 1.0f : 0.0f);
 	if (bAnimateIcon == false)
 	{
-		Favorite->SetRenderOpacity((bFavorite) ? 1.0f : 0.0f);
+		Favorite->SetRenderOpacity(ToOpacity);
+		Favorite->SetRenderScale(FVector2D(1.5f , 1.5f));
+		return;
 	}
-	else
-	{
 
-		const FWidgetTransform Transform;
-		if (bFavorite)
-		{
-			AnimationFavorite->SetCurves(CurveFavoritesFoward);
-			AnimationFavorite->PlayAnimation(Favorite, 0.45f, Transform, 1, false, EEasingFunc::EaseOut);
-		}
-		else
-		{
-			AnimationFavorite->SetCurves(CurveFavoritesReverse);
-			AnimationFavorite->PlayAnimation(Favorite, 0.45f, Transform, 0, false, EEasingFunc::EaseOut);
-		}
-	}
+	const FAnimationUICurves Curves = ((bEnable) ? CurveFavoritesFoward : CurveFavoritesReverse);
+	const FWidgetTransform Transform;
+	AnimationFavorite->SetCurves(Curves);
+	AnimationFavorite->PlayAnimation(Favorite, 0.45f, Transform, ToOpacity, false, EEasingFunc::EaseOut);
 }
 
 void UCard::SetCardImage(UTexture2D* texture, int32 width, int32 height)
@@ -153,8 +133,15 @@ void UCard::AnimationFade()
 	{
 		FWidgetTransform Transform;
 		Transform.Scale = FVector2D(1.8f, 1.8f);
-		AnimationFadeCard->PlayAnimation(this, 0.25f, Transform, 0, true, EEasingFunc::EaseOut);
+		AnimationFadeCard->PlayAnimation(this, 0.25f, Transform, 0, false, EEasingFunc::EaseOut);
 	}
+	FTimerHandle FadeHandle;
+	GetWorld()->GetTimerManager().SetTimer(FadeHandle, [&]()
+	{
+		this->SetRenderTransform(FWidgetTransform());
+		this->SetRenderOpacity(1);
+	}
+	, 0.5f, false);
 }
 
 bool UCard::HasFocusCard() const

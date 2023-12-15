@@ -66,7 +66,7 @@ public:
 	void SetThemeCard(UTexture2D* texture);
 
 	UFUNCTION(BlueprintCallable,  Category = "Card|Functions")
-	void SetFavorite(bool bFavorite, bool bAnimateIcon);
+	void SetFavorite(bool bEnable, bool bAnimateIcon);
 
 	UFUNCTION(BlueprintCallable, Category = "Card|Functions")
 	void SetCardImage(UTexture2D* texture, int32 width, int32 height);
@@ -119,6 +119,9 @@ private:
 
 	UPROPERTY()
 	bool bFocus;
+
+	UPROPERTY()
+	bool bFavorite;
 
 };
 

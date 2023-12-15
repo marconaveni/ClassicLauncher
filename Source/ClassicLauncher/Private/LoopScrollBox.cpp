@@ -12,13 +12,12 @@
 #include "Components/Button.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
-#include "Components/HorizontalBox.h"
 #include "Components/Scrollbox.h"
 
 
 void ULoopScrollBox::NativeOnInitialized()
 {
-	BtnClick->OnPressed.AddDynamic(this, &ULoopScrollBox::OnClickButton);
+	//BtnClick->OnPressed.AddDynamic(this, &ULoopScrollBox::OnClickButton);
 	PrepareScrollBox();
 	Super::NativeOnInitialized();
 }
@@ -34,7 +33,7 @@ void ULoopScrollBox::Clear()
 	InputDirection = EButtonsGame::NONE;
 	PositionOffsetFocus = 1;
 	IndexFocusCard = 0;
-	//UnlockInput = true;
+	bUnlockInput = true;
 }
 
 void ULoopScrollBox::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -51,7 +50,6 @@ void ULoopScrollBox::NativePreConstruct()
 void ULoopScrollBox::NativeConstruct()
 {
 	Super::NativeConstruct();
-
 }
 
 void ULoopScrollBox::PrepareScrollBox()
@@ -59,15 +57,15 @@ void ULoopScrollBox::PrepareScrollBox()
 	OnPrepareScrollBox();
 }
 
-void ULoopScrollBox::StartScrollTo(const EButtonsGame LeftRight)
-{
-	InputDirection = LeftRight;
-}
-
-void ULoopScrollBox::CancelScroll()
-{
-	InputDirection = EButtonsGame::NONE;
-}
+//void ULoopScrollBox::StartScrollTo(const EButtonsGame LeftRight)
+//{
+//	InputDirection = LeftRight;
+//}
+//
+//void ULoopScrollBox::CancelScroll()
+//{
+//	InputDirection = EButtonsGame::NONE;
+//}
 
 void ULoopScrollBox::SelectDirectionScroll()
 {
@@ -98,8 +96,9 @@ void ULoopScrollBox::SetFocusCover()
 	}
 }
 
-void ULoopScrollBox::OnClickButton()
+void ULoopScrollBox::SetCenterFocus() const
 {
+	BtnClick->SetKeyboardFocus();
 }
 
 void ULoopScrollBox::GetCardReference(UCard*& CardRef, const int32 Index, const int32 StartIndex)
@@ -144,7 +143,7 @@ void ULoopScrollBox::AddCardsHorizontalBox(TArray<FGameData> GameData, int32 Ind
 	Clear();
 
 	ChildrenCount = GameData.Num();
-	IndexFocusCard = (ChildrenCount > 3) ? FMath::Clamp(IndexFocus, 0, ChildrenCount) : 0;
+	IndexFocusCard = (ChildrenCount > 4) ? FMath::Clamp(IndexFocus, 0, ChildrenCount) : 0;
 
 	for (int32 i = 0; i < ChildrenCount; i++)
 	{
@@ -201,10 +200,9 @@ void ULoopScrollBox::ConstructCards()
 		CanvasCard->SetPosition(FVector2D(Position, 0));
 	}
 
-
 }
 
-FIndexPositions ULoopScrollBox::GetScrollOffSet()
+FIndexPositions ULoopScrollBox::GetScrollOffSet() const
 {
 	FIndexPositions Position;
 	Position.LastIndexFocus = IndexFocusCard;
