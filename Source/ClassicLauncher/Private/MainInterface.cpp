@@ -813,6 +813,7 @@ void UMainInterface::RunningGame(const bool bIsRun)
 		PlayAnimationReverse(FadeStartSystem);
 		GetWorld()->GetTimerManager().ClearTimer(DelayRunAppTimerHandle);
 		DelayRunAppTimerHandle.Invalidate();
+		SetFrame();
 	}
 }
 

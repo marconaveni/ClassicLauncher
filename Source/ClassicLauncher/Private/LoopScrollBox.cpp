@@ -17,18 +17,13 @@
 
 void ULoopScrollBox::NativeOnInitialized()
 {
-	//BtnClick->OnPressed.AddDynamic(this, &ULoopScrollBox::OnClickButton);
 	PrepareScrollBox();
 	Super::NativeOnInitialized();
 }
 
 void ULoopScrollBox::Clear()
 {
-	Offset = 0.0f;
 	Speed = 30.0f;
-	//Time = 0.0f;
-	//IndexScroll = 0;
-	//Move = 0;
 	ChildrenCount = 0;
 	InputDirection = EButtonsGame::NONE;
 	PositionOffsetFocus = 1;
@@ -55,21 +50,6 @@ void ULoopScrollBox::NativeConstruct()
 void ULoopScrollBox::PrepareScrollBox()
 {
 	OnPrepareScrollBox();
-}
-
-//void ULoopScrollBox::StartScrollTo(const EButtonsGame LeftRight)
-//{
-//	InputDirection = LeftRight;
-//}
-//
-//void ULoopScrollBox::CancelScroll()
-//{
-//	InputDirection = EButtonsGame::NONE;
-//}
-
-void ULoopScrollBox::SelectDirectionScroll()
-{
-	OnSelectDirectionScroll();
 }
 
 void ULoopScrollBox::OpenCard()
@@ -206,7 +186,6 @@ FIndexPositions ULoopScrollBox::GetScrollOffSet() const
 {
 	FIndexPositions Position;
 	Position.LastIndexFocus = IndexFocusCard;
-	Position.Index = IndexScroll;
 	Position.LastIndexOffSet = PositionOffsetFocus;
 	return Position;
 }

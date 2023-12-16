@@ -55,17 +55,14 @@ public:
 
 protected:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
-	float Offset;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
-	float Time;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
+	//float Offset;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	int32 IndexScroll;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
-	int32 Move;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
+	//int32 Move;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	int32 ChildrenCount;
@@ -121,17 +118,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
 	void PrepareScrollBox();
 
-	//UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
-	//void StartScrollTo(EButtonsGame LeftRight);
-
-	//UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
-	//void CancelScroll();
-
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
 	void OpenCard();
-
-	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
-	void SelectDirectionScroll();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnDirectionLeft();
@@ -141,9 +129,6 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnPrepareScrollBox();
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnSelectDirectionScroll();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnOpenCard();

@@ -295,4 +295,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|File IO")
 	static bool GetFiles(TArray<FString>& Files, FString FullFilePath, TArray<FString> Extension, const bool Recursive = false);
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|File IO")
+	static void CreateTextureFromBGRA(const FString& FullFilePath, EClassicImageFormat ImageFormat, EClassicTextureFilter Filter, int32& Width, int32& Height);
+
+
 };

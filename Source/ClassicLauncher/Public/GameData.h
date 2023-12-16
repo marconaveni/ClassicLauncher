@@ -151,12 +151,6 @@ struct FIndexPositions
 	/** Last focus card */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 LastIndexFocus;
-	/** Index Scroll */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Index;
-	/** Offset scroll */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float OffSet;
 	/** Last index offset */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 LastIndexOffSet;
@@ -166,8 +160,6 @@ struct FIndexPositions
 
 	FIndexPositions()
 		: LastIndexFocus(0)
-		, Index(0)
-		, OffSet(0)
 		, LastIndexOffSet(1)
 		, OrderBy(EGamesFilter::DEFAULT)
 	{
@@ -176,8 +168,6 @@ struct FIndexPositions
 	void DefaultValues()
 	{
 		LastIndexFocus = 0;
-		Index = 0;
-		OffSet = 0;
 		LastIndexOffSet = 1;
 		OrderBy = EGamesFilter::DEFAULT;
 	}
