@@ -314,7 +314,7 @@ public:
 	AClassicGameMode* GameMode;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables|Debug")
-	bool Debug = false;
+	bool bDebug = false;
 
 	UPROPERTY()
 	UCanvasPanelSlot* SlotToolTipSystem;
@@ -361,10 +361,10 @@ public:
 
 
 	//TempVariables
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	int32 FirstIndex;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	int32 LastIndex;
 
 	//Functions
@@ -452,12 +452,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void RunningGame(bool bIsRun);
-
-	//UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	//void PressedDelayNavigation(float Delay);
-
-	//UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	//void PressedTimerNavigation();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetRenderOpacityList();

@@ -113,7 +113,6 @@ void UMainInterface::NativeOnInitialized()
 	BtnFavorites->OnClickTrigger.AddDynamic(this, &UMainInterface::OnClickFavorites);
 	BtnInfo->OnClickTrigger.AddDynamic(this, &UMainInterface::OnClickInfo);
 
-
 	for (TActorIterator<AClassicMediaPlayer> ActorIterator(GetWorld()); ActorIterator; ++ActorIterator)
 	{
 		ClassicMediaPlayerReference = *ActorIterator;
@@ -625,7 +624,8 @@ void UMainInterface::OnClickLaunch()
 			{
 				CountSystem = IndexCard + 1;   //CountSystem = CountLocationY;
 				ResetCards(false, false);
-			}, 0.015f, false, 0.1f);
+			}
+			, 0.015f, false, 0.1f);
 		}
 		else
 		{
@@ -1085,6 +1085,7 @@ void UMainInterface::SetVisibiltyDebugButton(UButton* Button)
 {
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
 	Button->SetVisibility(ESlateVisibility::Visible);
+	bDebug = true;
 #endif
 }
 

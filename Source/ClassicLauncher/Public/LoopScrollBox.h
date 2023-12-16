@@ -16,7 +16,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateIndexFinal, int32, Index);
 
 
 /**
- * 
+ *
  */
 UCLASS()
 class CLASSICLAUNCHER_API ULoopScrollBox : public UUserWidget, public  IMusicInterface
@@ -41,12 +41,6 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FDelegateIndexFinal FinalIndexToStart;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Subclass")
-	TSubclassOf<UCard> CardClassReference;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Subclass")
-	TSubclassOf<UCover> CoverClass;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	TArray<UCard*> CardReference;
 
@@ -55,14 +49,14 @@ public:
 
 protected:
 
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
-	//float Offset;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Subclass")
+	TSubclassOf<UCard> CardClassReference;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Subclass")
+	TSubclassOf<UCover> CoverClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	int32 IndexScroll;
-
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
-	//int32 Move;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	int32 ChildrenCount;
@@ -87,9 +81,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	UTexture2D* ImageCardDefault;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables|Debug")
-	bool Debug = false;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	USoundBase* SoundNavigate;
 
@@ -107,19 +98,8 @@ protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UButton* BtnClick;
 
-public:
-
-	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
-	void DirectionRight();
-
-	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
-	void DirectionLeft();
-
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
 	void PrepareScrollBox();
-
-	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
-	void OpenCard();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnDirectionLeft();
@@ -134,16 +114,13 @@ public:
 	void OnOpenCard();
 
 	UFUNCTION(BlueprintPure, Category = "LoopScrollBox|Functions")
-	void GetCardReference(UPARAM(DisplayName = "Card Reference") UCard*& CardRef, const int32 Index,  const int32 StartIndex = 5);
+	void GetCardReference(UPARAM(DisplayName = "Card Reference") UCard*& CardRef, const int32 Index, const int32 StartIndex = 5);
 
-	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions") 
-	void SetCardFavorite(const bool ToggleFavorite);
-
-	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions" , meta = (DisplayName = "Set Z-Order Card"))
+	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions", meta = (DisplayName = "Set Z-Order Card"))
 	void SetZOrderCard();
 
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
-	void AddCardsHorizontalBox( TArray<FGameData> GameData, int32 IndexFocus);
+	void AddCardsHorizontalBox(TArray<FGameData> GameData, int32 IndexFocus);
 
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
 	void SetCardValues(UCard* Card, UPARAM(ref) FGameData& GameData);
@@ -154,8 +131,22 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
 	void ConstructCards();
 
-	UFUNCTION(BlueprintPure, Category = "LoopScrollBox|Functions")
-	FIndexPositions GetScrollOffSet() const;
+	UFUNCTION()
+	void Clear();
+
+public:
+
+	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
+	void SetCardFavorite(const bool ToggleFavorite);
+
+	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
+	void OpenCard();
+
+	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
+	void DirectionRight();
+
+	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
+	void DirectionLeft();
 
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
 	void SetFocusCover();
@@ -163,10 +154,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
 	void SetCenterFocus() const;
 
-	UFUNCTION()
-	void Clear();
-
-public:
+	UFUNCTION(BlueprintPure, Category = "LoopScrollBox|Functions")
+	FIndexPositions GetScrollOffSet() const;
 
 	virtual void EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound) override;
+
 };
