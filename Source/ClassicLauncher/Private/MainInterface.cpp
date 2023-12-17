@@ -687,13 +687,13 @@ void UMainInterface::OnClickSystem(int32 Value)
 		SetVisibilityToolTips();
 		if (CountSystem == Value)
 		{
-			PlayAnimationReverse(ShowSystem);
 			Focus = EFocus::MAIN;
 			PositionY = EPositionY::CENTER;
 			LoopScroll->SetCenterFocus();
-			PlayAnimationReverse(BarTop);
 			SetButtonsIconInterfaces(PositionY);
 			WBPFrame->SetFrameCenterPosition(WBPFrame->FrameIndexCenter);
+			PlayAnimationReverse(ShowSystem);
+			PlayAnimationReverse(BarTop);
 			return;
 		}
 		SetLastPositions(false);
