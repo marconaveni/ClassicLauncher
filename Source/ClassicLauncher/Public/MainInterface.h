@@ -42,9 +42,11 @@ struct FMultiInput
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EButtonsGame ENavigation4;
 
-	FMultiInput() { SetAllNoneInput(); }
+	FMultiInput() {
+		SetAllNoneInput();
+	}
 
-	FORCEINLINE void SetAllNoneInput() 
+	FORCEINLINE void SetAllNoneInput()
 	{
 		ENavigation1 = EButtonsGame::NONE;
 		ENavigation2 = EButtonsGame::NONE;
@@ -52,13 +54,13 @@ struct FMultiInput
 		ENavigation4 = EButtonsGame::NONE;
 	}
 
-	FORCEINLINE bool CheckInputPressed() const 
+	FORCEINLINE bool CheckInputPressed() const
 	{
 		return (ENavigation1 != EButtonsGame::NONE && ENavigation2 != EButtonsGame::NONE &&
-				ENavigation3 != EButtonsGame::NONE && ENavigation4 != EButtonsGame::NONE);
+			ENavigation3 != EButtonsGame::NONE && ENavigation4 != EButtonsGame::NONE);
 	}
 
-	FORCEINLINE void SetInput(const EButtonsGame Input) 
+	FORCEINLINE void SetInput(const EButtonsGame Input)
 	{
 		switch (Input)
 		{
@@ -73,7 +75,7 @@ struct FMultiInput
 
 
 /**
- * 
+ *
  */
 UCLASS()
 class CLASSICLAUNCHER_API UMainInterface : public UBaseUserWidget
@@ -157,6 +159,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UFrame* WBPFrame;
+
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UClassicButton* BtnSelectSystem;
 
@@ -168,6 +171,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UClassicButton* BtnInfo;
+
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UMessageBalloon* MessageDisplay;
 
@@ -177,43 +181,61 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UTextBoxScroll* WBPTextBoxScroll;
 
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UScaleBox* ScaleBoxImage;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UScaleBox* ScaleBoxVideo;
+
 	//animations WidgetBind
 
 public:
 
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	UWidgetAnimation* ShowDescBottomInfo;
+
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	UWidgetAnimation* ShowSystem;
+
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	UWidgetAnimation* AnimationShowConfiguration;
+
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	UWidgetAnimation* BarTop;
+
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	UWidgetAnimation* FadeStartSystem;
+
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	UWidgetAnimation* ShowInfo;
+
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	UWidgetAnimation* LoadListGame;
+
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	UWidgetAnimation* VideoAnimation;
+
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	UWidgetAnimation* FadeChangeImageToVideo;
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	UWidgetAnimation* ChangeVideoToImage;
+
+	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
+	//UWidgetAnimation* ChangeVideoToImage;
 
 	//subclass and references
-public:
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
 	TSubclassOf<UClassicButtonSystem> ButtonSystemClass;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
 	TArray<UClassicButtonSystem*> ButtonSystemReferences;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
 	AClassicMediaPlayer* ClassicMediaPlayerReference;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
 	USoundBase* SoundSelect;
-	
-public:
+
+protected:
 
 	UMainInterface(const FObjectInitializer& ObjectInitializer);
 
@@ -226,6 +248,7 @@ public:
 	virtual FReply NativeOnMouseWheel(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 
+public:
 	//variables
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
@@ -236,8 +259,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	TArray<FGameSystem> GameSystems;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	FConfig ConfigurationData;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	int32 IndexCard;
 
@@ -302,6 +327,9 @@ public:
 	int32 CountLocationY;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	int32 IndexBottom;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	UTexture2D* ImageBottomDefault;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
@@ -318,10 +346,13 @@ public:
 
 	UPROPERTY()
 	UCanvasPanelSlot* SlotToolTipSystem;
+
 	UPROPERTY()
 	UCanvasPanelSlot* SlotToolTipConfiguration;
+
 	UPROPERTY()
 	UCanvasPanelSlot* SlotToolTipFavorites;
+
 	UPROPERTY()
 	UCanvasPanelSlot* SlotToolTipInfo;
 
@@ -376,6 +407,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void LoadGamesList();
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnLoadGamesList();
 
@@ -390,25 +422,31 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void ShowGames();
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnShowGames();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void PrepareThemes();
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnPrepareThemes();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void NavigationGame(EButtonsGame Navigate);
+
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void NavigationMain(EButtonsGame Navigate);
+
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void NavigationSystem(EButtonsGame Navigate);
+
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void NavigationInfo(EButtonsGame Navigate);
+
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void NavigationConfiguration(EButtonsGame Navigate);
-	
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnNavigationGame(EButtonsGame Navigate);
 
@@ -420,12 +458,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void SetNavigationFocusUpBottom();
+
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void SetNavigationFocusDownBottom();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickLaunch();
-
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void AppLaunch();
@@ -435,6 +473,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickSystem(int32 Value);
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnClickOnSystem();
 
@@ -462,44 +501,50 @@ public:
 	UFUNCTION()
 	void Clear();
 
-
 private:
 
 	UPROPERTY()
 	TArray<FText> TextTop;
+
 	UPROPERTY()
 	TArray<FText> TextCenter;
+
 	UPROPERTY()
 	TArray<FText> TextCenterSystem;
+
 	UPROPERTY()
 	TArray<ESlateVisibility> IconTop;
+
 	UPROPERTY()
 	TArray<ESlateVisibility> IconCenter;
+
 	UPROPERTY()
 	TArray<ESlateVisibility> IconCenterSystem;
-
 
 	/**
 	* Function to avoid losing Focus on Widget .
 	*/
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnPreventLoseFocus();
+
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void SetTopButtonFocus();
 
 	//bindbuttons
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickSelectSystem();
+
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickConfigurations();
+
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickFavorites();
+
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickInfo();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickBackAction();
-
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickFavorite();
@@ -519,20 +564,24 @@ public:
 	void SetImageBottom();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void ChangeVisibilityImageVideo();
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void CloseMenus();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void CloseBackMenu();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void ShowMessage(const FText Message,const float InRate);
+	void ShowMessage(const FText Message, const float InRate);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetLastPositions(bool bResetPositions) const;
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetFrame();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void SetPlayAnimation(FName AnimationName);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void ImageOutThumb(UTexture2D* TextureOut, int32 Index, bool Sucesseful);
+
 };

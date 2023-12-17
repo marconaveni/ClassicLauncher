@@ -33,6 +33,7 @@ class UScrollBox;
 class UHorizontalBox;
 class UButton;
 class UCanvasPanel;
+class UScaleBox;
 
 /**
  * 

@@ -22,6 +22,7 @@
 #include "ToolTip.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/CanvasPanel.h"
+#include "Components/ScaleBox.h"
 #include "EngineUtils.h"
 #include "MessageBalloon.h"
 #include "LoopScrollBox.h"
@@ -156,7 +157,7 @@ void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		SpeedScroll = InitialSpeedScroll;
 		LoopScroll->Speed = InitialSpeedScroll;
 	}
-	LoopScroll->Speed = SpeedScroll; 
+	LoopScroll->Speed = SpeedScroll;
 }
 
 void UMainInterface::SteamRunApp()
@@ -437,7 +438,7 @@ void UMainInterface::NavigationMain(EButtonsGame Navigate)
 			TimerDelayInput = 0.0f;
 			if (LoopScroll->bUnlockInput)
 			{
-				SetFrame();
+				//SetFrame();
 				SetDirection(ENavigationButton);
 			}
 		}
@@ -494,7 +495,8 @@ void UMainInterface::SetNavigationFocusUpBottom()
 		if (BackgroundVideo->GetRenderOpacity() == 0)
 		{
 			GetWorld()->GetTimerManager().ClearTimer(StartVideoTimerHandle);
-			PlayAnimationReverse(ShowDescBottomInfo);
+			//PlayAnimationReverse(ShowDescBottomInfo);
+			SetPlayAnimation(TEXT("ShowDescBottomInfoReverse"));
 			PositionY = EPositionY::CENTER;
 			ClassicMediaPlayerReference->StopVideo();
 			ClassicMediaPlayerReference->ResumeMusic();
@@ -504,7 +506,8 @@ void UMainInterface::SetNavigationFocusUpBottom()
 		}
 		else
 		{
-			PlayAnimationReverse(VideoAnimation);
+			SetPlayAnimation(TEXT("VideoAnimationReverse"));
+			//PlayAnimationReverse(VideoAnimation);
 		}
 	}
 	else if (PositionY == EPositionY::CENTER)
@@ -527,7 +530,8 @@ void UMainInterface::SetNavigationFocusDownBottom()
 			PositionY = EPositionY::BOTTOM;
 			SetImageBottom();
 			WBPTextBoxScroll->StartScroll();
-			PlayAnimationForward(ShowDescBottomInfo);
+			//PlayAnimationForward(ShowDescBottomInfo);
+			SetPlayAnimation(TEXT("ShowDescBottomInfo"));
 			GetWorld()->GetTimerManager().SetTimer(StartVideoTimerHandle, this, &UMainInterface::StartVideo, 5.0f, false, -1);
 			UE_LOG(LogTemp, Warning, TEXT("Open frame bottom"));
 		}
@@ -536,7 +540,8 @@ void UMainInterface::SetNavigationFocusDownBottom()
 	{
 		if (BackgroundVideo->GetRenderOpacity() == 0)
 		{
-			PlayAnimationForward(VideoAnimation);
+			SetPlayAnimation(TEXT("VideoAnimation"));
+			//PlayAnimationForward(VideoAnimation);
 		}
 	}
 	else
@@ -834,6 +839,7 @@ void UMainInterface::ResetCards(const bool bAnimationBarTop, const bool bAnimati
 	Focus = EFocus::MAIN;
 	GameData.Empty();
 	IndexCard = 0;
+	IndexBottom = -1;
 	PositionY = EPositionY::CENTER;
 
 	if (bAnimationBarTop)
@@ -867,6 +873,7 @@ void UMainInterface::Clear()
 	CountSystem = 0;
 	CountLocationY = 0;
 	SpeedScroll = TargetSpeedScroll;
+	IndexBottom = -1;
 
 	GameData.Empty();
 	GameDataIndex.Empty();
@@ -986,15 +993,16 @@ void UMainInterface::OnClickInfo()
 
 void UMainInterface::OnClickBackAction()
 {
-	if (PositionY == EPositionY::TOP)
+	if (PositionY == EPositionY::TOP && Focus != EFocus::MAIN)
 	{
 		CloseMenus();
 	}
-	else if (PositionY == EPositionY::CENTER)
+	else if (PositionY == EPositionY::CENTER || PositionY == EPositionY::TOP)
 	{
-
+		
 		if (CountSystem != 0)
 		{
+			SetVisibilityToolTips();
 			ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas = GameDataIndex;
 			SetLastPositions(false);
 			CountSystem = 0;
@@ -1035,17 +1043,17 @@ void UMainInterface::OnClickFavorite()
 
 void UMainInterface::CloseMenus()
 {
-	const float TranslationSystemSelect = CanvasPanelSystemSelect->GetRenderTransform().Translation.Y;
-	const float TranslationInfo = CanvasPanelInfo->GetRenderTransform().Translation.Y;
-	const float TranslationConfiguration = CanvasPanelConfiguration->GetRenderTransform().Translation.Y;
+	//const float TranslationSystemSelect = CanvasPanelSystemSelect->GetRenderTransform().Translation.Y;
+	//const float TranslationInfo = CanvasPanelInfo->GetRenderTransform().Translation.Y;
+	//const float TranslationConfiguration = CanvasPanelConfiguration->GetRenderTransform().Translation.Y;
 
-	if (TranslationSystemSelect == 0)
+	if (Focus == EFocus::SYSTEM)
 	{
 		PlayAnimationReverse(ShowSystem);
 		BtnSelectSystem->BtButton->SetKeyboardFocus();
 		Focus = EFocus::MAIN;
 	}
-	else if (TranslationConfiguration == 0)
+	else if (Focus == EFocus::CONFIG)
 	{
 		ENavigationButton = EButtonsGame::NONE;
 		if (WBPClassicConfigurationsInterface->bFocus)
@@ -1058,7 +1066,7 @@ void UMainInterface::CloseMenus()
 			Focus = EFocus::MAIN;
 		}
 	}
-	else if (TranslationInfo == 0)
+	else if (Focus == EFocus::INFO)
 	{
 		PlayAnimationReverse(ShowInfo);
 		BtnInfo->BtButton->SetKeyboardFocus();
@@ -1091,14 +1099,15 @@ void UMainInterface::SetVisibiltyDebugButton(UButton* Button)
 
 void UMainInterface::SetImageBottom()
 {
-	if (ImgVideo == nullptr || ImgImageBottom == nullptr || !GameData.IsValidIndex(IndexCard)) return;
+	ScaleBoxImage->SetRenderOpacity(1);
+	ScaleBoxVideo->SetRenderOpacity(0);
+	//PlayAnimationForward(ChangeVideoToImage); //todo trocar por visibility
 
-	ChangeVisibilityImageVideo();
+	if (ImgVideo == nullptr || ImgImageBottom == nullptr || 
+		!GameData.IsValidIndex(IndexCard) || IndexCard == IndexBottom) return;
+	
 
 	FString ImagePath = TEXT("");
-	UTexture2D* ImageLoaded = ImageBottomDefault;
-	int32 Width = ImageBottomDefault->GetSizeX();
-	int32 Height = ImageBottomDefault->GetSizeY();
 
 	if (FPaths::FileExists(GameData[IndexCard].thumbnailFormated))
 	{
@@ -1112,31 +1121,13 @@ void UMainInterface::SetImageBottom()
 	if (ImagePath != TEXT(""))
 	{
 		const EClassicImageFormat Format = UClassicFunctionLibrary::GetFormatImage(ImagePath);
-		ImageLoaded = UClassicFunctionLibrary::LoadTexture2DFromFile(ImagePath, Format, EClassicTextureFilter::DEFAULT, Width, Height);
-
-		if (ImageLoaded == nullptr)
-		{
-			ImageLoaded = ImageBottomDefault;
-		}
-	}
-
-	FSlateBrush NewBrush;
-	NewBrush.SetImageSize(FVector2D(Width * 2, Height * 2));
-	NewBrush.SetResourceObject(ImageLoaded);
-	ImgImageBottom->SetBrush(NewBrush);
-}
-
-void UMainInterface::ChangeVisibilityImageVideo()
-{
-	const float TranslationPanelBottom = CanvasPanelBottom->GetRenderTransform().Translation.Y;
-	if (TranslationPanelBottom != 0)
-	{
-		PlayAnimationReverse(FadeChangeImageToVideo);
+		FLoadImageDelegate ImageLoadedDelegate;
+		ImageLoadedDelegate.BindDynamic(this, &UMainInterface::UMainInterface::ImageOutThumb);
+		UClassicFunctionLibrary::AsyncLoadTexture2DFromFile(ImageLoadedDelegate, ImagePath, IndexCard, Format, EClassicTextureFilter::DEFAULT);
 	}
 	else
 	{
-		//Change visibility ScaleBoxImage and ScaleBoxVideo
-		PlayAnimationForward(ChangeVideoToImage);
+		ImageOutThumb(nullptr, IndexCard, false);
 	}
 }
 
@@ -1153,6 +1144,19 @@ void UMainInterface::StartVideo()
 			ClassicMediaPlayerReference->PlayVideo(PathVideo);
 		}
 	}
+}
+
+void UMainInterface::ImageOutThumb(UTexture2D* TextureOut, int32 Index, bool Sucesseful)
+{
+	if (TextureOut == nullptr || !Sucesseful)
+	{
+		TextureOut = ImageBottomDefault;
+	}
+	FSlateBrush NewBrush;
+	NewBrush.SetImageSize(FVector2D(TextureOut->GetSizeX() * 2, TextureOut->GetSizeY() * 2));
+	NewBrush.SetResourceObject(TextureOut);
+	ImgImageBottom->SetBrush(NewBrush);
+	IndexBottom = Index;
 }
 
 #undef LOCTEXT_NAMESPACE
