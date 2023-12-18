@@ -16,6 +16,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/Scrollbox.h"
 #include "Kismet/GameplayStatics.h"
+#include "UI/Layout/Header.h"
 
 #define DELAY 1.0f
 #define LOCTEXT_NAMESPACE "ButtonsSelection"
@@ -275,7 +276,7 @@ void ULoadingGameData::SetToRestartWidgets()
 	MainInterfaceReference->Clear();
 	MainInterfaceReference->PlayAnimationReverse(MainInterfaceReference->AnimationShowConfiguration);
 	MainInterfaceReference->PlayAnimationReverse(MainInterfaceReference->LoadListGame);
-	MainInterfaceReference->PlayAnimationReverse(MainInterfaceReference->BarTop);
+	MainInterfaceReference->Header->SetFocusButton();
 	MainInterfaceReference->WBPFrame->SetFrameCenterPosition(1);
 	GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &ULoadingGameData::RestartWidgets, 0.1f, false, DELAY + 1.0f);
 	AddLoadingScreenToViewPort();

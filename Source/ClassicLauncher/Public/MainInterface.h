@@ -84,7 +84,6 @@ class CLASSICLAUNCHER_API UMainInterface : public UBaseUserWidget
 
 public:
 
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UTextImageBlock* TextTitleGame;
 
@@ -98,13 +97,7 @@ public:
 	UImage* ImgVideo;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UImage* BgTopBar;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UImage* BgTopBarIcon;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UImage* BackgroundTopBar;
+	class UHeader* Header;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UImage* BackgroundBottomBar;
@@ -134,18 +127,6 @@ public:
 	UCanvasPanel* CanvasPanelBottom;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UToolTip* WBPToolTipConfiguration;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UToolTip* WBPToolTipFavorites;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UToolTip* WBPToolTipInfo;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UToolTip* WBPToolTipSystem;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UClassicInfoInterface* WBPInfo;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
@@ -161,16 +142,7 @@ public:
 	UFrame* WBPFrame;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UClassicButton* BtnSelectSystem;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UClassicButton* BtnConfigurations;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UClassicButton* BtnFavorites;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UClassicButton* BtnInfo;
+	UToolTipsLayout* ToolTips;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UMessageBalloon* MessageDisplay;
@@ -217,9 +189,6 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	UWidgetAnimation* FadeChangeImageToVideo;
-
-	//UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	//UWidgetAnimation* ChangeVideoToImage;
 
 	//subclass and references
 
@@ -341,20 +310,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	AClassicGameMode* GameMode;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	bool bDelayTooltip = false;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables|Debug")
 	bool bDebug = false;
-
-	UPROPERTY()
-	UCanvasPanelSlot* SlotToolTipSystem;
-
-	UPROPERTY()
-	UCanvasPanelSlot* SlotToolTipConfiguration;
-
-	UPROPERTY()
-	UCanvasPanelSlot* SlotToolTipFavorites;
-
-	UPROPERTY()
-	UCanvasPanelSlot* SlotToolTipInfo;
 
 	//timers
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
@@ -410,9 +370,6 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnLoadGamesList();
-
-	UFUNCTION()
-	void EnableButtonsTop() const;
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void LoadImages(const int32 DistanceIndex = 15);
@@ -528,9 +485,19 @@ private:
 	void OnPreventLoseFocus();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void SetTopButtonFocus();
+	void SetHeaderButtonFocus();
 
 	//bindbuttons
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
+	void OnClickHeader(int32 Index);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
+	void OnFocusHeader(int32 Index);
+
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
+	void OnLostFocusHeader(int32 Index);
+
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickSelectSystem();
 
@@ -547,18 +514,12 @@ private:
 	void OnClickBackAction();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void OnClickFavorite();
+	void HoldFavorite();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetVisibiltyDebugButton(UButton* Button);
 
 public:
-
-	UFUNCTION()
-	void SetZOrderToolTips(UCanvasPanelSlot* ToolTipSlot) const;
-
-	UFUNCTION()
-	void SetVisibilityToolTips(UToolTip* ToolTip = nullptr) const;
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetImageBottom();

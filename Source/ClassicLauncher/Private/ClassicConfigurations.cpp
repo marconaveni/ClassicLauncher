@@ -18,6 +18,7 @@
 #include "LoadingGameData.h"
 #include "TextImageBlock.h"
 #include "Kismet/KismetInternationalizationLibrary.h"
+#include "UI/Layout/Header.h"
 
 #define LOCTEXT_NAMESPACE "ButtonsConfiguration"
 
@@ -102,7 +103,7 @@ void UClassicConfigurations::OnClickUpdate(int32 Value)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Deleted Saved"));
 		MainInterfaceReference->bInputEnable = false;
-		MainInterfaceReference->SetVisibilityToolTips();
+		MainInterfaceReference->Header->SetFocusButton();
 		GetWorld()->GetTimerManager().SetTimer(RestartMapTimerHandle, this, &UClassicConfigurations::RestartMap, 3.0f, false, -1);
 		if (MainInterfaceReference != nullptr)
 		{

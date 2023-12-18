@@ -4,46 +4,12 @@
 #include "ClassicButton.h"
 #include "Components/Button.h"
 #include "Components/Image.h"
-#include "Kismet/GameplayStatics.h"
 
-UClassicButton::UClassicButton(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+UClassicButton::UClassicButton(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+	, Index(0)
+	, bFocus(false)
 {
-    hover = false;
-}
-
-void UClassicButton::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
-{
-    Super::NativeTick(MyGeometry, InDeltaTime);
-	if (BtButton != nullptr) {
-		//equivale doonce blueprint
-		if (BtButton->HasKeyboardFocus()) 
-		{
-			if (!hover) 
-			{
-				SetFocusButton(true);			
-			}
-			hover = true;
-		}
-		else 
-		{
-			if (hover) 
-			{
-				SetFocusButton(false);			
-			}
-			hover = false;
-		}
-	}
-}
-
-bool UClassicButton::Initialize()
-{
-    bool Success = Super::Initialize();
-	if (BtButton)
-	{
-		BtButton->OnClicked.AddDynamic(this, &UClassicButton::ButtonClick);
-		
-	}
-    return false;
 }
 
 void UClassicButton::NativePreConstruct()
@@ -52,30 +18,71 @@ void UClassicButton::NativePreConstruct()
 	BtButton->SetStyle(StyleButton);
 }
 
-void UClassicButton::SetFocusButton(bool Focus)
+bool UClassicButton::Initialize()
 {
-	if(Focus)
+	const bool Success = Super::Initialize();
+	if (BtButton)
 	{
-		//OnFocusTrigger.Broadcast();
-		BtButton->SetKeyboardFocus();
-		BgImage->SetVisibility(ESlateVisibility::Visible);	
-		UGameplayStatics::PlaySound2D(this, SoundNavigation);
+		BtButton->OnClicked.AddDynamic(this, &UClassicButton::ButtonClick);
+	}
+	return Success;
+}
+
+void UClassicButton::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+	if (BtButton != nullptr) {
+		if (!BtButton->HasKeyboardFocus() && bFocus)
+		{
+			EnableFocusButton(false);
+		}
+	}
+}
+
+void UClassicButton::SetFocusButton()
+{
+	BtButton->SetKeyboardFocus();
+	EnableFocusButton(true);
+}
+
+void UClassicButton::EnableFocusButton(bool bEnable)
+{
+	bFocus = bEnable;
+	if (bEnable)
+	{
+		OnFocusTrigger.Broadcast(Index);
+		BgImage->SetVisibility(ESlateVisibility::Visible);
 		PlayAnimationForward(FocusButton);
 	}
 	else
 	{
+		OnFocusLostTrigger.Broadcast(Index);
 		BgImage->SetVisibility(ESlateVisibility::Hidden);
 		PlayAnimationReverse(FocusButton);
-		//OnFocusLostTrigger.Broadcast();
 	}
 }
 
 void UClassicButton::ButtonClick()
 {
-	OnClickTrigger.Broadcast();
+	OnClickTrigger.Broadcast(Index);
 }
 
-void UClassicButton::EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound)
+bool UClassicButton::HasFocusButton()
 {
-	SoundNavigation = NavigateSound;
+	return bFocus;
 }
+
+void UClassicButton::SetTheme(UTexture2D* TextureIcon, FSlateBrush BackgroundColor)
+{
+	BgImage->SetBrush(BackgroundColor);
+
+	FSlateBrush Icon;
+	Icon.SetResourceObject(TextureIcon);
+	FButtonStyle ButtonStyle;
+	ButtonStyle.SetNormal(Icon);
+	ButtonStyle.SetHovered(Icon);
+	ButtonStyle.SetPressed(Icon);
+	ButtonStyle.SetDisabled(Icon);
+	BtButton->SetStyle(ButtonStyle);
+}
+

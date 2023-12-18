@@ -3,18 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MusicInterface.h"
 #include "Blueprint/UserWidget.h"
 #include "ClassicButton.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDelegateFocusBT);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDelegateFocusLostBT);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDelegateClickBT);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateFocusBT, int32, Index);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateFocusLostBT, int32, Index);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateClickBT, int32, Index);
 /**
- * 
+ *
  */
 UCLASS()
-class CLASSICLAUNCHER_API UClassicButton : public UUserWidget, public IMusicInterface
+class CLASSICLAUNCHER_API UClassicButton : public UUserWidget
 {
 	GENERATED_BODY()
 
@@ -48,21 +47,26 @@ public:
 	FButtonStyle StyleButton;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButton|Variables")
-	class USoundBase* SoundNavigation;
+	int32 Index;
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicButton|Functions")
-	void SetFocusButton(bool Focus);
+	void SetFocusButton();
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicButton|Functions")
 	void ButtonClick();
 
+	UFUNCTION(BlueprintCallable, Category = "ClassicButton|Functions")
+	bool HasFocusButton();
+
+	UFUNCTION(BlueprintCallable, Category = "Themes")
+	void SetTheme(UTexture2D* TextureIcon, FSlateBrush BackgroundColor);
+
 private:
 
+	UFUNCTION()
+	void EnableFocusButton(bool bEnable);
+
 	UPROPERTY()
-	bool hover;
-
-public:
-
-	virtual void EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound) override;
+	bool bFocus;
 
 };

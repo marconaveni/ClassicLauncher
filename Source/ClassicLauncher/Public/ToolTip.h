@@ -7,35 +7,35 @@
 #include "TextImageBlock.h"
 #include "ToolTip.generated.h"
 
+
+class UOverlay;
 /**
- * 
+ *
  */
 UCLASS()
 class CLASSICLAUNCHER_API UToolTip : public UUserWidget
 {
 	GENERATED_BODY()
 
-public:
+protected:
 
 	UToolTip(const FObjectInitializer& ObjectInitializer);
 
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FadeInFadeOutAnimation;
+	UWidgetAnimation* FadeInFadeOutAnimation;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UOverlay* Overlay;
+	UOverlay* Overlay;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextImageBlock* TextBlock;
+	UTextImageBlock* TextBlock;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* BgImage;
+	UImage* BgImage;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* BgImageTop;
+	UImage* BgImageTop;
 
-	UPROPERTY()
-	bool bEnableVisibility = false;
 	UPROPERTY()
 	bool bFocus = false;
 
@@ -45,10 +45,24 @@ public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ToolTip|Variables")
-	FText Text;
+	FName IndexName;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowToolTip(bool bShow);
+
+public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ToolTip|Variables")
+	int32 Index;
 
 	UFUNCTION(BlueprintCallable, Category = "ToolTip|Functions")
-	void SetToolTipVisibility(ESlateVisibility Visible);
+	void SetFocusToolTip(bool bEnable);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ToolTip|Variables")
+	FText Text;
+
+	UFUNCTION(BlueprintPure, Category = "Classic Launcher|Functions")
+	bool GetToolTipFocus();
 
 	UFUNCTION(BlueprintCallable, Category = "Classic Launcher|Functions")
 	void SetTextAppearance(FTextStyle NewTextStyle);
@@ -56,5 +70,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Classic Launcher|Functions")
 	void AlternateToTextImage(bool bEnable, float Size = 24);
 
-	
+	UFUNCTION(BlueprintCallable, Category = "Themes")
+	void SetToolTipThemes(UTexture2D* TextureBackground, UTexture2D* TextureDetail, bool TextImage, float Size, FTextStyle NewTextStyle);
+
 };
