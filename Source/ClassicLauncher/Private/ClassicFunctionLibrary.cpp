@@ -13,7 +13,7 @@
 #include "HAL/Runnable.h"
 #include "Windows/AllowWindowsPlatformTypes.h"
 #include <winreg.h>
-
+#include "UObject/SavePackage.h"
 #include "MusicInterface.h"
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "Blueprint/UserWidget.h"
@@ -736,6 +736,7 @@ UTexture2D* UClassicFunctionLibrary::LoadTexture2DFromFile(const FString& FullFi
 					// Copy texture and update
 					NewTexture->GetPlatformData()->Mips[0].BulkData.Unlock();
 					NewTexture->Filter = GetTextureFilter(Filter);
+					NewTexture->CompressionSettings = TC_EditorIcon;
 					NewTexture->UpdateResource();
 				}
 			}
@@ -833,6 +834,7 @@ void UClassicFunctionLibrary::AsyncLoadTexture2DFromFile(FLoadImageDelegate Out,
 
 							// Copy texture set parameters and update
 							NewTexture->Filter = GetTextureFilter(Filter);
+							NewTexture->CompressionSettings = TC_EditorIcon;
 							NewTexture->UpdateResource();
 							bSuccessfull = true;
 						}
@@ -1178,12 +1180,14 @@ bool UClassicFunctionLibrary::GetFiles(TArray<FString>& Files, FString FullFileP
 
 }
 
-void UClassicFunctionLibrary::CreateTextureFromBGRA(const FString& FullFilePath, EClassicImageFormat ImageFormat, EClassicTextureFilter Filter, int32& Width, int32& Height)
+bool UClassicFunctionLibrary::LoadTextureToAsset(const FString& FullFilePath, EClassicImageFormat ImageFormat, EClassicTextureFilter Filter, int32& Width, int32& Height, const FString FileName)
 {
+	bool bSaved = false;
+
 	if (!FPaths::FileExists(FullFilePath))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("File not found. (%s)"), *FullFilePath);
-		return ;
+		return false;
 	}
 	IImageWrapperModule& ImageWrapperModule = FModuleManager::Get().LoadModuleChecked<IImageWrapperModule>(TEXT("ImageWrapper"));
 
@@ -1195,20 +1199,16 @@ void UClassicFunctionLibrary::CreateTextureFromBGRA(const FString& FullFilePath,
 		EPixelFormat PixelFormat = PF_Unknown;
 		EImageFormat Format = GetJoyImageFormat(ImageFormat);
 
-
 		if (Format != EImageFormat::Invalid)
 		{
 			TSharedPtr<IImageWrapper> ImageWrapper = ImageWrapperModule.CreateImageWrapper(Format);
-
 			int32 BitDepth = 0;
 
 			// Create texture
 			if (ImageWrapper->SetCompressed((void*)Buffer.GetData(), Buffer.Num()))
 			{
-
 				PixelFormat = PF_Unknown;
 				ERGBFormat RGBFormat = ERGBFormat::Invalid;
-
 				BitDepth = ImageWrapper->GetBitDepth();
 
 				Width = ImageWrapper->GetWidth();
@@ -1227,7 +1227,7 @@ void UClassicFunctionLibrary::CreateTextureFromBGRA(const FString& FullFilePath,
 				else
 				{
 					UE_LOG(LogTemp, Warning, TEXT("Error creating texture. Bit depth is unsupported. (%d)"), BitDepth);
-					return ;
+					return false;
 				}
 
 				TArray64<uint8> UncompressedData;
@@ -1237,65 +1237,77 @@ void UClassicFunctionLibrary::CreateTextureFromBGRA(const FString& FullFilePath,
 				const FString& BaseFilename = FPaths::GetBaseFilename(FullFilePath);
 
 				// Load texture
-
 				FString PackageName = TEXT("/Game/ProceduralTextures/");
-				PackageName += TEXT("teste");
-				UPackage* Package = CreatePackage( *PackageName);
+				PackageName += FileName;
+				UPackage* Package = CreatePackage(*PackageName);
 				Package->FullyLoad();
 
-				//NewTexture = CreateUniqueTransient(Width, Height, PixelFormat, *BaseFilename);
-
-				if (Width > 0 && Height > 0 && (Width % GPixelFormats[PixelFormat].BlockSizeX) == 0 && (Height % GPixelFormats[PixelFormat].BlockSizeY) == 0)
-				{
-					NewTexture = NewObject<UTexture2D>(Package, TEXT("teste") , RF_Public | RF_Standalone | RF_MarkAsRootSet);
-
-					NewTexture->SetPlatformData(new FTexturePlatformData());
-					NewTexture->GetPlatformData()->SizeX = Width;
-					NewTexture->GetPlatformData()->SizeY = Height;
-					NewTexture->GetPlatformData()->PixelFormat = PixelFormat;
-
-					// Allocate first mipmap.
-					const int32 NumBlocksX = Width / GPixelFormats[PixelFormat].BlockSizeX;
-					const int32 NumBlocksY = Height / GPixelFormats[PixelFormat].BlockSizeY;
-					FTexture2DMipMap* Mip = new FTexture2DMipMap();
-					NewTexture->GetPlatformData()->Mips.Add(Mip);
-					Mip->SizeX = Width;
-					Mip->SizeY = Height;
-					Mip->BulkData.Lock(LOCK_READ_WRITE);
-					Mip->BulkData.Realloc(NumBlocksX * NumBlocksY * GPixelFormats[PixelFormat].BlockBytes);
-					Mip->BulkData.Unlock();
-				}
+				CreateTexture2DToAsset(Width, Height, PixelFormat, *FileName, NewTexture, Package);
 
 				if (NewTexture)
 				{
 					NewTexture->AddToRoot();
-
 					NewTexture->bNotOfflineProcessed = true;
 					uint8* MipData = static_cast<uint8*>(NewTexture->GetPlatformData()->Mips[0].BulkData.Lock(LOCK_READ_WRITE));
 
-					// Bulk data was already allocated for the correct size when we called CreateTransient above
+					// Bulk data was already allocated for the correct size when we called CreateTexture2DToAsset above
 					FMemory::Memcpy(MipData, UncompressedData.GetData(), NewTexture->GetPlatformData()->Mips[0].BulkData.GetBulkDataSize());
 
 					// Copy texture and update
 					NewTexture->GetPlatformData()->Mips[0].BulkData.Unlock();
 					NewTexture->Filter = GetTextureFilter(Filter);
+					NewTexture->NeverStream = true;
+					NewTexture->CompressionSettings = TC_EditorIcon;
 #if WITH_EDITORONLY_DATA
-					NewTexture->Source.Init(Width, Height, 1, 1, ETextureSourceFormat::TSF_BGRA8, UncompressedData.GetData());
+					NewTexture->Source.Init(Width, Height, 1, 1, TSF_BGRA8, UncompressedData.GetData());
 #endif
 
 					NewTexture->UpdateResource();
-
 					Package->MarkPackageDirty();
 					FAssetRegistryModule::AssetCreated(NewTexture);
 
-					FString PackageFileName = FPackageName::LongPackageNameToFilename(PackageName, FPackageName::GetAssetPackageExtension());
-					bool bSaved = UPackage::SavePackage(Package, NewTexture, EObjectFlags::RF_Public | EObjectFlags::RF_Standalone, *PackageFileName, GError, nullptr, true, true, SAVE_NoError);
+					const FString PackageFileName = FPackageName::LongPackageNameToFilename(PackageName, FPackageName::GetAssetPackageExtension());
+					FSavePackageArgs SaveArgs;
+					SaveArgs.TopLevelFlags = RF_Public | RF_Standalone;
+					SaveArgs.SaveFlags = SAVE_NoError;
+					SaveArgs.Error = GError;
+					SaveArgs.bForceByteSwapping = true;
+					SaveArgs.bWarnOfLongFilename = true;
+					bSaved = UPackage::SavePackage(Package, NewTexture, *PackageFileName, SaveArgs);
 				}
 			}
 		}
 		else
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Error creating texture. Couldn't determine the file format"));
+			return false;
 		}
 	}
+
+	return bSaved;
 }
+
+void UClassicFunctionLibrary::CreateTexture2DToAsset(int32 InSizeX, int32 InSizeY, EPixelFormat InFormat, const FName InName, UTexture2D*& NewTexture, UPackage*& Package)
+{
+	if (InSizeX > 0 && InSizeY > 0 && (InSizeX % GPixelFormats[InFormat].BlockSizeX) == 0 && (InSizeY % GPixelFormats[InFormat].BlockSizeY) == 0)
+	{
+		NewTexture = NewObject<UTexture2D>(Package, InName, RF_Public | RF_Standalone | RF_MarkAsRootSet);
+
+		NewTexture->SetPlatformData(new FTexturePlatformData());
+		NewTexture->GetPlatformData()->SizeX = InSizeX;
+		NewTexture->GetPlatformData()->SizeY = InSizeY;
+		NewTexture->GetPlatformData()->PixelFormat = InFormat;
+
+		// Allocate first mipmap.
+		const int32 NumBlocksX = InSizeX / GPixelFormats[InFormat].BlockSizeX;
+		const int32 NumBlocksY = InSizeY / GPixelFormats[InFormat].BlockSizeY;
+		FTexture2DMipMap* Mip = new FTexture2DMipMap();
+		NewTexture->GetPlatformData()->Mips.Add(Mip);
+		Mip->SizeX = InSizeX;
+		Mip->SizeY = InSizeY;
+		Mip->BulkData.Lock(LOCK_READ_WRITE);
+		Mip->BulkData.Realloc(NumBlocksX * NumBlocksY * GPixelFormats[InFormat].BlockBytes);
+		Mip->BulkData.Unlock();
+	}
+}
+

@@ -17,7 +17,6 @@ public class ClassicLauncher : ModuleRules
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" , "UMG" , "MediaAssets", "TextImageBox" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "EasyXMLParser"});
-		//PrivateDependencyModuleNames.AddRange(new string[] { "TextImageBox" }); 
 
 		// Uncomment if you are using Slate UI
 		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

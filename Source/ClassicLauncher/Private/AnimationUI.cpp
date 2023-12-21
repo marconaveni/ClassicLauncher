@@ -7,7 +7,7 @@
 
 void UAnimationUI::PlayAnimation(UWidget* Target, float Time, FWidgetTransform ToPosition, float ToOpacity, bool bReset, TEnumAsByte<EEasingFunc::Type> FunctionCurve, bool ForceUpdateAnimation, FName CurrentNameAnimation)
 {
-	if (GetWorld()->GetTimerManager().IsTimerActive(AnimationTimerHandle) && !ForceUpdateAnimation)
+	if (GetWorld()->GetTimerManager().IsTimerActive(AnimationTimerHandle) && !ForceUpdateAnimation || Target == nullptr)
 	{
 		return;
 	}
@@ -35,13 +35,17 @@ void UAnimationUI::PlayAnimation(UWidget* Target, float Time, FWidgetTransform T
 
 }
 
-UAnimationUI::UAnimationUI() : FramesPerSeconds(0), Alpha(0), RenderOpacity(1), InitialRenderOpacity(1),
-bResetPosition(false),
-WidgetTarget(nullptr),
-EasingFunc(EEasingFunc::Linear),
-CurrentTime(0),
-TimeAnimation(0.2f),
-NameAnimation(NAME_None)
+UAnimationUI::UAnimationUI()
+	: FramesPerSeconds(0)
+	, Alpha(0)
+	, RenderOpacity(1)
+	, InitialRenderOpacity(1)
+	, bResetPosition(false)
+	, WidgetTarget(nullptr)
+	, EasingFunc(EEasingFunc::Linear)
+    , CurrentTime(0)
+	, TimeAnimation(0.2f)
+	, NameAnimation(NAME_None)
 {
 }
 

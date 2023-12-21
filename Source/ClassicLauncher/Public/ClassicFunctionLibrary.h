@@ -45,7 +45,7 @@ enum class EButtonsGame : uint8
 	DOWN		UMETA(DisplayName = "Down"),
 	A			UMETA(DisplayName = "A / Enter"),
 	B			UMETA(DisplayName = "B / Backspace"),
-	Y			UMETA(DisplayName = "Y / F"), 
+	Y			UMETA(DisplayName = "Y / F"),
 	X			UMETA(DisplayName = "X / S"),
 	LB			UMETA(DisplayName = "LB / Q"),
 	RB			UMETA(DisplayName = "RB / E"),
@@ -61,7 +61,7 @@ enum class EButtonsGame : uint8
 DECLARE_DYNAMIC_DELEGATE_ThreeParams(FLoadImageDelegate, UTexture2D*, TextureOut, int32, Index, bool, Sucesseful);
 
 /**
- * 
+ *
  */
 UCLASS()
 class CLASSICLAUNCHER_API UClassicFunctionLibrary : public UBlueprintFunctionLibrary
@@ -198,11 +198,11 @@ public:
 	static void FormatGameData(TArray<FGameData>& GameDatas, FConfig Config, FGameSystem GameSystem);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static bool FindGameData(TArray<FGameData> datas, FGameData  DataElement, int32& Index , int32 Find = -1);
+	static bool FindGameData(TArray<FGameData> datas, FGameData  DataElement, int32& Index, int32 Find = -1);
 
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static TArray<FGameData> FilterGameData(TArray<FGameData> GameData, EGamesFilter Filter , int32& Num);
+	static TArray<FGameData> FilterGameData(TArray<FGameData> GameData, EGamesFilter Filter, int32& Num);
 
 	//Return filter GameDatas Array favorites are true
 	UFUNCTION()
@@ -296,8 +296,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|File IO")
 	static bool GetFiles(TArray<FString>& Files, FString FullFilePath, TArray<FString> Extension, const bool Recursive = false);
 
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|File IO")
-	static void CreateTextureFromBGRA(const FString& FullFilePath, EClassicImageFormat ImageFormat, EClassicTextureFilter Filter, int32& Width, int32& Height);
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|Assets")
+	static bool LoadTextureToAsset(const FString& FullFilePath, EClassicImageFormat ImageFormat, EClassicTextureFilter Filter, int32& Width, int32& Height, const FString FileName = TEXT("TextureTheme"));
 
+	UFUNCTION()						   
+	static void CreateTexture2DToAsset(int32 InSizeX, int32 InSizeY, EPixelFormat InFormat, const FName InName, UTexture2D*& NewTexture, UPackage*& Package);
 
 };
