@@ -8,6 +8,7 @@
 #include "GameData.h"
 #include "Card.h"
 #include "Cover.h"
+#include "MainInterface.h"
 #include "Blueprint/WidgetTree.h"
 #include "Components/Button.h"
 #include "Components/CanvasPanel.h"
@@ -17,7 +18,7 @@
 
 void ULoopScrollBox::NativeOnInitialized()
 {
-	PrepareScrollBox();
+	//PrepareScrollBox();
 	Super::NativeOnInitialized();
 }
 
@@ -49,6 +50,17 @@ void ULoopScrollBox::NativeConstruct()
 
 void ULoopScrollBox::PrepareScrollBox()
 {
+	if (MainInterfaceReference != nullptr)
+	{
+		MainInterfaceReference->IndexCard = IndexFocusCard;
+	}
+
+	const ESlateVisibility VisibilityCard = (ChildrenCount > 4) ? ESlateVisibility::Visible : ESlateVisibility::Hidden;
+	for (UCard* Card : CardReference)
+	{
+		Card->SetVisibility(VisibilityCard);
+	}
+	CardsDefault();
 	OnPrepareScrollBox();
 }
 
@@ -141,6 +153,28 @@ void ULoopScrollBox::SetCardValues(UCard* Card, FGameData& GameData)
 		Card->PathImage = GameData.imageFormated;
 		Card->SetPlayers(GameData.players);
 		Card->SetFavorite(GameData.favorite, false);
+	}
+}
+
+void ULoopScrollBox::CardsDefault()
+{
+	for (int32 Index = 6; Index < 10; Index++)
+	{
+		if (!CardReference.IsValidIndex(Index)) continue;
+
+		UCard* CurrentCard = CardReference[Index];
+		CurrentCard->SetFocusCard(false, false);
+		CurrentCard->SetRenderOpacity(1);
+		CurrentCard->SetRenderTransform(FWidgetTransform());
+
+		if(Index - 6 >= ChildrenCount)
+		{
+			CurrentCard->SetVisibility(ESlateVisibility::Hidden);
+		}
+		else
+		{
+			CurrentCard->SetVisibility(ESlateVisibility::Visible);
+		}
 	}
 }
 

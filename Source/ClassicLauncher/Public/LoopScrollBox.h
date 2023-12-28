@@ -14,6 +14,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateCard, int32, Index);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateIndexStart, int32, Index);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateIndexFinal, int32, Index);
 
+class UMainInterface;
 
 /**
  *
@@ -47,6 +48,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	TArray<UCover*> CoverReference;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
+	UMainInterface* MainInterfaceReference;
+	
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Subclass")
@@ -125,6 +129,9 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
 	void SetCardValues(UCard* Card, UPARAM(ref) FGameData& GameData);
 
+	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
+	void CardsDefault();
+	
 	UFUNCTION()
 	void ConstructCover();
 

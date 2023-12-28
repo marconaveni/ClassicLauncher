@@ -20,7 +20,6 @@
 #include "ClassicConfigurations.h"
 #include "ClassicGameMode.h"
 #include "Cover.h"
-#include "Components/ScaleBox.h"
 #include "EngineUtils.h"
 #include "MessageBalloon.h"
 #include "LoopScrollBox.h"
@@ -115,6 +114,7 @@ void UMainInterface::NativeOnInitialized()
 	}
 
 	ClassicMediaPlayerReference->MainInterfaceReference = this;
+	LoopScroll->MainInterfaceReference = this;
 	CanvasPanelScreen->SetRenderOpacity(0);
 }
 
@@ -766,7 +766,7 @@ void UMainInterface::ResetCards(const bool bAnimationBarTop, const bool bAnimati
 	IndexCard = 0;
 	IndexBottom = -1;
 	PositionY = EPositionY::CENTER;
-	SetButtonsIconInterfaces(EPositionY::CENTER);
+	//SetButtonsIconInterfaces(EPositionY::CENTER);
 	SetPlayAnimation(TEXT("LoadListGameReverse"));
 }
 
@@ -1005,8 +1005,8 @@ void UMainInterface::SetVisibiltyDebugButton(UButton* Button)
 
 void UMainInterface::SetImageBottom()
 {
-	ScaleBoxImage->SetRenderOpacity(1);
-	ScaleBoxVideo->SetRenderOpacity(0);
+	ImgImageBottom->SetRenderOpacity(1);
+	ImgVideo->SetRenderOpacity(0);
 
 	if (ImgVideo == nullptr || ImgImageBottom == nullptr ||
 		!GameData.IsValidIndex(IndexCard) || IndexCard == IndexBottom) return;
