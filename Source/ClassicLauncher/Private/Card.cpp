@@ -41,7 +41,7 @@ void UCard::SetPath(FString value)
 {
 	PathImage = value;
 }
-
+ 
 void UCard::SetPlayers(FString NumberPlayers)
 {
 	if (PlayersImage.Max() > 3) {

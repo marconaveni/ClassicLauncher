@@ -97,11 +97,14 @@ public:
 	UImage* ImgVideo;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UHeader* Header;
+	UHeader* Header;
+
+	// UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	// UImage* BackgroundBottomBar;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UImage* BackgroundBottomBar;
-
+	UFooter* Footer;
+	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UImage* BgTitle;
 
@@ -110,10 +113,13 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UImage* StartSystemBackground;
+	
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UCanvasPanel* CanvasPanelRoot;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UImage* BgBottom;
-
+	UCanvasPanel* CanvasPanelScreen;
+	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UCanvasPanel* CanvasPanelSystemSelect;
 
@@ -341,8 +347,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle BackButtonTimerHandle;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
-	FTimerHandle InitializeTimerHandle;
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
+	FTimerHandle InitializeTimerHandle;*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle StartVideoTimerHandle;
@@ -449,8 +455,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void RunningGame(bool bIsRun);
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void SetRenderOpacityList();
+	/*UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void SetRenderOpacityList();*/
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void ResetCards(const bool bAnimationBarTop, const bool bAnimationShowSystem);
@@ -541,7 +547,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void SetPlayAnimation(FName AnimationName);
-
+	
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void ImageOutThumb(UTexture2D* TextureOut, int32 Index, bool Sucesseful);
 

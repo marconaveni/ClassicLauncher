@@ -44,7 +44,7 @@ public:
     FDelegateFinishAnimationUI OnFinishAnimationTrigger;
 
 
-    UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "AnimationUI|Functions", meta = (AdvancedDisplay = "Curves, bBind, bReset"))
+    UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "AnimationUI|Functions", meta = (AdvancedDisplay = "Curves, bBind, bReset" , ToOpacity="1" , Time="0.1"))
     void PlayAnimation( 
 		UWidget* Widget,
         float Time, 

@@ -55,6 +55,7 @@ void UFrame::SetFrameCenterPosition(const int32 PositionCenter)
 	FrameIndexCenter = PositionCenter;
 
 	ImageFrameCenter->SetRenderScale(FVector2D(1.0f, 1.0f));
+	ImageFrameCenter->SetRenderOpacity(1.0f);
 	ImageFrameCenter->SetVisibility(ESlateVisibility::Visible);
 	ImageFrameTop->SetVisibility(ESlateVisibility::Hidden);
 

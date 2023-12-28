@@ -2,6 +2,8 @@
 
 
 #include "MainInterface.h"
+
+#include "AnimationUILoader.h"
 #include "Card.h"
 #include "ClassicButtonSystem.h"
 #include "Components/Image.h"
@@ -27,9 +29,9 @@
 #include "TextBoxScroll.h"
 #include "TextImageBlock.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
+#include "Components/CanvasPanel.h"
 #include "UI/Layout/ToolTipsLayout.h"
 #include "UI/Layout/Header.h"
-//#include "Misc/OutputDeviceNull.h"
 
 #define LOCTEXT_NAMESPACE "ButtonsSelection"
 
@@ -113,7 +115,7 @@ void UMainInterface::NativeOnInitialized()
 	}
 
 	ClassicMediaPlayerReference->MainInterfaceReference = this;
-	SetRenderOpacityList();
+	CanvasPanelScreen->SetRenderOpacity(0);
 }
 
 void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -204,7 +206,7 @@ void UMainInterface::LoadGamesList()
 		ConfigurationData.DefaultStartSystem = FString::FromInt(CountSystem);
 		UClassicFunctionLibrary::SaveConfig(ConfigurationData);
 		GameDataIndex = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas;
-		GetWorld()->GetTimerManager().SetTimer(InitializeTimerHandle, this, &UMainInterface::OnLoadGamesList, 0.1f, false, -1);
+		OnLoadGamesList();
 	}
 }
 
@@ -237,20 +239,20 @@ void UMainInterface::LoadImages(const int32 DistanceIndex)
 		FirstIndex = FMath::Clamp(FirstIndex, 0, GameData.Num() - 1);
 		LastIndex = FMath::Clamp(LastIndex, 0, GameData.Num() - 1);
 
-		int32 IndexLoad = -1, IndexUnLoad = -1;
+		int32 IndexLoad = -1, IndexUnload = -1;
 		if (ENavigationButton == EButtonsGame::RIGHT || ENavigationButton == EButtonsGame::RB)
 		{
-			IndexUnLoad = FirstIndex;
+			IndexUnload = FirstIndex;
 			IndexLoad = LastIndex;
 		}
 		else if (ENavigationButton == EButtonsGame::LEFT || ENavigationButton == EButtonsGame::LB)
 		{
-			IndexUnLoad = LastIndex;
+			IndexUnload = LastIndex;
 			IndexLoad = FirstIndex;
 		}
-		if (IndexLoad != -1 && IndexUnLoad != -1)
+		if (IndexLoad != -1 && IndexUnload != -1)
 		{
-			LoopScroll->CoverReference[IndexUnLoad]->SetCoverImage(ImageNull, 1, 1);
+			LoopScroll->CoverReference[IndexUnload]->SetCoverImage(ImageNull, 1, 1);
 			OnLoadImages(IndexLoad, GameData[IndexLoad].imageFormated);
 			UE_LOG(LogTemp, Warning, TEXT("FirstIndex %d  IndexCard %d LastIndex %d"), FirstIndex, IndexCard, LastIndex);
 		}
@@ -260,7 +262,7 @@ void UMainInterface::LoadImages(const int32 DistanceIndex)
 
 void UMainInterface::ShowGames()
 {
-	PlayAnimationForward(LoadListGame);
+	SetPlayAnimation(TEXT("LoadListGame"));
 	bInputEnable = true;
 	PrepareThemes();
 	OnShowGames(); //BlueprintImplementableEvent
@@ -482,7 +484,9 @@ void UMainInterface::SetNavigationFocusUpBottom()
 			ClassicMediaPlayerReference->StopVideo();
 			ClassicMediaPlayerReference->ResumeMusic();
 			WBPTextBoxScroll->CancelAutoScroll();
-			StopAnimation(FadeChangeImageToVideo);
+			UAnimationUILoader* AnimationLoaderUISubSystem = GetWorld()->GetSubsystem<UAnimationUILoader>();
+			UAnimationUI* Animation = AnimationLoaderUISubSystem->GetAnimation("FadeChangeImageToVideo");
+			Animation->ClearAnimation();
 			UE_LOG(LogTemp, Warning, TEXT("Close frame bottom"));
 		}
 		else
@@ -625,7 +629,7 @@ void UMainInterface::OnClickSystem(int32 Value)
 			LoopScroll->SetCenterFocus();
 			SetButtonsIconInterfaces(PositionY);
 			WBPFrame->SetFrameCenterPosition(WBPFrame->FrameIndexCenter);
-			PlayAnimationReverse(ShowSystem);
+			SetPlayAnimation(TEXT("ShowSystemReverse"));
 			Header->SetFocusButton();
 			return;
 		}
@@ -751,35 +755,19 @@ void UMainInterface::RunningGame(const bool bIsRun)
 	}
 }
 
-void UMainInterface::SetRenderOpacityList() {
-
-	TextTitleGame->SetRenderOpacity(0.f);
-	BgTitle->SetRenderOpacity(0.f);
-	LoopScroll->SetRenderOpacity(0.f);
-	WBPFrame->SetRenderOpacity(0.f);
-}
-
 void UMainInterface::ResetCards(const bool bAnimationBarTop, const bool bAnimationShowSystem)
 {
 	bInputEnable = false;
-
-	PlayAnimationReverse(LoadListGame);
+	
+	SetPlayAnimation(TEXT("ShowSystemReverse"));
 	Header->SetFocusButton();
-
 	Focus = EFocus::MAIN;
 	GameData.Empty();
 	IndexCard = 0;
 	IndexBottom = -1;
 	PositionY = EPositionY::CENTER;
-
-	if (bAnimationShowSystem)
-	{
-		PlayAnimationReverse(ShowSystem);
-	}
-
 	SetButtonsIconInterfaces(EPositionY::CENTER);
-	FTimerHandle LoadListHandle;
-	GetWorld()->GetTimerManager().SetTimer(LoadListHandle, this, &UMainInterface::LoadGamesList, 0.3f, false, -1);
+	SetPlayAnimation(TEXT("LoadListGameReverse"));
 }
 
 void UMainInterface::Clear()
@@ -830,10 +818,7 @@ void UMainInterface::OnClickHeader(int32 Index)
 
 void UMainInterface::OnFocusHeader(int32 Index)
 {
-	if (Index != 0 && bDelayTooltip )
-	{
-		return;
-	}
+	if (Index != 0 && bDelayTooltip ) return;
 	ToolTips->OnFocus(WBPFrame->FrameIndexTop);
 }
 
@@ -845,7 +830,7 @@ void UMainInterface::OnLostFocusHeader(int32 Index)
 void UMainInterface::OnClickSelectSystem()
 {
 	Focus = EFocus::SYSTEM;
-	PlayAnimationForward(ShowSystem);
+	SetPlayAnimation(TEXT("ShowSystem"));
 	PositionY = EPositionY::TOP;
 	WBPSystemsList->SetFocusItem(EButtonsGame::NONE, CountLocationY, ButtonSystemReferences);
 }
@@ -853,7 +838,7 @@ void UMainInterface::OnClickSelectSystem()
 void UMainInterface::OnClickConfigurations()
 {
 	Focus = EFocus::CONFIG;
-	PlayAnimationForward(AnimationShowConfiguration);
+	SetPlayAnimation(TEXT("AnimationShowConfiguration"));
 	WBPClassicConfigurationsInterface->SetFocusSelect();
 }
 
@@ -894,7 +879,7 @@ void UMainInterface::OnClickInfo()
 {
 	if (Focus == EFocus::MAIN)
 	{
-		PlayAnimationForward(ShowInfo);
+		SetPlayAnimation(TEXT("ShowInfo"));
 		Focus = EFocus::INFO;
 	}
 }
@@ -967,7 +952,7 @@ void UMainInterface::CloseMenus()
 {
 	if (Focus == EFocus::SYSTEM)
 	{
-		PlayAnimationReverse(ShowSystem);
+		SetPlayAnimation(TEXT("ShowSystemReverse"));
 		Header->SetFocusButton(1);
 		SetFrame();
 		Focus = EFocus::MAIN;
@@ -987,7 +972,7 @@ void UMainInterface::CloseMenus()
 	}
 	else if (Focus == EFocus::INFO)
 	{
-		PlayAnimationReverse(ShowInfo);
+		SetPlayAnimation(TEXT("ShowInfoReverse"));
 		Header->SetFocusButton(4);
 		SetFrame();
 		Focus = EFocus::MAIN;
@@ -1000,7 +985,7 @@ void UMainInterface::CloseMenus()
 
 void UMainInterface::CloseBackMenu()
 {
-	PlayAnimationReverse(AnimationShowConfiguration);
+	SetPlayAnimation(TEXT("AnimationShowConfigurationReverse"));
 	Header->SetFocusButton(2);
 	SetFrame();
 }
@@ -1060,7 +1045,7 @@ void UMainInterface::StartVideo()
 		const FString PathVideo = GameData[IndexCard].videoFormated;
 		if (FPaths::FileExists(PathVideo))
 		{
-			PlayAnimationForward(FadeChangeImageToVideo);
+			SetPlayAnimation(TEXT("FadeChangeImageToVideo"));
 			ClassicMediaPlayerReference->PlayVideo(PathVideo);
 		}
 	}

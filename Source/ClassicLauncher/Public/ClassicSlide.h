@@ -8,6 +8,9 @@
 #include "TextImageBlock.h"
 #include "ClassicSlide.generated.h"
 
+class UButton;
+
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDelegateFocusSlide);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDelegateFocusLostSlide);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateSlide, int32, value);
@@ -40,6 +43,8 @@ public:
 	class UImage* BgBackground;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextImageBlock* TxtLabel;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UButton* Click;
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicSlide|Functions")
 	void SetFocusSlide();

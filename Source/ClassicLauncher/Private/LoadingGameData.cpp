@@ -274,7 +274,8 @@ void ULoadingGameData::RemoveLoadingScreenToParent()
 void ULoadingGameData::SetToRestartWidgets()
 {
 	MainInterfaceReference->Clear();
-	MainInterfaceReference->PlayAnimationReverse(MainInterfaceReference->AnimationShowConfiguration);
+	//MainInterfaceReference->PlayAnimationReverse(MainInterfaceReference->AnimationShowConfiguration);
+	MainInterfaceReference->SetPlayAnimation(TEXT("AnimationShowConfigurationReverse"));
 	MainInterfaceReference->PlayAnimationReverse(MainInterfaceReference->LoadListGame);
 	MainInterfaceReference->Header->SetFocusButton();
 	MainInterfaceReference->WBPFrame->SetFrameCenterPosition(1);

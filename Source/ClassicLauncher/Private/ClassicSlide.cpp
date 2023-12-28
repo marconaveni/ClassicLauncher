@@ -6,6 +6,7 @@
 #include "Components/Image.h"
 #include "Arrow.h"
 #include "TextImageBlock.h"
+#include "Components/Button.h"
 #include "Kismet/GameplayStatics.h"
 
 void UClassicSlide::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -13,7 +14,7 @@ void UClassicSlide::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	Super::NativeTick(MyGeometry, InDeltaTime);
 	if (SliderVol != nullptr) {
 		//equivale doonce blueprint
-		if (SliderVol->HasKeyboardFocus()) {
+		if (Click->HasKeyboardFocus()) {
 			if (!Hover)
 			{
 				BgBackground->SetVisibility(ESlateVisibility::Visible);
@@ -54,7 +55,7 @@ void UClassicSlide::NativePreConstruct()
 
 void UClassicSlide::SetFocusSlide()
 {
-	SliderVol->SetKeyboardFocus();
+	Click->SetKeyboardFocus();
 }
 
 void UClassicSlide::OnSlideValue(float Value)
