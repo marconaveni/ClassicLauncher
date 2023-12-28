@@ -104,6 +104,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UFooter* Footer;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UFooterDetails* FooterDetails;
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UImage* BgTitle;

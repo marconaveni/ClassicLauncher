@@ -29,6 +29,7 @@
 #include "TextImageBlock.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Components/CanvasPanel.h"
+#include "UI/Layout/FooterDetails.h"
 #include "UI/Layout/ToolTipsLayout.h"
 #include "UI/Layout/Header.h"
 
@@ -132,7 +133,7 @@ void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		}
 		if (PositionY == EPositionY::BOTTOM)
 		{
-			WBPTextBoxScroll->SetNewScroll(ENavigationLastButton, 0.0025f);
+			FooterDetails->TextBoxScroll->SetNewScroll(ENavigationLastButton, 0.0025f);
 		}
 	}
 
@@ -331,11 +332,11 @@ FReply UMainInterface::NativeOnMouseWheel(const FGeometry& InGeometry, const FPo
 	{
 		if (ScrollScale > 0)
 		{
-			WBPTextBoxScroll->SetNewScroll(EButtonsGame::SCROLLUP, 0.0025f * 4);
+			FooterDetails->TextBoxScroll->SetNewScroll(EButtonsGame::SCROLLUP, 0.0025f * 4);
 		}
 		else if (ScrollScale < 0)
 		{
-			WBPTextBoxScroll->SetNewScroll(EButtonsGame::SCROLLDOWN, 0.0025f * 4);
+			FooterDetails->TextBoxScroll->SetNewScroll(EButtonsGame::SCROLLDOWN, 0.0025f * 4);
 		}
 	}
 	return Super::NativeOnMouseWheel(InGeometry, InMouseEvent);
@@ -476,11 +477,16 @@ void UMainInterface::SetNavigationFocusUpBottom()
 {
 	if (PositionY == EPositionY::BOTTOM)
 	{
-		if (BackgroundVideo->GetRenderOpacity() == 0)
+		FooterDetails->CloseFooter(PositionY, ClassicMediaPlayerReference);
+		if(PositionY == EPositionY::CENTER)
 		{
+			SetPlayAnimation(TEXT("ShowDescBottomInfoReverse"));
+		}
+		/*if (BackgroundVideo->GetRenderOpacity() == 0)
+		{
+			PositionY = EPositionY::CENTER;
 			GetWorld()->GetTimerManager().ClearTimer(StartVideoTimerHandle);
 			SetPlayAnimation(TEXT("ShowDescBottomInfoReverse"));
-			PositionY = EPositionY::CENTER;
 			ClassicMediaPlayerReference->StopVideo();
 			ClassicMediaPlayerReference->ResumeMusic();
 			WBPTextBoxScroll->CancelAutoScroll();
@@ -492,7 +498,7 @@ void UMainInterface::SetNavigationFocusUpBottom()
 		else
 		{
 			SetPlayAnimation(TEXT("VideoAnimationReverse"));
-		}
+		}*/
 	}
 	else if (PositionY == EPositionY::CENTER)
 	{
@@ -506,24 +512,28 @@ void UMainInterface::SetNavigationFocusDownBottom()
 {
 	if (PositionY == EPositionY::CENTER)
 	{
-		if (PositionY != EPositionY::BOTTOM)
+		FooterDetails->OpenFooter(GameData[IndexCard], IndexCard,PositionY, ClassicMediaPlayerReference);
+		SetPlayAnimation(TEXT("ShowDescBottomInfo"));
+		
+		/*if (PositionY != EPositionY::BOTTOM)
 		{
+			PositionY = EPositionY::BOTTOM;
 			GetWorld()->GetTimerManager().ClearTimer(StartVideoTimerHandle);
 			StartVideoTimerHandle.Invalidate();
-			PositionY = EPositionY::BOTTOM;
 			SetImageBottom();
 			WBPTextBoxScroll->StartScroll();
 			SetPlayAnimation(TEXT("ShowDescBottomInfo"));
 			GetWorld()->GetTimerManager().SetTimer(StartVideoTimerHandle, this, &UMainInterface::StartVideo, 5.0f, false, -1);
 			UE_LOG(LogTemp, Warning, TEXT("Open frame bottom"));
-		}
+		}*/
 	}
 	else if (PositionY == EPositionY::BOTTOM)
 	{
-		if (BackgroundVideo->GetRenderOpacity() == 0)
+		FooterDetails->ExpandVideo();
+		/*if (BackgroundVideo->GetRenderOpacity() == 0)
 		{
 			SetPlayAnimation(TEXT("VideoAnimation"));
-		}
+		}*/
 	}
 	else
 	{
@@ -548,7 +558,7 @@ void UMainInterface::SetTitle(int32 Index)
 		IndexCard = Index;
 		const FString Title = GameData[IndexCard].nameFormated;
 		TextTitleGame->SetText(FText::FromString(Title));
-		WBPTextBoxScroll->SetText(GameData[IndexCard].descFormated);
+		FooterDetails->TextBoxScroll->SetText(GameData[IndexCard].descFormated);
 		SetButtonsIconInterfaces(PositionY);
 	}
 }
@@ -986,7 +996,7 @@ void UMainInterface::CloseMenus()
 void UMainInterface::CloseBackMenu()
 {
 	SetPlayAnimation(TEXT("AnimationShowConfigurationReverse"));
-	Header->SetFocusButton(2);
+	Header->SetFocusButton(2);    //todo mudar para lambda
 	SetFrame();
 }
 

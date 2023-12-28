@@ -8,6 +8,7 @@
 #include "MainInterface.h"
 #include "Components/Image.h"
 #include "Kismet/GameplayStatics.h"
+#include "UI/Layout/FooterDetails.h"
 
 #define LOCTEXT_NAMESPACE "PlayerMusic"
 
@@ -161,7 +162,7 @@ void AClassicMediaPlayer::OnEndVideo()
 {
 	if (MainInterfaceReference != nullptr)
 	{
-		MainInterfaceReference->SetImageBottom();
+		MainInterfaceReference->FooterDetails->SetImage();
 		UE_LOG(LogTemp, Warning, TEXT("Call Function MainInterface in Classic Media Player"));
 	}
 	ResumeMusic();

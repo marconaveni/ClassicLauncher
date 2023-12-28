@@ -37,6 +37,7 @@ class UScaleBox;
 class UToolTipsLayout;
 class UFooter;
 class UHeader;
+class UFooterDetails;
 
 /**
  * 
