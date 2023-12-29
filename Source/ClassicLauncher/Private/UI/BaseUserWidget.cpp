@@ -96,11 +96,11 @@ FReply UBaseUserWidget::NativeOnMouseMove(const FGeometry& InGeometry, const FPo
 				FVector2f Position;
 				UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetMousePosition(Position.X,Position.Y);
 				GetOwningPlayer()->SetMouseLocation(Position.X + 1, Position.Y);
-				UE_LOG(LogTemp, Warning, TEXT("hide mouse after 5 seconds"));
+				//UE_LOG(LogTemp, Warning, TEXT("hide mouse after 5 seconds"));
 			}
 			, 5, false);
 
-			UE_LOG(LogTemp, Warning, TEXT("mouse will hide "));
+			//UE_LOG(LogTemp, Warning, TEXT("mouse will hide "));
 		}
 	}
 	return Super::NativeOnMouseMove(InGeometry, InMouseEvent);

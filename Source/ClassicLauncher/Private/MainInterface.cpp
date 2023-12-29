@@ -179,7 +179,6 @@ void UMainInterface::ExternRunApp()
 		int32 Proc;
 		UClassicFunctionLibrary::CreateProc(Proc, TEXT("taskkill  "), TextArguments, false, true, 0, TEXT(""));
 	}
-
 	UClassicFunctionLibrary::PauseProcess(0.125f);
 }
 
@@ -190,6 +189,10 @@ void UMainInterface::LoadGamesList()
 	if (CountSystem == 0)
 	{
 		WBPFrame->FrameIndexTop = 1;
+		if (GEngine)
+		{
+			GEngine->ForceGarbageCollection(true);
+		}
 	}
 
 	int32 NumFavorites = 0;
@@ -585,11 +588,11 @@ void UMainInterface::OpenExternalProcess(FString ExecutablePath, TArray<FString>
 	RunningGame(true);
 	if (GameSystems[CountSystem].Executable.Equals(TEXT("steam")))
 	{
-		GetWorld()->GetTimerManager().SetTimer(DelayRunAppTimerHandle, this, &UMainInterface::SteamRunApp, 0.016f, true, 10);
+		GetWorld()->GetTimerManager().SetTimer(DelayRunAppTimerHandle, this, &UMainInterface::SteamRunApp, 0.064f, true, 10);
 	}
 	else
 	{
-		GetWorld()->GetTimerManager().SetTimer(DelayRunAppTimerHandle, this, &UMainInterface::ExternRunApp, 0.016f, true, 10);
+		GetWorld()->GetTimerManager().SetTimer(DelayRunAppTimerHandle, this, &UMainInterface::ExternRunApp, 0.064f, true, 10);
 	}
 }
 
@@ -721,14 +724,23 @@ void UMainInterface::RunningGame(const bool bIsRun)
 	}
 	else
 	{
-		ClassicMediaPlayerReference->PlaylistMusic();
-		GameMode->GameSettingsInit();
-		bInputEnable = true;
 		ProcessID = 0;
-		PlayAnimationReverse(FadeStartSystem);
+		GameMode->GameSettingsInit();
 		GetWorld()->GetTimerManager().ClearTimer(DelayRunAppTimerHandle);
 		DelayRunAppTimerHandle.Invalidate();
-		SetFrame();
+		ENavigationButton = EButtonsGame::NONE;
+
+		FTimerHandle ReturnHandle;
+		GetWorld()->GetTimerManager().SetTimer(
+			ReturnHandle,
+			[&]()
+			{
+				ClassicMediaPlayerReference->PlaylistMusic();
+				PlayAnimationReverse(FadeStartSystem);
+				SetFrame();
+				bInputEnable = true;
+			},0.18f ,false);
+
 	}
 }
 
