@@ -44,10 +44,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MessageBalloon|Functions")
 	void ShowMessage(FText Message, float Time = 5.0f);
 
+	UFUNCTION()
+	void CancelMessage();
+	
 private:
 	UFUNCTION()
 	void StartMessage();
 
 	UFUNCTION()
 	void EndMessage();
+	
 };

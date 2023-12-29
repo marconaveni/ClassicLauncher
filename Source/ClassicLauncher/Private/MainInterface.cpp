@@ -482,23 +482,6 @@ void UMainInterface::SetNavigationFocusUpBottom()
 		{
 			SetPlayAnimation(TEXT("ShowDescBottomInfoReverse"));
 		}
-		/*if (BackgroundVideo->GetRenderOpacity() == 0)
-		{
-			PositionY = EPositionY::CENTER;
-			GetWorld()->GetTimerManager().ClearTimer(StartVideoTimerHandle);
-			SetPlayAnimation(TEXT("ShowDescBottomInfoReverse"));
-			ClassicMediaPlayerReference->StopVideo();
-			ClassicMediaPlayerReference->ResumeMusic();
-			WBPTextBoxScroll->CancelAutoScroll();
-			UAnimationUILoader* AnimationLoaderUISubSystem = GetWorld()->GetSubsystem<UAnimationUILoader>();
-			UAnimationUI* Animation = AnimationLoaderUISubSystem->GetAnimation("FadeChangeImageToVideo");
-			Animation->ClearAnimation();
-			UE_LOG(LogTemp, Warning, TEXT("Close frame bottom"));
-		}
-		else
-		{
-			SetPlayAnimation(TEXT("VideoAnimationReverse"));
-		}*/
 	}
 	else if (PositionY == EPositionY::CENTER)
 	{
@@ -514,26 +497,10 @@ void UMainInterface::SetNavigationFocusDownBottom()
 	{
 		FooterDetails->OpenFooter(GameData[IndexCard], IndexCard,PositionY, ClassicMediaPlayerReference);
 		SetPlayAnimation(TEXT("ShowDescBottomInfo"));
-		
-		/*if (PositionY != EPositionY::BOTTOM)
-		{
-			PositionY = EPositionY::BOTTOM;
-			GetWorld()->GetTimerManager().ClearTimer(StartVideoTimerHandle);
-			StartVideoTimerHandle.Invalidate();
-			SetImageBottom();
-			WBPTextBoxScroll->StartScroll();
-			SetPlayAnimation(TEXT("ShowDescBottomInfo"));
-			GetWorld()->GetTimerManager().SetTimer(StartVideoTimerHandle, this, &UMainInterface::StartVideo, 5.0f, false, -1);
-			UE_LOG(LogTemp, Warning, TEXT("Open frame bottom"));
-		}*/
 	}
 	else if (PositionY == EPositionY::BOTTOM)
 	{
 		FooterDetails->ExpandVideo();
-		/*if (BackgroundVideo->GetRenderOpacity() == 0)
-		{
-			SetPlayAnimation(TEXT("VideoAnimation"));
-		}*/
 	}
 	else
 	{
@@ -575,7 +542,7 @@ void UMainInterface::OnClickLaunch()
 			GetWorld()->GetTimerManager().SetTimer(LauncherTimerHandle, [&]()
 			{
 				CountSystem = IndexCard + 1;   //CountSystem = CountLocationY;
-				ResetCards(false, false);
+				ResetCards();
 			}
 			, 0.015f, false, 0.1f);
 		}
@@ -645,7 +612,7 @@ void UMainInterface::OnClickSystem(int32 Value)
 		}
 		SetLastPositions(false);
 		CountSystem = Value;   //CountSystem = CountLocationY;
-		ResetCards(true, true);
+		ResetCards();
 		OnClickOnSystem();
 	}
 }
@@ -765,7 +732,7 @@ void UMainInterface::RunningGame(const bool bIsRun)
 	}
 }
 
-void UMainInterface::ResetCards(const bool bAnimationBarTop, const bool bAnimationShowSystem)
+void UMainInterface::ResetCards()
 {
 	bInputEnable = false;
 	
@@ -774,10 +741,10 @@ void UMainInterface::ResetCards(const bool bAnimationBarTop, const bool bAnimati
 	Focus = EFocus::MAIN;
 	GameData.Empty();
 	IndexCard = 0;
-	IndexBottom = -1;
+	FooterDetails->Clear();
 	PositionY = EPositionY::CENTER;
-	//SetButtonsIconInterfaces(EPositionY::CENTER);
 	SetPlayAnimation(TEXT("LoadListGameReverse"));
+	MessageDisplay->CancelMessage();
 }
 
 void UMainInterface::Clear()
@@ -797,8 +764,6 @@ void UMainInterface::Clear()
 	CountSystem = 0;
 	CountLocationY = 0;
 	SpeedScroll = TargetSpeedScroll;
-	IndexBottom = -1;
-
 	GameData.Empty();
 	GameDataIndex.Empty();
 }
@@ -882,7 +847,7 @@ void UMainInterface::OnClickFavorites()
 	NavigationGame(EButtonsGame::DOWN);
 	SetLastPositions(true);
 	Header->SetFocusButton();
-	ResetCards(false, false);
+	ResetCards();
 }
 
 void UMainInterface::OnClickInfo()
@@ -908,7 +873,7 @@ void UMainInterface::OnClickBackAction()
 			ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas = GameDataIndex;
 			SetLastPositions(false);
 			CountSystem = 0;
-			ResetCards(false, false);
+			ResetCards();
 			return;
 		}
 
@@ -976,7 +941,15 @@ void UMainInterface::CloseMenus()
 		}
 		else
 		{
-			GetWorld()->GetTimerManager().SetTimer(BackButtonTimerHandle, this, &UMainInterface::CloseBackMenu, 0.1f, false, -1);
+			GetWorld()->GetTimerManager().SetTimer(
+				BackButtonTimerHandle,
+				[&]()
+				{
+					SetPlayAnimation(TEXT("AnimationShowConfigurationReverse"));
+					Header->SetFocusButton(2);    
+					SetFrame();
+				},
+				0.1f, false, -1);
 			Focus = EFocus::MAIN;
 		}
 	}
@@ -993,13 +966,6 @@ void UMainInterface::CloseMenus()
 	}
 }
 
-void UMainInterface::CloseBackMenu()
-{
-	SetPlayAnimation(TEXT("AnimationShowConfigurationReverse"));
-	Header->SetFocusButton(2);    //todo mudar para lambda
-	SetFrame();
-}
-
 void UMainInterface::ShowMessage(const FText Message, const float InRate)
 {
 	MessageDisplay->ShowMessage(Message, InRate);
@@ -1011,67 +977,6 @@ void UMainInterface::SetVisibiltyDebugButton(UButton* Button)
 	Button->SetVisibility(ESlateVisibility::Visible);
 	bDebug = true;
 #endif
-}
-
-void UMainInterface::SetImageBottom()
-{
-	ImgImageBottom->SetRenderOpacity(1);
-	ImgVideo->SetRenderOpacity(0);
-
-	if (ImgVideo == nullptr || ImgImageBottom == nullptr ||
-		!GameData.IsValidIndex(IndexCard) || IndexCard == IndexBottom) return;
-
-
-	FString ImagePath = TEXT("");
-
-	if (FPaths::FileExists(GameData[IndexCard].thumbnailFormated))
-	{
-		ImagePath = GameData[IndexCard].thumbnailFormated;
-	}
-	else if (FPaths::FileExists(GameData[IndexCard].imageFormated))
-	{
-		ImagePath = GameData[IndexCard].imageFormated;
-	}
-
-	if (ImagePath != TEXT(""))
-	{
-		const EClassicImageFormat Format = UClassicFunctionLibrary::GetFormatImage(ImagePath);
-		FLoadImageDelegate ImageLoadedDelegate;
-		ImageLoadedDelegate.BindDynamic(this, &UMainInterface::UMainInterface::ImageOutThumb);
-		UClassicFunctionLibrary::AsyncLoadTexture2DFromFile(ImageLoadedDelegate, ImagePath, IndexCard, Format, EClassicTextureFilter::DEFAULT);
-	}
-	else
-	{
-		ImageOutThumb(nullptr, IndexCard, false);
-	}
-}
-
-void UMainInterface::StartVideo()
-{
-	if (PositionY != EPositionY::BOTTOM) return;
-
-	if (GameData.IsValidIndex(IndexCard))
-	{
-		const FString PathVideo = GameData[IndexCard].videoFormated;
-		if (FPaths::FileExists(PathVideo))
-		{
-			SetPlayAnimation(TEXT("FadeChangeImageToVideo"));
-			ClassicMediaPlayerReference->PlayVideo(PathVideo);
-		}
-	}
-}
-
-void UMainInterface::ImageOutThumb(UTexture2D* TextureOut, int32 Index, bool Sucesseful)
-{
-	if (TextureOut == nullptr || !Sucesseful)
-	{
-		TextureOut = ImageBottomDefault;
-	}
-	FSlateBrush NewBrush;
-	NewBrush.SetImageSize(FVector2D(TextureOut->GetSizeX() * 2, TextureOut->GetSizeY() * 2));
-	NewBrush.SetResourceObject(TextureOut);
-	ImgImageBottom->SetBrush(NewBrush);
-	IndexBottom = Index;
 }
 
 #undef LOCTEXT_NAMESPACE

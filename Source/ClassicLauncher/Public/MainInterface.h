@@ -88,19 +88,7 @@ public:
 	UTextImageBlock* TextTitleGame;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UImage* BgBottomMenu;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UImage* ImgImageBottom;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UImage* ImgVideo;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UHeader* Header;
-
-	// UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	// UImage* BackgroundBottomBar;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UFooter* Footer;
@@ -110,9 +98,6 @@ public:
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UImage* BgTitle;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UImage* BackgroundVideo;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UImage* StartSystemBackground;
@@ -131,9 +116,6 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UCanvasPanel* CanvasPanelConfiguration;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UCanvasPanel* CanvasPanelBottom;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UClassicInfoInterface* WBPInfo;
@@ -158,47 +140,10 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	ULoopScrollBox* LoopScroll;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UTextBoxScroll* WBPTextBoxScroll;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UScaleBox* ScaleBoxImage;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UScaleBox* ScaleBoxVideo;
-
-	//animations WidgetBind
-
-public:
-
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	UWidgetAnimation* ShowDescBottomInfo;
-
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	UWidgetAnimation* ShowSystem;
-
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	UWidgetAnimation* AnimationShowConfiguration;
-
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	UWidgetAnimation* BarTop;
-
+	
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	UWidgetAnimation* FadeStartSystem;
-
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	UWidgetAnimation* ShowInfo;
-
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	UWidgetAnimation* LoadListGame;
-
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	UWidgetAnimation* VideoAnimation;
-
-	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	UWidgetAnimation* FadeChangeImageToVideo;
-
+	
 	//subclass and references
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
@@ -305,12 +250,6 @@ public:
 	int32 CountLocationY;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	int32 IndexBottom;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	UTexture2D* ImageBottomDefault;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	UTexture2D* ImageNull;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Components")
@@ -349,12 +288,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle BackButtonTimerHandle;
-
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
-	FTimerHandle InitializeTimerHandle;*/
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
-	FTimerHandle StartVideoTimerHandle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle LoadImagesTimerHandle;
@@ -417,9 +350,6 @@ public:
 	void OnNavigationGame(EButtonsGame Navigate);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void StartVideo();
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void SetDirection(EButtonsGame Navigate);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
@@ -458,11 +388,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void RunningGame(bool bIsRun);
 
-	/*UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void SetRenderOpacityList();*/
-
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void ResetCards(const bool bAnimationBarTop, const bool bAnimationShowSystem);
+	void ResetCards();
 
 	UFUNCTION()
 	void Clear();
@@ -495,8 +422,6 @@ private:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void SetHeaderButtonFocus();
-
-	//bindbuttons
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickHeader(int32 Index);
@@ -531,13 +456,7 @@ private:
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void SetImageBottom();
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void CloseMenus();
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void CloseBackMenu();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void ShowMessage(const FText Message, const float InRate);
@@ -551,7 +470,5 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void SetPlayAnimation(FName AnimationName);
 	
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void ImageOutThumb(UTexture2D* TextureOut, int32 Index, bool Sucesseful);
 
 };

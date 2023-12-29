@@ -21,6 +21,12 @@ void UMessageBalloon::ShowMessage(const FText Message, const float Time)
 	GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &UMessageBalloon::StartMessage, GetWorld()->GetDeltaSeconds(), false, -1);
 }
 
+void UMessageBalloon::CancelMessage()
+{
+	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+	CanvasMessage->SetRenderTranslation(FVector2d());
+}
+
 void UMessageBalloon::StartMessage()
 {
 	UAnimationUILoader* AnimationLoaderUISubSystem = GetWorld()->GetSubsystem<UAnimationUILoader>();
