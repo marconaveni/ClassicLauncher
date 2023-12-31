@@ -278,12 +278,12 @@ void UMainInterface::PrepareThemes()
 	OnPrepareThemes(); //BlueprintImplementableEvent
 }
 
-FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
+void UMainInterface::NativePressedInput(const FKey& InKey)
 {
-	const EButtonsGame Input = UClassicFunctionLibrary::GetInputButton(InKeyEvent);
+	Super::NativePressedInput(InKey);
+	const EButtonsGame Input = UClassicFunctionLibrary::GetInputButtonsGame(InKey);
 	if (bInputEnable)
 	{
-		KeyEvent = InKeyEvent;
 		bKeyPressed = (Input != EButtonsGame::A && Input != EButtonsGame::NONE);
 
 		if (ENavigationLastButton == EButtonsGame::NONE && Input != EButtonsGame::A)
@@ -295,17 +295,17 @@ FReply UMainInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const
 			ENavigationButton = Input;
 			HoldFavorite();
 		}
-		return Super::NativeOnPreviewKeyDown(InGeometry, InKeyEvent);
 	}
-
-	MultiInput.SetInput(Input);
-	return Super::NativeOnPreviewKeyDown(InGeometry, InKeyEvent);
+	else
+	{
+		MultiInput.SetInput(Input);
+	}
 }
 
-FReply UMainInterface::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
+void UMainInterface::NativeReleaseInput(const FKey& InKey)
 {
-	KeyEvent = InKeyEvent;
-	const EButtonsGame Input = UClassicFunctionLibrary::GetInputButton(InKeyEvent);
+	Super::NativeReleaseInput(InKey);
+	const EButtonsGame Input = UClassicFunctionLibrary::GetInputButtonsGame(InKey);
 	ENavigationLastButton = EButtonsGame::NONE;
 
 	if (bInputEnable)
@@ -324,7 +324,6 @@ FReply UMainInterface::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEven
 	}
 
 	MultiInput.SetAllNoneInput();
-	return Super::NativeOnKeyUp(InGeometry, InKeyEvent);
 }
 
 FReply UMainInterface::NativeOnMouseWheel(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
@@ -347,7 +346,7 @@ FReply UMainInterface::NativeOnMouseWheel(const FGeometry& InGeometry, const FPo
 
 FReply UMainInterface::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	OnPreventLoseFocus();
+	//OnPreventLoseFocus();
 	return  Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 }
 
@@ -357,8 +356,9 @@ void UMainInterface::OnPreventLoseFocus()
 	{
 		if (PositionY == EPositionY::TOP)
 		{
-			ENavigationButton = EButtonsGame::NONE;
-			SetFrame();
+			const int32 Index = WBPFrame->FrameIndexTop;
+			Header->SetFocusButton(Index, false);
+			ToolTips->OnFocus(Index);
 			return;
 		}
 		LoopScroll->SetCenterFocus();
@@ -367,12 +367,12 @@ void UMainInterface::OnPreventLoseFocus()
 	{
 		if (ButtonSystemReferences.IsValidIndex(CountLocationY))
 		{
-			ButtonSystemReferences[CountLocationY]->Click->SetKeyboardFocus();
+			ButtonSystemReferences[CountLocationY]->SetFocusButton(false);
 		}
 	}
 	else if (Focus == EFocus::CONFIG)
 	{
-		WBPClassicConfigurationsInterface->SetFocusSelect();
+		WBPClassicConfigurationsInterface->SetFocusSelect(false);
 	}
 }
 
@@ -418,9 +418,10 @@ void UMainInterface::NavigationMain(EButtonsGame Navigate)
 {
 	ENavigationButton = Navigate;
 	TimerDelayInput = 0.14f;
-
-	if (ENavigationButton == EButtonsGame::LEFT || ENavigationButton == EButtonsGame::RIGHT ||
-		ENavigationButton == EButtonsGame::LB || ENavigationButton == EButtonsGame::RB)
+	const bool LeftRight = ENavigationButton == EButtonsGame::LEFT || ENavigationButton == EButtonsGame::RIGHT;
+	const bool LeftRightTrigger = ENavigationButton == EButtonsGame::LB || ENavigationButton == EButtonsGame::RB;
+	
+	if (LeftRight || LeftRightTrigger)
 	{
 		if (PositionY == EPositionY::CENTER)
 		{
@@ -430,7 +431,7 @@ void UMainInterface::NavigationMain(EButtonsGame Navigate)
 				SetDirection(ENavigationButton);
 			}
 		}
-		else if (PositionY == EPositionY::TOP)
+		else if (PositionY == EPositionY::TOP && LeftRight)
 		{
 			SetFrame();
 		}
@@ -783,7 +784,7 @@ void UMainInterface::Clear()
 void UMainInterface::SetHeaderButtonFocus()
 {
 	const int32 Index = WBPFrame->FrameIndexTop;
-	Header->SetFocusButton(Index);
+	Header->SetFocusButton(Index, true);
 	ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas = GameDataIndex;
 	if (Index == 4)
 	{
@@ -793,6 +794,8 @@ void UMainInterface::SetHeaderButtonFocus()
 
 void UMainInterface::OnClickHeader(int32 Index)
 {
+	if (PositionY == EPositionY::BOTTOM) return;
+	PositionY = EPositionY::TOP;
 	switch (Index)
 	{
 	case 1: OnClickSelectSystem(); break;
@@ -805,7 +808,16 @@ void UMainInterface::OnClickHeader(int32 Index)
 
 void UMainInterface::OnFocusHeader(int32 Index)
 {
-	if (Index != 0 && bDelayTooltip ) return;
+	if(GetMouseEnable())
+	{
+		PositionY = EPositionY::TOP;
+		ToolTips->OnFocus(Index);
+		Header->AnimationFocus(true);
+		WBPFrame->FrameIndexTop = Index;
+		WBPFrame->SetFrame(Index, PositionY);
+		SetButtonsIconInterfaces(PositionY);
+	}
+	if (Index == 0) return;
 	ToolTips->OnFocus(WBPFrame->FrameIndexTop);
 }
 
@@ -826,7 +838,7 @@ void UMainInterface::OnClickConfigurations()
 {
 	Focus = EFocus::CONFIG;
 	SetPlayAnimation(TEXT("AnimationShowConfiguration"));
-	WBPClassicConfigurationsInterface->SetFocusSelect();
+	WBPClassicConfigurationsInterface->SetFocusSelect(false);
 }
 
 void UMainInterface::OnClickFavorites()

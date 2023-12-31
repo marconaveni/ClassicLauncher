@@ -37,6 +37,16 @@ void ULoadingGameData::CreateWidgets()
 		// Create the widget and store it.
 		MainInterfaceReference = CreateWidget<UMainInterface>(GameplayStatics, MainInterfaceClass);
 		LoadingScreenReference = CreateWidget<ULoadingScreen>(GameplayStatics, LoadingScreenClass);
+
+		if (MainInterfaceReference != nullptr)
+		{
+			//let add it to the view port
+			MainInterfaceReference->AddToViewport(0);
+		}
+		if (LoadingScreenReference != nullptr)
+		{
+			LoadingScreenReference->AddToViewport(1);
+		}
 	}
 	else
 	{
@@ -206,7 +216,7 @@ void ULoadingGameData::PrepareToSaveNewGameList()
 			UE_LOG(LogTemp, Warning, TEXT("Saved"));
 			AsyncTask(ENamedThreads::GameThread, [this]()
 			{
-				MainInterfaceReference->RemoveFromParent();
+				//MainInterfaceReference->RemoveFromParent();
 				MessageShow.Broadcast(LOCTEXT("LogSuccessfullyGameList", "Game list update successfully wait..."));
 				GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &ULoadingGameData::LoadGameSystems, 0.1f, false, DELAY + 3.0f);
 			});
@@ -227,12 +237,11 @@ void ULoadingGameData::AddMainInterfaceToViewPort()
 
 	if (MainInterfaceReference != nullptr)
 	{
-		//let add it to the view port
-		MainInterfaceReference->AddToViewport(0);
+		MainInterfaceReference->SetVisibility(ESlateVisibility::Visible);
 		//Loading Game list in main interface
 		MainInterfaceReference->LoadGamesList();
 		//Show the Cursor.
-		GameplayStatics->bShowMouseCursor = false;
+		GameplayStatics->bShowMouseCursor = true;
 
 		//Input mode settings. 
 		FInputModeGameAndUI InputMode;
@@ -243,7 +252,7 @@ void ULoadingGameData::AddMainInterfaceToViewPort()
 		GameplayStatics->SetInputMode(InputMode);
 
 		//Mouse focus mode 
-		UGameplayStatics::SetViewportMouseCaptureMode(GameplayStatics, EMouseCaptureMode::CaptureDuringRightMouseDown);
+		UGameplayStatics::SetViewportMouseCaptureMode(GameplayStatics, EMouseCaptureMode::NoCapture);
 	}
 	else
 	{
@@ -255,7 +264,7 @@ void ULoadingGameData::AddLoadingScreenToViewPort()
 {
 	if (LoadingScreenReference != nullptr)
 	{
-		LoadingScreenReference->AddToViewport(1);
+		LoadingScreenReference->SetVisibility(ESlateVisibility::Visible);
 	}
 	else
 	{
@@ -267,7 +276,7 @@ void ULoadingGameData::RemoveLoadingScreenToParent()
 {
 	if (LoadingScreenReference != nullptr)
 	{
-		LoadingScreenReference->RemoveFromParent();
+		LoadingScreenReference->SetVisibility(ESlateVisibility::Hidden);
 	}
 }
 
@@ -275,7 +284,7 @@ void ULoadingGameData::SetToRestartWidgets()
 {
 	MainInterfaceReference->Clear();
 	MainInterfaceReference->SetPlayAnimation(TEXT("AnimationShowConfigurationReverse"));
-	MainInterfaceReference->SetPlayAnimation(TEXT("LoadListGameReverse"));
+	//MainInterfaceReference->SetPlayAnimation(TEXT("LoadListGameReverse"));
 	MainInterfaceReference->Header->SetFocusButton();
 	MainInterfaceReference->WBPFrame->SetFrameCenterPosition(1);
 	GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &ULoadingGameData::RestartWidgets, 0.1f, false, DELAY + 1.0f);

@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DoOnce.h"
 #include "Blueprint/UserWidget.h"
 #include "BaseUserWidget.generated.h"
 
@@ -24,7 +23,6 @@ class UTextBoxScroll;
 class UClassicGameInstance;
 class UClassicButtonSystem;
 class AClassicMediaPlayer;
-class AClassicLibretroTV;
 class UCanvasPanelSlot;
 class AClassicGameMode;
 class UCard;
@@ -48,7 +46,10 @@ class CLASSICLAUNCHER_API UBaseUserWidget : public UUserWidget
 	GENERATED_BODY()
 
 protected:
-
+	
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UImage* MouseHide;
+	
 	UPROPERTY()
 	FTimerHandle TickTimerHandle;
 
@@ -58,8 +59,9 @@ protected:
 	UPROPERTY()
 	FTimerHandle MouseHandle;
 
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UImage* MouseHide;
+	UPROPERTY()
+	bool bInputDelay;
+	
 
 	UBaseUserWidget(const FObjectInitializer& ObjectInitializer);
 
@@ -68,17 +70,21 @@ protected:
 	virtual void NativePreConstruct() override;
 	virtual void NativeOnInitialized() override;
 	virtual FReply NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
+	virtual void NativePressedInput(const FKey& InKey);
 	virtual FReply NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
+	virtual void NativeReleaseInput(const FKey& InKey);
 	virtual FReply NativeOnMouseWheel(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual void OnAnimationStartedPlaying(UUMGSequencePlayer& Player) override;
 	virtual void OnAnimationFinishedPlaying(UUMGSequencePlayer& Player) override;
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual FReply NativeOnMouseMove(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-	virtual void TimeTick();
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCosmetic, Category = "User Interface")
-	void OnTimeTick();
-
+	UFUNCTION(BlueprintCallable,  Category = "Input")
+	void PressedInput(const FKey InKey);
+	
+	UFUNCTION(BlueprintCallable,  Category = "Input")
+	void ReleaseInput(const FKey InKey);
+	
 	UFUNCTION(BlueprintCallable, Category = "User Interface")
 	void DelayInput(const float Delay);
 
@@ -88,12 +94,9 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "User Interface")
 	void CancelDelay();
 
-	UPROPERTY()
-	FDoOnce DoOnceHideCursor;
-
-	UPROPERTY()
-	bool bInputDelay;
-
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	bool GetMouseEnable();
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
 	float TimerDelayInput;
 

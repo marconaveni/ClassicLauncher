@@ -1,4 +1,4 @@
-// Copyright 2022 Marco Naveni. All Rights Reserved.
+// Copyright 2023 Marco Naveni. All Rights Reserved.
 
 
 #include "ClassicButtonSystem.h"
@@ -20,10 +20,9 @@ void UClassicButtonSystem::NativeTick(const FGeometry& MyGeometry, float InDelta
 		//equivale doonce blueprint
 		if (Click->HasKeyboardFocus()) {
 			if (!Hover) {
-				BgBackground->SetVisibility(ESlateVisibility::Visible);
-				WBPArrow->SetVisibility(ESlateVisibility::Visible);
+				BgBackground->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+				WBPArrow->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 				OnFocusTrigger.Broadcast();
-				UGameplayStatics::PlaySound2D(this, SoundSelect);
 			}
 			Hover = true;
 		}
@@ -53,6 +52,15 @@ void UClassicButtonSystem::NativePreConstruct()
 {
 	Text->SetText(ButtonText);
 	Super::NativePreConstruct();
+}
+
+void UClassicButtonSystem::SetFocusButton(const bool bIsSound)
+{
+	Click->SetKeyboardFocus();
+	if (bIsSound)
+	{
+		UGameplayStatics::PlaySound2D(this, SoundSelect);
+	}
 }
 
 void UClassicButtonSystem::SetText(FText NewText)

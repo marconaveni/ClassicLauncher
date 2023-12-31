@@ -46,30 +46,34 @@ void UHeader::OnLostFocusClick(int32 Index)
 }
 
 
-void UHeader::SetFocusButton(const int32 Index)
+void UHeader::SetFocusButton(const int32 Index, const bool bIsSound)
 {
 
 	bool bIsFocus = false;
 
-	if (Index > 0)
+	if (bIsSound)
 	{
 		UGameplayStatics::PlaySound2D(this, SoundNavigation);
+	}
+
+	if (Index > 0)
+	{
 		bIsFocus = true;
 	}
 
 	switch (Index)
 	{
 	case 1:
-		SelectSystem->SetFocusButton();
+		SelectSystem->SetFocus();
 		break;
 	case 2:
-		Configurations->SetFocusButton();
+		Configurations->SetFocus();
 		break;
 	case 3:
-		Filter->SetFocusButton();
+		Filter->SetFocus();
 		break;
 	case 4:
-		MoreInformation->SetFocusButton();
+		MoreInformation->SetFocus();
 		break;
 	default:;
 	}
@@ -99,12 +103,12 @@ void UHeader::EnableButtonsHeader(const int32 Index) const
 {
 	if (Index == 0)
 	{
-		Filter->SetColorAndOpacity(FLinearColor(1, 1, 1, 0.5f));
-		MoreInformation->SetColorAndOpacity(FLinearColor(1, 1, 1, 0.5f));
+		Filter->EnableButton(false);
+		MoreInformation->EnableButton(false);
 		return;
 	}
-	Filter->SetColorAndOpacity(FLinearColor(1, 1, 1, 1));
-	MoreInformation->SetColorAndOpacity(FLinearColor(1, 1, 1, 1));
+	Filter->EnableButton(true);
+	MoreInformation->EnableButton(true);
 }
 
 void UHeader::SetThemeButton(UTexture2D* TextureMain, UTexture2D* TextureConfig, UTexture2D* TextureFilter, UTexture2D* TextureInformation, FSlateBrush BackgroundColor)

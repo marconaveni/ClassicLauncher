@@ -7,8 +7,8 @@
 #include "AnimationUI.h"
 #include "Card.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegate, FString , value);
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDelegateTrigger, EUINavigation, value, UCard*, selfCard);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegate, int32 , Index);
+
 /**
  * 
  */
@@ -24,9 +24,6 @@ class CLASSICLAUNCHER_API UCard : public UUserWidget
 
 public:
 
-	//UPROPERTY(BlueprintAssignable, BlueprintCallable)
-	//FDelegateTrigger OnNavigate;
-
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FDelegate OnClickTrigger;
 
@@ -34,6 +31,7 @@ public:
 	UCard(const FObjectInitializer& ObjectInitializer);
 
 	virtual void NativePreConstruct() override;
+	virtual void NativeConstruct() override;
 	virtual bool Initialize() override;
 	virtual FReply NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 
@@ -50,10 +48,10 @@ public:
 	int32 MapIndex;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card|Variables")
+	int32 IndexCard;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card|Variables")
 	TArray<FSlateBrush> PlayersImage;
-
-	UFUNCTION(BlueprintCallable,  Category = "Card|Functions")
-	void SetPath(FString value);
 	
 	UFUNCTION(BlueprintCallable,  Category = "Card|Functions")
 	void SetPlayers(FString NumberPlayers);
@@ -61,6 +59,8 @@ public:
 	UFUNCTION(BlueprintCallable,  Category = "Card|Functions")
 	void SetFocusCard(bool bEnable, bool bAnimate = true, bool bReset = false, float TimeAnimation = 0.2f);
 
+	UFUNCTION(BlueprintCallable, Category = "Card|Functions")
+	bool BindButton();
 
 	UFUNCTION(BlueprintCallable,  Category = "Card|Functions")
 	void SetThemeCard(UTexture2D* texture);
@@ -79,9 +79,6 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Card|Functions")
 	bool HasFocusCard() const; 
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void ClickButton();
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UButton* BtnClick;

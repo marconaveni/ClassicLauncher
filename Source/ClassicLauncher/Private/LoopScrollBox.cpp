@@ -16,12 +16,6 @@
 #include "Components/Scrollbox.h"
 
 
-void ULoopScrollBox::NativeOnInitialized()
-{
-	//PrepareScrollBox();
-	Super::NativeOnInitialized();
-}
-
 void ULoopScrollBox::Clear()
 {
 	Speed = 30.0f;
@@ -40,12 +34,18 @@ void ULoopScrollBox::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 void ULoopScrollBox::NativePreConstruct()
 {
 	Super::NativePreConstruct();
-	ConstructCards();
 }
 
 void ULoopScrollBox::NativeConstruct()
 {
 	Super::NativeConstruct();
+}
+
+void ULoopScrollBox::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+	SetIsFocusable(true);
+	ConstructCards();
 }
 
 void ULoopScrollBox::PrepareScrollBox()
@@ -199,13 +199,16 @@ void ULoopScrollBox::ConstructCards()
 		UE_LOG(LogTemp, Error, TEXT("CardClassReference is Empty"));
 		return;
 	}
-
+	
 	CardReference.Empty();
 	CanvasCards->ClearChildren();
+	bBindCard = true;
 
 	for (int32 i = 0; i < 16; i++)
 	{
 		UCard* Card = WidgetTree->ConstructWidget<UCard>(CardClassReference);
+		Card->IndexCard = i;
+		Card->OnClickTrigger.AddDynamic(this, &ULoopScrollBox::OnClickButton);
 		CardReference.Add(Card);
 		CanvasCards->AddChild(Card);
 		UCanvasPanelSlot* CanvasCard = Cast<UCanvasPanelSlot>(Card->Slot);
@@ -222,6 +225,11 @@ FIndexPositions ULoopScrollBox::GetScrollOffSet() const
 	Position.LastIndexFocus = IndexFocusCard;
 	Position.LastIndexOffSet = PositionOffsetFocus;
 	return Position;
+}
+
+void ULoopScrollBox::OnClickButton(int32 Index)
+{
+	UE_LOG(LogTemp, Warning, TEXT("%d"), Index);
 }
 
 void ULoopScrollBox::DirectionRight()

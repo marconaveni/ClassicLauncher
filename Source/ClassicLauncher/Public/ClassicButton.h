@@ -42,15 +42,16 @@ public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual bool Initialize() override;
 	virtual void NativePreConstruct() override;
-
+	virtual FReply NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
+	virtual FReply NativeOnFocusReceived(const FGeometry& InGeometry, const FFocusEvent& InFocusEvent) override;
+	virtual void NativeOnFocusLost(const FFocusEvent& InFocusEvent) override;
+	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButton|Variables")
 	FButtonStyle StyleButton;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButton|Variables")
 	int32 Index;
-
-	UFUNCTION(BlueprintCallable, Category = "ClassicButton|Functions")
-	void SetFocusButton();
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicButton|Functions")
 	void ButtonClick();
@@ -61,10 +62,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Themes")
 	void SetTheme(UTexture2D* TextureIcon, FSlateBrush BackgroundColor);
 
+	UFUNCTION()
+	void EnableButton(const bool bEnable);
+	
 private:
 
 	UFUNCTION()
-	void EnableFocusButton(bool bEnable);
+	void SetFocusButton(bool bEnable);
 
 	UPROPERTY()
 	bool bFocus;

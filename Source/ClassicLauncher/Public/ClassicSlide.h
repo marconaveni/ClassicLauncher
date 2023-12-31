@@ -47,7 +47,7 @@ public:
 	class UButton* Click;
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicSlide|Functions")
-	void SetFocusSlide();
+	void SetFocusSlide(const bool bIsSound = true);
 	UFUNCTION(BlueprintCallable, Category = "ClassicSlide|Functions")
 	void OnSlideValue(float Value);
 	UFUNCTION(BlueprintCallable, Category = "ClassicSlide|Functions")

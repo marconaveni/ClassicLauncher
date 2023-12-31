@@ -21,6 +21,11 @@ class CLASSICLAUNCHER_API UClassicButtonSystem : public UUserWidget, public IMus
 {
 	GENERATED_BODY()
 
+protected:
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UButton* Click;
+	
 public:
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
@@ -31,9 +36,6 @@ public:
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FDelegateClick OnClickTrigger;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* Click;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UArrow* WBPArrow;
@@ -50,6 +52,9 @@ public:
 	virtual bool Initialize() override;
 	virtual void NativePreConstruct() override;
 
+	UFUNCTION(BlueprintCallable, Category = "ClassicButtonSystem|Functions")
+	void SetFocusButton(const bool bIsSound = true);
+	
 	UFUNCTION(BlueprintCallable, Category = "ClassicButtonSystem|Functions")
 	void SetText(FText NewText);
 

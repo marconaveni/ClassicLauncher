@@ -18,42 +18,34 @@
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "Blueprint/UserWidget.h"
 
-EUINavigation UClassicFunctionLibrary::GetInputnavigation(const FKeyEvent& InKeyEvent)
+EButtonsGame UClassicFunctionLibrary::GetInputButtonsGame(const FKey& InKey)
 {
-	const FString KeyEvent = InKeyEvent.GetKey().ToString();
+	const FString KeyName = InKey.ToString();
 
-	if (KeyEvent == "Left" || KeyEvent == "Gamepad_DPad_Left" || KeyEvent == "Gamepad_LeftStick_Left") return EUINavigation::Left;
-	else if (KeyEvent == "Right" || KeyEvent == "Gamepad_DPad_Right" || KeyEvent == "Gamepad_LeftStick_Right") return EUINavigation::Right;
-	else if (KeyEvent == "Up" || KeyEvent == "Gamepad_DPad_Up" || KeyEvent == "Gamepad_LeftStick_Up") 	return EUINavigation::Up;
-	else if (KeyEvent == "Down" || KeyEvent == "Gamepad_DPad_Down" || KeyEvent == "Gamepad_LeftStick_Down") return EUINavigation::Down;
-	else return EUINavigation::Invalid;
+	if (KeyName == "Left" || KeyName == "Gamepad_DPad_Left" || KeyName == "Gamepad_LeftStick_Left") return EButtonsGame::LEFT;
+	if (KeyName == "Right" || KeyName == "Gamepad_DPad_Right" || KeyName == "Gamepad_LeftStick_Right") return EButtonsGame::RIGHT;
+	if (KeyName == "Up" || KeyName == "Gamepad_DPad_Up" || KeyName == "Gamepad_LeftStick_Up") return EButtonsGame::UP;
+	if (KeyName == "Down" || KeyName == "Gamepad_DPad_Down" || KeyName == "Gamepad_LeftStick_Down") return EButtonsGame::DOWN;
+	if (KeyName == "Enter" || KeyName == "Gamepad_FaceButton_Bottom") return EButtonsGame::A;
+	if (KeyName == "Backspace" || KeyName == "Escape" || KeyName == "Gamepad_FaceButton_Right") return EButtonsGame::B;
+	if (KeyName == "F" || KeyName == "Gamepad_FaceButton_Top") return EButtonsGame::Y;
+	if (KeyName == "S" || KeyName == "Gamepad_FaceButton_Left") return EButtonsGame::X;
+	if (KeyName == "Q" || KeyName == "Gamepad_LeftShoulder") return EButtonsGame::LB;
+	if (KeyName == "E" || KeyName == "Gamepad_RightShoulder") return EButtonsGame::RB;
+	if (KeyName == "A" || KeyName == "Gamepad_LeftTrigger") return EButtonsGame::LT;
+	if (KeyName == "D" || KeyName == "Gamepad_RightTrigger") return EButtonsGame::RT;
+	if (KeyName == "LeftControl" || KeyName == "Gamepad_Special_Right") return EButtonsGame::START;
+	if (KeyName == "Alt" || KeyName == "Gamepad_Special_Left") return EButtonsGame::SELECT;
+	if (KeyName == "Mouse_Scroll_Up" || KeyName == "Gamepad_RightStick_Up") return EButtonsGame::SCROLLUP;
+	if (KeyName == "Mouse_Scroll_Down" || KeyName == "Gamepad_RightStick_Down") return EButtonsGame::SCROLLDOWN;
+	if (KeyName == "M" || KeyName == "Gamepad_RightThumbstick") return EButtonsGame::M;
 
+	return EButtonsGame::NONE;
 }
 
 EButtonsGame UClassicFunctionLibrary::GetInputButton(const FKeyEvent& InKeyEvent)
 {
-	const FString KeyEvent = InKeyEvent.GetKey().ToString();
-
-	if (KeyEvent == "Left" || KeyEvent == "Gamepad_DPad_Left" || KeyEvent == "Gamepad_LeftStick_Left")	return EButtonsGame::LEFT;
-	else if (KeyEvent == "Right" || KeyEvent == "Gamepad_DPad_Right" || KeyEvent == "Gamepad_LeftStick_Right")	return EButtonsGame::RIGHT;
-	else if (KeyEvent == "Up" || KeyEvent == "Gamepad_DPad_Up" || KeyEvent == "Gamepad_LeftStick_Up")	return EButtonsGame::UP;
-	else if (KeyEvent == "Down" || KeyEvent == "Gamepad_DPad_Down" || KeyEvent == "Gamepad_LeftStick_Down")	return EButtonsGame::DOWN;
-	else if (KeyEvent == "Enter" || KeyEvent == "Gamepad_FaceButton_Bottom")	return EButtonsGame::A;
-	else if (KeyEvent == "Backspace" || KeyEvent == "Escape" || KeyEvent == "Gamepad_FaceButton_Right")	return EButtonsGame::B;
-	else if (KeyEvent == "F" || KeyEvent == "Gamepad_FaceButton_Top")	return EButtonsGame::Y;
-	else if (KeyEvent == "S" || KeyEvent == "Gamepad_FaceButton_Left")	return EButtonsGame::X;
-	else if (KeyEvent == "Q" || KeyEvent == "Gamepad_LeftShoulder")	return EButtonsGame::LB;
-	else if (KeyEvent == "E" || KeyEvent == "Gamepad_RightShoulder")  return EButtonsGame::RB;
-	else if (KeyEvent == "A" || KeyEvent == "Gamepad_LeftTrigger")  return EButtonsGame::LT;
-	else if (KeyEvent == "D" || KeyEvent == "Gamepad_RightTrigger")  return EButtonsGame::RT;
-	else if (KeyEvent == "LeftControl" || KeyEvent == "Gamepad_Special_Right")  return EButtonsGame::START;
-	else if (KeyEvent == "Alt" || KeyEvent == "Gamepad_Special_Left")  return EButtonsGame::SELECT;
-	else if (KeyEvent == "Mouse_Scroll_Up" || KeyEvent == "Gamepad_RightStick_Up")  return EButtonsGame::SCROLLUP;
-	else if (KeyEvent == "Mouse_Scroll_Down" || KeyEvent == "Gamepad_RightStick_Down")  return EButtonsGame::SCROLLDOWN;
-	else if (KeyEvent == "M" || KeyEvent == "Gamepad_RightThumbstick")  return EButtonsGame::M;
-
-	else return EButtonsGame::NONE;
-
+	return GetInputButtonsGame(InKeyEvent.GetKey());
 }
 
 void UClassicFunctionLibrary::SortGameDate(TArray<FGameData>& GameDatas)

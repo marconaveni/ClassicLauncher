@@ -14,13 +14,13 @@ void UClassicSlide::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	Super::NativeTick(MyGeometry, InDeltaTime);
 	if (SliderVol != nullptr) {
 		//equivale doonce blueprint
-		if (Click->HasKeyboardFocus()) {
+		if (Click->HasKeyboardFocus() || SliderVol->HasKeyboardFocus()) {
 			if (!Hover)
 			{
-				BgBackground->SetVisibility(ESlateVisibility::Visible);
-				WBPArrow->SetVisibility(ESlateVisibility::Visible);
+				BgBackground->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+				WBPArrow->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 				OnFocusTriggerSlide.Broadcast();
-				UGameplayStatics::PlaySound2D(this, SoundNavigation);
+				
 			}
 			Hover = true;
 		}
@@ -53,9 +53,13 @@ void UClassicSlide::NativePreConstruct()
 	SetTextLabel(TxtTextLabel);
 }
 
-void UClassicSlide::SetFocusSlide()
+void UClassicSlide::SetFocusSlide(const bool bIsSound)
 {
 	Click->SetKeyboardFocus();
+	if (bIsSound)
+	{
+		UGameplayStatics::PlaySound2D(this, SoundNavigation);
+	}
 }
 
 void UClassicSlide::OnSlideValue(float Value)

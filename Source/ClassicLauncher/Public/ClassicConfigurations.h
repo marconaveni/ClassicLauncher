@@ -82,7 +82,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void SetIndexFocus(EButtonsGame Input);
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
-	void SetFocusSelect();
+	void SetFocusSelect(const bool bIsSound = true);
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void Delay();
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")

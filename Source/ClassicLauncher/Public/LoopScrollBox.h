@@ -68,6 +68,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	EButtonsGame InputDirection;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
+	bool bBindCard;
+	
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
@@ -163,6 +166,9 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "LoopScrollBox|Functions")
 	FIndexPositions GetScrollOffSet() const;
+
+	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
+	void OnClickButton(int32 Index);
 
 	virtual void EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound) override;
 

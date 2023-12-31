@@ -10,6 +10,7 @@ UCard::UCard(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 	, PathImage(TEXT(""))
 	, MapIndex(0)
+	, IndexCard(0)
 	, Favorite(nullptr)
 	, bFocus(false)
 {
@@ -20,16 +21,23 @@ void UCard::NativePreConstruct()
 	Super::NativePreConstruct();
 }
 
+void UCard::NativeConstruct()
+{
+	Super::NativeConstruct();
+	BindButton();
+}
+
 bool UCard::Initialize()
 {
+	const bool Success = Super::Initialize();
+	//if (!Success)  return false;
+	
 	AnimationFrame = NewObject<UAnimationUI>(this, UAnimationUI::StaticClass());
 	AnimationCard = NewObject<UAnimationUI>(this, UAnimationUI::StaticClass());
 	AnimationFadeCard = NewObject<UAnimationUI>(this, UAnimationUI::StaticClass());
 	AnimationFavorite = NewObject<UAnimationUI>(this, UAnimationUI::StaticClass());
-
-
-	bool Success = Super::Initialize();
-	return false;
+	
+	return Success;
 }
 
 FReply UCard::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
@@ -37,10 +45,6 @@ FReply UCard::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEven
 	return Super::NativeOnPreviewKeyDown(InGeometry, InKeyEvent);
 }
 
-void UCard::SetPath(FString value)
-{
-	PathImage = value;
-}
  
 void UCard::SetPlayers(FString NumberPlayers)
 {
@@ -85,6 +89,13 @@ void UCard::SetFocusCard(bool bEnable, bool bAnimate, bool bReset, float TimeAni
 	}
 }
 
+bool UCard::BindButton()
+{
+	if (!ensure(BtnClick != nullptr)) return false;
+	BtnClick->OnClicked.AddDynamic(this, &UCard::ButtonClick);
+	return true;
+}
+
 void UCard::SetThemeCard(UTexture2D* texture)
 {
 }
@@ -123,8 +134,7 @@ void UCard::SetCardImage(UTexture2D* texture, int32 width, int32 height)
 
 void UCard::ButtonClick()
 {
-	ClickButton();
-	OnClickTrigger.Broadcast(PathImage);
+	OnClickTrigger.Broadcast(IndexCard);
 }
 
 void UCard::AnimationFade()

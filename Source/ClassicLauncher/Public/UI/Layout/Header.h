@@ -90,7 +90,7 @@ public:
 	USoundBase* SoundNavigation;
 
 	UFUNCTION()
-	void SetFocusButton(const int32 Index = 0);
+	void SetFocusButton(const int32 Index = 0, const bool bIsSound = false);
 
 	UFUNCTION()
 	void HasButtonFocus();

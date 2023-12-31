@@ -120,16 +120,16 @@ void UClassicConfigurations::OnClickUpdate(int32 Value)
 void UClassicConfigurations::OnClickDevice(int32 Value)
 {
 	bFocus = true;
-	WSButtons->SetVisibility(ESlateVisibility::Hidden);
-	WSDeviceInfo->SetVisibility(ESlateVisibility::Visible);
+	WSButtons->SetRenderOpacity(0);
+	WSDeviceInfo->SetRenderOpacity(1);
 	UE_LOG(LogTemp, Warning, TEXT("OnClickDevice"));
 }
 
 void UClassicConfigurations::OnClickLicense(int32 Value)
 {
 	bFocus = true;
-	WSButtons->SetVisibility(ESlateVisibility::Hidden);
-	WSDeviceLicense->SetVisibility(ESlateVisibility::Visible);
+	WSButtons->SetRenderOpacity(0);
+	WSDeviceLicense->SetRenderOpacity(1);
 	UE_LOG(LogTemp, Warning, TEXT("OnClickLicense"));
 }
 
@@ -174,18 +174,17 @@ void UClassicConfigurations::GetLanguageText(bool bShowMessage)
 void UClassicConfigurations::CloseModal()
 {
 	bFocus = false;
-	WSButtons->SetVisibility(ESlateVisibility::Visible);
-	WSDeviceInfo->SetVisibility(ESlateVisibility::Hidden);
-	WSDeviceLicense->SetVisibility(ESlateVisibility::Hidden);
+	WSButtons->SetRenderOpacity(1);
+	WSDeviceInfo->SetRenderOpacity(0);
+	WSDeviceLicense->SetRenderOpacity(0);
 }
 
 void UClassicConfigurations::SetIndexFocus(EButtonsGame Input)
 {
-	if (bFocus || bDelayInput) return;
-
+	if (bFocus) return;
+	
 	if (Input == EButtonsGame::UP || Input == EButtonsGame::DOWN)
 	{
-		//bDelayInput = true;
 		if (Input == EButtonsGame::DOWN)
 		{
 			IndexSelect++;
@@ -217,24 +216,24 @@ void UClassicConfigurations::SetIndexFocus(EButtonsGame Input)
 
 }
 
-void UClassicConfigurations::SetFocusSelect()
+void UClassicConfigurations::SetFocusSelect(const bool bIsSound)
 {
 	switch (IndexSelect)
 	{
 	case 0:
-		SlideVolume->SetFocusSlide();
+		SlideVolume->SetFocusSlide(bIsSound);
 		break;
 	case 1:
-		BtnUpdateGameList->Click->SetKeyboardFocus();
+		BtnUpdateGameList->SetFocusButton(bIsSound);
 		break;
 	case 2:
-		BtnDeviceInfo->Click->SetKeyboardFocus();
+		BtnDeviceInfo->SetFocusButton(bIsSound);
 		break;
 	case 3:
-		BtnLicenseInfo->Click->SetKeyboardFocus();
+		BtnLicenseInfo->SetFocusButton(bIsSound);
 		break;
 	case 4:
-		BtnLanguage->Click->SetKeyboardFocus();
+		BtnLanguage->SetFocusButton(bIsSound);
 		break;
 	default:
 		break;

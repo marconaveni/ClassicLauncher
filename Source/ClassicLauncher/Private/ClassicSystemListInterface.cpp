@@ -35,10 +35,7 @@ void UClassicSystemListInterface::SetScrollArrowIcons(const EButtonsGame Navigat
 
 void UClassicSystemListInterface::OnUserScrolled(float CurrentOffset)
 {
-	if (CurrentOffset >= ScrollBoxSystems->GetScrollOffsetOfEnd() - 2)
-	{
-		//ScrollBoxSystems->SetScrollOffset(ScrollBoxSystems->GetScrollOffsetOfEnd() - 1);
-	}
+	SetIconArrow();
 }
 
 void UClassicSystemListInterface::SetIconArrow()
@@ -75,27 +72,30 @@ void UClassicSystemListInterface::SetIconArrow()
 void UClassicSystemListInterface::SetFocusItem(const EButtonsGame Navigate, int32& Index, TArray<UClassicButtonSystem*> ButtonSystemReferences)
 {
 	const int32 NumChildren = ScrollBoxSystems->GetChildrenCount() - 1;
-	if (Navigate == EButtonsGame::UP)
+	const bool bNavigation = (Navigate == EButtonsGame::UP || Navigate == EButtonsGame::DOWN);
+	if (bNavigation)
 	{
-		Index--;
-		if (Index < 0)
+		if (Navigate == EButtonsGame::UP)
 		{
-			Index = NumChildren;
+			Index--;
+			if (Index < 0)
+			{
+				Index = NumChildren;
+			}
+		}
+		else if (Navigate == EButtonsGame::DOWN)
+		{
+			Index++;
+			if (Index > NumChildren)
+			{
+				Index = 0;
+				ScrollBoxSystems->SetScrollOffset(0);
+			}
 		}
 	}
-	else if (Navigate == EButtonsGame::DOWN)
-	{
-		Index++;
-		if (Index > NumChildren)
-		{
-			Index = 0;
-			ScrollBoxSystems->SetScrollOffset(0);
-		}
-	}
-
 	if (ButtonSystemReferences.IsValidIndex(Index))
 	{
-		ButtonSystemReferences[Index]->Click->SetKeyboardFocus();
+		ButtonSystemReferences[Index]->SetFocusButton(bNavigation);
 		ScrollBoxSystems->ScrollWidgetIntoView(ButtonSystemReferences[Index], false, EDescendantScrollDestination::Center, 0);
 	}
 	IndexFocus = Index;

@@ -73,7 +73,7 @@ public:
 
 	///** Return EUINavigation*/
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|Input")
-	static EUINavigation GetInputnavigation(const FKeyEvent& InKeyEvent);
+	static EButtonsGame GetInputButtonsGame(const FKey& InKey);
 
 	///** Return EEButtonsGame*/
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|Input")

@@ -3,6 +3,8 @@
 
 #include "UI/BaseUserWidget.h"
 
+#include "ClassicFunctionLibrary.h"
+#include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/Image.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -38,21 +40,57 @@ void UBaseUserWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 	MouseHide->SetRenderOpacity(0);
-	GetWorld()->GetTimerManager().SetTimer(TickTimerHandle, this, &UBaseUserWidget::TimeTick, 0.01667f, true, -1);
+}
+
+void UBaseUserWidget::PressedInput(const FKey InKey)
+{
+	NativePressedInput(InKey);
+}
+
+void UBaseUserWidget::ReleaseInput(const FKey InKey)
+{
+	NativeReleaseInput(InKey);
 }
 
 FReply UBaseUserWidget::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
+	NativePressedInput(InKeyEvent.GetKey());
 	return Super::NativeOnPreviewKeyDown(InGeometry, InKeyEvent);
 }
 
+void UBaseUserWidget::NativePressedInput(const FKey& InKey)
+{
+	if (MouseHide->GetVisibility() == ESlateVisibility::Hidden && !InKey.IsMouseButton())
+	{
+		FVector2D MousePosition;
+		if(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetMousePosition(MousePosition.X,MousePosition.Y))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Inside Viewport"));
+			MouseHide->SetVisibility(ESlateVisibility::Visible);
+			GetOwningPlayer()->SetMouseLocation(MousePosition.X + 1, MousePosition.Y);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("OutSide Viewport"));
+		}
+	}
+}
+
 FReply UBaseUserWidget::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
+{
+	if(UClassicFunctionLibrary::GetInputButton(InKeyEvent) == EButtonsGame::A)
+	{
+		NativeReleaseInput(InKeyEvent.GetKey());
+	}
+	return Super::NativeOnKeyUp(InGeometry, InKeyEvent);
+}
+
+void UBaseUserWidget::NativeReleaseInput(const FKey& InKey)
 {
 	CancelDelay();
 	FirstDelayInput = DefaultFirstDelayInput;
 	DefaultTimerDelayInput = TimerDelayInput;
 	bInputDelay = false;
-	return Super::NativeOnKeyUp(InGeometry, InKeyEvent);
 }
 
 FReply UBaseUserWidget::NativeOnMouseWheel(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
@@ -78,37 +116,12 @@ FReply UBaseUserWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, con
 
 FReply UBaseUserWidget::NativeOnMouseMove(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	const double Move = InMouseEvent.GetCursorDelta().Size();
-	if(Move > 0)
+    const double CursorDelta = InMouseEvent.GetCursorDelta().Size();
+	if(CursorDelta > 0)
 	{
-		GetWorld()->GetTimerManager().ClearTimer(MouseHandle);
-		DoOnceHideCursor.Reset();
 		MouseHide->SetVisibility(ESlateVisibility::Hidden);
-		UE_LOG(LogTemp, Warning, TEXT("show mouse"));
-	}
-	else
-	{
-		if (DoOnceHideCursor.Execute())
-		{
-			GetWorld()->GetTimerManager().SetTimer(MouseHandle, [&]()
-			{
-				MouseHide->SetVisibility(ESlateVisibility::Visible);
-				FVector2f Position;
-				UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetMousePosition(Position.X,Position.Y);
-				GetOwningPlayer()->SetMouseLocation(Position.X + 1, Position.Y);
-				//UE_LOG(LogTemp, Warning, TEXT("hide mouse after 5 seconds"));
-			}
-			, 5, false);
-
-			//UE_LOG(LogTemp, Warning, TEXT("mouse will hide "));
-		}
 	}
 	return Super::NativeOnMouseMove(InGeometry, InMouseEvent);
-}
-
-void UBaseUserWidget::TimeTick()
-{
-	OnTimeTick();
 }
 
 void UBaseUserWidget::DelayInput(const float Delay)
@@ -134,5 +147,10 @@ void UBaseUserWidget::CancelDelay()
 	GetWorld()->GetTimerManager().ClearTimer(DelayHandle);
 	DelayHandle.Invalidate();
 	bInputDelay = false;
+}
+
+bool UBaseUserWidget::GetMouseEnable()
+{
+	return MouseHide->GetVisibility() == ESlateVisibility::Hidden;
 }
 
