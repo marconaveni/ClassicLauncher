@@ -1,66 +1,59 @@
-// Copyright 2023 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 
 #include "ClassicButtonSystem.h"
 #include "Components/Button.h"
 #include "Components/Image.h"
 #include "Arrow.h"
+#include "ClassicFunctionLibrary.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Kismet/GameplayStatics.h"
 
-UClassicButtonSystem::UClassicButtonSystem(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+UClassicButtonSystem::UClassicButtonSystem(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
-	CountSystem = 0;
-	Hover = false;
 }
 
-void UClassicButtonSystem::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+void UClassicButtonSystem::NativePreConstruct()
 {
-	Super::NativeTick(MyGeometry, InDeltaTime);
-	if (Click != nullptr) {
-		//equivale doonce blueprint
-		if (Click->HasKeyboardFocus()) {
-			if (!Hover) {
-				BgBackground->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-				WBPArrow->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-				OnFocusTrigger.Broadcast();
-			}
-			Hover = true;
-		}
-		else {
-			if (Hover) {
-				BgBackground->SetVisibility(ESlateVisibility::Hidden);
-				WBPArrow->SetVisibility(ESlateVisibility::Hidden);
-				OnFocusLostTrigger.Broadcast();
-			}
-			Hover = false;
-		}
-	}
+	Super::NativePreConstruct();
+	Text->SetText(ButtonText);
+}
+
+FReply UClassicButtonSystem::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
+{
+	return Super::NativeOnKeyUp(InGeometry, InKeyEvent);
+}
+
+void UClassicButtonSystem::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
+}
+
+FReply UClassicButtonSystem::NativeOnFocusReceived(const FGeometry& InGeometry, const FFocusEvent& InFocusEvent)
+{
+	return Super::NativeOnFocusReceived(InGeometry, InFocusEvent);
+}
+
+void UClassicButtonSystem::NativeOnFocusLost(const FFocusEvent& InFocusEvent)
+{
+	Super::NativeOnFocusLost(InFocusEvent);
+}
+
+FReply UClassicButtonSystem::NativeOnMouseWheel(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	return Super::NativeOnMouseWheel(InGeometry, InMouseEvent);
 }
 
 bool UClassicButtonSystem::Initialize()
 {
 	bool Success = Super::Initialize();
-	if (Click)
-	{
-		Click->OnClicked.AddDynamic(this, &UClassicButtonSystem::ButtonClick);
-	}
-	
 	return Success;
 }
 
-void UClassicButtonSystem::NativePreConstruct()
+void UClassicButtonSystem::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
-	Text->SetText(ButtonText);
-	Super::NativePreConstruct();
-}
-
-void UClassicButtonSystem::SetFocusButton(const bool bIsSound)
-{
-	Click->SetKeyboardFocus();
-	if (bIsSound)
-	{
-		UGameplayStatics::PlaySound2D(this, SoundSelect);
-	}
+	Super::NativeTick(MyGeometry, InDeltaTime);
 }
 
 void UClassicButtonSystem::SetText(FText NewText)
@@ -69,15 +62,25 @@ void UClassicButtonSystem::SetText(FText NewText)
 	ButtonText = NewText;
 }
 
-void UClassicButtonSystem::SetCount(int32 NewValue)
+void UClassicButtonSystem::SetIndex(int32 NewIndex)
 {
-	CountSystem = NewValue;
+	Index = NewIndex;
 }
 
-void UClassicButtonSystem::ButtonClick()
+void UClassicButtonSystem::SetFocusButton(bool bEnable)
 {
-	OnClickTrigger.Broadcast(CountSystem);
-	UGameplayStatics::PlaySound2D(this, SoundClick);
+	if (bEnable)
+	{
+		BgBackground->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		WBPArrow->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		UGameplayStatics::PlaySound2D(this, SoundSelect);
+	}
+	else
+	{
+		BgBackground->SetVisibility(ESlateVisibility::Hidden);
+		WBPArrow->SetVisibility(ESlateVisibility::Hidden);
+	}
+	Super::SetFocusButton(bEnable);
 }
 
 void UClassicButtonSystem::SetTextAppearance(FTextStyle NewTextStyle)

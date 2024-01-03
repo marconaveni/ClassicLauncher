@@ -1,4 +1,4 @@
-// Copyright 2022 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 #pragma once
 
@@ -168,8 +168,14 @@ public:
 	FIndexPositions GetScrollOffSet() const;
 
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
-	void OnClickButton(int32 Index);
+	void OnReleaseCard(int32 Index);
 
+	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
+	void OnHoveredCard(int32 Index);
+	
+	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
+	void OnUnhoveredCard(int32 Index);
+	
 	virtual void EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound) override;
 
 };

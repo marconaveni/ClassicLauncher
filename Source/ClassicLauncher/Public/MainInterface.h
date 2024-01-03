@@ -1,4 +1,4 @@
-// Copyright 2023 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 #pragma once
 
@@ -216,11 +216,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	bool bUpDownPressed;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	bool bInputEnable;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	bool bDelayFavoriteClick;
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	bool bDelayFavoriteClick;*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	bool bDelayQuit;

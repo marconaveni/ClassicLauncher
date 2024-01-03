@@ -1,4 +1,4 @@
-// Copyright 2022 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 #pragma once
 
@@ -7,7 +7,9 @@
 #include "AnimationUI.h"
 #include "Card.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegate, int32 , Index);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateRelease, int32 , Index);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateHovered, int32 , Index);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateUnhovered, int32 , Index);
 
 /**
  * 
@@ -25,8 +27,13 @@ class CLASSICLAUNCHER_API UCard : public UUserWidget
 public:
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
-	FDelegate OnClickTrigger;
+	FDelegateRelease OnReleaseTrigger;
 
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FDelegateHovered OnHoveredTrigger;
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FDelegateUnhovered OnUnhoveredTrigger;
 
 	UCard(const FObjectInitializer& ObjectInitializer);
 
@@ -72,8 +79,14 @@ public:
 	void SetCardImage(UTexture2D* texture, int32 width, int32 height);
 
 	UFUNCTION(BlueprintCallable,  Category = "Card|Functions")
-	void ButtonClick();
+	void Release();
 
+	UFUNCTION(BlueprintCallable,  Category = "Card|Functions")
+	void Hovered();
+
+	UFUNCTION(BlueprintCallable,  Category = "Card|Functions")
+	void Unhovered();
+	
 	UFUNCTION(BlueprintCallable, Category = "Card|Functions")
 	void AnimationFade();
 

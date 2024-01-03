@@ -1,4 +1,4 @@
-// Copyright 2023 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 
 #include "MainInterface.h"
@@ -267,7 +267,7 @@ void UMainInterface::LoadImages(const int32 DistanceIndex)
 void UMainInterface::ShowGames()
 {
 	SetPlayAnimation(TEXT("LoadListGame"));
-	bInputEnable = true;
+	SetInputEnable(true);
 	PrepareThemes();
 	OnShowGames(); //BlueprintImplementableEvent
 	GameMode->LoadingGameData->RemoveLoadingScreenToParent();
@@ -282,18 +282,25 @@ void UMainInterface::NativePressedInput(const FKey& InKey)
 {
 	Super::NativePressedInput(InKey);
 	const EButtonsGame Input = UClassicFunctionLibrary::GetInputButtonsGame(InKey);
-	if (bInputEnable)
+	if (GetInputEnable())
 	{
-		bKeyPressed = (Input != EButtonsGame::A && Input != EButtonsGame::NONE);
+		/*bKeyPressed = (Input != EButtonsGame::A && Input != EButtonsGame::NONE);
 
 		if (ENavigationLastButton == EButtonsGame::NONE && Input != EButtonsGame::A)
 		{
 			ENavigationLastButton = Input;
-		}
+		}*/
+		bKeyPressed = (Input != EButtonsGame::NONE);
+		ENavigationLastButton = Input;
+		
 		if (Input == EButtonsGame::B || Input == EButtonsGame::Y)
 		{
 			ENavigationButton = Input;
 			HoldFavorite();
+			if (GetInputEnable() && PositionY == EPositionY::CENTER)
+			{
+				GetWorld()->GetTimerManager().SetTimer(DelayFavoriteTimerHandle, this, &UMainInterface::SetFavoriteToSave, 0.5f, false, -1);
+			}
 		}
 	}
 	else
@@ -308,11 +315,11 @@ void UMainInterface::NativeReleaseInput(const FKey& InKey)
 	const EButtonsGame Input = UClassicFunctionLibrary::GetInputButtonsGame(InKey);
 	ENavigationLastButton = EButtonsGame::NONE;
 
-	if (bInputEnable)
+	if (GetInputEnable())
 	{
 		bKeyPressed = false;
-		bDelayFavoriteClick = false;
-
+		GetWorld()->GetTimerManager().ClearTimer(DelayFavoriteTimerHandle);
+		
 		if (Input == EButtonsGame::B)
 		{
 			OnClickBackAction();
@@ -388,7 +395,7 @@ void UMainInterface::NavigationGame(EButtonsGame Navigate)
 		Navigate == EButtonsGame::LB || Navigate == EButtonsGame::RB)
 	{
 
-		if (bInputEnable && !GetDelayInput())
+		if (GetInputEnable() && !GetDelayInput())
 		{
 			DelayInput(TimerDelayInput + FirstDelayInput);
 			FirstDelayInput = 0.0f;
@@ -449,7 +456,7 @@ void UMainInterface::NavigationMain(EButtonsGame Navigate)
 void UMainInterface::NavigationSystem(EButtonsGame Navigate)
 {
 	ENavigationButton = Navigate;
-	WBPSystemsList->SetFocusItem(ENavigationButton, CountLocationY, ButtonSystemReferences);
+	WBPSystemsList->SetFocusItem(ENavigationButton, CountLocationY);
 }
 
 void UMainInterface::NavigationInfo(EButtonsGame Navigate)
@@ -536,7 +543,7 @@ void UMainInterface::SetTitle(int32 Index)
 
 void UMainInterface::OnClickLaunch()
 {
-	if (PositionY == EPositionY::CENTER && bInputEnable)
+	if (PositionY == EPositionY::CENTER && GetInputEnable())
 	{
 		LoopScroll->OpenCard();
 		if (CountSystem == 0)
@@ -599,7 +606,7 @@ void UMainInterface::OpenExternalProcess(FString ExecutablePath, TArray<FString>
 
 void UMainInterface::OnClickSystem(int32 Value)
 {
-	if (bInputEnable)
+	if (GetInputEnable())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("The OnClickSystem parameter value is: %d"), Value);
 
@@ -669,9 +676,9 @@ void UMainInterface::SetCountPlayerToSave()
 
 void UMainInterface::HoldFavorite()
 {
-	if (bInputEnable && PositionY == EPositionY::CENTER && !bDelayFavoriteClick)
+	if (GetInputEnable() && PositionY == EPositionY::CENTER /*&& !bDelayFavoriteClick*/)
 	{
-		bDelayFavoriteClick = true;
+		// bDelayFavoriteClick = true;
 		GetWorld()->GetTimerManager().SetTimer(DelayFavoriteTimerHandle, this, &UMainInterface::SetFavoriteToSave, 0.5f, false, -1);
 	}
 }
@@ -680,7 +687,7 @@ void UMainInterface::SetFavoriteToSave()
 {
 	if (!GameSystems.IsValidIndex(CountSystem)) return;
 
-	if (bDelayFavoriteClick && ENavigationButton == EButtonsGame::Y && !GameSystems[CountSystem].SystemName.Equals(TEXT("${System}")))
+	if (/*bDelayFavoriteClick && */ENavigationButton == EButtonsGame::Y && !GameSystems[CountSystem].SystemName.Equals(TEXT("${System}")))
 	{
 
 		AsyncTask(ENamedThreads::AnyHiPriThreadNormalTask, [this]()
@@ -721,7 +728,7 @@ void UMainInterface::RunningGame(const bool bIsRun)
 	if (bIsRun)
 	{
 		ClassicMediaPlayerReference->PauseMusic();
-		bInputEnable = false;
+		SetInputEnable(false);
 	}
 	else
 	{
@@ -739,7 +746,7 @@ void UMainInterface::RunningGame(const bool bIsRun)
 				ClassicMediaPlayerReference->PlaylistMusic();
 				PlayAnimationReverse(FadeStartSystem);
 				SetFrame();
-				bInputEnable = true;
+				SetInputEnable(true);
 			},0.18f ,false);
 
 	}
@@ -747,8 +754,7 @@ void UMainInterface::RunningGame(const bool bIsRun)
 
 void UMainInterface::ResetCards()
 {
-	bInputEnable = false;
-	
+	SetInputEnable(false);
 	SetPlayAnimation(TEXT("ShowSystemReverse"));
 	Header->SetFocusButton();
 	Focus = EFocus::MAIN;
@@ -762,6 +768,7 @@ void UMainInterface::ResetCards()
 
 void UMainInterface::Clear()
 {
+	SetInputEnable(false);
 	IndexCard = 0;
 	ProcessID = 0;
 	ENavigationLastButton = EButtonsGame::NONE;
@@ -771,8 +778,6 @@ void UMainInterface::Clear()
 	Focus = EFocus::MAIN;
 	bKeyPressed = false;
 	bUpDownPressed = true;
-	bInputEnable = false;
-	bDelayFavoriteClick = false;
 	bDelayQuit = false;
 	CountSystem = 0;
 	CountLocationY = 0;
@@ -816,6 +821,11 @@ void UMainInterface::OnFocusHeader(int32 Index)
 		WBPFrame->FrameIndexTop = Index;
 		WBPFrame->SetFrame(Index, PositionY);
 		SetButtonsIconInterfaces(PositionY);
+		ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas = GameDataIndex;
+		if (Index == 4)
+		{
+			WBPInfo->SetGameInfo(GameData[IndexCard]);
+		}
 	}
 	if (Index == 0) return;
 	ToolTips->OnFocus(WBPFrame->FrameIndexTop);
@@ -831,7 +841,7 @@ void UMainInterface::OnClickSelectSystem()
 	Focus = EFocus::SYSTEM;
 	SetPlayAnimation(TEXT("ShowSystem"));
 	PositionY = EPositionY::TOP;
-	WBPSystemsList->SetFocusItem(EButtonsGame::NONE, CountLocationY, ButtonSystemReferences);
+	WBPSystemsList->SetFocusItem(EButtonsGame::NONE, CountLocationY);
 }
 
 void UMainInterface::OnClickConfigurations()

@@ -1,19 +1,21 @@
-// Copyright 2022 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "UI/BaseButton.h"
 #include "ClassicButton.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateFocusBT, int32, Index);
+/*DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateFocusBT, int32, Index);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateFocusLostBT, int32, Index);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateClickBT, int32, Index);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateClickBT, int32, Index);*/
+
 /**
  *
  */
 UCLASS()
-class CLASSICLAUNCHER_API UClassicButton : public UUserWidget
+class CLASSICLAUNCHER_API UClassicButton : public UBaseButton
 {
 	GENERATED_BODY()
 
@@ -22,9 +24,9 @@ public:
 	UClassicButton(const FObjectInitializer& ObjectInitializer);
 
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
-	class UWidgetAnimation* FocusButton;
+	UWidgetAnimation* FocusButton;
 
-	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	/*UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FDelegateFocusBT OnFocusTrigger;
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
@@ -35,7 +37,8 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UButton* BtButton;
-
+	*/
+	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* BgImage;
 
@@ -50,14 +53,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButton|Variables")
 	FButtonStyle StyleButton;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButton|Variables")
-	int32 Index;
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButton|Variables")
+	int32 Index;*/
 
-	UFUNCTION(BlueprintCallable, Category = "ClassicButton|Functions")
-	void ButtonClick();
+	/*UFUNCTION(BlueprintCallable, Category = "ClassicButton|Functions")
+	void ButtonClick();*/
 
-	UFUNCTION(BlueprintCallable, Category = "ClassicButton|Functions")
-	bool HasFocusButton();
+	/*UFUNCTION(BlueprintCallable, Category = "ClassicButton|Functions")
+	bool HasFocusButton();*/
 
 	UFUNCTION(BlueprintCallable, Category = "Themes")
 	void SetTheme(UTexture2D* TextureIcon, FSlateBrush BackgroundColor);
@@ -66,11 +69,10 @@ public:
 	void EnableButton(const bool bEnable);
 	
 private:
+	
+	virtual void SetFocusButton(bool bEnable) override;
 
-	UFUNCTION()
-	void SetFocusButton(bool bEnable);
-
-	UPROPERTY()
-	bool bFocus;
+	/*UPROPERTY()
+	bool bFocus;*/
 
 };

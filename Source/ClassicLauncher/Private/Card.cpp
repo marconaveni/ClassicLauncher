@@ -1,4 +1,4 @@
-// Copyright 2022 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 
 #include "Card.h"
@@ -92,7 +92,9 @@ void UCard::SetFocusCard(bool bEnable, bool bAnimate, bool bReset, float TimeAni
 bool UCard::BindButton()
 {
 	if (!ensure(BtnClick != nullptr)) return false;
-	BtnClick->OnClicked.AddDynamic(this, &UCard::ButtonClick);
+	BtnClick->OnReleased.AddDynamic(this, &UCard::Release);
+	BtnClick->OnHovered.AddDynamic(this, &UCard::Hovered);
+	BtnClick->OnUnhovered.AddDynamic(this, &UCard::Unhovered);
 	return true;
 }
 
@@ -132,9 +134,19 @@ void UCard::SetCardImage(UTexture2D* texture, int32 width, int32 height)
 	}
 }
 
-void UCard::ButtonClick()
+void UCard::Release()
 {
-	OnClickTrigger.Broadcast(IndexCard);
+	OnReleaseTrigger.Broadcast(IndexCard);
+}
+
+void UCard::Hovered()
+{
+	OnHoveredTrigger.Broadcast(IndexCard);
+}
+
+void UCard::Unhovered()
+{
+	OnUnhoveredTrigger.Broadcast(IndexCard);
 }
 
 void UCard::AnimationFade()

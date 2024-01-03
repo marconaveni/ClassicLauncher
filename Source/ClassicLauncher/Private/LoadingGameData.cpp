@@ -1,4 +1,4 @@
-// Copyright 2023 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 
 #include "LoadingGameData.h"
@@ -14,9 +14,12 @@
 #include "MainInterface.h"
 #include "LoadingScreen.h"
 #include "Blueprint/UserWidget.h"
+#include "Blueprint/WidgetTree.h"
 #include "Components/Scrollbox.h"
+#include "Components/VerticalBox.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/Layout/Header.h"
+#include "UI/Layout/Components/ScrollBoxEnhanced.h"
 
 #define DELAY 1.0f
 #define LOCTEXT_NAMESPACE "ButtonsSelection"
@@ -106,21 +109,24 @@ void ULoadingGameData::LoadGameSystems()
 
 void ULoadingGameData::AddSystems()
 {
-	MainInterfaceReference->WBPSystemsList->ScrollBoxSystems->ClearChildren();
+	MainInterfaceReference->WBPSystemsList->ScrollBox->ClearAllChildrenContent();
 	MainInterfaceReference->GameSystems.Empty();
 	MainInterfaceReference->ButtonSystemReferences.Empty();
 
 	if (MainInterfaceReference->ButtonSystemClass != nullptr)
 	{
 		UClassicButtonSystem* ButtonSystem = nullptr;
+		
 		for (int32 i = 0; i < Systems.Num(); i++)
 		{
 			ButtonSystem = CreateWidget<UClassicButtonSystem>(MainInterfaceReference->GetOwningPlayer(), MainInterfaceReference->ButtonSystemClass);
 			ButtonSystem->OnClickTrigger.AddDynamic(MainInterfaceReference , &UMainInterface::OnClickSystem);
 			ButtonSystem->SetText((i == 0) ? LOCTEXT("Systems", "Show Systems") : FText::FromString(Systems[i].SystemLabel));
-			ButtonSystem->SetCount(i);
+			ButtonSystem->SetIndex(i);
+			ButtonSystem->SetNavigationRuleBase(EUINavigation::Up, EUINavigationRule::Stop);
+			ButtonSystem->SetNavigationRuleBase(EUINavigation::Down, EUINavigationRule::Stop);
 			MainInterfaceReference->ButtonSystemReferences.Add(ButtonSystem);
-			MainInterfaceReference->WBPSystemsList->ScrollBoxSystems->AddChild(ButtonSystem);
+			MainInterfaceReference->WBPSystemsList->ScrollBox->SetContent(ButtonSystem);
 		}
 		MainInterfaceReference->GameSystems = Systems;
 	}

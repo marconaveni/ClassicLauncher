@@ -1,4 +1,4 @@
-// Copyright 2023 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 
 #include "UI/BaseUserWidget.h"
@@ -11,11 +11,12 @@
 
 UBaseUserWidget::UBaseUserWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
-	, bInputDelay(false)
-	, TimerDelayInput(0.18f)
-	, DefaultTimerDelayInput(0.18f)
-	, FirstDelayInput(0.18f)
-	, DefaultFirstDelayInput(0.18f)
+	  , bInputEnable(false)
+	  , bInputDelay(false)
+	  , TimerDelayInput(0.18f)
+	  , DefaultTimerDelayInput(0.18f)
+	  , FirstDelayInput(0.18f)
+	  , DefaultFirstDelayInput(0.18f)
 {
 }
 
@@ -63,7 +64,7 @@ void UBaseUserWidget::NativePressedInput(const FKey& InKey)
 	if (MouseHide->GetVisibility() == ESlateVisibility::Hidden && !InKey.IsMouseButton())
 	{
 		FVector2D MousePosition;
-		if(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetMousePosition(MousePosition.X,MousePosition.Y))
+		if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetMousePosition(MousePosition.X, MousePosition.Y))
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Inside Viewport"));
 			MouseHide->SetVisibility(ESlateVisibility::Visible);
@@ -78,7 +79,7 @@ void UBaseUserWidget::NativePressedInput(const FKey& InKey)
 
 FReply UBaseUserWidget::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
-	if(UClassicFunctionLibrary::GetInputButton(InKeyEvent) == EButtonsGame::A)
+	if (UClassicFunctionLibrary::GetInputButton(InKeyEvent) == EButtonsGame::A)
 	{
 		NativeReleaseInput(InKeyEvent.GetKey());
 	}
@@ -116,8 +117,8 @@ FReply UBaseUserWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, con
 
 FReply UBaseUserWidget::NativeOnMouseMove(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-    const double CursorDelta = InMouseEvent.GetCursorDelta().Size();
-	if(CursorDelta > 0)
+	const double CursorDelta = InMouseEvent.GetCursorDelta().Size();
+	if (CursorDelta > 0)
 	{
 		MouseHide->SetVisibility(ESlateVisibility::Hidden);
 	}
@@ -129,11 +130,12 @@ void UBaseUserWidget::DelayInput(const float Delay)
 	if (!bInputDelay)
 	{
 		bInputDelay = true;
-		GetWorld()->GetTimerManager().SetTimer(DelayHandle, [&]()
-		{
-			bInputDelay = false;
-		}
-		, 0.016f, false, Delay);
+		GetWorld()->GetTimerManager()
+		.SetTimer(DelayHandle, [&]()
+           {
+               bInputDelay = false;
+           }
+           , 0.016f, false, Delay);
 	}
 }
 
@@ -154,3 +156,16 @@ bool UBaseUserWidget::GetMouseEnable()
 	return MouseHide->GetVisibility() == ESlateVisibility::Hidden;
 }
 
+void UBaseUserWidget::SetInputEnable(const bool bEnable)
+{
+	if(bInputEnable != bEnable)
+	{
+		bInputEnable = bEnable;
+		SetVisibility(bEnable ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::HitTestInvisible);
+	}
+}
+
+bool UBaseUserWidget::GetInputEnable()
+{
+	return bInputEnable;
+}

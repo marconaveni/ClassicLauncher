@@ -1,4 +1,4 @@
-// Copyright 2023 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 #pragma once
 
@@ -45,6 +45,10 @@ class CLASSICLAUNCHER_API UBaseUserWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
+private:
+
+	bool bInputEnable;
+
 protected:
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
@@ -62,7 +66,6 @@ protected:
 	UPROPERTY()
 	bool bInputDelay;
 	
-
 	UBaseUserWidget(const FObjectInitializer& ObjectInitializer);
 
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
@@ -93,9 +96,6 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "User Interface")
 	void CancelDelay();
-
-	UFUNCTION(BlueprintCallable, Category = "Input")
-	bool GetMouseEnable();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
 	float TimerDelayInput;
@@ -109,4 +109,14 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input|Defaults")
 	float DefaultFirstDelayInput;
 
+public:
+	
+	UFUNCTION(BlueprintPure, Category = "Input")
+	bool GetMouseEnable();
+
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	void SetInputEnable(const bool bEnable);
+
+	UFUNCTION(BlueprintPure, Category = "Input")
+	bool GetInputEnable();
 };

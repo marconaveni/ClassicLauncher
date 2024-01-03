@@ -1,4 +1,4 @@
-// Copyright 2023 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 
 #include "UI/Layout/ToolTipsLayout.h"
@@ -29,10 +29,6 @@ void UToolTipsLayout::OnFocus(const int32 Index) const
 	SlotToolTipConfiguration->SetZOrder(50);
 	SlotToolTipFilter->SetZOrder(50);
 	SlotToolTipMoreInformation->SetZOrder(50);
-	ToolTipSystem->SetFocusToolTip(false);
-	ToolTipConfiguration->SetFocusToolTip(false);
-	ToolTipFilter->SetFocusToolTip(false);
-	ToolTipMoreInformation->SetFocusToolTip(false);
 
 	switch (Index)
 	{

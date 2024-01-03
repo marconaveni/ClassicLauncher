@@ -1,103 +1,37 @@
-// Copyright 2023 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 
 #include "ClassicSystemListInterface.h"
-#include "Components/Scrollbox.h"
-#include "ClassicButtonSystem.h"
-#include "Components/Button.h"
-#include "Components/Image.h"
+#include "UI/Layout/Components/ScrollBoxEnhanced.h"
 
 void UClassicSystemListInterface::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-	ScrollBoxSystems->OnUserScrolled.AddDynamic(this, &UClassicSystemListInterface::OnUserScrolled);
-	SetIconArrow();
 }
 
 FReply UClassicSystemListInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
-	Input = UClassicFunctionLibrary::GetInputButton(InKeyEvent);
-	SetScrollArrowIcons(Input);
 	return Super::NativeOnPreviewKeyDown(InGeometry, InKeyEvent);
 }
 
 FReply UClassicSystemListInterface::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
-	SetScrollArrowIcons(Input);
 	return Super::NativeOnKeyUp(InGeometry, InKeyEvent);
 }
 
-void UClassicSystemListInterface::SetScrollArrowIcons(const EButtonsGame Navigate)
+void UClassicSystemListInterface::SetFocusItem(const EButtonsGame Navigate, int32& Index)
 {
-	if (Navigate != EButtonsGame::DOWN && Navigate != EButtonsGame::UP) return;
-	SetIconArrow();
-}
-
-void UClassicSystemListInterface::OnUserScrolled(float CurrentOffset)
-{
-	SetIconArrow();
-}
-
-void UClassicSystemListInterface::SetIconArrow()
-{
-	ScrollCurrentOffSet = ScrollBoxSystems->GetScrollOffset();
-
-	if (ScrollBoxSystems->GetAllChildren().Num() <= 5)
+	
+	if (Navigate == EButtonsGame::UP)
 	{
-		ArrowUP->SetBrushFromTexture(ArrowIconOutline);
-		ArrowDown->SetBrushFromTexture(ArrowIconOutline);
-		return;
+		Index = ScrollBox->SetFocusScroll(EScrollTo::UP);
 	}
-
-	if (ScrollCurrentOffSet >= ScrollBoxSystems->GetScrollOffsetOfEnd() - 2)
+	else if (Navigate == EButtonsGame::DOWN)
 	{
-		//set ArrowDown
-		ArrowUP->SetBrushFromTexture(ArrowIcon);
-		ArrowDown->SetBrushFromTexture(ArrowIconOutline);
-		return;
+		Index = ScrollBox->SetFocusScroll(EScrollTo::DOWN);
 	}
-	if (ScrollCurrentOffSet <= 1)
+	else
 	{
-		//set ArrowUP
-		ArrowUP->SetBrushFromTexture(ArrowIconOutline);
-		ArrowDown->SetBrushFromTexture(ArrowIcon);
-		return;
+		Index = ScrollBox->SetFocusScroll(EScrollTo::NONE);
 	}
-
-	ArrowUP->SetBrushFromTexture(ArrowIcon);
-	ArrowDown->SetBrushFromTexture(ArrowIcon);
-
-}
-
-void UClassicSystemListInterface::SetFocusItem(const EButtonsGame Navigate, int32& Index, TArray<UClassicButtonSystem*> ButtonSystemReferences)
-{
-	const int32 NumChildren = ScrollBoxSystems->GetChildrenCount() - 1;
-	const bool bNavigation = (Navigate == EButtonsGame::UP || Navigate == EButtonsGame::DOWN);
-	if (bNavigation)
-	{
-		if (Navigate == EButtonsGame::UP)
-		{
-			Index--;
-			if (Index < 0)
-			{
-				Index = NumChildren;
-			}
-		}
-		else if (Navigate == EButtonsGame::DOWN)
-		{
-			Index++;
-			if (Index > NumChildren)
-			{
-				Index = 0;
-				ScrollBoxSystems->SetScrollOffset(0);
-			}
-		}
-	}
-	if (ButtonSystemReferences.IsValidIndex(Index))
-	{
-		ButtonSystemReferences[Index]->SetFocusButton(bNavigation);
-		ScrollBoxSystems->ScrollWidgetIntoView(ButtonSystemReferences[Index], false, EDescendantScrollDestination::Center, 0);
-	}
-	IndexFocus = Index;
-	GetWorld()->GetTimerManager().SetTimer(ArrowTimerHandle, this, &UClassicSystemListInterface::SetIconArrow, 0.016f, false, 0.1f);
 }

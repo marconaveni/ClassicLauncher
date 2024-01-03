@@ -1,4 +1,4 @@
-// Copyright 2022 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 #pragma once
 
@@ -9,6 +9,7 @@
 
 
 class UClassicButtonSystem;
+class UScrollBoxEnhanced;
 
 /**
  * 
@@ -37,9 +38,6 @@ protected:
 
 public:
 
-	UPROPERTY()
-	int32 IndexFocus;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Timers")
 	FTimerHandle ArrowTimerHandle;
 
@@ -47,17 +45,11 @@ public:
 	class UTextImageBlock* TextSelectSystem;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UScrollBox* ScrollBoxSystems;
+	UScrollBoxEnhanced* ScrollBox;
 
 	virtual void NativeOnInitialized() override;
 	virtual FReply NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 	virtual FReply NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicSystemListInterface|Variables")
-	float ScrollCurrentOffSet;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicSystemListInterface|Variables")
-	EButtonsGame Input;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicSystemListInterface|Variables")
 	UTexture2D* ArrowIcon;
@@ -66,14 +58,5 @@ public:
 	UTexture2D* ArrowIconOutline;
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicSystemListInterface|Events")
-	void SetScrollArrowIcons(const EButtonsGame Navigate);
-
-	UFUNCTION(BlueprintCallable, Category = "ClassicSystemListInterface|Events")
-	void OnUserScrolled(float CurrentOffset);
-
-	UFUNCTION(BlueprintCallable, Category = "ClassicSystemListInterface|Events")
-	void SetIconArrow();
-
-	UFUNCTION(BlueprintCallable, Category = "ClassicSystemListInterface|Events")
-	void SetFocusItem(const EButtonsGame Navigate,UPARAM(ref) int32& Index, TArray<UClassicButtonSystem*> ButtonSystemReferences);
+	void SetFocusItem(const EButtonsGame Navigate,UPARAM(ref) int32& Index);
 };

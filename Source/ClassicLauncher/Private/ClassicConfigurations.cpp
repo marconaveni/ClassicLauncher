@@ -1,4 +1,4 @@
-// Copyright 2022 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 
 #include "ClassicConfigurations.h"
@@ -102,7 +102,7 @@ void UClassicConfigurations::OnClickUpdate(int32 Value)
 	if (UGameplayStatics::DeleteGameInSlot(ClassicGameInstance->SlotGame, 0))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Deleted Saved"));
-		MainInterfaceReference->bInputEnable = false;
+		MainInterfaceReference->SetInputEnable(false);
 		MainInterfaceReference->Header->SetFocusButton();
 		GetWorld()->GetTimerManager().SetTimer(RestartMapTimerHandle, this, &UClassicConfigurations::RestartMap, 3.0f, false, -1);
 		if (MainInterfaceReference != nullptr)
@@ -224,16 +224,16 @@ void UClassicConfigurations::SetFocusSelect(const bool bIsSound)
 		SlideVolume->SetFocusSlide(bIsSound);
 		break;
 	case 1:
-		BtnUpdateGameList->SetFocusButton(bIsSound);
+		BtnUpdateGameList->SetFocus();
 		break;
 	case 2:
-		BtnDeviceInfo->SetFocusButton(bIsSound);
+		BtnDeviceInfo->SetFocus();
 		break;
 	case 3:
-		BtnLicenseInfo->SetFocusButton(bIsSound);
+		BtnLicenseInfo->SetFocus();
 		break;
 	case 4:
-		BtnLanguage->SetFocusButton(bIsSound);
+		BtnLanguage->SetFocus();
 		break;
 	default:
 		break;
