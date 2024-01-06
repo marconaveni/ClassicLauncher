@@ -41,6 +41,9 @@ public:
 	virtual void NativeConstruct() override;
 	virtual bool Initialize() override;
 	virtual FReply NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
+	virtual FReply NativeOnMouseMove( const FGeometry& InGeometry, const FPointerEvent& InMouseEvent ) override;
+	virtual void NativeOnMouseEnter( const FGeometry& InGeometry, const FPointerEvent& InMouseEvent ) override;
+	virtual void NativeOnMouseLeave( const FPointerEvent& InMouseEvent ) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card|Variables")
 	FAnimationUICurves CurveFavoritesFoward;
@@ -132,6 +135,9 @@ private:
 
 	UPROPERTY()
 	bool bFavorite;
+
+	UPROPERTY()
+	bool bMouseMove;
 
 };
 

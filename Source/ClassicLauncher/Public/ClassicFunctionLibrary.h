@@ -302,4 +302,7 @@ public:
 	UFUNCTION()						   
 	static void CreateTexture2DToAsset(int32 InSizeX, int32 InSizeY, EPixelFormat InFormat, const FName InName, UTexture2D*& NewTexture, UPackage*& Package);
 
+	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Widgets")
+	static bool GetVisibilityWidget(const class UWidget* Widget);
+
 };

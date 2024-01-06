@@ -8,6 +8,7 @@
 
 class UImage;
 class UScrollBox;
+class UBaseButton;
 
 UENUM(BlueprintType, Category = "Navigation")
 enum class EScrollTo : uint8
@@ -44,6 +45,8 @@ protected:
 	
 private:
 
+	UScrollBoxEnhanced(const FObjectInitializer& ObjectInitializer);
+	
 	virtual void NativePreConstruct() override;
 	virtual void NativeOnInitialized() override;
 	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
@@ -72,20 +75,32 @@ private:
 	UPROPERTY()
 	FTimerHandle IndexWheelHandle;
 
+	void BindButton(UWidget* Content);
+	
+	void BindButton(UBaseButton* Content);
+
+	UWidget* AddIndex(EScrollTo Scroll);
+
+
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
 	bool bAutoContent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
+	ESlateVisibility ScrollBarVisibility;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
 	UTexture2D* ArrowIcon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
 	UTexture2D* ArrowIconOutline;
-
+	
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void SetContent(UWidget* Content);
-
+	
+	void BindButtonsScroll();
+	
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void ClearAllChildrenContent();
 
@@ -94,6 +109,12 @@ public:
 	
 	UFUNCTION(BlueprintPure, Category = "Functions")
 	TArray<UWidget*> GetAllChildrenContent() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+	void SetScrollBarVisibility(ESlateVisibility EnableVisibility);
+
+	UFUNCTION(BlueprintPure, Category = "Functions")
+	bool GetScrollBarVisibility();
 
 	UFUNCTION()
 	void OnFocusButton(int32 Index);

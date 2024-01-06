@@ -16,21 +16,6 @@
 #include "Components/Scrollbox.h"
 
 
-void ULoopScrollBox::Clear()
-{
-	Speed = 30.0f;
-	ChildrenCount = 0;
-	InputDirection = EButtonsGame::NONE;
-	PositionOffsetFocus = 1;
-	IndexFocusCard = 0;
-	bUnlockInput = true;
-}
-
-void ULoopScrollBox::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
-{
-	Super::NativeTick(MyGeometry, InDeltaTime);
-}
-
 void ULoopScrollBox::NativePreConstruct()
 {
 	Super::NativePreConstruct();
@@ -41,11 +26,41 @@ void ULoopScrollBox::NativeConstruct()
 	Super::NativeConstruct();
 }
 
+FReply ULoopScrollBox::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
+{
+	const EButtonsGame NewInput = UClassicFunctionLibrary::GetInputButton(InKeyEvent);
+	if (NewInput == EButtonsGame::A && HasAnyUserFocus())
+	{
+		OnCardClick.Broadcast();
+	}
+	return Super::NativeOnKeyUp(InGeometry, InKeyEvent);
+}
+
+FReply ULoopScrollBox::NativeOnMouseMove(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	return Super::NativeOnMouseMove(InGeometry, InMouseEvent);
+}
+
 void ULoopScrollBox::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 	SetIsFocusable(true);
 	ConstructCards();
+}
+
+void ULoopScrollBox::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+}
+
+void ULoopScrollBox::Clear()
+{
+	Speed = 30.0f;
+	ChildrenCount = 0;
+	InputDirection = EButtonsGame::NONE;
+	PositionOffsetFocus = 1;
+	IndexFocusCard = 0;
+	bUnlockInput = true;
 }
 
 void ULoopScrollBox::PrepareScrollBox()
@@ -86,11 +101,6 @@ void ULoopScrollBox::SetFocusCover()
 	{
 		CoverReference[IndexFocusCard - 1]->FocusCover(false);
 	}
-}
-
-void ULoopScrollBox::SetCenterFocus() const
-{
-	BtnClick->SetKeyboardFocus();
 }
 
 void ULoopScrollBox::GetCardReference(UCard*& CardRef, const int32 Index, const int32 StartIndex)
@@ -167,7 +177,7 @@ void ULoopScrollBox::CardsDefault()
 		CurrentCard->SetRenderOpacity(1);
 		CurrentCard->SetRenderTransform(FWidgetTransform());
 
-		if(Index - 6 >= ChildrenCount)
+		if (Index - 6 >= ChildrenCount)
 		{
 			CurrentCard->SetVisibility(ESlateVisibility::Hidden);
 		}
@@ -199,7 +209,7 @@ void ULoopScrollBox::ConstructCards()
 		UE_LOG(LogTemp, Error, TEXT("CardClassReference is Empty"));
 		return;
 	}
-	
+
 	CardReference.Empty();
 	CanvasCards->ClearChildren();
 	bBindCard = true;
@@ -208,9 +218,9 @@ void ULoopScrollBox::ConstructCards()
 	{
 		UCard* Card = WidgetTree->ConstructWidget<UCard>(CardClassReference);
 		Card->IndexCard = i;
-		Card->OnReleaseTrigger.AddDynamic(this, &ULoopScrollBox::OnReleaseCard);
-		Card->OnHoveredTrigger.AddDynamic(this, &ULoopScrollBox::OnHoveredCard);
-		Card->OnUnhoveredTrigger.AddDynamic(this, &ULoopScrollBox::OnUnhoveredCard);
+		Card->OnReleaseTrigger.AddUniqueDynamic(this, &ULoopScrollBox::OnReleaseCard);
+		Card->OnHoveredTrigger.AddUniqueDynamic(this, &ULoopScrollBox::OnHoveredCard);
+		Card->OnUnhoveredTrigger.AddUniqueDynamic(this, &ULoopScrollBox::OnUnhoveredCard);
 		CardReference.Add(Card);
 		CanvasCards->AddChild(Card);
 		UCanvasPanelSlot* CanvasCard = Cast<UCanvasPanelSlot>(Card->Slot);
@@ -218,7 +228,6 @@ void ULoopScrollBox::ConstructCards()
 		CanvasCard->SetAutoSize(true);
 		CanvasCard->SetPosition(FVector2D(Position, 0));
 	}
-
 }
 
 FIndexPositions ULoopScrollBox::GetScrollOffSet() const
@@ -229,33 +238,8 @@ FIndexPositions ULoopScrollBox::GetScrollOffSet() const
 	return Position;
 }
 
-void ULoopScrollBox::OnReleaseCard(int32 Index)
+void ULoopScrollBox::NewDirectionInput(const int32 NewIndex)
 {
-	if(Index > 5 && Index < 10)
-	{
-		const int32 NewIndex = Index - 5;
-		UE_LOG(LogTemp, Warning, TEXT("%d"), NewIndex);
-		MainInterfaceReference->OnClickLaunch();
-	}
-}
-
-void ULoopScrollBox::OnHoveredCard(int32 Index)
-{
-	if(!MainInterfaceReference->GetInputEnable()) return;
-	
-	const int32 NewIndex = Index - 5;
-	if(Index > 5 && Index < 10)
-	{
-		Speed = 0.01f;
-		if(MainInterfaceReference->PositionY == EPositionY::TOP)
-		{
-			MainInterfaceReference->SetNavigationFocusDownBottom();
-		}
-		else if(MainInterfaceReference->PositionY == EPositionY::BOTTOM)
-		{
-			MainInterfaceReference->SetNavigationFocusUpBottom();
-		}
-	}
 	if (NewIndex < PositionOffsetFocus)
 	{
 		MainInterfaceReference->ENavigationButton = EButtonsGame::LEFT;
@@ -268,13 +252,54 @@ void ULoopScrollBox::OnHoveredCard(int32 Index)
 	}
 }
 
+bool ULoopScrollBox::CheckFocus() const
+{
+	if(MainInterfaceReference == nullptr) return true; 
+	return !MainInterfaceReference->GetInputEnable() ||
+				MainInterfaceReference->PositionY == EPositionY::BOTTOM ||
+					MainInterfaceReference->Focus != EFocus::MAIN;
+}
+
+void ULoopScrollBox::OnReleaseCard(int32 Index)
+{
+	if(CheckFocus()) return;
+
+	const int32 NewIndex = Index - 5;
+	if (Index > 5 && Index < 10)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%d"), NewIndex);
+		MainInterfaceReference->OnClickLaunch();
+		return;
+	}
+	NewDirectionInput(NewIndex);
+}
+
+void ULoopScrollBox::OnHoveredCard(int32 Index)
+{
+	if(CheckFocus()) return;
+
+	const int32 NewIndex = Index - 5;
+	if (Index > 5 && Index < 10)
+	{
+		
+		Speed = 0.01f;
+		if (MainInterfaceReference->PositionY == EPositionY::TOP)
+		{
+			MainInterfaceReference->SetNavigationFocusDownBottom();
+		}
+		else if (MainInterfaceReference->PositionY == EPositionY::BOTTOM)
+		{
+			MainInterfaceReference->SetNavigationFocusUpBottom();
+		}
+		NewDirectionInput(NewIndex);
+	}
+}
+
 void ULoopScrollBox::OnUnhoveredCard(int32 Index)
 {
-	if(Index > 5 && Index < 10)
+	if (Index > 5 && Index < 10)
 	{
-		//bUnlockInput = true;
 		const int32 NewIndex = Index - 5;
-		//CardReference[Index]->SetFocusCard(false,true,false,0.25f);
 	}
 }
 

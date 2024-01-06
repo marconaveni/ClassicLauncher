@@ -80,8 +80,9 @@ protected:
 	virtual void OnAnimationStartedPlaying(UUMGSequencePlayer& Player) override;
 	virtual void OnAnimationFinishedPlaying(UUMGSequencePlayer& Player) override;
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	virtual FReply NativeOnMouseButtonUp( const FGeometry& InGeometry, const FPointerEvent& InMouseEvent ) override;
 	virtual FReply NativeOnMouseMove(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-
+	
 	UFUNCTION(BlueprintCallable,  Category = "Input")
 	void PressedInput(const FKey InKey);
 	
@@ -110,6 +111,9 @@ protected:
 	float DefaultFirstDelayInput;
 
 public:
+
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	void SetHideMouse() const;
 	
 	UFUNCTION(BlueprintPure, Category = "Input")
 	bool GetMouseEnable();

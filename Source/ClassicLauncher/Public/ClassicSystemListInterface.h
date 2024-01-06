@@ -58,5 +58,5 @@ public:
 	UTexture2D* ArrowIconOutline;
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicSystemListInterface|Events")
-	void SetFocusItem(const EButtonsGame Navigate,UPARAM(ref) int32& Index);
+	void SetFocusItem(const EButtonsGame Input,UPARAM(ref) int32& Index);
 };

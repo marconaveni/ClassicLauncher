@@ -8,14 +8,28 @@
 #include "Components/VerticalBox.h"
 #include "UI/BaseButton.h"
 
+
+UScrollBoxEnhanced::UScrollBoxEnhanced(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+	  , bUpdateIndex(false)
+	  , IndexFocus(0)
+	  , IndexWheelFocus(0)
+	  , bAutoContent(false)
+	  , ScrollBarVisibility(ESlateVisibility::Hidden)
+{
+}
+
 void UScrollBoxEnhanced::NativePreConstruct()
 {
 	Super::NativePreConstruct();
-	if(bAutoContent)
+	if (bAutoContent)
 	{
 		NamedSlot->AddChild(VerticalBoxContent);
 	}
+
+	SetScrollBarVisibility(ScrollBarVisibility);
 	bUpdateIndex = true;
+	BindButtonsScroll();
 }
 
 void UScrollBoxEnhanced::NativeOnInitialized()
@@ -34,23 +48,23 @@ FReply UScrollBoxEnhanced::NativeOnMouseWheel(const FGeometry& InGeometry, const
 {
 	const float WheelDelta = InMouseEvent.GetWheelDelta();
 
-	if(bUpdateIndex)
+	if (bUpdateIndex)
 	{
 		bUpdateIndex = false;
 		IndexWheelFocus = IndexFocus;
 	}
-	
-	if(WheelDelta > 0)
+
+	if (WheelDelta > 0)
 	{
-		IndexWheelFocus = FMath::Clamp(IndexWheelFocus - 1 , 0 ,GetAllChildrenContent().Num()); 
+		IndexWheelFocus = FMath::Clamp(IndexWheelFocus - 1, 2, GetAllChildrenContent().Num() - 3);
 	}
-	else if(WheelDelta < 0)
+	else if (WheelDelta < 0)
 	{
-		IndexWheelFocus = FMath::Clamp(IndexWheelFocus + 1 , 0 ,GetAllChildrenContent().Num());
+		IndexWheelFocus = FMath::Clamp(IndexWheelFocus + 1, 2, GetAllChildrenContent().Num() - 3);
 	}
-	if(GetAllChildrenContent().IsValidIndex(IndexWheelFocus) && WheelDelta != 0 )
+	if (GetAllChildrenContent().IsValidIndex(IndexWheelFocus) && WheelDelta != 0)
 	{
-		ScrollBox->ScrollWidgetIntoView(GetAllChildrenContent()[IndexWheelFocus], true , EDescendantScrollDestination::Center);
+		ScrollBox->ScrollWidgetIntoView(GetAllChildrenContent()[IndexWheelFocus], true, EDescendantScrollDestination::Center);
 	}
 	return Super::NativeOnMouseWheel(InGeometry, InMouseEvent);
 }
@@ -76,25 +90,26 @@ void UScrollBoxEnhanced::SetIconArrow()
 {
 	ScrollCurrentOffSet = ScrollBox->GetScrollOffset();
 
-	if (VerticalBoxContent->GetAllChildren().Num() <= 5)
+	if (GetAllChildrenContent().Num() <= 5)
 	{
 		ArrowUP->SetBrushFromTexture(ArrowIconOutline);
 		ArrowDown->SetBrushFromTexture(ArrowIconOutline);
 		return;
 	}
-	
-	if (ScrollCurrentOffSet >= ScrollBox->GetScrollOffsetOfEnd() - 2)
-	{
-		//set ArrowDown
-		ArrowUP->SetBrushFromTexture(ArrowIcon);
-		ArrowDown->SetBrushFromTexture(ArrowIconOutline);
-		return;
-	}
-	if (ScrollCurrentOffSet <= 1)
+
+	if (ScrollCurrentOffSet < 1)
 	{
 		//set ArrowUP
 		ArrowUP->SetBrushFromTexture(ArrowIconOutline);
 		ArrowDown->SetBrushFromTexture(ArrowIcon);
+		return;
+	}
+
+	if (ScrollCurrentOffSet >= ScrollBox->GetScrollOffsetOfEnd() - 1)
+	{
+		//set ArrowDown
+		ArrowUP->SetBrushFromTexture(ArrowIcon);
+		ArrowDown->SetBrushFromTexture(ArrowIconOutline);
 		return;
 	}
 
@@ -105,12 +120,39 @@ void UScrollBoxEnhanced::SetIconArrow()
 void UScrollBoxEnhanced::SetContent(UWidget* Content)
 {
 	VerticalBoxContent->AddChild(Content);
+	BindButton(Content);
+}
+
+void UScrollBoxEnhanced::BindButton(UWidget* Content)
+{
 	UBaseButton* BaseButton = Cast<UBaseButton>(Content);
-	if(BaseButton != nullptr)
+	if (BaseButton != nullptr)
 	{
-		BaseButton->OnFocusTrigger.AddUniqueDynamic(this, &UScrollBoxEnhanced::OnFocusButton);
-		BaseButton->OnFocusLostTrigger.AddUniqueDynamic(this, &UScrollBoxEnhanced::OnLostFocusButton);
+		BindButton(BaseButton);
 	}
+}
+
+void UScrollBoxEnhanced::BindButton(UBaseButton* Content)
+{
+	Content->OnFocusTrigger.AddUniqueDynamic(this, &UScrollBoxEnhanced::OnFocusButton);
+	Content->OnFocusLostTrigger.AddUniqueDynamic(this, &UScrollBoxEnhanced::OnLostFocusButton);
+}
+
+void UScrollBoxEnhanced::BindButtonsScroll()
+{
+	TArray<UWidget*> Widgets = GetAllChildrenContent();
+	int32 NewIndex = 0;
+	for (UWidget* Widget : Widgets)
+	{
+		UBaseButton* BaseButton = Cast<UBaseButton>(Widget);
+		if (BaseButton != nullptr && UClassicFunctionLibrary::GetVisibilityWidget(BaseButton))
+		{
+			BindButton(BaseButton);
+			BaseButton->SetIndex(NewIndex);
+		}
+		NewIndex++;
+	}
+	SetIconArrow();
 }
 
 void UScrollBoxEnhanced::ClearAllChildrenContent()
@@ -118,39 +160,77 @@ void UScrollBoxEnhanced::ClearAllChildrenContent()
 	VerticalBoxContent->ClearChildren();
 }
 
-int32 UScrollBoxEnhanced::SetFocusScroll(EScrollTo Scroll)
+UWidget* UScrollBoxEnhanced::AddIndex(EScrollTo Scroll)
 {
-	const int32 Count = GetAllChildrenContent().Num() - 1 ;
-	if(Scroll == EScrollTo::UP)
+	const int32 Count = GetAllChildrenContent().Num() - 1;
+	if (Scroll == EScrollTo::UP)
 	{
 		IndexFocus--;
-		IndexFocus = (IndexFocus < 0 ) ?  Count : IndexFocus  ; 
+		IndexFocus = (IndexFocus < 0) ? Count : IndexFocus;
 	}
-	else if(Scroll == EScrollTo::DOWN)
+	else if (Scroll == EScrollTo::DOWN)
 	{
 		IndexFocus++;
-		IndexFocus = (IndexFocus > Count ) ?  0 : IndexFocus ; 
+		IndexFocus = (IndexFocus > Count) ? 0 : IndexFocus;
 	}
-	if(GetAllChildrenContent().IsValidIndex(IndexFocus))
+	if (GetAllChildrenContent().IsValidIndex(IndexFocus))
 	{
-		GetAllChildrenContent()[IndexFocus]->SetFocus();
-		ScrollBox->ScrollWidgetIntoView(GetAllChildrenContent()[IndexFocus], false , EDescendantScrollDestination::Center);
+		return GetAllChildrenContent()[IndexFocus];
 	}
+	return nullptr;
+}
+
+int32 UScrollBoxEnhanced::SetFocusScroll(EScrollTo Scroll)
+{
+	UBaseButton* BaseButton = nullptr;
+	for (int i = 0; i < GetAllChildrenContent().Num() - 1; i++)
+	{
+		BaseButton = Cast<UBaseButton>(AddIndex(Scroll));
+		if (BaseButton != nullptr)
+		{
+			if (BaseButton->IsFocusable() && UClassicFunctionLibrary::GetVisibilityWidget(BaseButton))
+			{
+				BaseButton->SetFocus();
+				break;
+			}
+		}
+	}
+	ScrollBox->ScrollWidgetIntoView(BaseButton, false, EDescendantScrollDestination::Center);
 	return IndexFocus;
 }
 
 TArray<UWidget*> UScrollBoxEnhanced::GetAllChildrenContent() const
 {
-	return VerticalBoxContent->GetAllChildren();
+	UPanelWidget* Content = Cast<UPanelWidget>(NamedSlot->GetChildAt(0));
+	if (Content != nullptr)
+	{
+		return Content->GetAllChildren();
+	}
+	return TArray<UWidget*>();
+}
+
+void UScrollBoxEnhanced::SetScrollBarVisibility(ESlateVisibility EnableVisibility)
+{
+	ScrollBarVisibility = EnableVisibility;
+	const bool bAlwaysShowScrollbar = (EnableVisibility == ESlateVisibility::Visible);
+	ScrollBox->SetAlwaysShowScrollbar(bAlwaysShowScrollbar);
+	ScrollBox->SetScrollBarVisibility(EnableVisibility);
+	ArrowUP->SetVisibility(EnableVisibility);
+	ArrowDown->SetVisibility(EnableVisibility);
+}
+
+bool UScrollBoxEnhanced::GetScrollBarVisibility()
+{
+	return ScrollBox->GetScrollBarVisibility() == ESlateVisibility::Visible;
 }
 
 void UScrollBoxEnhanced::OnFocusButton(int32 Index)
 {
-	UE_LOG(LogTemp,Warning,TEXT("focus %d"), Index);
+	UE_LOG(LogTemp, Warning, TEXT("focus %d"), Index);
 	IndexFocus = Index;
 }
 
 void UScrollBoxEnhanced::OnLostFocusButton(int32 Index)
 {
-	UE_LOG(LogTemp,Warning,TEXT("lost focus %d"), Index);
+	UE_LOG(LogTemp, Warning, TEXT("lost focus %d"), Index);
 }

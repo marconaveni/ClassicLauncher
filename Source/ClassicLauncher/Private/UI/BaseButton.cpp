@@ -18,14 +18,26 @@ void UBaseButton::NativePreConstruct()
 	Super::NativePreConstruct();
 }
 
+FReply UBaseButton::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
+{
+	Input = UClassicFunctionLibrary::GetInputButton(InKeyEvent);
+	return Super::NativeOnPreviewKeyDown(InGeometry, InKeyEvent);
+}
+
 FReply UBaseButton::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
-	const EButtonsGame Input = UClassicFunctionLibrary::GetInputButton(InKeyEvent);
-	if (Input == EButtonsGame::A)
+	const EButtonsGame NewInput = UClassicFunctionLibrary::GetInputButton(InKeyEvent);
+	if (NewInput == EButtonsGame::A)
 	{
 		ButtonClick();
 	}
+	Input = EButtonsGame::NONE;
 	return Super::NativeOnKeyUp(InGeometry, InKeyEvent);
+}
+
+FReply UBaseButton::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	return Super::NativeOnPreviewMouseButtonDown(InGeometry, InMouseEvent);
 }
 
 void UBaseButton::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
@@ -87,4 +99,9 @@ void UBaseButton::SetFocusButton(bool bEnable)
 	{
 		OnFocusLostTrigger.Broadcast(Index);
 	}
+}
+
+void UBaseButton::SetIndex(const int32 NewIndex)
+{
+	Index = NewIndex;
 }

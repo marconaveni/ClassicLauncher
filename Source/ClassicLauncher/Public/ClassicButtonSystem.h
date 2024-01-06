@@ -22,10 +22,10 @@ public:
 	class UArrow* WBPArrow;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* BgBackground;
+	UImage* BgBackground;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextImageBlock* Text;
+	UTextImageBlock* Text;
 	
 	UClassicButtonSystem(const FObjectInitializer& ObjectInitializer);
 
@@ -38,12 +38,10 @@ public:
 	virtual bool Initialize() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual void SetFocusButton(bool bEnable) override;
+	virtual void ButtonClick() override;
 	
 	UFUNCTION(BlueprintCallable, Category = "ClassicButtonSystem|Functions")
 	void SetText(FText NewText);
-
-	UFUNCTION(BlueprintCallable, Category = "ClassicButtonSystem|Functions")
-	void SetIndex(int32 NewIndex);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButtonSystem|Variables")
 	FText ButtonText;
@@ -61,5 +59,9 @@ public:
 	void AlternateToTextImage(bool bEnable, float Size = 24);
 
 	virtual void EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound) override;
-	
+
+private:
+
+	UPROPERTY()
+	bool bMouseFocus;
 };

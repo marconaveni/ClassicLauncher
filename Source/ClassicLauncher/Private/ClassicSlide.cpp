@@ -1,47 +1,42 @@
-// Copyright 2022 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 
 #include "ClassicSlide.h"
+
+#include "ClassicFunctionLibrary.h"
 #include "Components/Slider.h"
-#include "Components/Image.h"
-#include "Arrow.h"
-#include "TextImageBlock.h"
-#include "Components/Button.h"
-#include "Kismet/GameplayStatics.h"
+
+void UClassicSlide::MoveSlide()
+{
+
+	if (IsFocusable() && (Input == EButtonsGame::LEFT || Input == EButtonsGame::RIGHT))
+	{
+		const float SlideValue = GetSlideValue();
+		const float SlideTo = 60.0f * GetWorld()->GetDeltaSeconds();
+		if (Input == EButtonsGame::LEFT)
+		{
+			SetSlideValue(SlideValue - SlideTo);
+		}
+		else if (Input == EButtonsGame::RIGHT)
+		{
+			SetSlideValue(SlideValue + SlideTo);
+		}
+		UE_LOG(LogTemp, Warning, TEXT("slide %f") , SlideValue + SlideTo);
+	}
+}
 
 void UClassicSlide::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
-	if (SliderVol != nullptr) {
-		//equivale doonce blueprint
-		if (Click->HasKeyboardFocus() || SliderVol->HasKeyboardFocus()) {
-			if (!Hover)
-			{
-				BgBackground->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-				WBPArrow->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-				OnFocusTriggerSlide.Broadcast();
-				
-			}
-			Hover = true;
-		}
-		else {
-			if (Hover)
-			{
-				BgBackground->SetVisibility(ESlateVisibility::Hidden);
-				WBPArrow->SetVisibility(ESlateVisibility::Hidden);
-				OnFocusLostTriggerSlide.Broadcast();
-			}
-			Hover = false;
-		}
-	}
+	MoveSlide();
 }
 
 bool UClassicSlide::Initialize()
 {
-	bool Success = Super::Initialize();
-	if (SliderVol)
+	const bool Success = Super::Initialize();
+	if (SliderVolume)
 	{
-		SliderVol->OnValueChanged.AddDynamic(this, &UClassicSlide::OnSlideValue);
+		SliderVolume->OnValueChanged.AddDynamic(this, &UClassicSlide::OnSlideValue);
 	}
 
 	return Success;
@@ -50,50 +45,33 @@ bool UClassicSlide::Initialize()
 void UClassicSlide::NativePreConstruct()
 {
 	Super::NativePreConstruct();
-	SetTextLabel(TxtTextLabel);
 }
 
-void UClassicSlide::SetFocusSlide(const bool bIsSound)
+void UClassicSlide::NativeOnFocusLost(const FFocusEvent& InFocusEvent)
 {
-	Click->SetKeyboardFocus();
-	if (bIsSound)
-	{
-		UGameplayStatics::PlaySound2D(this, SoundNavigation);
-	}
+	OnFocusLostTriggerSlide.Broadcast();
+	Super::NativeOnFocusLost(InFocusEvent);
 }
 
 void UClassicSlide::OnSlideValue(float Value)
 {
-	OnSlide.Broadcast(FMath::Clamp(Value, 0, 100));
-	SlideValue = FMath::Clamp(Value, 0, 100);
+	OnSlideTrigger.Broadcast(FMath::Clamp(Value, 0, 100));
 }
 
 void UClassicSlide::SetSlideValue(float Value)
 {
-	OnSlide.Broadcast(FMath::Clamp(Value, 0, 100));
-	SliderVol->SetValue(FMath::Clamp(Value, 0, 100));
-	SlideValue = FMath::Clamp(Value, 0, 100);
+	SliderVolume->SetValue(FMath::Clamp(Value, 0, 100));
+	OnSlideTrigger.Broadcast(FMath::Clamp(Value, 0, 100));
 }
 
-void UClassicSlide::SetTextLabel(FText NewText)
+float UClassicSlide::GetSlideValue()
 {
-	TxtLabel->SetText(NewText);
-}
-
-void UClassicSlide::SetTextAppearance(FTextStyle NewTextStyle)
-{
-	TxtLabel->SetTextStyle(NewTextStyle);
-}
-
-void UClassicSlide::AlternateToTextImage(bool bEnable, float Size)
-{
-	TxtLabel->SetTextImageSize(Size);
-	TxtLabel->DefaultToImageText(bEnable, true);
+	return SliderVolume->GetValue();
 }
 
 void UClassicSlide::EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound)
 {
-	SoundNavigation = NavigateSound;
+	SoundSelect = NavigateSound;
 }
 
 

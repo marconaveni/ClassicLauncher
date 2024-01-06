@@ -19,14 +19,14 @@ FReply UClassicSystemListInterface::NativeOnKeyUp(const FGeometry& InGeometry, c
 	return Super::NativeOnKeyUp(InGeometry, InKeyEvent);
 }
 
-void UClassicSystemListInterface::SetFocusItem(const EButtonsGame Navigate, int32& Index)
+void UClassicSystemListInterface::SetFocusItem(const EButtonsGame Input, int32& Index)
 {
 	
-	if (Navigate == EButtonsGame::UP)
+	if (Input == EButtonsGame::UP)
 	{
 		Index = ScrollBox->SetFocusScroll(EScrollTo::UP);
 	}
-	else if (Navigate == EButtonsGame::DOWN)
+	else if (Input == EButtonsGame::DOWN)
 	{
 		Index = ScrollBox->SetFocusScroll(EScrollTo::DOWN);
 	}

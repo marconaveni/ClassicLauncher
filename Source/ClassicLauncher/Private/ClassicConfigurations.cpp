@@ -19,6 +19,7 @@
 #include "TextImageBlock.h"
 #include "Kismet/KismetInternationalizationLibrary.h"
 #include "UI/Layout/Header.h"
+#include "UI/Layout/Components/ScrollBoxEnhanced.h"
 
 #define LOCTEXT_NAMESPACE "ButtonsConfiguration"
 
@@ -32,15 +33,17 @@ void UClassicConfigurations::NativeOnInitialized()
 	Super::NativeOnInitialized();
 
 	bFocus = false;
-	IndexSelect = 0;
+	Index = 0;
 
-	SlideVolume->OnSlide.AddDynamic(this, &UClassicConfigurations::OnSlideVolume);
+	SetIsFocusable(true);
+
+	SlideVolume->OnSlideTrigger.AddDynamic(this, &UClassicConfigurations::OnSlideVolume);
 	SlideVolume->OnFocusLostTriggerSlide.AddDynamic(this, &UClassicConfigurations::OnSlideLostFocus);
 	BtnUpdateGameList->OnClickTrigger.AddDynamic(this, &UClassicConfigurations::OnClickUpdate);
 	BtnDeviceInfo->OnClickTrigger.AddDynamic(this, &UClassicConfigurations::OnClickDevice);
 	BtnLicenseInfo->OnClickTrigger.AddDynamic(this, &UClassicConfigurations::OnClickLicense);
 	BtnLanguage->OnClickTrigger.AddDynamic(this, &UClassicConfigurations::OnClickLanguage);
-
+	
 	
 	for (TObjectIterator<UMainInterface> ObjectIterator; ObjectIterator; ++ObjectIterator)
 	{
@@ -90,6 +93,7 @@ void UClassicConfigurations::OnSlideLostFocus()
 	{
 		MainInterfaceReference->ConfigurationData.Volume = ClassicMediaPlayerReference->GetMasterVolume();
 		UClassicFunctionLibrary::SaveConfig(MainInterfaceReference->ConfigurationData);
+		UE_LOG(LogTemp, Warning, TEXT("saving config"));
 	}
 }
 
@@ -122,7 +126,12 @@ void UClassicConfigurations::OnClickDevice(int32 Value)
 	bFocus = true;
 	WSButtons->SetRenderOpacity(0);
 	WSDeviceInfo->SetRenderOpacity(1);
+	WSButtons->SetVisibility(ESlateVisibility::Hidden);
+	WSDeviceLicense->SetVisibility(ESlateVisibility::Hidden);
+	WSDeviceInfo->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	SetFocus();
 	UE_LOG(LogTemp, Warning, TEXT("OnClickDevice"));
+	
 }
 
 void UClassicConfigurations::OnClickLicense(int32 Value)
@@ -130,6 +139,10 @@ void UClassicConfigurations::OnClickLicense(int32 Value)
 	bFocus = true;
 	WSButtons->SetRenderOpacity(0);
 	WSDeviceLicense->SetRenderOpacity(1);
+	WSButtons->SetVisibility(ESlateVisibility::Hidden);
+	WSDeviceInfo->SetVisibility(ESlateVisibility::Hidden);
+	WSDeviceLicense->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	SetFocus();
 	UE_LOG(LogTemp, Warning, TEXT("OnClickLicense"));
 }
 
@@ -177,51 +190,36 @@ void UClassicConfigurations::CloseModal()
 	WSButtons->SetRenderOpacity(1);
 	WSDeviceInfo->SetRenderOpacity(0);
 	WSDeviceLicense->SetRenderOpacity(0);
+	WSButtons->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	WSDeviceInfo->SetVisibility(ESlateVisibility::Hidden);
+	WSDeviceLicense->SetVisibility(ESlateVisibility::Hidden);
+	SetFocusItem(EButtonsGame::NONE);
 }
 
-void UClassicConfigurations::SetIndexFocus(EButtonsGame Input)
+void UClassicConfigurations::SetFocusItem(const EButtonsGame Input)
 {
 	if (bFocus) return;
 	
-	if (Input == EButtonsGame::UP || Input == EButtonsGame::DOWN)
+	if (Input == EButtonsGame::UP)
 	{
-		if (Input == EButtonsGame::DOWN)
-		{
-			IndexSelect++;
-			IndexSelect = (IndexSelect > 4) ? 0 : IndexSelect;
-		}
-		else if (Input == EButtonsGame::UP)
-		{
-			IndexSelect--;
-			IndexSelect = (IndexSelect < 0) ? 4 : IndexSelect;
-		}
-		SetFocusSelect();
+		Index = ScrollBox->SetFocusScroll(EScrollTo::UP);
 	}
-
-	const float SlideValue = static_cast<float>(SlideVolume->SlideValue);
-	const float SlideTo = 60.0f * GetWorld()->GetDeltaSeconds();
-
-	if (IndexSelect == 0)
+	else if (Input == EButtonsGame::DOWN)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("slide %f") , SlideValue + SlideTo);
-		if (Input == EButtonsGame::LEFT)
-		{
-			SlideVolume->SetSlideValue(SlideValue - SlideTo);
-		}
-		else if (Input == EButtonsGame::RIGHT)
-		{
-			SlideVolume->SetSlideValue(SlideValue + SlideTo);
-		}
+		Index = ScrollBox->SetFocusScroll(EScrollTo::DOWN);
 	}
-
+	else
+	{
+		Index = ScrollBox->SetFocusScroll(EScrollTo::NONE);
+	}
 }
 
 void UClassicConfigurations::SetFocusSelect(const bool bIsSound)
 {
-	switch (IndexSelect)
+	switch (Index)
 	{
 	case 0:
-		SlideVolume->SetFocusSlide(bIsSound);
+		SlideVolume->SetFocus();
 		break;
 	case 1:
 		BtnUpdateGameList->SetFocus();
@@ -249,7 +247,7 @@ void UClassicConfigurations::Delay()
 void UClassicConfigurations::RestartMap()
 {
 	const AClassicGameMode* GameMode = Cast<AClassicGameMode>(UGameplayStatics::GetGameMode(this));
-	IndexSelect = 0;
+	Index = 0;
 	bFocus = false;
 	bDelayInput = false;
 	GameMode->LoadingGameData->SetToRestartWidgets();

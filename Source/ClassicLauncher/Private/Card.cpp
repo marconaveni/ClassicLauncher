@@ -45,7 +45,34 @@ FReply UCard::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEven
 	return Super::NativeOnPreviewKeyDown(InGeometry, InKeyEvent);
 }
 
- 
+FReply UCard::NativeOnMouseMove(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	const float CursorDelta = FMath::Abs(InMouseEvent.GetCursorDelta().X + InMouseEvent.GetCursorDelta().Y);
+
+	if (BtnClick->IsHovered() && CursorDelta > 5 /*&& !bMouseMove*/)
+	{
+		/*bMouseMove = true;*/
+		Hovered();
+	}
+	return Super::NativeOnMouseMove(InGeometry, InMouseEvent);
+}
+
+void UCard::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	if (/*BtnClick->IsHovered() && */bMouseMove)
+	{
+	}
+	
+	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
+}
+
+void UCard::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
+{
+	/*bMouseMove = false;*/
+	Super::NativeOnMouseLeave(InMouseEvent);
+}
+
+
 void UCard::SetPlayers(FString NumberPlayers)
 {
 	if (PlayersImage.Max() > 3) {
@@ -92,9 +119,9 @@ void UCard::SetFocusCard(bool bEnable, bool bAnimate, bool bReset, float TimeAni
 bool UCard::BindButton()
 {
 	if (!ensure(BtnClick != nullptr)) return false;
-	BtnClick->OnReleased.AddDynamic(this, &UCard::Release);
-	BtnClick->OnHovered.AddDynamic(this, &UCard::Hovered);
-	BtnClick->OnUnhovered.AddDynamic(this, &UCard::Unhovered);
+	BtnClick->OnReleased.AddUniqueDynamic(this, &UCard::Release);
+	/*BtnClick->OnHovered.AddDynamic(this, &UCard::Hovered);*/
+	BtnClick->OnUnhovered.AddUniqueDynamic(this, &UCard::Unhovered);
 	return true;
 }
 

@@ -11,8 +11,9 @@
 #include "LoopScrollBox.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateCard, int32, Index);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateIndexStart, int32, Index);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateIndexFinal, int32, Index);
+/*DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateIndexStart, int32, Index);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateIndexFinal, int32, Index);*/
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDelegateOnCardClick);
 
 class UMainInterface;
 
@@ -26,22 +27,28 @@ class CLASSICLAUNCHER_API ULoopScrollBox : public UUserWidget, public  IMusicInt
 
 protected:
 
+	virtual FReply NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
+	virtual FReply NativeOnMouseMove( const FGeometry& InGeometry, const FPointerEvent& InMouseEvent ) override;
 	virtual void NativeOnInitialized() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
 
+	
 public:
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
-	FDelegateCard GetCardIndex;
+	FDelegateCard OnCardIndex;
 
-	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	/*UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FDelegateIndexStart StartIndexToFinal;
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
-	FDelegateIndexFinal FinalIndexToStart;
+	FDelegateIndexFinal FinalIndexToStart;*/
 
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FDelegateOnCardClick OnCardClick;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
 	TArray<UCard*> CardReference;
 
@@ -144,6 +151,10 @@ protected:
 	UFUNCTION()
 	void Clear();
 
+	void NewDirectionInput(int32 NewIndex);
+	
+	bool CheckFocus() const;
+
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
@@ -160,9 +171,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
 	void SetFocusCover();
-
-	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
-	void SetCenterFocus() const;
 
 	UFUNCTION(BlueprintPure, Category = "LoopScrollBox|Functions")
 	FIndexPositions GetScrollOffSet() const;

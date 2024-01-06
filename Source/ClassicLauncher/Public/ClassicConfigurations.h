@@ -31,8 +31,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicConfigurations|Variables")
 	bool bDelayInput;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicConfigurations|Variables")
-	int32 IndexSelect;
+	int32 Index;
 
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UScrollBoxEnhanced* ScrollBox;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UVerticalBox* VerticalBoxContent;
+	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* Background;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
@@ -65,12 +71,16 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void OnSlideVolume(int32 Value);
+	
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void OnSlideLostFocus();
+	
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void OnClickUpdate(int32 Value);
+	
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void OnClickDevice(int32 Value);
+	
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void OnClickLicense(int32 Value);
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
@@ -80,7 +90,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void CloseModal();
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
-	void SetIndexFocus(EButtonsGame Input);
+	void SetFocusItem(EButtonsGame Input);
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void SetFocusSelect(const bool bIsSound = true);
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")

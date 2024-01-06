@@ -1303,3 +1303,10 @@ void UClassicFunctionLibrary::CreateTexture2DToAsset(int32 InSizeX, int32 InSize
 	}
 }
 
+bool UClassicFunctionLibrary::GetVisibilityWidget(const UWidget* Widget)
+{
+	return  Widget->GetVisibility() != ESlateVisibility::Collapsed &&
+				Widget->GetVisibility() != ESlateVisibility::Hidden &&
+					Widget->GetVisibility() != ESlateVisibility::HitTestInvisible;
+}
+

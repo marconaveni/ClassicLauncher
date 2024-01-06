@@ -169,7 +169,6 @@ protected:
 	virtual void NativePressedInput(const FKey& InKey) override;
 	virtual void NativeReleaseInput(const FKey& InKey) override;
 	virtual FReply NativeOnMouseWheel(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 
 public:
 	//variables
@@ -215,9 +214,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	bool bUpDownPressed;
-
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	bool bDelayFavoriteClick;*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	bool bDelayQuit;
@@ -286,7 +282,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle LoadImagesTimerHandle;
 
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
+	FTimerHandle MouseScrollTimerHandle;
+	
 	//TempVariables
 	UPROPERTY(BlueprintReadOnly)
 	int32 FirstIndex;
@@ -464,5 +462,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void SetPlayAnimation(FName AnimationName);
 	
-
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void CardIndex(int32 CardIndex);
 };

@@ -10,7 +10,7 @@
 #include "Kismet/GameplayStatics.h"
 
 UClassicButtonSystem::UClassicButtonSystem(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+	: Super(ObjectInitializer), bMouseFocus(false)
 {
 }
 
@@ -22,11 +22,13 @@ void UClassicButtonSystem::NativePreConstruct()
 
 FReply UClassicButtonSystem::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
+	//const EButtonsGame NewInput = UClassicFunctionLibrary::GetInputButton(InKeyEvent);
 	return Super::NativeOnKeyUp(InGeometry, InKeyEvent);
 }
 
 void UClassicButtonSystem::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
+	bMouseFocus = true;
 	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
 }
 
@@ -38,6 +40,7 @@ FReply UClassicButtonSystem::NativeOnFocusReceived(const FGeometry& InGeometry, 
 void UClassicButtonSystem::NativeOnFocusLost(const FFocusEvent& InFocusEvent)
 {
 	Super::NativeOnFocusLost(InFocusEvent);
+	bMouseFocus = false;
 }
 
 FReply UClassicButtonSystem::NativeOnMouseWheel(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
@@ -62,18 +65,16 @@ void UClassicButtonSystem::SetText(FText NewText)
 	ButtonText = NewText;
 }
 
-void UClassicButtonSystem::SetIndex(int32 NewIndex)
-{
-	Index = NewIndex;
-}
-
 void UClassicButtonSystem::SetFocusButton(bool bEnable)
 {
 	if (bEnable)
 	{
 		BgBackground->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		WBPArrow->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-		UGameplayStatics::PlaySound2D(this, SoundSelect);
+		if(!bMouseFocus)
+		{
+			UGameplayStatics::PlaySound2D(this, SoundSelect);
+		}
 	}
 	else
 	{
@@ -81,6 +82,16 @@ void UClassicButtonSystem::SetFocusButton(bool bEnable)
 		WBPArrow->SetVisibility(ESlateVisibility::Hidden);
 	}
 	Super::SetFocusButton(bEnable);
+}
+
+void UClassicButtonSystem::ButtonClick()
+{
+	if (HasAnyUserFocus())
+	{
+		UGameplayStatics::PlaySound2D(this, SoundClick);
+		//FSlateApplication::Get().SetAllUserFocusToGameViewport();
+	}
+	Super::ButtonClick();
 }
 
 void UClassicButtonSystem::SetTextAppearance(FTextStyle NewTextStyle)
