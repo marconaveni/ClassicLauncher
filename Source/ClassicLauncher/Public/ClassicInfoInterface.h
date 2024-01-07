@@ -1,4 +1,4 @@
-// Copyright 2022 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 #pragma once
 
@@ -25,7 +25,7 @@ protected:
 private:
 
 	virtual FReply NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
-
+	virtual void NativeOnInitialized() override;
 	virtual FReply NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 
 public:	
@@ -36,11 +36,11 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* Icon;
 
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	/*UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* ArrowUP;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* ArrowDown;
+	class UImage* ArrowDown;*/
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UScrollBox* ScrollBox;
@@ -113,8 +113,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InfoInterface|Variables")
 	float CurrentOffSet;
 
-	UFUNCTION(BlueprintCallable, Category = "InfoInterface")
-	void ScrollTopEnd(EButtonsGame Navigate);
+	/*UFUNCTION(BlueprintCallable, Category = "InfoInterface")
+	void ScrollTopEnd(EButtonsGame Navigate);*/
 
 	UFUNCTION(BlueprintCallable, Category = "InfoInterface")
 	void SetGameInfo(FGameData GameData);

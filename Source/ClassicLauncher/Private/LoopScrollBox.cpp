@@ -23,11 +23,13 @@ void ULoopScrollBox::NativePreConstruct()
 
 void ULoopScrollBox::NativeConstruct()
 {
+	ScrollConfiguration.ClampValues();
 	Super::NativeConstruct();
 }
 
 FReply ULoopScrollBox::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
+	InputDirection = EButtonsGame::NONE;
 	const EButtonsGame NewInput = UClassicFunctionLibrary::GetInputButton(InKeyEvent);
 	if (NewInput == EButtonsGame::A && HasAnyUserFocus())
 	{
@@ -44,7 +46,9 @@ FReply ULoopScrollBox::NativeOnMouseMove(const FGeometry& InGeometry, const FPoi
 void ULoopScrollBox::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+	ScrollConfiguration.ClampValues();
 	SetIsFocusable(true);
+	bIgnoreOffset = false;
 	ConstructCards();
 }
 
@@ -155,11 +159,12 @@ void ULoopScrollBox::AddCardsHorizontalBox(TArray<FGameData> GameData, int32 Ind
 	PrepareScrollBox();
 }
 
-void ULoopScrollBox::SetCardValues(UCard* Card, FGameData& GameData)
+void ULoopScrollBox::SetCardValues(UCard* Card, FGameData& GameData, const int32 Index)
 {
 	if (Card != nullptr)
 	{
-		Card->MapIndex = GameData.MapIndex;
+		Card->IndexGameData = Index;
+		Card->MapIndexGameData = GameData.MapIndex;
 		Card->PathImage = GameData.imageFormated;
 		Card->SetPlayers(GameData.players);
 		Card->SetFavorite(GameData.favorite, false);
@@ -172,18 +177,18 @@ void ULoopScrollBox::CardsDefault()
 	{
 		if (!CardReference.IsValidIndex(Index)) continue;
 
-		UCard* CurrentCard = CardReference[Index];
-		CurrentCard->SetFocusCard(false, false);
-		CurrentCard->SetRenderOpacity(1);
-		CurrentCard->SetRenderTransform(FWidgetTransform());
+		UCard* Card = CardReference[Index];
+		Card->SetFocusCard(false, false);
+		Card->SetRenderOpacity(1);
+		Card->SetRenderTransform(FWidgetTransform());
 
 		if (Index - 6 >= ChildrenCount)
 		{
-			CurrentCard->SetVisibility(ESlateVisibility::Hidden);
+			Card->SetVisibility(ESlateVisibility::Hidden);
 		}
 		else
 		{
-			CurrentCard->SetVisibility(ESlateVisibility::Visible);
+			Card->SetVisibility(ESlateVisibility::Visible);
 		}
 	}
 }
@@ -212,7 +217,6 @@ void ULoopScrollBox::ConstructCards()
 
 	CardReference.Empty();
 	CanvasCards->ClearChildren();
-	bBindCard = true;
 
 	for (int32 i = 0; i < 16; i++)
 	{
@@ -293,23 +297,30 @@ void ULoopScrollBox::OnHoveredCard(int32 Index)
 		}
 		NewDirectionInput(NewIndex);
 	}
+	OnHoveredOnCard(Index);
 }
 
 void ULoopScrollBox::OnUnhoveredCard(int32 Index)
 {
+	if(CheckFocus()) return;
 	if (Index > 5 && Index < 10)
 	{
 		const int32 NewIndex = Index - 5;
 	}
+	OnUnhoveredOnCard(Index);
 }
 
-void ULoopScrollBox::DirectionRight()
+void ULoopScrollBox::DirectionRight(const bool bIgnoreOffsetScroll)
 {
+	InputDirection = EButtonsGame::RIGHT;
+	bIgnoreOffset = bIgnoreOffsetScroll;
 	OnDirectionRight();
 }
 
-void ULoopScrollBox::DirectionLeft()
+void ULoopScrollBox::DirectionLeft(const bool bIgnoreOffsetScroll)
 {
+	InputDirection = EButtonsGame::LEFT;
+	bIgnoreOffset = bIgnoreOffsetScroll;
 	OnDirectionLeft();
 }
 

@@ -123,7 +123,7 @@ FReply UBaseUserWidget::NativeOnMouseButtonUp(const FGeometry& InGeometry, const
 		FKey Key = EKeys::Gamepad_FaceButton_Right;
 		NativeReleaseInput(Key);
 	}
-
+	
 	return Super::NativeOnMouseButtonUp(InGeometry, InMouseEvent);
 }
 

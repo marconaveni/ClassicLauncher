@@ -9,7 +9,7 @@
 UCard::UCard(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 	, PathImage(TEXT(""))
-	, MapIndex(0)
+	, MapIndexGameData(0)
 	, IndexCard(0)
 	, Favorite(nullptr)
 	, bFocus(false)
@@ -49,9 +49,9 @@ FReply UCard::NativeOnMouseMove(const FGeometry& InGeometry, const FPointerEvent
 {
 	const float CursorDelta = FMath::Abs(InMouseEvent.GetCursorDelta().X + InMouseEvent.GetCursorDelta().Y);
 
-	if (BtnClick->IsHovered() && CursorDelta > 5 /*&& !bMouseMove*/)
+	if (BtnClick->IsHovered() && CursorDelta > 0 && !bMouseMove)
 	{
-		/*bMouseMove = true;*/
+		bMouseMove = true;
 		Hovered();
 	}
 	return Super::NativeOnMouseMove(InGeometry, InMouseEvent);
@@ -59,16 +59,12 @@ FReply UCard::NativeOnMouseMove(const FGeometry& InGeometry, const FPointerEvent
 
 void UCard::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	if (/*BtnClick->IsHovered() && */bMouseMove)
-	{
-	}
-	
 	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
 }
 
 void UCard::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
-	/*bMouseMove = false;*/
+	bMouseMove = false;
 	Super::NativeOnMouseLeave(InMouseEvent);
 }
 
@@ -120,7 +116,6 @@ bool UCard::BindButton()
 {
 	if (!ensure(BtnClick != nullptr)) return false;
 	BtnClick->OnReleased.AddUniqueDynamic(this, &UCard::Release);
-	/*BtnClick->OnHovered.AddDynamic(this, &UCard::Hovered);*/
 	BtnClick->OnUnhovered.AddUniqueDynamic(this, &UCard::Unhovered);
 	return true;
 }

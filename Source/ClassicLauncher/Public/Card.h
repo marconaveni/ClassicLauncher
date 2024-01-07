@@ -55,7 +55,10 @@ public:
 	FString PathImage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card|Variables")
-	int32 MapIndex;
+	int32 MapIndexGameData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card|Variables")
+	int32 IndexGameData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card|Variables")
 	int32 IndexCard;

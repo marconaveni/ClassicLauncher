@@ -331,13 +331,15 @@ FReply UMainInterface::NativeOnMouseWheel(const FGeometry& InGeometry, const FPo
 	{
 		if (ScrollScale > 0)
 		{
+			//LoopScroll->bUnlockInput = false;
 			ENavigationButton = EButtonsGame::LEFT;
-			SetDirection(ENavigationButton);
+			LoopScroll->DirectionLeft(true);
 		}
 		else if (ScrollScale < 0)
 		{
+			//LoopScroll->bUnlockInput = false;
 			ENavigationButton = EButtonsGame::RIGHT;
-			SetDirection(ENavigationButton);
+			LoopScroll->DirectionRight(true);
 		}
 		if(ScrollScale != 0)
 		{
@@ -352,7 +354,7 @@ FReply UMainInterface::NativeOnMouseWheel(const FGeometry& InGeometry, const FPo
                {
                    CanvasPanelRoot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
                }
-               , 0.015f, false, 1.0f);
+               , 0.015f, false, 0.5f);
 		}
 	}
 	else if (PositionY == EPositionY::BOTTOM)
@@ -473,6 +475,7 @@ void UMainInterface::NavigationSystem(EButtonsGame Navigate)
 
 void UMainInterface::NavigationInfo(EButtonsGame Navigate)
 {
+	WBPInfo->SetFocus();
 }
 
 void UMainInterface::NavigationConfiguration(EButtonsGame Navigate)

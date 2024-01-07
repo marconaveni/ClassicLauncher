@@ -1,4 +1,4 @@
-// Copyright 2022 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 
 #include "ClassicInfoInterface.h"
@@ -16,12 +16,18 @@ FReply UClassicInfoInterface::NativeOnPreviewKeyDown(const FGeometry& InGeometry
 	return Super::NativeOnPreviewKeyDown(InGeometry, InKeyEvent);
 }
 
+void UClassicInfoInterface::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+	SetIsFocusable(true);
+}
+
 FReply UClassicInfoInterface::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
 	return Super::NativeOnKeyUp(InGeometry, InKeyEvent);
 }
 
-void UClassicInfoInterface::ScrollTopEnd(EButtonsGame Navigate)
+/*void UClassicInfoInterface::ScrollTopEnd(EButtonsGame Navigate)
 {
 	if (Navigate == EButtonsGame::UP)
 	{
@@ -41,7 +47,7 @@ void UClassicInfoInterface::ScrollTopEnd(EButtonsGame Navigate)
 			//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::White, TEXT("down"));
 		}
 	}
-}
+}*/
 
 FString IsDateNull(FString value)
 {

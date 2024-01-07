@@ -10,9 +10,47 @@
 #include "UI/BaseUserWidget.h"
 #include "LoopScrollBox.generated.h"
 
+USTRUCT(BlueprintType)
+struct FScrollConfiguration
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta= (UIMin = "1", UIMax = "16"))
+	int32 MaxPositionOffset;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly , meta= ( UIMin = "1", UIMax = "2048"))
+	int32 StartIndex;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta= ( UIMin = "1", UIMax = "2048"))
+	int32 NumberCards;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta= ( UIMin = "1", UIMax = "1000") )
+	int32 CardSize;
+	
+	FScrollConfiguration()
+		: MaxPositionOffset(4)
+		  , StartIndex(5)
+	      , NumberCards(16)
+	      , CardSize(385)
+	{
+	}
+
+	void ClampValues()
+	{
+		if(StartIndex < 1 || MaxPositionOffset < 1)
+		{
+			StartIndex = 1;
+		} 
+		if(StartIndex > NumberCards + MaxPositionOffset)
+		{
+			StartIndex = NumberCards + MaxPositionOffset;
+		} 
+	}
+};
+
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateCard, int32, Index);
-/*DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateIndexStart, int32, Index);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateIndexFinal, int32, Index);*/
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDelegateOnCardClick);
 
 class UMainInterface;
@@ -27,6 +65,15 @@ class CLASSICLAUNCHER_API ULoopScrollBox : public UUserWidget, public  IMusicInt
 
 protected:
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Default|Configurations" )
+	FScrollConfiguration ScrollConfiguration;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cards")
+	UCard* CurrentCard;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cards")
+	UCard* LastCard;
+	
 	virtual FReply NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 	virtual FReply NativeOnMouseMove( const FGeometry& InGeometry, const FPointerEvent& InMouseEvent ) override;
 	virtual void NativeOnInitialized() override;
@@ -40,65 +87,59 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FDelegateCard OnCardIndex;
 
-	/*UPROPERTY(BlueprintAssignable, BlueprintCallable)
-	FDelegateIndexStart StartIndexToFinal;
-
-	UPROPERTY(BlueprintAssignable, BlueprintCallable)
-	FDelegateIndexFinal FinalIndexToStart;*/
-
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FDelegateOnCardClick OnCardClick;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cards")
 	TArray<UCard*> CardReference;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cards")
 	TArray<UCover*> CoverReference;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
 	UMainInterface* MainInterfaceReference;
 	
 protected:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Subclass")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
 	TSubclassOf<UCard> CardClassReference;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Subclass")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
 	TSubclassOf<UCover> CoverClass;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
 	int32 IndexScroll;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
 	int32 ChildrenCount;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
 	EButtonsGame InputDirection;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
-	bool bBindCard;
 	
 public:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
+	bool bIgnoreOffset;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
 	float Speed;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
 	int32 PositionOffsetFocus;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
 	int32 IndexFocusCard;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
 	bool bUnlockInput;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
 	UTexture2D* ImageCardDefault;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
 	USoundBase* SoundNavigate;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LoopScrollBox|Variables")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
 	USoundBase* SoundSelect;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
@@ -137,7 +178,7 @@ protected:
 	void AddCardsHorizontalBox(TArray<FGameData> GameData, int32 IndexFocus);
 
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
-	void SetCardValues(UCard* Card, UPARAM(ref) FGameData& GameData);
+	void SetCardValues(UCard* Card, UPARAM(ref) FGameData& GameData, int32 Index);
 
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
 	void CardsDefault();
@@ -164,10 +205,10 @@ public:
 	void OpenCard();
 
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
-	void DirectionRight();
+	void DirectionRight(bool bIgnoreOffsetScroll = false);
 
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
-	void DirectionLeft();
+	void DirectionLeft(bool bIgnoreOffsetScroll = false);
 
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
 	void SetFocusCover();
@@ -180,9 +221,15 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
 	void OnHoveredCard(int32 Index);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "LoopScrollBox|Functions")
+	void OnHoveredOnCard(const int32& Index);
 	
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
 	void OnUnhoveredCard(int32 Index);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "LoopScrollBox|Functions")
+	void OnUnhoveredOnCard(const int32& Index);
 	
 	virtual void EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound) override;
 
