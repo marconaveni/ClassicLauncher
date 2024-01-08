@@ -23,7 +23,7 @@ void ULoopScrollBox::NativePreConstruct()
 
 void ULoopScrollBox::NativeConstruct()
 {
-	ScrollConfiguration.ClampValues();
+	//ScrollConfiguration.ClampValues();
 	Super::NativeConstruct();
 }
 
@@ -218,7 +218,7 @@ void ULoopScrollBox::ConstructCards()
 	CardReference.Empty();
 	CanvasCards->ClearChildren();
 
-	for (int32 i = 0; i < 16; i++)
+	for (int32 i = 0; i < ScrollConfiguration.NumberCards; i++)
 	{
 		UCard* Card = WidgetTree->ConstructWidget<UCard>(CardClassReference);
 		Card->IndexCard = i;
@@ -228,7 +228,7 @@ void ULoopScrollBox::ConstructCards()
 		CardReference.Add(Card);
 		CanvasCards->AddChild(Card);
 		UCanvasPanelSlot* CanvasCard = Cast<UCanvasPanelSlot>(Card->Slot);
-		const int32 Position = i * 385;
+		const int32 Position = i * ScrollConfiguration.CardSize;
 		CanvasCard->SetAutoSize(true);
 		CanvasCard->SetPosition(FVector2D(Position, 0));
 	}

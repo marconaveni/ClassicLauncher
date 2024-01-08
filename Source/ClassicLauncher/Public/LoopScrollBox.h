@@ -15,13 +15,13 @@ struct FScrollConfiguration
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta= (UIMin = "1", UIMax = "16"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta= (UIMin = "1", UIMax = "13"))
 	int32 MaxPositionOffset;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly , meta= ( UIMin = "1", UIMax = "2048"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly , meta= ( UIMin = "0", UIMax = "13"))
 	int32 StartIndex;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta= ( UIMin = "1", UIMax = "2048"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta= ( UIMin = "8", UIMax = "16"))
 	int32 NumberCards;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta= ( UIMin = "1", UIMax = "1000") )
@@ -37,13 +37,22 @@ struct FScrollConfiguration
 
 	void ClampValues()
 	{
-		if(StartIndex < 1 || MaxPositionOffset < 1)
+		if(StartIndex < 0 )
 		{
-			StartIndex = 1;
-		} 
-		if(StartIndex > NumberCards + MaxPositionOffset)
+			StartIndex = 0;
+		}
+		if(MaxPositionOffset < 1)
 		{
-			StartIndex = NumberCards + MaxPositionOffset;
+			MaxPositionOffset = 1;
+		}
+		if(MaxPositionOffset > NumberCards - 2)
+		{
+			MaxPositionOffset = NumberCards - 2;
+		}
+		if(StartIndex + MaxPositionOffset > NumberCards - 3 )
+		{
+			MaxPositionOffset = 1;
+			StartIndex = NumberCards - 3;
 		} 
 	}
 };
