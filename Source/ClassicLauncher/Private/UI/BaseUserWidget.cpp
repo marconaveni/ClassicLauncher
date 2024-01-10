@@ -42,9 +42,9 @@ void UBaseUserWidget::NativeOnInitialized()
 	SetHideMouse();
 }
 
-void UBaseUserWidget::PressedInput(const FKey InKey)
+void UBaseUserWidget::PressInput(const FKey InKey)
 {
-	NativePressedInput(InKey);
+	NativePressInput(InKey);
 }
 
 void UBaseUserWidget::ReleaseInput(const FKey InKey)
@@ -52,8 +52,14 @@ void UBaseUserWidget::ReleaseInput(const FKey InKey)
 	NativeReleaseInput(InKey);
 }
 
-void UBaseUserWidget::NativePressedInput(const FKey& InKey)
+void UBaseUserWidget::NativePressInput(const FKey& InKey)
 {
+	if(GetInputEnable())
+	{
+		InputLastPressed = UClassicFunctionLibrary::GetInputButtonsGame(InKey);
+		InputPressed = InputLastPressed;
+		bKeyPressed = (InputLastPressed != EButtonsGame::NONE);
+	}
 	if (MouseHide->GetVisibility() == ESlateVisibility::Hidden && !InKey.IsMouseButton())
 	{
 		SetHideMouse();
@@ -62,15 +68,20 @@ void UBaseUserWidget::NativePressedInput(const FKey& InKey)
 
 void UBaseUserWidget::NativeReleaseInput(const FKey& InKey)
 {
+	if(GetInputEnable())
+	{
+		InputLastPressed = UClassicFunctionLibrary::GetInputButtonsGame(InKey);
+		InputPressed = EButtonsGame::NONE;
+	}
+	bKeyPressed = false;
 	CancelDelay();
 	FirstDelayInput = DefaultFirstDelayInput;
 	DefaultTimerDelayInput = TimerDelayInput;
-	bInputDelay = false;
 }
 
 FReply UBaseUserWidget::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
-	NativePressedInput(InKeyEvent.GetKey());
+	NativePressInput(InKeyEvent.GetKey());
 	return Super::NativeOnPreviewKeyDown(InGeometry, InKeyEvent);
 }
 

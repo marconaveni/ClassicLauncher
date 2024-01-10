@@ -74,7 +74,7 @@ void ULoopScrollBox::PrepareScrollBox()
 		MainInterfaceReference->IndexCard = IndexFocusCard;
 	}
 
-	const ESlateVisibility VisibilityCard = (ChildrenCount > 4) ? ESlateVisibility::Visible : ESlateVisibility::Hidden;
+	const ESlateVisibility VisibilityCard = (ChildrenCount > ScrollConfiguration.MinimumInfinityCard) ? ESlateVisibility::Visible : ESlateVisibility::Hidden;
 	for (UCard* Card : CardReference)
 	{
 		Card->SetVisibility(VisibilityCard);
@@ -173,7 +173,9 @@ void ULoopScrollBox::SetCardValues(UCard* Card, FGameData& GameData, const int32
 
 void ULoopScrollBox::CardsDefault()
 {
-	for (int32 Index = 6; Index < 10; Index++)
+	const int32 Start = ScrollConfiguration.StartIndex + 1;
+	const int32 End = Start + ScrollConfiguration.MinimumInfinityCard;
+	for (int32 Index = Start; Index < End; Index++)
 	{
 		if (!CardReference.IsValidIndex(Index)) continue;
 
@@ -182,7 +184,7 @@ void ULoopScrollBox::CardsDefault()
 		Card->SetRenderOpacity(1);
 		Card->SetRenderTransform(FWidgetTransform());
 
-		if (Index - 6 >= ChildrenCount)
+		if (Index - Start >= ChildrenCount)
 		{
 			Card->SetVisibility(ESlateVisibility::Hidden);
 		}
@@ -246,46 +248,47 @@ void ULoopScrollBox::NewDirectionInput(const int32 NewIndex)
 {
 	if (NewIndex < PositionOffsetFocus)
 	{
-		MainInterfaceReference->ENavigationButton = EButtonsGame::LEFT;
 		DirectionLeft();
 	}
 	else if (NewIndex > PositionOffsetFocus)
 	{
-		MainInterfaceReference->ENavigationButton = EButtonsGame::RIGHT;
 		DirectionRight();
 	}
 }
 
 bool ULoopScrollBox::CheckFocus() const
 {
-	if(MainInterfaceReference == nullptr) return true; 
+	if (MainInterfaceReference == nullptr) return true;
 	return !MainInterfaceReference->GetInputEnable() ||
-				MainInterfaceReference->PositionY == EPositionY::BOTTOM ||
-					MainInterfaceReference->Focus != EFocus::MAIN;
+		MainInterfaceReference->PositionY == EPositionY::BOTTOM ||
+		MainInterfaceReference->Focus != EFocus::MAIN;
+}
+
+bool ULoopScrollBox::IndexFocusRange(int32 Index, int32& NewIndex) const
+{
+	if (CheckFocus()) return false;
+
+	NewIndex = Index - ScrollConfiguration.StartIndex;
+	const int32 StartIndex = ScrollConfiguration.StartIndex;
+	const int32 MaxPositionOffset = StartIndex + ScrollConfiguration.MaxPositionOffset;
+	return (Index > StartIndex && Index <= MaxPositionOffset);
 }
 
 void ULoopScrollBox::OnReleaseCard(int32 Index)
 {
-	if(CheckFocus()) return;
-
-	const int32 NewIndex = Index - 5;
-	if (Index > 5 && Index < 10)
+	int32 NewIndex = 0;
+	if (IndexFocusRange(Index, NewIndex))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%d"), NewIndex);
 		MainInterfaceReference->OnClickLaunch();
-		return;
+		NewDirectionInput(NewIndex);
 	}
-	NewDirectionInput(NewIndex);
 }
 
 void ULoopScrollBox::OnHoveredCard(int32 Index)
 {
-	if(CheckFocus()) return;
-
-	const int32 NewIndex = Index - 5;
-	if (Index > 5 && Index < 10)
+	int32 NewIndex = 0;
+	if (IndexFocusRange(Index, NewIndex))
 	{
-		
 		Speed = 0.01f;
 		if (MainInterfaceReference->PositionY == EPositionY::TOP)
 		{
@@ -296,16 +299,24 @@ void ULoopScrollBox::OnHoveredCard(int32 Index)
 			MainInterfaceReference->SetNavigationFocusUpBottom();
 		}
 		NewDirectionInput(NewIndex);
+		if (CardReference.IsValidIndex(NewIndex))
+		{
+			CurrentCard = CardReference[NewIndex];
+		}
 	}
+
 	OnHoveredOnCard(Index);
 }
 
 void ULoopScrollBox::OnUnhoveredCard(int32 Index)
 {
-	if(CheckFocus()) return;
-	if (Index > 5 && Index < 10)
+	int32 NewIndex = 0;
+	if (IndexFocusRange(Index, NewIndex))
 	{
-		const int32 NewIndex = Index - 5;
+		if (CardReference.IsValidIndex(NewIndex))
+		{
+			LastCard = CardReference[NewIndex];
+		}
 	}
 	OnUnhoveredOnCard(Index);
 }
@@ -322,6 +333,26 @@ void ULoopScrollBox::DirectionLeft(const bool bIgnoreOffsetScroll)
 	InputDirection = EButtonsGame::LEFT;
 	bIgnoreOffset = bIgnoreOffsetScroll;
 	OnDirectionLeft();
+}
+
+FScrollConfiguration ULoopScrollBox::GetScrollConfiguration() const
+{
+	return ScrollConfiguration;
+}
+
+int32 ULoopScrollBox::GetInitialScrollPosition() const
+{
+	const int32 Value = FMath::Clamp(PositionOffsetFocus - 1, 0, GetScrollConfiguration().MaxPositionOffset - 1);
+	return Value * GetScrollConfiguration().CardSize;
+}
+
+int32 ULoopScrollBox::GetIndexToCount() const
+{
+	const int32 PositionOffsetDirection = (Direction == -1) ? PositionOffsetFocus + 1 : PositionOffsetFocus - 1;
+	const int32 MinValue = (bIgnoreOffset) ? PositionOffsetDirection : 1;
+	const int32 MaxValue = (bIgnoreOffset) ? PositionOffsetDirection : ScrollConfiguration.MaxPositionOffset;
+	const int32 Result = ScrollConfiguration.StartIndex + FMath::Clamp(PositionOffsetFocus, MinValue, MaxValue);
+	return  (IndexFocusCard - Result < 0) ? CoverReference.Num() - FMath::Abs(IndexFocusCard - Result) : IndexFocusCard - Result;
 }
 
 void ULoopScrollBox::EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound)

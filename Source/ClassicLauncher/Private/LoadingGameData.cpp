@@ -292,7 +292,7 @@ void ULoadingGameData::SetToRestartWidgets()
 	MainInterfaceReference->SetPlayAnimation(TEXT("AnimationShowConfigurationReverse"));
 	//MainInterfaceReference->SetPlayAnimation(TEXT("LoadListGameReverse"));
 	MainInterfaceReference->Header->SetFocusButton();
-	MainInterfaceReference->WBPFrame->SetFrameCenterPosition(1);
+	MainInterfaceReference->WBPFrame->SetFramePositionWithoutAnimation(1);
 	GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &ULoadingGameData::RestartWidgets, 0.1f, false, DELAY + 1.0f);
 	AddLoadingScreenToViewPort();
 	const FText Message = LOCTEXT("UpdateGame", "Update game wait");

@@ -26,39 +26,28 @@ struct FScrollConfiguration
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta= ( UIMin = "1", UIMax = "1000") )
 	int32 CardSize;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta= ( UIMin = "4", UIMax = "13") )
+	int32 MinimumInfinityCard;
 	
 	FScrollConfiguration()
 		: MaxPositionOffset(4)
 		  , StartIndex(5)
-	      , NumberCards(16)
-	      , CardSize(385)
+		  , NumberCards(16)
+		  , CardSize(385)
+	      , MinimumInfinityCard(4)
 	{
 	}
 
 	void ClampValues()
 	{
-		if(StartIndex < 0 )
-		{
-			StartIndex = 0;
-		}
-		if(MaxPositionOffset < 1)
-		{
-			MaxPositionOffset = 1;
-		}
-		if(MaxPositionOffset > NumberCards - 2)
-		{
-			MaxPositionOffset = NumberCards - 2;
-		}
-		if(StartIndex + MaxPositionOffset > NumberCards - 3 )
-		{
-			MaxPositionOffset = 1;
-			StartIndex = NumberCards - 3;
-		} 
+		StartIndex = FMath::Clamp(StartIndex, 0 , NumberCards - 3); 
+		MaxPositionOffset = FMath::Clamp(MaxPositionOffset, 1 , NumberCards - StartIndex - 2); 
 	}
 };
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateCard, int32, Index);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDelegateCard, int32, Index, EButtonsGame , Input);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDelegateOnCardClick);
 
@@ -82,6 +71,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cards")
 	UCard* LastCard;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Value")
+	int32 Direction;
+	
 	
 	virtual FReply NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 	virtual FReply NativeOnMouseMove( const FGeometry& InGeometry, const FPointerEvent& InMouseEvent ) override;
@@ -204,6 +197,8 @@ protected:
 	void NewDirectionInput(int32 NewIndex);
 	
 	bool CheckFocus() const;
+	
+	bool IndexFocusRange(int32 Index, int32& NewIndex) const;
 
 public:
 
@@ -239,7 +234,16 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "LoopScrollBox|Functions")
 	void OnUnhoveredOnCard(const int32& Index);
+
+	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
+	FScrollConfiguration GetScrollConfiguration() const;
 	
+	UFUNCTION(BlueprintPure, Category = "LoopScrollBox|Functions")
+	int32 GetInitialScrollPosition() const;
+
+	UFUNCTION(BlueprintPure, Category = "LoopScrollBox|Functions")
+	int32 GetIndexToCount() const;
+
 	virtual void EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound) override;
 
 };

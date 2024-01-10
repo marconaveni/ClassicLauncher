@@ -1,4 +1,4 @@
-// Copyright 2023 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 #pragma once
 
@@ -7,6 +7,7 @@
 #include "MainInterface.h"
 #include "Blueprint/UserWidget.h"
 #include "Frame.generated.h"
+
 
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDelegateAnimationStartFrame);
@@ -37,6 +38,24 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UImage* ImageFrameTop;
 
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UImage* PaddingImage;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UHorizontalBox* HorizontalBox;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UOverlay* PaddingOverlay;
+	
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UCanvasPanel* CanvasPanelRoot;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
+	FVector2D FrameCenter2D;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
+	FVector2D FrameTop2D;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
 	int32 FrameIndexCenter;
 
@@ -44,24 +63,33 @@ public:
 	int32 FrameIndexTop = 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
+	FName ImgCenterAnimationLeftRightTop = TEXT("ImgCenterAnimationLeftRightTop");
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
+	FName ImgCenterAnimationLeftRight = TEXT("ImgCenterAnimationLeftRight");
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
+	EPositionY Position;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
+	class ULoopScrollBox* LoopScrollReference;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
 	UTexture2D* TextureFrameTop;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
 	UTexture2D* TextureFrameCenter;
 
-	UFUNCTION()
-	void SetFrame(const int32& IndexFrame, const EPositionY& Position);
-
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnSetFrame(const int32& IndexFrame, const EPositionY& Position);
-
-	UFUNCTION()
-	void SetFrameIndexTop(const EButtonsGame Input, const int32 IndexLimit);
+	void OnSetFrame(const int32& IndexFrame, const EPositionY& NewPosition);
 
 	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
-	void SetDefaultValues(int32 MaxFrameRightLimit, float MaxSpeed);
+	void SetIndexTop(const EButtonsGame Input, const int32 IndexLimit);
 
 	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
-	void SetFrameCenterPosition(int32 PositionCenter);
+	void SetFramePositionWithAnimation(const int32& IndexFrame, const EPositionY& NewPosition);
+	
+	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
+	void SetFramePositionWithoutAnimation(int32 PositionCenter);
 
 };

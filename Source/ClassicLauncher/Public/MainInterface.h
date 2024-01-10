@@ -166,7 +166,7 @@ protected:
 	virtual void NativeConstruct() override;
 	virtual void NativePreConstruct() override;
 	virtual void NativeOnInitialized() override;
-	virtual void NativePressedInput(const FKey& InKey) override;
+	virtual void NativePressInput(const FKey& InKey) override;
 	virtual void NativeReleaseInput(const FKey& InKey) override;
 	virtual FReply NativeOnMouseWheel(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 
@@ -192,12 +192,6 @@ public:
 	int32 ProcessID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	EButtonsGame ENavigationButton;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	EButtonsGame ENavigationLastButton;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	FMultiInput MultiInput;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
@@ -205,12 +199,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	EFocus Focus;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	bool bDelayPressed;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	bool bKeyPressed;
+	
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	bool bUpDownPressed;
@@ -264,8 +253,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle DelayLoadListTimerHandle;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
-	FTimerHandle DelayFavoriteTimerHandle;
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
+	FTimerHandle DelayFavoriteTimerHandle;*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle DelayQuitTimerHandle;
@@ -306,7 +295,7 @@ public:
 	void OnLoadGamesList();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void LoadImages(const int32 DistanceIndex = 15);
+	void LoadImages(const EButtonsGame Input, UPARAM(ref) TArray<FGameData>& Data, const int32 DistanceIndex = 15);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnLoadImages(const int32& Index, const FString& Path);
@@ -324,25 +313,22 @@ public:
 	void OnPrepareThemes();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void NavigationGame(EButtonsGame Navigate);
+	void NavigationGame(EButtonsGame Input);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void NavigationMain(EButtonsGame Navigate);
+	void NavigationMain(EButtonsGame Input);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void NavigationSystem(EButtonsGame Navigate);
+	void NavigationSystem(EButtonsGame Input);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void NavigationInfo(EButtonsGame Navigate);
+	void NavigationInfo(EButtonsGame Input);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void NavigationConfiguration(EButtonsGame Navigate);
+	void NavigationConfiguration(EButtonsGame Input);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnNavigationGame(EButtonsGame Navigate);
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void SetDirection(EButtonsGame Navigate);
+	void OnNavigationGame(EButtonsGame Input);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void SetNavigationFocusUpBottom();
@@ -406,12 +392,6 @@ private:
 	UPROPERTY()
 	TArray<ESlateVisibility> IconCenterSystem;
 
-	/**
-	* Function to avoid losing Focus on Widget .
-	*/
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void OnPreventLoseFocus();
-
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void SetHeaderButtonFocus();
 
@@ -439,8 +419,8 @@ private:
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickBackAction();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void HoldFavorite();
+	/*UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
+	void HoldFavorite();*/
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetVisibiltyDebugButton(UButton* Button);
@@ -463,5 +443,5 @@ public:
 	void SetPlayAnimation(FName AnimationName);
 	
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void CardIndex(int32 CardIndex);
+	void CardIndex(int32 CardIndex, EButtonsGame Input);
 };

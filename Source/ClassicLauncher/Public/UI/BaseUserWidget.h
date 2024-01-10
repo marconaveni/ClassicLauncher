@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ClassicFunctionLibrary.h"
 #include "Blueprint/UserWidget.h"
 #include "BaseUserWidget.generated.h"
 
@@ -65,6 +66,15 @@ protected:
 
 	UPROPERTY()
 	bool bInputDelay;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
+	bool bKeyPressed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
+	EButtonsGame InputLastPressed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
+	EButtonsGame InputPressed;
 	
 	UBaseUserWidget(const FObjectInitializer& ObjectInitializer);
 
@@ -73,7 +83,7 @@ protected:
 	virtual void NativePreConstruct() override;
 	virtual void NativeOnInitialized() override;
 	virtual FReply NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
-	virtual void NativePressedInput(const FKey& InKey);
+	virtual void NativePressInput(const FKey& InKey);
 	virtual FReply NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 	virtual void NativeReleaseInput(const FKey& InKey);
 	virtual FReply NativeOnMouseWheel(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
@@ -84,7 +94,7 @@ protected:
 	virtual FReply NativeOnMouseMove(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	
 	UFUNCTION(BlueprintCallable,  Category = "Input")
-	void PressedInput(const FKey InKey);
+	void PressInput(const FKey InKey);
 	
 	UFUNCTION(BlueprintCallable,  Category = "Input")
 	void ReleaseInput(const FKey InKey);

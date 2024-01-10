@@ -38,7 +38,7 @@
 UMainInterface::UMainInterface(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	Clear();
-
+	
 	TextTop.Add(FText::FromString(TEXT("")));
 	TextTop.Add(LOCTEXT("buttonGameList", "Game List"));
 	TextTop.Add(LOCTEXT("buttonSelect", "Select"));
@@ -109,13 +109,14 @@ void UMainInterface::NativeOnInitialized()
 	Header->OnLostFocusDelegate.AddDynamic(this, &UMainInterface::OnLostFocusHeader);
 	LoopScroll->OnCardIndex.AddDynamic(this, &UMainInterface::CardIndex);
 	LoopScroll->OnCardClick.AddDynamic(this, &UMainInterface::OnClickLaunch);
-
+	
 	for (TActorIterator<AClassicMediaPlayer> ActorIterator(GetWorld()); ActorIterator; ++ActorIterator)
 	{
 		ClassicMediaPlayerReference = *ActorIterator;
 		UE_LOG(LogTemp, Warning, TEXT("Reference AClassicMediaPlayer Founds: %s "), *ClassicMediaPlayerReference->GetName());
 	}
 
+	WBPFrame->LoopScrollReference = LoopScroll;
 	ClassicMediaPlayerReference->MainInterfaceReference = this;
 	LoopScroll->MainInterfaceReference = this;
 	CanvasPanelScreen->SetRenderOpacity(0);
@@ -127,19 +128,19 @@ void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 
 	if (bKeyPressed)
 	{
-		NavigationGame(ENavigationLastButton);
+		NavigationGame(InputPressed);
 		if (PositionY == EPositionY::BOTTOM)
 		{
-			FooterDetails->TextBoxScroll->SetNewScroll(ENavigationLastButton, 0.0025f);
+			FooterDetails->TextBoxScroll->SetNewScroll(InputPressed, 0.0025f);
 		}
 	}
 
-	if (bKeyPressed && PositionY == EPositionY::CENTER && (ENavigationLastButton == EButtonsGame::LEFT || ENavigationLastButton == EButtonsGame::RIGHT))
+	if (bKeyPressed && PositionY == EPositionY::CENTER && (InputPressed == EButtonsGame::LEFT || InputPressed == EButtonsGame::RIGHT))
 	{
 		SpeedScroll = UKismetMathLibrary::Ease(InitialSpeedScroll, TargetSpeedScroll, Alpha, EEasingFunc::EaseIn);
 		Alpha = FMath::Clamp(Alpha + 0.24f * GetWorld()->GetDeltaSeconds(), 0, 1);
 	}
-	else if (bKeyPressed && PositionY == EPositionY::CENTER && (ENavigationLastButton == EButtonsGame::LB || ENavigationLastButton == EButtonsGame::RB))
+	else if (bKeyPressed && PositionY == EPositionY::CENTER && (InputPressed == EButtonsGame::LB || InputPressed == EButtonsGame::RB))
 	{
 		SpeedScroll = FastSpeedScroll;
 	}
@@ -211,18 +212,18 @@ void UMainInterface::LoadGamesList()
 	}
 }
 
-void UMainInterface::LoadImages(const int32 DistanceIndex)
+void UMainInterface::LoadImages(const EButtonsGame Input, TArray<FGameData>& Data, const int32 DistanceIndex)
 {
-	if ((ENavigationButton == EButtonsGame::RIGHT || ENavigationButton == EButtonsGame::RB ||
-		ENavigationButton == EButtonsGame::LEFT || ENavigationButton == EButtonsGame::LB) &&
-		DistanceIndex > 0 && GameData.Num() >= 64)
+	if ((Input == EButtonsGame::RIGHT || Input == EButtonsGame::RB ||
+		Input == EButtonsGame::LEFT || Input == EButtonsGame::LB) &&
+		DistanceIndex > 0 && Data.Num() >= 64)
 	{
-		if (ENavigationButton == EButtonsGame::RIGHT || ENavigationButton == EButtonsGame::RB)
+		if (Input == EButtonsGame::RIGHT || Input == EButtonsGame::RB)
 		{
 			FirstIndex = IndexCard - DistanceIndex;
 			LastIndex = IndexCard + (DistanceIndex - 1);
 		}
-		else if (ENavigationButton == EButtonsGame::LEFT || ENavigationButton == EButtonsGame::LB)
+		else if (Input == EButtonsGame::LEFT || Input == EButtonsGame::LB)
 		{
 			FirstIndex = IndexCard - (DistanceIndex - 1);
 			LastIndex = IndexCard + DistanceIndex;
@@ -230,23 +231,23 @@ void UMainInterface::LoadImages(const int32 DistanceIndex)
 
 		if (FirstIndex < 0)
 		{
-			FirstIndex = GameData.Num() - FMath::Abs(FirstIndex);
+			FirstIndex = Data.Num() - FMath::Abs(FirstIndex);
 		}
-		if (LastIndex >= GameData.Num())
+		if (LastIndex >= Data.Num())
 		{
-			LastIndex = LastIndex - GameData.Num();
+			LastIndex = LastIndex - Data.Num();
 		}
 
-		FirstIndex = FMath::Clamp(FirstIndex, 0, GameData.Num() - 1);
-		LastIndex = FMath::Clamp(LastIndex, 0, GameData.Num() - 1);
+		FirstIndex = FMath::Clamp(FirstIndex, 0, Data.Num() - 1);
+		LastIndex = FMath::Clamp(LastIndex, 0, Data.Num() - 1);
 
 		int32 IndexLoad = -1, IndexUnload = -1;
-		if (ENavigationButton == EButtonsGame::RIGHT || ENavigationButton == EButtonsGame::RB)
+		if (Input == EButtonsGame::RIGHT || Input == EButtonsGame::RB)
 		{
 			IndexUnload = FirstIndex;
 			IndexLoad = LastIndex;
 		}
-		else if (ENavigationButton == EButtonsGame::LEFT || ENavigationButton == EButtonsGame::LB)
+		else if (Input == EButtonsGame::LEFT || Input == EButtonsGame::LB)
 		{
 			IndexUnload = LastIndex;
 			IndexLoad = FirstIndex;
@@ -254,7 +255,7 @@ void UMainInterface::LoadImages(const int32 DistanceIndex)
 		if (IndexLoad != -1 && IndexUnload != -1)
 		{
 			LoopScroll->CoverReference[IndexUnload]->SetCoverImage(ImageNull, 1, 1);
-			OnLoadImages(IndexLoad, GameData[IndexLoad].imageFormated);
+			OnLoadImages(IndexLoad, Data[IndexLoad].imageFormated);
 			UE_LOG(LogTemp, Warning, TEXT("FirstIndex %d  IndexCard %d LastIndex %d"), FirstIndex, IndexCard, LastIndex);
 		}
 
@@ -275,49 +276,31 @@ void UMainInterface::PrepareThemes()
 	OnPrepareThemes(); //BlueprintImplementableEvent
 }
 
-void UMainInterface::NativePressedInput(const FKey& InKey)
+void UMainInterface::NativePressInput(const FKey& InKey)
 {
-	Super::NativePressedInput(InKey);
-	const EButtonsGame Input = UClassicFunctionLibrary::GetInputButtonsGame(InKey);
-	if (GetInputEnable())
+	Super::NativePressInput(InKey);
+	if (!GetInputEnable())
 	{
-		bKeyPressed = (Input != EButtonsGame::NONE);
-		ENavigationLastButton = Input;
-		
-		if (Input == EButtonsGame::B || Input == EButtonsGame::Y)
-		{
-			ENavigationButton = Input;
-			HoldFavorite();
-			if (GetInputEnable() && PositionY == EPositionY::CENTER)
-			{
-				GetWorld()->GetTimerManager().SetTimer(DelayFavoriteTimerHandle, this, &UMainInterface::SetFavoriteToSave, 0.5f, false, -1);
-			}
-		}
-	}
-	else
-	{
-		MultiInput.SetInput(Input);
+		MultiInput.SetInput(UClassicFunctionLibrary::GetInputButtonsGame(InKey));
 	}
 }
 
 void UMainInterface::NativeReleaseInput(const FKey& InKey)
 {
 	Super::NativeReleaseInput(InKey);
-	const EButtonsGame Input = UClassicFunctionLibrary::GetInputButtonsGame(InKey);
-	ENavigationLastButton = EButtonsGame::NONE;
-	bKeyPressed = false;
-
 	if (GetInputEnable())
 	{
-		GetWorld()->GetTimerManager().ClearTimer(DelayFavoriteTimerHandle);
-		
-		if (Input == EButtonsGame::B)
+		if (InputLastPressed == EButtonsGame::B)
 		{
 			OnClickBackAction();
 		}
-		if (Input == EButtonsGame::M)
+		if (InputLastPressed == EButtonsGame::M)
 		{
 			ClassicMediaPlayerReference->PlaylistMusic();
+		}
+		if(InputLastPressed == EButtonsGame::Y)
+		{
+			SetFavoriteToSave();
 		}
 	}
 	MultiInput.SetAllNoneInput();
@@ -331,14 +314,12 @@ FReply UMainInterface::NativeOnMouseWheel(const FGeometry& InGeometry, const FPo
 	{
 		if (ScrollScale > 0)
 		{
-			//LoopScroll->bUnlockInput = false;
-			ENavigationButton = EButtonsGame::LEFT;
+			InputLastPressed = EButtonsGame::LEFT;
 			LoopScroll->DirectionLeft(true);
 		}
 		else if (ScrollScale < 0)
 		{
-			//LoopScroll->bUnlockInput = false;
-			ENavigationButton = EButtonsGame::RIGHT;
+			InputLastPressed = EButtonsGame::RIGHT;
 			LoopScroll->DirectionRight(true);
 		}
 		if(ScrollScale != 0)
@@ -371,42 +352,16 @@ FReply UMainInterface::NativeOnMouseWheel(const FGeometry& InGeometry, const FPo
 	return Super::NativeOnMouseWheel(InGeometry, InMouseEvent);
 }
 
-void UMainInterface::OnPreventLoseFocus()
-{
-	if (Focus == EFocus::MAIN)
-	{
-		if (PositionY == EPositionY::TOP)
-		{
-			const int32 Index = WBPFrame->FrameIndexTop;
-			Header->SetFocusButton(Index, false);
-			ToolTips->OnFocus(Index);
-			return;
-		}
-		LoopScroll->SetFocus();
-	}
-	else if (Focus == EFocus::SYSTEM || Focus == EFocus::INFO)
-	{
-		if (ButtonSystemReferences.IsValidIndex(CountLocationY))
-		{
-			ButtonSystemReferences[CountLocationY]->SetFocus();
-		}
-	}
-	else if (Focus == EFocus::CONFIG)
-	{
-		WBPClassicConfigurationsInterface->SetFocusItem(EButtonsGame::NONE);
-	}
-}
-
 /////////////////////////////////////////////////
 ///navigation area
 
 #pragma region NavigationArea
 
-void UMainInterface::NavigationGame(EButtonsGame Navigate)
+void UMainInterface::NavigationGame(EButtonsGame Input)
 {
-	if (Navigate == EButtonsGame::UP || Navigate == EButtonsGame::DOWN ||
-		Navigate == EButtonsGame::LEFT || Navigate == EButtonsGame::RIGHT ||
-		Navigate == EButtonsGame::LB || Navigate == EButtonsGame::RB)
+	if (Input == EButtonsGame::UP || Input == EButtonsGame::DOWN ||
+		Input == EButtonsGame::LEFT || Input == EButtonsGame::RIGHT ||
+		Input == EButtonsGame::LB || Input == EButtonsGame::RB)
 	{
 
 		if (GetInputEnable() && !GetDelayInput())
@@ -417,30 +372,29 @@ void UMainInterface::NavigationGame(EButtonsGame Navigate)
 
 			if (Focus == EFocus::MAIN)
 			{
-				NavigationMain(Navigate);
+				NavigationMain(Input);
 			}
 			else if (Focus == EFocus::SYSTEM)
 			{
-				NavigationSystem(Navigate);
+				NavigationSystem(Input);
 			}
 			else if (Focus == EFocus::INFO)
 			{
-				NavigationInfo(Navigate);
+				NavigationInfo(Input);
 			}
 			else if (Focus == EFocus::CONFIG) {
-				NavigationConfiguration(Navigate);
+				NavigationConfiguration(Input);
 			}
 		}
-		OnNavigationGame(Navigate); //BlueprintImplementableEvent
+		OnNavigationGame(Input); //BlueprintImplementableEvent
 	}
 }
 
-void UMainInterface::NavigationMain(EButtonsGame Navigate)
+void UMainInterface::NavigationMain(EButtonsGame Input)
 {
-	ENavigationButton = Navigate;
 	TimerDelayInput = 0.14f;
-	const bool LeftRight = ENavigationButton == EButtonsGame::LEFT || ENavigationButton == EButtonsGame::RIGHT;
-	const bool LeftRightTrigger = ENavigationButton == EButtonsGame::LB || ENavigationButton == EButtonsGame::RB;
+	const bool LeftRight = InputLastPressed == EButtonsGame::LEFT || InputLastPressed == EButtonsGame::RIGHT;
+	const bool LeftRightTrigger = InputLastPressed == EButtonsGame::LB || InputLastPressed == EButtonsGame::RB;
 	
 	if (LeftRight || LeftRightTrigger)
 	{
@@ -449,7 +403,14 @@ void UMainInterface::NavigationMain(EButtonsGame Navigate)
 			TimerDelayInput = 0.0f;
 			if (LoopScroll->bUnlockInput)
 			{
-				SetDirection(ENavigationButton);
+				if (Input == EButtonsGame::RIGHT || Input == EButtonsGame::RB)
+				{
+					LoopScroll->DirectionRight();
+				}
+				else if (Input == EButtonsGame::LEFT || Input == EButtonsGame::LB)
+				{
+					LoopScroll->DirectionLeft();
+				}
 			}
 		}
 		else if (PositionY == EPositionY::TOP && LeftRight)
@@ -457,46 +418,33 @@ void UMainInterface::NavigationMain(EButtonsGame Navigate)
 			SetFrame();
 		}
 	}
-	else if (ENavigationButton == EButtonsGame::UP && bUpDownPressed)
+	else if (InputLastPressed == EButtonsGame::UP && bUpDownPressed)
 	{
 		SetNavigationFocusUpBottom();
 	}
-	else if (ENavigationButton == EButtonsGame::DOWN && bUpDownPressed)
+	else if (InputLastPressed == EButtonsGame::DOWN && bUpDownPressed)
 	{
 		SetNavigationFocusDownBottom();
 	}
 }
 
-void UMainInterface::NavigationSystem(EButtonsGame Navigate)
+void UMainInterface::NavigationSystem(EButtonsGame Input)
 {
-	ENavigationButton = Navigate;
-	WBPSystemsList->SetFocusItem(ENavigationButton, CountLocationY);
+	WBPSystemsList->SetFocusItem(InputLastPressed, CountLocationY);
 }
 
-void UMainInterface::NavigationInfo(EButtonsGame Navigate)
+void UMainInterface::NavigationInfo(EButtonsGame Input)
 {
 	WBPInfo->SetFocus();
 }
 
-void UMainInterface::NavigationConfiguration(EButtonsGame Navigate)
+void UMainInterface::NavigationConfiguration(EButtonsGame Input)
 {
-	if (Navigate == EButtonsGame::LEFT || Navigate == EButtonsGame::RIGHT)
+	if (Input == EButtonsGame::LEFT || Input == EButtonsGame::RIGHT)
 	{
 		CancelDelay();
 	}
-	WBPClassicConfigurationsInterface->SetFocusItem(Navigate);
-}
-
-void UMainInterface::SetDirection(EButtonsGame Navigate)
-{
-	if (Navigate == EButtonsGame::RIGHT || Navigate == EButtonsGame::RB)
-	{
-		LoopScroll->DirectionRight();
-	}
-	else if (Navigate == EButtonsGame::LEFT || Navigate == EButtonsGame::LB)
-	{
-		LoopScroll->DirectionLeft();
-	}
+	WBPClassicConfigurationsInterface->SetFocusItem(Input);
 }
 
 void UMainInterface::SetNavigationFocusUpBottom()
@@ -633,7 +581,7 @@ void UMainInterface::OnClickSystem(int32 Value)
 			PositionY = EPositionY::CENTER;
 			LoopScroll->SetFocus();
 			SetButtonsIconInterfaces(PositionY);
-			WBPFrame->SetFrameCenterPosition(WBPFrame->FrameIndexCenter);
+			WBPFrame->SetFramePositionWithoutAnimation(WBPFrame->FrameIndexCenter);
 			SetPlayAnimation(TEXT("ShowSystemReverse"));
 			Header->SetFocusButton();
 			return;
@@ -691,21 +639,12 @@ void UMainInterface::SetCountPlayerToSave()
 	}
 }
 
-void UMainInterface::HoldFavorite()
-{
-	if (GetInputEnable() && PositionY == EPositionY::CENTER)
-	{
-		GetWorld()->GetTimerManager().SetTimer(DelayFavoriteTimerHandle, this, &UMainInterface::SetFavoriteToSave, 0.5f, false, -1);
-	}
-}
-
 void UMainInterface::SetFavoriteToSave()
 {
 	if (!GameSystems.IsValidIndex(CountSystem)) return;
 
-	if (ENavigationButton == EButtonsGame::Y && !GameSystems[CountSystem].SystemName.Equals(TEXT("${System}")))
+	if (InputLastPressed == EButtonsGame::Y && !GameSystems[CountSystem].SystemName.Equals(TEXT("${System}")))
 	{
-
 		AsyncTask(ENamedThreads::AnyHiPriThreadNormalTask, [this]()
 		{
 			int32 Find;
@@ -752,7 +691,7 @@ void UMainInterface::RunningGame(const bool bIsRun)
 		GameMode->GameSettingsInit();
 		GetWorld()->GetTimerManager().ClearTimer(DelayRunAppTimerHandle);
 		DelayRunAppTimerHandle.Invalidate();
-		ENavigationButton = EButtonsGame::NONE;
+		InputLastPressed = EButtonsGame::NONE;
 
 		FTimerHandle ReturnHandle;
 		GetWorld()->GetTimerManager().SetTimer(
@@ -787,8 +726,8 @@ void UMainInterface::Clear()
 	SetInputEnable(false);
 	IndexCard = 0;
 	ProcessID = 0;
-	ENavigationLastButton = EButtonsGame::NONE;
-	ENavigationButton = EButtonsGame::NONE;
+	InputPressed = EButtonsGame::NONE;
+	InputLastPressed = EButtonsGame::NONE;
 	MultiInput.SetAllNoneInput();
 	PositionY = EPositionY::CENTER;
 	Focus = EFocus::MAIN;
@@ -835,7 +774,7 @@ void UMainInterface::OnFocusHeader(int32 Index)
 		ToolTips->OnFocus(Index);
 		Header->AnimationFocus(true);
 		WBPFrame->FrameIndexTop = Index;
-		WBPFrame->SetFrame(Index, PositionY);
+		WBPFrame->SetFramePositionWithAnimation(Index, PositionY);
 		SetButtonsIconInterfaces(PositionY);
 		ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas = GameDataIndex;
 		if (Index == 4)
@@ -964,11 +903,11 @@ void UMainInterface::SetFrame()
 {
 	if (PositionY == EPositionY::TOP)
 	{
-		WBPFrame->SetFrameIndexTop(ENavigationButton, CountSystem);
+		WBPFrame->SetIndexTop(InputLastPressed, CountSystem);
 		SetHeaderButtonFocus();
 	}
 	const int32 FrameIndex = LoopScroll->PositionOffsetFocus;
-	WBPFrame->SetFrame(FrameIndex, PositionY);
+	WBPFrame->SetFramePositionWithAnimation(FrameIndex, PositionY);
 }
 
 void UMainInterface::CloseMenus()
@@ -982,7 +921,7 @@ void UMainInterface::CloseMenus()
 	}
 	else if (Focus == EFocus::CONFIG)
 	{
-		ENavigationButton = EButtonsGame::NONE;
+		InputLastPressed = EButtonsGame::NONE;
 		if (WBPClassicConfigurationsInterface->bFocus)
 		{
 			WBPClassicConfigurationsInterface->CloseModal();
@@ -1019,10 +958,10 @@ void UMainInterface::ShowMessage(const FText Message, const float InRate)
 	MessageDisplay->ShowMessage(Message, InRate);
 }
 
-void UMainInterface::CardIndex(int32 CardIndex)
+void UMainInterface::CardIndex(int32 CardIndex, EButtonsGame Input)
 {
 	SetTitle(CardIndex);
-	LoadImages(32);
+	LoadImages(Input,GameData, 32);
 	SetFrame();
 }
 
