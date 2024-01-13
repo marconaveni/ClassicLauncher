@@ -25,6 +25,9 @@ public:
 	UImage* BgBackground;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UOverlay* OverlayMain;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UTextImageBlock* Text;
 	
 	UClassicButtonSystem(const FObjectInitializer& ObjectInitializer);

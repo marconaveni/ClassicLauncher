@@ -9,17 +9,8 @@
 
 UFrame::UFrame(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
-	  , ImageFrameCenter(nullptr)
-	  , ImageFrameTop(nullptr)
-	  , HorizontalBox(nullptr)
-	  , PaddingOverlay(nullptr)
-	  , CanvasPanelRoot(nullptr)
 	  , FrameIndexCenter(1)
 	  , Position(EPositionY::CENTER)
-	  , LoopScrollReference(nullptr)
-      , PaddingImage(nullptr)
-	  , TextureFrameTop(nullptr)
-	  , TextureFrameCenter(nullptr)
 {
 }
 
@@ -70,8 +61,9 @@ void UFrame::SetFramePositionWithoutAnimation(const int32 PositionCenter)
 	}
 }
 
-void UFrame::SetFramePositionWithAnimation(const int32& IndexFrame, const EPositionY& NewPosition)
+void UFrame::SetFramePositionWithAnimation(const EPositionY& NewPosition)
 {
-	OnSetFrame(IndexFrame, NewPosition);
+	Position = NewPosition;
+	OnSetFrame();
 }
 

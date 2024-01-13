@@ -47,7 +47,7 @@ struct FScrollConfiguration
 };
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDelegateCard, int32, Index, EButtonsGame , Input);
+/*DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDelegateCard, int32, Index, EButtonsGame , Input);*/
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDelegateOnCardClick);
 
@@ -57,11 +57,32 @@ class UMainInterface;
  *
  */
 UCLASS()
-class CLASSICLAUNCHER_API ULoopScrollBox : public UUserWidget, public  IMusicInterface
+class CLASSICLAUNCHER_API ULoopScrollBox : public UUserWidget ,public IMusicInterface
 {
 	GENERATED_BODY()
 
+private:
+	
+	UPROPERTY()
+	float Alpha;
+
+	UPROPERTY()
+	FTimerHandle MouseScrollTimerHandle;
+
 protected:
+	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default|Configurations")
+	float InitialSpeedScroll = 0.18f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default|Configurations")
+	float TargetSpeedScroll = 0.125f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default|Configurations")
+	float FastSpeedScroll = 0.085f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default|Configurations")
+	float Speed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Default|Configurations" )
 	FScrollConfiguration ScrollConfiguration;
@@ -75,9 +96,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Value")
 	int32 Direction;
 	
-	
+	virtual FReply NativeOnPreviewKeyDown( const FGeometry& InGeometry, const FKeyEvent& InKeyEvent ) override;
 	virtual FReply NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 	virtual FReply NativeOnMouseMove( const FGeometry& InGeometry, const FPointerEvent& InMouseEvent ) override;
+	virtual FReply NativeOnMouseWheel( const FGeometry& InGeometry, const FPointerEvent& InMouseEvent ) override;
 	virtual void NativeOnInitialized() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual void NativePreConstruct() override;
@@ -86,8 +108,8 @@ protected:
 	
 public:
 
-	UPROPERTY(BlueprintAssignable, BlueprintCallable)
-	FDelegateCard OnCardIndex;
+	/*UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FDelegateCard OnCardIndex;*/
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FDelegateOnCardClick OnCardClick;
@@ -117,14 +139,14 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
 	EButtonsGame InputDirection;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
+	EButtonsGame InputNavigation;
 	
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
 	bool bIgnoreOffset;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
-	float Speed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
 	int32 PositionOffsetFocus;
@@ -171,7 +193,7 @@ protected:
 	void OnOpenCard();
 
 	UFUNCTION(BlueprintPure, Category = "LoopScrollBox|Functions")
-	void GetCardReference(UPARAM(DisplayName = "Card Reference") UCard*& CardRef, const int32 Index, const int32 StartIndex = 5);
+	UCard* GetCardReference(const int32 Index);
 
 	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions", meta = (DisplayName = "Set Z-Order Card"))
 	void SetZOrderCard();
@@ -243,6 +265,12 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "LoopScrollBox|Functions")
 	int32 GetIndexToCount() const;
+
+	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
+	void SetUnlockInput(const bool bEnable);
+	
+	UFUNCTION(BlueprintCallable, Category = "LoopScrollBox|Functions")
+	bool GetUnlockInput() const;
 
 	virtual void EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound) override;
 

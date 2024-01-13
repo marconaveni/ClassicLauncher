@@ -26,7 +26,7 @@ void UScrollBoxEnhanced::NativePreConstruct()
 	{
 		NamedSlot->AddChild(VerticalBoxContent);
 	}
-
+	ScrollBarSettings(nullptr , nullptr , ScrollbarThickness,ScrollbarThicknessBackground);
 	SetScrollBarVisibility(ScrollBarVisibility);
 	bUpdateIndex = true;
 	BindButtonsScroll();
@@ -233,4 +233,47 @@ void UScrollBoxEnhanced::OnFocusButton(int32 Index)
 void UScrollBoxEnhanced::OnLostFocusButton(int32 Index)
 {
 	UE_LOG(LogTemp, Warning, TEXT("lost focus %d"), Index);
+}
+
+void UScrollBoxEnhanced::SetArrowIcons(UTexture2D* Texture, UTexture2D* TextureOutLine)
+{
+	if(Texture != nullptr)
+	{
+		ArrowIcon = Texture;
+	}
+	if(TextureOutLine != nullptr)
+	{
+		ArrowIconOutline = TextureOutLine;
+	}
+}
+
+void UScrollBoxEnhanced::ScrollBarSettings(UTexture2D* TextureThumb, UTexture2D* TextureBackground, const float SizeThumb, const float SizeBackground)
+{
+	FMargin Margin;
+	Margin.Bottom = 85;
+	Margin.Top = 85;
+	Margin.Left = 0;
+	Margin.Right = (45.0f - SizeThumb) / 2;
+	ScrollbarThickness = FMath::Clamp(SizeThumb, 0 , 45); 
+	ScrollBox->SetScrollbarPadding(Margin);
+	ScrollBox->SetScrollbarThickness(FVector2D( ScrollbarThickness,0));
+	FScrollBarStyle BarStyle = ScrollBox->GetWidgetBarStyle();
+	if(TextureThumb != nullptr)
+	{
+		FSlateBrush SlateBrushThumb = ScrollBox->GetWidgetBarStyle().NormalThumbImage;
+		SlateBrushThumb.SetResourceObject(TextureThumb);
+		BarStyle.SetNormalThumbImage(SlateBrushThumb);
+		BarStyle.SetHoveredThumbImage(SlateBrushThumb);
+		BarStyle.SetDraggedThumbImage(SlateBrushThumb);
+	}
+	if(TextureBackground != nullptr)
+	{
+		FSlateBrush SlateBrushTopBottom = ScrollBox->GetWidgetBarStyle().HorizontalTopSlotImage;
+		SlateBrushTopBottom.ImageSize = FVector2D(SizeBackground,1);
+		SlateBrushTopBottom.DrawAs = ESlateBrushDrawType::Image;
+		SlateBrushTopBottom.SetResourceObject(TextureBackground);
+		BarStyle.SetVerticalTopSlotImage(SlateBrushTopBottom);
+		BarStyle.SetVerticalBottomSlotImage(SlateBrushTopBottom);
+	}
+	ScrollBox->SetWidgetBarStyle(BarStyle);
 }

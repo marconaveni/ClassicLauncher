@@ -207,21 +207,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	bool bDelayQuit;
 
-	UPROPERTY()
-	float Alpha;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	float SpeedScroll;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	float InitialSpeedScroll = 0.18f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	float TargetSpeedScroll = 0.125f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	float FastSpeedScroll = 0.085f;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	int32 CountSystem;
 
@@ -253,9 +238,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle DelayLoadListTimerHandle;
 
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
-	FTimerHandle DelayFavoriteTimerHandle;*/
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle DelayQuitTimerHandle;
 
@@ -270,9 +252,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
 	FTimerHandle LoadImagesTimerHandle;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Timers")
-	FTimerHandle MouseScrollTimerHandle;
+	
 	
 	//TempVariables
 	UPROPERTY(BlueprintReadOnly)
@@ -294,8 +274,8 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnLoadGamesList();
 
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void LoadImages(const EButtonsGame Input, UPARAM(ref) TArray<FGameData>& Data, const int32 DistanceIndex = 15);
+	/*UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void LoadImages(const EButtonsGame Input, UPARAM(ref) TArray<FGameData>& Data, const int32 DistanceIndex = 15);*/
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnLoadImages(const int32& Index, const FString& Path);
@@ -419,9 +399,6 @@ private:
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickBackAction();
 
-	/*UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void HoldFavorite();*/
-
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetVisibiltyDebugButton(UButton* Button);
 
@@ -442,6 +419,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void SetPlayAnimation(FName AnimationName);
 	
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void CardIndex(int32 CardIndex, EButtonsGame Input);
+	/*UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void CardIndex(int32 CardIndex, EButtonsGame Input);*/
 };

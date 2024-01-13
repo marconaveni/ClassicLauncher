@@ -81,44 +81,55 @@ private:
 
 	UWidget* AddIndex(EScrollTo Scroll);
 
-
-public:
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
-	bool bAutoContent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
-	ESlateVisibility ScrollBarVisibility;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
-	UTexture2D* ArrowIcon;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Variables")
-	UTexture2D* ArrowIconOutline;
-	
-	UFUNCTION(BlueprintCallable, Category = "Functions")
-	void SetContent(UWidget* Content);
-	
-	void BindButtonsScroll();
-	
-	UFUNCTION(BlueprintCallable, Category = "Functions")
-	void ClearAllChildrenContent();
-
-	UFUNCTION(BlueprintCallable, Category = "Functions")
-	int32 SetFocusScroll(EScrollTo Scroll);
-	
-	UFUNCTION(BlueprintPure, Category = "Functions")
-	TArray<UWidget*> GetAllChildrenContent() const;
-
-	UFUNCTION(BlueprintCallable, Category = "Functions")
-	void SetScrollBarVisibility(ESlateVisibility EnableVisibility);
-
-	UFUNCTION(BlueprintPure, Category = "Functions")
-	bool GetScrollBarVisibility();
-
 	UFUNCTION()
 	void OnFocusButton(int32 Index);
 
 	UFUNCTION()
 	void OnLostFocusButton(int32 Index);
+	
+public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default" , meta=(UIMin = 0 , UIMax = 45))
+	float ScrollbarThickness = 28;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default" , meta=(UIMin = 0 , UIMax = 45))
+	float ScrollbarThicknessBackground = 10;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
+	bool bAutoContent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
+	ESlateVisibility ScrollBarVisibility;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
+	UTexture2D* ArrowIcon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
+	UTexture2D* ArrowIconOutline;
+	
+	UFUNCTION(BlueprintCallable, Category = "ScrollBoxEnhanced|Functions")
+	void SetContent(UWidget* Content);
+	
+	void BindButtonsScroll();
+	
+	UFUNCTION(BlueprintCallable, Category = "ScrollBoxEnhanced|Functions")
+	void ClearAllChildrenContent();
+
+	UFUNCTION(BlueprintCallable, Category = "ScrollBoxEnhanced|Functions")
+	int32 SetFocusScroll(EScrollTo Scroll);
+	
+	UFUNCTION(BlueprintPure, Category = "ScrollBoxEnhanced|Functions")
+	TArray<UWidget*> GetAllChildrenContent() const;
+
+	UFUNCTION(BlueprintCallable, Category = "ScrollBoxEnhanced|Functions")
+	void SetScrollBarVisibility(ESlateVisibility EnableVisibility);
+
+	UFUNCTION(BlueprintPure, Category = "ScrollBoxEnhanced|Functions")
+	bool GetScrollBarVisibility();
+
+	UFUNCTION(BlueprintCallable, Category = "ScrollBoxEnhanced|Functions")
+	void SetArrowIcons(UTexture2D* Texture, UTexture2D* TextureOutLine);
+
+	UFUNCTION(BlueprintCallable, Category = "ScrollBoxEnhanced|Functions")
+	void ScrollBarSettings(UTexture2D* TextureThumb, UTexture2D* TextureBackground, const float SizeThumb, const float SizeBackground);
 };

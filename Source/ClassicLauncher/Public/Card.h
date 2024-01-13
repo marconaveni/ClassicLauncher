@@ -82,7 +82,7 @@ public:
 	void SetFavorite(bool bEnable, bool bAnimateIcon);
 
 	UFUNCTION(BlueprintCallable, Category = "Card|Functions")
-	void SetCardImage(UTexture2D* texture, int32 width, int32 height);
+	void SetCardImage(UTexture2D* Texture);
 
 	UFUNCTION(BlueprintCallable,  Category = "Card|Functions")
 	void Release();

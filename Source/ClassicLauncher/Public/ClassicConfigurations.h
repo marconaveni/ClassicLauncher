@@ -1,4 +1,4 @@
-// Copyright 2022 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 #pragma once
 
@@ -26,10 +26,13 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
 	class UMainInterface* MainInterfaceReference;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicConfigurations|Variables")
 	bool bFocus;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicConfigurations|Variables")
 	bool bDelayInput;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicConfigurations|Variables")
 	int32 Index;
 
@@ -41,28 +44,40 @@ public:
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* Background;
+	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UClassicSlide* SlideVolume;
+	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UClassicButtonSystem* BtnUpdateGameList;
+	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UClassicButtonSystem* BtnDeviceInfo;
+	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UClassicButtonSystem* BtnLicenseInfo;
+	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UClassicButtonSystem* BtnLanguage;
+	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UWidgetSwitcher* WSButtons;
+	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UWidgetSwitcher* WSDeviceInfo;
+	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UWidgetSwitcher* WSDeviceLicense;
+	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UClassicButtonsIcons* WBPButtonsIconsInterfaces;
+	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextImageBlock* TextConfiguration;
+	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UClassicDeviceInfo* WBPDeviceInfo;
+	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UClassicLicenseInfo* WBPLicenseInfo;
 
@@ -83,23 +98,31 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void OnClickLicense(int32 Value);
+	
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void OnClickLanguage(int32 Value);
+	
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void GetLanguageText(bool bShowMessage);
+	
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void CloseModal();
+	
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void SetFocusItem(EButtonsGame Input);
+	
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void SetFocusSelect(const bool bIsSound = true);
+	
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void Delay();
+	
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void RestartMap();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicConfigurations|Timers")
 	FTimerHandle RestartMapTimerHandle;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicConfigurations|Timers")
 	FTimerHandle DelayTimerHandle;
 };

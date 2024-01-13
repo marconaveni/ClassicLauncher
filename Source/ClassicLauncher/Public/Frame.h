@@ -81,13 +81,13 @@ public:
 	UTexture2D* TextureFrameCenter;
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnSetFrame(const int32& IndexFrame, const EPositionY& NewPosition);
+	void OnSetFrame();
 
 	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
 	void SetIndexTop(const EButtonsGame Input, const int32 IndexLimit);
 
 	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
-	void SetFramePositionWithAnimation(const int32& IndexFrame, const EPositionY& NewPosition);
+	void SetFramePositionWithAnimation(const EPositionY& NewPosition);
 	
 	UFUNCTION(BlueprintCallable, Category = "Frame|Functions")
 	void SetFramePositionWithoutAnimation(int32 PositionCenter);

@@ -10,7 +10,6 @@
 #include "Cover.h"
 #include "MainInterface.h"
 #include "Blueprint/WidgetTree.h"
-#include "Components/Button.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Scrollbox.h"
@@ -23,15 +22,29 @@ void ULoopScrollBox::NativePreConstruct()
 
 void ULoopScrollBox::NativeConstruct()
 {
-	//ScrollConfiguration.ClampValues();
 	Super::NativeConstruct();
+}
+
+FReply ULoopScrollBox::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
+{
+	if(HasAnyUserFocus())
+	{
+		const EButtonsGame Input = UClassicFunctionLibrary::GetInputButton(InKeyEvent);
+		if(Input == EButtonsGame::UP || Input == EButtonsGame::DOWN ||
+			Input == EButtonsGame::LEFT || Input == EButtonsGame::RIGHT ||
+			Input == EButtonsGame::LB || Input == EButtonsGame::RB)
+		{
+			InputNavigation = Input;
+		}
+	}
+	return Super::NativeOnPreviewKeyDown(InGeometry, InKeyEvent);
 }
 
 FReply ULoopScrollBox::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
 	InputDirection = EButtonsGame::NONE;
-	const EButtonsGame NewInput = UClassicFunctionLibrary::GetInputButton(InKeyEvent);
-	if (NewInput == EButtonsGame::A && HasAnyUserFocus())
+	InputNavigation = EButtonsGame::NONE;
+	if (UClassicFunctionLibrary::GetInputButton(InKeyEvent) == EButtonsGame::A && HasAnyUserFocus())
 	{
 		OnCardClick.Broadcast();
 	}
@@ -41,6 +54,36 @@ FReply ULoopScrollBox::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEven
 FReply ULoopScrollBox::NativeOnMouseMove(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	return Super::NativeOnMouseMove(InGeometry, InMouseEvent);
+}
+
+FReply ULoopScrollBox::NativeOnMouseWheel(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	const float ScrollScale = InMouseEvent.GetWheelDelta();
+
+	if(HasAnyUserFocus() && GetUnlockInput() && CanvasCards->GetVisibility() == ESlateVisibility::SelfHitTestInvisible)
+	{
+		if (ScrollScale > 0)
+		{
+			DirectionLeft(true);
+		}
+		else if (ScrollScale < 0)
+		{
+			DirectionRight(true);
+		}
+		/*if(ScrollScale != 0)
+		{
+			CanvasCards->SetVisibility(ESlateVisibility::HitTestInvisible);
+			GetWorld()->GetTimerManager().ClearTimer(MouseScrollTimerHandle);
+			MouseScrollTimerHandle.Invalidate();
+			GetWorld()->GetTimerManager().SetTimer(
+				MouseScrollTimerHandle, [&]()
+			   {
+				   CanvasCards->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			   }
+			   , 0.015f, false, 0.001f);
+		}*/
+	}
+	return Super::NativeOnMouseWheel(InGeometry, InMouseEvent);
 }
 
 void ULoopScrollBox::NativeOnInitialized()
@@ -55,6 +98,21 @@ void ULoopScrollBox::NativeOnInitialized()
 void ULoopScrollBox::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
+
+	if (InputNavigation == EButtonsGame::LEFT || InputNavigation == EButtonsGame::RIGHT)
+	{
+		Speed = UKismetMathLibrary::Ease(InitialSpeedScroll, TargetSpeedScroll, Alpha, EEasingFunc::EaseIn);
+		Alpha = FMath::Clamp(Alpha + 0.24f * GetWorld()->GetDeltaSeconds(), 0, 1);
+	}
+	else if (InputNavigation == EButtonsGame::LB || InputNavigation == EButtonsGame::RB)
+	{
+		Speed = FastSpeedScroll;
+	}
+	else if (Speed != InitialSpeedScroll)
+	{
+		Alpha = 0;
+		Speed = InitialSpeedScroll;
+	}
 }
 
 void ULoopScrollBox::Clear()
@@ -64,7 +122,7 @@ void ULoopScrollBox::Clear()
 	InputDirection = EButtonsGame::NONE;
 	PositionOffsetFocus = 1;
 	IndexFocusCard = 0;
-	bUnlockInput = true;
+	SetUnlockInput(false);
 }
 
 void ULoopScrollBox::PrepareScrollBox()
@@ -107,12 +165,13 @@ void ULoopScrollBox::SetFocusCover()
 	}
 }
 
-void ULoopScrollBox::GetCardReference(UCard*& CardRef, const int32 Index, const int32 StartIndex)
+UCard* ULoopScrollBox::GetCardReference(const int32 Index)
 {
-	if (CardReference.IsValidIndex(Index + StartIndex))
+	if (CardReference.IsValidIndex(Index + ScrollConfiguration.StartIndex))
 	{
-		CardRef = CardReference[Index + StartIndex];
+		return CardReference[Index + ScrollConfiguration.StartIndex];
 	}
+	return nullptr;
 }
 
 void ULoopScrollBox::SetCardFavorite(const bool ToggleFavorite)
@@ -175,22 +234,25 @@ void ULoopScrollBox::CardsDefault()
 {
 	const int32 Start = ScrollConfiguration.StartIndex + 1;
 	const int32 End = Start + ScrollConfiguration.MinimumInfinityCard;
-	for (int32 Index = Start; Index < End; Index++)
+	for (int32 i = 0; i < CardReference.Num(); i++)
 	{
-		if (!CardReference.IsValidIndex(Index)) continue;
+		if (!CardReference.IsValidIndex(i)) continue;
 
-		UCard* Card = CardReference[Index];
+		UCard* Card = CardReference[i];
 		Card->SetFocusCard(false, false);
 		Card->SetRenderOpacity(1);
 		Card->SetRenderTransform(FWidgetTransform());
 
-		if (Index - Start >= ChildrenCount)
+		if(i >= Start && i < End)
 		{
-			Card->SetVisibility(ESlateVisibility::Hidden);
-		}
-		else
-		{
-			Card->SetVisibility(ESlateVisibility::Visible);
+			if (i - Start >= ChildrenCount)
+			{
+				Card->SetVisibility(ESlateVisibility::Hidden);
+			}
+			else
+			{
+				Card->SetVisibility(ESlateVisibility::Visible);
+			}
 		}
 	}
 }
@@ -205,7 +267,7 @@ void ULoopScrollBox::ConstructCover()
 
 	UCover* Cover = WidgetTree->ConstructWidget<UCover>(CoverClass);
 	ScrollBoxBottom->AddChild(Cover);
-	Cover->SetCoverImage(ImageCardDefault, ImageCardDefault->GetSizeX(), ImageCardDefault->GetSizeY());
+	Cover->SetCoverImage(ImageCardDefault);
 	CoverReference.Add(Cover);
 }
 
@@ -271,7 +333,7 @@ bool ULoopScrollBox::IndexFocusRange(int32 Index, int32& NewIndex) const
 	NewIndex = Index - ScrollConfiguration.StartIndex;
 	const int32 StartIndex = ScrollConfiguration.StartIndex;
 	const int32 MaxPositionOffset = StartIndex + ScrollConfiguration.MaxPositionOffset;
-	return (Index > StartIndex && Index <= MaxPositionOffset);
+	return (Index > StartIndex && Index <= MaxPositionOffset && GetUnlockInput() && CanvasCards->GetVisibility() == ESlateVisibility::SelfHitTestInvisible);
 }
 
 void ULoopScrollBox::OnReleaseCard(int32 Index)
@@ -280,6 +342,9 @@ void ULoopScrollBox::OnReleaseCard(int32 Index)
 	if (IndexFocusRange(Index, NewIndex))
 	{
 		MainInterfaceReference->OnClickLaunch();
+	}
+	else
+	{
 		NewDirectionInput(NewIndex);
 	}
 }
@@ -289,7 +354,7 @@ void ULoopScrollBox::OnHoveredCard(int32 Index)
 	int32 NewIndex = 0;
 	if (IndexFocusRange(Index, NewIndex))
 	{
-		Speed = 0.01f;
+		Speed = 0.001f;
 		if (MainInterfaceReference->PositionY == EPositionY::TOP)
 		{
 			MainInterfaceReference->SetNavigationFocusDownBottom();
@@ -298,7 +363,11 @@ void ULoopScrollBox::OnHoveredCard(int32 Index)
 		{
 			MainInterfaceReference->SetNavigationFocusUpBottom();
 		}
-		NewDirectionInput(NewIndex);
+		else if(MainInterfaceReference->PositionY == EPositionY::CENTER && MainInterfaceReference->GetInputEnable())
+		{
+			SetFocus();
+			NewDirectionInput(NewIndex);
+		}
 		if (CardReference.IsValidIndex(NewIndex))
 		{
 			CurrentCard = CardReference[NewIndex];
@@ -323,6 +392,8 @@ void ULoopScrollBox::OnUnhoveredCard(int32 Index)
 
 void ULoopScrollBox::DirectionRight(const bool bIgnoreOffsetScroll)
 {
+	if(!GetUnlockInput()) return;
+	SetUnlockInput(false);
 	InputDirection = EButtonsGame::RIGHT;
 	bIgnoreOffset = bIgnoreOffsetScroll;
 	OnDirectionRight();
@@ -330,6 +401,8 @@ void ULoopScrollBox::DirectionRight(const bool bIgnoreOffsetScroll)
 
 void ULoopScrollBox::DirectionLeft(const bool bIgnoreOffsetScroll)
 {
+	if(!GetUnlockInput()) return;
+	SetUnlockInput(false);
 	InputDirection = EButtonsGame::LEFT;
 	bIgnoreOffset = bIgnoreOffsetScroll;
 	OnDirectionLeft();
@@ -353,6 +426,18 @@ int32 ULoopScrollBox::GetIndexToCount() const
 	const int32 MaxValue = (bIgnoreOffset) ? PositionOffsetDirection : ScrollConfiguration.MaxPositionOffset;
 	const int32 Result = ScrollConfiguration.StartIndex + FMath::Clamp(PositionOffsetFocus, MinValue, MaxValue);
 	return  (IndexFocusCard - Result < 0) ? CoverReference.Num() - FMath::Abs(IndexFocusCard - Result) : IndexFocusCard - Result;
+}
+
+void ULoopScrollBox::SetUnlockInput(const bool bEnable)
+{
+	bUnlockInput = bEnable;
+	const ESlateVisibility SlateVisibility = (bEnable) ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::HitTestInvisible;
+	SetVisibility(SlateVisibility);
+}
+
+bool ULoopScrollBox::GetUnlockInput() const
+{
+	return bUnlockInput;
 }
 
 void ULoopScrollBox::EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound)

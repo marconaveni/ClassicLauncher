@@ -1,4 +1,4 @@
-// Copyright 2022 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 
 #include "Cover.h"
@@ -18,10 +18,12 @@ void UCover::FocusCover(bool bEnable)
 	}
 }
 
-void UCover::SetCoverImage(UTexture2D* Texture, int32 Width, int32 Height)
+void UCover::SetCoverImage(UTexture2D* Texture)
 {
 	if (Texture != nullptr) 
 	{
+		const int32 Width = Texture->GetSizeX();
+		const int32 Height = Texture->GetSizeY();
 		FSlateBrush NewBrush;
 		NewBrush.SetImageSize(FVector2D(Width, Height));
 		NewBrush.SetResourceObject(Texture);

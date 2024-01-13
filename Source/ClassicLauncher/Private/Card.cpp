@@ -145,13 +145,15 @@ void UCard::SetFavorite(bool bEnable, bool bAnimateIcon)
 	AnimationFavorite->PlayAnimation(Favorite, 0.45f, Transform, ToOpacity, false, EEasingFunc::EaseOut);
 }
 
-void UCard::SetCardImage(UTexture2D* texture, int32 width, int32 height)
+void UCard::SetCardImage(UTexture2D* Texture)
 {
-	if (texture != nullptr)
+	if (Texture != nullptr)
 	{
+		const int32 Width = Texture->GetSizeX();
+		const int32 Height = Texture->GetSizeY();
 		FSlateBrush NewBrush;
-		NewBrush.SetImageSize(FVector2D(width * 2, height * 2));
-		NewBrush.SetResourceObject(texture);
+		NewBrush.SetImageSize(FVector2D(Width * 2, Height * 2));
+		NewBrush.SetResourceObject(Texture);
 		Cover->SetBrush(NewBrush);
 	}
 }

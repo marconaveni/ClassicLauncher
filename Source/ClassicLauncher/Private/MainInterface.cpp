@@ -3,9 +3,7 @@
 
 #include "MainInterface.h"
 
-#include "AnimationUILoader.h"
 #include "Card.h"
-#include "ClassicButtonSystem.h"
 #include "Components/Image.h"
 #include "Components/Button.h"
 #include "ClassicFunctionLibrary.h"
@@ -19,7 +17,6 @@
 #include "ClassicMediaPlayer.h"
 #include "ClassicConfigurations.h"
 #include "ClassicGameMode.h"
-#include "Cover.h"
 #include "EngineUtils.h"
 #include "MessageBalloon.h"
 #include "LoopScrollBox.h"
@@ -107,7 +104,6 @@ void UMainInterface::NativeOnInitialized()
 	Header->OnClickDelegate.AddDynamic(this, &UMainInterface::OnClickHeader);
 	Header->OnFocusDelegate.AddDynamic(this, &UMainInterface::OnFocusHeader);
 	Header->OnLostFocusDelegate.AddDynamic(this, &UMainInterface::OnLostFocusHeader);
-	LoopScroll->OnCardIndex.AddDynamic(this, &UMainInterface::CardIndex);
 	LoopScroll->OnCardClick.AddDynamic(this, &UMainInterface::OnClickLaunch);
 	
 	for (TActorIterator<AClassicMediaPlayer> ActorIterator(GetWorld()); ActorIterator; ++ActorIterator)
@@ -134,23 +130,6 @@ void UMainInterface::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 			FooterDetails->TextBoxScroll->SetNewScroll(InputPressed, 0.0025f);
 		}
 	}
-
-	if (bKeyPressed && PositionY == EPositionY::CENTER && (InputPressed == EButtonsGame::LEFT || InputPressed == EButtonsGame::RIGHT))
-	{
-		SpeedScroll = UKismetMathLibrary::Ease(InitialSpeedScroll, TargetSpeedScroll, Alpha, EEasingFunc::EaseIn);
-		Alpha = FMath::Clamp(Alpha + 0.24f * GetWorld()->GetDeltaSeconds(), 0, 1);
-	}
-	else if (bKeyPressed && PositionY == EPositionY::CENTER && (InputPressed == EButtonsGame::LB || InputPressed == EButtonsGame::RB))
-	{
-		SpeedScroll = FastSpeedScroll;
-	}
-	else
-	{
-		Alpha = 0;
-		SpeedScroll = InitialSpeedScroll;
-		LoopScroll->Speed = InitialSpeedScroll;
-	}
-	LoopScroll->Speed = SpeedScroll;
 }
 
 void UMainInterface::SteamRunApp()
@@ -212,63 +191,13 @@ void UMainInterface::LoadGamesList()
 	}
 }
 
-void UMainInterface::LoadImages(const EButtonsGame Input, TArray<FGameData>& Data, const int32 DistanceIndex)
-{
-	if ((Input == EButtonsGame::RIGHT || Input == EButtonsGame::RB ||
-		Input == EButtonsGame::LEFT || Input == EButtonsGame::LB) &&
-		DistanceIndex > 0 && Data.Num() >= 64)
-	{
-		if (Input == EButtonsGame::RIGHT || Input == EButtonsGame::RB)
-		{
-			FirstIndex = IndexCard - DistanceIndex;
-			LastIndex = IndexCard + (DistanceIndex - 1);
-		}
-		else if (Input == EButtonsGame::LEFT || Input == EButtonsGame::LB)
-		{
-			FirstIndex = IndexCard - (DistanceIndex - 1);
-			LastIndex = IndexCard + DistanceIndex;
-		}
-
-		if (FirstIndex < 0)
-		{
-			FirstIndex = Data.Num() - FMath::Abs(FirstIndex);
-		}
-		if (LastIndex >= Data.Num())
-		{
-			LastIndex = LastIndex - Data.Num();
-		}
-
-		FirstIndex = FMath::Clamp(FirstIndex, 0, Data.Num() - 1);
-		LastIndex = FMath::Clamp(LastIndex, 0, Data.Num() - 1);
-
-		int32 IndexLoad = -1, IndexUnload = -1;
-		if (Input == EButtonsGame::RIGHT || Input == EButtonsGame::RB)
-		{
-			IndexUnload = FirstIndex;
-			IndexLoad = LastIndex;
-		}
-		else if (Input == EButtonsGame::LEFT || Input == EButtonsGame::LB)
-		{
-			IndexUnload = LastIndex;
-			IndexLoad = FirstIndex;
-		}
-		if (IndexLoad != -1 && IndexUnload != -1)
-		{
-			LoopScroll->CoverReference[IndexUnload]->SetCoverImage(ImageNull, 1, 1);
-			OnLoadImages(IndexLoad, Data[IndexLoad].imageFormated);
-			UE_LOG(LogTemp, Warning, TEXT("FirstIndex %d  IndexCard %d LastIndex %d"), FirstIndex, IndexCard, LastIndex);
-		}
-
-	}
-}
-
 void UMainInterface::ShowGames()
 {
 	SetPlayAnimation(TEXT("LoadListGame"));
-	SetInputEnable(true);
 	PrepareThemes();
-	OnShowGames(); //BlueprintImplementableEvent
 	GameMode->LoadingGameData->RemoveLoadingScreenToParent();
+	//OnShowGames(); //BlueprintImplementableEvent
+	SetInputEnable(true);
 }
 
 void UMainInterface::PrepareThemes()
@@ -309,36 +238,7 @@ void UMainInterface::NativeReleaseInput(const FKey& InKey)
 FReply UMainInterface::NativeOnMouseWheel(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	const float ScrollScale = InMouseEvent.GetWheelDelta();
-
-	if(PositionY == EPositionY::CENTER && LoopScroll->bUnlockInput)
-	{
-		if (ScrollScale > 0)
-		{
-			InputLastPressed = EButtonsGame::LEFT;
-			LoopScroll->DirectionLeft(true);
-		}
-		else if (ScrollScale < 0)
-		{
-			InputLastPressed = EButtonsGame::RIGHT;
-			LoopScroll->DirectionRight(true);
-		}
-		if(ScrollScale != 0)
-		{
-			if(CanvasPanelRoot->GetVisibility() != ESlateVisibility::HitTestInvisible)
-			{
-				CanvasPanelRoot->SetVisibility(ESlateVisibility::HitTestInvisible);
-			}
-			GetWorld()->GetTimerManager().ClearTimer(MouseScrollTimerHandle);
-			MouseScrollTimerHandle.Invalidate();
-			GetWorld()->GetTimerManager().SetTimer(
-				MouseScrollTimerHandle, [&]()
-               {
-                   CanvasPanelRoot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-               }
-               , 0.015f, false, 0.5f);
-		}
-	}
-	else if (PositionY == EPositionY::BOTTOM)
+	if (PositionY == EPositionY::BOTTOM)
 	{
 		if (ScrollScale > 0)
 		{
@@ -401,7 +301,7 @@ void UMainInterface::NavigationMain(EButtonsGame Input)
 		if (PositionY == EPositionY::CENTER)
 		{
 			TimerDelayInput = 0.0f;
-			if (LoopScroll->bUnlockInput)
+			if (LoopScroll->GetUnlockInput())
 			{
 				if (Input == EButtonsGame::RIGHT || Input == EButtonsGame::RB)
 				{
@@ -503,6 +403,7 @@ void UMainInterface::SetTitle(int32 Index)
 		TextTitleGame->SetText(FText::FromString(Title));
 		FooterDetails->TextBoxScroll->SetText(GameData[IndexCard].descFormated);
 		SetButtonsIconInterfaces(PositionY);
+		SetFrame();
 	}
 }
 
@@ -662,15 +563,11 @@ void UMainInterface::SetFavoriteToSave()
 
 				if (UGameplayStatics::SaveGameToSlot(ClassicGameInstance->ClassicSaveGameInstance, ClassicGameInstance->SlotGame, 0))
 				{
-
 					AsyncTask(ENamedThreads::GameThread, [this, ToggleFavorite]()
 					{
-
 						LoopScroll->SetCardFavorite(ToggleFavorite);
 						SetButtonsIconInterfaces(EPositionY::CENTER);
-
 						ShowMessage((ToggleFavorite) ? LOCTEXT("MessageAddFavorite", "Add game to favorite") : LOCTEXT("RemoveFavorite", "Remove game to favorite"), 3.5f);
-
 					});
 				}
 			}
@@ -700,6 +597,7 @@ void UMainInterface::RunningGame(const bool bIsRun)
 			{
 				ClassicMediaPlayerReference->PlaylistMusic();
 				PlayAnimationReverse(FadeStartSystem);
+				LoopScroll->SetUnlockInput(true);
 				SetFrame();
 				SetInputEnable(true);
 			},0.18f ,false);
@@ -736,7 +634,6 @@ void UMainInterface::Clear()
 	bDelayQuit = false;
 	CountSystem = 0;
 	CountLocationY = 0;
-	SpeedScroll = TargetSpeedScroll;
 	GameData.Empty();
 	GameDataIndex.Empty();
 }
@@ -774,7 +671,7 @@ void UMainInterface::OnFocusHeader(int32 Index)
 		ToolTips->OnFocus(Index);
 		Header->AnimationFocus(true);
 		WBPFrame->FrameIndexTop = Index;
-		WBPFrame->SetFramePositionWithAnimation(Index, PositionY);
+		WBPFrame->SetFramePositionWithAnimation(PositionY);
 		SetButtonsIconInterfaces(PositionY);
 		ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas = GameDataIndex;
 		if (Index == 4)
@@ -906,8 +803,7 @@ void UMainInterface::SetFrame()
 		WBPFrame->SetIndexTop(InputLastPressed, CountSystem);
 		SetHeaderButtonFocus();
 	}
-	const int32 FrameIndex = LoopScroll->PositionOffsetFocus;
-	WBPFrame->SetFramePositionWithAnimation(FrameIndex, PositionY);
+	WBPFrame->SetFramePositionWithAnimation(PositionY);
 }
 
 void UMainInterface::CloseMenus()
@@ -956,13 +852,6 @@ void UMainInterface::CloseMenus()
 void UMainInterface::ShowMessage(const FText Message, const float InRate)
 {
 	MessageDisplay->ShowMessage(Message, InRate);
-}
-
-void UMainInterface::CardIndex(int32 CardIndex, EButtonsGame Input)
-{
-	SetTitle(CardIndex);
-	LoadImages(Input,GameData, 32);
-	SetFrame();
 }
 
 void UMainInterface::SetVisibiltyDebugButton(UButton* Button)

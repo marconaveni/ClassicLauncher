@@ -1,4 +1,4 @@
-// Copyright 2022 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 #pragma once
 
@@ -26,7 +26,7 @@ public:
 	void FocusCover(bool bEnable);
 
 	UFUNCTION(BlueprintCallable, category = "Classic Launcher|Functions")
-	void SetCoverImage(UTexture2D* Texture, int32 Width, int32 Height);
+	void SetCoverImage(UTexture2D* Texture);
 
 	UFUNCTION(BlueprintCallable, category = "Classic Launcher|Functions")
 	bool GetPositionCover();

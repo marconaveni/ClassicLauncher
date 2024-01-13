@@ -58,6 +58,7 @@ enum class EButtonsGame : uint8
 	M			UMETA(DisplayName = "Stick Right Button / M")
 };
 
+
 DECLARE_DYNAMIC_DELEGATE_ThreeParams(FLoadImageDelegate, UTexture2D*, TextureOut, int32, Index, bool, Sucesseful);
 
 /**

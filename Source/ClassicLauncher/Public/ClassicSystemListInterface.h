@@ -28,12 +28,6 @@ protected:
 	class UImage* Icon;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* ArrowUP;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* ArrowDown;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UClassicButtonsIcons* WBPButtonsIconsInterfaces;
 
 public:
@@ -50,12 +44,6 @@ public:
 	virtual void NativeOnInitialized() override;
 	virtual FReply NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 	virtual FReply NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicSystemListInterface|Variables")
-	UTexture2D* ArrowIcon;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicSystemListInterface|Variables")
-	UTexture2D* ArrowIconOutline;
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicSystemListInterface|Events")
 	void SetFocusItem(const EButtonsGame Input,UPARAM(ref) int32& Index);
