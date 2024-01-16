@@ -38,6 +38,9 @@ protected:
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class USlider* SliderVolume;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UHorizontalBox* HorizontalBox;
 	
 public:
 	
@@ -50,5 +53,8 @@ public:
 	UFUNCTION(BlueprintPure, Category = "ClassicSlide|Functions")
 	float GetSlideValue();
 
+	UFUNCTION(BlueprintCallable, Category = "ClassicSlide|Functions")
+	void SetSlidePosition(float MarginLeft);
+	
 	virtual void EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound) override;
 };

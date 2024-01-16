@@ -4,11 +4,15 @@
 #include "ClassicSlide.h"
 
 #include "ClassicFunctionLibrary.h"
+#include "Components/HorizontalBox.h"
+#include "Components/HorizontalBoxSlot.h"
+#include "Components/Image.h"
+#include "Components/OverlaySlot.h"
 #include "Components/Slider.h"
+
 
 void UClassicSlide::MoveSlide()
 {
-
 	if (IsFocusable() && (Input == EButtonsGame::LEFT || Input == EButtonsGame::RIGHT))
 	{
 		const float SlideValue = GetSlideValue();
@@ -21,7 +25,7 @@ void UClassicSlide::MoveSlide()
 		{
 			SetSlideValue(SlideValue + SlideTo);
 		}
-		UE_LOG(LogTemp, Warning, TEXT("slide %f") , SlideValue + SlideTo);
+		UE_LOG(LogTemp, Warning, TEXT("slide %f"), SlideValue + SlideTo);
 	}
 }
 
@@ -69,9 +73,20 @@ float UClassicSlide::GetSlideValue()
 	return SliderVolume->GetValue();
 }
 
+void UClassicSlide::SetSlidePosition(float MarginLeft)
+{
+	UOverlaySlot* HorizontalBoxSlot = Cast<UOverlaySlot>(HorizontalBox->Slot);
+	const UOverlaySlot* OverlaySlot = Cast<UOverlaySlot>(BackgroundFocus->Slot);
+	HorizontalBoxSlot->SetPadding(FMargin(OverlaySlot->GetPadding()));
+	UHorizontalBoxSlot* TextHorizontalBoxSlot = Cast<UHorizontalBoxSlot>(Text->Slot);
+	const float NewPaddingLeft = MarginLeft - OverlaySlot->GetPadding().Left;
+	TextHorizontalBoxSlot->SetPadding(FMargin(NewPaddingLeft, 0, 0, 0));
+	/*if (TextHorizontalBoxSlot != nullptr)
+	{*/
+	/*}*/
+}
+
 void UClassicSlide::EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound)
 {
 	SoundSelect = NavigateSound;
 }
-
-

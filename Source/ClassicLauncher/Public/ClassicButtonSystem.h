@@ -15,20 +15,27 @@ UCLASS()
 class CLASSICLAUNCHER_API UClassicButtonSystem : public UBaseButton, public IMusicInterface
 {
 	GENERATED_BODY()
-
-public:
+	
+protected:
+	
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UArrow* Arrow;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UArrow* WBPArrow;
+	UImage* BackgroundFocus;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UImage* BgBackground;
+	UImage* Image;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UImage* Icon;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UOverlay* OverlayMain;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UTextImageBlock* Text;
+	
 	
 	UClassicButtonSystem(const FObjectInitializer& ObjectInitializer);
 
@@ -43,24 +50,50 @@ public:
 	virtual void SetFocusButton(bool bEnable) override;
 	virtual void ButtonClick() override;
 	
-	UFUNCTION(BlueprintCallable, Category = "ClassicButtonSystem|Functions")
-	void SetText(FText NewText);
+public:
+	
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButtonSystem|Variables")
 	FText ButtonText;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButtonSystem|Variables")
-	class USoundBase* SoundSelect;
+	USoundBase* SoundSelect;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButtonSystem|Variables")
-	class USoundBase* SoundClick;
+	USoundBase* SoundClick;
 
-	UFUNCTION(BlueprintCallable, Category = "Classic Launcher|Functions")
-	void SetTextAppearance(FTextStyle NewTextStyle);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButtonSystem|Variables")
+	TEnumAsByte<ESlateBrushDrawType::Type> BackgroundDrawAs = ESlateBrushDrawType::RoundedBox;
 
-	UFUNCTION(BlueprintCallable, Category = "Classic Launcher|Functions")
-	void AlternateToTextImage(bool bEnable, float Size = 24);
+	UFUNCTION(BlueprintCallable, Category = "ClassicButtonSystem|Functions")
+	void SetText(FText NewText);
 
+	UFUNCTION(BlueprintCallable, Category = "ClassicButtonSystem|Functions")
+	void SetBackgroundAppearance(
+		float CornerRadius = 20,
+		FString Color = TEXT("00baaf00"),
+		float BorderWidth = 5,
+		FString BorderColor = TEXT("00baaf"),
+		float MarginLeft = 0,
+		float MarginTop = 8,
+		float MarginRight = 0,
+		float MarginBottom = 8);
+	
+	UFUNCTION(BlueprintCallable, Category = "ClassicButtonSystem|Functions")
+	void SetTextAppearance(FTextStyle NewTextStyle, bool bEnableImageText, float Margin = 90, float Size = 24);
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicButtonSystem|Functions")
+	void SetSize(float Width = 900, float Height = 108);
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicButtonSystem|Functions")
+	void SetArrow(UTexture2D* Texture0, UTexture2D* Texture1, UTexture2D* Texture2, float Angle, float Margin);
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicButtonSystem|Functions")
+	void SetIcon(UTexture2D* Texture, float Margin, bool bEnable);
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicButtonSystem|Functions")
+	void SetImage(UTexture2D* Texture, float Margin, bool bEnable);
+	
 	virtual void EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound) override;
 
 private:
