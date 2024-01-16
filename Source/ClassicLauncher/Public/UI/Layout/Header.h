@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MusicInterface.h"
+#include "Interfaces/MusicInterface.h"
 #include "TextImageBlock.h"
 #include "Blueprint/UserWidget.h"
 #include "Header.generated.h"
@@ -11,7 +11,7 @@
 
 class UToolTip;
 class UImage;
-class UClassicButton;
+class UButtonIcon;
 class UOverlay;
 class UCanvasPanelSlot;
 class UHorizontalBox;
@@ -55,16 +55,16 @@ protected:
 	UImage* MainOpacity;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UClassicButton* SelectSystem;
+	UButtonIcon* SelectSystem;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UClassicButton* Configurations;
+	UButtonIcon* Configurations;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UClassicButton* Filter;
+	UButtonIcon* Filter;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UClassicButton* MoreInformation;
+	UButtonIcon* MoreInformation;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UOverlay* Buttons;

@@ -3,11 +3,11 @@
 
 #include "UI/Layout/FooterDetails.h"
 
-#include "AnimationUILoader.h"
-#include "ClassicFunctionLibrary.h"
-#include "ClassicMediaPlayer.h"
-#include "MainInterface.h"
-#include "TextBoxScroll.h"
+#include "UI/Animations/AnimationUILoader.h"
+#include "FunctionLibrary/ClassicFunctionLibrary.h"
+#include "Audio/ClassicMediaPlayer.h"
+#include "UI/Screens/MainScreen.h"
+#include "UI/Components/TextBoxScroll.h"
 #include "Components/Image.h"
 
 void UFooterDetails::NativeOnInitialized()

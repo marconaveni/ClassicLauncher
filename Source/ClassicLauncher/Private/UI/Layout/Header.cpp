@@ -2,8 +2,8 @@
 
 
 #include "UI/Layout/Header.h"
-#include "ClassicButton.h"
-#include "ToolTip.h"
+#include "UI/Components/ButtonIcon.h"
+#include "UI/Components/ToolTip.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/HorizontalBox.h"
 #include "Components/Image.h"
@@ -87,7 +87,7 @@ void UHeader::HasButtonFocus()
 	bool bIsFocus = false;
 	for (UWidget*& Widget : Widgets)
 	{
-		UClassicButton* Button = Cast<UClassicButton>(Widget);
+		UButtonIcon* Button = Cast<UButtonIcon>(Widget);
 		if (Button == nullptr) continue;
 
 		if (Button->HasFocusButton())

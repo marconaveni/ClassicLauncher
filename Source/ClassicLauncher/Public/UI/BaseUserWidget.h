@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ClassicFunctionLibrary.h"
+#include "FunctionLibrary/ClassicFunctionLibrary.h"
 #include "Blueprint/UserWidget.h"
 #include "BaseUserWidget.generated.h"
 
@@ -11,18 +11,18 @@ class UImage;
 class UTextImageBlock;
 class UCanvasPanel;
 class UToolTip;
-class UClassicButton;
+class UButtonIcon;
 class UFrame;
-class UClassicInfoInterface;
-class UClassicSystemListInterface;
-class UClassicConfigurations;
-class UClassicButtonsIcons;
+class UMoreInformationsLayout;
+class UGameListLayout;
+class UOptionsLayout;
+class UButtonsPrompt;
 class UMessageBalloon;
 class UTextBlock;
-class ULoopScrollBox;
+class ULoopScroll;
 class UTextBoxScroll;
 class UClassicGameInstance;
-class UClassicButtonSystem;
+class UButtonCommon;
 class AClassicMediaPlayer;
 class UCanvasPanelSlot;
 class AClassicGameMode;

@@ -3,7 +3,7 @@
 
 #include "UI/BaseButton.h"
 
-#include "ClassicFunctionLibrary.h"
+#include "FunctionLibrary/ClassicFunctionLibrary.h"
 #include "Components/Button.h"
 
 UBaseButton::UBaseButton(const FObjectInitializer& ObjectInitializer)

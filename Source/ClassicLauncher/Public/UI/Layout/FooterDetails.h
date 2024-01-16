@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameData.h"
-#include "MainInterface.h"
+#include "Data/GameData.h"
+#include "UI/Screens/MainScreen.h"
 #include "Blueprint/UserWidget.h"
 #include "FooterDetails.generated.h"
 
@@ -12,7 +12,7 @@ class UImage;
 class UScaleBox;
 class UTextBoxScroll;
 class UCanvasPanel;
-class UMainInterface;
+class UMainScreen;
 
 /**
  * 

@@ -2,7 +2,7 @@
 
 
 #include "UI/Layout/ToolTipsLayout.h"
-#include "ToolTip.h"
+#include "UI/Components/ToolTip.h"
 #include "Components/CanvasPanelSlot.h"
 
 void UToolTipsLayout::NativeOnInitialized()

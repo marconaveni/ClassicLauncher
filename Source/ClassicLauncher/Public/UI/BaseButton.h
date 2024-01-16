@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ClassicFunctionLibrary.h"
+#include "FunctionLibrary/ClassicFunctionLibrary.h"
 #include "Blueprint/UserWidget.h"
 #include "BaseButton.generated.h"
 
