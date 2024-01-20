@@ -16,9 +16,12 @@
 #include "FunctionLibrary/ClassicFunctionLibrary.h"
 #include "TextImageBlock.h"
 #include "Kismet/KismetInternationalizationLibrary.h"
+#include "UI/Components/ButtonCheckBox.h"
 #include "UI/Layout/Header.h"
 #include "UI/Components/ButtonCommon.h"
+#include "UI/Components/ButtonCommonAlternative.h"
 #include "UI/Components/ScrollBoxEnhanced.h"
+#include "UI/Layout/Modal.h"
 
 #define LOCTEXT_NAMESPACE "ButtonsConfiguration"
 
@@ -30,20 +33,25 @@ void UOptionsLayout::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 void UOptionsLayout::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-
-	bFocus = false;
-	Index = 0;
-
 	SetIsFocusable(true);
 
-	SlideVolume->OnSlideTrigger.AddDynamic(this, &UOptionsLayout::OnSlideVolume);
-	SlideVolume->OnFocusLostTriggerSlide.AddDynamic(this, &UOptionsLayout::OnSlideLostFocus);
+	SlideVolumeSystem->OnSlideTrigger.AddDynamic(this, &UOptionsLayout::OnSlideVolumeMaster);
+	SlideVolumeSystem->OnFocusLostTriggerSlide.AddDynamic(this, &UOptionsLayout::OnSlideLostFocus);
+	SlideVolumeMusic->OnSlideTrigger.AddDynamic(this, &UOptionsLayout::OnSlideVolumeMusic);
+	SlideVolumeMusic->OnFocusLostTriggerSlide.AddDynamic(this, &UOptionsLayout::OnSlideLostFocus);
+	SlideVolumeVideo->OnSlideTrigger.AddDynamic(this, &UOptionsLayout::OnSlideVolumeVideo);
+	SlideVolumeVideo->OnFocusLostTriggerSlide.AddDynamic(this, &UOptionsLayout::OnSlideLostFocus);
 	BtnUpdateGameList->OnClickTrigger.AddDynamic(this, &UOptionsLayout::OnClickUpdate);
+	BtnChangeSystems->OnClickTrigger.AddDynamic(this, &UOptionsLayout::OnClickChangeSystems);
 	BtnDeviceInfo->OnClickTrigger.AddDynamic(this, &UOptionsLayout::OnClickDevice);
 	BtnLicenseInfo->OnClickTrigger.AddDynamic(this, &UOptionsLayout::OnClickLicense);
 	BtnLanguage->OnClickTrigger.AddDynamic(this, &UOptionsLayout::OnClickLanguage);
-	
-	
+	BtnChangeTheme->OnClickTrigger.AddDynamic(this, &UOptionsLayout::OnClickChangeTheme);
+	BtnPrompt->OnClickTrigger.AddDynamic(this, &UOptionsLayout::OnClickPrompt);
+	CbVideoAudio->CheckDelegate.AddDynamic(this, &UOptionsLayout::OnSoundVideo);
+	BtnEnglish->OnClickTrigger.AddDynamic(this, &UOptionsLayout::OnClickChangeLanguage);
+	BtnPortuguese->OnClickTrigger.AddDynamic(this, &UOptionsLayout::OnClickChangeLanguage);
+
 	for (TObjectIterator<UMainScreen> ObjectIterator; ObjectIterator; ++ObjectIterator)
 	{
 		if (ObjectIterator->GetWorld() != GetWorld())
@@ -58,25 +66,35 @@ void UOptionsLayout::NativeOnInitialized()
 		ClassicMediaPlayerReference = *ActorIterator;
 		UE_LOG(LogTemp, Warning, TEXT("Reference AClassicMediaPlayer classicconfigurations Founds: %s "), *ClassicMediaPlayerReference->GetName());
 	}
-
-	GetLanguageText(false);
+	
 }
 
 FReply UOptionsLayout::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
-	const EButtonsGame Input = UClassicFunctionLibrary::GetInputButton(InKeyEvent);
-
-	if (Input == EButtonsGame::B)
-	{
-	}
 	return Super::NativeOnPreviewKeyDown(InGeometry, InKeyEvent);
 }
 
-void UOptionsLayout::OnSlideVolume(int32 Value)
+void UOptionsLayout::OnSlideVolumeMaster(int32 Value)
 {
 	if (IsValid(ClassicMediaPlayerReference))
 	{
 		ClassicMediaPlayerReference->ChangeMasterVolume(Value);
+	}
+}
+
+void UOptionsLayout::OnSlideVolumeMusic(int32 Value)
+{
+	if (IsValid(ClassicMediaPlayerReference))
+	{
+		ClassicMediaPlayerReference->ChangeMusicVolume(Value);
+	}
+}
+
+void UOptionsLayout::OnSlideVolumeVideo(int32 Value)
+{
+	if (IsValid(ClassicMediaPlayerReference))
+	{
+		ClassicMediaPlayerReference->ChangeVideoVolume(Value);
 	}
 }
 
@@ -87,18 +105,35 @@ void UOptionsLayout::OnSlideLostFocus()
 		UE_LOG(LogTemp, Warning, TEXT("MainInterfaceReference ClassicMediaPlayerReference error"));
 		return;
 	}
+	bool bSave = false;
+	FConfig Config = MainInterfaceReference->ConfigurationData;
 
-	if (MainInterfaceReference->ConfigurationData.Volume != ClassicMediaPlayerReference->GetMasterVolume())
+	if (Config.VolumeMaster != ClassicMediaPlayerReference->GetMasterVolume())
 	{
-		MainInterfaceReference->ConfigurationData.Volume = ClassicMediaPlayerReference->GetMasterVolume();
-		UClassicFunctionLibrary::SaveConfig(MainInterfaceReference->ConfigurationData);
+		Config.VolumeMaster = ClassicMediaPlayerReference->GetMasterVolume();
+		bSave = true;
+	}
+	if (Config.VolumeMusic != ClassicMediaPlayerReference->GetMusicVolume())
+	{
+		Config.VolumeMusic = ClassicMediaPlayerReference->GetMusicVolume();
+		bSave = true;
+	}
+	if (Config.VolumeVideo != ClassicMediaPlayerReference->GetVideoVolume())
+	{
+		Config.VolumeVideo = ClassicMediaPlayerReference->GetVideoVolume();
+		bSave = true;
+	}
+	
+	if (bSave)
+	{
+		MainInterfaceReference->ConfigurationData = Config;
+		UClassicFunctionLibrary::SaveConfig(Config);
 		UE_LOG(LogTemp, Warning, TEXT("saving config"));
 	}
 }
 
 void UOptionsLayout::OnClickUpdate(int32 Value)
 {
-	bFocus = true;
 	UClassicGameInstance* ClassicGameInstance = Cast<UClassicGameInstance>(GetGameInstance());
 	ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave.Empty();
 
@@ -120,47 +155,67 @@ void UOptionsLayout::OnClickUpdate(int32 Value)
 	}
 }
 
-void UOptionsLayout::OnClickDevice(int32 Value)
+void UOptionsLayout::OnClickChangeSystems(int32 Value)
 {
-	bFocus = true;
-	WSButtons->SetRenderOpacity(0);
-	WSDeviceInfo->SetRenderOpacity(1);
-	WSButtons->SetVisibility(ESlateVisibility::Hidden);
-	WSDeviceLicense->SetVisibility(ESlateVisibility::Hidden);
-	WSDeviceInfo->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	SetFocus();
-	UE_LOG(LogTemp, Warning, TEXT("OnClickDevice"));
-	
+	//open new screen 
 }
 
-void UOptionsLayout::OnClickLicense(int32 Value)
+void UOptionsLayout::CloseModal()
 {
-	bFocus = true;
-	WSButtons->SetRenderOpacity(0);
-	WSDeviceLicense->SetRenderOpacity(1);
-	WSButtons->SetVisibility(ESlateVisibility::Hidden);
-	WSDeviceInfo->SetVisibility(ESlateVisibility::Hidden);
-	WSDeviceLicense->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	SetFocus();
-	UE_LOG(LogTemp, Warning, TEXT("OnClickLicense"));
+	SetActiveWidgetIndex(0);
+	SetFocusOptionsItem(EButtonsGame::NONE);
+}
+
+void UOptionsLayout::OnClickPrompt(int32 Value)
+{
+	SetActiveWidgetIndex(1);
+	SetFocusOptionsItem(EButtonsGame::NONE);
+}
+
+void UOptionsLayout::OnClickChangeTheme(int32 Value)
+{
+	SetActiveWidgetIndex(2);
+	SetFocusOptionsItem(EButtonsGame::NONE);
 }
 
 void UOptionsLayout::OnClickLanguage(int32 Value)
 {
+	SetActiveWidgetIndex(3);
+	SetFocusOptionsItem(EButtonsGame::NONE);
+}
+
+void UOptionsLayout::OnClickDevice(int32 Value)
+{
+	SetActiveWidgetIndex(4);
+	SetFocus();
+}
+
+void UOptionsLayout::OnClickLicense(int32 Value)
+{
+	SetActiveWidgetIndex(5);
+	SetFocus();
+}
+
+void UOptionsLayout::OnSoundVideo(bool bCheck)
+{
+	UE_LOG(LogTemp, Warning, TEXT("bcheck is %s"), (bCheck)? TEXT("true"): TEXT("false"));
+}
+
+void UOptionsLayout::OnClickChangeLanguage(int32 Value)
+{
 	const FString CurrentLanguage = UKismetInternationalizationLibrary::GetCurrentCulture();
 
-	if (CurrentLanguage == TEXT("en"))
-	{
-		UKismetInternationalizationLibrary::SetCurrentCulture(TEXT("pt-BR"), true);
-		GetLanguageText(true);
-	}
-	else
+	if (Value == 0)
 	{
 		UKismetInternationalizationLibrary::SetCurrentCulture(TEXT("en"), true);
 		GetLanguageText(true);
 	}
-
-
+	else if (Value == 1)
+	{
+		UKismetInternationalizationLibrary::SetCurrentCulture(TEXT("pt-BR"), true);
+		GetLanguageText(true);
+	}
+	
 	for (TObjectIterator<UTextImageBlock> ObjectIterator; ObjectIterator; ++ObjectIterator)
 	{
 		if (ObjectIterator->GetWorld() != GetWorld())
@@ -183,73 +238,62 @@ void UOptionsLayout::GetLanguageText(bool bShowMessage)
 	}
 }
 
-void UOptionsLayout::CloseModal()
+void UOptionsLayout::SetFocusOptionsItem(const EButtonsGame Input)
 {
-	bFocus = false;
-	WSButtons->SetRenderOpacity(1);
-	WSDeviceInfo->SetRenderOpacity(0);
-	WSDeviceLicense->SetRenderOpacity(0);
-	WSButtons->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	WSDeviceInfo->SetVisibility(ESlateVisibility::Hidden);
-	WSDeviceLicense->SetVisibility(ESlateVisibility::Hidden);
-	SetFocusItem(EButtonsGame::NONE);
-}
+	UScrollBoxEnhanced* ToScroll;
+	if (!GetScrollBoxEnhancedWidgetSwitcherIndex(ToScroll)) return;
 
-void UOptionsLayout::SetFocusItem(const EButtonsGame Input)
-{
-	if (bFocus) return;
-	
+
+	UE_LOG(LogTemp, Warning, TEXT("Reference scroll: %s ws index %d"), *ToScroll->GetName(), WSScreens->GetActiveWidgetIndex());
+
 	if (Input == EButtonsGame::UP)
 	{
-		Index = ScrollBox->SetFocusScroll(EScrollTo::UP);
+		ToScroll->SetFocusScroll(EScrollTo::UP);
 	}
 	else if (Input == EButtonsGame::DOWN)
 	{
-		Index = ScrollBox->SetFocusScroll(EScrollTo::DOWN);
+		ToScroll->SetFocusScroll(EScrollTo::DOWN);
 	}
 	else
 	{
-		Index = ScrollBox->SetFocusScroll(EScrollTo::NONE);
+		ToScroll->SetFocusScroll(EScrollTo::NONE);
 	}
-}
-
-void UOptionsLayout::SetFocusSelect(const bool bIsSound)
-{
-	switch (Index)
-	{
-	case 0:
-		SlideVolume->SetFocus();
-		break;
-	case 1:
-		BtnUpdateGameList->SetFocus();
-		break;
-	case 2:
-		BtnDeviceInfo->SetFocus();
-		break;
-	case 3:
-		BtnLicenseInfo->SetFocus();
-		break;
-	case 4:
-		BtnLanguage->SetFocus();
-		break;
-	default:
-		break;
-	}
-
-}
-
-void UOptionsLayout::Delay()
-{
-	bDelayInput = false;
 }
 
 void UOptionsLayout::RestartMap()
 {
 	const AClassicGameMode* GameMode = Cast<AClassicGameMode>(UGameplayStatics::GetGameMode(this));
-	Index = 0;
-	bFocus = false;
-	bDelayInput = false;
+	WSScreens->SetActiveWidgetIndex(0);
 	GameMode->LoadingGameData->SetToRestartWidgets();
+}
+
+
+bool UOptionsLayout::GetScrollBoxEnhancedWidgetSwitcherIndex(UScrollBoxEnhanced*& Scroll) const
+{
+	switch (WSScreens->GetActiveWidgetIndex())
+	{
+	case 0: Scroll = ScrollBoxOptions;
+		break;
+	case 1: Scroll = ScrollBoxPrompt;
+		break;
+	case 2: Scroll = ScrollBoxThemes;
+		break;
+	case 3: Scroll = ScrollBoxLanguage;
+		break;
+	default: Scroll = nullptr;
+		break;
+	}
+	return Scroll != nullptr;
+}
+
+void UOptionsLayout::SetActiveWidgetIndex(int32 Index)
+{
+	WSScreens->SetActiveWidgetIndex(Index);
+	const FText* NewTitle = TitleList.Find(Index);
+	if (NewTitle != nullptr)
+	{
+		Modal->SetTitleText(*NewTitle);
+	}
 }
 
 #undef LOCTEXT_NAMESPACE

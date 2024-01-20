@@ -7,16 +7,13 @@
 #include "ButtonSlide.generated.h"
 
 
-
-/*
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDelegateFocusSlide);*/
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDelegateFocusLostSlide);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateSlide, int32, value);
 /**
  * 
  */
 UCLASS()
-class CLASSICLAUNCHER_API UButtonSlide : public UButtonCommon/*, public IMusicInterface*/
+class CLASSICLAUNCHER_API UButtonSlide : public UButtonCommon
 {
 	GENERATED_BODY()
 
@@ -34,6 +31,8 @@ protected:
 	virtual bool Initialize() override;
 	virtual void NativePreConstruct() override;
 	virtual void NativeOnFocusLost(const FFocusEvent& InFocusEvent) override;
+	virtual void NativeSetBackgroundAppearance(float CornerRadius,FString Color,float BorderWidth,FString BorderColor,float MarginLeft,float MarginTop,float MarginRight,float MarginBottom) override;
+	virtual void NativeSetTextAppearance(FTextStyle NewTextStyle, bool bEnableImageText, float Margin, float Size) override;
 	void MoveSlide();
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
@@ -41,6 +40,9 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UHorizontalBox* HorizontalBox;
+	
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UCanvasPanel* CanvasSlide;
 	
 public:
 	
@@ -54,7 +56,7 @@ public:
 	float GetSlideValue();
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicSlide|Functions")
-	void SetSlidePosition(float MarginLeft);
+	void SetSlidePosition(FVector2D Size);
 	
 	virtual void EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound) override;
 };

@@ -1,4 +1,4 @@
-// Copyright 2022 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 #pragma once
 
@@ -8,15 +8,15 @@
 UENUM(BlueprintType)
 enum class EGamesFilter : uint8
 {
-	DEFAULT		    UMETA(DisplayName = "Default"),
-	FAVORITES_FIRST	UMETA(DisplayName = "Favorites First"),
-	FAVORITES_ONLY	UMETA(DisplayName = "Favorites Only")
+	DEFAULT UMETA(DisplayName = "Default"),
+	FAVORITES_FIRST UMETA(DisplayName = "Favorites First"),
+	FAVORITES_ONLY UMETA(DisplayName = "Favorites Only")
 };
 
 /**
  *
  */
- //Use USTRUCT(BlueprintType) if you would like to include your Struct in Blueprints "i really like the blueprints integration with c++"
+//Use USTRUCT(BlueprintType) if you would like to include your Struct in Blueprints "i really like the blueprints integration with c++"
 USTRUCT(BlueprintType)
 struct FGameData
 {
@@ -106,7 +106,6 @@ struct FGameData
 	FString videoFormated;
 
 
-
 	//construtor
 	FGameData()
 	{
@@ -160,8 +159,8 @@ struct FIndexPositions
 
 	FIndexPositions()
 		: LastIndexFocus(0)
-		, LastIndexOffSet(1)
-		, OrderBy(EGamesFilter::DEFAULT)
+		  , LastIndexOffSet(1)
+		  , OrderBy(EGamesFilter::DEFAULT)
 	{
 	}
 
@@ -171,6 +170,7 @@ struct FIndexPositions
 		LastIndexOffSet = 1;
 		OrderBy = EGamesFilter::DEFAULT;
 	}
+
 	void ChangeFilter()
 	{
 		if (OrderBy == EGamesFilter::DEFAULT)
@@ -185,7 +185,7 @@ struct FIndexPositions
 /**
  *
  */
- //Use USTRUCT(BlueprintType) if you would like to include your Struct in Blueprints
+//Use USTRUCT(BlueprintType) if you would like to include your Struct in Blueprints
 USTRUCT(BlueprintType)
 struct FGameSystem
 {
@@ -233,15 +233,12 @@ struct FGameSystem
 		Description = TEXT("");
 		Screenshot = TEXT("");
 	}
-
 };
-
 
 
 /**
  *
  */
- //Use USTRUCT(BlueprintType) if you would like to include your Struct in Blueprints
 USTRUCT(BlueprintType)
 struct FConfig
 {
@@ -257,16 +254,21 @@ struct FConfig
 	bool Rendering;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Volume;
+	float VolumeMaster;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float VolumeMusic;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float VolumeVideo;
 
 	FConfig()
+		: PathMedia(TEXT(""))
+		  , DefaultStartSystem(TEXT(""))
+		  , Rendering(true)
+		  , VolumeMaster(80)
+		  , VolumeMusic(80)
+		  , VolumeVideo(80)
 	{
-		PathMedia = TEXT("");
-		DefaultStartSystem = TEXT("");
-		Rendering = true;
-		Volume = 80;
 	}
-
 };
-

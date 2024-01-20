@@ -50,8 +50,21 @@ protected:
 	virtual void SetFocusButton(bool bEnable) override;
 	virtual void ButtonClick() override;
 	
+	virtual void NativeSetBackgroundAppearance(float CornerRadius,FString Color,float BorderWidth,FString BorderColor,float MarginLeft,float MarginTop,float MarginRight,float MarginBottom);
+	virtual void NativeSetTextAppearance(FTextStyle NewTextStyle, bool bEnableImageText, float Margin, float Size);
+	virtual void NativeSetSize(float Width, float Height);
+	virtual void NativeSetArrow(UTexture2D* Texture0, UTexture2D* Texture1, UTexture2D* Texture2, float Angle, float Margin);
+	virtual void NativeSetIcon(UTexture2D* Texture, float Margin, bool bEnable);
+	virtual void NativeSetImage(UTexture2D* Texture, float Margin, bool bEnable);
+	virtual void NativeSetTextColor(FSlateColor TextColorWithFocus, FSlateColor TextColorWithoutFocus);
+	
 public:
 	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "ClassicButtonSystem|Variables")
+	FSlateColor TextColorFocus;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "ClassicButtonSystem|Variables")
+	FSlateColor TextColorNoFocus;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButtonSystem|Variables")
 	FText ButtonText;
@@ -93,6 +106,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicButtonSystem|Functions")
 	void SetImage(UTexture2D* Texture, float Margin, bool bEnable);
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicButtonSystem|Functions")
+	void SetTextColor(FSlateColor TextColorWithFocus, FSlateColor TextColorWithoutFocus);
 	
 	virtual void EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound) override;
 

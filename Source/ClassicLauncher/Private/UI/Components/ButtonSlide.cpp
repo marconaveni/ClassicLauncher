@@ -3,6 +3,7 @@
 
 #include "UI/Components/ButtonSlide.h"
 
+#include "Components/CanvasPanelSlot.h"
 #include "FunctionLibrary/ClassicFunctionLibrary.h"
 #include "Components/HorizontalBox.h"
 #include "Components/HorizontalBoxSlot.h"
@@ -57,6 +58,23 @@ void UButtonSlide::NativeOnFocusLost(const FFocusEvent& InFocusEvent)
 	Super::NativeOnFocusLost(InFocusEvent);
 }
 
+void UButtonSlide::NativeSetBackgroundAppearance(float CornerRadius, FString Color, float BorderWidth, FString BorderColor, float MarginLeft, float MarginTop, float MarginRight, float MarginBottom)
+{
+	Super::NativeSetBackgroundAppearance(CornerRadius, Color, BorderWidth, BorderColor, MarginLeft, MarginTop, MarginRight, MarginBottom);
+	const UOverlaySlot* OverlaySlot = Cast<UOverlaySlot>(BackgroundFocus->Slot);
+	UOverlaySlot* HorizontalBoxSlot = Cast<UOverlaySlot>(HorizontalBox->Slot);
+	HorizontalBoxSlot->SetPadding(FMargin(OverlaySlot->GetPadding()));
+}
+
+void UButtonSlide::NativeSetTextAppearance(FTextStyle NewTextStyle, bool bEnableImageText, float Margin, float Size)
+{
+	Super::NativeSetTextAppearance(NewTextStyle, bEnableImageText, Margin, Size);
+	const UOverlaySlot* OverlaySlot = Cast<UOverlaySlot>(BackgroundFocus->Slot);
+	UHorizontalBoxSlot* TextHorizontalBoxSlot = Cast<UHorizontalBoxSlot>(Text->Slot);
+	const float NewPaddingLeft = Margin - OverlaySlot->GetPadding().Left;
+	TextHorizontalBoxSlot->SetPadding(FMargin(NewPaddingLeft, 0, 0, 0));
+}
+
 void UButtonSlide::OnSlideValue(float Value)
 {
 	OnSlideTrigger.Broadcast(FMath::Clamp(Value, 0, 100));
@@ -73,17 +91,10 @@ float UButtonSlide::GetSlideValue()
 	return SliderVolume->GetValue();
 }
 
-void UButtonSlide::SetSlidePosition(float MarginLeft)
+void UButtonSlide::SetSlidePosition(FVector2D Size)
 {
-	UOverlaySlot* HorizontalBoxSlot = Cast<UOverlaySlot>(HorizontalBox->Slot);
-	const UOverlaySlot* OverlaySlot = Cast<UOverlaySlot>(BackgroundFocus->Slot);
-	HorizontalBoxSlot->SetPadding(FMargin(OverlaySlot->GetPadding()));
-	UHorizontalBoxSlot* TextHorizontalBoxSlot = Cast<UHorizontalBoxSlot>(Text->Slot);
-	const float NewPaddingLeft = MarginLeft - OverlaySlot->GetPadding().Left;
-	TextHorizontalBoxSlot->SetPadding(FMargin(NewPaddingLeft, 0, 0, 0));
-	/*if (TextHorizontalBoxSlot != nullptr)
-	{*/
-	/*}*/
+	UCanvasPanelSlot* CanvasSlideBoxSlot = Cast<UCanvasPanelSlot>(SliderVolume->Slot);
+	CanvasSlideBoxSlot->SetSize(Size);
 }
 
 void UButtonSlide::EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound)

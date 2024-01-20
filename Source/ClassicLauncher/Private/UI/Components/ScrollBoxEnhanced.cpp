@@ -6,6 +6,7 @@
 #include "Components/NamedSlot.h"
 #include "Components/Scrollbox.h"
 #include "Components/VerticalBox.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "UI/BaseButton.h"
 
 
@@ -15,6 +16,9 @@ UScrollBoxEnhanced::UScrollBoxEnhanced(const FObjectInitializer& ObjectInitializ
 	  , IndexFocus(0)
 	  , IndexWheelFocus(0)
 	  , bAutoContent(false)
+	  , StartIndexFocus(0)
+	  , OffsetTop(4)
+	  , OffsetBottom(4)
 	  , ScrollBarVisibility(ESlateVisibility::Hidden)
 {
 }
@@ -26,7 +30,7 @@ void UScrollBoxEnhanced::NativePreConstruct()
 	{
 		NamedSlot->AddChild(VerticalBoxContent);
 	}
-	ScrollBarSettings(nullptr , nullptr , ScrollbarThickness,ScrollbarThicknessBackground);
+	ScrollBarSettings(nullptr, nullptr, ScrollbarThickness, ScrollbarThicknessBackground);
 	SetScrollBarVisibility(ScrollBarVisibility);
 	bUpdateIndex = true;
 	BindButtonsScroll();
@@ -35,6 +39,7 @@ void UScrollBoxEnhanced::NativePreConstruct()
 void UScrollBoxEnhanced::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+	IndexFocus = StartIndexFocus;
 	ScrollBox->OnUserScrolled.AddDynamic(this, &UScrollBoxEnhanced::OnUserScrolled);
 }
 
@@ -56,17 +61,24 @@ FReply UScrollBoxEnhanced::NativeOnMouseWheel(const FGeometry& InGeometry, const
 
 	if (WheelDelta > 0)
 	{
-		IndexWheelFocus = FMath::Clamp(IndexWheelFocus - 1, 2, GetAllChildrenContent().Num() - 3);
+		IndexWheelFocus = FMath::Clamp(IndexWheelFocus - 1, 0, GetAllChildrenContent().Num() - 1 - OffsetBottom);
 	}
 	else if (WheelDelta < 0)
 	{
-		IndexWheelFocus = FMath::Clamp(IndexWheelFocus + 1, 2, GetAllChildrenContent().Num() - 3);
+		IndexWheelFocus = FMath::Clamp(IndexWheelFocus + 1, OffsetTop, GetAllChildrenContent().Num());
 	}
 	if (GetAllChildrenContent().IsValidIndex(IndexWheelFocus) && WheelDelta != 0)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("scroll Index Wheel %d"), IndexWheelFocus);
 		ScrollBox->ScrollWidgetIntoView(GetAllChildrenContent()[IndexWheelFocus], true, EDescendantScrollDestination::Center);
 	}
+
 	return Super::NativeOnMouseWheel(InGeometry, InMouseEvent);
+}
+
+void UScrollBoxEnhanced::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
 }
 
 FReply UScrollBoxEnhanced::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
@@ -120,7 +132,7 @@ void UScrollBoxEnhanced::SetIconArrow()
 void UScrollBoxEnhanced::SetContent(UWidget* Content)
 {
 	VerticalBoxContent->AddChild(Content);
-	BindButton(Content);
+	BindButtonsScroll();
 }
 
 void UScrollBoxEnhanced::BindButton(UWidget* Content)
@@ -142,6 +154,7 @@ void UScrollBoxEnhanced::BindButtonsScroll()
 {
 	TArray<UWidget*> Widgets = GetAllChildrenContent();
 	int32 NewIndex = 0;
+	BaseButtons.Empty();
 	for (UWidget* Widget : Widgets)
 	{
 		UBaseButton* BaseButton = Cast<UBaseButton>(Widget);
@@ -149,6 +162,7 @@ void UScrollBoxEnhanced::BindButtonsScroll()
 		{
 			BindButton(BaseButton);
 			BaseButton->SetIndex(NewIndex);
+			BaseButtons.Add(BaseButton);
 		}
 		NewIndex++;
 	}
@@ -180,7 +194,7 @@ UWidget* UScrollBoxEnhanced::AddIndex(EScrollTo Scroll)
 	return nullptr;
 }
 
-int32 UScrollBoxEnhanced::SetFocusScroll(EScrollTo Scroll)
+int32 UScrollBoxEnhanced::SetFocusScroll(EScrollTo Scroll, bool AnimatedScroll)
 {
 	UBaseButton* BaseButton = nullptr;
 	for (int i = 0; i < GetAllChildrenContent().Num() - 1; i++)
@@ -195,7 +209,7 @@ int32 UScrollBoxEnhanced::SetFocusScroll(EScrollTo Scroll)
 			}
 		}
 	}
-	ScrollBox->ScrollWidgetIntoView(BaseButton, false, EDescendantScrollDestination::Center);
+	ScrollBox->ScrollWidgetIntoView(BaseButton, AnimatedScroll, EDescendantScrollDestination::Center);
 	return IndexFocus;
 }
 
@@ -207,6 +221,11 @@ TArray<UWidget*> UScrollBoxEnhanced::GetAllChildrenContent() const
 		return Content->GetAllChildren();
 	}
 	return TArray<UWidget*>();
+}
+
+TArray<UBaseButton*> UScrollBoxEnhanced::GetAllBaseButtons() const
+{
+	return BaseButtons;
 }
 
 void UScrollBoxEnhanced::SetScrollBarVisibility(ESlateVisibility EnableVisibility)
@@ -237,14 +256,15 @@ void UScrollBoxEnhanced::OnLostFocusButton(int32 Index)
 
 void UScrollBoxEnhanced::SetArrowIcons(UTexture2D* Texture, UTexture2D* TextureOutLine)
 {
-	if(Texture != nullptr)
+	if (Texture != nullptr)
 	{
 		ArrowIcon = Texture;
 	}
-	if(TextureOutLine != nullptr)
+	if (TextureOutLine != nullptr)
 	{
 		ArrowIconOutline = TextureOutLine;
 	}
+	SetIconArrow();
 }
 
 void UScrollBoxEnhanced::ScrollBarSettings(UTexture2D* TextureThumb, UTexture2D* TextureBackground, const float SizeThumb, const float SizeBackground)
@@ -254,11 +274,11 @@ void UScrollBoxEnhanced::ScrollBarSettings(UTexture2D* TextureThumb, UTexture2D*
 	Margin.Top = 85;
 	Margin.Left = 0;
 	Margin.Right = (45.0f - SizeThumb) / 2;
-	ScrollbarThickness = FMath::Clamp(SizeThumb, 0 , 45); 
+	ScrollbarThickness = FMath::Clamp(SizeThumb, 0, 45);
 	ScrollBox->SetScrollbarPadding(Margin);
-	ScrollBox->SetScrollbarThickness(FVector2D( ScrollbarThickness,0));
+	ScrollBox->SetScrollbarThickness(FVector2D(ScrollbarThickness, 0));
 	FScrollBarStyle BarStyle = ScrollBox->GetWidgetBarStyle();
-	if(TextureThumb != nullptr)
+	if (TextureThumb != nullptr)
 	{
 		FSlateBrush SlateBrushThumb = ScrollBox->GetWidgetBarStyle().NormalThumbImage;
 		SlateBrushThumb.SetResourceObject(TextureThumb);
@@ -266,10 +286,10 @@ void UScrollBoxEnhanced::ScrollBarSettings(UTexture2D* TextureThumb, UTexture2D*
 		BarStyle.SetHoveredThumbImage(SlateBrushThumb);
 		BarStyle.SetDraggedThumbImage(SlateBrushThumb);
 	}
-	if(TextureBackground != nullptr)
+	if (TextureBackground != nullptr)
 	{
 		FSlateBrush SlateBrushTopBottom = ScrollBox->GetWidgetBarStyle().HorizontalTopSlotImage;
-		SlateBrushTopBottom.ImageSize = FVector2D(SizeBackground,1);
+		SlateBrushTopBottom.ImageSize = FVector2D(SizeBackground, 1);
 		SlateBrushTopBottom.DrawAs = ESlateBrushDrawType::Image;
 		SlateBrushTopBottom.SetResourceObject(TextureBackground);
 		BarStyle.SetVerticalTopSlotImage(SlateBrushTopBottom);

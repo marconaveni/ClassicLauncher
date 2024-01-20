@@ -7,9 +7,6 @@
 #include "UI/BaseButton.h"
 #include "ButtonIcon.generated.h"
 
-/*DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateFocusBT, int32, Index);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateFocusLostBT, int32, Index);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateClickBT, int32, Index);*/
 
 /**
  *
@@ -25,19 +22,6 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	UWidgetAnimation* FocusButton;
-
-	/*UPROPERTY(BlueprintAssignable, BlueprintCallable)
-	FDelegateFocusBT OnFocusTrigger;
-
-	UPROPERTY(BlueprintAssignable, BlueprintCallable)
-	FDelegateFocusLostBT OnFocusLostTrigger;
-
-	UPROPERTY(BlueprintAssignable, BlueprintCallable)
-	FDelegateClickBT OnClickTrigger;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* BtButton;
-	*/
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* BgImage;
@@ -53,15 +37,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButton|Variables")
 	FButtonStyle StyleButton;
 
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicButton|Variables")
-	int32 Index;*/
-
-	/*UFUNCTION(BlueprintCallable, Category = "ClassicButton|Functions")
-	void ButtonClick();*/
-
-	/*UFUNCTION(BlueprintCallable, Category = "ClassicButton|Functions")
-	bool HasFocusButton();*/
-
 	UFUNCTION(BlueprintCallable, Category = "Themes")
 	void SetTheme(UTexture2D* TextureIcon, FSlateBrush BackgroundColor);
 
@@ -71,8 +46,5 @@ public:
 private:
 	
 	virtual void SetFocusButton(bool bEnable) override;
-
-	/*UPROPERTY()
-	bool bFocus;*/
-
+	
 };

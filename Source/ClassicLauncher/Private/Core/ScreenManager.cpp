@@ -15,8 +15,6 @@
 #include "UI/Screens/LoadingScreen.h"
 #include "Blueprint/UserWidget.h"
 #include "Blueprint/WidgetTree.h"
-#include "Components/Scrollbox.h"
-#include "Components/VerticalBox.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/Layout/Header.h"
 #include "UI/Components/ScrollBoxEnhanced.h"
@@ -123,8 +121,8 @@ void UScreenManager::AddSystems()
 			ButtonSystem->OnClickTrigger.AddDynamic(MainInterfaceReference , &UMainScreen::OnClickSystem);
 			ButtonSystem->SetText((i == 0) ? LOCTEXT("Systems", "Show Systems") : FText::FromString(Systems[i].SystemLabel));
 			ButtonSystem->SetIndex(i);
-			ButtonSystem->SetNavigationRuleBase(EUINavigation::Up, EUINavigationRule::Stop);
-			ButtonSystem->SetNavigationRuleBase(EUINavigation::Down, EUINavigationRule::Stop);
+			/*ButtonSystem->SetNavigationRuleBase(EUINavigation::Up, EUINavigationRule::Stop);
+			ButtonSystem->SetNavigationRuleBase(EUINavigation::Down, EUINavigationRule::Stop);*/
 			MainInterfaceReference->ButtonSystemReferences.Add(ButtonSystem);
 			MainInterfaceReference->WBPSystemsList->ScrollBox->SetContent(ButtonSystem);
 		}
@@ -142,7 +140,9 @@ void UScreenManager::SetMainInterfaceData() const
 	MainInterfaceReference->CountLocationY = CountSystem;
 	MainInterfaceReference->ConfigurationData = ConfigurationData;
 	MainInterfaceReference->ClassicGameInstance = ClassicGameInstance;
-	MainInterfaceReference->WBPClassicConfigurationsInterface->SlideVolume->SetSlideValue(FMath::Clamp(ConfigurationData.Volume, 0, 100));
+	MainInterfaceReference->WBPClassicConfigurationsInterface->SlideVolumeSystem->SetSlideValue(FMath::Clamp(ConfigurationData.VolumeMaster, 0, 100));
+	MainInterfaceReference->WBPClassicConfigurationsInterface->SlideVolumeMusic->SetSlideValue(FMath::Clamp(ConfigurationData.VolumeMusic, 0, 100));
+	MainInterfaceReference->WBPClassicConfigurationsInterface->SlideVolumeVideo->SetSlideValue(FMath::Clamp(ConfigurationData.VolumeVideo, 0, 100));
 }
 
 void UScreenManager::CreateNewGameList()

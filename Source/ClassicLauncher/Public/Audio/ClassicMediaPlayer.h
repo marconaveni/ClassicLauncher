@@ -1,4 +1,4 @@
-// Copyright 2022 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 #pragma once
 
@@ -24,6 +24,12 @@ protected:
 	class USoundClass* MasterSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
+	class USoundClass* MusicSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
+	class USoundClass* VideoSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
 	class USoundMix* MasterSoundMix;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess = "true"))
@@ -43,6 +49,12 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Media|Variables")
 	int32 MasterVolume;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Media|Variables")
+	int32 MusicVolume;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Media|Variables")
+	int32 VideoVolume;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Media|Variables")
 	FDoOnce DoOnceIsPlayVideo;
@@ -93,6 +105,18 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Media|Functions")
 	void ChangeMasterVolume(int32 Volume);
 
+	UFUNCTION(BlueprintCallable, Category = "Media|Functions")
+	void ChangeMusicVolume(int32 Volume);
+
+	UFUNCTION(BlueprintCallable, Category = "Media|Functions")
+	void ChangeVideoVolume(int32 Volume);
+
 	UFUNCTION(BlueprintPure, Category = "Media|Functions")
 	int32 GetMasterVolume() const;
+
+	UFUNCTION(BlueprintPure, Category = "Media|Functions")
+	int32 GetMusicVolume() const;
+	
+	UFUNCTION(BlueprintPure, Category = "Media|Functions")
+	int32 GetVideoVolume() const;
 };

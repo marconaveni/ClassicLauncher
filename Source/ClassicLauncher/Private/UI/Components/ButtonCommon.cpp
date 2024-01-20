@@ -2,12 +2,10 @@
 
 
 #include "UI/Components/ButtonCommon.h"
-#include "Components/Button.h"
 #include "Components/Image.h"
 #include "UI/Components/Arrow.h"
 #include "FunctionLibrary/ClassicFunctionLibrary.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
-#include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Overlay.h"
 #include "Components/OverlaySlot.h"
@@ -16,12 +14,15 @@
 UButtonCommon::UButtonCommon(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer), bMouseFocus(false)
 {
+	TextColorFocus = FSlateColor(FColor::White);
+	TextColorNoFocus = FSlateColor(FColor::White);
 }
 
 void UButtonCommon::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 	Text->SetText(ButtonText);
+
 }
 
 FReply UButtonCommon::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
@@ -74,6 +75,8 @@ void UButtonCommon::SetFocusButton(bool bEnable)
 	{
 		BackgroundFocus->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		Arrow->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		Text->SetColorText(TextColorFocus);
+		
 		if (!bMouseFocus)
 		{
 			UGameplayStatics::PlaySound2D(this, SoundSelect);
@@ -81,6 +84,7 @@ void UButtonCommon::SetFocusButton(bool bEnable)
 	}
 	else
 	{
+		Text->SetColorText(TextColorNoFocus);
 		BackgroundFocus->SetVisibility(ESlateVisibility::Hidden);
 		Arrow->SetVisibility(ESlateVisibility::Hidden);
 	}
@@ -96,9 +100,8 @@ void UButtonCommon::ButtonClick()
 	Super::ButtonClick();
 }
 
-void UButtonCommon::SetBackgroundAppearance(float CornerRadius, FString Color, float BorderWidth, FString BorderColor, float MarginLeft, float MarginTop, float MarginRight, float MarginBottom)
+void UButtonCommon::NativeSetBackgroundAppearance(float CornerRadius, FString Color, float BorderWidth, FString BorderColor, float MarginLeft, float MarginTop, float MarginRight, float MarginBottom)
 {
-	
 	FSlateBrushOutlineSettings BorderOutlineSettings;
 	BorderOutlineSettings.RoundingType = ESlateBrushRoundingType::FixedRadius;
 	BorderOutlineSettings.CornerRadii = FVector4(CornerRadius, CornerRadius, CornerRadius, CornerRadius);
@@ -115,7 +118,7 @@ void UButtonCommon::SetBackgroundAppearance(float CornerRadius, FString Color, f
 	OverlaySlot->SetPadding(FMargin(MarginLeft, MarginTop, MarginRight, MarginBottom));
 }
 
-void UButtonCommon::SetTextAppearance(FTextStyle NewTextStyle, bool bEnableImageText, float Margin, float Size)
+void UButtonCommon::NativeSetTextAppearance(FTextStyle NewTextStyle, bool bEnableImageText, float Margin, float Size)
 {
 	Text->SetTextStyle(NewTextStyle);
 	Text->SetTextImageSize(Size);
@@ -127,13 +130,13 @@ void UButtonCommon::SetTextAppearance(FTextStyle NewTextStyle, bool bEnableImage
 	}
 }
 
-void UButtonCommon::SetSize(float Width, float Height)
+void UButtonCommon::NativeSetSize(float Width, float Height)
 {
 	UCanvasPanelSlot* CanvasPanel = Cast<UCanvasPanelSlot>(OverlayMain->Slot);
 	CanvasPanel->SetSize(FVector2D(Width, Height));
 }
 
-void UButtonCommon::SetArrow(UTexture2D* Texture0, UTexture2D* Texture1, UTexture2D* Texture2, float Angle, float Margin)
+void UButtonCommon::NativeSetArrow(UTexture2D* Texture0, UTexture2D* Texture1, UTexture2D* Texture2, float Angle, float Margin)
 {
 	Arrow->ArrowTextures.Empty();
 	if (Texture0 != nullptr)
@@ -154,7 +157,7 @@ void UButtonCommon::SetArrow(UTexture2D* Texture0, UTexture2D* Texture1, UTextur
 	OverlaySlot->SetPadding(FMargin(Margin, 0, 0, 0));
 }
 
-void UButtonCommon::SetIcon(UTexture2D* Texture, float Margin, bool bEnable)
+void UButtonCommon::NativeSetIcon(UTexture2D* Texture, float Margin, bool bEnable)
 {
 	if (Texture != nullptr)
 	{
@@ -165,7 +168,7 @@ void UButtonCommon::SetIcon(UTexture2D* Texture, float Margin, bool bEnable)
 	Image->SetVisibility((bEnable) ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Hidden);
 }
 
-void UButtonCommon::SetImage(UTexture2D* Texture, float Margin, bool bEnable)
+void UButtonCommon::NativeSetImage(UTexture2D* Texture, float Margin, bool bEnable)
 {
 	if (Texture != nullptr)
 	{
@@ -174,6 +177,49 @@ void UButtonCommon::SetImage(UTexture2D* Texture, float Margin, bool bEnable)
 	UOverlaySlot* OverlaySlot = Cast<UOverlaySlot>(Image->Slot);
 	OverlaySlot->SetPadding(FMargin(Margin, 0, 0, 0));
 	Image->SetVisibility((bEnable) ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Hidden);
+}
+
+void UButtonCommon::NativeSetTextColor(FSlateColor TextColorWithFocus, FSlateColor TextColorWithoutFocus)
+{
+	TextColorFocus = TextColorWithFocus;
+	TextColorNoFocus = TextColorWithoutFocus;
+	Text->SetColorText( HasFocusButton() ? TextColorFocus : TextColorNoFocus);
+	
+}
+
+void UButtonCommon::SetBackgroundAppearance(float CornerRadius, FString Color, float BorderWidth, FString BorderColor, float MarginLeft, float MarginTop, float MarginRight, float MarginBottom)
+{
+	NativeSetBackgroundAppearance(CornerRadius, Color, BorderWidth, BorderColor, MarginLeft, MarginTop, MarginRight, MarginBottom);
+}
+
+void UButtonCommon::SetTextAppearance(FTextStyle NewTextStyle, bool bEnableImageText, float Margin, float Size)
+{
+	NativeSetTextAppearance(NewTextStyle, bEnableImageText, Margin, Size);
+}
+
+void UButtonCommon::SetSize(float Width, float Height)
+{
+	NativeSetSize(Width, Height);
+}
+
+void UButtonCommon::SetArrow(UTexture2D* Texture0, UTexture2D* Texture1, UTexture2D* Texture2, float Angle, float Margin)
+{
+	NativeSetArrow(Texture0, Texture1, Texture2, Angle, Margin);
+}
+
+void UButtonCommon::SetIcon(UTexture2D* Texture, float Margin, bool bEnable)
+{
+	NativeSetIcon(Texture, Margin, bEnable);
+}
+
+void UButtonCommon::SetImage(UTexture2D* Texture, float Margin, bool bEnable)
+{
+	NativeSetImage(Texture, Margin, bEnable);
+}
+
+void UButtonCommon::SetTextColor(FSlateColor TextColorWithFocus, FSlateColor TextColorWithoutFocus)
+{
+	NativeSetTextColor(TextColorWithFocus, TextColorWithoutFocus);
 }
 
 void UButtonCommon::EffectSound(USoundBase* SelectSound, USoundBase* NavigateSound)

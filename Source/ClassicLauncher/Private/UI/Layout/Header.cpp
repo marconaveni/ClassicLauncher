@@ -1,10 +1,8 @@
-// Copyright 2023 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 
 #include "UI/Layout/Header.h"
 #include "UI/Components/ButtonIcon.h"
-#include "UI/Components/ToolTip.h"
-#include "Components/CanvasPanelSlot.h"
 #include "Components/HorizontalBox.h"
 #include "Components/Image.h"
 #include "Kismet/GameplayStatics.h"

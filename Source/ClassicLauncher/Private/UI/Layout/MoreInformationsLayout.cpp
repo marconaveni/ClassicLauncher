@@ -2,9 +2,9 @@
 
 
 #include "UI/Layout/MoreInformationsLayout.h"
-#include "Components/Image.h"
 #include "UI/Components/StarRating.h"
 #include "Components/ScrollBox.h"
+#include "FunctionLibrary/ClassicFunctionLibrary.h"
 
 UMoreInformationsLayout::UMoreInformationsLayout(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
 {
@@ -26,28 +26,6 @@ FReply UMoreInformationsLayout::NativeOnKeyUp(const FGeometry& InGeometry, const
 {
 	return Super::NativeOnKeyUp(InGeometry, InKeyEvent);
 }
-
-/*void UClassicInfoInterface::ScrollTopEnd(EButtonsGame Navigate)
-{
-	if (Navigate == EButtonsGame::UP)
-	{
-		if (CurrentOffSet == 0)
-		{
-			ArrowUP->SetBrushFromTexture(ArrowIconOutline);
-			ArrowDown->SetBrushFromTexture(ArrowIcon);
-			//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::White, TEXT("top"));
-		}
-	}
-	else if(Navigate == EButtonsGame::DOWN)
-	{
-		if (CurrentOffSet >= ScrollBox->GetScrollOffsetOfEnd())
-		{
-			ArrowUP->SetBrushFromTexture(ArrowIcon);
-			ArrowDown->SetBrushFromTexture(ArrowIconOutline);
-			//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::White, TEXT("down"));
-		}
-	}
-}*/
 
 FString IsDateNull(FString value)
 {

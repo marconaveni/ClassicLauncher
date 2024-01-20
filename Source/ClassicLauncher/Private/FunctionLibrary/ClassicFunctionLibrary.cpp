@@ -1,4 +1,4 @@
-// Copyright 2022 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 
 #include "FunctionLibrary/ClassicFunctionLibrary.h"
@@ -333,7 +333,9 @@ FString UClassicFunctionLibrary::CreateXMLConfigFile(FConfig ConfigData)
 	NewConfigXml += GenerateXmlTag(TEXT("pathmedia"), ConfigData.PathMedia);
 	NewConfigXml += GenerateXmlTag(TEXT("defaultstartsystem"), ConfigData.DefaultStartSystem);
 	NewConfigXml += GenerateXmlTag(TEXT("rendering"), (ConfigData.Rendering) ? TEXT("true") : TEXT("false"));
-	NewConfigXml += GenerateXmlTag(TEXT("volume"), FString::SanitizeFloat(ConfigData.Volume, 0));
+	NewConfigXml += GenerateXmlTag(TEXT("volumemaster"), FString::SanitizeFloat(ConfigData.VolumeMaster, 0));
+	NewConfigXml += GenerateXmlTag(TEXT("volumemusic"), FString::SanitizeFloat(ConfigData.VolumeMusic, 0));
+	NewConfigXml += GenerateXmlTag(TEXT("volumevideo"), FString::SanitizeFloat(ConfigData.VolumeVideo, 0));
 	NewConfigXml += TEXT("</config>\n");
 
 	return NewConfigXml;
@@ -379,7 +381,9 @@ void UClassicFunctionLibrary::SetConfig(UEasyXMLElement* Element, FConfig& Confi
 	Config.DefaultStartSystem = Element->ReadString(TEXT("defaultstartsystem"));
 	Config.PathMedia = Element->ReadString(TEXT("pathmedia"));
 	Config.Rendering = Element->ReadBool(TEXT("rendering"));
-	Config.Volume = Element->ReadInt(TEXT("volume"));
+	Config.VolumeMaster = Element->ReadInt(TEXT("volumemaster"));
+	Config.VolumeMusic = Element->ReadInt(TEXT("volumemusic"));
+	Config.VolumeVideo = Element->ReadInt(TEXT("volumevideo"));
 }
 
 void UClassicFunctionLibrary::SetGameSystem(TArray<UEasyXMLElement*>  Elements, TArray<FGameSystem>& ConfigSystems)

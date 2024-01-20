@@ -53,6 +53,7 @@ private:
 	virtual FReply NativeOnMouseWheel( const FGeometry& InGeometry, const FPointerEvent& InMouseEvent ) override;
 	virtual FReply NativeOnPreviewMouseButtonDown( const FGeometry& InGeometry, const FPointerEvent& InMouseEvent ) override;
 	virtual void NativeOnMouseLeave( const FPointerEvent& InMouseEvent ) override;
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	
 	UFUNCTION()
 	void OnUserScrolled(float CurrentOffset);
@@ -72,6 +73,9 @@ private:
 	UPROPERTY()
 	float ScrollCurrentOffSet;
 
+	UPROPERTY()
+	TArray<UBaseButton*> BaseButtons;
+	
 	UPROPERTY()
 	FTimerHandle IndexWheelHandle;
 
@@ -97,6 +101,15 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
 	bool bAutoContent;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
+	int32 StartIndexFocus;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
+	int32 OffsetTop;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
+	int32 OffsetBottom;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
 	ESlateVisibility ScrollBarVisibility;
@@ -116,10 +129,13 @@ public:
 	void ClearAllChildrenContent();
 
 	UFUNCTION(BlueprintCallable, Category = "ScrollBoxEnhanced|Functions")
-	int32 SetFocusScroll(EScrollTo Scroll);
+	int32 SetFocusScroll(EScrollTo Scroll, bool AnimatedScroll = false);
 	
 	UFUNCTION(BlueprintPure, Category = "ScrollBoxEnhanced|Functions")
 	TArray<UWidget*> GetAllChildrenContent() const;
+
+	UFUNCTION(BlueprintPure, Category = "ScrollBoxEnhanced|Functions")
+	TArray<UBaseButton*> GetAllBaseButtons() const;
 
 	UFUNCTION(BlueprintCallable, Category = "ScrollBoxEnhanced|Functions")
 	void SetScrollBarVisibility(ESlateVisibility EnableVisibility);

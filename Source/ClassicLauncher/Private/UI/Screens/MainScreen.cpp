@@ -26,6 +26,7 @@
 #include "TextImageBlock.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Components/CanvasPanel.h"
+#include "Components/WidgetSwitcher.h"
 #include "UI/Layout/FooterDetails.h"
 #include "UI/Layout/ToolTipsLayout.h"
 #include "UI/Layout/Header.h"
@@ -344,7 +345,7 @@ void UMainScreen::NavigationConfiguration(EButtonsGame Input)
 	{
 		CancelDelay();
 	}
-	WBPClassicConfigurationsInterface->SetFocusItem(Input);
+	WBPClassicConfigurationsInterface->SetFocusOptionsItem(Input);
 }
 
 void UMainScreen::SetNavigationFocusUpBottom()
@@ -700,7 +701,7 @@ void UMainScreen::OnClickConfigurations()
 {
 	Focus = EFocus::CONFIG;
 	SetPlayAnimation(TEXT("AnimationShowConfiguration"));
-	WBPClassicConfigurationsInterface->SetFocusItem(EButtonsGame::NONE);
+	WBPClassicConfigurationsInterface->SetFocusOptionsItem(EButtonsGame::NONE);
 }
 
 void UMainScreen::OnClickFavorites()
@@ -818,7 +819,7 @@ void UMainScreen::CloseMenus()
 	else if (Focus == EFocus::CONFIG)
 	{
 		InputLastPressed = EButtonsGame::NONE;
-		if (WBPClassicConfigurationsInterface->bFocus)
+		if (WBPClassicConfigurationsInterface->WSScreens->GetActiveWidgetIndex())
 		{
 			WBPClassicConfigurationsInterface->CloseModal();
 		}

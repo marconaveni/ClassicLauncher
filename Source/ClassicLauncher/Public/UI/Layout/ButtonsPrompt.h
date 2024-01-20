@@ -1,4 +1,4 @@
-// Copyright 2022 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 #pragma once
 
@@ -46,9 +46,14 @@ struct FButtonsIcons
 
 	//construtor
 	FButtonsIcons()
+	: ButtonTexture(nullptr)
+	, BgButtonTexture(nullptr)
+	, IconReference(nullptr)
+	, IconBackgroundReference(nullptr)
+	, TextImageBlockReference(nullptr)
 	{
 		EVisibility = ESlateVisibility::Visible;
-		ButtonText = FText::FromString(TEXT(""));
+		ButtonText = FText::FromString(TEXT("Text"));
 		DefaultToImageText = false;
 	}
 };

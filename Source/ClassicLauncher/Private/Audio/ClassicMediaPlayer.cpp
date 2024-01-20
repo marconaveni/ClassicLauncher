@@ -1,4 +1,4 @@
-// Copyright 2023 Marco Naveni. All Rights Reserved.
+// Copyright 2024 Marco Naveni. All Rights Reserved.
 
 
 #include "Audio/ClassicMediaPlayer.h"
@@ -32,7 +32,7 @@ AClassicMediaPlayer::AClassicMediaPlayer()
 void AClassicMediaPlayer::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	FString ConfigResult;
 	const FString GameRoot = UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("config\\config.xml");
 
@@ -40,7 +40,9 @@ void AClassicMediaPlayer::BeginPlay()
 	{
 		FConfig ConfigurationData;
 		UClassicFunctionLibrary::SetConfig(UClassicFunctionLibrary::LoadXMLSingle(ConfigResult, TEXT("config")), ConfigurationData);
-		ChangeMasterVolume(ConfigurationData.Volume);
+		ChangeMasterVolume(ConfigurationData.VolumeMaster);
+		ChangeMusicVolume(ConfigurationData.VolumeMusic);
+		ChangeVideoVolume(ConfigurationData.VolumeVideo);
 	}
 	else
 	{
@@ -177,9 +179,37 @@ void AClassicMediaPlayer::ChangeMasterVolume(int32 Volume)
 	}
 }
 
+void AClassicMediaPlayer::ChangeMusicVolume(int32 Volume)
+{
+	if (MasterSoundMix != nullptr && MusicSound != nullptr)
+	{
+		MusicVolume = Volume;
+		UGameplayStatics::SetSoundMixClassOverride(this, MasterSoundMix, MusicSound, MusicVolume * 0.01f, 1.0f, 0.0f, true);
+	}
+}
+
+void AClassicMediaPlayer::ChangeVideoVolume(int32 Volume)
+{
+	if (MasterSoundMix != nullptr && VideoSound != nullptr)
+	{
+		VideoVolume = Volume;
+		UGameplayStatics::SetSoundMixClassOverride(this, MasterSoundMix, VideoSound, VideoVolume * 0.01f, 1.0f, 0.0f, true);
+	}
+}
+
 int32 AClassicMediaPlayer::GetMasterVolume() const
 {
 	return MasterVolume;
+}
+
+int32 AClassicMediaPlayer::GetMusicVolume() const
+{
+	return MusicVolume;
+}
+
+int32 AClassicMediaPlayer::GetVideoVolume() const
+{
+	return VideoVolume;
 }
 
 #undef LOCTEXT_NAMESPACE

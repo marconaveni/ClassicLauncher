@@ -7,6 +7,10 @@
 #include "Blueprint/UserWidget.h"
 #include "OptionsLayout.generated.h"
 
+
+class UScrollBoxEnhanced;
+class UButtonCommon;
+
 /**
  * 
  */
@@ -14,11 +18,10 @@ UCLASS()
 class CLASSICLAUNCHER_API UOptionsLayout : public UUserWidget
 {
 	GENERATED_BODY()
-	
-public:
 
+public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* Icon;
+	class UModal* Modal;
 
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual void NativeOnInitialized() override;
@@ -26,103 +29,164 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
 	class UMainScreen* MainInterfaceReference;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicConfigurations|Variables")
-	bool bFocus;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicConfigurations|Variables")
-	bool bDelayInput;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicConfigurations|Variables")
-	int32 Index;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UScrollBoxEnhanced* ScrollBox;
+	UScrollBoxEnhanced* ScrollBoxOptions;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UVerticalBox* VerticalBoxContent;
+	UScrollBoxEnhanced* ScrollBoxThemes;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UScrollBoxEnhanced* ScrollBoxPrompt;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UScrollBoxEnhanced* ScrollBoxLanguage;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UVerticalBox* OptionsContent;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UVerticalBox* PromptContent;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UVerticalBox* LanguageContent;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UButtonSlide* SlideVolumeSystem;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UButtonSlide* SlideVolumeMusic;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UButtonSlide* SlideVolumeVideo;
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* Background;
+	UButtonCommon* BtnChangeTheme;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UButtonCommon* BtnPrompt;
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButtonSlide* SlideVolume;
+	UButtonCommon* BtnDeviceInfo;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UButtonCommon* BtnLicenseInfo;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UButtonCommon* BtnLanguage;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UButtonCommon* BtnEnglish;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UButtonCommon* BtnPortuguese;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UButtonCommon* BtnPromptTypeOne;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UButtonCommon* BtnPromptTypeTwo;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UButtonCommon* BtnPromptTypeThree;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UButtonCheckBox* CbVideoAudio;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class ULabel* LabelAppearance;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class ULabel* LabelAudio;
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButtonCommon* BtnUpdateGameList;
+	class ULabel* LabelOptions;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class ULabel* LabelSystem;
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButtonCommon* BtnDeviceInfo;
+	class UButtonCommonAlternative* BtnUpdateGameList;
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButtonCommon* BtnLicenseInfo;
-	
+	class UButtonCommonAlternative* BtnChangeSystems;
+
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButtonCommon* BtnLanguage;
-	
+	class UWidgetSwitcher* WSScreens;
+
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UWidgetSwitcher* WSButtons;
-	
+	class UOptionsDeviceLayout* OptionsDeviceLayout;
+
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UWidgetSwitcher* WSDeviceInfo;
-	
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UWidgetSwitcher* WSDeviceLicense;
-	
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButtonsPrompt* WBPButtonsIconsInterfaces;
-	
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextImageBlock* TextConfiguration;
-	
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UOptionsDeviceLayout* WBPDeviceInfo;
-	
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UOptionsLicenceLayout* WBPLicenseInfo;
+	class UOptionsLicenceLayout* OptionsLicenceLayout;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
 	class AClassicMediaPlayer* ClassicMediaPlayerReference;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<int32, FText> TitleList;
+
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
-	void OnSlideVolume(int32 Value);
-	
+	void OnSlideVolumeMaster(int32 Value);
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
+	void OnSlideVolumeMusic(int32 Value);
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
+	void OnSlideVolumeVideo(int32 Value);
+
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void OnSlideLostFocus();
-	
+
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void OnClickUpdate(int32 Value);
-	
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
+	void OnClickChangeSystems(int32 Value);
+
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void OnClickDevice(int32 Value);
-	
+
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void OnClickLicense(int32 Value);
-	
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
+	void OnSoundVideo(bool bCheck);
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
+	void OnClickChangeLanguage(int32 Value);
+
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void OnClickLanguage(int32 Value);
-	
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
+	void OnClickPrompt(int32 Value);
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
+	void OnClickChangeTheme(int32 Value);
+
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void GetLanguageText(bool bShowMessage);
-	
+
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void CloseModal();
-	
+
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
-	void SetFocusItem(EButtonsGame Input);
-	
-	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
-	void SetFocusSelect(const bool bIsSound = true);
-	
-	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
-	void Delay();
-	
+	void SetFocusOptionsItem(EButtonsGame Input);
+
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void RestartMap();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicConfigurations|Timers")
-	FTimerHandle RestartMapTimerHandle;
+protected:
+
+
+	
+	UFUNCTION()
+	bool GetScrollBoxEnhancedWidgetSwitcherIndex(UScrollBoxEnhanced*& Scroll) const;
+
+	UFUNCTION()
+	void SetActiveWidgetIndex(int32 Index);
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicConfigurations|Timers")
-	FTimerHandle DelayTimerHandle;
+	FTimerHandle RestartMapTimerHandle;
 };
