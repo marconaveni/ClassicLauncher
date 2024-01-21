@@ -24,14 +24,14 @@ void UGameListLayout::SetFocusItem(const EButtonsGame Input, int32& Index)
 	
 	if (Input == EButtonsGame::UP)
 	{
-		Index = ScrollBox->SetFocusScroll(EScrollTo::UP);
+		/*Index =*/ ScrollBox->SetFocusScroll(EScrollTo::UP);
 	}
 	else if (Input == EButtonsGame::DOWN)
 	{
-		Index = ScrollBox->SetFocusScroll(EScrollTo::DOWN);
+		/*Index =*/ ScrollBox->SetFocusScroll(EScrollTo::DOWN);
 	}
 	else
 	{
-		Index = ScrollBox->SetFocusScroll(EScrollTo::NONE);
+		/*Index =*/ ScrollBox->SetFocusScroll(EScrollTo::NONE);
 	}
 }

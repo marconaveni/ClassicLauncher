@@ -337,7 +337,7 @@ void UMainScreen::NavigationMain(EButtonsGame Input)
 
 void UMainScreen::NavigationSystem(EButtonsGame Input)
 {
-	WBPSystemsList->SetFocusItem(InputLastPressed, CountLocationY);
+	WBPSystemsList->SetFocusItem(InputLastPressed, CountSystem);
 }
 
 void UMainScreen::NavigationInfo(EButtonsGame Input)
@@ -425,7 +425,7 @@ void UMainScreen::OnClickLaunch()
 			SetLastPositions(false);
 			GetWorld()->GetTimerManager().SetTimer(LauncherTimerHandle, [&]()
 			{
-				CountSystem = IndexCard + 1;   //CountSystem = CountLocationY;
+				CountSystem = IndexCard + 1;   
 				ResetCards();
 			}
 			, 0.015f, false, 0.1f);
@@ -495,7 +495,7 @@ void UMainScreen::OnClickSystem(int32 Value)
 			return;
 		}
 		SetLastPositions(false);
-		CountSystem = Value;   //CountSystem = CountLocationY;
+		CountSystem = Value;   
 		ResetCards();
 		OnClickOnSystem();
 	}
@@ -640,7 +640,7 @@ void UMainScreen::Clear()
 	bUpDownPressed = true;
 	bDelayQuit = false;
 	CountSystem = 0;
-	CountLocationY = 0;
+	/*CountLocationY = 0;*/
 	GameData.Empty();
 	GameDataIndex.Empty();
 }
@@ -700,7 +700,7 @@ void UMainScreen::OnClickSelectSystem()
 	Focus = EFocus::SYSTEM;
 	SetPlayAnimation(TEXT("ShowSystem"));
 	PositionY = EPositionY::TOP;
-	WBPSystemsList->SetFocusItem(EButtonsGame::NONE, CountLocationY);
+	WBPSystemsList->SetFocusItem(EButtonsGame::NONE, CountSystem);
 }
 
 void UMainScreen::OnClickConfigurations()
@@ -861,7 +861,7 @@ void UMainScreen::ShowMessage(const FText Message, const float InRate)
 	MessageDisplay->ShowMessage(Message, InRate);
 }
 
-void UMainScreen::SetVisibiltyDebugButton(UButton* Button)
+void UMainScreen::SetVisibilityDebugButton(UButton* Button)
 {
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
 	Button->SetVisibility(ESlateVisibility::Visible);

@@ -155,8 +155,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
 	AClassicMediaPlayer* ClassicMediaPlayerReference;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
-	USoundBase* SoundSelect;
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
+	USoundBase* SoundSelect;*/
 
 protected:
 
@@ -225,8 +225,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	int32 CountSystem;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	int32 CountLocationY;
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	int32 CountLocationY;*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	UTexture2D* ImageNull;
@@ -413,7 +413,7 @@ private:
 	void OnClickBackAction();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void SetVisibiltyDebugButton(UButton* Button);
+	void SetVisibilityDebugButton(UButton* Button);
 
 public:
 
@@ -432,6 +432,4 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void SetPlayAnimation(FName AnimationName);
 	
-	/*UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void CardIndex(int32 CardIndex, EButtonsGame Input);*/
 };

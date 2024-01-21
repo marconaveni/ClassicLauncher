@@ -142,7 +142,7 @@ void UScreenManager::AddSystems()
 void UScreenManager::SetMainInterfaceData() const
 {
 	DataManager->MainScreenReference->CountSystem = DataManager->IndexGameSystem;
-	DataManager->MainScreenReference->CountLocationY = DataManager->IndexGameSystem;
+	/*DataManager->MainScreenReference->CountLocationY = DataManager->IndexGameSystem;*/
 	DataManager->MainScreenReference->ConfigurationData = DataManager->ConfigurationData;
 	DataManager->MainScreenReference->ClassicGameInstance = DataManager->ClassicGameInstance;
 }
