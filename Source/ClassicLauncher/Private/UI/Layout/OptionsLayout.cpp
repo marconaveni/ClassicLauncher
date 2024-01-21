@@ -70,57 +70,57 @@ void UOptionsLayout::SetSlide(FConfig& Configuration)
 
 void UOptionsLayout::OnSlideVolumeMaster(int32 Value)
 {
-	if (IsValid(ClassicMediaPlayerReference))
+	if (IsValid(DataManager->GetClassicMediaPlayerReference()))
 	{
-		ClassicMediaPlayerReference->ChangeMasterVolume(Value);
+		DataManager->GetClassicMediaPlayerReference()->ChangeMasterVolume(Value);
 	}
 }
 
 void UOptionsLayout::OnSlideVolumeMusic(int32 Value)
 {
-	if (IsValid(ClassicMediaPlayerReference))
+	if (IsValid(DataManager->GetClassicMediaPlayerReference()))
 	{
-		ClassicMediaPlayerReference->ChangeMusicVolume(Value);
+		DataManager->GetClassicMediaPlayerReference()->ChangeMusicVolume(Value);
 	}
 }
 
 void UOptionsLayout::OnSlideVolumeVideo(int32 Value)
 {
-	if (IsValid(ClassicMediaPlayerReference))
+	if (IsValid(DataManager->GetClassicMediaPlayerReference()))
 	{
-		ClassicMediaPlayerReference->ChangeVideoVolume(Value);
+		DataManager->GetClassicMediaPlayerReference()->ChangeVideoVolume(Value);
 	}
 }
 
 void UOptionsLayout::OnSlideLostFocus()
 {
-	if (!IsValid(MainInterfaceReference) && !IsValid(ClassicMediaPlayerReference))
+	if (!IsValid(DataManager->GetMainScreenReference()) && !IsValid(DataManager->GetClassicMediaPlayerReference()))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("MainInterfaceReference ClassicMediaPlayerReference error"));
 		return;
 	}
 	bool bSave = false;
-	FConfig Config = MainInterfaceReference->ConfigurationData;
+	FConfig Config = DataManager->ConfigurationData;
 
-	if (Config.VolumeMaster != ClassicMediaPlayerReference->GetMasterVolume())
+	if (Config.VolumeMaster != DataManager->GetClassicMediaPlayerReference()->GetMasterVolume())
 	{
-		Config.VolumeMaster = ClassicMediaPlayerReference->GetMasterVolume();
+		Config.VolumeMaster = DataManager->GetClassicMediaPlayerReference()->GetMasterVolume();
 		bSave = true;
 	}
-	if (Config.VolumeMusic != ClassicMediaPlayerReference->GetMusicVolume())
+	if (Config.VolumeMusic != DataManager->GetClassicMediaPlayerReference()->GetMusicVolume())
 	{
-		Config.VolumeMusic = ClassicMediaPlayerReference->GetMusicVolume();
+		Config.VolumeMusic = DataManager->GetClassicMediaPlayerReference()->GetMusicVolume();
 		bSave = true;
 	}
-	if (Config.VolumeVideo != ClassicMediaPlayerReference->GetVideoVolume())
+	if (Config.VolumeVideo != DataManager->GetClassicMediaPlayerReference()->GetVideoVolume())
 	{
-		Config.VolumeVideo = ClassicMediaPlayerReference->GetVideoVolume();
+		Config.VolumeVideo = DataManager->GetClassicMediaPlayerReference()->GetVideoVolume();
 		bSave = true;
 	}
 
 	if (bSave)
 	{
-		MainInterfaceReference->ConfigurationData = Config;
+		DataManager->ConfigurationData = Config;
 		UClassicFunctionLibrary::SaveConfig(Config);
 		UE_LOG(LogTemp, Warning, TEXT("saving config"));
 	}
@@ -132,13 +132,13 @@ void UOptionsLayout::OnClickUpdate(int32 Value)
 	if (ClassicGameInstance->DeleteGameSystemSave())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Deleted Saved"));
-		MainInterfaceReference->SetInputEnable(false);
-		MainInterfaceReference->Header->SetFocusButton();
+		DataManager->GetMainScreenReference()->SetInputEnable(false);
+		DataManager->GetMainScreenReference()->Header->SetFocusButton();
 		GetWorld()->GetTimerManager().SetTimer(RestartMapTimerHandle, this, &UOptionsLayout::RestartMap, 3.0f, false, -1);
-		if (MainInterfaceReference != nullptr)
+		if (IsValid(DataManager->GetMainScreenReference()))
 		{
 			const FText Message = LOCTEXT("UpdateGame", "Update game wait");
-			MainInterfaceReference->ShowMessage(Message, 2.5f);
+			DataManager->GetMainScreenReference()->ShowMessage(Message, 2.5f);
 		}
 	}
 	else
@@ -224,9 +224,9 @@ void UOptionsLayout::GetLanguageText(bool bShowMessage)
 	const FString CurrentLanguage = UKismetInternationalizationLibrary::GetCurrentCulture();
 	const FText TextCurrentLanguage = (CurrentLanguage == TEXT("en")) ? LOCTEXT("LogLanguageen", "English") : LOCTEXT("LogLanguageptbr", "Portuguese (Brazil)");
 	const FText Message = FText::Format(LOCTEXT("ChangeLanguageTo", "Change language to {0}"), TextCurrentLanguage);
-	if (bShowMessage && MainInterfaceReference != nullptr)
+	if (bShowMessage && IsValid(DataManager->GetMainScreenReference()))
 	{
-		MainInterfaceReference->ShowMessage(Message, 2.5f);
+		DataManager->GetMainScreenReference()->ShowMessage(Message, 2.5f);
 	}
 }
 

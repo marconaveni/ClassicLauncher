@@ -51,6 +51,10 @@ private:
 	bool bInputEnable;
 
 protected:
+
+	
+	UPROPERTY()
+	class UDataManager* DataManager;
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UImage* MouseHide;

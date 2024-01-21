@@ -19,6 +19,11 @@ UCLASS()
 class CLASSICLAUNCHER_API UFrame : public UUserWidget
 {
 	GENERATED_BODY()
+
+protected:
+
+	UPROPERTY()
+	UDataManager* DataManager;
 	
 public:
 
@@ -71,8 +76,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
 	EPositionY Position;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
-	class ULoopScroll* LoopScrollReference;
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
+	class ULoopScroll* LoopScrollReference;*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Frame|Variables")
 	UTexture2D* TextureFrameTop;

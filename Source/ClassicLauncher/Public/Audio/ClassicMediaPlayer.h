@@ -71,8 +71,6 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Reference")
-	class UMainScreen* MainInterfaceReference;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

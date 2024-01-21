@@ -4,6 +4,7 @@
 #include "UI/BaseUserWidget.h"
 #include "Components/Image.h"
 #include "Kismet/GameplayStatics.h"
+#include "Data/DataManager.h"
 
 
 
@@ -40,6 +41,7 @@ void UBaseUserWidget::NativeOnInitialized()
 	Super::NativeOnInitialized();
 	MouseHide->SetRenderOpacity(0);
 	SetHideMouse();
+	DataManager = GetWorld()->GetSubsystem<UDataManager>();
 }
 
 void UBaseUserWidget::PressInput(const FKey InKey)

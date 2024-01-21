@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Data/GameData.h"
 #include "ScreenManager.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageDelegate, FText, Message);
@@ -25,36 +24,6 @@ protected:
 	UPROPERTY()
 	class UDataManager* DataManager;
 
-	/*UPROPERTY()
-	TSubclassOf<class UMainScreen> MainInterfaceClass;
-
-	UPROPERTY()
-	TSubclassOf<class ULoadingScreen> LoadingScreenClass;*/
-
-	//UPROPERTY()
-	//class UMainScreen* MainScreenReference;
-
-	//UPROPERTY()
-	//class ULoadingScreen* LoadingScreenReference;
-
-	/*UPROPERTY()
-	TArray<FGameData> GameData;*/
-
-	/*UPROPERTY()
-	TArray<FGameSystem>GameSystems;*/
-
-	/*UPROPERTY()
-	FConfig ConfigurationData;*/
-
-	/*UPROPERTY()
-	APlayerController* GameplayStatics;*/
-
-	/*UPROPERTY()
-	class UClassicGameInstance* ClassicGameInstance;*/
-
-	/*UPROPERTY()
-	int32 IndexGameSystem;*/
-
 	UPROPERTY()
 	FTimerHandle DelayTimerHandle;
 
@@ -62,10 +31,7 @@ protected:
 
 public:
 
-	void Init(TSubclassOf<class UMainScreen> MainInterface, TSubclassOf<class ULoadingScreen> LoadingScreen);
-
-	/*UFUNCTION()
-	void CreateWidgets();*/
+	void Init(TSubclassOf<class UMainScreen> MainScreenClass, TSubclassOf<class ULoadingScreen> LoadingScreenClass);
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void LoadConfiguration();

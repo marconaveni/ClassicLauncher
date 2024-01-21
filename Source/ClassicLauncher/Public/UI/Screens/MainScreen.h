@@ -152,11 +152,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
 	TArray<UButtonCommon*> ButtonSystemReferences;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
-	AClassicMediaPlayer* ClassicMediaPlayerReference;
-
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
-	USoundBase* SoundSelect;*/
 
 protected:
 
@@ -171,38 +166,6 @@ protected:
 	virtual FReply NativeOnMouseWheel(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 
 public:
-	
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void SetReferences();
-	
-	//variables
-
-
-
-
-
-
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	TArray<FGameData> GameData;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	TArray<FGameData> GameDataIndex;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	TArray<FGameSystem> GameSystems;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	FConfig ConfigurationData;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	int32 IndexCard;
-
-
-
-
-
-	
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	EPositionY PositionY;
@@ -223,16 +186,7 @@ public:
 	bool bDelayQuit;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	int32 CountSystem;
-
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	int32 CountLocationY;*/
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	UTexture2D* ImageNull;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Components")
-	UClassicGameInstance* ClassicGameInstance;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	AClassicGameMode* GameMode;
@@ -350,11 +304,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetButtonsIconInterfaces(EPositionY GetPosition);
 
+	/*UFUNCTION()
+	bool Save(int32 IndexGameSystem);
+
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Save")
 	void SetCountPlayerToSave();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Save")
-	void SetFavoriteToSave();
+	void SetFavoriteToSave();*/
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void RunningGame(bool bIsRun);

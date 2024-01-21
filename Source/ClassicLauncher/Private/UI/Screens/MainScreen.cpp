@@ -17,7 +17,6 @@
 #include "Misc/Paths.h"
 #include "Audio/ClassicMediaPlayer.h"
 #include "UI/Layout/OptionsLayout.h"
-#include "EngineUtils.h"
 #include "UI/Components/MessageBalloon.h"
 #include "UI/Layout/LoopScroll.h"
 #include "UI/Layout/Frame.h"
@@ -26,6 +25,7 @@
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Components/CanvasPanel.h"
 #include "Components/WidgetSwitcher.h"
+#include "Data/DataManager.h"
 #include "UI/Layout/FooterDetails.h"
 #include "UI/Layout/ToolTipsLayout.h"
 #include "UI/Layout/Header.h"
@@ -35,7 +35,7 @@
 UMainScreen::UMainScreen(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	Clear();
-	
+
 	TextTop.Add(FText::FromString(TEXT("")));
 	TextTop.Add(LOCTEXT("buttonGameList", "Game List"));
 	TextTop.Add(LOCTEXT("buttonSelect", "Select"));
@@ -95,21 +95,6 @@ void UMainScreen::NativeConstruct()
 	Super::NativeConstruct();
 }
 
-void UMainScreen::SetReferences()
-{
-	for (TActorIterator<AClassicMediaPlayer> ActorIterator(GetWorld()); ActorIterator; ++ActorIterator)
-	{
-		ClassicMediaPlayerReference = *ActorIterator;
-		UE_LOG(LogTemp, Warning, TEXT("Reference AClassicMediaPlayer Founds: %s "), *ClassicMediaPlayerReference->GetName());
-	}
-
-	ClassicMediaPlayerReference->MainInterfaceReference = this;
-	Options->ClassicMediaPlayerReference = ClassicMediaPlayerReference;
-	Options->MainInterfaceReference = this;
-	LoopScroll->MainInterfaceReference = this;
-	Frame->LoopScrollReference = LoopScroll;
-}
-
 void UMainScreen::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
@@ -120,15 +105,13 @@ void UMainScreen::NativeOnInitialized()
 	Header->OnFocusDelegate.AddDynamic(this, &UMainScreen::OnFocusHeader);
 	Header->OnLostFocusDelegate.AddDynamic(this, &UMainScreen::OnLostFocusHeader);
 	LoopScroll->OnCardClick.AddDynamic(this, &UMainScreen::OnClickLaunch);
-	
+
 	CanvasPanelScreen->SetRenderOpacity(0);
-	SetReferences();
 }
 
 void UMainScreen::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
-
 	if (bKeyPressed)
 	{
 		NavigationGame(InputPressed);
@@ -141,7 +124,7 @@ void UMainScreen::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 
 void UMainScreen::SteamRunApp()
 {
-	if (!UClassicFunctionLibrary::IsRunningSteamApp(GameData[IndexCard].Path))
+	if (!UClassicFunctionLibrary::IsRunningSteamApp(DataManager->GetGameData().Path))
 	{
 		RunningGame(false);
 	}
@@ -168,8 +151,9 @@ void UMainScreen::ExternRunApp()
 
 void UMainScreen::LoadGamesList()
 {
-	Header->EnableButtonsHeader(CountSystem);
-	if (CountSystem == 0)
+	const int32 IndexGameSystem = DataManager->IndexGameSystem;
+	Header->EnableButtonsHeader(IndexGameSystem);
+	if (IndexGameSystem == 0)
 	{
 		Frame->FrameIndexTop = 1;
 		if (GEngine)
@@ -179,20 +163,19 @@ void UMainScreen::LoadGamesList()
 	}
 
 	int32 NumFavorites = 0;
-	GameData = UClassicFunctionLibrary::FilterGameData(GameSystems[CountSystem].GameDatas, GameSystems[CountSystem].Positions.OrderBy, NumFavorites);
-	if (NumFavorites == 0 && GameSystems[CountSystem].Positions.OrderBy != EGamesFilter::DEFAULT)
+	DataManager->GameData = UClassicFunctionLibrary::FilterGameData(DataManager->GetGameSystem().GameDatas, DataManager->GetGameSystem().Positions.OrderBy, NumFavorites);
+	if (NumFavorites == 0 && DataManager->GetGameSystem().Positions.OrderBy != EGamesFilter::DEFAULT)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Retry load filter game data with order default"));
-		GameSystems[CountSystem].Positions.DefaultValues();
-		GameData = UClassicFunctionLibrary::FilterGameData(GameSystems[CountSystem].GameDatas, GameSystems[CountSystem].Positions.OrderBy, NumFavorites);
+		DataManager->GameSystems[IndexGameSystem].Positions.DefaultValues();
+		DataManager->GameData = UClassicFunctionLibrary::FilterGameData(DataManager->GetGameSystem().GameDatas, DataManager->GetGameSystem().Positions.OrderBy, NumFavorites);
 	}
 
-	if (GameData.Num() > 0)
+	if (DataManager->GameData.Num() > 0)
 	{
-		ConfigurationData.DefaultStartSystem = FString::FromInt(CountSystem);
-		UClassicFunctionLibrary::SaveConfig(ConfigurationData);
-		GameDataIndex = GameSystems[CountSystem].GameDatas;
-		ClassicGameInstance->SaveGameSystem(GameSystems);
+		DataManager->ConfigurationData.DefaultStartSystem = FString::FromInt(DataManager->IndexGameSystem);
+		UClassicFunctionLibrary::SaveConfig(DataManager->ConfigurationData);
+		DataManager->GetClassicGameInstance()->SaveGameSystem(DataManager->GameSystems);
 		OnLoadGamesList();
 	}
 }
@@ -230,11 +213,11 @@ void UMainScreen::NativeReleaseInput(const FKey& InKey)
 		}
 		if (InputLastPressed == EButtonsGame::M)
 		{
-			ClassicMediaPlayerReference->PlaylistMusic();
+			DataManager->GetClassicMediaPlayerReference()->PlaylistMusic();
 		}
-		if(InputLastPressed == EButtonsGame::Y)
+		if (InputLastPressed == EButtonsGame::Y)
 		{
-			SetFavoriteToSave();
+			DataManager->SetFavoriteToSave();
 		}
 	}
 	MultiInput.SetAllNoneInput();
@@ -268,7 +251,6 @@ void UMainScreen::NavigationGame(EButtonsGame Input)
 		Input == EButtonsGame::LEFT || Input == EButtonsGame::RIGHT ||
 		Input == EButtonsGame::LB || Input == EButtonsGame::RB)
 	{
-
 		if (GetInputEnable() && !GetDelayInput())
 		{
 			DelayInput(TimerDelayInput + FirstDelayInput);
@@ -287,7 +269,8 @@ void UMainScreen::NavigationGame(EButtonsGame Input)
 			{
 				NavigationInfo(Input);
 			}
-			else if (Focus == EFocus::CONFIG) {
+			else if (Focus == EFocus::CONFIG)
+			{
 				NavigationConfiguration(Input);
 			}
 		}
@@ -300,7 +283,7 @@ void UMainScreen::NavigationMain(EButtonsGame Input)
 	TimerDelayInput = 0.14f;
 	const bool LeftRight = InputLastPressed == EButtonsGame::LEFT || InputLastPressed == EButtonsGame::RIGHT;
 	const bool LeftRightTrigger = InputLastPressed == EButtonsGame::LB || InputLastPressed == EButtonsGame::RB;
-	
+
 	if (LeftRight || LeftRightTrigger)
 	{
 		if (PositionY == EPositionY::CENTER)
@@ -335,7 +318,7 @@ void UMainScreen::NavigationMain(EButtonsGame Input)
 
 void UMainScreen::NavigationSystem(EButtonsGame Input)
 {
-	WBPSystemsList->SetFocusItem(InputLastPressed, CountSystem);
+	WBPSystemsList->SetFocusItem(InputLastPressed, DataManager->IndexGameSystem);
 }
 
 void UMainScreen::NavigationInfo(EButtonsGame Input)
@@ -356,9 +339,9 @@ void UMainScreen::SetNavigationFocusUpBottom()
 {
 	if (PositionY == EPositionY::BOTTOM)
 	{
-		FooterDetails->CloseFooter(PositionY, ClassicMediaPlayerReference);
+		FooterDetails->CloseFooter(PositionY, DataManager->GetClassicMediaPlayerReference());
 		CanvasPanelRoot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-		if(PositionY == EPositionY::CENTER)
+		if (PositionY == EPositionY::CENTER)
 		{
 			SetPlayAnimation(TEXT("ShowDescBottomInfoReverse"));
 		}
@@ -375,7 +358,7 @@ void UMainScreen::SetNavigationFocusDownBottom()
 {
 	if (PositionY == EPositionY::CENTER)
 	{
-		FooterDetails->OpenFooter(GameData[IndexCard], IndexCard,PositionY, ClassicMediaPlayerReference);
+		FooterDetails->OpenFooter(DataManager->GetGameData(), DataManager->IndexGameSystem, PositionY, DataManager->GetClassicMediaPlayerReference());
 		CanvasPanelRoot->SetVisibility(ESlateVisibility::HitTestInvisible);
 		SetPlayAnimation(TEXT("ShowDescBottomInfo"));
 	}
@@ -398,18 +381,14 @@ void UMainScreen::SetNavigationFocusDownBottom()
 
 #pragma endregion NavigationArea
 
-
 void UMainScreen::SetTitle(int32 Index)
 {
-	if (GameData.IsValidIndex(Index))
-	{
-		IndexCard = Index;
-		const FString Title = GameData[IndexCard].nameFormated;
-		TextTitleGame->SetText(FText::FromString(Title));
-		FooterDetails->TextBoxScroll->SetText(GameData[IndexCard].descFormated);
-		SetButtonsIconInterfaces(PositionY);
-		SetFrame();
-	}
+	DataManager->IndexGameData = Index;
+	const FString Title = DataManager->GetGameData().nameFormated;
+	TextTitleGame->SetText(FText::FromString(Title));
+	FooterDetails->TextBoxScroll->SetText(DataManager->GetGameData().descFormated);
+	SetButtonsIconInterfaces(PositionY);
+	SetFrame();
 }
 
 void UMainScreen::OnClickLaunch()
@@ -417,24 +396,20 @@ void UMainScreen::OnClickLaunch()
 	if (PositionY == EPositionY::CENTER && GetInputEnable())
 	{
 		LoopScroll->OpenCard();
-		if (CountSystem == 0)
+		if (DataManager->IndexGameSystem == 0)
 		{
-			GameSystems[CountSystem].GameDatas = GameDataIndex;
 			SetLastPositions(false);
 			GetWorld()->GetTimerManager().SetTimer(LauncherTimerHandle, [&]()
-			{
-				CountSystem = IndexCard + 1;   
-				ResetCards();
-			}
-			, 0.015f, false, 0.1f);
+			                                       {
+				                                       DataManager->IndexGameSystem = DataManager->IndexGameData + 1;
+				                                       ResetCards();
+			                                       }
+			                                       , 0.015f, false, 0.1f);
 		}
 		else
 		{
 			PlayAnimationForward(FadeStartSystem);
-			AsyncTask(ENamedThreads::AnyHiPriThreadNormalTask, [this]
-			{
-				SetCountPlayerToSave();
-			});
+			DataManager->SetCountPlayerToSave();
 			GetWorld()->GetTimerManager().SetTimer(LauncherTimerHandle, this, &UMainScreen::AppLaunch, 0.015f, false, 1.5f);
 		}
 	}
@@ -442,9 +417,9 @@ void UMainScreen::OnClickLaunch()
 
 void UMainScreen::AppLaunch()
 {
-	const FString PathRomFormated = UClassicFunctionLibrary::HomeDirectoryReplace(GameData[IndexCard].PathFormated);
-	const FString ExecutablePath = (GameData[IndexCard].Executable == TEXT("")) ? GameSystems[CountSystem].Executable : GameData[IndexCard].Executable;
-	const FString Arguments = (GameData[IndexCard].Arguments == TEXT("")) ? GameSystems[CountSystem].Arguments : GameData[IndexCard].Arguments;
+	const FString PathRomFormatted = UClassicFunctionLibrary::HomeDirectoryReplace(DataManager->GetGameData().PathFormated);
+	const FString ExecutablePath = (DataManager->GetGameData().Executable == TEXT("")) ? DataManager->GetGameSystem().Executable : DataManager->GetGameData().Executable;
+	const FString Arguments = (DataManager->GetGameData().Arguments == TEXT("")) ? DataManager->GetGameSystem().Arguments : DataManager->GetGameData().Arguments;
 	TArray<FString> Commands;
 
 	if (!Arguments.IsEmpty())
@@ -453,10 +428,10 @@ void UMainScreen::AppLaunch()
 	}
 	if (!ExecutablePath.IsEmpty())
 	{
-		Commands.Add(UClassicFunctionLibrary::HomeDirectoryReplace(PathRomFormated));
+		Commands.Add(UClassicFunctionLibrary::HomeDirectoryReplace(PathRomFormatted));
 	}
 	OpenExternalProcess(ExecutablePath, Commands);
-	UE_LOG(LogTemp, Warning, TEXT("OpenExternalProcess: %s %s %s"), *ExecutablePath, *Arguments, *PathRomFormated);
+	UE_LOG(LogTemp, Warning, TEXT("OpenExternalProcess: %s %s %s"), *ExecutablePath, *Arguments, *PathRomFormatted);
 }
 
 void UMainScreen::OpenExternalProcess(FString ExecutablePath, TArray<FString> CommandArgs)
@@ -465,7 +440,7 @@ void UMainScreen::OpenExternalProcess(FString ExecutablePath, TArray<FString> Co
 	UClassicFunctionLibrary::CreateProc(ProcessID, ExecutablePath, CommandArgs, false, false, 0, WorkingDirectory);
 	GameMode->GameSettingsRunning();
 	RunningGame(true);
-	if (GameSystems[CountSystem].Executable.Equals(TEXT("steam")))
+	if (DataManager->GetGameSystem().Executable.Equals(TEXT("steam")))
 	{
 		GetWorld()->GetTimerManager().SetTimer(DelayRunAppTimerHandle, this, &UMainScreen::SteamRunApp, 0.064f, true, 10);
 	}
@@ -481,7 +456,7 @@ void UMainScreen::OnClickSystem(int32 Value)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("The OnClickSystem parameter value is: %d"), Value);
 
-		if (CountSystem == Value)
+		if (DataManager->IndexGameSystem == Value)
 		{
 			Focus = EFocus::MAIN;
 			PositionY = EPositionY::CENTER;
@@ -493,7 +468,7 @@ void UMainScreen::OnClickSystem(int32 Value)
 			return;
 		}
 		SetLastPositions(false);
-		CountSystem = Value;   
+		DataManager->IndexGameSystem = Value;
 		ResetCards();
 		OnClickOnSystem();
 	}
@@ -506,11 +481,11 @@ void UMainScreen::SetButtonsIconInterfaces(EPositionY GetPosition)
 		WBPButtonsIconsInterfaces->SetTexts(TextTop);
 		WBPButtonsIconsInterfaces->SetButtonsVisibility(IconTop);
 	}
-	else if (GetPosition == EPositionY::CENTER && CountSystem != 0)
+	else if (GetPosition == EPositionY::CENTER && DataManager->IndexGameSystem != 0)
 	{
-		if (GameData.IsValidIndex(IndexCard) && TextCenter.IsValidIndex(5))
+		if (TextCenter.IsValidIndex(5))
 		{
-			TextCenter[5] = (GameData[IndexCard].favorite) ? LOCTEXT("buttonRemoveFavorite", "Remove Favorite") : LOCTEXT("buttonRemoveFavoriteAddFavorite", "Add Favorite");
+			TextCenter[5] = (DataManager->GetGameData().favorite) ? LOCTEXT("buttonRemoveFavorite", "Remove Favorite") : LOCTEXT("buttonRemoveFavoriteAddFavorite", "Add Favorite");
 		}
 
 		WBPButtonsIconsInterfaces->SetTexts(TextCenter);
@@ -523,68 +498,11 @@ void UMainScreen::SetButtonsIconInterfaces(EPositionY GetPosition)
 	}
 }
 
-void UMainScreen::SetCountPlayerToSave()
-{
-	int32 Find;
-
-	if (UClassicFunctionLibrary::FindGameData(GameSystems[CountSystem].GameDatas, GameData[IndexCard], Find))
-	{
-		// Find = return inline found index
-		GameSystems[CountSystem].GameDatas[Find].playcount++;
-		GameSystems[CountSystem].GameDatas[Find].lastplayed = UClassicFunctionLibrary::FormatDateToXml();
-
-		GameData[IndexCard].playcount++;
-		GameData[IndexCard].lastplayed = UClassicFunctionLibrary::FormatDateToXml();
-		GameDataIndex[Find].playcount++;
-		GameDataIndex[Find].lastplayed = GameData[IndexCard].lastplayed;
-
-		FString Path = GameSystems[CountSystem].RomPath;
-		UClassicFunctionLibrary::SaveGameListXML(Path, GameSystems[CountSystem].GameDatas);
-
-		ClassicGameInstance->SaveGameSystem(GameSystems);
-	}
-}
-
-void UMainScreen::SetFavoriteToSave()
-{
-	if (!GameSystems.IsValidIndex(CountSystem)) return;
-
-	if (InputLastPressed == EButtonsGame::Y && !GameSystems[CountSystem].SystemName.Equals(TEXT("${System}")))
-	{
-		AsyncTask(ENamedThreads::AnyHiPriThreadNormalTask, [this]()
-		{
-			int32 Find;
-			if (UClassicFunctionLibrary::FindGameData(GameSystems[CountSystem].GameDatas, GameData[IndexCard], Find))
-			{
-				// Find = return inline found index
-				const bool ToggleFavorite = !GameSystems[CountSystem].GameDatas[Find].favorite;
-				GameSystems[CountSystem].GameDatas[Find].favorite = ToggleFavorite;
-
-				GameData[IndexCard].favorite = ToggleFavorite;
-				GameDataIndex[Find].favorite = ToggleFavorite;
-
-				FString Path = GameSystems[CountSystem].RomPath;
-				UClassicFunctionLibrary::SaveGameListXML(Path, GameSystems[CountSystem].GameDatas);
-
-				if (ClassicGameInstance->SaveGameSystem(GameSystems))
-				{
-					AsyncTask(ENamedThreads::GameThread, [this, ToggleFavorite]()
-					{
-						LoopScroll->SetCardFavorite(ToggleFavorite);
-						SetButtonsIconInterfaces(EPositionY::CENTER);
-						ShowMessage((ToggleFavorite) ? LOCTEXT("MessageAddFavorite", "Add game to favorite") : LOCTEXT("RemoveFavorite", "Remove game to favorite"), 3.5f);
-					});
-				}
-			}
-		});
-	}
-}
-
 void UMainScreen::RunningGame(const bool bIsRun)
 {
 	if (bIsRun)
 	{
-		ClassicMediaPlayerReference->PauseMusic();
+		DataManager->GetClassicMediaPlayerReference()->PauseMusic();
 		SetInputEnable(false);
 	}
 	else
@@ -600,13 +518,12 @@ void UMainScreen::RunningGame(const bool bIsRun)
 			ReturnHandle,
 			[&]()
 			{
-				ClassicMediaPlayerReference->PlaylistMusic();
+				DataManager->GetClassicMediaPlayerReference()->PlaylistMusic();
 				PlayAnimationReverse(FadeStartSystem);
 				LoopScroll->SetUnlockInput(true);
 				SetFrame();
 				SetInputEnable(true);
-			},0.18f ,false);
-
+			}, 0.18f, false);
 	}
 }
 
@@ -616,18 +533,17 @@ void UMainScreen::ResetCards()
 	SetPlayAnimation(TEXT("ShowSystemReverse"));
 	Header->SetFocusButton();
 	Focus = EFocus::MAIN;
-	GameData.Empty();
-	IndexCard = 0;
 	FooterDetails->Clear();
 	PositionY = EPositionY::CENTER;
 	SetPlayAnimation(TEXT("LoadListGameReverse"));
 	MessageDisplay->CancelMessage();
+	DataManager->IndexGameData = 0;
+	DataManager->GameData.Empty();
 }
 
 void UMainScreen::Clear()
 {
 	SetInputEnable(false);
-	IndexCard = 0;
 	ProcessID = 0;
 	InputPressed = EButtonsGame::NONE;
 	InputLastPressed = EButtonsGame::NONE;
@@ -637,19 +553,21 @@ void UMainScreen::Clear()
 	bKeyPressed = false;
 	bUpDownPressed = true;
 	bDelayQuit = false;
-	CountSystem = 0;
-	GameData.Empty();
-	GameDataIndex.Empty();
+	if(DataManager != nullptr)
+	{
+		DataManager->IndexGameData = 0;
+		DataManager->IndexGameSystem = 0;
+		DataManager->GameData.Empty();
+	}
 }
 
 void UMainScreen::SetHeaderButtonFocus()
 {
 	const int32 Index = Frame->FrameIndexTop;
 	Header->SetFocusButton(Index, true);
-	GameSystems[CountSystem].GameDatas = GameDataIndex;
 	if (Index == 4)
 	{
-		WBPInfo->SetGameInfo(GameData[IndexCard]);
+		WBPInfo->SetGameInfo(DataManager->GetGameData());
 	}
 }
 
@@ -659,17 +577,21 @@ void UMainScreen::OnClickHeader(int32 Index)
 	PositionY = EPositionY::TOP;
 	switch (Index)
 	{
-	case 1: OnClickSelectSystem(); break;
-	case 2: OnClickConfigurations(); break;
-	case 3: OnClickFavorites(); break;
-	case 4: OnClickInfo(); break;
+	case 1: OnClickSelectSystem();
+		break;
+	case 2: OnClickConfigurations();
+		break;
+	case 3: OnClickFavorites();
+		break;
+	case 4: OnClickInfo();
+		break;
 	default: break;
 	}
 }
 
 void UMainScreen::OnFocusHeader(int32 Index)
 {
-	if(GetMouseEnable())
+	if (GetMouseEnable())
 	{
 		PositionY = EPositionY::TOP;
 		ToolTips->OnFocus(Index);
@@ -677,10 +599,9 @@ void UMainScreen::OnFocusHeader(int32 Index)
 		Frame->FrameIndexTop = Index;
 		Frame->SetFramePositionWithAnimation(PositionY);
 		SetButtonsIconInterfaces(PositionY);
-		GameSystems[CountSystem].GameDatas = GameDataIndex;
 		if (Index == 4)
 		{
-			WBPInfo->SetGameInfo(GameData[IndexCard]);
+			WBPInfo->SetGameInfo(DataManager->GetGameData());
 		}
 	}
 	if (Index == 0) return;
@@ -697,7 +618,7 @@ void UMainScreen::OnClickSelectSystem()
 	Focus = EFocus::SYSTEM;
 	SetPlayAnimation(TEXT("ShowSystem"));
 	PositionY = EPositionY::TOP;
-	WBPSystemsList->SetFocusItem(EButtonsGame::NONE, CountSystem);
+	WBPSystemsList->SetFocusItem(EButtonsGame::NONE, DataManager->IndexGameSystem);
 }
 
 void UMainScreen::OnClickConfigurations()
@@ -709,11 +630,12 @@ void UMainScreen::OnClickConfigurations()
 
 void UMainScreen::OnClickFavorites()
 {
-	const int32 NumFavorites = UClassicFunctionLibrary::CountFavorites(GameData);
+	const int32 NumFavorites = UClassicFunctionLibrary::CountFavorites(DataManager->GameData);
 	FText Message = LOCTEXT("MessageNoFavorites", "No favorites to show");
 
-	GameSystems[CountSystem].Positions.ChangeFilter();
-	const EGamesFilter Filter = GameSystems[CountSystem].Positions.OrderBy;
+	const int32 IndexGameSystem = DataManager->IndexGameSystem;
+	DataManager->GameSystems[IndexGameSystem].Positions.ChangeFilter();
+	const EGamesFilter Filter = DataManager->GameSystems[IndexGameSystem].Positions.OrderBy;
 
 	if (NumFavorites != 0 && Filter == EGamesFilter::FAVORITES_FIRST)
 	{
@@ -756,11 +678,10 @@ void UMainScreen::OnClickBackAction()
 	}
 	else if (PositionY == EPositionY::CENTER || PositionY == EPositionY::TOP)
 	{
-		if (CountSystem != 0)
+		if (DataManager->IndexGameSystem != 0)
 		{
-			GameSystems[CountSystem].GameDatas = GameDataIndex;
 			SetLastPositions(false);
-			CountSystem = 0;
+			DataManager->IndexGameSystem = 0;
 			ResetCards();
 			return;
 		}
@@ -768,17 +689,17 @@ void UMainScreen::OnClickBackAction()
 		if (bDelayQuit)
 		{
 			SetLastPositions(false);
-			if (ClassicGameInstance->SaveGameSystem(GameSystems))
+			if (DataManager->GetClassicGameInstance()->SaveGameSystem(DataManager->GameSystems))
 			{
 				UKismetSystemLibrary::QuitGame(this, GetOwningPlayer(), EQuitPreference::Quit, false);
 			}
 		}
 		bDelayQuit = true;
 		GetWorld()->GetTimerManager().SetTimer(DelayQuitTimerHandle, [this]()
-		{
-			bDelayQuit = false;
-		}
-		, 3.f, false, -1);
+		                                       {
+			                                       bDelayQuit = false;
+		                                       }
+		                                       , 3.f, false, -1);
 		ShowMessage(LOCTEXT("PressAgainToQuit", "Press Again To Quit"), 3);
 	}
 	else if (PositionY == EPositionY::BOTTOM)
@@ -789,22 +710,23 @@ void UMainScreen::OnClickBackAction()
 
 void UMainScreen::SetLastPositions(const bool bResetPositions)
 {
+	const int32 IndexGameSystem = DataManager->IndexGameSystem;
 	FIndexPositions Positions = LoopScroll->GetScrollOffSet();
-	Positions.OrderBy = GameSystems[CountSystem].Positions.OrderBy;
+	Positions.OrderBy = DataManager->GameSystems[IndexGameSystem].Positions.OrderBy;
 	if (bResetPositions || Positions.OrderBy != EGamesFilter::DEFAULT)
 	{
-		GameSystems[CountSystem].Positions.DefaultValues();
-		GameSystems[CountSystem].Positions.OrderBy = Positions.OrderBy;
+		DataManager->GameSystems[IndexGameSystem].Positions.DefaultValues();
+		DataManager->GameSystems[IndexGameSystem].Positions.OrderBy = Positions.OrderBy;
 		return;
 	}
-	GameSystems[CountSystem].Positions = Positions;
+	DataManager->GameSystems[IndexGameSystem].Positions = Positions;
 }
 
 void UMainScreen::SetFrame()
 {
 	if (PositionY == EPositionY::TOP)
 	{
-		Frame->SetIndexTop(InputLastPressed, CountSystem);
+		Frame->SetIndexTop(InputLastPressed, DataManager->IndexGameSystem);
 		SetHeaderButtonFocus();
 	}
 	Frame->SetFramePositionWithAnimation(PositionY);
@@ -833,7 +755,7 @@ void UMainScreen::CloseMenus()
 				[&]()
 				{
 					SetPlayAnimation(TEXT("AnimationShowConfigurationReverse"));
-					Header->SetFocusButton(2);    
+					Header->SetFocusButton(2);
 					SetFrame();
 				},
 				0.1f, false, -1);

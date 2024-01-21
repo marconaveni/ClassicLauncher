@@ -6,9 +6,7 @@
 #include "UI/Components/ButtonCommon.h"
 #include "UI/Layout/OptionsLayout.h"
 #include "Core/ClassicGameinstance.h"
-#include "Core/ClassicSaveGame.h"
 #include "Audio/ClassicMediaPlayer.h"
-#include "UI/Components/ButtonSlide.h"
 #include "UI/Layout/GameListLayout.h"
 #include "UI/Layout/Frame.h"
 #include "UI/Screens/MainScreen.h"
@@ -23,49 +21,16 @@
 #define DELAY 1.0f
 #define LOCTEXT_NAMESPACE "ButtonsSelection"
 
-void UScreenManager::Init(TSubclassOf<UMainScreen> MainInterface, TSubclassOf<class ULoadingScreen> LoadingScreen)
+void UScreenManager::Init(TSubclassOf<UMainScreen> MainScreenClass, TSubclassOf<class ULoadingScreen> LoadingScreenClass)
 {
-
 	DataManager = GetWorld()->GetSubsystem<UDataManager>();
-	DataManager->MainScreenClass = MainInterface;
-	DataManager->LoadingScreenClass = LoadingScreen;
-	DataManager->CreateWidgets();
-	
-	/*
-	MainInterfaceClass = MainInterface;
-	LoadingScreenClass = LoadingScreen;*/
-	/*GameplayStatics = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	ClassicGameInstance = Cast<UClassicGameInstance>(GetWorld()->GetGameInstance());*/
+	DataManager->CreateWidgets(MainScreenClass,LoadingScreenClass);
 	MessageShow.AddDynamic(this, &UScreenManager::Message);
 }
 
-/*void UScreenManager::CreateWidgets()
-{
-	/*if (MainInterfaceClass != nullptr && LoadingScreenClass != nullptr) // Check if the Asset is assigned in the blueprint.
-	{
-		// Create the widget and store it.
-		MainInterfaceReference = CreateWidget<UMainScreen>(GameplayStatics, MainInterfaceClass);
-		LoadingScreenReference = CreateWidget<ULoadingScreen>(GameplayStatics, LoadingScreenClass);
-
-		if (MainInterfaceReference != nullptr)
-		{
-			//let add it to the view port
-			MainInterfaceReference->AddToViewport(0);
-		}
-		if (LoadingScreenReference != nullptr)
-		{
-			LoadingScreenReference->AddToViewport(1);
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("MainInterfaceClass or LoadingScreenClass the Assets is not assigned"));
-	}#1#
-}*/
-
 void UScreenManager::LoadConfiguration()
 {
-	DataManager->LoadingScreenReference->ShowMessage(FText::FromString(TEXT("Loading Configurations...")));
+	DataManager->GetLoadingScreenReference()->ShowMessage(FText::FromString(TEXT("Loading Configurations...")));
 
 	FString ConfigResult;
 	const FString GameRoot = UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("config\\config.xml");
@@ -75,19 +40,19 @@ void UScreenManager::LoadConfiguration()
 		UClassicFunctionLibrary::SetConfig(UClassicFunctionLibrary::LoadXMLSingle(ConfigResult, TEXT("config")), DataManager->ConfigurationData);
 		UGameplayStatics::SetEnableWorldRendering(this, DataManager->ConfigurationData.Rendering);
 		DataManager->ConfigurationData.PathMedia = (DataManager->ConfigurationData.PathMedia != TEXT("")) ? DataManager->ConfigurationData.PathMedia : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
-		DataManager->MainScreenReference->Options->SetSlide( DataManager->ConfigurationData);
+		DataManager->GetMainScreenReference()->Options->SetSlide( DataManager->ConfigurationData);
 		GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &UScreenManager::LoadGameSystems, 0.1f, false, DELAY);
 	}
-	DataManager->MainScreenReference->ClassicMediaPlayerReference->SetMusics(TEXT(""));
-	DataManager->MainScreenReference->ClassicMediaPlayerReference->PlaylistMusic(false);
+	DataManager->GetClassicMediaPlayerReference()->SetMusics(TEXT(""));
+	DataManager->GetClassicMediaPlayerReference()->PlaylistMusic(false);
 }
 
 void UScreenManager::LoadGameSystems()
 {
-	DataManager->GameSystems = DataManager->ClassicGameInstance->GetGameSystemSave();
+	DataManager->GameSystems = DataManager->GetClassicGameInstance()->GetGameSystemSave();
 	UClassicFunctionLibrary::CreateFolders(DataManager->ConfigurationData.PathMedia, DataManager->GameSystems);
 
-	DataManager->LoadingScreenReference->ShowMessage(LOCTEXT("Loading", "Loading Games Wait..."));
+	DataManager->GetLoadingScreenReference()->ShowMessage(LOCTEXT("Loading", "Loading Games Wait..."));
 	if (DataManager->GameSystems.Num() > 0)
 	{
 		AddSystems();
@@ -101,7 +66,7 @@ void UScreenManager::LoadGameSystems()
 				break;
 			}
 		}
-
+		
 		SetMainInterfaceData();
 		GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &UScreenManager::AddMainInterfaceToViewPort, 0.1f, false, DELAY);
 	}
@@ -114,24 +79,24 @@ void UScreenManager::LoadGameSystems()
 
 void UScreenManager::AddSystems()
 {
-	DataManager->MainScreenReference->WBPSystemsList->ScrollBox->ClearAllChildrenContent();
-	DataManager->MainScreenReference->GameSystems.Empty();
-	DataManager->MainScreenReference->ButtonSystemReferences.Empty();
+	DataManager->GetMainScreenReference()->WBPSystemsList->ScrollBox->ClearAllChildrenContent();
+	//DataManager->GameSystems.Empty();
+	DataManager->GetMainScreenReference()->ButtonSystemReferences.Empty();
 
-	if (DataManager->MainScreenReference->ButtonSystemClass != nullptr)
+	if (DataManager->GetMainScreenReference()->ButtonSystemClass != nullptr)
 	{
 		UButtonCommon* ButtonSystem = nullptr;
 		
 		for (int32 i = 0; i < DataManager->GameSystems.Num(); i++)
 		{
-			ButtonSystem = CreateWidget<UButtonCommon>(DataManager->MainScreenReference->GetOwningPlayer(), DataManager->MainScreenReference->ButtonSystemClass);
-			ButtonSystem->OnClickTrigger.AddDynamic(DataManager->MainScreenReference , &UMainScreen::OnClickSystem);
+			ButtonSystem = CreateWidget<UButtonCommon>(DataManager->GetMainScreenReference()->GetOwningPlayer(), DataManager->GetMainScreenReference()->ButtonSystemClass);
+			ButtonSystem->OnClickTrigger.AddDynamic(DataManager->GetMainScreenReference() , &UMainScreen::OnClickSystem);
 			ButtonSystem->SetText((i == 0) ? LOCTEXT("Systems", "Show Systems") : FText::FromString(DataManager->GameSystems[i].SystemLabel));
 			ButtonSystem->SetIndex(i);
-			DataManager->MainScreenReference->ButtonSystemReferences.Add(ButtonSystem);
-			DataManager->MainScreenReference->WBPSystemsList->ScrollBox->SetContent(ButtonSystem);
+			DataManager->GetMainScreenReference()->ButtonSystemReferences.Add(ButtonSystem);
+			DataManager->GetMainScreenReference()->WBPSystemsList->ScrollBox->SetContent(ButtonSystem);
 		}
-		DataManager->MainScreenReference->GameSystems = DataManager->GameSystems;
+		//DataManager->GameSystems = DataManager->GameSystems;
 	}
 	else
 	{
@@ -141,9 +106,9 @@ void UScreenManager::AddSystems()
 
 void UScreenManager::SetMainInterfaceData() const
 {
-	DataManager->MainScreenReference->CountSystem = DataManager->IndexGameSystem;
-	DataManager->MainScreenReference->ConfigurationData = DataManager->ConfigurationData;
-	DataManager->MainScreenReference->ClassicGameInstance = DataManager->ClassicGameInstance;
+	/*DataManager->GetMainScreenReference()->CountSystem = DataManager->IndexGameSystem;
+	DataManager->GetMainScreenReference()->ConfigurationData = DataManager->ConfigurationData;
+	DataManager->GetMainScreenReference()->ClassicGameInstance = DataManager->GetClassicGameInstance();*/
 }
 
 void UScreenManager::CreateNewGameList()
@@ -218,7 +183,7 @@ void UScreenManager::PrepareToSaveNewGameList()
 
 		}
 		
-		if (DataManager->ClassicGameInstance->SaveGameSystem(DataManager->GameSystems))
+		if (DataManager->GetClassicGameInstance()->SaveGameSystem(DataManager->GameSystems))
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Saved"));
 			AsyncTask(ENamedThreads::GameThread, [this]()
@@ -242,13 +207,13 @@ void UScreenManager::PrepareToSaveNewGameList()
 void UScreenManager::AddMainInterfaceToViewPort()
 {
 
-	if (DataManager->MainScreenReference != nullptr)
+	if (DataManager->GetMainScreenReference() != nullptr)
 	{
-		DataManager->MainScreenReference->SetVisibility(ESlateVisibility::Visible);
+		DataManager->GetMainScreenReference()->SetVisibility(ESlateVisibility::Visible);
 		//Loading Game list in main interface
-		DataManager->MainScreenReference->LoadGamesList();
+		DataManager->GetMainScreenReference()->LoadGamesList();
 		//Show the Cursor.
-		DataManager->GameplayStatics->bShowMouseCursor = true;
+		DataManager->GetGameplayStatics()->bShowMouseCursor = true;
 
 		//Input mode settings. 
 		FInputModeGameAndUI InputMode;
@@ -256,10 +221,10 @@ void UScreenManager::AddMainInterfaceToViewPort()
 		InputMode.SetHideCursorDuringCapture(false);
 
 		//set input mode
-		DataManager->GameplayStatics->SetInputMode(InputMode);
+		DataManager->GetGameplayStatics()->SetInputMode(InputMode);
 
 		//Mouse focus mode 
-		UGameplayStatics::SetViewportMouseCaptureMode(DataManager->GameplayStatics, EMouseCaptureMode::NoCapture);
+		UGameplayStatics::SetViewportMouseCaptureMode(DataManager->GetGameplayStatics(), EMouseCaptureMode::NoCapture);
 	}
 	else
 	{
@@ -269,9 +234,9 @@ void UScreenManager::AddMainInterfaceToViewPort()
 
 void UScreenManager::AddLoadingScreenToViewPort()
 {
-	if (DataManager->LoadingScreenReference != nullptr)
+	if (DataManager->GetLoadingScreenReference() != nullptr)
 	{
-		DataManager->LoadingScreenReference->SetVisibility(ESlateVisibility::Visible);
+		DataManager->GetLoadingScreenReference()->SetVisibility(ESlateVisibility::Visible);
 	}
 	else
 	{
@@ -281,23 +246,23 @@ void UScreenManager::AddLoadingScreenToViewPort()
 
 void UScreenManager::RemoveLoadingScreenToParent()
 {
-	if (DataManager->LoadingScreenReference != nullptr)
+	if (DataManager->GetLoadingScreenReference() != nullptr)
 	{
-		DataManager->LoadingScreenReference->SetVisibility(ESlateVisibility::Hidden);
+		DataManager->GetLoadingScreenReference()->SetVisibility(ESlateVisibility::Hidden);
 	}
 }
 
 void UScreenManager::SetToRestartWidgets()
 {
-	DataManager->MainScreenReference->Clear();
-	DataManager->MainScreenReference->SetPlayAnimation(TEXT("AnimationShowConfigurationReverse"));
+	DataManager->GetMainScreenReference()->Clear();
+	DataManager->GetMainScreenReference()->SetPlayAnimation(TEXT("AnimationShowConfigurationReverse"));
 	//MainInterfaceReference->SetPlayAnimation(TEXT("LoadListGameReverse"));
-	DataManager->MainScreenReference->Header->SetFocusButton();
-	DataManager->MainScreenReference->Frame->SetFramePositionWithoutAnimation(1);
+	DataManager->GetMainScreenReference()->Header->SetFocusButton();
+	DataManager->GetMainScreenReference()->Frame->SetFramePositionWithoutAnimation(1);
 	GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &UScreenManager::RestartWidgets, 0.1f, false, DELAY + 1.0f);
 	AddLoadingScreenToViewPort();
 	const FText Message = LOCTEXT("UpdateGame", "Update game wait");
-	DataManager->LoadingScreenReference->ShowMessage(Message);
+	DataManager->GetLoadingScreenReference()->ShowMessage(Message);
 }
 
 void UScreenManager::RestartWidgets()
@@ -307,7 +272,7 @@ void UScreenManager::RestartWidgets()
 
 void UScreenManager::Message(FText Message)
 {
-	DataManager->LoadingScreenReference->ShowMessage(Message);
+	DataManager->GetLoadingScreenReference()->ShowMessage(Message);
 }
 
 #undef LOCTEXT_NAMESPACE

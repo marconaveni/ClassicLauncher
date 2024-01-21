@@ -36,8 +36,8 @@ public:
 	virtual void NativeOnInitialized() override;
 	virtual FReply NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
-	class UMainScreen* MainInterfaceReference;
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
+	class UMainScreen* MainInterfaceReference;*/
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UScrollBoxEnhanced* ScrollBoxOptions;
@@ -129,8 +129,8 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UOptionsLicenceLayout* OptionsLicenceLayout;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
-	class AClassicMediaPlayer* ClassicMediaPlayerReference;
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
+	class AClassicMediaPlayer* ClassicMediaPlayerReference;*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<int32, FText> TitleList;

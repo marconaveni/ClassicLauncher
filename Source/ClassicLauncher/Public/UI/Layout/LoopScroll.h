@@ -70,6 +70,9 @@ private:
 	FTimerHandle MouseScrollTimerHandle;
 
 protected:
+
+	UPROPERTY()
+	class UDataManager* DataManager;
 	
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default|Configurations")
@@ -120,8 +123,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cards")
 	TArray<UCover*> CoverReference;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
-	UMainScreen* MainInterfaceReference;
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
+	UMainScreen* MainInterfaceReference;*/
 	
 protected:
 

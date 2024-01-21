@@ -6,6 +6,7 @@
 #include "UI/Layout/LoopScroll.h"
 #include "UI/Screens/MainScreen.h"
 #include "Components/Image.h"
+#include "Data/DataManager.h"
 
 UFrame::UFrame(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -17,6 +18,7 @@ UFrame::UFrame(const FObjectInitializer& ObjectInitializer)
 void UFrame::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+	DataManager = GetWorld()->GetSubsystem<UDataManager>();
 }
 
 
@@ -54,9 +56,9 @@ void UFrame::SetFramePositionWithoutAnimation(const int32 PositionCenter)
 	ImageFrameTop->SetVisibility(ESlateVisibility::Hidden);
 
 
-	if(LoopScrollReference != nullptr)
+	if(DataManager->GetLoopScrollReference() != nullptr)
 	{
-		const int32 PositionX = LoopScrollReference->GetScrollConfiguration().CardSize * (PositionCenter - 1);
+		const int32 PositionX = DataManager->GetLoopScrollReference()->GetScrollConfiguration().CardSize * (PositionCenter - 1);
 		ImageFrameCenter->SetRenderTranslation(FVector2D(PositionX, 0));
 	}
 }

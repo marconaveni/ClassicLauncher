@@ -35,8 +35,8 @@ void AClassicMediaPlayer::BeginPlay()
 	Super::BeginPlay();
 
 	DataManager = GetWorld()->GetSubsystem<UDataManager>();
-	DataManager->ClassicMediaPlayerReference = this;
-	
+	DataManager->SetClassicMediaPlayerReference(this);
+
 	FString ConfigResult;
 	const FString GameRoot = UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("config\\config.xml");
 
@@ -60,14 +60,14 @@ void AClassicMediaPlayer::BeginPlay()
 // Called every frame
 void AClassicMediaPlayer::Tick(float DeltaTime)
 {
-	if (ClassicPlayerVideo->GetMediaPlayer()->IsPlaying() && MainInterfaceReference != nullptr)
+	if (ClassicPlayerVideo->GetMediaPlayer()->IsPlaying() && IsValid(DataManager->GetMainScreenReference()))
 	{
 		if (DoOnceIsPlayVideo.Execute())
 		{
 			const FIntPoint VideoDimensions = ClassicPlayerVideo->GetMediaPlayer()->GetVideoTrackDimensions(0, 0);
-			FSlateBrush InBrush = MainInterfaceReference->FooterDetails->Video->GetBrush();
+			FSlateBrush InBrush = DataManager->GetMainScreenReference()->FooterDetails->Video->GetBrush();
 			InBrush.SetImageSize(FVector2f(VideoDimensions.X, VideoDimensions.Y));
-			MainInterfaceReference->FooterDetails->Video->SetBrush(InBrush);
+			DataManager->GetMainScreenReference()->FooterDetails->Video->SetBrush(InBrush);
 		}
 	}
 	else
@@ -104,12 +104,12 @@ void AClassicMediaPlayer::PlayMusic(const FString File, const bool bShowMessage)
 	{
 		if (MusicPath.Equals(File)) return;
 
-		if (MainInterfaceReference != nullptr && bShowMessage)
+		if (IsValid(DataManager->GetMainScreenReference()) && bShowMessage)
 		{
 			const FText TextPlayerMusic = FText::FromString(FPaths::GetBaseFilename(File, true));
 			FFormatNamedArguments Args;
 			Args.Add("TextPlayerMusic", TextPlayerMusic);
-			MainInterfaceReference->ShowMessage(FText::Format(LOCTEXT("Play", "Playing {TextPlayerMusic}"), Args), 3.5f);
+			DataManager->GetMainScreenReference()->ShowMessage(FText::Format(LOCTEXT("Play", "Playing {TextPlayerMusic}"), Args), 3.5f);
 		}
 		PauseVideo();
 		MusicPath = File;
@@ -165,9 +165,9 @@ void AClassicMediaPlayer::OnEndMusic()
 
 void AClassicMediaPlayer::OnEndVideo()
 {
-	if (MainInterfaceReference != nullptr)
+	if (IsValid(DataManager->GetMainScreenReference()))
 	{
-		MainInterfaceReference->FooterDetails->SetImage();
+		DataManager->GetMainScreenReference()->FooterDetails->SetImage();
 		UE_LOG(LogTemp, Warning, TEXT("Call Function MainInterface in Classic Media Player"));
 	}
 	ResumeMusic();

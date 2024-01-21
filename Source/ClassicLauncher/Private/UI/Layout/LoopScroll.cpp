@@ -13,6 +13,7 @@
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Scrollbox.h"
+#include "Data/DataManager.h"
 
 
 void ULoopScroll::NativePreConstruct()
@@ -23,6 +24,16 @@ void ULoopScroll::NativePreConstruct()
 void ULoopScroll::NativeConstruct()
 {
 	Super::NativeConstruct();
+}
+
+void ULoopScroll::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+	DataManager = GetWorld()->GetSubsystem<UDataManager>();
+	ScrollConfiguration.ClampValues();
+	SetIsFocusable(true);
+	bIgnoreOffset = false;
+	ConstructCards();
 }
 
 FReply ULoopScroll::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
@@ -86,15 +97,6 @@ FReply ULoopScroll::NativeOnMouseWheel(const FGeometry& InGeometry, const FPoint
 	return Super::NativeOnMouseWheel(InGeometry, InMouseEvent);
 }
 
-void ULoopScroll::NativeOnInitialized()
-{
-	Super::NativeOnInitialized();
-	ScrollConfiguration.ClampValues();
-	SetIsFocusable(true);
-	bIgnoreOffset = false;
-	ConstructCards();
-}
-
 void ULoopScroll::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
@@ -127,9 +129,9 @@ void ULoopScroll::Clear()
 
 void ULoopScroll::PrepareScrollBox()
 {
-	if (MainInterfaceReference != nullptr)
+	if (DataManager->GetMainScreenReference() != nullptr)
 	{
-		MainInterfaceReference->IndexCard = IndexFocusCard;
+		DataManager->IndexGameData = IndexFocusCard;
 	}
 
 	const ESlateVisibility VisibilityCard = (ChildrenCount > ScrollConfiguration.MinimumInfinityCard) ? ESlateVisibility::Visible : ESlateVisibility::Hidden;
@@ -320,10 +322,10 @@ void ULoopScroll::NewDirectionInput(const int32 NewIndex)
 
 bool ULoopScroll::CheckFocus() const
 {
-	if (MainInterfaceReference == nullptr) return true;
-	return !MainInterfaceReference->GetInputEnable() ||
-		MainInterfaceReference->PositionY == EPositionY::BOTTOM ||
-		MainInterfaceReference->Focus != EFocus::MAIN;
+	if (DataManager->GetMainScreenReference() == nullptr) return true;
+	return !DataManager->GetMainScreenReference()->GetInputEnable() ||
+		DataManager->GetMainScreenReference()->PositionY == EPositionY::BOTTOM ||
+		DataManager->GetMainScreenReference()->Focus != EFocus::MAIN;
 }
 
 bool ULoopScroll::IndexFocusRange(int32 Index, int32& NewIndex) const
@@ -341,7 +343,7 @@ void ULoopScroll::OnReleaseCard(int32 Index)
 	int32 NewIndex = 0;
 	if (IndexFocusRange(Index, NewIndex))
 	{
-		MainInterfaceReference->OnClickLaunch();
+		DataManager->GetMainScreenReference()->OnClickLaunch();
 	}
 	else
 	{
@@ -355,15 +357,15 @@ void ULoopScroll::OnHoveredCard(int32 Index)
 	if (IndexFocusRange(Index, NewIndex))
 	{
 		Speed = 0.001f;
-		if (MainInterfaceReference->PositionY == EPositionY::TOP)
+		if (DataManager->GetMainScreenReference()->PositionY == EPositionY::TOP)
 		{
-			MainInterfaceReference->SetNavigationFocusDownBottom();
+			DataManager->GetMainScreenReference()->SetNavigationFocusDownBottom();
 		}
-		else if (MainInterfaceReference->PositionY == EPositionY::BOTTOM)
+		else if (DataManager->GetMainScreenReference()->PositionY == EPositionY::BOTTOM)
 		{
-			MainInterfaceReference->SetNavigationFocusUpBottom();
+			DataManager->GetMainScreenReference()->SetNavigationFocusUpBottom();
 		}
-		else if(MainInterfaceReference->PositionY == EPositionY::CENTER && MainInterfaceReference->GetInputEnable())
+		else if(DataManager->GetMainScreenReference()->PositionY == EPositionY::CENTER && DataManager->GetMainScreenReference()->GetInputEnable())
 		{
 			SetFocus();
 			NewDirectionInput(NewIndex);

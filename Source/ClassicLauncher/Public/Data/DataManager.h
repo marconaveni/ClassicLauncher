@@ -30,34 +30,26 @@ protected:
 	virtual void Deinitialize() override;
 	virtual bool DoesSupportWorldType(EWorldType::Type WorldType) const override;
 
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataManager|Game")
-	APlayerController* GameplayStatics;
+private:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataManager|Game")
-	UClassicGameInstance* ClassicGameInstance;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataManager|Subclass")
-	TSubclassOf<UMainScreen> MainScreenClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataManager|Subclass")
-	TSubclassOf<ULoadingScreen> LoadingScreenClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataManager|References")
+	UPROPERTY()
 	UMainScreen* MainScreenReference;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataManager|References")
+	UPROPERTY()
 	ULoadingScreen* LoadingScreenReference;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataManager|References")
+	UPROPERTY()
 	AClassicMediaPlayer* ClassicMediaPlayerReference;
 
+public:
+	
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataManager|GameData")
 	TArray<FGameData> GameData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataManager|GameData")
 	TArray<FGameSystem> GameSystems;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataManager|GameData")
 	FConfig ConfigurationData;
 
@@ -67,8 +59,33 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataManager|GameData")
 	int32 IndexGameSystem;
 
+	UFUNCTION(BlueprintPure, Category = "DataManager|DataData|Getters")
+	FGameData GetGameData(int32 Index = -1) const;
+
+	UFUNCTION(BlueprintPure, Category = "DataManager|DataData|Getters")
+	FGameSystem GetGameSystem(int32 Index = -1) const;
+
+	UFUNCTION(BlueprintPure, Category = "DataManager|DataData|Getters")
+	FGameData GetGameSystemGameData(int32 Index = -1) const;
+
+private:
+	
+	UFUNCTION()
+	bool Save();
+
+public:
+	
+	UFUNCTION(BlueprintCallable, Category = "DataManager|Save")
+	void SetCountPlayerToSave();
+
+	UFUNCTION(BlueprintCallable, Category = "DataManager|Save")
+	void SetFavoriteToSave();
+	
 	UFUNCTION(BlueprintCallable, Category = "DataManager|Functions")
-	void CreateWidgets();
+	void CreateWidgets(TSubclassOf<UMainScreen> MainScreenClass, TSubclassOf<class ULoadingScreen> LoadingScreenClass);
+
+	UFUNCTION(BlueprintPure, Category = "DataManager|Getters")
+	APlayerController* GetGameplayStatics() const;
 
 	UFUNCTION(BlueprintPure, Category = "DataManager|Getters")
 	UClassicGameInstance* GetClassicGameInstance() const;
@@ -89,20 +106,13 @@ public:
 	UFrame* GetFrameReference() const;
 
 	UFUNCTION(BlueprintCallable, Category = "DataManager|Setters")
-	void SetClassicGameInstance(UPARAM(ref) UClassicGameInstance*& ClassicGameInstanceRef);
+	void SetClassicMediaPlayerReference(AClassicMediaPlayer* ClassicMediaPlayerRef);
 
 	UFUNCTION(BlueprintCallable, Category = "DataManager|Setters")
-	void SetClassicMediaPlayerReference(UPARAM(ref) AClassicMediaPlayer*& ClassicMediaPlayerRef);
+	void SetLoadingScreenReference(ULoadingScreen* LoadingScreenRef);
 
 	UFUNCTION(BlueprintCallable, Category = "DataManager|Setters")
-	void SetLoadingScreenReference(UPARAM(ref) ULoadingScreen*& LoadingScreenRef);
-
-	UFUNCTION(BlueprintCallable, Category = "DataManager|Setters")
-	void SetMainScreenReference(UPARAM(ref) UMainScreen*& MainScreenRef);
-
-	UFUNCTION(BlueprintCallable, Category = "DataManager|Setters")
-	void SetLoopScrollReference(UPARAM(ref) ULoopScroll*& LoopScrollRef);
-
-	UFUNCTION(BlueprintCallable, Category = "DataManager|Setters")
-	void SetFrameReference(UPARAM(ref) UFrame*& FrameReferenceRef);
+	void SetMainScreenReference(UMainScreen* MainScreenRef);
+	
 };
+
