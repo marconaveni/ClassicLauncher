@@ -2,11 +2,14 @@
 
 
 #include "Audio/ClassicMediaPlayer.h"
+
+#include "RuntimeAudioImporterLibrary.h"
 #include "Runtime/MediaAssets/Public/MediaSoundComponent.h"
 #include "Runtime/MediaAssets/Public/MediaPlayer.h"
 #include "FunctionLibrary/ClassicFunctionLibrary.h"
 #include "UI/Screens/MainScreen.h"
 #include "Components/Image.h"
+#include "Data/DataManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/Layout/FooterDetails.h"
 
@@ -15,7 +18,6 @@
 // Sets default values
 AClassicMediaPlayer::AClassicMediaPlayer()
 {
-	
 	ClassicPlayerMusic = CreateDefaultSubobject<UMediaSoundComponent>(TEXT("Classic Music Media Player"));
 	ClassicPlayerVideo = CreateDefaultSubobject<UMediaSoundComponent>(TEXT("Classic Video Media Player"));
 
@@ -25,13 +27,15 @@ AClassicMediaPlayer::AClassicMediaPlayer()
 
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // Called when the game starts or when spawned
 void AClassicMediaPlayer::BeginPlay()
 {
 	Super::BeginPlay();
+
+	DataManager = GetWorld()->GetSubsystem<UDataManager>();
+	DataManager->ClassicMediaPlayerReference = this;
 	
 	FString ConfigResult;
 	const FString GameRoot = UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("config\\config.xml");
@@ -56,7 +60,6 @@ void AClassicMediaPlayer::BeginPlay()
 // Called every frame
 void AClassicMediaPlayer::Tick(float DeltaTime)
 {
-
 	if (ClassicPlayerVideo->GetMediaPlayer()->IsPlaying() && MainInterfaceReference != nullptr)
 	{
 		if (DoOnceIsPlayVideo.Execute())
@@ -99,7 +102,7 @@ void AClassicMediaPlayer::PlayMusic(const FString File, const bool bShowMessage)
 {
 	if (ClassicPlayerMusic->GetMediaPlayer()->CanPlayUrl(File))
 	{
-		if(MusicPath.Equals(File)) return;
+		if (MusicPath.Equals(File)) return;
 
 		if (MainInterfaceReference != nullptr && bShowMessage)
 		{
@@ -211,5 +214,77 @@ int32 AClassicMediaPlayer::GetVideoVolume() const
 {
 	return VideoVolume;
 }
+
+bool AClassicMediaPlayer::CreateRuntimeAudioImporter(URuntimeAudioImporterLibrary*& RuntimeAudioImporter)
+{
+	RuntimeAudioImporter = URuntimeAudioImporterLibrary::CreateRuntimeAudioImporter();
+
+	if (!IsValid(RuntimeAudioImporter))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to create audio importer"));
+		return false;
+	}
+	return true;
+}
+
+void AClassicMediaPlayer::ImportAudioClick(FString Path, FOnAudioFinalize Out)
+{
+	if (!CreateRuntimeAudioImporter(RuntimeAudioImporterClick)) return;
+
+	RuntimeAudioImporterClick->OnResultNative.AddWeakLambda(this, [this, Out](URuntimeAudioImporterLibrary* Importer, UImportedSoundWave* ImportedSoundWave, ERuntimeImportStatus Status)
+	{
+		if (Status == ERuntimeImportStatus::SuccessfulImport)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Successfully imported audio with sound wave %s"), *ImportedSoundWave->GetName());
+			ClickSound = ImportedSoundWave;
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Failed to import audio"));
+			ClickSound = DefaultClickSound;
+		}
+		if (Out.IsBound())
+		{
+			Out.Execute();
+		}
+		RuntimeAudioImporterClick = nullptr;
+	});
+
+	RuntimeAudioImporterClick->ImportAudioFromFile(Path, ERuntimeAudioFormat::Auto);
+}
+
+void AClassicMediaPlayer::ImportAudioCursor(FString Path, FOnAudioFinalize Out)
+{
+	if (!CreateRuntimeAudioImporter(RuntimeAudioImporterCursor)) return;
+
+	RuntimeAudioImporterCursor->OnResultNative.AddWeakLambda(this, [this, Out](URuntimeAudioImporterLibrary* Importer, UImportedSoundWave* ImportedSoundWave, ERuntimeImportStatus Status)
+	{
+		if (Status == ERuntimeImportStatus::SuccessfulImport)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Successfully imported audio with sound wave %s"), *ImportedSoundWave->GetName());
+			CursorSound = ImportedSoundWave;
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Failed to import audio"));
+			CursorSound = DefaultCursorSound;
+		}
+		if (Out.IsBound())
+		{
+			Out.Execute();
+		}
+
+		RuntimeAudioImporterCursor = nullptr;
+	});
+
+	RuntimeAudioImporterCursor->ImportAudioFromFile(Path, ERuntimeAudioFormat::Auto);
+}
+
+void AClassicMediaPlayer::GetSounds(USoundBase*& SoundCursor, USoundBase*& SoundClick) const
+{
+	SoundCursor = CursorSound;
+	SoundClick = ClickSound;
+}
+
 
 #undef LOCTEXT_NAMESPACE

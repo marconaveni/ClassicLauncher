@@ -132,7 +132,7 @@ void UScrollBoxEnhanced::SetIconArrow()
 void UScrollBoxEnhanced::SetContent(UWidget* Content)
 {
 	VerticalBoxContent->AddChild(Content);
-	BindButtonsScroll();
+	BindButton(Content);
 }
 
 void UScrollBoxEnhanced::BindButton(UWidget* Content)

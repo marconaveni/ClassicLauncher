@@ -146,9 +146,6 @@ public:
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Strings")
 	static FString HomeDirectoryReplace(FString Directory);
 
-	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Strings", Meta = (ReturnDisplayName = "Core Found"))
-	static bool SwitchOnDefaultLibreto(FString Core, FString& CoreFormated, bool& CanUnzip);
-
 	/**
 	*Replace relative media path
 	*

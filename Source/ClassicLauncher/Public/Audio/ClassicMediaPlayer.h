@@ -7,19 +7,24 @@
 #include "GameFramework/Actor.h"
 #include "ClassicMediaPlayer.generated.h"
 
+class URuntimeAudioImporterLibrary;
+
+DECLARE_DYNAMIC_DELEGATE(FOnAudioFinalize);
 
 UCLASS()
 class CLASSICLAUNCHER_API AClassicMediaPlayer : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AClassicMediaPlayer();
 
 protected:
-	
 
+	UPROPERTY()
+	class UDataManager* DataManager;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
 	class USoundClass* MasterSound;
 
@@ -42,7 +47,7 @@ protected:
 	FString MediaPath;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Media|Variables")
-    TArray<FString> MediaFiles;
+	TArray<FString> MediaFiles;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Media|Variables")
 	int32 Random;
@@ -65,7 +70,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Reference")
 	class UMainScreen* MainInterfaceReference;
 
@@ -116,7 +121,38 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Media|Functions")
 	int32 GetMusicVolume() const;
-	
+
 	UFUNCTION(BlueprintPure, Category = "Media|Functions")
 	int32 GetVideoVolume() const;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Media|Variables")
+	USoundBase* DefaultCursorSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Media|Variables")
+	USoundBase* DefaultClickSound;
+
+	UFUNCTION(BlueprintCallable, Category = "Media|Functions")
+	void ImportAudioClick(FString Path, FOnAudioFinalize Out);
+
+	UFUNCTION(BlueprintCallable, Category = "Media|Functions")
+	void ImportAudioCursor(FString Path, FOnAudioFinalize Out);
+
+	UFUNCTION(BlueprintPure, Category = "Media|Functions")
+	void GetSounds(USoundBase*& SoundCursor, USoundBase*& SoundClick) const;
+
+private:
+	UFUNCTION()
+	bool CreateRuntimeAudioImporter(URuntimeAudioImporterLibrary*& RuntimeAudioImporter);
+
+	UPROPERTY()
+	URuntimeAudioImporterLibrary* RuntimeAudioImporterClick;
+
+	UPROPERTY()
+	URuntimeAudioImporterLibrary* RuntimeAudioImporterCursor;
+
+	UPROPERTY()
+	USoundBase* CursorSound;
+
+	UPROPERTY()
+	USoundBase* ClickSound;
 };

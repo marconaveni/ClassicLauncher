@@ -16,12 +16,11 @@ public class ClassicLauncher : ModuleRules
 
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" , "UMG" , "MediaAssets", "TextImageBox" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "EasyXMLParser"});
+		// third plugins  
+		PrivateDependencyModuleNames.AddRange(new string[] { "EasyXMLParser" , "RuntimeAudioImporter" });
 
 		// Uncomment if you are using Slate UI
 		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
-
-
 		PrivateDependencyModuleNames.AddRange(new string[] { "RHI", "ImageWrapper", "RenderCore", "ImageCore", "FreeImage", "HTTP" });	
 
 		

@@ -16,7 +16,6 @@ enum class EGamesFilter : uint8
 /**
  *
  */
-//Use USTRUCT(BlueprintType) if you would like to include your Struct in Blueprints "i really like the blueprints integration with c++"
 USTRUCT(BlueprintType)
 struct FGameData
 {

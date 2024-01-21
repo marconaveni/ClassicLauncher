@@ -96,6 +96,21 @@ void UMainScreen::NativeConstruct()
 	Super::NativeConstruct();
 }
 
+void UMainScreen::SetReferences()
+{
+	for (TActorIterator<AClassicMediaPlayer> ActorIterator(GetWorld()); ActorIterator; ++ActorIterator)
+	{
+		ClassicMediaPlayerReference = *ActorIterator;
+		UE_LOG(LogTemp, Warning, TEXT("Reference AClassicMediaPlayer Founds: %s "), *ClassicMediaPlayerReference->GetName());
+	}
+
+	ClassicMediaPlayerReference->MainInterfaceReference = this;
+	Options->ClassicMediaPlayerReference = ClassicMediaPlayerReference;
+	Options->MainInterfaceReference = this;
+	LoopScroll->MainInterfaceReference = this;
+	Frame->LoopScrollReference = LoopScroll;
+}
+
 void UMainScreen::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
@@ -107,16 +122,8 @@ void UMainScreen::NativeOnInitialized()
 	Header->OnLostFocusDelegate.AddDynamic(this, &UMainScreen::OnLostFocusHeader);
 	LoopScroll->OnCardClick.AddDynamic(this, &UMainScreen::OnClickLaunch);
 	
-	for (TActorIterator<AClassicMediaPlayer> ActorIterator(GetWorld()); ActorIterator; ++ActorIterator)
-	{
-		ClassicMediaPlayerReference = *ActorIterator;
-		UE_LOG(LogTemp, Warning, TEXT("Reference AClassicMediaPlayer Founds: %s "), *ClassicMediaPlayerReference->GetName());
-	}
-
-	WBPFrame->LoopScrollReference = LoopScroll;
-	ClassicMediaPlayerReference->MainInterfaceReference = this;
-	LoopScroll->MainInterfaceReference = this;
 	CanvasPanelScreen->SetRenderOpacity(0);
+	SetReferences();
 }
 
 void UMainScreen::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -166,7 +173,7 @@ void UMainScreen::LoadGamesList()
 	Header->EnableButtonsHeader(CountSystem);
 	if (CountSystem == 0)
 	{
-		WBPFrame->FrameIndexTop = 1;
+		Frame->FrameIndexTop = 1;
 		if (GEngine)
 		{
 			GEngine->ForceGarbageCollection(true);
@@ -197,7 +204,6 @@ void UMainScreen::ShowGames()
 	SetPlayAnimation(TEXT("LoadListGame"));
 	PrepareThemes();
 	GameMode->LoadingGameData->RemoveLoadingScreenToParent();
-	//OnShowGames(); //BlueprintImplementableEvent
 	SetInputEnable(true);
 }
 
@@ -345,7 +351,7 @@ void UMainScreen::NavigationConfiguration(EButtonsGame Input)
 	{
 		CancelDelay();
 	}
-	WBPClassicConfigurationsInterface->SetFocusOptionsItem(Input);
+	Options->SetFocusOptionsItem(Input);
 }
 
 void UMainScreen::SetNavigationFocusUpBottom()
@@ -483,7 +489,7 @@ void UMainScreen::OnClickSystem(int32 Value)
 			PositionY = EPositionY::CENTER;
 			LoopScroll->SetFocus();
 			SetButtonsIconInterfaces(PositionY);
-			WBPFrame->SetFramePositionWithoutAnimation(WBPFrame->FrameIndexCenter);
+			Frame->SetFramePositionWithoutAnimation(Frame->FrameIndexCenter);
 			SetPlayAnimation(TEXT("ShowSystemReverse"));
 			Header->SetFocusButton();
 			return;
@@ -641,7 +647,7 @@ void UMainScreen::Clear()
 
 void UMainScreen::SetHeaderButtonFocus()
 {
-	const int32 Index = WBPFrame->FrameIndexTop;
+	const int32 Index = Frame->FrameIndexTop;
 	Header->SetFocusButton(Index, true);
 	ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas = GameDataIndex;
 	if (Index == 4)
@@ -671,8 +677,8 @@ void UMainScreen::OnFocusHeader(int32 Index)
 		PositionY = EPositionY::TOP;
 		ToolTips->OnFocus(Index);
 		Header->AnimationFocus(true);
-		WBPFrame->FrameIndexTop = Index;
-		WBPFrame->SetFramePositionWithAnimation(PositionY);
+		Frame->FrameIndexTop = Index;
+		Frame->SetFramePositionWithAnimation(PositionY);
 		SetButtonsIconInterfaces(PositionY);
 		ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas = GameDataIndex;
 		if (Index == 4)
@@ -681,7 +687,7 @@ void UMainScreen::OnFocusHeader(int32 Index)
 		}
 	}
 	if (Index == 0) return;
-	ToolTips->OnFocus(WBPFrame->FrameIndexTop);
+	ToolTips->OnFocus(Frame->FrameIndexTop);
 }
 
 void UMainScreen::OnLostFocusHeader(int32 Index)
@@ -701,7 +707,7 @@ void UMainScreen::OnClickConfigurations()
 {
 	Focus = EFocus::CONFIG;
 	SetPlayAnimation(TEXT("AnimationShowConfiguration"));
-	WBPClassicConfigurationsInterface->SetFocusOptionsItem(EButtonsGame::NONE);
+	Options->SetFocusOptionsItem(EButtonsGame::NONE);
 }
 
 void UMainScreen::OnClickFavorites()
@@ -801,10 +807,10 @@ void UMainScreen::SetFrame()
 {
 	if (PositionY == EPositionY::TOP)
 	{
-		WBPFrame->SetIndexTop(InputLastPressed, CountSystem);
+		Frame->SetIndexTop(InputLastPressed, CountSystem);
 		SetHeaderButtonFocus();
 	}
-	WBPFrame->SetFramePositionWithAnimation(PositionY);
+	Frame->SetFramePositionWithAnimation(PositionY);
 }
 
 void UMainScreen::CloseMenus()
@@ -819,9 +825,9 @@ void UMainScreen::CloseMenus()
 	else if (Focus == EFocus::CONFIG)
 	{
 		InputLastPressed = EButtonsGame::NONE;
-		if (WBPClassicConfigurationsInterface->WSScreens->GetActiveWidgetIndex())
+		if (Options->WSScreens->GetActiveWidgetIndex())
 		{
-			WBPClassicConfigurationsInterface->CloseModal();
+			Options->CloseModal();
 		}
 		else
 		{

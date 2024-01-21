@@ -124,13 +124,13 @@ public:
 	UGameListLayout* WBPSystemsList;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UOptionsLayout* WBPClassicConfigurationsInterface;
+	UOptionsLayout* Options;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UButtonsPrompt* WBPButtonsIconsInterfaces;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UFrame* WBPFrame;
+	UFrame* Frame;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UToolTipsLayout* ToolTips;
@@ -171,8 +171,18 @@ protected:
 	virtual FReply NativeOnMouseWheel(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 
 public:
+	
+	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
+	void SetReferences();
+	
 	//variables
 
+
+
+
+
+
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	TArray<FGameData> GameData;
 
@@ -188,18 +198,23 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	int32 IndexCard;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	int32 ProcessID;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	FMultiInput MultiInput;
+
+
+
+	
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	EPositionY PositionY;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	EFocus Focus;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	int32 ProcessID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	FMultiInput MultiInput;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	bool bUpDownPressed;
@@ -273,9 +288,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnLoadGamesList();
-
-	/*UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void LoadImages(const EButtonsGame Input, UPARAM(ref) TArray<FGameData>& Data, const int32 DistanceIndex = 15);*/
+	
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnLoadImages(const int32& Index, const FString& Path);

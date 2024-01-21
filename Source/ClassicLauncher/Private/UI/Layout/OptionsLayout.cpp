@@ -3,7 +3,6 @@
 
 #include "UI/Layout/OptionsLayout.h"
 #include "UI/Screens/MainScreen.h"
-#include "EngineUtils.h"
 #include "UI/Components/ButtonSlide.h"
 #include "Components/WidgetSwitcher.h"
 #include "Audio/ClassicMediaPlayer.h"
@@ -15,6 +14,7 @@
 #include "Engine/World.h"
 #include "FunctionLibrary/ClassicFunctionLibrary.h"
 #include "TextImageBlock.h"
+#include "Data/DataManager.h"
 #include "Kismet/KismetInternationalizationLibrary.h"
 #include "UI/Components/ButtonCheckBox.h"
 #include "UI/Layout/Header.h"
@@ -35,6 +35,8 @@ void UOptionsLayout::NativeOnInitialized()
 	Super::NativeOnInitialized();
 	SetIsFocusable(true);
 
+	DataManager = GetWorld()->GetSubsystem<UDataManager>();
+
 	SlideVolumeSystem->OnSlideTrigger.AddDynamic(this, &UOptionsLayout::OnSlideVolumeMaster);
 	SlideVolumeSystem->OnFocusLostTriggerSlide.AddDynamic(this, &UOptionsLayout::OnSlideLostFocus);
 	SlideVolumeMusic->OnSlideTrigger.AddDynamic(this, &UOptionsLayout::OnSlideVolumeMusic);
@@ -52,26 +54,19 @@ void UOptionsLayout::NativeOnInitialized()
 	BtnEnglish->OnClickTrigger.AddDynamic(this, &UOptionsLayout::OnClickChangeLanguage);
 	BtnPortuguese->OnClickTrigger.AddDynamic(this, &UOptionsLayout::OnClickChangeLanguage);
 
-	for (TObjectIterator<UMainScreen> ObjectIterator; ObjectIterator; ++ObjectIterator)
-	{
-		if (ObjectIterator->GetWorld() != GetWorld())
-		{
-			continue;
-		}
-		MainInterfaceReference = *ObjectIterator;
-		UE_LOG(LogTemp, Warning, TEXT("Reference UMainInterface Founds: %s "), *MainInterfaceReference->GetName());
-	}
-	for (TActorIterator<AClassicMediaPlayer> ActorIterator(GetWorld()); ActorIterator; ++ActorIterator)
-	{
-		ClassicMediaPlayerReference = *ActorIterator;
-		UE_LOG(LogTemp, Warning, TEXT("Reference AClassicMediaPlayer classicconfigurations Founds: %s "), *ClassicMediaPlayerReference->GetName());
-	}
-	
+	SetFolderThemes();
 }
 
 FReply UOptionsLayout::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
 	return Super::NativeOnPreviewKeyDown(InGeometry, InKeyEvent);
+}
+
+void UOptionsLayout::SetSlide(FConfig& Configuration)
+{
+	SlideVolumeSystem->SetSlideValue(FMath::Clamp(Configuration.VolumeMaster, 0, 100));
+	SlideVolumeMusic->SetSlideValue(FMath::Clamp(Configuration.VolumeMusic, 0, 100));
+	SlideVolumeVideo->SetSlideValue(FMath::Clamp(Configuration.VolumeVideo, 0, 100));
 }
 
 void UOptionsLayout::OnSlideVolumeMaster(int32 Value)
@@ -123,7 +118,7 @@ void UOptionsLayout::OnSlideLostFocus()
 		Config.VolumeVideo = ClassicMediaPlayerReference->GetVideoVolume();
 		bSave = true;
 	}
-	
+
 	if (bSave)
 	{
 		MainInterfaceReference->ConfigurationData = Config;
@@ -215,7 +210,7 @@ void UOptionsLayout::OnClickChangeLanguage(int32 Value)
 		UKismetInternationalizationLibrary::SetCurrentCulture(TEXT("pt-BR"), true);
 		GetLanguageText(true);
 	}
-	
+
 	for (TObjectIterator<UTextImageBlock> ObjectIterator; ObjectIterator; ++ObjectIterator)
 	{
 		if (ObjectIterator->GetWorld() != GetWorld())
@@ -267,7 +262,6 @@ void UOptionsLayout::RestartMap()
 	GameMode->LoadingGameData->SetToRestartWidgets();
 }
 
-
 bool UOptionsLayout::GetScrollBoxEnhancedWidgetSwitcherIndex(UScrollBoxEnhanced*& Scroll) const
 {
 	switch (WSScreens->GetActiveWidgetIndex())
@@ -294,6 +288,41 @@ void UOptionsLayout::SetActiveWidgetIndex(int32 Index)
 	{
 		Modal->SetTitleText(*NewTitle);
 	}
+}
+
+void UOptionsLayout::SetFolderThemes()
+{
+	if (ButtonCommonClass != nullptr)
+	{
+		FoldersThemes.Empty();
+		const FString FullFilePath = UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("themes");
+		UE_LOG(LogTemp,Warning ,TEXT("folder %s") , *FullFilePath);
+		UClassicFunctionLibrary::GetFolders(FoldersThemes, FullFilePath);
+
+		for (int32 i = 0; i < FoldersThemes.Num(); i++)
+		{
+			UButtonCommon* ButtonThemes = CreateWidget<UButtonCommon>(GetOwningPlayer(), ButtonCommonClass);
+			ButtonThemes->OnClickTrigger.AddDynamic(this, &UOptionsLayout::OnTheme);
+			ButtonThemes->SetText(FText::FromString(FoldersThemes[i]));
+			ScrollBoxThemes->SetContent(ButtonThemes);
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ButtonCommonClass Not Found"));
+	}
+}
+
+void UOptionsLayout::OnTheme(int32 Value)
+{
+	if(!FoldersThemes.IsValidIndex(Value)) return;
+	
+	UE_LOG(LogTemp, Warning, TEXT("theme name %s"), *FoldersThemes[Value]);
+}
+
+TArray<FString> UOptionsLayout::GetFoldersThemes()
+{
+	return FoldersThemes;
 }
 
 #undef LOCTEXT_NAMESPACE

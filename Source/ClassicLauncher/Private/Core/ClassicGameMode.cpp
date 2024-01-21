@@ -16,7 +16,7 @@ void AClassicGameMode::Init()
 {
 	LoadingGameData = NewObject<UScreenManager>(this, UScreenManager::StaticClass(), FName("Data"));
 	LoadingGameData->Init(MainInterfaceClass, LoadingScreenClass);
-	LoadingGameData->CreateWidgets();
+	//LoadingGameData->CreateWidgets();
 	LoadingGameData->AddLoadingScreenToViewPort();
 	LoadingGameData->LoadConfiguration();
 	GameSettingsInit();

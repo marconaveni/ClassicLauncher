@@ -23,34 +23,37 @@ protected:
 	FMessageDelegate MessageShow;
 
 	UPROPERTY()
+	class UDataManager* DataManager;
+
+	/*UPROPERTY()
 	TSubclassOf<class UMainScreen> MainInterfaceClass;
 
 	UPROPERTY()
-	TSubclassOf<class ULoadingScreen> LoadingScreenClass;
+	TSubclassOf<class ULoadingScreen> LoadingScreenClass;*/
 
-	UPROPERTY()
-	class UMainScreen* MainInterfaceReference;
+	//UPROPERTY()
+	//class UMainScreen* MainScreenReference;
 
-	UPROPERTY()
-	class ULoadingScreen* LoadingScreenReference;
+	//UPROPERTY()
+	//class ULoadingScreen* LoadingScreenReference;
 
-	UPROPERTY()
-	TArray<FGameData> GameData;
+	/*UPROPERTY()
+	TArray<FGameData> GameData;*/
 
-	UPROPERTY()
-	TArray<FGameSystem>Systems;
+	/*UPROPERTY()
+	TArray<FGameSystem>GameSystems;*/
 
-	UPROPERTY()
-	FConfig ConfigurationData;
+	/*UPROPERTY()
+	FConfig ConfigurationData;*/
 
-	UPROPERTY()
-	APlayerController* GameplayStatics;
+	/*UPROPERTY()
+	APlayerController* GameplayStatics;*/
 
-	UPROPERTY()
-	class UClassicGameInstance* ClassicGameInstance;
+	/*UPROPERTY()
+	class UClassicGameInstance* ClassicGameInstance;*/
 
-	UPROPERTY()
-	int32 CountSystem;
+	/*UPROPERTY()
+	int32 IndexGameSystem;*/
 
 	UPROPERTY()
 	FTimerHandle DelayTimerHandle;
@@ -61,8 +64,8 @@ public:
 
 	void Init(TSubclassOf<class UMainScreen> MainInterface, TSubclassOf<class ULoadingScreen> LoadingScreen);
 
-	UFUNCTION()
-	void CreateWidgets();
+	/*UFUNCTION()
+	void CreateWidgets();*/
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void LoadConfiguration();

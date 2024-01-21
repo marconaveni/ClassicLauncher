@@ -19,7 +19,16 @@ class CLASSICLAUNCHER_API UOptionsLayout : public UUserWidget
 {
 	GENERATED_BODY()
 
+protected:
+
+	UPROPERTY()
+	class UDataManager* DataManager;
+
 public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
+	TSubclassOf<UButtonCommon> ButtonCommonClass;
+	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UModal* Modal;
 
@@ -127,6 +136,9 @@ public:
 	TMap<int32, FText> TitleList;
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
+	void SetSlide(FConfig& Configuration);
+	
+	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void OnSlideVolumeMaster(int32 Value);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
@@ -177,15 +189,25 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void RestartMap();
 
+	UFUNCTION(BlueprintPure, Category = "ClassicConfigurations|Funtions")
+	TArray<FString> GetFoldersThemes();
+
 protected:
 
-
+	UPROPERTY()
+	TArray<FString> FoldersThemes;
 	
 	UFUNCTION()
 	bool GetScrollBoxEnhancedWidgetSwitcherIndex(UScrollBoxEnhanced*& Scroll) const;
 
 	UFUNCTION()
 	void SetActiveWidgetIndex(int32 Index);
+
+	UFUNCTION()
+	void SetFolderThemes();
+	
+	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
+	void OnTheme(int32 Value);
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicConfigurations|Timers")
 	FTimerHandle RestartMapTimerHandle;

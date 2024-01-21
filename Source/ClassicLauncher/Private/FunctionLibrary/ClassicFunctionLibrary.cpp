@@ -220,44 +220,7 @@ FString UClassicFunctionLibrary::HomeDirectoryReplace(FString Directory)
 	return Directory.Replace(TEXT("$(home)"), *RootDirectory, ESearchCase::IgnoreCase);
 }
 
-bool UClassicFunctionLibrary::SwitchOnDefaultLibreto(FString Core, FString& CoreFormated, bool& CanUnzip)
-{
-	CanUnzip = true;
-	if (Core == TEXT("$(fbneo_libretro.dll)")) {
-		CoreFormated = CoreReplace(Core); CanUnzip = false;
-	}
-	else if (Core == TEXT("$(gearboy_libretro.dll)")) {
-		CoreFormated = CoreReplace(Core);
-	}
-	else if (Core == TEXT("$(genesis_plus_gx_libretro.dll)")) {
-		CoreFormated = CoreReplace(Core);
-	}
-	else if (Core == TEXT("$(mame2003_libretro.dll)")) {
-		CoreFormated = CoreReplace(Core); CanUnzip = false;
-	}
-	else if (Core == TEXT("$(mupen64plus_next_libretro.dll)")) {
-		CoreFormated = CoreReplace(Core);
-	}
-	else if (Core == TEXT("$(nestopia_libretro.dll)")) {
-		CoreFormated = CoreReplace(Core);
-	}
-	else if (Core == TEXT("$(smsplus_libretro.dll)")) {
-		CoreFormated = CoreReplace(Core);
-	}
-	else if (Core == TEXT("$(snes9x_libretro.dll)")) {
-		CoreFormated = CoreReplace(Core);
-	}
-	else if (Core == TEXT("$(stella_libretro.dll)")) {
-		CoreFormated = CoreReplace(Core);
-	}
-	else if (Core == TEXT("$(vbam_libretro.dll)")) {
-		CoreFormated = CoreReplace(Core);
-	}
-	else {
-		return false;
-	}
-	return true;
-}
+
 
 /**
 *Replace relative media path
