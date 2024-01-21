@@ -9,7 +9,6 @@
 #include "FunctionLibrary/ClassicFunctionLibrary.h"
 #include "Core/ClassicGameinstance.h"
 #include "Core/ClassicGameMode.h"
-#include "Core/ClassicSaveGame.h"
 #include "Core/ScreenManager.h"
 #include "UI/Layout/ButtonsPrompt.h"
 #include "UI/Layout/MoreInformationsLayout.h"
@@ -169,7 +168,6 @@ void UMainScreen::ExternRunApp()
 
 void UMainScreen::LoadGamesList()
 {
-	TArray<FGameSystem>Systems = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave;
 	Header->EnableButtonsHeader(CountSystem);
 	if (CountSystem == 0)
 	{
@@ -181,20 +179,20 @@ void UMainScreen::LoadGamesList()
 	}
 
 	int32 NumFavorites = 0;
-	GameData = UClassicFunctionLibrary::FilterGameData(Systems[CountSystem].GameDatas, Systems[CountSystem].Positions.OrderBy, NumFavorites);
-	if (NumFavorites == 0 && Systems[CountSystem].Positions.OrderBy != EGamesFilter::DEFAULT)
+	GameData = UClassicFunctionLibrary::FilterGameData(GameSystems[CountSystem].GameDatas, GameSystems[CountSystem].Positions.OrderBy, NumFavorites);
+	if (NumFavorites == 0 && GameSystems[CountSystem].Positions.OrderBy != EGamesFilter::DEFAULT)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Retry load filter game data with order default"));
-		Systems[CountSystem].Positions.DefaultValues();
-		GameData = UClassicFunctionLibrary::FilterGameData(Systems[CountSystem].GameDatas, Systems[CountSystem].Positions.OrderBy, NumFavorites);
+		GameSystems[CountSystem].Positions.DefaultValues();
+		GameData = UClassicFunctionLibrary::FilterGameData(GameSystems[CountSystem].GameDatas, GameSystems[CountSystem].Positions.OrderBy, NumFavorites);
 	}
 
 	if (GameData.Num() > 0)
 	{
-		ClassicGameInstance->SetSystemSave(Systems);
 		ConfigurationData.DefaultStartSystem = FString::FromInt(CountSystem);
 		UClassicFunctionLibrary::SaveConfig(ConfigurationData);
-		GameDataIndex = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas;
+		GameDataIndex = GameSystems[CountSystem].GameDatas;
+		ClassicGameInstance->SaveGameSystem(GameSystems);
 		OnLoadGamesList();
 	}
 }
@@ -421,7 +419,7 @@ void UMainScreen::OnClickLaunch()
 		LoopScroll->OpenCard();
 		if (CountSystem == 0)
 		{
-			ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas = GameDataIndex;
+			GameSystems[CountSystem].GameDatas = GameDataIndex;
 			SetLastPositions(false);
 			GetWorld()->GetTimerManager().SetTimer(LauncherTimerHandle, [&]()
 			{
@@ -529,21 +527,21 @@ void UMainScreen::SetCountPlayerToSave()
 {
 	int32 Find;
 
-	if (UClassicFunctionLibrary::FindGameData(ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas, GameData[IndexCard], Find))
+	if (UClassicFunctionLibrary::FindGameData(GameSystems[CountSystem].GameDatas, GameData[IndexCard], Find))
 	{
 		// Find = return inline found index
-		ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas[Find].playcount++;
-		ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas[Find].lastplayed = UClassicFunctionLibrary::FormatDateToXml();
+		GameSystems[CountSystem].GameDatas[Find].playcount++;
+		GameSystems[CountSystem].GameDatas[Find].lastplayed = UClassicFunctionLibrary::FormatDateToXml();
 
 		GameData[IndexCard].playcount++;
 		GameData[IndexCard].lastplayed = UClassicFunctionLibrary::FormatDateToXml();
 		GameDataIndex[Find].playcount++;
 		GameDataIndex[Find].lastplayed = GameData[IndexCard].lastplayed;
 
-		FString Path = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].RomPath;
-		UClassicFunctionLibrary::SaveGameListXML(Path, ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas);
+		FString Path = GameSystems[CountSystem].RomPath;
+		UClassicFunctionLibrary::SaveGameListXML(Path, GameSystems[CountSystem].GameDatas);
 
-		UGameplayStatics::SaveGameToSlot(ClassicGameInstance->ClassicSaveGameInstance, ClassicGameInstance->SlotGame, 0);
+		ClassicGameInstance->SaveGameSystem(GameSystems);
 	}
 }
 
@@ -556,19 +554,19 @@ void UMainScreen::SetFavoriteToSave()
 		AsyncTask(ENamedThreads::AnyHiPriThreadNormalTask, [this]()
 		{
 			int32 Find;
-			if (UClassicFunctionLibrary::FindGameData(ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas, GameData[IndexCard], Find))
+			if (UClassicFunctionLibrary::FindGameData(GameSystems[CountSystem].GameDatas, GameData[IndexCard], Find))
 			{
 				// Find = return inline found index
-				const bool ToggleFavorite = !ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas[Find].favorite;
-				ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas[Find].favorite = ToggleFavorite;
+				const bool ToggleFavorite = !GameSystems[CountSystem].GameDatas[Find].favorite;
+				GameSystems[CountSystem].GameDatas[Find].favorite = ToggleFavorite;
 
 				GameData[IndexCard].favorite = ToggleFavorite;
 				GameDataIndex[Find].favorite = ToggleFavorite;
 
-				FString Path = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].RomPath;
-				UClassicFunctionLibrary::SaveGameListXML(Path, ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas);
+				FString Path = GameSystems[CountSystem].RomPath;
+				UClassicFunctionLibrary::SaveGameListXML(Path, GameSystems[CountSystem].GameDatas);
 
-				if (UGameplayStatics::SaveGameToSlot(ClassicGameInstance->ClassicSaveGameInstance, ClassicGameInstance->SlotGame, 0))
+				if (ClassicGameInstance->SaveGameSystem(GameSystems))
 				{
 					AsyncTask(ENamedThreads::GameThread, [this, ToggleFavorite]()
 					{
@@ -640,7 +638,6 @@ void UMainScreen::Clear()
 	bUpDownPressed = true;
 	bDelayQuit = false;
 	CountSystem = 0;
-	/*CountLocationY = 0;*/
 	GameData.Empty();
 	GameDataIndex.Empty();
 }
@@ -649,7 +646,7 @@ void UMainScreen::SetHeaderButtonFocus()
 {
 	const int32 Index = Frame->FrameIndexTop;
 	Header->SetFocusButton(Index, true);
-	ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas = GameDataIndex;
+	GameSystems[CountSystem].GameDatas = GameDataIndex;
 	if (Index == 4)
 	{
 		WBPInfo->SetGameInfo(GameData[IndexCard]);
@@ -680,7 +677,7 @@ void UMainScreen::OnFocusHeader(int32 Index)
 		Frame->FrameIndexTop = Index;
 		Frame->SetFramePositionWithAnimation(PositionY);
 		SetButtonsIconInterfaces(PositionY);
-		ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas = GameDataIndex;
+		GameSystems[CountSystem].GameDatas = GameDataIndex;
 		if (Index == 4)
 		{
 			WBPInfo->SetGameInfo(GameData[IndexCard]);
@@ -715,8 +712,8 @@ void UMainScreen::OnClickFavorites()
 	const int32 NumFavorites = UClassicFunctionLibrary::CountFavorites(GameData);
 	FText Message = LOCTEXT("MessageNoFavorites", "No favorites to show");
 
-	ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].Positions.ChangeFilter();
-	const EGamesFilter Filter = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].Positions.OrderBy;
+	GameSystems[CountSystem].Positions.ChangeFilter();
+	const EGamesFilter Filter = GameSystems[CountSystem].Positions.OrderBy;
 
 	if (NumFavorites != 0 && Filter == EGamesFilter::FAVORITES_FIRST)
 	{
@@ -761,7 +758,7 @@ void UMainScreen::OnClickBackAction()
 	{
 		if (CountSystem != 0)
 		{
-			ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].GameDatas = GameDataIndex;
+			GameSystems[CountSystem].GameDatas = GameDataIndex;
 			SetLastPositions(false);
 			CountSystem = 0;
 			ResetCards();
@@ -771,7 +768,7 @@ void UMainScreen::OnClickBackAction()
 		if (bDelayQuit)
 		{
 			SetLastPositions(false);
-			if (UGameplayStatics::SaveGameToSlot(ClassicGameInstance->ClassicSaveGameInstance, ClassicGameInstance->SlotGame, 0))
+			if (ClassicGameInstance->SaveGameSystem(GameSystems))
 			{
 				UKismetSystemLibrary::QuitGame(this, GetOwningPlayer(), EQuitPreference::Quit, false);
 			}
@@ -790,17 +787,17 @@ void UMainScreen::OnClickBackAction()
 	}
 }
 
-void UMainScreen::SetLastPositions(const bool bResetPositions) const
+void UMainScreen::SetLastPositions(const bool bResetPositions)
 {
 	FIndexPositions Positions = LoopScroll->GetScrollOffSet();
-	Positions.OrderBy = ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].Positions.OrderBy;
+	Positions.OrderBy = GameSystems[CountSystem].Positions.OrderBy;
 	if (bResetPositions || Positions.OrderBy != EGamesFilter::DEFAULT)
 	{
-		ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].Positions.DefaultValues();
-		ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].Positions.OrderBy = Positions.OrderBy;
+		GameSystems[CountSystem].Positions.DefaultValues();
+		GameSystems[CountSystem].Positions.OrderBy = Positions.OrderBy;
 		return;
 	}
-	ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave[CountSystem].Positions = Positions;
+	GameSystems[CountSystem].Positions = Positions;
 }
 
 void UMainScreen::SetFrame()

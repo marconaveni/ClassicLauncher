@@ -84,7 +84,7 @@ void UScreenManager::LoadConfiguration()
 
 void UScreenManager::LoadGameSystems()
 {
-	DataManager->GameSystems = DataManager->ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave;
+	DataManager->GameSystems = DataManager->ClassicGameInstance->GetGameSystemSave();
 	UClassicFunctionLibrary::CreateFolders(DataManager->ConfigurationData.PathMedia, DataManager->GameSystems);
 
 	DataManager->LoadingScreenReference->ShowMessage(LOCTEXT("Loading", "Loading Games Wait..."));
@@ -142,7 +142,6 @@ void UScreenManager::AddSystems()
 void UScreenManager::SetMainInterfaceData() const
 {
 	DataManager->MainScreenReference->CountSystem = DataManager->IndexGameSystem;
-	/*DataManager->MainScreenReference->CountLocationY = DataManager->IndexGameSystem;*/
 	DataManager->MainScreenReference->ConfigurationData = DataManager->ConfigurationData;
 	DataManager->MainScreenReference->ClassicGameInstance = DataManager->ClassicGameInstance;
 }
@@ -218,8 +217,8 @@ void UScreenManager::PrepareToSaveNewGameList()
 			});
 
 		}
-		DataManager->ClassicGameInstance->SetSystemSave(DataManager->GameSystems);
-		if (UGameplayStatics::SaveGameToSlot(DataManager->ClassicGameInstance->ClassicSaveGameInstance, DataManager->ClassicGameInstance->SlotGame, 0))
+		
+		if (DataManager->ClassicGameInstance->SaveGameSystem(DataManager->GameSystems))
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Saved"));
 			AsyncTask(ENamedThreads::GameThread, [this]()

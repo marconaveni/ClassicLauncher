@@ -15,22 +15,29 @@ class CLASSICLAUNCHER_API UClassicGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 
-public:
+protected:
 
 	virtual void Init() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SaveGame|Variables")
+	UPROPERTY()
 	class UClassicSaveGame* ClassicSaveGameInstance;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SaveGame|Variables")
+	UPROPERTY()
 	FString SlotGame;
 
 	UClassicGameInstance();
 
+public:
 
-	UFUNCTION()
-	void SetSystemSave(TArray<FGameSystem> Systems);
+	UFUNCTION(BlueprintPure, Category = "ClassicGameInstance|SaveGame|Functions")
+	TArray<FGameSystem> GetGameSystemSave() const;
+	
+	UFUNCTION(BlueprintCallable, Category = "ClassicGameInstance|SaveGame|Functions")
+	bool SaveGameSystem(const TArray<FGameSystem>& GameSystem, int32 Slot = 0);
 
+	UFUNCTION(BlueprintCallable, Category = "ClassicGameInstance|SaveGame|Functions")
+	bool DeleteGameSystemSave(int32 Slot = 0);
+	
 	UFUNCTION(Exec)
 	void UpdateTheme();
 };

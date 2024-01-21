@@ -221,6 +221,16 @@ struct FGameSystem
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FIndexPositions Positions;
 
+	void DefaultValues()
+	{
+		Positions.DefaultValues();
+	}
+
+	void ChangeFilter()
+	{
+		Positions.ChangeFilter();
+	}
+
 	FGameSystem()
 	{
 		Executable = TEXT("");

@@ -424,7 +424,7 @@ public:
 	void ShowMessage(const FText Message, const float InRate);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
-	void SetLastPositions(bool bResetPositions) const;
+	void SetLastPositions(bool bResetPositions);
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetFrame();

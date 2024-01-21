@@ -24,15 +24,13 @@ class CLASSICLAUNCHER_API UDataManager : public UWorldSubsystem
 	GENERATED_BODY()
 
 protected:
-
 	UDataManager();
-	
+
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 	virtual bool DoesSupportWorldType(EWorldType::Type WorldType) const override;
 
 public:
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataManager|Game")
 	APlayerController* GameplayStatics;
 
@@ -52,19 +50,10 @@ public:
 	ULoadingScreen* LoadingScreenReference;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataManager|References")
-	ULoopScroll* LoopScrollReference;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataManager|References")
-	ULoopScroll* FrameReference;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataManager|References")
 	AClassicMediaPlayer* ClassicMediaPlayerReference;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataManager|GameData")
 	TArray<FGameData> GameData;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataManager|GameData")
-	TArray<FGameData> GameDataIndex;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataManager|GameData")
 	TArray<FGameSystem> GameSystems;
@@ -80,4 +69,40 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "DataManager|Functions")
 	void CreateWidgets();
+
+	UFUNCTION(BlueprintPure, Category = "DataManager|Getters")
+	UClassicGameInstance* GetClassicGameInstance() const;
+
+	UFUNCTION(BlueprintPure, Category = "DataManager|Getters")
+	AClassicMediaPlayer* GetClassicMediaPlayerReference() const;
+
+	UFUNCTION(BlueprintPure, Category = "DataManager|Getters")
+	ULoadingScreen* GetLoadingScreenReference() const;
+
+	UFUNCTION(BlueprintPure, Category = "DataManager|Getters")
+	UMainScreen* GetMainScreenReference() const;
+
+	UFUNCTION(BlueprintPure, Category = "DataManager|Getters")
+	ULoopScroll* GetLoopScrollReference() const;
+
+	UFUNCTION(BlueprintPure, Category = "DataManager|Getters")
+	UFrame* GetFrameReference() const;
+
+	UFUNCTION(BlueprintCallable, Category = "DataManager|Setters")
+	void SetClassicGameInstance(UPARAM(ref) UClassicGameInstance*& ClassicGameInstanceRef);
+
+	UFUNCTION(BlueprintCallable, Category = "DataManager|Setters")
+	void SetClassicMediaPlayerReference(UPARAM(ref) AClassicMediaPlayer*& ClassicMediaPlayerRef);
+
+	UFUNCTION(BlueprintCallable, Category = "DataManager|Setters")
+	void SetLoadingScreenReference(UPARAM(ref) ULoadingScreen*& LoadingScreenRef);
+
+	UFUNCTION(BlueprintCallable, Category = "DataManager|Setters")
+	void SetMainScreenReference(UPARAM(ref) UMainScreen*& MainScreenRef);
+
+	UFUNCTION(BlueprintCallable, Category = "DataManager|Setters")
+	void SetLoopScrollReference(UPARAM(ref) ULoopScroll*& LoopScrollRef);
+
+	UFUNCTION(BlueprintCallable, Category = "DataManager|Setters")
+	void SetFrameReference(UPARAM(ref) UFrame*& FrameReferenceRef);
 };

@@ -8,7 +8,6 @@
 #include "Audio/ClassicMediaPlayer.h"
 #include "Core/ClassicGameinstance.h"
 #include "Core/ClassicGameMode.h"
-#include "Core/ClassicSaveGame.h"
 #include "Core/ScreenManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
@@ -130,9 +129,7 @@ void UOptionsLayout::OnSlideLostFocus()
 void UOptionsLayout::OnClickUpdate(int32 Value)
 {
 	UClassicGameInstance* ClassicGameInstance = Cast<UClassicGameInstance>(GetGameInstance());
-	ClassicGameInstance->ClassicSaveGameInstance->GameSystemsSave.Empty();
-
-	if (UGameplayStatics::DeleteGameInSlot(ClassicGameInstance->SlotGame, 0))
+	if (ClassicGameInstance->DeleteGameSystemSave())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Deleted Saved"));
 		MainInterfaceReference->SetInputEnable(false);

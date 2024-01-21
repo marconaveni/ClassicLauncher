@@ -13,8 +13,9 @@ UDataManager::UDataManager()
 	  , ClassicGameInstance(nullptr)
 	  , MainScreenReference(nullptr)
 	  , LoadingScreenReference(nullptr)
-	  , LoopScrollReference(nullptr)
-	  , FrameReference(nullptr)
+	  /*, LoopScrollReference(nullptr)
+	  , FrameReference(nullptr)*/
+	  , ClassicMediaPlayerReference(nullptr)
 	  , IndexGameData(0)
 	  , IndexGameSystem(0)
 {
@@ -39,7 +40,7 @@ void UDataManager::CreateWidgets()
 {
 	GameplayStatics = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	ClassicGameInstance = Cast<UClassicGameInstance>(GetWorld()->GetGameInstance());
-	
+
 	if (MainScreenClass != nullptr && LoadingScreenClass != nullptr) // Check if the Asset is assigned.
 	{
 		// Create the widget and store it.
@@ -61,4 +62,64 @@ void UDataManager::CreateWidgets()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("MainInterfaceClass or LoadingScreenClass the Assets is not assigned"));
 	}
+}
+
+UClassicGameInstance* UDataManager::GetClassicGameInstance() const
+{
+	return ClassicGameInstance;
+}
+
+AClassicMediaPlayer* UDataManager::GetClassicMediaPlayerReference() const
+{
+	return ClassicMediaPlayerReference;
+}
+
+ULoadingScreen* UDataManager::GetLoadingScreenReference() const
+{
+	return LoadingScreenReference;
+}
+
+UMainScreen* UDataManager::GetMainScreenReference() const
+{
+	return MainScreenReference;
+}
+
+ULoopScroll* UDataManager::GetLoopScrollReference() const
+{
+	return MainScreenReference->LoopScroll;
+}
+
+UFrame* UDataManager::GetFrameReference() const
+{
+	return MainScreenReference->Frame;
+}
+
+void UDataManager::SetClassicGameInstance(UClassicGameInstance*& ClassicGameInstanceRef)
+{
+	ClassicGameInstance = ClassicGameInstanceRef;
+}
+
+void UDataManager::SetClassicMediaPlayerReference(AClassicMediaPlayer*& ClassicMediaPlayerRef)
+{
+	ClassicMediaPlayerReference = ClassicMediaPlayerRef;
+}
+
+void UDataManager::SetLoadingScreenReference(ULoadingScreen*& LoadingScreenRef)
+{
+	LoadingScreenReference = LoadingScreenRef;
+}
+
+void UDataManager::SetMainScreenReference(UMainScreen*& MainScreenRef)
+{
+	MainScreenReference = MainScreenRef;
+}
+
+void UDataManager::SetLoopScrollReference(ULoopScroll*& LoopScrollRef)
+{
+	MainScreenReference->LoopScroll = LoopScrollRef;
+}
+
+void UDataManager::SetFrameReference(UFrame*& FrameReferenceRef)
+{
+	MainScreenReference->Frame = FrameReferenceRef;
 }

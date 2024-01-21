@@ -7,30 +7,39 @@
 #include "Kismet/GameplayStatics.h"
 #include "Misc/OutputDeviceNull.h"
 
-void UClassicGameInstance::Init()
-{
-
-	if (UGameplayStatics::DoesSaveGameExist(SlotGame, 0)) 
-	{
-		ClassicSaveGameInstance = Cast<UClassicSaveGame>(UGameplayStatics::LoadGameFromSlot(SlotGame, 0));
-	}
-	else 
-	{
-		ClassicSaveGameInstance = Cast<UClassicSaveGame>(UGameplayStatics::CreateSaveGameObject(UClassicSaveGame::StaticClass()) );
-	}
-	Super::Init();
-
-}
-
 UClassicGameInstance::UClassicGameInstance()
 {
 	SlotGame = TEXT("save_c1");
 }
 
-
-void UClassicGameInstance::SetSystemSave(TArray<FGameSystem> Systems)
+void UClassicGameInstance::Init()
 {
-	ClassicSaveGameInstance->GameSystemsSave = Systems;
+	if (UGameplayStatics::DoesSaveGameExist(SlotGame, 0))
+	{
+		ClassicSaveGameInstance = Cast<UClassicSaveGame>(UGameplayStatics::LoadGameFromSlot(SlotGame, 0));
+	}
+	else
+	{
+		ClassicSaveGameInstance = Cast<UClassicSaveGame>(UGameplayStatics::CreateSaveGameObject(UClassicSaveGame::StaticClass()));
+	}
+	Super::Init();
+}
+
+TArray<FGameSystem> UClassicGameInstance::GetGameSystemSave() const
+{
+	return ClassicSaveGameInstance->GameSystemsSave;
+}
+
+bool UClassicGameInstance::SaveGameSystem(const TArray<FGameSystem>& GameSystem, const int32 Slot)
+{
+	ClassicSaveGameInstance->GameSystemsSave = GameSystem;
+	return UGameplayStatics::SaveGameToSlot(ClassicSaveGameInstance, SlotGame, Slot);
+}
+
+bool UClassicGameInstance::DeleteGameSystemSave(const int32 Slot)
+{
+	ClassicSaveGameInstance->GameSystemsSave.Empty();
+	return  UGameplayStatics::DeleteGameInSlot(SlotGame, Slot);
 }
 
 void UClassicGameInstance::UpdateTheme()
@@ -43,11 +52,9 @@ void UClassicGameInstance::UpdateTheme()
 		{
 			continue;
 		}
-		
+
 		FOutputDeviceNull OutputDeviceNull;
 		ObjectIterator->CallFunctionByNameWithArguments(TEXT("SetTheme"), OutputDeviceNull, nullptr, true);
 		break;
 	}
-
-
 }
