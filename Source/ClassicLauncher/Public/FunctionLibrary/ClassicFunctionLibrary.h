@@ -80,13 +80,25 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|Input")
 	static EButtonsGame GetInputButton(const FKeyEvent& InKeyEvent);
 
-	///** Sort a GameData.name array alphabetically!  */
+	///** Sort  GameSystem.SystemLabel array */
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static void SortGameDate(UPARAM(ref) TArray<FGameData>& GameDatas);
+	static void SortConfigSystem(UPARAM(ref) TArray<FGameSystem>& GameSystems, const bool bAscending = true);
+	
+	///** Sort  GameData.Name array  */
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
+	static void SortGameData(UPARAM(ref) TArray<FGameData>& GameData, const bool bAscending = true);
 
-	///** Sort a GameData.name array alphabetically!  */
+	///** filters GameData.bFavorites if is equals true first in the array */
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static TArray<FGameSystem> SortConfigSystem(TArray<FGameSystem> configData);
+	static TArray<FGameData> FilterGameDataFavoritesFirst(UPARAM(ref) TArray<FGameData>& GameData, const bool bOnlyFavorites);
+
+	///** filters larger GameData.PlayCount value first in the array */
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
+	static void FilterGameDataMostPlayed(UPARAM(ref) TArray<FGameData>& GameData);
+
+	///** filters larger GameData.LastPlayed value first in the array */
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
+	static void FilterGameDataLastPlayed(UPARAM(ref) TArray<FGameData>& GameData);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
 	static bool SaveGameListXML(FString& GameListPath, TArray<FGameData>& NewGames);
@@ -136,16 +148,17 @@ public:
 	static int32 GenerateNumberWithoutRepeat(int32 Value, int32 Min, int32 Max);
 
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Strings")
-	static FString ReplacePath(FString value, FString path);
+	static FString ReplacePath(FString Value, FString Path);
 
-	/** Replace name core Remove */
+	/*/** Replace name core Remove #1#
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Strings", Meta = (ReturnDisplayName = "Replaced Core Name"))
-	static FString CoreReplace(FString Core);
+	static FString CoreReplace(FString Core);*/
 
 	/** Replace $(Home) ClassicLauncher root directory  */
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Strings")
 	static FString HomeDirectoryReplace(FString Directory);
 
+	/*
 	/**
 	*Replace relative media path
 	*
@@ -156,9 +169,10 @@ public:
 	*@param    TypeMedia 3 types "covers" "screenshots" "videos"
 	*@param    Format  2 types .png . mp4
 	*@return   Return new path EX: "c:\classiclauncher\media\covers\game.png"
-	*/
+	#1#
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Strings")
 	static FString ReplaceMedia(FString OriginalPathMedia, FString PathMedia, FString PathRom, FString RomName, FString SystemName, FString TypeMedia, FString Format, FString RomFormated);
+	*/
 
 	//create a file gamelist.xml for save 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData|XML")
@@ -193,7 +207,7 @@ public:
 
 	//format the array game data with correct path system
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static void FormatGameData(TArray<FGameData>& GameDatas, FConfig Config, FGameSystem GameSystem);
+	static void FormatGameData(UPARAM(ref) FGameSystem& GameSystems, FConfig Configuration);
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
 	static bool FindGameData(TArray<FGameData> datas, FGameData  DataElement, int32& Index, int32 Find = -1);
@@ -258,6 +272,10 @@ public:
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Date")
 	static FString FormatDateTimeToView(FString DateXml);
 
+	//convert XMl to DateTime 
+	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Date")
+	static FDateTime GetXMLDateTime(FString DateXml);
+
 	//formated date time now to ex 1994-06-19 22:40 to 19940619T224020 
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Date")
 	static FString FormatDateToXml();
@@ -302,5 +320,6 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Widgets")
 	static bool GetVisibilityWidget(const class UWidget* Widget);
+	
 
 };

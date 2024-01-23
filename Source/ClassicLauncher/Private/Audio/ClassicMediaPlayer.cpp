@@ -117,12 +117,15 @@ void AClassicMediaPlayer::PlayMusic(const FString File, const bool bShowMessage)
 	}
 }
 
-void AClassicMediaPlayer::PlayVideo(const FString File)
+void AClassicMediaPlayer::PlayVideo(const FString File, const bool bPauseMusic)
 {
 	const FString FileVideo = TEXT("file://") + File;
 	if (ClassicPlayerVideo->GetMediaPlayer()->CanPlayUrl(FileVideo))
 	{
-		PauseMusic();
+		if (bPauseMusic)
+		{
+			PauseMusic();
+		}
 		ClassicPlayerVideo->GetMediaPlayer()->OpenUrl(FileVideo);
 	}
 }

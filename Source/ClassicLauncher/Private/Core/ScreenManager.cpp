@@ -24,7 +24,7 @@
 void UScreenManager::Init(TSubclassOf<UMainScreen> MainScreenClass, TSubclassOf<class ULoadingScreen> LoadingScreenClass)
 {
 	DataManager = GetWorld()->GetSubsystem<UDataManager>();
-	DataManager->CreateWidgets(MainScreenClass,LoadingScreenClass);
+	DataManager->CreateWidgets(MainScreenClass, LoadingScreenClass);
 	MessageShow.AddDynamic(this, &UScreenManager::Message);
 }
 
@@ -39,8 +39,10 @@ void UScreenManager::LoadConfiguration()
 	{
 		UClassicFunctionLibrary::SetConfig(UClassicFunctionLibrary::LoadXMLSingle(ConfigResult, TEXT("config")), DataManager->ConfigurationData);
 		UGameplayStatics::SetEnableWorldRendering(this, DataManager->ConfigurationData.Rendering);
-		DataManager->ConfigurationData.PathMedia = (DataManager->ConfigurationData.PathMedia != TEXT("")) ? DataManager->ConfigurationData.PathMedia : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
-		DataManager->GetMainScreenReference()->Options->SetSlide( DataManager->ConfigurationData);
+		DataManager->ConfigurationData.PathMedia = (DataManager->ConfigurationData.PathMedia != TEXT(""))
+			                                           ? DataManager->ConfigurationData.PathMedia
+			                                           : UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("media");
+		DataManager->GetMainScreenReference()->Options->SetSlide(DataManager->ConfigurationData);
 		GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &UScreenManager::LoadGameSystems, 0.1f, false, DELAY);
 	}
 	DataManager->GetClassicMediaPlayerReference()->SetMusics(TEXT(""));
@@ -66,8 +68,7 @@ void UScreenManager::LoadGameSystems()
 				break;
 			}
 		}
-		
-		SetMainInterfaceData();
+
 		GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &UScreenManager::AddMainInterfaceToViewPort, 0.1f, false, DELAY);
 	}
 	else
@@ -79,22 +80,21 @@ void UScreenManager::LoadGameSystems()
 
 void UScreenManager::AddSystems()
 {
-	DataManager->GetMainScreenReference()->WBPSystemsList->ScrollBox->ClearAllChildrenContent();
-	//DataManager->GameSystems.Empty();
+	DataManager->GetMainScreenReference()->GameList->ScrollBox->ClearAllChildrenContent();
 	DataManager->GetMainScreenReference()->ButtonSystemReferences.Empty();
 
 	if (DataManager->GetMainScreenReference()->ButtonSystemClass != nullptr)
 	{
 		UButtonCommon* ButtonSystem = nullptr;
-		
+
 		for (int32 i = 0; i < DataManager->GameSystems.Num(); i++)
 		{
 			ButtonSystem = CreateWidget<UButtonCommon>(DataManager->GetMainScreenReference()->GetOwningPlayer(), DataManager->GetMainScreenReference()->ButtonSystemClass);
-			ButtonSystem->OnClickTrigger.AddDynamic(DataManager->GetMainScreenReference() , &UMainScreen::OnClickSystem);
+			ButtonSystem->OnClickTrigger.AddDynamic(DataManager->GetMainScreenReference(), &UMainScreen::OnClickSystem);
 			ButtonSystem->SetText((i == 0) ? LOCTEXT("Systems", "Show Systems") : FText::FromString(DataManager->GameSystems[i].SystemLabel));
 			ButtonSystem->SetIndex(i);
 			DataManager->GetMainScreenReference()->ButtonSystemReferences.Add(ButtonSystem);
-			DataManager->GetMainScreenReference()->WBPSystemsList->ScrollBox->SetContent(ButtonSystem);
+			DataManager->GetMainScreenReference()->GameList->ScrollBox->SetContent(ButtonSystem);
 		}
 		//DataManager->GameSystems = DataManager->GameSystems;
 	}
@@ -104,91 +104,103 @@ void UScreenManager::AddSystems()
 	}
 }
 
-void UScreenManager::SetMainInterfaceData() const
-{
-	/*DataManager->GetMainScreenReference()->CountSystem = DataManager->IndexGameSystem;
-	DataManager->GetMainScreenReference()->ConfigurationData = DataManager->ConfigurationData;
-	DataManager->GetMainScreenReference()->ClassicGameInstance = DataManager->GetClassicGameInstance();*/
-}
-
 void UScreenManager::CreateNewGameList()
 {
-	DataManager->GameSystems.Empty();
-
-	FString ConfigResult;
-	FString ConfigRoot = UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("config\\configsys.xml");
-
-	if (UClassicFunctionLibrary::LoadStringFile(ConfigResult, ConfigRoot))
+	AsyncTask(ENamedThreads::AnyThread, [this]()
 	{
-		// check if is empty to avoid error in UEasyXMLElement*
-		if (ConfigResult.IsEmpty())
+		DataManager->GameSystems.Empty();
+
+		FString ConfigSysXMLFile;
+		const FString PathConfigSys = UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("config\\configsys.xml");
+
+		if (UClassicFunctionLibrary::LoadStringFile(ConfigSysXMLFile, PathConfigSys))
 		{
-			MessageShow.Broadcast(LOCTEXT("configsysempty", "configsys.xml is Empty"));
-			return;
-		}
-
-		TArray<FGameSystem> TempSystems;
-		UClassicFunctionLibrary::SetGameSystem(UClassicFunctionLibrary::LoadXML(ConfigResult, TEXT("config.system")), TempSystems);
-
-		TempSystems = UClassicFunctionLibrary::SortConfigSystem(TempSystems);
-		DataManager->GameSystems.Add(UClassicFunctionLibrary::SetSystemToGameData(TempSystems));
-
-		for (int32 i = 0; i < TempSystems.Num(); i++)
-		{
-			ConfigRoot = TempSystems[i].RomPath + TEXT("\\gamelist.xml");
-			if (UClassicFunctionLibrary::LoadStringFile(ConfigResult, ConfigRoot))
+			// check if is empty to avoid error in UEasyXMLElement*
+			if (ConfigSysXMLFile.IsEmpty())
 			{
-				if (ConfigResult.IsEmpty()) continue; // check if is empty to avoid error in UEasyXMLElement*
-
-				UClassicFunctionLibrary::SetGameData(UClassicFunctionLibrary::LoadXML(ConfigResult, TEXT("gameList.game")), TempSystems[i].GameDatas, nullptr);
-				if (TempSystems[i].GameDatas.Num() > 0)
+				AsyncTask(ENamedThreads::GameThread, [this]()
 				{
-					DataManager->GameSystems.Add(TempSystems[i]);
+					MessageShow.Broadcast(LOCTEXT("configsysempty", "configsys.xml is Empty"));
+				});
+				return;
+			}
+
+			TArray<FGameSystem> TempGameSystems;
+			TArray<UEasyXMLElement*> Elements = UClassicFunctionLibrary::LoadXML(ConfigSysXMLFile, TEXT("config.system"));
+			UClassicFunctionLibrary::SetGameSystem(Elements, TempGameSystems);
+			UClassicFunctionLibrary::SortConfigSystem(TempGameSystems);
+
+			DataManager->GameSystems.Add(UClassicFunctionLibrary::SetSystemToGameData(TempGameSystems));
+
+			for (int32 i = 0; i < TempGameSystems.Num(); i++)
+			{
+				const FString PathGameList = TempGameSystems[i].RomPath + TEXT("\\gamelist.xml");
+				if (UClassicFunctionLibrary::LoadStringFile(ConfigSysXMLFile, PathGameList))
+				{
+					if (ConfigSysXMLFile.IsEmpty()) continue; // check if is empty to avoid error in UEasyXMLElement*
+					FString Label = TempGameSystems[i].SystemLabel;
+					AsyncTask(ENamedThreads::GameThread, [this,i,Label]()
+					{
+						const FText Loading = FText::Format(LOCTEXT("AddSystem", "Add System {0}"), FText::FromString(Label));
+						MessageShow.Broadcast(Loading);
+					});
+
+					Elements = UClassicFunctionLibrary::LoadXML(ConfigSysXMLFile, TEXT("gameList.game"));
+					UClassicFunctionLibrary::SetGameData(Elements, TempGameSystems[i].GameDatas, nullptr);
+					if (TempGameSystems[i].GameDatas.Num() > 0)
+					{
+						DataManager->GameSystems.Add(TempGameSystems[i]);
+					}
 				}
 			}
+			if (TempGameSystems.Num() == 0)
+			{
+				AsyncTask(ENamedThreads::GameThread, [this]()
+				{
+					MessageShow.Broadcast(LOCTEXT("sysnotfound", "Systems not found"));
+				});
+				return;
+			}
+			TempGameSystems.Empty();
 		}
-		if (TempSystems.Num() == 0)
+		else
 		{
-			MessageShow.Broadcast(LOCTEXT("sysnotfound", "Systems not found"));
+			AsyncTask(ENamedThreads::GameThread, [this]()
+			{
+				MessageShow.Broadcast(LOCTEXT("configsysnotfound", "configsys.xml not found"));
+			});
 			return;
 		}
-		TempSystems.Empty();
-	}
-	else
-	{
-		MessageShow.Broadcast(LOCTEXT("configsysnotfound", "configsys.xml not found"));
-		return;
-	}
-
-	PrepareToSaveNewGameList();
+		AsyncTask(ENamedThreads::GameThread, [this]()
+		{
+			PrepareToSaveNewGameList();
+		});
+	});
 }
 
 void UScreenManager::PrepareToSaveNewGameList()
 {
 	AsyncTask(ENamedThreads::AnyThread, [this]()
 	{
-
 		for (int32 i = 1; i < DataManager->GameSystems.Num(); i++)
 		{
 			FString GameResult;
 			FString GameRoot = DataManager->GameSystems[i].RomPath + TEXT("\\gamelist.xml");
 
-			UClassicFunctionLibrary::SortGameDate(DataManager->GameSystems[i].GameDatas);
-			UClassicFunctionLibrary::FormatGameData(DataManager->GameSystems[i].GameDatas, DataManager->ConfigurationData, DataManager->GameSystems[i]);
+			UClassicFunctionLibrary::SortGameData(DataManager->GameSystems[i].GameDatas, false);
+			UClassicFunctionLibrary::FormatGameData(DataManager->GameSystems[i], DataManager->ConfigurationData);
 			AsyncTask(ENamedThreads::GameThread, [this,i]()
 			{
-				const FText Loading = FText::Format(LOCTEXT("loading", "Loading {0}") , FText::FromString(DataManager->GameSystems[i].SystemLabel));
+				const FText Loading = FText::Format(LOCTEXT("loading", "Loading {0}"), FText::FromString(DataManager->GameSystems[i].SystemLabel));
 				MessageShow.Broadcast(Loading);
 			});
-
 		}
-		
+
 		if (DataManager->GetClassicGameInstance()->SaveGameSystem(DataManager->GameSystems))
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Saved"));
 			AsyncTask(ENamedThreads::GameThread, [this]()
 			{
-				//MainInterfaceReference->RemoveFromParent();
 				MessageShow.Broadcast(LOCTEXT("LogSuccessfullyGameList", "Game list update successfully wait..."));
 				GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &UScreenManager::LoadGameSystems, 0.1f, false, DELAY + 3.0f);
 			});
@@ -200,13 +212,11 @@ void UScreenManager::PrepareToSaveNewGameList()
 				MessageShow.Broadcast(LOCTEXT("LogErrorGameList", "Game list not save"));
 			});
 		}
-
 	});
 }
 
 void UScreenManager::AddMainInterfaceToViewPort()
 {
-
 	if (DataManager->GetMainScreenReference() != nullptr)
 	{
 		DataManager->GetMainScreenReference()->SetVisibility(ESlateVisibility::Visible);

@@ -32,57 +32,10 @@
 
 #define LOCTEXT_NAMESPACE "ButtonsSelection"
 
-UMainScreen::UMainScreen(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+UMainScreen::UMainScreen(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	Clear();
-
-	TextTop.Add(FText::FromString(TEXT("")));
-	TextTop.Add(LOCTEXT("buttonGameList", "Game List"));
-	TextTop.Add(LOCTEXT("buttonSelect", "Select"));
-	TextTop.Add(LOCTEXT("buttonOk", "Ok"));
-	TextTop.Add(LOCTEXT("buttonBack", "Back"));
-	TextTop.Add(FText::FromString(TEXT("")));
-	TextTop.Shrink();
-
-	TextCenter.Add(LOCTEXT("buttonMenu", "Menu"));
-	TextCenter.Add(LOCTEXT("buttonDetails", "Details"));
-	TextCenter.Add(LOCTEXT("buttonSelect", "Select"));
-	TextCenter.Add(LOCTEXT("buttonStartGame", "Start Game"));
-	TextCenter.Add(LOCTEXT("buttonBack", "Back"));
-	TextCenter.Add(LOCTEXT("buttonFavorite", "Favorite"));
-	TextCenter.Shrink();
-
-	TextCenterSystem.Add(LOCTEXT("buttonMenu", "Menu"));
-	TextCenterSystem.Add(LOCTEXT("buttonDetails", "Details"));
-	TextCenterSystem.Add(LOCTEXT("buttonSelect", "Select"));
-	TextCenterSystem.Add(LOCTEXT("buttonOk", "Ok"));
-	TextCenterSystem.Add(LOCTEXT("buttonExit", "Exit"));
-	TextCenterSystem.Add(FText::FromString(TEXT("")));
-	TextCenterSystem.Shrink();
-
-	IconTop.Add(ESlateVisibility::Collapsed);
-	IconTop.Add(ESlateVisibility::Visible);
-	IconTop.Add(ESlateVisibility::Visible);
-	IconTop.Add(ESlateVisibility::Visible);
-	IconTop.Add(ESlateVisibility::Visible);
-	IconTop.Add(ESlateVisibility::Collapsed);
-	IconTop.Shrink();
-
-	IconCenter.Add(ESlateVisibility::Visible);
-	IconCenter.Add(ESlateVisibility::Visible);
-	IconCenter.Add(ESlateVisibility::Visible);
-	IconCenter.Add(ESlateVisibility::Visible);
-	IconCenter.Add(ESlateVisibility::Visible);
-	IconCenter.Add(ESlateVisibility::Visible);
-	IconCenter.Shrink();
-
-	IconCenterSystem.Add(ESlateVisibility::Visible);
-	IconCenterSystem.Add(ESlateVisibility::Visible);
-	IconCenterSystem.Add(ESlateVisibility::Visible);
-	IconCenterSystem.Add(ESlateVisibility::Visible);
-	IconCenterSystem.Add(ESlateVisibility::Visible);
-	IconCenterSystem.Add(ESlateVisibility::Collapsed);
-	IconCenterSystem.Shrink();
 }
 
 void UMainScreen::NativePreConstruct()
@@ -318,12 +271,12 @@ void UMainScreen::NavigationMain(EButtonsGame Input)
 
 void UMainScreen::NavigationSystem(EButtonsGame Input)
 {
-	WBPSystemsList->SetFocusItem(InputLastPressed, DataManager->IndexGameSystem);
+	GameList->SetFocusItem(InputLastPressed, DataManager->IndexGameSystem);
 }
 
 void UMainScreen::NavigationInfo(EButtonsGame Input)
 {
-	WBPInfo->SetFocus();
+	Information->SetFocus();
 }
 
 void UMainScreen::NavigationConfiguration(EButtonsGame Input)
@@ -478,23 +431,22 @@ void UMainScreen::SetButtonsIconInterfaces(EPositionY GetPosition)
 {
 	if (GetPosition == EPositionY::TOP)
 	{
-		WBPButtonsIconsInterfaces->SetTexts(TextTop);
-		WBPButtonsIconsInterfaces->SetButtonsVisibility(IconTop);
+		PromptMain->SetTexts(PromptHelper.TextTop);
+		PromptMain->SetButtonsVisibility(PromptHelper.IconTop);
 	}
 	else if (GetPosition == EPositionY::CENTER && DataManager->IndexGameSystem != 0)
 	{
-		if (TextCenter.IsValidIndex(5))
+		if (PromptHelper.TextCenter.IsValidIndex(5))
 		{
-			TextCenter[5] = (DataManager->GetGameData().favorite) ? LOCTEXT("buttonRemoveFavorite", "Remove Favorite") : LOCTEXT("buttonRemoveFavoriteAddFavorite", "Add Favorite");
+			PromptHelper.TextCenter[5] = (DataManager->GetGameData().favorite) ? LOCTEXT("buttonRemoveFavorite", "Remove Favorite") : LOCTEXT("buttonRemoveFavoriteAddFavorite", "Add Favorite");
 		}
-
-		WBPButtonsIconsInterfaces->SetTexts(TextCenter);
-		WBPButtonsIconsInterfaces->SetButtonsVisibility(IconCenter);
+		PromptMain->SetTexts(PromptHelper.TextCenter);
+		PromptMain->SetButtonsVisibility(PromptHelper.IconCenter);
 	}
 	else
 	{
-		WBPButtonsIconsInterfaces->SetTexts(TextCenterSystem);
-		WBPButtonsIconsInterfaces->SetButtonsVisibility(IconCenterSystem);
+		PromptMain->SetTexts(PromptHelper.TextCenterSystem);
+		PromptMain->SetButtonsVisibility(PromptHelper.IconCenterSystem);
 	}
 }
 
@@ -553,7 +505,7 @@ void UMainScreen::Clear()
 	bKeyPressed = false;
 	bUpDownPressed = true;
 	bDelayQuit = false;
-	if(DataManager != nullptr)
+	if (DataManager != nullptr)
 	{
 		DataManager->IndexGameData = 0;
 		DataManager->IndexGameSystem = 0;
@@ -567,7 +519,7 @@ void UMainScreen::SetHeaderButtonFocus()
 	Header->SetFocusButton(Index, true);
 	if (Index == 4)
 	{
-		WBPInfo->SetGameInfo(DataManager->GetGameData());
+		Information->SetGameInfo(DataManager->GetGameData());
 	}
 }
 
@@ -601,7 +553,7 @@ void UMainScreen::OnFocusHeader(int32 Index)
 		SetButtonsIconInterfaces(PositionY);
 		if (Index == 4)
 		{
-			WBPInfo->SetGameInfo(DataManager->GetGameData());
+			Information->SetGameInfo(DataManager->GetGameData());
 		}
 	}
 	if (Index == 0) return;
@@ -618,7 +570,7 @@ void UMainScreen::OnClickSelectSystem()
 	Focus = EFocus::SYSTEM;
 	SetPlayAnimation(TEXT("ShowSystem"));
 	PositionY = EPositionY::TOP;
-	WBPSystemsList->SetFocusItem(EButtonsGame::NONE, DataManager->IndexGameSystem);
+	GameList->SetFocusItem(EButtonsGame::NONE, DataManager->IndexGameSystem);
 }
 
 void UMainScreen::OnClickConfigurations()

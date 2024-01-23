@@ -48,55 +48,54 @@ EButtonsGame UClassicFunctionLibrary::GetInputButton(const FKeyEvent& InKeyEvent
 	return GetInputButtonsGame(InKeyEvent.GetKey());
 }
 
-void UClassicFunctionLibrary::SortGameDate(TArray<FGameData>& GameDatas)
+void UClassicFunctionLibrary::SortConfigSystem(TArray<FGameSystem>& GameSystems, const bool bAscending)
 {
-	TArray<FString> Names;
-	TArray<FGameData> NewGameData;
-
-	for (FGameData& GameData : GameDatas)
+	GameSystems.Sort([bAscending](const FGameSystem& A, const FGameSystem& B)
 	{
-		Names.Add(GameData.name);
-	}
-	Names.Sort();
-	for (FString& Name : Names)
-	{
-		for (FGameData& GameData : GameDatas)
-		{
-			if (GameData.name == Name && GameData.name != TEXT("null_value")) {
-				NewGameData.Add(GameData);
-				GameData.name = TEXT("null_value");
-				break;
-			}
-		}
-	}
-	GameDatas.Empty();
-	GameDatas = NewGameData;
-	GameDatas.Shrink();
+		return (bAscending) ? A.SystemLabel < B.SystemLabel : A.SystemLabel > B.SystemLabel;
+	});
 }
 
-TArray<FGameSystem> UClassicFunctionLibrary::SortConfigSystem(TArray<FGameSystem> configData)
+void UClassicFunctionLibrary::SortGameData(TArray<FGameData>& GameData, const bool bAscending)
 {
-	TArray<FString> Names;
-	TArray<FGameSystem> NewConfigData;
+	GameData.Sort([bAscending](const FGameData& A, const FGameData& B)
+	{
+		return (bAscending) ? A.name < B.name : A.name > B.name;
+	});
+}
 
-	for (FGameSystem& data : configData)
+TArray<FGameData> UClassicFunctionLibrary::FilterGameDataFavoritesFirst(TArray<FGameData>& GameData, const bool bOnlyFavorites)
+{
+	auto Favorites = GameData.FilterByPredicate([](const FGameData& A)
 	{
-		Names.Add(data.SystemLabel);
-	}
-	Names.Sort();
-	for (FString& name : Names)
+		return A.favorite == true;
+	});
+
+	if (!bOnlyFavorites)
 	{
-		for (FGameSystem& data : configData)
+		const auto NoFavorites = GameData.FilterByPredicate([](const FGameData& A)
 		{
-			if (data.SystemLabel == name && data.SystemLabel != TEXT("null_value")) {
-				NewConfigData.Add(data);
-				data.SystemLabel = TEXT("null_value");
-				break;
-			}
-		}
+			return A.favorite == false;
+		});
+		Favorites += NoFavorites;
 	}
+	return Favorites;
+}
 
-	return NewConfigData;
+void UClassicFunctionLibrary::FilterGameDataMostPlayed(TArray<FGameData>& GameData)
+{
+	GameData.Sort([](const FGameData& A, const FGameData& B)
+	{
+		return A.playcount < B.playcount;
+	});
+}
+
+void UClassicFunctionLibrary::FilterGameDataLastPlayed(TArray<FGameData>& GameData)
+{
+	GameData.Sort([](const FGameData& A, const FGameData& B)
+	{
+		return A.lastplayed < B.lastplayed; //is not working todo create a class XMLDate 
+	});
 }
 
 bool UClassicFunctionLibrary::SaveGameListXML(FString& GameListPath, TArray<FGameData>& NewGames)
@@ -170,7 +169,6 @@ bool UClassicFunctionLibrary::VerifyOrCreateDirectory(const FString& TestDir)
 		if (!PlatformFile.DirectoryExists(*TestDir))
 		{
 			return false;
-			//~~~~~~~~~~~~~~
 		}
 	}
 	return true;
@@ -185,10 +183,13 @@ bool UClassicFunctionLibrary::VerifyDirectory(const FString& TestDir)
 int32 UClassicFunctionLibrary::GenerateNumberWithoutRepeat(int32 Value, int32 Min, int32 Max)
 {
 	int32 NewValue = Value;
-	if (Max > Min) {
-		while (true) {
+	if (Max > Min)
+	{
+		while (true)
+		{
 			NewValue = FMath::RandRange(Min, Max);
-			if (Value != NewValue) {
+			if (Value != NewValue)
+			{
 				return NewValue;
 			}
 		}
@@ -197,22 +198,21 @@ int32 UClassicFunctionLibrary::GenerateNumberWithoutRepeat(int32 Value, int32 Mi
 }
 
 
-FString UClassicFunctionLibrary::ReplacePath(FString value, FString path)
+FString UClassicFunctionLibrary::ReplacePath(FString Value, FString Path)
 {
-	path = path + TEXT("\\");
-	const TCHAR* cpath = *path;
-	value = value.Replace(TEXT("/"), TEXT("\\"), ESearchCase::IgnoreCase);
-	value = value.Replace(TEXT("&amp;"), TEXT("&"), ESearchCase::IgnoreCase);
-	value = value.Replace(TEXT(".\\"), cpath, ESearchCase::IgnoreCase);
-	return value;
+	Path = Path + TEXT("\\");
+	Value = Value.Replace(TEXT("/"), TEXT("\\"), ESearchCase::IgnoreCase);
+	Value = Value.Replace(TEXT("&amp;"), TEXT("&"), ESearchCase::IgnoreCase);
+	Value = Value.Replace(TEXT(".\\"), *Path, ESearchCase::IgnoreCase);
+	return Value;
 }
 
-FString UClassicFunctionLibrary::CoreReplace(FString Core)
+/*FString UClassicFunctionLibrary::CoreReplace(FString Core)
 {
 	Core = Core.Replace(TEXT("$("), TEXT(""), ESearchCase::IgnoreCase);
 	Core = Core.Replace(TEXT(")"), TEXT(""), ESearchCase::IgnoreCase);
 	return Core;
-}
+}*/
 
 FString UClassicFunctionLibrary::HomeDirectoryReplace(FString Directory)
 {
@@ -221,8 +221,7 @@ FString UClassicFunctionLibrary::HomeDirectoryReplace(FString Directory)
 }
 
 
-
-/**
+/*/**
 *Replace relative media path
 *
 *@param    OriginalPathMedia EX: "./game.png or c:\games\roms\game.png" <image> or <thumbnail> or <video> in gamelist.xml
@@ -232,8 +231,9 @@ FString UClassicFunctionLibrary::HomeDirectoryReplace(FString Directory)
 *@param    TypeMedia 3 types "covers" "screenshots" "videos"
 *@param    Format  2 types .png . mp4
 *@return   Return new path EX: "c:\classiclauncher\media\covers\game.png"
-*/
-FString UClassicFunctionLibrary::ReplaceMedia(FString OriginalPathMedia, FString PathMedia, FString PathRom, FString RomName, FString SystemName, FString TypeMedia, FString Format, FString RomFormated)
+#1#
+FString UClassicFunctionLibrary::ReplaceMedia(FString OriginalPathMedia, FString PathMedia, FString PathRom, FString RomName, FString SystemName, FString TypeMedia, FString Format,
+                                              FString RomFormated)
 {
 	FString NewPath = ReplacePath(OriginalPathMedia, PathRom);
 
@@ -246,8 +246,7 @@ FString UClassicFunctionLibrary::ReplaceMedia(FString OriginalPathMedia, FString
 	}
 
 	return NewPath;
-
-}
+}*/
 
 FString UClassicFunctionLibrary::CreateXMLGameFile(TArray<FGameData> GameData)
 {
@@ -279,7 +278,6 @@ FString UClassicFunctionLibrary::CreateXMLGameFile(TArray<FGameData> GameData)
 		NewGameData += GenerateXmlTag(TEXT("arguments"), Data.Arguments);
 
 		NewGameData += TEXT("</game>\n");
-
 	}
 
 	NewGameData += TEXT("</gameList>\n");
@@ -306,7 +304,8 @@ FString UClassicFunctionLibrary::CreateXMLConfigFile(FConfig ConfigData)
 
 FString UClassicFunctionLibrary::GenerateXmlTag(FString tagName, FString data)
 {
-	if (data == TEXT("") || data == TEXT("0")) {
+	if (data == TEXT("") || data == TEXT("0"))
+	{
 		return TEXT("");
 	}
 	FString gameDt;
@@ -327,7 +326,7 @@ TArray<UEasyXMLElement*> UClassicFunctionLibrary::LoadXML(FString XMLString, FSt
 	FString ErrorMessage;
 	UEasyXMLElement* ElementXML = UEasyXMLParseManager::LoadFromString(XMLString, Result, ErrorMessage);
 	EEasyXMLParserFound Results;
-	return  ElementXML->ReadElements(AccessString, Results);
+	return ElementXML->ReadElements(AccessString, Results);
 }
 
 UEasyXMLElement* UClassicFunctionLibrary::LoadXMLSingle(FString XMLString, FString AccessString)
@@ -349,9 +348,9 @@ void UClassicFunctionLibrary::SetConfig(UEasyXMLElement* Element, FConfig& Confi
 	Config.VolumeVideo = Element->ReadInt(TEXT("volumevideo"));
 }
 
-void UClassicFunctionLibrary::SetGameSystem(TArray<UEasyXMLElement*>  Elements, TArray<FGameSystem>& ConfigSystems)
+void UClassicFunctionLibrary::SetGameSystem(TArray<UEasyXMLElement*> Elements, TArray<FGameSystem>& ConfigSystems)
 {
-	FGameSystem  ConfigSystem;
+	FGameSystem ConfigSystem;
 	for (UEasyXMLElement* Element : Elements)
 	{
 		ConfigSystem.RomPath = Element->ReadString(TEXT("rompath"));
@@ -373,8 +372,7 @@ void UClassicFunctionLibrary::SetGameSystem(TArray<UEasyXMLElement*>  Elements, 
 
 void UClassicFunctionLibrary::SetGameData(TArray<UEasyXMLElement*> Elements, TArray<FGameData>& GameDatas, UTexture2D* Texture)
 {
-
-	FGameData  GameData;
+	FGameData GameData;
 	int32 Index = 0;
 
 	for (UEasyXMLElement* Element : Elements)
@@ -407,7 +405,7 @@ void UClassicFunctionLibrary::SetGameData(TArray<UEasyXMLElement*> Elements, TAr
 
 FGameSystem UClassicFunctionLibrary::SetSystemToGameData(TArray<FGameSystem> Systems)
 {
-	TArray <FGameData> GameDatas;
+	TArray<FGameData> GameDatas;
 	for (int32 i = 0; i < Systems.Num(); i++)
 	{
 		FGameData NewGameData;
@@ -426,25 +424,33 @@ FGameSystem UClassicFunctionLibrary::SetSystemToGameData(TArray<FGameSystem> Sys
 	NewSystem.SystemLabel = TEXT("Systems");
 	NewSystem.GameDatas = GameDatas;
 	return NewSystem;
-
 }
 
-void UClassicFunctionLibrary::FormatGameData(TArray<FGameData>& GameDatas, FConfig Config, FGameSystem GameSystem)
+void UClassicFunctionLibrary::FormatGameData(FGameSystem& GameSystems, FConfig Configuration)
 {
-	for (FGameData& GameData : GameDatas)
+	for (FGameData& GameData : GameSystems.GameDatas)
 	{
-		GameData.PathFormated = ReplacePath(GameData.Path, GameSystem.RomPath);
-		GameData.PathFormated = TEXT("\"") + GameData.PathFormated + TEXT("\"");
+		GameData.PathFormated = TEXT("\"") + ReplacePath(GameData.Path, GameSystems.RomPath) + TEXT("\"");
+		if (GameData.PathFormated.Equals(TEXT("\"\"")))
+		{
+			GameData.PathFormated = TEXT("");
+		}
+		GameData.imageFormated = ReplacePath(GameData.image, GameSystems.RomPath);
+		GameData.thumbnailFormated = ReplacePath(GameData.thumbnail, GameSystems.RomPath);
+		GameData.videoFormated = ReplacePath(GameData.video, GameSystems.RomPath);
 		GameData.nameFormated = GameData.name.Replace(TEXT("&amp;"), TEXT("&"), ESearchCase::IgnoreCase);
 		GameData.descFormated = GameData.desc.Replace(TEXT("&amp;"), TEXT("&"), ESearchCase::IgnoreCase);
-		GameData.imageFormated = ReplaceMedia(GameData.image, Config.PathMedia, GameSystem.RomPath, GameData.Path, GameSystem.SystemName, TEXT("covers"), TEXT(".png"), GameData.PathFormated);
-		GameData.thumbnailFormated = ReplaceMedia(GameData.thumbnail, Config.PathMedia, GameSystem.RomPath, GameData.Path, GameSystem.SystemName, TEXT("screenshots"), TEXT(".png"), GameData.PathFormated);
-		GameData.videoFormated = ReplaceMedia(GameData.video, Config.PathMedia, GameSystem.RomPath, GameData.Path, GameSystem.SystemName, TEXT("videos"), TEXT(".mp4"), GameData.PathFormated);
 	}
 }
 
 bool UClassicFunctionLibrary::FindGameData(TArray<FGameData> datas, FGameData DataElement, int32& Index, int32 Find)
 {
+	int32 Id = datas.IndexOfByPredicate([DataElement](const FGameData& A)
+	{
+		return A.MapIndex == DataElement.MapIndex;
+	});
+	UE_LOG(LogTemp, Warning, TEXT("id founded IndexOfByPredicate %d"), Id);
+
 
 	if (Find == DataElement.MapIndex)
 	{
@@ -461,6 +467,7 @@ bool UClassicFunctionLibrary::FindGameData(TArray<FGameData> datas, FGameData Da
 		Index++;
 		if (Data.MapIndex == DataElement.MapIndex)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("id founded linear search %d"), Id);
 			return true;
 		}
 	}
@@ -517,7 +524,6 @@ int32 UClassicFunctionLibrary::FilterFavoriteGameData(TArray<FGameData>& GameDat
 	GameData.Empty();
 	GameData = FilterGameDataFavorite;
 	return Num;
-
 }
 
 int32 UClassicFunctionLibrary::CountFavorites(TArray<FGameData> GameData)
@@ -609,16 +615,20 @@ static TextureFilter GetTextureFilter(EClassicTextureFilter Filter)
 
 EClassicImageFormat UClassicFunctionLibrary::GetFormatImage(const FString& FullFilePath)
 {
-	if (FullFilePath.Contains("png")) {
+	if (FullFilePath.Contains("png"))
+	{
 		return EClassicImageFormat::PNG;
 	}
-	if (FullFilePath.Contains("jpg")) {
+	if (FullFilePath.Contains("jpg"))
+	{
 		return EClassicImageFormat::JPG;
 	}
-	if (FullFilePath.Contains("bmp")) {
+	if (FullFilePath.Contains("bmp"))
+	{
 		return EClassicImageFormat::BMP;
 	}
-	if (FullFilePath.Contains("ico")) {
+	if (FullFilePath.Contains("ico"))
+	{
 		return EClassicImageFormat::ICO;
 	}
 	return EClassicImageFormat::PNG;
@@ -651,7 +661,6 @@ UTexture2D* UClassicFunctionLibrary::LoadTexture2DFromFile(const FString& FullFi
 			// Create texture
 			if (ImageWrapper->SetCompressed((void*)Buffer.GetData(), Buffer.Num()))
 			{
-
 				PixelFormat = PF_Unknown;
 				ERGBFormat RGBFormat = ERGBFormat::Invalid;
 
@@ -741,7 +750,6 @@ void UClassicFunctionLibrary::AsyncLoadTexture2DFromFile(FLoadImageDelegate Out,
 				// Create texture
 				if (ImageWrapper->SetCompressed((void*)Buffer.GetData(), Buffer.Num()))
 				{
-
 					PixelFormat = PF_Unknown;
 					ERGBFormat RGBFormat = ERGBFormat::Invalid;
 
@@ -782,7 +790,6 @@ void UClassicFunctionLibrary::AsyncLoadTexture2DFromFile(FLoadImageDelegate Out,
 						UTexture2D* NewTexture = CreateUniqueTransient(Width, Height, PixelFormat, *BaseFilename);
 						if (NewTexture)
 						{
-
 							NewTexture->NeverStream = true;
 							NewTexture->bNotOfflineProcessed = true;
 
@@ -799,7 +806,6 @@ void UClassicFunctionLibrary::AsyncLoadTexture2DFromFile(FLoadImageDelegate Out,
 						}
 						// execute function 
 						Out.ExecuteIfBound(NewTexture, Index, bSuccessfull);
-
 					});
 					return; // early return successful!!
 				}
@@ -863,12 +869,12 @@ void UClassicFunctionLibrary::CreateProc(int32& ProcessId, FString FullPath, TAr
 	FProcHandle ProcHandle = FPlatformProcess::CreateProc(
 		*FullPath,
 		*Args,
-		Detach,//* @param bLaunchDetached		if true, the new process will have its own window
-		false,//* @param bLaunchHidded			if true, the new process will be minimized in the task bar
-		Hidden,//* @param bLaunchReallyHidden	if true, the new process will not have a window or be in the task bar
+		Detach, //* @param bLaunchDetached		if true, the new process will have its own window
+		false, //* @param bLaunchHidded			if true, the new process will be minimized in the task bar
+		Hidden, //* @param bLaunchReallyHidden	if true, the new process will not have a window or be in the task bar
 		&NeedBPUINT32,
 		Priority,
-		(OptionalWorkingDirectory != "") ? *OptionalWorkingDirectory : nullptr,//const TCHAR* OptionalWorkingDirectory, 
+		(OptionalWorkingDirectory != "") ? *OptionalWorkingDirectory : nullptr, //const TCHAR* OptionalWorkingDirectory, 
 		nullptr
 	);
 
@@ -923,10 +929,14 @@ FString UClassicFunctionLibrary::FormatDateTimeToView(FString DateXml)
 		{
 			Minute += DateFormat[i];
 		}
-
 	}
 	//2022-12-31 22:30
 	return Date + TEXT("  ") + Hour + TEXT(":") + Minute;
+}
+
+FDateTime UClassicFunctionLibrary::GetXMLDateTime(FString DateXml)
+{
+	return FDateTime();
 }
 
 FString UClassicFunctionLibrary::FormatDateToXml()
@@ -976,7 +986,6 @@ FString UClassicFunctionLibrary::GetProjectName()
 }
 
 
-
 FString UClassicFunctionLibrary::ReadRegistryValue(const FString& KeyName, const FString& ValueName)
 {
 	HKEY hKey;
@@ -1003,11 +1012,10 @@ bool UClassicFunctionLibrary::IsRunningSteamApp(const FString& AppID)
 	const FString ValueName = TEXT("Running");
 	const FString Value = ReadRegistryValue(KeyName, ValueName);
 
-	if (Value.Len() == 0)  return false;
+	if (Value.Len() == 0) return false;
 	if (Value[0] == 1) return true;
 
 	return false;
-
 }
 
 UUserWidget* UClassicFunctionLibrary::GetFirstWidgetOfClass(UObject* WorldContextObject, TSubclassOf<UUserWidget> WidgetClass, bool TopLevelOnly)
@@ -1074,7 +1082,6 @@ void UClassicFunctionLibrary::DefineEffects(USoundBase* SelectSound, USoundBase*
 				MyInterface->EffectSound(SelectSound, NavigateSound);
 			}
 		}
-
 	}
 }
 
@@ -1116,7 +1123,6 @@ bool UClassicFunctionLibrary::GetFolders(TArray<FString>& Folders, FString FullF
 	}
 
 	return Folders.Num() > 0;
-
 }
 
 bool UClassicFunctionLibrary::GetFiles(TArray<FString>& Files, FString FullFilePath, TArray<FString> Extensions, const bool Recursive)
@@ -1136,7 +1142,6 @@ bool UClassicFunctionLibrary::GetFiles(TArray<FString>& Files, FString FullFileP
 	}
 
 	return Files.Num() > 0;
-
 }
 
 bool UClassicFunctionLibrary::LoadTextureToAsset(const FString& FullFilePath, EClassicImageFormat ImageFormat, EClassicTextureFilter Filter, int32& Width, int32& Height, const FString FileName)
@@ -1272,8 +1277,7 @@ void UClassicFunctionLibrary::CreateTexture2DToAsset(int32 InSizeX, int32 InSize
 
 bool UClassicFunctionLibrary::GetVisibilityWidget(const UWidget* Widget)
 {
-	return  Widget->GetVisibility() != ESlateVisibility::Collapsed &&
-				Widget->GetVisibility() != ESlateVisibility::Hidden &&
-					Widget->GetVisibility() != ESlateVisibility::HitTestInvisible;
+	return Widget->GetVisibility() != ESlateVisibility::Collapsed &&
+		Widget->GetVisibility() != ESlateVisibility::Hidden &&
+		Widget->GetVisibility() != ESlateVisibility::HitTestInvisible;
 }
-

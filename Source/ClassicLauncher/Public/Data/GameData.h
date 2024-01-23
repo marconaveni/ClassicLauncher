@@ -24,8 +24,7 @@ struct FGameData
 	// map index
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 MapIndex;
-
-	// Use UPROPERTY() to decorate member variables as they allow for easier integration with network replication as well as potential garbage collection processing
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString Path;
 
@@ -139,6 +138,11 @@ struct FGameData
 		thumbnailFormated = TEXT("");
 		videoFormated = TEXT("");
 	}
+
+	bool operator==(const FGameData& A) const
+	{
+		return (MapIndex == A.MapIndex);
+	}
 };
 
 USTRUCT(BlueprintType)
@@ -172,12 +176,15 @@ struct FIndexPositions
 
 	void ChangeFilter()
 	{
-		if (OrderBy == EGamesFilter::DEFAULT)
-			OrderBy = EGamesFilter::FAVORITES_FIRST;
-		else if (OrderBy == EGamesFilter::FAVORITES_FIRST)
-			OrderBy = EGamesFilter::FAVORITES_ONLY;
-		else
-			OrderBy = EGamesFilter::DEFAULT;
+		switch (OrderBy)
+		{
+		case EGamesFilter::DEFAULT: OrderBy = EGamesFilter::FAVORITES_FIRST;
+			break;
+		case EGamesFilter::FAVORITES_FIRST: OrderBy = EGamesFilter::FAVORITES_ONLY;
+			break;
+		case EGamesFilter::FAVORITES_ONLY: OrderBy = EGamesFilter::DEFAULT;
+			break;
+		}
 	}
 };
 

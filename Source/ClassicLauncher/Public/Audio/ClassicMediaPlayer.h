@@ -80,10 +80,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Media|Functions")
 	void PlaylistMusic(const bool bShowMessage = true);
+	
 	UFUNCTION(BlueprintCallable, Category = "Media|Functions")
 	void PlayMusic(const FString File, const bool bShowMessage = true);
+	
 	UFUNCTION(BlueprintCallable, Category = "Media|Functions")
-	void PlayVideo(const FString File);
+	void PlayVideo(const FString File, const bool bPauseMusic = true);
 
 	UFUNCTION(BlueprintCallable, Category = "Media|Functions")
 	void PauseMusic();

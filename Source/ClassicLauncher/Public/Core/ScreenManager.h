@@ -49,9 +49,6 @@ public:
 	void AddSystems();
 
 	UFUNCTION()
-	void SetMainInterfaceData() const;
-
-	UFUNCTION()
 	void AddMainInterfaceToViewPort();
 
 	UFUNCTION()

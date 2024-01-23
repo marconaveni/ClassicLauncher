@@ -28,6 +28,80 @@ enum class EFocus : uint8
 	CONFIG   UMETA(DisplayName = "Configuration")
 };
 
+#define LOCTEXT_NAMESPACE "ButtonsSelection"
+
+USTRUCT(BlueprintType)
+struct FPromptHelper
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	TArray<FText> TextTop;
+	UPROPERTY()
+	TArray<FText> TextCenter;
+	UPROPERTY()
+	TArray<FText> TextCenterSystem;
+	UPROPERTY()
+	TArray<ESlateVisibility> IconTop;
+	UPROPERTY()
+	TArray<ESlateVisibility> IconCenter;
+	UPROPERTY()
+	TArray<ESlateVisibility> IconCenterSystem;
+	
+	FPromptHelper()
+	{
+		TextTop.Add(FText::FromString(TEXT("")));
+		TextTop.Add(LOCTEXT("buttonGameList", "Game List"));
+		TextTop.Add(LOCTEXT("buttonSelect", "Select"));
+		TextTop.Add(LOCTEXT("buttonOk", "Ok"));
+		TextTop.Add(LOCTEXT("buttonBack", "Back"));
+		TextTop.Add(FText::FromString(TEXT("")));
+		TextTop.Shrink();
+
+		TextCenter.Add(LOCTEXT("buttonMenu", "Menu"));
+		TextCenter.Add(LOCTEXT("buttonDetails", "Details"));
+		TextCenter.Add(LOCTEXT("buttonSelect", "Select"));
+		TextCenter.Add(LOCTEXT("buttonStartGame", "Start Game"));
+		TextCenter.Add(LOCTEXT("buttonBack", "Back"));
+		TextCenter.Add(LOCTEXT("buttonFavorite", "Favorite"));
+		TextCenter.Shrink();
+
+		TextCenterSystem.Add(LOCTEXT("buttonMenu", "Menu"));
+		TextCenterSystem.Add(LOCTEXT("buttonDetails", "Details"));
+		TextCenterSystem.Add(LOCTEXT("buttonSelect", "Select"));
+		TextCenterSystem.Add(LOCTEXT("buttonOk", "Ok"));
+		TextCenterSystem.Add(LOCTEXT("buttonExit", "Exit"));
+		TextCenterSystem.Add(FText::FromString(TEXT("")));
+		TextCenterSystem.Shrink();
+
+		IconTop.Add(ESlateVisibility::Collapsed);
+		IconTop.Add(ESlateVisibility::Visible);
+		IconTop.Add(ESlateVisibility::Visible);
+		IconTop.Add(ESlateVisibility::Visible);
+		IconTop.Add(ESlateVisibility::Visible);
+		IconTop.Add(ESlateVisibility::Collapsed);
+		IconTop.Shrink();
+
+		IconCenter.Add(ESlateVisibility::Visible);
+		IconCenter.Add(ESlateVisibility::Visible);
+		IconCenter.Add(ESlateVisibility::Visible);
+		IconCenter.Add(ESlateVisibility::Visible);
+		IconCenter.Add(ESlateVisibility::Visible);
+		IconCenter.Add(ESlateVisibility::Visible);
+		IconCenter.Shrink();
+
+		IconCenterSystem.Add(ESlateVisibility::Visible);
+		IconCenterSystem.Add(ESlateVisibility::Visible);
+		IconCenterSystem.Add(ESlateVisibility::Visible);
+		IconCenterSystem.Add(ESlateVisibility::Visible);
+		IconCenterSystem.Add(ESlateVisibility::Visible);
+		IconCenterSystem.Add(ESlateVisibility::Collapsed);
+		IconCenterSystem.Shrink();
+	};
+};
+
+#undef LOCTEXT_NAMESPACE
+
 USTRUCT(BlueprintType)
 struct FMultiInput
 {
@@ -118,16 +192,16 @@ public:
 	UCanvasPanel* CanvasPanelConfiguration;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UMoreInformationsLayout* WBPInfo;
+	UMoreInformationsLayout* Information;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UGameListLayout* WBPSystemsList;
+	UGameListLayout* GameList;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UOptionsLayout* Options;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UButtonsPrompt* WBPButtonsIconsInterfaces;
+	UButtonsPrompt* PromptMain;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UFrame* Frame;
@@ -304,15 +378,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void SetButtonsIconInterfaces(EPositionY GetPosition);
 
-	/*UFUNCTION()
-	bool Save(int32 IndexGameSystem);
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Save")
-	void SetCountPlayerToSave();
-
-	UFUNCTION(BlueprintCallable, Category = "MainInterface|Save")
-	void SetFavoriteToSave();*/
-
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Functions")
 	void RunningGame(bool bIsRun);
 
@@ -325,22 +390,7 @@ public:
 private:
 
 	UPROPERTY()
-	TArray<FText> TextTop;
-
-	UPROPERTY()
-	TArray<FText> TextCenter;
-
-	UPROPERTY()
-	TArray<FText> TextCenterSystem;
-
-	UPROPERTY()
-	TArray<ESlateVisibility> IconTop;
-
-	UPROPERTY()
-	TArray<ESlateVisibility> IconCenter;
-
-	UPROPERTY()
-	TArray<ESlateVisibility> IconCenterSystem;
+	FPromptHelper PromptHelper;
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void SetHeaderButtonFocus();
