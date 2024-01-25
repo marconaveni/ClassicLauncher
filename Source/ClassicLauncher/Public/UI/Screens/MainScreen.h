@@ -217,14 +217,6 @@ public:
 	
 	UPROPERTY(BlueprintReadWrite, Transient, meta = (BindWidgetAnim))
 	UWidgetAnimation* FadeStartSystem;
-	
-	//subclass and references
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
-	TSubclassOf<UButtonCommon> ButtonSystemClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
-	TArray<UButtonCommon*> ButtonSystemReferences;
 
 
 protected:
@@ -262,11 +254,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
 	UTexture2D* ImageNull;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	AClassicGameMode* GameMode;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
-	bool bDelayTooltip = false;
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables")
+	bool bDelayTooltip = false;*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainInterface|Variables|Debug")
 	bool bDebug = false;
@@ -317,7 +306,6 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnLoadGamesList();
 	
-
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnLoadImages(const int32& Index, const FString& Path);
 
@@ -411,7 +399,7 @@ private:
 	void OnClickConfigurations();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
-	void OnClickFavorites();
+	void OnClickFilters();
 
 	UFUNCTION(BlueprintCallable, Category = "MainInterface|Events")
 	void OnClickInfo();

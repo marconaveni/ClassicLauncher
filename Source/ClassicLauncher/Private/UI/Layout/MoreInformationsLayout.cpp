@@ -3,12 +3,10 @@
 
 #include "UI/Layout/MoreInformationsLayout.h"
 #include "UI/Components/StarRating.h"
-#include "Components/ScrollBox.h"
 #include "FunctionLibrary/ClassicFunctionLibrary.h"
 
 UMoreInformationsLayout::UMoreInformationsLayout(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
 {
-	CurrentOffSet = 0;
 }
 
 FReply UMoreInformationsLayout::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
@@ -48,13 +46,7 @@ void UMoreInformationsLayout::SetGameInfo(FGameData GameData)
 	TextFavorite->SetText(FText::FromString(GameData.favorite ? TEXT("Yes") : TEXT("No")) );
 	TextPlayCount->SetText(FText::FromString(FString::FromInt(GameData.playcount)));
 	TextLastPlayed->SetText(FText::FromString(IsDateNull(GameData.lastplayed)));
-	WBPStar->SetUpdateRatingStar(FCString::Atof(*GameData.rating));
-}
-
-void UMoreInformationsLayout::Scrolled(float NewValue)
-{
-	ScrollBox->SetScrollOffset(FMath::Clamp(NewValue, 0, ScrollBox->GetScrollOffsetOfEnd()) );
-	CurrentOffSet = ScrollBox->GetScrollOffset();
+	StarRating->SetUpdateRatingStar(FCString::Atof(*GameData.rating));
 }
 
 void UMoreInformationsLayout::SetTextAppearance(FTextStyle NewTextStyle)

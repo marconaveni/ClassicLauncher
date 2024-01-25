@@ -5,7 +5,9 @@
 #include "CoreMinimal.h"
 #include "ScreenManager.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageDelegate, FText, Message);
+class UDataManager;
+class ULoadingScreen;
+class UMainScreen;
 
 /**
  * 
@@ -15,54 +17,33 @@ class CLASSICLAUNCHER_API UScreenManager : public UObject
 {
 	GENERATED_BODY()
 
-
 protected:
 
-	UPROPERTY(BlueprintAssignable, BlueprintCallable)
-	FMessageDelegate MessageShow;
-
 	UPROPERTY()
-	class UDataManager* DataManager;
+	UDataManager* DataManager;
 
 	UPROPERTY()
 	FTimerHandle DelayTimerHandle;
 
-
-
 public:
 
-	void Init(TSubclassOf<class UMainScreen> MainScreenClass, TSubclassOf<class ULoadingScreen> LoadingScreenClass);
+	void Init(TSubclassOf<UMainScreen> MainScreenClass, TSubclassOf<ULoadingScreen> LoadingScreenClass);
 
-	UFUNCTION(BlueprintCallable, Category = "Functions")
-	void LoadConfiguration();
-
-	UFUNCTION(BlueprintCallable, Category = "Functions")
-	void CreateNewGameList();
-
-	UFUNCTION(BlueprintCallable, Category = "Functions")
-	void PrepareToSaveNewGameList();
-
-	UFUNCTION(BlueprintCallable, Category = "Functions")
-	void LoadGameSystems();
+	UFUNCTION(BlueprintCallable, Category = "DataManager|Functions")
+	void CreateWidgetsAndActors(TSubclassOf<UMainScreen> MainScreenClass, TSubclassOf<ULoadingScreen> LoadingScreenClass);
 
 	UFUNCTION()
-	void AddSystems();
+	void ShowMainScreenToViewPort();
 
 	UFUNCTION()
-	void AddMainInterfaceToViewPort();
-
-	UFUNCTION()
-	void AddLoadingScreenToViewPort();
-
-	UFUNCTION()
-	void RemoveLoadingScreenToParent();
+	void SetVisibilityLoadingScreen(const ESlateVisibility Visibility) const;
 
 	UFUNCTION()
 	void SetToRestartWidgets();
 
 	UFUNCTION()
-	void RestartWidgets();
+	void RestartConfigurations();
 
 	UFUNCTION()
-	void Message(FText Message);
+	void ShowMessage(const FText& Message) const;
 };

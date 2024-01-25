@@ -16,12 +16,15 @@ class CLASSICLAUNCHER_API ULoadingScreen : public UUserWidget
 {
 	GENERATED_BODY()
 
+protected:
+
+	virtual void NativeOnInitialized() override;
+
 public:
-
-
+	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* Message;
 
 	UFUNCTION()
-	void ShowMessage(FText NewMessage) const;
+	void ShowMessage(const FText& NewMessage);
 };

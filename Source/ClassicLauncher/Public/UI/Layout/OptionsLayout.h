@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "FunctionLibrary/ClassicFunctionLibrary.h"
+#include "Data/GameData.h"
 #include "Blueprint/UserWidget.h"
 #include "OptionsLayout.generated.h"
 
@@ -35,9 +36,7 @@ public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual void NativeOnInitialized() override;
 	virtual FReply NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
-
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
-	class UMainScreen* MainInterfaceReference;*/
+	
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UScrollBoxEnhanced* ScrollBoxOptions;
@@ -129,9 +128,6 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UOptionsLicenceLayout* OptionsLicenceLayout;
 
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
-	class AClassicMediaPlayer* ClassicMediaPlayerReference;*/
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<int32, FText> TitleList;
 
@@ -186,9 +182,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void SetFocusOptionsItem(EButtonsGame Input);
 
-	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
-	void RestartMap();
-
 	UFUNCTION(BlueprintPure, Category = "ClassicConfigurations|Funtions")
 	TArray<FString> GetFoldersThemes();
 
@@ -209,6 +202,6 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void OnTheme(int32 Value);
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicConfigurations|Timers")
-	FTimerHandle RestartMapTimerHandle;
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicConfigurations|Timers")
+	FTimerHandle RestartMapTimerHandle;*/
 };

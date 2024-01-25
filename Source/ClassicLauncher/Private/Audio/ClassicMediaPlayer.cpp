@@ -10,6 +10,7 @@
 #include "UI/Screens/MainScreen.h"
 #include "Components/Image.h"
 #include "Data/DataManager.h"
+#include "Data/GameDataFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/Layout/FooterDetails.h"
 
@@ -36,22 +37,14 @@ void AClassicMediaPlayer::BeginPlay()
 
 	DataManager = GetWorld()->GetSubsystem<UDataManager>();
 	DataManager->SetClassicMediaPlayerReference(this);
+	
+	const FConfig ConfigurationData = DataManager->ConfigurationData;
+	ChangeMasterVolume(ConfigurationData.VolumeMaster);
+	ChangeMusicVolume(ConfigurationData.VolumeMusic);
+	ChangeVideoVolume(ConfigurationData.VolumeVideo);
 
-	FString ConfigResult;
-	const FString GameRoot = UClassicFunctionLibrary::GetGameRootDirectory() + TEXT("config\\config.xml");
-
-	if (UClassicFunctionLibrary::LoadStringFile(ConfigResult, GameRoot))
-	{
-		FConfig ConfigurationData;
-		UClassicFunctionLibrary::SetConfig(UClassicFunctionLibrary::LoadXMLSingle(ConfigResult, TEXT("config")), ConfigurationData);
-		ChangeMasterVolume(ConfigurationData.VolumeMaster);
-		ChangeMusicVolume(ConfigurationData.VolumeMusic);
-		ChangeVideoVolume(ConfigurationData.VolumeVideo);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("%s Not Found"), *GameRoot);
-	}
+	SetMusics(TEXT(""));
+	PlaylistMusic(false);
 
 	ClassicPlayerVideo->GetMediaPlayer()->OnEndReached.AddDynamic(this, &AClassicMediaPlayer::OnEndVideo);
 	ClassicPlayerMusic->GetMediaPlayer()->OnEndReached.AddDynamic(this, &AClassicMediaPlayer::OnEndMusic);
@@ -218,11 +211,29 @@ int32 AClassicMediaPlayer::GetVideoVolume() const
 	return VideoVolume;
 }
 
+void AClassicMediaPlayer::SetVolumeSave()
+{
+	FConfig Config = DataManager->ConfigurationData;
+
+	const bool bSave = (Config.VolumeMaster != GetMasterVolume() || Config.VolumeMusic != GetMusicVolume() || Config.VolumeVideo != GetVideoVolume());
+
+	Config.VolumeMaster = GetMasterVolume();
+	Config.VolumeMusic = GetMusicVolume();
+	Config.VolumeVideo = GetVideoVolume();
+	
+	if (bSave)
+	{
+		DataManager->ConfigurationData = Config;
+		UGameDataFunctionLibrary::SaveConfigurationData(Config);
+		UE_LOG(LogTemp, Warning, TEXT("saving config"));
+	}
+}
+
 bool AClassicMediaPlayer::CreateRuntimeAudioImporter(URuntimeAudioImporterLibrary*& RuntimeAudioImporter)
 {
 	RuntimeAudioImporter = URuntimeAudioImporterLibrary::CreateRuntimeAudioImporter();
 
-	if (!IsValid(RuntimeAudioImporter))
+	if (RuntimeAudioImporter != nullptr)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Failed to create audio importer"));
 		return false;

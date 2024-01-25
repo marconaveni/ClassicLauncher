@@ -140,7 +140,11 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Media|Functions")
 	void GetSounds(USoundBase*& SoundCursor, USoundBase*& SoundClick) const;
 
+	UFUNCTION()
+	void SetVolumeSave();
+	
 private:
+	
 	UFUNCTION()
 	bool CreateRuntimeAudioImporter(URuntimeAudioImporterLibrary*& RuntimeAudioImporter);
 

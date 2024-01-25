@@ -14,6 +14,17 @@ class ULoopScroll;
 class UFrame;
 class UClassicGameInstance;
 class AClassicMediaPlayer;
+class UScreenManager;
+class AClassicGameMode;
+
+/*dynamic */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMessageDelegate,const FText&, Message);
+/*dynamic */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDoneGameListNative);
+
+
+enum class EGameDataStatus { None ,Done ,Failed };
+enum class EConfigurationStatus { None ,Done ,Failed };
 
 /**
  * 
@@ -40,9 +51,21 @@ private:
 
 	UPROPERTY()
 	AClassicMediaPlayer* ClassicMediaPlayerReference;
-
-public:
 	
+	UPROPERTY()
+	UScreenManager* ScreenManager;
+
+	EGameDataStatus GameDataStatus;
+	
+	EConfigurationStatus ConfigurationStatus;
+	
+public:
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FOnDoneGameListNative OnDoneGameListNative;
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FOnMessageDelegate OnMessageShow;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataManager|GameData")
 	TArray<FGameData> GameData;
@@ -59,13 +82,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataManager|GameData")
 	int32 IndexGameSystem;
 
-	UFUNCTION(BlueprintPure, Category = "DataManager|DataData|Getters")
+	UFUNCTION(BlueprintPure, Category = "DataManager|GameData|Getters")
 	FGameData GetGameData(int32 Index = -1) const;
 
-	UFUNCTION(BlueprintPure, Category = "DataManager|DataData|Getters")
+	UFUNCTION(BlueprintPure, Category = "DataManager|GameData|Getters")
 	FGameSystem GetGameSystem(int32 Index = -1) const;
 
-	UFUNCTION(BlueprintPure, Category = "DataManager|DataData|Getters")
+	UFUNCTION(BlueprintPure, Category = "DataManager|GameData|Getters")
 	FGameData GetGameSystemGameData(int32 Index = -1) const;
 
 private:
@@ -74,15 +97,40 @@ private:
 	bool Save();
 
 public:
-	
+
 	UFUNCTION(BlueprintCallable, Category = "DataManager|Save")
 	void SetCountPlayerToSave();
 
 	UFUNCTION(BlueprintCallable, Category = "DataManager|Save")
 	void SetFavoriteToSave();
 	
-	UFUNCTION(BlueprintCallable, Category = "DataManager|Functions")
-	void CreateWidgets(TSubclassOf<UMainScreen> MainScreenClass, TSubclassOf<class ULoadingScreen> LoadingScreenClass);
+	UFUNCTION(BlueprintCallable, Category = "DataManager|GameData|Functions")
+	void InitGameData();
+	
+	UFUNCTION(BlueprintCallable, Category = "DataManager|GameData|Functions")
+	void LoadConfiguration();
+
+	UFUNCTION(BlueprintCallable, Category = "DataManager|GameData|Functions")
+	void LoadGamesList();
+
+private:
+	
+	UFUNCTION()
+	void LoadGameSystems();
+
+	UFUNCTION()
+	void CreateNewGameList();
+	
+	UFUNCTION()
+	void PrepareToSaveNewGameList();
+	
+public:
+
+	UFUNCTION(BlueprintPure, Category = "DataManager|Getters")
+	UScreenManager* GetScreenManager() const;
+
+	UFUNCTION(BlueprintPure, Category = "DataManager|Getters")
+	AClassicGameMode* GetGameMode() const;
 
 	UFUNCTION(BlueprintPure, Category = "DataManager|Getters")
 	APlayerController* GetGameplayStatics() const;

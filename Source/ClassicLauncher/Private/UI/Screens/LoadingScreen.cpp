@@ -4,8 +4,16 @@
 #include "UI/Screens/LoadingScreen.h"
 
 #include "Components/TextBlock.h"
+#include "Data/DataManager.h"
 
-void ULoadingScreen::ShowMessage(FText NewMessage) const
+void ULoadingScreen::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+	UDataManager* DataManager = GetWorld()->GetSubsystem<UDataManager>();
+	DataManager->OnMessageShow.AddDynamic(this , &ULoadingScreen::ShowMessage);
+}
+
+void ULoadingScreen::ShowMessage(const FText& NewMessage)
 {
 	Message->SetText(NewMessage);
 }

@@ -4,8 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "Data/GameData.h"
-#include "EasyXMLElement.h"
 #include "ClassicFunctionLibrary.generated.h"
 
 //~~~~~~~~~~~~~~~~~~~~~~
@@ -80,35 +78,36 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|Input")
 	static EButtonsGame GetInputButton(const FKeyEvent& InKeyEvent);
 
+
+
+
+	
+
 	///** Sort  GameSystem.SystemLabel array */
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static void SortConfigSystem(UPARAM(ref) TArray<FGameSystem>& GameSystems, const bool bAscending = true);
+	/*UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
+	static void SortConfigSystem(UPARAM(ref) TArray<FGameSystem>& GameSystems, const bool bAscending = true);*/
 	
 	///** Sort  GameData.Name array  */
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static void SortGameData(UPARAM(ref) TArray<FGameData>& GameData, const bool bAscending = true);
+	/*UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
+	static void SortGameData(UPARAM(ref) TArray<FGameData>& GameData, const bool bAscending = true);*/
 
 	///** filters GameData.bFavorites if is equals true first in the array */
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static TArray<FGameData> FilterGameDataFavoritesFirst(UPARAM(ref) TArray<FGameData>& GameData, const bool bOnlyFavorites);
-
+	/*UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
+	static TArray<FGameData> FilterGameDataFavoritesFirst(UPARAM(ref) TArray<FGameData>& GameData, const bool bOnlyFavorites);*/
+	
 	///** filters larger GameData.PlayCount value first in the array */
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static void FilterGameDataMostPlayed(UPARAM(ref) TArray<FGameData>& GameData);
+	/*UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
+	static void FilterGameDataMostPlayed(UPARAM(ref) TArray<FGameData>& GameData);*/
 
 	///** filters larger GameData.LastPlayed value first in the array */
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static void FilterGameDataLastPlayed(UPARAM(ref) TArray<FGameData>& GameData);
+	/*UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
+	static void FilterGameDataLastPlayed(UPARAM(ref) TArray<FGameData>& GameData);*/
 
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static bool SaveGameListXML(FString& GameListPath, TArray<FGameData>& NewGames);
+	/*UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
+	static bool SaveGameListXML(FString& GameListPath, TArray<FGameData>& NewGames);*/
 
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|Configuration")
-	static void SaveConfig(const FConfig ConfigurationData);
-
-	/** InstallDir/GameName */
-	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|File IO")
-	static FString GetGameRootDirectory();
+	/*UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|Configuration")
+	static void SaveConfig(const FConfig ConfigurationData);*/
 
 	//pause a main thread
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|System")
@@ -124,6 +123,80 @@ public:
 	//verify if not exists folder and create
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|File IO")
 	static bool VerifyDirectory(const FString& TestDir);
+
+	/*UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Strings")
+	static FString ReplacePath(FString Value, FString Path);*/
+	
+
+	//create a file gamelist.xml for save 
+	/*UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData|XML")
+	static FString CreateXMLGameFile(TArray<FGameData> GameData);*/
+
+	//create a file config.xml for save 
+	/*UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData|XML")
+	static FString CreateXMLConfigFile(FConfig ConfigData);*/
+
+	//generate specific tag ex:  <name>value</name>
+	/*UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData|XML")
+	static FString GenerateXmlTag(FString tagName, FString data);*/
+
+	/*UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData|XML")
+	static TArray<UEasyXMLElement*> LoadXML(FString XMLString, FString AccessString);*/
+
+	/*UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData|XML")
+	static UEasyXMLElement* LoadXMLSingle(FString XMLString, FString AccessString);*/
+
+	/*UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
+	static void SetConfig(UEasyXMLElement* Element, FConfig& Config);*/
+
+	/*UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
+	static void SetGameSystem(TArray<UEasyXMLElement*>  Elements, TArray<FGameSystem>& ConfigSystems);*/
+
+	/*UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
+	static void SetGameData(TArray<UEasyXMLElement*>  Elements, TArray<FGameData>& GameDatas, UTexture2D* Texture);*/
+
+	/*UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
+	static FGameSystem SetSystemToGameData(TArray<FGameSystem> Systems);*/
+	
+	//format the array game data with correct path system
+	/*UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
+	static void FormatGameData(UPARAM(ref) FGameSystem& GameSystems, FConfig Configuration);*/
+
+	/*UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
+	static bool FindGameData(TArray<FGameData> datas, FGameData  DataElement, int32& Index, int32 Find = -1);*/
+
+
+
+
+
+	
+	/*UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
+	static TArray<FGameData> FilterGameData(TArray<FGameData> GameData, EGamesFilter Filter, int32& Num);
+
+	//Return filter GameDatas Array favorites are true
+	UFUNCTION()
+	static int32 FilterFavoriteGameData(TArray<FGameData>& GameData, bool bOnlyFavorites);
+
+	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
+	static int32 CountFavorites(TArray<FGameData> GameData);*/
+
+
+
+
+
+
+	
+
+
+
+	/** Replace $(Home) ClassicLauncher root directory  */
+	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Strings")
+	static FString HomeDirectoryReplace(FString Directory);
+	
+	/** InstallDir/GameName */
+	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|File IO")
+	static FString GetGameRootDirectory();
+	
 
 	//delete file if exists in folder 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|File IO")
@@ -146,99 +219,18 @@ public:
 	//Generate a random number without repeating the last one
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Integers")
 	static int32 GenerateNumberWithoutRepeat(int32 Value, int32 Min, int32 Max);
-
-	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Strings")
-	static FString ReplacePath(FString Value, FString Path);
-
-	/*/** Replace name core Remove #1#
-	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Strings", Meta = (ReturnDisplayName = "Replaced Core Name"))
-	static FString CoreReplace(FString Core);*/
-
-	/** Replace $(Home) ClassicLauncher root directory  */
-	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Strings")
-	static FString HomeDirectoryReplace(FString Directory);
-
-	/*
-	/**
-	*Replace relative media path
-	*
-	*@param    OriginalPathMedia EX: "./game.png or c:\games\roms\game.png" <image> or <thumbnail> or <video> in gamelist.xml
-	*@param    PathMedia EX: "c:\classiclauncher\media" <pathmedia> in config.xml
-	*@param    RomName EX: "./game.zip or c:\games\roms\game.zip" in <path> gamelist.xml
-	*@param    SystemName EX: snes  <systemname> in configsys
-	*@param    TypeMedia 3 types "covers" "screenshots" "videos"
-	*@param    Format  2 types .png . mp4
-	*@return   Return new path EX: "c:\classiclauncher\media\covers\game.png"
-	#1#
-	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Strings")
-	static FString ReplaceMedia(FString OriginalPathMedia, FString PathMedia, FString PathRom, FString RomName, FString SystemName, FString TypeMedia, FString Format, FString RomFormated);
-	*/
-
-	//create a file gamelist.xml for save 
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData|XML")
-	static FString CreateXMLGameFile(TArray<FGameData> GameData);
-
-	//create a file config.xml for save 
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData|XML")
-	static FString CreateXMLConfigFile(FConfig ConfigData);
-
-	//generate specific tag ex:  <name>value</name>
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData|XML")
-	static FString GenerateXmlTag(FString tagName, FString data);
-
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData|XML")
-	static TArray<UEasyXMLElement*> LoadXML(FString XMLString, FString AccessString);
-
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData|XML")
-	static UEasyXMLElement* LoadXMLSingle(FString XMLString, FString AccessString);
-
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static void SetConfig(UEasyXMLElement* Element, FConfig& Config);
-
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static void SetGameSystem(TArray<UEasyXMLElement*>  Elements, TArray<FGameSystem>& ConfigSystems);
-
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static void SetGameData(TArray<UEasyXMLElement*>  Elements, TArray<FGameData>& GameDatas, UTexture2D* Texture);
-
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static FGameSystem SetSystemToGameData(TArray<FGameSystem> Systems);
+	
 
 
-	//format the array game data with correct path system
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static void FormatGameData(UPARAM(ref) FGameSystem& GameSystems, FConfig Configuration);
-
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static bool FindGameData(TArray<FGameData> datas, FGameData  DataElement, int32& Index, int32 Find = -1);
-
-
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static TArray<FGameData> FilterGameData(TArray<FGameData> GameData, EGamesFilter Filter, int32& Num);
-
-	//Return filter GameDatas Array favorites are true
-	UFUNCTION()
-	static int32 FilterFavoriteGameData(TArray<FGameData>& GameData, bool bOnlyFavorites);
-
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
-	static int32 CountFavorites(TArray<FGameData> GameData);
-
-
-	///////////////////////////////////////////////////////
-	///////////////////////////////////////////////////////
-	///these functions are not mine, all credits go to Rama
-
-	//function credits Rama VictoryBPFunctionLibrary
 	/** Obtain all files in a provided directory, with optional extension filter. All files are returned if Ext is left blank. Returns false if operation could not occur. */
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|File IO")
 	static bool ClassicGetFiles(TArray<FString>& Files, FString RootFolderFullPath, FString Ext);
-
-	//function credits Rama VictoryBPFunctionLibrary
+	
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|File IO")
 	static bool LoadStringFile(FString& Result, FString FullFilePath);
 
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|File IO")
-	static void CreateFolders(FString PathMedia, TArray<FGameSystem> GameSystems);
+	/*UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|File IO")
+	static void CreateFolders(FString PathMedia, TArray<FGameSystem> GameSystems);*/
 
 	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|LoadTexture", meta = (DisplayName = "Load Texture", Keywords = "loadtexture", ReturnDisplayName = "TextureOut"))
 	static UTexture2D* LoadTexture2DFromFile(const FString& FullFilePath, EClassicImageFormat ImageFormat, EClassicTextureFilter Filter, int32& Width, int32& Height);
@@ -318,6 +310,13 @@ public:
 	UFUNCTION()						   
 	static void CreateTexture2DToAsset(int32 InSizeX, int32 InSizeY, EPixelFormat InFormat, const FName InName, UTexture2D*& NewTexture, UPackage*& Package);
 
+
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+	static void GameSettingsInit();
+
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+	static void GameSettingsRunning();
+	
 	UFUNCTION(BlueprintPure, Category = "ClassicFunctionLibrary|Widgets")
 	static bool GetVisibilityWidget(const class UWidget* Widget);
 	

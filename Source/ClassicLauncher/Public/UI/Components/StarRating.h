@@ -6,6 +6,8 @@
 #include "Blueprint/UserWidget.h"
 #include "StarRating.generated.h"
 
+
+class UImage;
 /**
  * 
  */
@@ -17,19 +19,19 @@ class CLASSICLAUNCHER_API UStarRating : public UUserWidget
 protected:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* Star0;
+	UImage* Star0;
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* Star1;
+	UImage* Star1;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* Star2;
+	UImage* Star2;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* Star3;
+	UImage* Star3;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* Star4;
+	UImage* Star4;
 
 	virtual void NativePreConstruct() override;
 

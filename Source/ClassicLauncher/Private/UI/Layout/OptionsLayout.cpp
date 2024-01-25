@@ -7,16 +7,13 @@
 #include "Components/WidgetSwitcher.h"
 #include "Audio/ClassicMediaPlayer.h"
 #include "Core/ClassicGameinstance.h"
-#include "Core/ClassicGameMode.h"
 #include "Core/ScreenManager.h"
-#include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "FunctionLibrary/ClassicFunctionLibrary.h"
 #include "TextImageBlock.h"
 #include "Data/DataManager.h"
 #include "Kismet/KismetInternationalizationLibrary.h"
 #include "UI/Components/ButtonCheckBox.h"
-#include "UI/Layout/Header.h"
 #include "UI/Components/ButtonCommon.h"
 #include "UI/Components/ButtonCommonAlternative.h"
 #include "UI/Components/ScrollBoxEnhanced.h"
@@ -70,7 +67,7 @@ void UOptionsLayout::SetSlide(FConfig& Configuration)
 
 void UOptionsLayout::OnSlideVolumeMaster(int32 Value)
 {
-	if (IsValid(DataManager->GetClassicMediaPlayerReference()))
+	if (DataManager->GetClassicMediaPlayerReference() != nullptr)
 	{
 		DataManager->GetClassicMediaPlayerReference()->ChangeMasterVolume(Value);
 	}
@@ -78,7 +75,7 @@ void UOptionsLayout::OnSlideVolumeMaster(int32 Value)
 
 void UOptionsLayout::OnSlideVolumeMusic(int32 Value)
 {
-	if (IsValid(DataManager->GetClassicMediaPlayerReference()))
+	if (DataManager->GetClassicMediaPlayerReference() != nullptr)
 	{
 		DataManager->GetClassicMediaPlayerReference()->ChangeMusicVolume(Value);
 	}
@@ -86,7 +83,7 @@ void UOptionsLayout::OnSlideVolumeMusic(int32 Value)
 
 void UOptionsLayout::OnSlideVolumeVideo(int32 Value)
 {
-	if (IsValid(DataManager->GetClassicMediaPlayerReference()))
+	if (DataManager->GetClassicMediaPlayerReference() != nullptr)
 	{
 		DataManager->GetClassicMediaPlayerReference()->ChangeVideoVolume(Value);
 	}
@@ -94,35 +91,9 @@ void UOptionsLayout::OnSlideVolumeVideo(int32 Value)
 
 void UOptionsLayout::OnSlideLostFocus()
 {
-	if (!IsValid(DataManager->GetMainScreenReference()) && !IsValid(DataManager->GetClassicMediaPlayerReference()))
+	if (DataManager->GetClassicMediaPlayerReference() != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("MainInterfaceReference ClassicMediaPlayerReference error"));
-		return;
-	}
-	bool bSave = false;
-	FConfig Config = DataManager->ConfigurationData;
-
-	if (Config.VolumeMaster != DataManager->GetClassicMediaPlayerReference()->GetMasterVolume())
-	{
-		Config.VolumeMaster = DataManager->GetClassicMediaPlayerReference()->GetMasterVolume();
-		bSave = true;
-	}
-	if (Config.VolumeMusic != DataManager->GetClassicMediaPlayerReference()->GetMusicVolume())
-	{
-		Config.VolumeMusic = DataManager->GetClassicMediaPlayerReference()->GetMusicVolume();
-		bSave = true;
-	}
-	if (Config.VolumeVideo != DataManager->GetClassicMediaPlayerReference()->GetVideoVolume())
-	{
-		Config.VolumeVideo = DataManager->GetClassicMediaPlayerReference()->GetVideoVolume();
-		bSave = true;
-	}
-
-	if (bSave)
-	{
-		DataManager->ConfigurationData = Config;
-		UClassicFunctionLibrary::SaveConfig(Config);
-		UE_LOG(LogTemp, Warning, TEXT("saving config"));
+		DataManager->GetClassicMediaPlayerReference()->SetVolumeSave();
 	}
 }
 
@@ -132,20 +103,15 @@ void UOptionsLayout::OnClickUpdate(int32 Value)
 	if (ClassicGameInstance->DeleteGameSystemSave())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Deleted Saved"));
-		DataManager->GetMainScreenReference()->SetInputEnable(false);
-		DataManager->GetMainScreenReference()->Header->SetFocusButton();
-		GetWorld()->GetTimerManager().SetTimer(RestartMapTimerHandle, this, &UOptionsLayout::RestartMap, 3.0f, false, -1);
-		if (IsValid(DataManager->GetMainScreenReference()))
-		{
-			const FText Message = LOCTEXT("UpdateGame", "Update game wait");
-			DataManager->GetMainScreenReference()->ShowMessage(Message, 2.5f);
-		}
+		WSScreens->SetActiveWidgetIndex(0);
+		DataManager->GetScreenManager()->SetToRestartWidgets();
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("MainInterfaceReference or ClassicMediaPlayerReference references error"));
 	}
 }
+
 
 void UOptionsLayout::OnClickChangeSystems(int32 Value)
 {
@@ -224,7 +190,7 @@ void UOptionsLayout::GetLanguageText(bool bShowMessage)
 	const FString CurrentLanguage = UKismetInternationalizationLibrary::GetCurrentCulture();
 	const FText TextCurrentLanguage = (CurrentLanguage == TEXT("en")) ? LOCTEXT("LogLanguageen", "English") : LOCTEXT("LogLanguageptbr", "Portuguese (Brazil)");
 	const FText Message = FText::Format(LOCTEXT("ChangeLanguageTo", "Change language to {0}"), TextCurrentLanguage);
-	if (bShowMessage && IsValid(DataManager->GetMainScreenReference()))
+	if (bShowMessage && DataManager->GetMainScreenReference() != nullptr)
 	{
 		DataManager->GetMainScreenReference()->ShowMessage(Message, 2.5f);
 	}
@@ -250,13 +216,6 @@ void UOptionsLayout::SetFocusOptionsItem(const EButtonsGame Input)
 	{
 		ToScroll->SetFocusScroll(EScrollTo::NONE);
 	}
-}
-
-void UOptionsLayout::RestartMap()
-{
-	const AClassicGameMode* GameMode = Cast<AClassicGameMode>(UGameplayStatics::GetGameMode(this));
-	WSScreens->SetActiveWidgetIndex(0);
-	GameMode->LoadingGameData->SetToRestartWidgets();
 }
 
 bool UOptionsLayout::GetScrollBoxEnhancedWidgetSwitcherIndex(UScrollBoxEnhanced*& Scroll) const

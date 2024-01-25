@@ -4,12 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Data/GameData.h"
 #include "FunctionLibrary/ClassicFunctionLibrary.h"
+#include "UI/Screens/MainScreen.h"
 #include "GameListLayout.generated.h"
 
 
 class UButtonCommon;
 class UScrollBoxEnhanced;
+class UModal;
 
 /**
  * 
@@ -22,21 +25,12 @@ class CLASSICLAUNCHER_API UGameListLayout : public UUserWidget
 protected:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* BgBackground;
+	UModal* Modal;
 
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* Icon;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButtonsPrompt* WBPButtonsIconsInterfaces;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
+	TSubclassOf<UButtonCommon> ButtonCommonClass;
 
 public:
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Timers")
-	FTimerHandle ArrowTimerHandle;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextImageBlock* TextSelectSystem;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UScrollBoxEnhanced* ScrollBox;
@@ -45,6 +39,9 @@ public:
 	virtual FReply NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 	virtual FReply NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 
+	UFUNCTION()
+	void AddSystems(TArray<FGameSystem> GameSystem, UMainScreen* MainScreenRef);
+
 	UFUNCTION(BlueprintCallable, Category = "ClassicSystemListInterface|Events")
-	void SetFocusItem(const EButtonsGame Input,UPARAM(ref) int32& Index);
+	void SetFocusItem(const EButtonsGame Input);
 };

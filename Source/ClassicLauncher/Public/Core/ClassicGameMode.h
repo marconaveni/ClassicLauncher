@@ -6,6 +6,12 @@
 #include "GameFramework/GameModeBase.h"
 #include "ClassicGameMode.generated.h"
 
+
+class UMainScreen;
+class ULoadingScreen;
+class AClassicMediaPlayer;
+class UScreenManager;
+
 /**
  * 
  */
@@ -16,26 +22,18 @@ class CLASSICLAUNCHER_API AClassicGameMode : public AGameModeBase
 	
 public:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	class UScreenManager* LoadingGameData;
+	UPROPERTY()
+	UScreenManager* ScreenManager;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
-	TSubclassOf<class UMainScreen> MainInterfaceClass;
+	TSubclassOf<UMainScreen> MainInterfaceClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subclass")
-	TSubclassOf<class ULoadingScreen> LoadingScreenClass;
+	TSubclassOf<ULoadingScreen> LoadingScreenClass;
 
 	virtual void BeginPlay() override;
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void Init();
-
-	UFUNCTION(BlueprintCallable, Category = "Functions")
-	void GameSettingsInit();
-
-	UFUNCTION(BlueprintCallable, Category = "Functions")
-	void GameSettingsRunningInternal();
-
-	UFUNCTION(BlueprintCallable, Category = "Functions")
-	void GameSettingsRunning();
+	
 };

@@ -3,7 +3,6 @@
 
 #include "UI/Components/ToolTip.h"
 #include "Components/Image.h"
-#include "Components/Overlay.h"
 
 
 UToolTip::UToolTip(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)

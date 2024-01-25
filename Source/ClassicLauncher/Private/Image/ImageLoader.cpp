@@ -2,6 +2,7 @@
 
 
 #include "Image/ImageLoader.h"
+#include "Data/GameData.h"
 
 UImageLoader::UImageLoader()
 	: FirstIndex(-1)
