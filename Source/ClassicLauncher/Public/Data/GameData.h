@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "XMLDateTime.h"
 #include "GameData.generated.h"
 
 UENUM(BlueprintType)
@@ -38,7 +39,7 @@ struct FGameData
 	FString rating;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString releasedate;
+	FString releasedate; // todo change
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString developer;
@@ -74,7 +75,7 @@ struct FGameData
 	int32 playcount;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString lastplayed;
+	FString lastplayed; // todo change
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString Executable;
@@ -83,7 +84,8 @@ struct FGameData
 	FString Arguments;
 
 
-	//formated 
+
+	//formatted 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString PathFormated;
@@ -103,8 +105,11 @@ struct FGameData
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString videoFormated;
 
-
-	//construtor
+	FXMLDateTime DTReleaseDate;
+	
+	FXMLDateTime DTLastPlayed;
+	
+	//constructor
 	FGameData()
 	{
 		//map index
@@ -130,13 +135,16 @@ struct FGameData
 		Executable = TEXT("");
 		Arguments = TEXT("");
 
-		//formated
+		//formatted
 		PathFormated = TEXT("");
 		nameFormated = TEXT("");
 		descFormated = TEXT("");
 		imageFormated = TEXT("");
 		thumbnailFormated = TEXT("");
 		videoFormated = TEXT("");
+
+		DTReleaseDate = FXMLDateTime();
+		DTLastPlayed = FXMLDateTime();
 	}
 
 	bool operator==(const FGameData& A) const
@@ -288,3 +296,21 @@ struct FConfig
 	{
 	}
 };
+
+
+USTRUCT(BlueprintType)
+struct FTest
+{
+	GENERATED_BODY()
+	
+
+	FXMLDateTime DateTime;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString Value;
+
+	FTest()
+	{
+	};
+};
+

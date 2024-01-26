@@ -333,3 +333,37 @@ bool UGameDataFunctionLibrary::IsHasFavorites(TArray<FGameData>& GameData)
 	return false;
 }
 
+void UGameDataFunctionLibrary::BreakGameDataDateTime(FGameData GameData, FDateTime& DateTimeReleaseDate, FString& StringReleaseDate, FDateTime& DateTimeLastPlayed, FString& StringLastPlayed, FString& ReleaseDateFormatted, FString& StringLastPlayedFormatted)
+{
+	DateTimeLastPlayed = GameData.DTLastPlayed.ToDateTime();
+	StringLastPlayed = GameData.DTLastPlayed.ToString();
+	DateTimeReleaseDate = GameData.DTReleaseDate.ToDateTime();
+	StringReleaseDate = GameData.DTReleaseDate.ToString();
+	StringLastPlayedFormatted = GameData.DTLastPlayed.FormatDateTime();
+	ReleaseDateFormatted = GameData.DTReleaseDate.FormatDateTime();
+}
+
+FGameData UGameDataFunctionLibrary::MakeGameDataDateTime_DateTime(FGameData GameData, FDateTime DateTimeReleaseDate, FDateTime DateTimeLastPlayed)
+{
+	GameData.DTReleaseDate = DateTimeReleaseDate;
+	GameData.DTLastPlayed = DateTimeLastPlayed;
+	return GameData;
+}
+
+FGameData UGameDataFunctionLibrary::MakeGameDataDateTime_String(FGameData GameData, FString StringReleaseDate, FString StringLastPlayed)
+{
+	GameData.DTReleaseDate = StringReleaseDate;
+	GameData.DTLastPlayed = StringLastPlayed;
+	return GameData;
+}
+
+
+
+
+
+
+
+
+
+
+

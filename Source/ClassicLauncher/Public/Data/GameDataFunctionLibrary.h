@@ -84,9 +84,19 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GameDataFunctionLibrary|File IO")
 	static void CreateFolders(FString PathMedia, TArray<FGameSystem> GameSystems);
 
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
+	UFUNCTION(BlueprintCallable, Category = "GameDataFunctionLibrary|GameData")
 	static TArray<FGameData> FilterGameData(TArray<FGameData> GameData, EGamesFilter& Filter);
 
-	UFUNCTION(BlueprintCallable, Category = "ClassicFunctionLibrary|GameData")
+	UFUNCTION(BlueprintCallable, Category = "GameDataFunctionLibrary|GameData")
 	static bool IsHasFavorites(UPARAM(ref) TArray<FGameData>& GameData);
+
+	UFUNCTION(BlueprintPure, Category="GameDataFunctionLibrary|DateTime" ,meta=(IgnoreTypePromotion, NativeBreakFunc), DisplayName = "Break GameData DateTime")
+	static void BreakGameDataDateTime(FGameData GameData, FDateTime&  DateTimeReleaseDate, FString& StringReleaseDate, FDateTime&  DateTimeLastPlayed, FString& StringLastPlayed, FString& ReleaseDateFormatted, FString& StringLastPlayedFormatted);
+
+	UFUNCTION(BlueprintPure, Category="GameDataFunctionLibrary|DateTime" ,meta=(IgnoreTypePromotion, NativeMakeFunc), DisplayName = "Make GameData DateTime")
+	static FGameData MakeGameDataDateTime_DateTime(FGameData GameData, FDateTime  DateTimeReleaseDate, FDateTime DateTimeLastPlayed);
+
+	UFUNCTION(BlueprintPure, Category="GameDataFunctionLibrary|DateTime" ,meta=(IgnoreTypePromotion, NativeMakeFunc), DisplayName = "Make GameData DateTime String")
+	static FGameData MakeGameDataDateTime_String(FGameData GameData, FString StringReleaseDate, FString StringLastPlayed);
+	
 };

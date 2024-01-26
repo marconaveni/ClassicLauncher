@@ -202,6 +202,4 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "ClassicConfigurations|Events")
 	void OnTheme(int32 Value);
 	
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassicConfigurations|Timers")
-	FTimerHandle RestartMapTimerHandle;*/
 };
