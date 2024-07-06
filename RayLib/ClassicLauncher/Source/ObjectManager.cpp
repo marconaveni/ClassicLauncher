@@ -1,0 +1,100 @@
+﻿#include "ObjectManager.h"
+
+#include <random>
+
+
+ObjectManager* ObjectManager::GetInstance()
+{
+	static ObjectManager object;
+	return &object;
+}
+
+
+void ObjectManager::RegisterObject(std::shared_ptr<Object> object)
+{
+	if (object->bRegisterObject)
+	{
+		return;
+	}
+	object->bRegisterObject = true;
+	objects.push_back(object);
+}
+
+void ObjectManager::UnRegisterObject()
+{
+	for (auto& object : objects)
+	{
+		object->bRegisterObject = false;
+	}
+	objectsGet.clear();
+	objectsGet.shrink_to_fit();
+	objects.clear();
+	objects.shrink_to_fit();
+}
+
+std::vector<Object*>& ObjectManager::GetAllObjects()
+{
+	if (objectsGet.size() != objects.size())
+	{
+		objectsGet.clear();
+		objectsGet.shrink_to_fit();
+		objectsGet.reserve(objects.size());
+		std::transform(objects.cbegin(), objects.cend(), std::back_inserter(objectsGet),
+			[](auto& ptr) { return ptr.get(); });
+	}
+	return objectsGet;
+
+	/*std::vector<Object*> object;
+	object.reserve(objects.size());
+	for (auto& objShared : objects)
+	{
+		object.push_back(objShared.get());
+	}
+	return object;*/
+}
+
+void ObjectManager::BeginPlay()
+{
+	for (auto& objShared : objects)
+	{
+		objShared->BeginPlay();
+		objShared->Collision();
+		objShared->Tick();
+	}
+}
+
+void ObjectManager::Tick() const
+{
+	for (auto& objShared : objects)
+	{
+
+		objShared->Collision();
+		objShared->Tick();
+
+	}
+}
+
+void ObjectManager::Draw() const
+{
+	for (auto& objShared : objects)
+	{
+		objShared->Draw();
+
+	}
+}
+
+void ObjectManager::EndDraw() const
+{
+	for (auto& objShared : objects)
+	{
+		objShared->EndDraw();
+	}
+}
+
+void ObjectManager::EndPlay() const
+{
+	for (auto& objShared : objects)
+	{
+		objShared->EndPlay();
+	}
+}
