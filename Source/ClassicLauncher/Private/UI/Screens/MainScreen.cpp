@@ -320,9 +320,9 @@ void UMainScreen::SetNavigationFocusDownBottom()
 void UMainScreen::SetTitle(int32 Index)
 {
 	DataManager->IndexGameData = Index;
-	const FString Title = DataManager->GetGameData().nameFormated;
+	const FString Title = DataManager->GetGameData().NameFormatted;
 	TextTitleGame->SetText(FText::FromString(Title));
-	FooterDetails->TextBoxScroll->SetText(DataManager->GetGameData().descFormated);
+	FooterDetails->TextBoxScroll->SetText(DataManager->GetGameData().DescFormatted);
 	SetButtonsIconInterfaces(PositionY);
 	SetFrame();
 }
@@ -353,7 +353,7 @@ void UMainScreen::OnClickLaunch()
 
 void UMainScreen::AppLaunch()
 {
-	const FString PathRomFormatted = UClassicFunctionLibrary::HomeDirectoryReplace(DataManager->GetGameData().PathFormated);
+	const FString PathRomFormatted = UClassicFunctionLibrary::HomeDirectoryReplace(DataManager->GetGameData().PathFormatted);
 	const FString ExecutablePath = (DataManager->GetGameData().Executable == TEXT("")) ? DataManager->GetGameSystem().Executable : DataManager->GetGameData().Executable;
 	const FString Arguments = (DataManager->GetGameData().Arguments == TEXT("")) ? DataManager->GetGameSystem().Arguments : DataManager->GetGameData().Arguments;
 	TArray<FString> Commands;
@@ -421,7 +421,7 @@ void UMainScreen::SetButtonsIconInterfaces(EPositionY GetPosition)
 	{
 		if (PromptHelper.TextCenter.IsValidIndex(5))
 		{
-			PromptHelper.TextCenter[5] = (DataManager->GetGameData().favorite) ? LOCTEXT("buttonRemoveFavorite", "Remove Favorite") : LOCTEXT("buttonRemoveFavoriteAddFavorite", "Add Favorite");
+			PromptHelper.TextCenter[5] = (DataManager->GetGameData().bFavorite) ? LOCTEXT("buttonRemoveFavorite", "Remove Favorite") : LOCTEXT("buttonRemoveFavoriteAddFavorite", "Add Favorite");
 		}
 		PromptMain->SetTexts(PromptHelper.TextCenter);
 		PromptMain->SetButtonsVisibility(PromptHelper.IconCenter);

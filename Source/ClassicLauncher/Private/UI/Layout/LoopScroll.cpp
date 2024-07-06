@@ -226,9 +226,9 @@ void ULoopScroll::SetCardValues(UCard* Card, FGameData& GameData, const int32 In
 	{
 		Card->IndexGameData = Index;
 		Card->MapIndexGameData = GameData.MapIndex;
-		Card->PathImage = GameData.imageFormated;
-		Card->SetPlayers(GameData.players);
-		Card->SetFavorite(GameData.favorite, false);
+		Card->PathImage = GameData.ImageFormatted;
+		Card->SetPlayers(GameData.Players);
+		Card->SetFavorite(GameData.bFavorite, false);
 	}
 }
 

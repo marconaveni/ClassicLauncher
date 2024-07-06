@@ -6,41 +6,19 @@
 #include "Kismet/KismetInternationalizationLibrary.h"
 
 
-FXMLDateTime::FXMLDateTime(const FString& NewValue)
-{
-	DateTime = StringToDateTime(NewValue);
-	SetDateStringValue();
-}
-
-FXMLDateTime::FXMLDateTime(const FDateTime& NewValue)
-{
-	DateTime = NewValue;
-	SetDateStringValue();
-}
-
-FXMLDateTime::FXMLDateTime(const TCHAR* NewValue)
-{
-	DateTime = StringToDateTime(NewValue);
-	SetDateStringValue();
-}
-
 void FXMLDateTime::operator=(const FString& NewValue)
 {
-	DateTime = StringToDateTime(NewValue);
-	SetDateStringValue();
+	SetDateTime(NewValue);
 }
-
 
 void FXMLDateTime::operator=(const FDateTime& NewValue)
 {
-	DateTime = NewValue;
-	SetDateStringValue();
+	SetDateTime(NewValue);
 }
 
 void FXMLDateTime::operator=(const TCHAR* NewValue)
 {
-	DateTime = StringToDateTime(NewValue);
-	SetDateStringValue();
+	SetDateTime(NewValue);
 }
 
 void FXMLDateTime::SetDateStringValue()
@@ -48,11 +26,35 @@ void FXMLDateTime::SetDateStringValue()
 	DateStringValue = DateTime.ToString(TEXT("%Y%m%dT%H%M%S"));
 }
 
-FString FXMLDateTime::FormatDateTime()
+void FXMLDateTime::SetDateTime(const FString& NewValue)
 {
+	DateTime = StringToDateTime(NewValue);
+	SetDateStringValue();
+}
+
+void FXMLDateTime::SetDateTime(const FDateTime& NewValue)
+{
+	DateTime = NewValue;
+	SetDateStringValue();
+}
+
+FString FXMLDateTime::FormatDateTime(const bool bIsTime)
+{
+	if(DateTime.GetYear() <= 1)
+	{
+		return TEXT("");
+	}
 	const FString CurrentLanguage = UKismetInternationalizationLibrary::GetCurrentCulture();
 	const FCulturePtr LanguageCulture = FInternationalization::Get().GetCulture(CurrentLanguage);
-	const FText Text = FText::AsDateTime(DateTime, EDateTimeStyle::Short, EDateTimeStyle::Medium, FText::GetInvariantTimeZone(), LanguageCulture);
+	FText Text;
+	if(bIsTime)
+	{
+		Text = FText::AsDateTime(DateTime, EDateTimeStyle::Short, EDateTimeStyle::Medium, FText::GetInvariantTimeZone(), LanguageCulture);
+	}
+	else
+	{
+		Text = FText::AsDate(DateTime, EDateTimeStyle::Short, FText::GetInvariantTimeZone(), LanguageCulture);
+	}
 	return Text.ToString();
 }
 

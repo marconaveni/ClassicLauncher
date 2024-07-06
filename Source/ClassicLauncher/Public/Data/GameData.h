@@ -30,126 +30,103 @@ struct FGameData
 	FString Path;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString name;
+	FString Name;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString desc;
+	FString Desc;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString rating;
+	FString Rating;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString releasedate; // todo change
+	FString Developer;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString developer;
+	FString Publisher;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString publisher;
+	FString Genre;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString genre;
+	FString Players;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString players;
+	FString Hash;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString hash;
+	FString Image;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString image;
+	FString Screenshot;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString thumbnail;
+	FString Video;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString video;
+	FString GenreId;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString genreid;
+	bool bFavorite;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool favorite;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 playcount;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString lastplayed; // todo change
+	int32 PlayCount;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString Executable;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString Arguments;
-
-
-
-	//formatted 
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString PathFormated;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString nameFormated;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString descFormated;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString imageFormated;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString thumbnailFormated;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString videoFormated;
-
-	FXMLDateTime DTReleaseDate;
 	
-	FXMLDateTime DTLastPlayed;
+	//
+	//formatted 
+	//
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString PathFormatted;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString NameFormatted;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString DescFormatted;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString ImageFormatted;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString ScreenshotFormatted;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString VideoFormatted;
+
+	//
+	//datetime
+	//
+	UPROPERTY()
+	FXMLDateTime ReleaseDate;
+
+	UPROPERTY()
+	FXMLDateTime LastPlayed;
 	
 	//constructor
 	FGameData()
-	{
-		//map index
-		MapIndex = -1;
-
-		Path = TEXT("");
-		name = TEXT("");
-		desc = TEXT("");
-		rating = TEXT("");
-		releasedate = TEXT("");
-		developer = TEXT("");
-		publisher = TEXT("");
-		genre = TEXT("");
-		players = TEXT("1");
-		hash = TEXT("");
-		image = TEXT("");
-		thumbnail = TEXT("");
-		video = TEXT("");
-		genreid = TEXT("");
-		favorite = false;
-		playcount = 0;
-		lastplayed = TEXT("");
-		Executable = TEXT("");
-		Arguments = TEXT("");
-
-		//formatted
-		PathFormated = TEXT("");
-		nameFormated = TEXT("");
-		descFormated = TEXT("");
-		imageFormated = TEXT("");
-		thumbnailFormated = TEXT("");
-		videoFormated = TEXT("");
-
-		DTReleaseDate = FXMLDateTime();
-		DTLastPlayed = FXMLDateTime();
-	}
+	: MapIndex(-1) //map index
+	, Players(TEXT("1"))
+	, bFavorite(false)
+	, PlayCount(0)
+	{}
 
 	bool operator==(const FGameData& A) const
 	{
 		return (MapIndex == A.MapIndex);
+	}
+	bool operator>(const FGameData& A) const
+	{
+		return (MapIndex > A.MapIndex);
+	}
+	bool operator<(const FGameData& A) const
+	{
+		return (MapIndex < A.MapIndex);
 	}
 };
 
@@ -231,7 +208,7 @@ struct FGameSystem
 	FString Description;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<FGameData> GameDatas;
+	TArray<FGameData> GameData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FIndexPositions Positions;
@@ -298,19 +275,4 @@ struct FConfig
 };
 
 
-USTRUCT(BlueprintType)
-struct FTest
-{
-	GENERATED_BODY()
-	
-
-	FXMLDateTime DateTime;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString Value;
-
-	FTest()
-	{
-	};
-};
 

@@ -97,3 +97,11 @@ Config/config.xml
 !7zip/7zxa.dll
 dependencies.zip
 
+
+RayLib/ClassicLauncher/*
+RayLib/ClassicLauncher/.idea/
+RayLib/ClassicLauncher/.vs/
+RayLib/ClassicLauncher/packages/
+RayLib/ClassicLauncher/x64/
+RayLib/ClassicLauncher/Resources/
+

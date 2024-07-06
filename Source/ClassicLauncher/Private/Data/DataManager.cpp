@@ -154,8 +154,8 @@ void UDataManager::CreateNewGameList()
 					});
 
 					Elements = UGameDataFunctionLibrary::LoadXML(ConfigSysXMLFile, TEXT("gameList.game"));
-					UGameDataFunctionLibrary::SetGameData(Elements, TempGameSystems[i].GameDatas, nullptr);
-					if (TempGameSystems[i].GameDatas.Num() > 0)
+					UGameDataFunctionLibrary::SetGameData(Elements, TempGameSystems[i].GameData, nullptr);
+					if (TempGameSystems[i].GameData.Num() > 0)
 					{
 						GameSystems.Add(TempGameSystems[i]);
 					}
@@ -201,7 +201,7 @@ void UDataManager::PrepareToSaveNewGameList()
 			FString GameResult;
 			FString GameRoot = GameSystems[i].RomPath + TEXT("\\gamelist.xml");
 
-			UGameDataFunctionLibrary::SortGameData(GameSystems[i].GameDatas, true);
+			UGameDataFunctionLibrary::SortGameData(GameSystems[i].GameData, true);
 			UGameDataFunctionLibrary::FormatGameData(GameSystems[i], ConfigurationData);
 			AsyncTask(ENamedThreads::GameThread, [this,i]()
 			{
@@ -243,7 +243,7 @@ void UDataManager::LoadGamesList()
 {
 	AsyncTask(ENamedThreads::AnyNormalThreadNormalTask, [&]()
 	{
-		GameData = UGameDataFunctionLibrary::FilterGameData(GetGameSystem().GameDatas, GameSystems[IndexGameSystem].Positions.OrderBy);
+		GameData = UGameDataFunctionLibrary::FilterGameData(GetGameSystem().GameData, GameSystems[IndexGameSystem].Positions.OrderBy);
 
 		if (GameData.Num() > 0)
 		{
@@ -297,9 +297,9 @@ FGameSystem UDataManager::GetGameSystem(const int32 Index) const
 FGameData UDataManager::GetGameSystemGameData(const int32 Index) const
 {
 	const int32 Id = (Index != -1) ? Index : IndexGameData;
-	if (GameSystems[IndexGameSystem].GameDatas.IsValidIndex(Id))
+	if (GameSystems[IndexGameSystem].GameData.IsValidIndex(Id))
 	{
-		return GameSystems[IndexGameSystem].GameDatas[Id];
+		return GameSystems[IndexGameSystem].GameData[Id];
 	}
 	return FGameData();
 }
@@ -307,7 +307,7 @@ FGameData UDataManager::GetGameSystemGameData(const int32 Index) const
 bool UDataManager::Save()
 {
 	FString Path = GetGameSystem().RomPath;
-	UGameDataFunctionLibrary::SaveGameListXML(Path, GameSystems[IndexGameSystem].GameDatas);
+	UGameDataFunctionLibrary::SaveGameListXML(Path, GameSystems[IndexGameSystem].GameData);
 	return GetClassicGameInstance()->SaveGameSystem(GameSystems);
 }
 
@@ -317,12 +317,12 @@ void UDataManager::SetCountPlayerToSave()
 	{
 		int32 Find;
 		const FString CurrentDateNow = UClassicFunctionLibrary::FormatDateToXml();
-		if (UGameDataFunctionLibrary::FindGameData(GetGameSystem().GameDatas, GetGameData(), Find))
+		if (UGameDataFunctionLibrary::FindGameData(GetGameSystem().GameData, GetGameData(), Find))
 		{
-			GameSystems[IndexGameSystem].GameDatas[Find].playcount++;
-			GameSystems[IndexGameSystem].GameDatas[Find].lastplayed = CurrentDateNow;
-			GameData[IndexGameData].playcount++;
-			GameData[IndexGameData].lastplayed = CurrentDateNow;
+			GameSystems[IndexGameSystem].GameData[Find].PlayCount++;
+			GameSystems[IndexGameSystem].GameData[Find].LastPlayed = CurrentDateNow;
+			GameData[IndexGameData].PlayCount++;
+			GameData[IndexGameData].LastPlayed = CurrentDateNow;
 			Save();
 		}
 	});
@@ -336,11 +336,11 @@ void UDataManager::SetFavoriteToSave()
 		AsyncTask(ENamedThreads::AnyHiPriThreadNormalTask, [this]()
 		{
 			int32 Find;
-			if (UGameDataFunctionLibrary::FindGameData(GetGameSystem().GameDatas, GetGameData(), Find))
+			if (UGameDataFunctionLibrary::FindGameData(GetGameSystem().GameData, GetGameData(), Find))
 			{
-				const bool ToggleFavorite = !GetGameSystem().GameDatas[Find].favorite;
-				GameSystems[IndexGameSystem].GameDatas[Find].favorite = ToggleFavorite;
-				GameData[IndexGameData].favorite = ToggleFavorite;
+				const bool ToggleFavorite = !GetGameSystem().GameData[Find].bFavorite;
+				GameSystems[IndexGameSystem].GameData[Find].bFavorite = ToggleFavorite;
+				GameData[IndexGameData].bFavorite = ToggleFavorite;
 
 				if (Save())
 				{

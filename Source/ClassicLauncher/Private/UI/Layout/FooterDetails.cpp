@@ -75,13 +75,13 @@ void UFooterDetails::SetImage()
 
 	FString ImagePath = TEXT("");
 
-	if (FPaths::FileExists(GameData.thumbnailFormated))
+	if (FPaths::FileExists(GameData.ScreenshotFormatted))
 	{
-		ImagePath = GameData.thumbnailFormated;
+		ImagePath = GameData.ScreenshotFormatted;
 	}
-	else if (FPaths::FileExists(GameData.imageFormated))
+	else if (FPaths::FileExists(GameData.ImageFormatted))
 	{
-		ImagePath = GameData.imageFormated;
+		ImagePath = GameData.ImageFormatted;
 	}
 
 	if (ImagePath != TEXT(""))
@@ -101,7 +101,7 @@ void UFooterDetails::StartVideo(EPositionY PositionY, AClassicMediaPlayer* Class
 {
 	if (PositionY != EPositionY::BOTTOM) return;
 
-	const FString PathVideo = GameData.videoFormated;
+	const FString PathVideo = GameData.VideoFormatted;
 	if (FPaths::FileExists(PathVideo))
 	{
 		SetPlayAnimation(TEXT("ImageToVideo"));

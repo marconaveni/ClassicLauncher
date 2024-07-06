@@ -18,7 +18,7 @@ void UGameDataFunctionLibrary::SortGameData(TArray<FGameData>& GameData, const b
 {
 	GameData.Sort([bAscending](const FGameData& A, const FGameData& B)
 	{
-		return (bAscending) ? A.name < B.name : A.name > B.name;
+		return (bAscending) ? A.Name < B.Name : A.Name > B.Name;
 	});
 }
 
@@ -26,14 +26,14 @@ TArray<FGameData> UGameDataFunctionLibrary::FilterGameDataFavoritesFirst(TArray<
 {
 	auto Favorites = GameData.FilterByPredicate([](const FGameData& A)
 	{
-		return A.favorite == true;
+		return A.bFavorite == true;
 	});
 
 	if (!bOnlyFavorites)
 	{
 		const auto NoFavorites = GameData.FilterByPredicate([](const FGameData& A)
 		{
-			return A.favorite == false;
+			return A.bFavorite == false;
 		});
 		Favorites += NoFavorites;
 	}
@@ -44,7 +44,7 @@ void UGameDataFunctionLibrary::FilterGameDataMostPlayed(TArray<FGameData>& GameD
 {
 	GameData.Sort([](const FGameData& A, const FGameData& B)
 	{
-		return A.playcount < B.playcount;
+		return A.PlayCount < B.PlayCount;
 	});
 }
 
@@ -52,7 +52,7 @@ void UGameDataFunctionLibrary::FilterGameDataLastPlayed(TArray<FGameData>& GameD
 {
 	GameData.Sort([](const FGameData& A, const FGameData& B)
 	{
-		return A.lastplayed < B.lastplayed; //is not working todo create a class XMLDate 
+		return  A.LastPlayed < B.LastPlayed;
 	});
 }
 
@@ -90,22 +90,22 @@ FString UGameDataFunctionLibrary::CreateXMLGameFile(TArray<FGameData> GameData)
 	{
 		NewGameData += TEXT("<game>\n");
 		NewGameData += GenerateXmlTag(TEXT("path"), Data.Path);
-		NewGameData += GenerateXmlTag(TEXT("name"), Data.name);
-		NewGameData += GenerateXmlTag(TEXT("desc"), Data.desc);
-		NewGameData += GenerateXmlTag(TEXT("rating"), Data.rating);
-		NewGameData += GenerateXmlTag(TEXT("releasedate"), Data.releasedate);
-		NewGameData += GenerateXmlTag(TEXT("developer"), Data.developer);
-		NewGameData += GenerateXmlTag(TEXT("publisher"), Data.publisher);
-		NewGameData += GenerateXmlTag(TEXT("genre"), Data.genre);
-		NewGameData += GenerateXmlTag(TEXT("players"), Data.players);
-		NewGameData += GenerateXmlTag(TEXT("hash"), Data.hash);
-		NewGameData += GenerateXmlTag(TEXT("image"), Data.image);
-		NewGameData += GenerateXmlTag(TEXT("thumbnail"), Data.thumbnail);
-		NewGameData += GenerateXmlTag(TEXT("video"), Data.video);
-		NewGameData += GenerateXmlTag(TEXT("genreid"), Data.genreid);
-		NewGameData += GenerateXmlTag(TEXT("favorite"), (Data.favorite) ? TEXT("true") : TEXT("false"));
-		NewGameData += GenerateXmlTag(TEXT("playcount"), FString::SanitizeFloat(Data.playcount, 0));
-		NewGameData += GenerateXmlTag(TEXT("lastplayed"), Data.lastplayed);
+		NewGameData += GenerateXmlTag(TEXT("name"), Data.Name);
+		NewGameData += GenerateXmlTag(TEXT("desc"), Data.Desc);
+		NewGameData += GenerateXmlTag(TEXT("rating"), Data.Rating);
+		NewGameData += GenerateXmlTag(TEXT("releasedate"), Data.ReleaseDate.ToString());
+		NewGameData += GenerateXmlTag(TEXT("developer"), Data.Developer);
+		NewGameData += GenerateXmlTag(TEXT("publisher"), Data.Publisher);
+		NewGameData += GenerateXmlTag(TEXT("genre"), Data.Genre);
+		NewGameData += GenerateXmlTag(TEXT("players"), Data.Players);
+		NewGameData += GenerateXmlTag(TEXT("hash"), Data.Hash);
+		NewGameData += GenerateXmlTag(TEXT("image"), Data.Image);
+		NewGameData += GenerateXmlTag(TEXT("thumbnail"), Data.Screenshot);
+		NewGameData += GenerateXmlTag(TEXT("video"), Data.Video);
+		NewGameData += GenerateXmlTag(TEXT("genreid"), Data.GenreId);
+		NewGameData += GenerateXmlTag(TEXT("favorite"), (Data.bFavorite) ? TEXT("true") : TEXT("false"));
+		NewGameData += GenerateXmlTag(TEXT("playcount"), FString::SanitizeFloat(Data.PlayCount, 0));
+		NewGameData += GenerateXmlTag(TEXT("lastplayed"), Data.LastPlayed.ToString());
 		NewGameData += GenerateXmlTag(TEXT("executable"), Data.Executable);
 		NewGameData += GenerateXmlTag(TEXT("arguments"), Data.Arguments);
 		NewGameData += TEXT("</game>\n");
@@ -210,22 +210,22 @@ void UGameDataFunctionLibrary::SetGameData(TArray<UEasyXMLElement*> Elements, TA
 	{
 		Data.MapIndex = Index;
 		Data.Path = Element->ReadString(TEXT("path"));
-		Data.name = Element->ReadString(TEXT("name"));
-		Data.desc = Element->ReadString(TEXT("desc"));
-		Data.rating = Element->ReadString(TEXT("rating"));
-		Data.releasedate = Element->ReadString(TEXT("releasedate"));
-		Data.developer = Element->ReadString(TEXT("developer"));
-		Data.publisher = Element->ReadString(TEXT("publisher"));
-		Data.genre = Element->ReadString(TEXT("genre"));
-		Data.players = Element->ReadString(TEXT("players"));
-		Data.hash = Element->ReadString(TEXT("hash"));
-		Data.image = Element->ReadString(TEXT("image"));
-		Data.thumbnail = Element->ReadString(TEXT("thumbnail"));
-		Data.video = Element->ReadString(TEXT("video"));
-		Data.genreid = Element->ReadString(TEXT("genreid"));
-		Data.favorite = Element->ReadBool(TEXT("favorite"));
-		Data.playcount = Element->ReadInt(TEXT("playcount"));
-		Data.lastplayed = Element->ReadString(TEXT("lastplayed"));
+		Data.Name = Element->ReadString(TEXT("name"));
+		Data.Desc = Element->ReadString(TEXT("desc"));
+		Data.Rating = Element->ReadString(TEXT("rating"));
+		Data.ReleaseDate = Element->ReadString(TEXT("releasedate"));
+		Data.Developer = Element->ReadString(TEXT("developer"));
+		Data.Publisher = Element->ReadString(TEXT("publisher"));
+		Data.Genre = Element->ReadString(TEXT("genre"));
+		Data.Players = Element->ReadString(TEXT("players"));
+		Data.Hash = Element->ReadString(TEXT("hash"));
+		Data.Image = Element->ReadString(TEXT("image"));
+		Data.Screenshot = Element->ReadString(TEXT("thumbnail"));
+		Data.Video = Element->ReadString(TEXT("video"));
+		Data.GenreId = Element->ReadString(TEXT("genreid"));
+		Data.bFavorite = Element->ReadBool(TEXT("favorite"));
+		Data.PlayCount = Element->ReadInt(TEXT("playcount"));
+		Data.LastPlayed = Element->ReadString(TEXT("lastplayed"));
 		Data.Executable = Element->ReadString(TEXT("executable"));
 		Data.Arguments = Element->ReadString(TEXT("arguments"));
 		GameData.Add(Data);
@@ -241,36 +241,36 @@ FGameSystem UGameDataFunctionLibrary::SetSystemToGameData(TArray<FGameSystem> Sy
 	{
 		FGameData NewGameData;
 		NewGameData.MapIndex = i;
-		NewGameData.PathFormated = Systems[i].RomPath;
-		NewGameData.nameFormated = Systems[i].SystemLabel;
+		NewGameData.PathFormatted = Systems[i].RomPath;
+		NewGameData.NameFormatted = Systems[i].SystemLabel;
 		NewGameData.Executable = Systems[i].Executable;
-		NewGameData.imageFormated = Systems[i].Image;
-		NewGameData.thumbnailFormated = Systems[i].Screenshot;
-		NewGameData.descFormated = Systems[i].Description;
+		NewGameData.ImageFormatted = Systems[i].Image;
+		NewGameData.ScreenshotFormatted = Systems[i].Screenshot;
+		NewGameData.DescFormatted = Systems[i].Description;
 		GameData.Add(NewGameData);
 	}
 
 	FGameSystem NewSystem;
 	NewSystem.SystemName = TEXT("${System}");
 	NewSystem.SystemLabel = TEXT("Systems");
-	NewSystem.GameDatas = GameData;
+	NewSystem.GameData = GameData;
 	return NewSystem;
 }
 
 void UGameDataFunctionLibrary::FormatGameData(FGameSystem& GameSystems, FConfig Configuration)
 {
-	for (FGameData& GameData : GameSystems.GameDatas)
+	for (FGameData& GameData : GameSystems.GameData)
 	{
-		GameData.PathFormated = TEXT("\"") + ReplacePath(GameData.Path, GameSystems.RomPath) + TEXT("\"");
-		if (GameData.PathFormated.Equals(TEXT("\"\"")))
+		GameData.PathFormatted = TEXT("\"") + ReplacePath(GameData.Path, GameSystems.RomPath) + TEXT("\"");
+		if (GameData.PathFormatted.Equals(TEXT("\"\"")))
 		{
-			GameData.PathFormated = TEXT("");
+			GameData.PathFormatted = TEXT("");
 		}
-		GameData.imageFormated = ReplacePath(GameData.image, GameSystems.RomPath);
-		GameData.thumbnailFormated = ReplacePath(GameData.thumbnail, GameSystems.RomPath);
-		GameData.videoFormated = ReplacePath(GameData.video, GameSystems.RomPath);
-		GameData.nameFormated = GameData.name.Replace(TEXT("&amp;"), TEXT("&"), ESearchCase::IgnoreCase);
-		GameData.descFormated = GameData.desc.Replace(TEXT("&amp;"), TEXT("&"), ESearchCase::IgnoreCase);
+		GameData.ImageFormatted = ReplacePath(GameData.Image, GameSystems.RomPath);
+		GameData.ScreenshotFormatted = ReplacePath(GameData.Screenshot, GameSystems.RomPath);
+		GameData.VideoFormatted = ReplacePath(GameData.Video, GameSystems.RomPath);
+		GameData.NameFormatted = GameData.Name.Replace(TEXT("&amp;"), TEXT("&"), ESearchCase::IgnoreCase);
+		GameData.DescFormatted = GameData.Desc.Replace(TEXT("&amp;"), TEXT("&"), ESearchCase::IgnoreCase);
 	}
 }
 
@@ -294,29 +294,29 @@ void UGameDataFunctionLibrary::CreateFolders(FString Path, TArray<FGameSystem> G
 	{
 		if (GameSystemElement.SystemName.Equals(TEXT("${System}"))) continue; //ignore System
 		UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia + TEXT("\\") + GameSystemElement.SystemName);
-		UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia + TEXT("\\") + GameSystemElement.SystemName + TEXT("\\covers"));
-		UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia + TEXT("\\") + GameSystemElement.SystemName + TEXT("\\screenshots"));
+		UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia + TEXT("\\") + GameSystemElement.SystemName + TEXT("\\images"));
+		UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia + TEXT("\\") + GameSystemElement.SystemName + TEXT("\\screenshot"));
 		UClassicFunctionLibrary::VerifyOrCreateDirectory(PathMedia + TEXT("\\") + GameSystemElement.SystemName + TEXT("\\videos"));
 	}
 }
 
 TArray<FGameData> UGameDataFunctionLibrary::FilterGameData(TArray<FGameData> GameData, EGamesFilter& Filter)
 {
-	if(!IsHasFavorites(GameData))
+	if (!IsHasFavorites(GameData))
 	{
 		Filter = EGamesFilter::DEFAULT;
 	}
-	if(Filter == EGamesFilter::DEFAULT)
+	if (Filter == EGamesFilter::DEFAULT)
 	{
-		return  GameData;
+		return GameData;
 	}
-	if(Filter == EGamesFilter::FAVORITES_FIRST)
+	if (Filter == EGamesFilter::FAVORITES_FIRST)
 	{
-		return  FilterGameDataFavoritesFirst(GameData, false);
+		return FilterGameDataFavoritesFirst(GameData, false);
 	}
-	if(Filter == EGamesFilter::FAVORITES_ONLY)
+	if (Filter == EGamesFilter::FAVORITES_ONLY)
 	{
-		return  FilterGameDataFavoritesFirst(GameData, true);
+		return FilterGameDataFavoritesFirst(GameData, true);
 	}
 	return GameData;
 }
@@ -325,7 +325,7 @@ bool UGameDataFunctionLibrary::IsHasFavorites(TArray<FGameData>& GameData)
 {
 	for (const FGameData& Data : GameData)
 	{
-		if (Data.favorite)
+		if (Data.bFavorite)
 		{
 			return true;
 		}
@@ -333,37 +333,27 @@ bool UGameDataFunctionLibrary::IsHasFavorites(TArray<FGameData>& GameData)
 	return false;
 }
 
-void UGameDataFunctionLibrary::BreakGameDataDateTime(FGameData GameData, FDateTime& DateTimeReleaseDate, FString& StringReleaseDate, FDateTime& DateTimeLastPlayed, FString& StringLastPlayed, FString& ReleaseDateFormatted, FString& StringLastPlayedFormatted)
+void UGameDataFunctionLibrary::BreakGameDataDateTime(FGameData GameData, FDateTime& DateTimeReleaseDate, FString& StringReleaseDate, FDateTime& DateTimeLastPlayed, FString& StringLastPlayed,
+                                                     FString& ReleaseDateFormatted, FString& StringLastPlayedFormatted)
 {
-	DateTimeLastPlayed = GameData.DTLastPlayed.ToDateTime();
-	StringLastPlayed = GameData.DTLastPlayed.ToString();
-	DateTimeReleaseDate = GameData.DTReleaseDate.ToDateTime();
-	StringReleaseDate = GameData.DTReleaseDate.ToString();
-	StringLastPlayedFormatted = GameData.DTLastPlayed.FormatDateTime();
-	ReleaseDateFormatted = GameData.DTReleaseDate.FormatDateTime();
+	DateTimeLastPlayed = GameData.LastPlayed.ToDateTime();
+	StringLastPlayed = GameData.LastPlayed.ToString();
+	DateTimeReleaseDate = GameData.ReleaseDate.ToDateTime();
+	StringReleaseDate = GameData.ReleaseDate.ToString();
+	StringLastPlayedFormatted = GameData.LastPlayed.FormatDateTime();
+	ReleaseDateFormatted = GameData.ReleaseDate.FormatDateTime();
 }
 
 FGameData UGameDataFunctionLibrary::MakeGameDataDateTime_DateTime(FGameData GameData, FDateTime DateTimeReleaseDate, FDateTime DateTimeLastPlayed)
 {
-	GameData.DTReleaseDate = DateTimeReleaseDate;
-	GameData.DTLastPlayed = DateTimeLastPlayed;
+	GameData.ReleaseDate = DateTimeReleaseDate;
+	GameData.LastPlayed = DateTimeLastPlayed;
 	return GameData;
 }
 
 FGameData UGameDataFunctionLibrary::MakeGameDataDateTime_String(FGameData GameData, FString StringReleaseDate, FString StringLastPlayed)
 {
-	GameData.DTReleaseDate = StringReleaseDate;
-	GameData.DTLastPlayed = StringLastPlayed;
+	GameData.ReleaseDate = StringReleaseDate;
+	GameData.LastPlayed = StringLastPlayed;
 	return GameData;
 }
-
-
-
-
-
-
-
-
-
-
-
