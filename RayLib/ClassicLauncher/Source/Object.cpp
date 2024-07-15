@@ -4,47 +4,43 @@
 
 Object::Object(Texture2D* textureReference, const Vector2 position, const Rectangle rectangleTexture)
 	: bRegisterObject(false)
-	, color(WHITE)
 	, id(-1)
-	, position(position)
 	, spriteResource(textureReference, rectangleTexture)
-	, scale(0)
 {
 }
 
 Object::Object()
 	: bRegisterObject(false)
-	, color(WHITE)
 	, id(-1)
-	, position(Vector2{ 0, 0 })
 	, spriteResource(Sprite{})
-	, scale(0)
 {
 }
+
+Object::~Object() = default;
 
 
 void Object::Draw()
 {
-	const Vector2 positionRender = { round(position.x), round(position.y) };
+	const Vector2 positionRender = { round(position.position.x), round(position.position.y) };
 	Rectangle destination = { 0,0,0,0 };
-	destination.x = positionRender.x - scale / 2;
-	destination.y = positionRender.y - scale / 2;
-	destination.width = spriteResource.source.width + scale;
-	destination.height = spriteResource.source.height + scale;
-	DrawTexturePro(*spriteResource.texture, spriteResource.source, destination, Vector2{}, 0, color); //draw texture
+	destination.x = positionRender.x + (spriteResource.source.width / 2 - spriteResource.source.width * position.scale.x / 2) ;
+	destination.y = positionRender.y + (spriteResource.source.height / 2 - spriteResource.source.height * position.scale.y / 2);
+	destination.width = spriteResource.source.width * position.scale.x;
+	destination.height = spriteResource.source.height * position.scale.y;
+	DrawTexturePro(*spriteResource.texture, spriteResource.source, destination, Vector2{}, 0, position.color); //draw texture
 	//DrawTextureRec(*spriteResource.texture, spriteResource.source, positionRender, color); //draw texture
 }
 
 void Object::SetColor(const unsigned char r, const unsigned char g, const unsigned char b)
 {
-	color.r = r;
-	color.g = g;
-	color.b = b;
+	position.color.r = r;
+	position.color.g = g;
+	position.color.b = b;
 }
 
 void Object::SetOpacity(const unsigned char opacity)
 {
-	color.a = opacity;
+	position.color.a = opacity;
 }
 
 void Object::SetTexture(Texture2D* textureReference)
@@ -58,6 +54,21 @@ void Object::SetTexture(Texture2D* textureReference, const Rectangle rectangleTe
 	spriteResource.texture = textureReference;
 }
 
+void Object::BeginPlay()
+{
+}
+
+void Object::EndDraw()
+{
+}
+
+void Object::EndPlay()
+{
+}
+
+void Object::Collision()
+{
+}
 
 void Object::Tick()
 {

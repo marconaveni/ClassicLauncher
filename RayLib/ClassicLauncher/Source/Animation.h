@@ -1,22 +1,24 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
-#include "External/reasings.h"
+#include "Object.h"
+
 
 namespace Ease
 {
-	enum
+	enum Ease
 	{
 		EaseLinearNone,
 		EaseLinearIn,
 		EaseLinearOut,
 		EaseLinearInOut,
-		EaseSineInne,
+		EaseSineIn,
 		EaseSineOut,
-		EaseSineInOutIn,
-		EaseCircInar,
-		EaseCircOutlar,
+		EaseSineInOut,
+		EaseCircIn,
+		EaseCircOut,
 		EaseCircInOut,
 		EaseCubicIn,
 		EaseCubicOut,
@@ -45,23 +47,32 @@ class Animation
 {
 public:
 
-	int currentTime = 0;
-	int duration = 25;
-	float startPositionX = 0.0f;
-	float finalPositionX = 60.0f;
-	float currentPositionX = startPositionX;
+	int currentTime;
+	int duration;
 
-	bool bStart = false;
+	bool bStart;
+	bool bFinish;
+	bool bReset;
 	bool bRelative;
 	std::string name;
 
+	Ease::Ease type;
+
+	Position startPosition;
+	Position currentPosition;
+	Position finalPosition;
+
 	Animation();
 
-
-	void StartAnimation();
+	//std::vector<Object*> objectsAnimation;
+	void StartAnimation(int durationAnimation, const Position& startAnimationPosition, const Position& finalAnimationPosition, Ease::Ease typeAnimation = Ease::EaseLinearNone, bool bForceReset = true);
 	void UpdateAnimation();
 	void FinishAnimation();
+	void ResetAnimation();
+	bool GetAnimationIsRun() const;
+	bool GetAnimationFinish() const;
 
 protected:
 
+	float GetAnimation(float t, float b, float c, float d) const;
 };

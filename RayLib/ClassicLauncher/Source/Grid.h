@@ -26,9 +26,23 @@ struct CardContainer
 
     void AddPosition(Vector2 newPosition) ;
 
-    void ChangePosition(Vector2 newPosition) ;
+    void ChangePosition(const Position& newPosition) ;
 
     void Tick();
+
+    void StartAnimationFocus();
+
+    void StartAnimationLostFocus();
+
+    void StartAnimationClick();
+
+    Animation animationFocus;
+
+    Animation animationLostFocus;
+
+    Animation animationClick;
+
+    bool bFocus;
 };
 
 class Grid : public Object
@@ -40,10 +54,12 @@ class Grid : public Object
     bool bLeft;
     bool bRight;
     Direction LastDirection;
+    int idFocus;
 
 public:
 
     Animation animation;
+    Animation animation2;
 
     Grid(Texture2D* textureReference, Vector2 position, Rectangle rectangleTexture);
     ~Grid() override;

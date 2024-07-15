@@ -5,57 +5,97 @@
 
 struct Sprite
 {
-    Texture2D* texture;
-    Rectangle source;
-    bool bInvert;
-    Sprite() = default;
+	Texture2D* texture;
+	Rectangle source;
+	bool bInvert;
+	Sprite() = default;
 
-    Sprite(Texture2D* texture, const Rectangle source)
-        : texture(texture)
-          , source(source)
-          , bInvert(true)
-    {
-    }
+	Sprite(Texture2D* texture, const Rectangle source)
+		: texture(texture)
+		, source(source)
+		, bInvert(true)
+	{
+	}
+};
+
+struct Position
+{
+	Vector2 position;
+	Vector2 scale;
+	Color color;
+
+	Position()
+		: position(Vector2{})
+		, scale(Vector2{1,1})
+		, color(WHITE)
+	{
+	}
+
+	Position(const Vector2 position)
+		: position(position)
+		, scale(Vector2{ 1,1 })
+		, color(WHITE)
+	{
+	}
+
+	Position(const Vector2 position, const Vector2 scale)
+		: position(position)
+		, scale(scale)
+		, color(WHITE)
+	{
+	}
+
+	Position(const Vector2 position, const Vector2 scale, const Color color)
+		: position(position)
+		, scale(scale)
+		, color(color)
+	{
+	}
 };
 
 
 class Object
 {
-    bool bRegisterObject;
+	bool bRegisterObject;
 
 protected:
 
-    Color color;
+
+	//Color color;
 
 public:
-    friend class ObjectManager;
 
-    Object(Texture2D* textureReference, Vector2 position, Rectangle rectangleTexture);
-    Object();
-    virtual ~Object() = default;
+	Position position;
 
-    int id;
-    Vector2 position;
-    Sprite spriteResource;
-    float scale;
+	friend class ObjectManager;
 
-    void SetTexture(Texture2D* textureReference);
+	Object(Texture2D* textureReference, Vector2 position, Rectangle rectangleTexture);
+	Object();
+	virtual ~Object();
 
-    void SetTexture(Texture2D* textureReference, Rectangle rectangleTexture);
+	int id;
+	//Vector2 position;
+	Sprite spriteResource;
+	//float scale;
 
-    virtual void BeginPlay() {}
+	void SetTexture(Texture2D* textureReference);
 
-    virtual void Tick();
+	void SetTexture(Texture2D* textureReference, Rectangle rectangleTexture);
 
-    virtual void Draw();
+	virtual void BeginPlay();
 
-    virtual void EndDraw() {}
+	virtual void Tick();
 
-    virtual void EndPlay() {}
+	virtual void Draw();
 
-    virtual void Collision() {}
+	virtual void EndDraw();
 
-    void SetColor(unsigned char r, unsigned char g, unsigned char b);
+	virtual void EndPlay();
 
-    void SetOpacity(unsigned char opacity);
+	virtual void Collision();
+
+	void SetColor(unsigned char r, unsigned char g, unsigned char b);
+
+	void SetOpacity(unsigned char opacity);
+
 };

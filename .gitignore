@@ -98,7 +98,7 @@ Config/config.xml
 dependencies.zip
 
 
-RayLib/ClassicLauncher/*
+# RayLib/ClassicLauncher/*
 RayLib/ClassicLauncher/.idea/
 RayLib/ClassicLauncher/.vs/
 RayLib/ClassicLauncher/packages/
