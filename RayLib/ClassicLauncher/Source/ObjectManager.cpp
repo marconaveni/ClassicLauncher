@@ -76,10 +76,20 @@ void ObjectManager::Tick() const
 
 void ObjectManager::Draw() const
 {
+	std::vector<Object*> frontObjects;
 	for (auto& objShared : objects)
 	{
+		if(objShared->bToFrontRender)
+		{
+			frontObjects.push_back(objShared.get());
+			continue;
+		}
 		objShared->Draw();
-
+	}
+	for (auto& objShared : frontObjects)
+	{
+		objShared->bToFrontRender = false;
+		objShared->Draw();
 	}
 }
 

@@ -36,10 +36,34 @@ void Animation::UpdateAnimation()
 			currentPosition.position.y = GetAnimation(static_cast<float>(currentTime), startPosition.position.y, finalPosition.position.y - startPosition.position.y, static_cast<float>(duration));
 			currentPosition.scale.x = GetAnimation(static_cast<float>(currentTime), startPosition.scale.x, finalPosition.scale.x - startPosition.scale.x, static_cast<float>(duration));
 			currentPosition.scale.y = GetAnimation(static_cast<float>(currentTime), startPosition.scale.y, finalPosition.scale.y - startPosition.scale.y, static_cast<float>(duration));
-			currentPosition.color.r = GetAnimation(static_cast<float>(currentTime), startPosition.color.r, finalPosition.color.r - startPosition.color.r, static_cast<float>(duration));
-			currentPosition.color.g = GetAnimation(static_cast<float>(currentTime), startPosition.color.g, finalPosition.color.g - startPosition.color.g, static_cast<float>(duration));
-			currentPosition.color.b = GetAnimation(static_cast<float>(currentTime), startPosition.color.b, finalPosition.color.b - startPosition.color.b, static_cast<float>(duration));
-			currentPosition.color.a = GetAnimation(static_cast<float>(currentTime), startPosition.color.a, finalPosition.color.a - startPosition.color.a, static_cast<float>(duration));
+
+
+			const float r = GetAnimation(
+				static_cast<float>(currentTime), 
+				static_cast<float>(startPosition.color.GetColorRed()), 
+				static_cast<float>(finalPosition.color.GetColorRed() - startPosition.color.GetColorRed()),
+				static_cast<float>(duration)
+			);
+			const float g = GetAnimation(
+				static_cast<float>(currentTime),
+				static_cast<float>(startPosition.color.GetColorGreen()),
+				static_cast<float>(finalPosition.color.GetColorGreen() - startPosition.color.GetColorGreen()),
+				static_cast<float>(duration)
+			);
+			const float b = GetAnimation(
+				static_cast<float>(currentTime),
+				static_cast<float>(startPosition.color.GetColorBlue()),
+				static_cast<float>(finalPosition.color.GetColorBlue() - startPosition.color.GetColorBlue()),
+				static_cast<float>(duration)
+			);
+			const float a = GetAnimation(
+				static_cast<float>(currentTime),
+				static_cast<float>(startPosition.color.GetColorAlpha()),
+				static_cast<float>(finalPosition.color.GetColorAlpha() - startPosition.color.GetColorAlpha()),
+				static_cast<float>(duration)
+			);
+
+			currentPosition.color.SetColor(r, g, b, a);
 
 			currentTime++;
 			return;

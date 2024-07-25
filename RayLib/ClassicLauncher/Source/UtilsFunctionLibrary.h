@@ -11,7 +11,6 @@ public:
 	static void SetSizeWithProportion(Vector2& texture, const int widthResize, const int heightResize);
 
 
-
 	static std::string NormalizePath(const std::string& path);
 
 

@@ -65,6 +65,9 @@
     <ClCompile Include="Source\Animation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Date.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -128,6 +131,9 @@
       <Filter>Header Files\External Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Animation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Date.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

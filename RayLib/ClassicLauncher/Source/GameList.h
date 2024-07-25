@@ -50,7 +50,7 @@ struct GameList
 
 	std::string nameFormatted;
 
-	std::string DescFormatted;
+	std::string descFormatted;
 
 	std::string imageFormatted;
 
@@ -64,7 +64,6 @@ struct GameList
 	
 	std::string releaseDate;
 
-	
 	std::string lastPlayed;
 
 	//constructor
@@ -75,16 +74,16 @@ struct GameList
 		, playCount(0)
 	{}
 
-	bool operator==(const GameList& A) const
+	bool operator==(const GameList& a) const
 	{
-		return (mapIndex == A.mapIndex);
+		return (mapIndex == a.mapIndex);
 	}
-	bool operator>(const GameList& A) const
+	bool operator>(const GameList& a) const
 	{
-		return (mapIndex > A.mapIndex);
+		return (mapIndex > a.mapIndex);
 	}
-	bool operator<(const GameList& A) const
+	bool operator<(const GameList& a) const
 	{
-		return (mapIndex < A.mapIndex);
+		return (mapIndex < a.mapIndex);
 	}
 };
