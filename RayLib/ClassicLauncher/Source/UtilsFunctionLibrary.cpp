@@ -1,5 +1,4 @@
 #include "UtilsFunctionLibrary.h"
-#include <algorithm>
 
 
 
@@ -8,13 +7,13 @@ void UtilsFunctionLibrary::SetSizeWithProportion(Vector2& texture, const int wid
 {
 
 	// Define a nova largura e altura desejadas
-	float newWidth = widthResize;  // Largura desejada
-	float newHeight = heightResize; // Altura desejada
+	float newWidth = static_cast<float>(widthResize);  // Largura desejada
+	float newHeight = static_cast<float>(heightResize); // Altura desejada
 
-	// Calcula a proporção da imagem original
-	float aspectRatio = (float)texture.x / (float)texture.y;
+	// Calcula a proporÃ§Ã£o da imagem original
+	const float aspectRatio = texture.x / texture.y;
 
-	// Ajusta as dimensões para manter a proporção
+	// Ajusta as dimensÃµes para manter a proporÃ§Ã£o
 	if (newWidth / aspectRatio > newHeight) {
 		newWidth = newHeight * aspectRatio;
 	}
@@ -27,16 +26,6 @@ void UtilsFunctionLibrary::SetSizeWithProportion(Vector2& texture, const int wid
 
 }
 
-std::string UtilsFunctionLibrary::NormalizePath(const std::string& path)
-{
-#ifdef _WIN32
-	std::string convertedPath = path;
-	std::replace(convertedPath.begin(), convertedPath.end(), '/', '\\');
-	return convertedPath;
-#else
-	return path;
-#endif
-}
 
 Texture2D UtilsFunctionLibrary::LoadTexture(const std::string& path, int width, int height)
 {

@@ -25,6 +25,8 @@
     <ClCompile Include="Source\Card.cpp" />
     <ClCompile Include="Source\Date.cpp" />
     <ClCompile Include="Source\Engine.cpp" />
+    <ClCompile Include="Source\External\tinyxml2.cpp" />
+    <ClCompile Include="Source\GameListManager.cpp" />
     <ClCompile Include="Source\Grid.cpp" />
     <ClCompile Include="Source\ImageLoader.cpp" />
     <ClCompile Include="Source\MainScreen.cpp" />
@@ -35,6 +37,7 @@
     <ClCompile Include="Source\Process.cpp" />
     <ClCompile Include="Source\Render.cpp" />
     <ClCompile Include="Source\SoundComponent.cpp" />
+    <ClCompile Include="Source\StringFunctionLibrary.cpp" />
     <ClCompile Include="Source\TextureManager.cpp" />
     <ClCompile Include="Source\UtilsFunctionLibrary.cpp" />
     <ClCompile Include="Source\VideoPlayer.cpp" />
@@ -49,13 +52,15 @@
     <ClInclude Include="Source\Date.h" />
     <ClInclude Include="Source\Engine.h" />
     <ClInclude Include="Source\External\reasings.h" />
-    <ClInclude Include="Source\GameList.h" />
+    <ClInclude Include="Source\External\tinyxml2.h" />
+    <ClInclude Include="Source\GameListManager.h" />
     <ClInclude Include="Source\Grid.h" />
     <ClInclude Include="Source\ImageLoader.h" />
     <ClInclude Include="Source\MainScreen.h" />
     <ClInclude Include="Source\Math.h" />
     <ClInclude Include="Source\Process.h" />
     <ClInclude Include="Source\SoundComponent.h" />
+    <ClInclude Include="Source\StringFunctionLibrary.h" />
     <ClInclude Include="Source\TextureManager.h" />
     <ClInclude Include="Source\UtilsFunctionLibrary.h" />
     <ClInclude Include="Source\Types.h" />

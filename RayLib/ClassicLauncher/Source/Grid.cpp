@@ -12,7 +12,7 @@ Grid::Grid(Texture2D* textureReference, Vector2 position, Rectangle rectangleTex
 	, bLeft(false)
 	, bRight(false)
 	, lastDirection(None)
-	, idFocus(3)
+	, idFocus(0)
 {
 	for (int i = 0; i < 10; i++)
 	{
@@ -22,6 +22,7 @@ Grid::Grid(Texture2D* textureReference, Vector2 position, Rectangle rectangleTex
 		cardsContainer.push_back(card);
 	}
 
+	SetFocus(3);
 
 	//cardsContainer[0].cardSelected->SetColor(255, 0, 0);
 }

@@ -12,6 +12,7 @@ using uint = unsigned int;
 
 #define PATH_SOUND "Resources/musics"
 #define PATH_FONTS "Resources/fonts"
+#define PATH_SYSTEM_XML "Resources/systemlist.xml"
 
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 720

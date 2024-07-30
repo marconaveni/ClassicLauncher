@@ -25,11 +25,12 @@ Object::~Object() = default;
 void Object::Draw()
 {
 	const Vector2 positionRender = { round(position.position.x), round(position.position.y) };
-	Rectangle destination = { 0,0,0,0 };
-	destination.x = positionRender.x + (spriteResource.source.width / 2 - spriteResource.source.width * position.scale.x / 2);
-	destination.y = positionRender.y + (spriteResource.source.height / 2 - spriteResource.source.height * position.scale.y / 2);
-	destination.width = spriteResource.source.width * position.scale.x;
-	destination.height = spriteResource.source.height * position.scale.y;
+	const Rectangle destination{
+		 positionRender.x + (spriteResource.source.width / 2 - spriteResource.source.width * position.scale.x / 2),
+		 positionRender.y + (spriteResource.source.height / 2 - spriteResource.source.height * position.scale.y / 2),
+		spriteResource.source.width * position.scale.x,
+		spriteResource.source.height * position.scale.y
+	};
 	DrawTexturePro(*spriteResource.texture, spriteResource.source, destination, Vector2{}, 0, position.color.GetColor()); //draw texture
 	//DrawTextureRec(*spriteResource.texture, spriteResource.source, positionRender, color); //draw texture
 }

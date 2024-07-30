@@ -23,7 +23,7 @@ void ImageLoader::LoadImage(const char* path, Vector2 size)
 		// Add the callback to the queue
 		{
 			std::lock_guard<std::mutex> lock(queueMutex);
-			callbackQueue.push([this, img]() { callback(img); });
+			callbackQueue.push([this, img]() { callback(img , 0); });
 		}
 		cv.notify_one();
 
@@ -41,7 +41,7 @@ void ImageLoader::StartLoading(const char* path, Vector2 size)
 	loadThread.detach(); // Detach the thread so it runs independently
 }
 
-void ImageLoader::SetCallback(std::function<void(Image)> callback)
+void ImageLoader::SetCallback(std::function<void(Image,int)> callback)
 {
 	this->callback = callback;
 }

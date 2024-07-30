@@ -24,7 +24,7 @@ void Card::RegisterCard() const
 	ObjectManager::GetInstance()->RegisterObject(cardSelected);
 }
 
-void Card::AddPosition(Vector2 newPosition)
+void Card::AddPosition(const Vector2 newPosition)
 {
 	currentPosition.position = Vector2{ currentPosition.position.x + newPosition.x , currentPosition.position.y + newPosition.y };
 	cardMain->position.position = currentPosition.position;

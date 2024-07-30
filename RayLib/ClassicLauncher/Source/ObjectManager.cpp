@@ -10,7 +10,7 @@ ObjectManager* ObjectManager::GetInstance()
 }
 
 
-void ObjectManager::RegisterObject(std::shared_ptr<Object> object)
+void ObjectManager::RegisterObject(const std::shared_ptr<Object>& object)
 {
 	if (object->bRegisterObject)
 	{

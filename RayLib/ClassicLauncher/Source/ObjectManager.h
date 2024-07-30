@@ -18,7 +18,7 @@ class ObjectManager
 public:
     static ObjectManager* GetInstance();
     std::vector<Object*>& GetAllObjects();
-    void RegisterObject(std::shared_ptr<Object> object);
+    void RegisterObject(const std::shared_ptr<Object>& object);
     void UnRegisterObject();
     void BeginPlay();
     void Tick() const;

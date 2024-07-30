@@ -7,6 +7,7 @@
 #include "UtilsFunctionLibrary.h"
 #include "Render.h"
 #include "SoundComponent.h"
+#include "StringFunctionLibrary.h"
 
 
 VideoPlayerComponent* VideoPlayerComponent::GetInstance()
@@ -24,7 +25,7 @@ void VideoPlayerComponent::BeginPlay()
 
 void VideoPlayerComponent::PlayVideo(const char* videoPath)
 {
-	const std::string normalizedVideoPath = UtilsFunctionLibrary::NormalizePath(videoPath);
+	const std::string normalizedVideoPath = StringFunctionLibrary::NormalizePath(videoPath);
 	videoPlayer.PlayVideo(normalizedVideoPath.c_str());
 }
 

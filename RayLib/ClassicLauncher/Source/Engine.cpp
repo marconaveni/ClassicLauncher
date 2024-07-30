@@ -44,7 +44,7 @@ void Engine::BeginPlay()
 
 
     // Set the callback to be called when images are loaded
-    ImageLoader::GetInstance()->SetCallback([](Image img) {
+    ImageLoader::GetInstance()->SetCallback([](Image img, int i) {
         PRINT_STRING("Executou callback");
         Texture2D texture = LoadTextureFromImage(img);
         ImageLoader::GetInstance()->coversTextures.push_back(texture);

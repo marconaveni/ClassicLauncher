@@ -22,7 +22,7 @@ public:
 	std::queue<std::function<void()>> callbackQueue;
 	std::mutex queueMutex;
 	std::condition_variable cv;
-	std::function<void(Image)> callback;
+	std::function<void(Image,int)> callback;
 
 	std::vector<Texture2D> coversTextures;
 
@@ -34,7 +34,7 @@ public:
 
 	void StartLoading(const char* path, Vector2 size);
 
-	void SetCallback(std::function<void(Image)> callback);
+	void SetCallback(std::function<void(Image,int)> callback);
 
 	void CreateTextures();
 };

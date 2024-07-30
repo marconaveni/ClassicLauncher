@@ -68,6 +68,15 @@
     <ClCompile Include="Source\Date.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\StringFunctionLibrary.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\tinyxml2.cpp">
+      <Filter>Header Files\External Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameListManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -115,9 +124,6 @@
     <ClInclude Include="Source\ImageLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameList.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Grid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -134,6 +140,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Date.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StringFunctionLibrary.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\tinyxml2.h">
+      <Filter>Header Files\External Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameListManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

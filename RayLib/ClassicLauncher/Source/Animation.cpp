@@ -12,7 +12,7 @@ Animation::Animation()
 {
 }
 
-void Animation::StartAnimation(const int durationAnimation, const Position& startAnimationPosition, const Position& finalAnimationPosition, Ease::Ease typeAnimation, bool bForceReset)
+void Animation::StartAnimation(const int durationAnimation, const Position& startAnimationPosition, const Position& finalAnimationPosition, const Ease::Ease typeAnimation, const bool bForceReset)
 {
 	bFinish = false;
 	bStart = true;
