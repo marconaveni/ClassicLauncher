@@ -1,5 +1,7 @@
 #include "Grid.h"
 
+#include "GameListManager.h"
+#include "ImageLoader.h"
 #include "Math.h"
 #include "ObjectManager.h"
 #include "Print.h"
@@ -77,6 +79,15 @@ void Grid::SetFocus(const int newId)
 	bLeft = true;
 }
 
+void Grid::SetCovers()
+{
+	for (int i = 0; i < 10; i++)
+	{
+		int x = Math::Clamp(GameListManager::GetInstance()->GetId() + i - idFocus, 0, GameListManager::GetInstance()->GetAllGameList().size() - 1);
+		cardsContainer[i].SetCover(&GameListManager::GetInstance()->GetAllGameList()[x].texture);
+	}
+}
+
 void Grid::Tick()
 {
 	Object::Tick();
@@ -99,6 +110,8 @@ void Grid::Tick()
 	{
 		if (!bLeft)
 		{
+			GameListManager::GetInstance()->AddId(-1);
+			ImageLoader::GetInstance()->StartLoading("", Vector2{ 0 }, GameListManager::GetInstance()->GetId());
 			cardsContainer[idFocus].StartAnimationLostFocus();
 			cardsContainer[idFocus].bFocus = false;
 			idFocus--;
@@ -111,6 +124,8 @@ void Grid::Tick()
 	{
 		if (!bRight)
 		{
+			GameListManager::GetInstance()->AddId(1);
+			ImageLoader::GetInstance()->StartLoading("", Vector2{ 0 }, GameListManager::GetInstance()->GetId());
 			cardsContainer[idFocus].StartAnimationLostFocus();
 			cardsContainer[idFocus].bFocus = false;
 			idFocus++;
@@ -154,6 +169,7 @@ void Grid::Tick()
 			positionX = 0;
 			bRight = false;
 			bLeft = false;
+			SetCovers();
 		}
 
 	}

@@ -17,12 +17,17 @@ private:
 
 	std::vector<Image> covers;
 
+	int indexCurrent;
+	int indexRight;
+	int indexLeft;
+
+
 public:
 
 	std::queue<std::function<void()>> callbackQueue;
 	std::mutex queueMutex;
 	std::condition_variable cv;
-	std::function<void(Image,int)> callback;
+	std::function<void(Image, int, bool)> callback;
 
 	std::vector<Texture2D> coversTextures;
 
@@ -30,13 +35,13 @@ public:
 
 	static ImageLoader* GetInstance();
 
-	void LoadImage(const char* path, Vector2 size);
+	void LoadImage(const char* path, Vector2 size, int index);
 
-	void StartLoading(const char* path, Vector2 size);
+	void StartLoading(const char* path, Vector2 size, int index);
 
-	void SetCallback(std::function<void(Image,int)> callback);
+	void SetCallback(std::function<void(Image, int, bool)> callback);
 
-	void CreateTextures();
+	void CreateTextures(const Image& image, int index, bool bCond);
 };
 
 

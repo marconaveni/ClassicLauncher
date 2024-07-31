@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "Date.h"
+#include "raylib.h"
 #include "External/tinyxml2.h"
 
 
@@ -42,13 +43,16 @@ struct GameList
 	std::string arguments;
 	DateTime releaseDate;
 	DateTime lastPlayed;
+	Texture2D texture;
 
 	GameList()
 		: mapIndex(-1)
 		, players("1")
 		, bFavorite(false)
 		, playCount(0)
-	{}
+		, texture()
+	{
+	}
 
 	bool operator==(const GameList& a) const
 	{
@@ -100,6 +104,8 @@ private:
 	{
 	}
 
+	friend class ImageLoader;
+
 public:
 
 	static GameListManager* GetInstance();
@@ -124,6 +130,9 @@ public:
 	void AddId(const int newId);
 	void ChangeId(const int newId);
 	int GetId() const;
+	std::vector<GameList>& GetAllGameList();
+	GameList* GetCurrentGameList();
+	SystemList* GetCurrentSystemList();
 
 private:
 

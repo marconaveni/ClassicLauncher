@@ -13,6 +13,7 @@ void Card::CreateCard(Texture2D* textureReference, Vector2 position, Rectangle r
 	cardMain = std::make_shared<Object>(textureReference, position, rectangleTexture);
 	cardFavorite = std::make_shared<Object>(textureReference, position, rectangleFavorite);
 	cardSelected = std::make_shared<Object>(textureReference, position, rectangleSelected);
+	cover = std::make_shared<Object>(textureReference, position, Rectangle{0,0,230,230});
 	cardSelected->position.color.SetColorAlpha(0);
 	id = idCard;
 }
@@ -22,6 +23,7 @@ void Card::RegisterCard() const
 	ObjectManager::GetInstance()->RegisterObject(cardFavorite);
 	ObjectManager::GetInstance()->RegisterObject(cardMain);
 	ObjectManager::GetInstance()->RegisterObject(cardSelected);
+	ObjectManager::GetInstance()->RegisterObject(cover);
 }
 
 void Card::AddPosition(const Vector2 newPosition)
@@ -30,6 +32,7 @@ void Card::AddPosition(const Vector2 newPosition)
 	cardMain->position.position = currentPosition.position;
 	cardFavorite->position.position = currentPosition.position;
 	cardSelected->position.position = currentPosition.position;
+	cover->position.position = currentPosition.position;
 }
 
 void Card::ChangePosition(const Position& newPosition)
@@ -43,6 +46,7 @@ void Card::ChangePosition(const Vector2& newPosition)
 	cardMain->position.position = newPosition;
 	cardFavorite->position.position = newPosition;
 	cardSelected->position.position = newPosition;
+	cover->position.position = newPosition;
 }
 
 void Card::Tick()
@@ -100,4 +104,9 @@ void Card::StartAnimationClick()
 	newPosition.scale.y = 2.7f;
 	newPosition.color.SetColorAlpha(-255);
 	animationClick.StartAnimation(60, currentPosition, newPosition, Ease::EaseQuadOut, true);
+}
+
+void Card::SetCover(Texture2D* textureReference)
+{
+	cover->SetTexture(textureReference);
 }

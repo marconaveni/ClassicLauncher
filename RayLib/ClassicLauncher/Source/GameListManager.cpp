@@ -1,5 +1,6 @@
 #include "GameListManager.h"
 
+#include "Math.h"
 #include "StringFunctionLibrary.h"
 #include "Types.h"
 
@@ -97,31 +98,46 @@ void GameListManager::LoadSystemList()
 
 void GameListManager::AddId(const int newId)
 {
-	if (currentList == SystemListSelect)
+	if (currentList != SystemListSelect)
 	{
-		idSystemList += newId;
+		idSystemList = Math::Clamp(idSystemList += newId,0,static_cast<int>(systemList.size()) - 1);
 	}
 	else
 	{
-		idGameList += newId;
 	}
+		idGameList = Math::Clamp(idGameList += newId, 0, static_cast<int>(gameList.size()) - 1);
 }
 
 void GameListManager::ChangeId(const int newId)
 {
-	if (currentList == SystemListSelect)
+	if (currentList != SystemListSelect)
 	{
-		idSystemList = newId;
+		idSystemList = Math::Clamp(newId, 0, static_cast<int>(systemList.size()) - 1);
 	}
 	else
 	{
-		idGameList = newId;
 	}
+		idGameList = Math::Clamp( newId, 0, static_cast<int>(gameList.size()) - 1);
 }
 
 int GameListManager::GetId() const
 {
-	return  (currentList == SystemListSelect) ? idSystemList : idGameList;
+	return  (currentList != SystemListSelect) ? idSystemList : idGameList;
+}
+
+std::vector<GameList>& GameListManager::GetAllGameList()
+{
+	return gameList;
+}
+
+GameList* GameListManager::GetCurrentGameList()
+{
+	return &gameList[idGameList];
+}
+
+SystemList* GameListManager::GetCurrentSystemList()
+{
+	return &systemList[idSystemList];
 }
 
 void GameListManager::ReplaceCurrentPath(GameList& game) const

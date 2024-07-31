@@ -11,7 +11,9 @@ public:
     std::shared_ptr<Object> cardMain;
     std::shared_ptr<Object> cardSelected;
     std::shared_ptr<Object> cardFavorite;
+    std::shared_ptr<Object> cover;
     int id = 0;
+    int idList = 0;
     Position currentPosition;
 
     Card() = default;
@@ -33,6 +35,8 @@ public:
     void StartAnimationLostFocus();
 
     void StartAnimationClick();
+
+    void SetCover(Texture2D* textureReference);
 
     Animation animationFocus;
 

@@ -37,4 +37,5 @@ public:
     void Collision() override;
     void RegisterCards() const;
     void SetFocus(int newId);
+    void SetCovers();
 };
