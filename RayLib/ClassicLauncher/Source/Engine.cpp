@@ -46,8 +46,12 @@ void Engine::BeginPlay()
 
 
 	// Set the callback to be called when images are loaded
-	ImageLoader::GetInstance()->SetCallback([](Image img, int i, bool b) {
-		ImageLoader::GetInstance()->CreateTextures(img, i, b);
+	ImageLoader::GetInstance()->SetCallbackLoadTexture([](const Image& img, const int i) {
+		ImageLoader::GetInstance()->CreateTextures(img, i);
+		});
+
+	ImageLoader::GetInstance()->SetCallbackUnloadTexture([](const std::vector<int>& range) {
+		ImageLoader::GetInstance()->UnloadGameListTextureOutRange(range);
 		});
 }
 

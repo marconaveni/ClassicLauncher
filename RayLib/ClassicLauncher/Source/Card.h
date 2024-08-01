@@ -15,10 +15,14 @@ public:
     int id = 0;
     int idList = 0;
     Position currentPosition;
+    Texture2D* defaultTexture;
+    Vector2 offSetCover;
 
     Card() = default;
 
     void CreateCard(Texture2D* textureReference, Vector2 position, Rectangle rectangleTexture, int idCard);
+
+    void ResetCover() const;
 
     void RegisterCard() const;
 

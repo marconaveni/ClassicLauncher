@@ -1,6 +1,7 @@
 #pragma once
 
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -124,7 +125,7 @@ private:
 
 	tinyxml2::XMLDocument documentGameListXml;
 	tinyxml2::XMLDocument documentSystemListXml;
-	std::vector<GameList> gameList;
+	std::vector< std::shared_ptr<GameList> > gameList;
 	std::vector<SystemList> systemList;
 
 public:
@@ -135,13 +136,14 @@ public:
 	void AddId(const int newId);
 	void ChangeId(const int newId);
 	int GetId() const;
-	std::vector<GameList>& GetAllGameList();
+	int GetGameListSize() const;
+	std::vector<std::shared_ptr<GameList>>& GetAllGameList();
 	GameList* GetCurrentGameList();
 	SystemList* GetCurrentSystemList();
 
 private:
 
-	void ReplaceCurrentPath(GameList& game) const;
+	void ReplaceCurrentPath(GameList* game) const;
 	static bool IsValidElement(const tinyxml2::XMLElement* pElement, const char* name = "");
 
 

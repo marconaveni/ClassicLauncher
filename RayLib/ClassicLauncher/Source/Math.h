@@ -11,6 +11,11 @@ public:
         return Max(Min<T>(value, max), min);
     }
 
+    static constexpr float Clamp(const int value, const int min, const int max)
+    {
+        return Max(Min<float>(static_cast<float>(value), static_cast<float>(max)), static_cast<float>(min));
+    }
+
     static constexpr float Clamp(const float value, const int min, const int max)
     {
         return Max(Min<float>(value, static_cast<float>(max)), static_cast<float>(min));

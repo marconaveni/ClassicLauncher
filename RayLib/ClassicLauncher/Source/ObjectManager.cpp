@@ -43,17 +43,9 @@ std::vector<Object*>& ObjectManager::GetAllObjects()
 			[](auto& ptr) { return ptr.get(); });
 	}
 	return objectsGet;
-
-	/*std::vector<Object*> object;
-	object.reserve(objects.size());
-	for (auto& objShared : objects)
-	{
-		object.push_back(objShared.get());
-	}
-	return object;*/
 }
 
-void ObjectManager::BeginPlay()
+void ObjectManager::BeginPlay() const
 {
 	for (auto& objShared : objects)
 	{

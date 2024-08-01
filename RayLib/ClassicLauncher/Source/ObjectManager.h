@@ -20,7 +20,7 @@ public:
     std::vector<Object*>& GetAllObjects();
     void RegisterObject(const std::shared_ptr<Object>& object);
     void UnRegisterObject();
-    void BeginPlay();
+    void BeginPlay() const;
     void Tick() const;
     void Draw() const;
     void EndDraw() const;

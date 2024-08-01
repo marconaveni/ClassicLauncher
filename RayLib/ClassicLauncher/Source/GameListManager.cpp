@@ -33,28 +33,28 @@ void GameListManager::LoadGameList()
 	while (pGame)
 	{
 
-		GameList game;
-		game.mapIndex = index;
-		game.path = IsValidElement(pGame, "path") ? StringFunctionLibrary::NormalizePath(pGame->FirstChildElement("path")->GetText()) : "";
-		game.name = IsValidElement(pGame, "name") ? pGame->FirstChildElement("name")->GetText() : "";
-		game.desc = IsValidElement(pGame, "desc") ? pGame->FirstChildElement("desc")->GetText() : "";
-		game.rating = IsValidElement(pGame, "rating") ? pGame->FirstChildElement("rating")->GetText() : "";
-		game.developer = IsValidElement(pGame, "developer") ? pGame->FirstChildElement("developer")->GetText() : "";
-		game.publisher = IsValidElement(pGame, "publisher") ? pGame->FirstChildElement("publisher")->GetText() : "";
-		game.genre = IsValidElement(pGame, "genre") ? pGame->FirstChildElement("genre")->GetText() : "";
-		game.players = IsValidElement(pGame, "players") ? pGame->FirstChildElement("players")->GetText() : "";
-		game.hash = IsValidElement(pGame, "hash") ? pGame->FirstChildElement("hash")->GetText() : "";
-		game.image = IsValidElement(pGame, "image") ? StringFunctionLibrary::NormalizePath(pGame->FirstChildElement("image")->GetText()) : "";
-		game.thumbnail = IsValidElement(pGame, "thumbnail") ? StringFunctionLibrary::NormalizePath(pGame->FirstChildElement("thumbnail")->GetText()) : "";
-		game.video = IsValidElement(pGame, "video") ? StringFunctionLibrary::NormalizePath(pGame->FirstChildElement("video")->GetText()) : "";
-		game.genreId = IsValidElement(pGame, "genreid") ? pGame->FirstChildElement("genreid")->GetText() : "";
-		game.bFavorite = IsValidElement(pGame, "favorite") ? pGame->FirstChildElement("favorite")->BoolText() : false;
-		game.playCount = IsValidElement(pGame, "playcount") ? pGame->FirstChildElement("playcount")->IntText() : 0;
-		game.executable = IsValidElement(pGame, "executable") ? StringFunctionLibrary::NormalizePath(pGame->FirstChildElement("executable")->GetText()) : "";
-		game.arguments = IsValidElement(pGame, "arguments") ? StringFunctionLibrary::NormalizePath(pGame->FirstChildElement("arguments")->GetText()) : "";
-		game.releaseDate = IsValidElement(pGame, "releasedate") ? StringFunctionLibrary::NormalizePath(pGame->FirstChildElement("releasedate")->GetText()) : "";
-		game.lastPlayed = IsValidElement(pGame, "lastplayed") ? StringFunctionLibrary::NormalizePath(pGame->FirstChildElement("lastplayed")->GetText()) : "";
-		ReplaceCurrentPath(game);
+		auto game = std::make_shared<GameList>();
+		game->mapIndex = index;
+		game->path = IsValidElement(pGame, "path") ? StringFunctionLibrary::NormalizePath(pGame->FirstChildElement("path")->GetText()) : "";
+		game->name = IsValidElement(pGame, "name") ? pGame->FirstChildElement("name")->GetText() : "";
+		game->desc = IsValidElement(pGame, "desc") ? pGame->FirstChildElement("desc")->GetText() : "";
+		game->rating = IsValidElement(pGame, "rating") ? pGame->FirstChildElement("rating")->GetText() : "";
+		game->developer = IsValidElement(pGame, "developer") ? pGame->FirstChildElement("developer")->GetText() : "";
+		game->publisher = IsValidElement(pGame, "publisher") ? pGame->FirstChildElement("publisher")->GetText() : "";
+		game->genre = IsValidElement(pGame, "genre") ? pGame->FirstChildElement("genre")->GetText() : "";
+		game->players = IsValidElement(pGame, "players") ? pGame->FirstChildElement("players")->GetText() : "";
+		game->hash = IsValidElement(pGame, "hash") ? pGame->FirstChildElement("hash")->GetText() : "";
+		game->image = IsValidElement(pGame, "image") ? StringFunctionLibrary::NormalizePath(pGame->FirstChildElement("image")->GetText()) : "";
+		game->thumbnail = IsValidElement(pGame, "thumbnail") ? StringFunctionLibrary::NormalizePath(pGame->FirstChildElement("thumbnail")->GetText()) : "";
+		game->video = IsValidElement(pGame, "video") ? StringFunctionLibrary::NormalizePath(pGame->FirstChildElement("video")->GetText()) : "";
+		game->genreId = IsValidElement(pGame, "genreid") ? pGame->FirstChildElement("genreid")->GetText() : "";
+		game->bFavorite = IsValidElement(pGame, "favorite") ? pGame->FirstChildElement("favorite")->BoolText() : false;
+		game->playCount = IsValidElement(pGame, "playcount") ? pGame->FirstChildElement("playcount")->IntText() : 0;
+		game->executable = IsValidElement(pGame, "executable") ? StringFunctionLibrary::NormalizePath(pGame->FirstChildElement("executable")->GetText()) : "";
+		game->arguments = IsValidElement(pGame, "arguments") ? StringFunctionLibrary::NormalizePath(pGame->FirstChildElement("arguments")->GetText()) : "";
+		game->releaseDate = IsValidElement(pGame, "releasedate") ? StringFunctionLibrary::NormalizePath(pGame->FirstChildElement("releasedate")->GetText()) : "";
+		game->lastPlayed = IsValidElement(pGame, "lastplayed") ? StringFunctionLibrary::NormalizePath(pGame->FirstChildElement("lastplayed")->GetText()) : "";
+		ReplaceCurrentPath(game.get());
 		gameList.push_back(game);
 
 		pGame = pGame->NextSiblingElement("game");
@@ -131,14 +131,19 @@ int GameListManager::GetId() const
 	return  (currentList != SystemListSelect) ? idSystemList : idGameList;
 }
 
-std::vector<GameList>& GameListManager::GetAllGameList()
+int GameListManager::GetGameListSize() const
+{
+	return static_cast<int>(gameList.size());
+}
+
+std::vector<std::shared_ptr<GameList>>& GameListManager::GetAllGameList()
 {
 	return gameList;
 }
 
 GameList* GameListManager::GetCurrentGameList()
 {
-	return &gameList[idGameList];
+	return gameList[idGameList].get();
 }
 
 SystemList* GameListManager::GetCurrentSystemList()
@@ -146,7 +151,7 @@ SystemList* GameListManager::GetCurrentSystemList()
 	return &systemList[idSystemList];
 }
 
-void GameListManager::ReplaceCurrentPath(GameList& game) const
+void GameListManager::ReplaceCurrentPath(GameList* game) const
 {
 	std::string dotSlash = "./";
 	std::string slash = "/";
@@ -154,10 +159,10 @@ void GameListManager::ReplaceCurrentPath(GameList& game) const
 	dotSlash = ".\\";
 	slash = "\\";
 #endif
-	StringFunctionLibrary::ReplaceString(game.path, dotSlash, systemList[idSystemList].romPath + slash);
-	StringFunctionLibrary::ReplaceString(game.image, dotSlash, systemList[idSystemList].romPath + slash);
-	StringFunctionLibrary::ReplaceString(game.thumbnail, dotSlash, systemList[idSystemList].romPath + slash);
-	StringFunctionLibrary::ReplaceString(game.video, dotSlash, systemList[idSystemList].romPath + slash);
+	StringFunctionLibrary::ReplaceString(game->path, dotSlash, systemList[idSystemList].romPath + slash);
+	StringFunctionLibrary::ReplaceString(game->image, dotSlash, systemList[idSystemList].romPath + slash);
+	StringFunctionLibrary::ReplaceString(game->thumbnail, dotSlash, systemList[idSystemList].romPath + slash);
+	StringFunctionLibrary::ReplaceString(game->video, dotSlash, systemList[idSystemList].romPath + slash);
 }
 
 bool GameListManager::IsValidElement(const tinyxml2::XMLElement* pElement, const char* name)

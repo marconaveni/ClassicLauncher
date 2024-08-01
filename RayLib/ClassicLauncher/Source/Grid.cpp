@@ -9,8 +9,8 @@
 #include "UtilsFunctionLibrary.h"
 
 
-Grid::Grid(Texture2D* textureReference, Vector2 position, Rectangle rectangleTexture)
-	: Object(textureReference, position, rectangleTexture)
+Grid::Grid(Texture2D* textureReference, const Vector2 positionGrid, const Rectangle rectangleTexture)
+	: Object(textureReference, positionGrid, rectangleTexture)
 	, positionX(0)
 	, bLeft(false)
 	, bRight(false)
@@ -26,6 +26,8 @@ Grid::Grid(Texture2D* textureReference, Vector2 position, Rectangle rectangleTex
 	}
 
 	SetFocus(3);
+	ImageLoader::GetInstance()->StartLoadingLoadTexture("", Vector2{ 0 ,0}, GameListManager::GetInstance()->GetId());
+	
 
 	//cardsContainer[0].cardSelected->SetColor(255, 0, 0);
 }
@@ -37,6 +39,7 @@ Grid::~Grid()
 void Grid::BeginPlay()
 {
 	Object::BeginPlay();
+	SetCovers();
 }
 
 void Grid::Draw()
@@ -84,31 +87,31 @@ void Grid::SetCovers()
 {
 	GameListManager* manager = GameListManager::GetInstance();
 
-
-
 	for (int i = 0; i < 10; i++)
 	{
-		int indexFinal = UtilsFunctionLibrary::SetIndexArray(manager->GetId() + i - idFocus, static_cast<int>(manager->GetAllGameList().size()));
-		indexFinal = Math::Clamp(indexFinal, 0, manager->GetAllGameList().size() - 1);
-		if (manager->GetAllGameList().empty())
+		int indexFinal = UtilsFunctionLibrary::SetIndexArray(manager->GetId() + i - idFocus, manager->GetGameListSize());
+		indexFinal = Math::Clamp(indexFinal, 0, manager->GetGameListSize() - 1);
+		if (!manager->GetAllGameList().empty())
 		{
-			//cardsContainer[i].SetCover(&manager->GetAllGameList()[indexFinal].texture);
-			//continue;
+			cardsContainer[i].SetCover(&manager->GetAllGameList()[indexFinal]->texture);
 		}
-		cardsContainer[i].SetCover(&manager->GetAllGameList()[indexFinal].texture);
 	}
 }
 
 void Grid::Tick()
 {
 	Object::Tick();
-
+	SetCovers();
 
 	if (IsKeyDown(KEY_B))
 	{
 		cardsContainer[idFocus].StartAnimationClick();
+		for (auto& card : cardsContainer)
+		{
+			card.ResetCover();
+		}
 		GameListManager::GetInstance()->GetAllGameList().clear();
-		//SetCovers();
+		GameListManager::GetInstance()->GetAllGameList().shrink_to_fit();
 	}
 
 	if (IsKeyDown(KEY_V) && !bLeft)
@@ -125,7 +128,7 @@ void Grid::Tick()
 		if (!bLeft)
 		{
 			GameListManager::GetInstance()->AddId(-1);
-			ImageLoader::GetInstance()->StartLoading("", Vector2{ 0 }, GameListManager::GetInstance()->GetId());
+			ImageLoader::GetInstance()->StartLoadingLoadTexture("", Vector2{ 0 ,0}, GameListManager::GetInstance()->GetId());
 			cardsContainer[idFocus].StartAnimationLostFocus();
 			cardsContainer[idFocus].bFocus = false;
 			idFocus--;
@@ -139,7 +142,7 @@ void Grid::Tick()
 		if (!bRight)
 		{
 			GameListManager::GetInstance()->AddId(1);
-			ImageLoader::GetInstance()->StartLoading("", Vector2{ 0 }, GameListManager::GetInstance()->GetId());
+			ImageLoader::GetInstance()->StartLoadingLoadTexture("", Vector2{ 0 , 0}, GameListManager::GetInstance()->GetId());
 			cardsContainer[idFocus].StartAnimationLostFocus();
 			cardsContainer[idFocus].bFocus = false;
 			idFocus++;
@@ -183,7 +186,7 @@ void Grid::Tick()
 			positionX = 0;
 			bRight = false;
 			bLeft = false;
-			SetCovers();
+			//SetCovers();
 		}
 
 	}

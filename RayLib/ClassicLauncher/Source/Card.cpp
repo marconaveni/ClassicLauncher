@@ -5,6 +5,7 @@
 
 void Card::CreateCard(Texture2D* textureReference, Vector2 position, Rectangle rectangleTexture, const int idCard)
 {
+	defaultTexture = textureReference;
 	currentPosition.position = position;
 	Rectangle rectangleFavorite = rectangleTexture;
 	Rectangle rectangleSelected = rectangleTexture;
@@ -16,6 +17,11 @@ void Card::CreateCard(Texture2D* textureReference, Vector2 position, Rectangle r
 	cover = std::make_shared<Object>(textureReference, position, Rectangle{0,0,230,230});
 	cardSelected->position.color.SetColorAlpha(0);
 	id = idCard;
+}
+
+void Card::ResetCover() const
+{
+	cover->SetTexture(defaultTexture, Rectangle{ 0,0,230,230 });
 }
 
 void Card::RegisterCard() const
@@ -32,7 +38,9 @@ void Card::AddPosition(const Vector2 newPosition)
 	cardMain->position.position = currentPosition.position;
 	cardFavorite->position.position = currentPosition.position;
 	cardSelected->position.position = currentPosition.position;
-	cover->position.position = currentPosition.position;
+	cover->position.position.x = currentPosition.position.x + offSetCover.x;
+	cover->position.position.y = currentPosition.position.y + offSetCover.y;
+	
 }
 
 void Card::ChangePosition(const Position& newPosition)
@@ -46,7 +54,8 @@ void Card::ChangePosition(const Vector2& newPosition)
 	cardMain->position.position = newPosition;
 	cardFavorite->position.position = newPosition;
 	cardSelected->position.position = newPosition;
-	cover->position.position = newPosition;
+	cover->position.position.x = newPosition.x + offSetCover.x;
+	cover->position.position.y = newPosition.y + offSetCover.y;
 }
 
 void Card::Tick()
@@ -108,5 +117,7 @@ void Card::StartAnimationClick()
 
 void Card::SetCover(Texture2D* textureReference)
 {
-	cover->SetTexture(textureReference);
+	cover->SetTexture(textureReference,Rectangle{0,0,(float)textureReference->width,(float)textureReference->height});
+	offSetCover.x = (240.0f - (float)textureReference->width) / 2;
+	offSetCover.y = (216.0f - (float)textureReference->height) / 2;
 }

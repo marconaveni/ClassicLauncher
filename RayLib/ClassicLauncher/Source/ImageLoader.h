@@ -17,9 +17,7 @@ private:
 
 	std::vector<Image> covers;
 
-	int indexCurrent;
-	int indexRight;
-	int indexLeft;
+	std::vector<int> rangeImages;
 
 
 public:
@@ -27,7 +25,8 @@ public:
 	std::queue<std::function<void()>> callbackQueue;
 	std::mutex queueMutex;
 	std::condition_variable cv;
-	std::function<void(Image, int, bool)> callback;
+	std::function<void(Image, int)> callback;
+	std::function<void(std::vector<int>&)> callbackUnloadTexture;
 
 	std::vector<Texture2D> coversTextures;
 
@@ -37,11 +36,17 @@ public:
 
 	void LoadImage(const char* path, Vector2 size, int index);
 
-	void StartLoading(const char* path, Vector2 size, int index);
+	void StartLoadingLoadTexture(const char* path, Vector2 size, int index);
 
-	void SetCallback(std::function<void(Image, int, bool)> callback);
+	//void StartLoadingUnLoadTexture(std::vector<int> rangeImages);
 
-	void CreateTextures(const Image& image, int index, bool bCond);
+	void SetCallbackLoadTexture(std::function<void(Image, int)> callback);
+
+	void SetCallbackUnloadTexture(std::function<void(std::vector<int>&)> callback);
+
+	void CreateTextures(const Image& image, int index);
+
+	void UnloadGameListTextureOutRange(const std::vector<int>& range);
 };
 
 
