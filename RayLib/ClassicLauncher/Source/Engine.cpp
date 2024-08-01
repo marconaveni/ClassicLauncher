@@ -88,7 +88,7 @@ void Engine::Tick()
 	}
 	if (IsKeyReleased(KEY_I))
 	{
-		
+
 	}
 
 
@@ -98,7 +98,7 @@ void Engine::Tick()
 	}
 	if (IsKeyDown(KEY_RIGHT))
 	{
-		
+
 		x = x - 10;
 	}
 

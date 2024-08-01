@@ -1,6 +1,6 @@
 #include "UtilsFunctionLibrary.h"
 
-
+#include "Math.h"
 
 
 void UtilsFunctionLibrary::SetSizeWithProportion(Vector2& texture, const int widthResize, const int heightResize)
@@ -36,5 +36,18 @@ Texture2D UtilsFunctionLibrary::LoadTexture(const std::string& path, int width, 
 	const Texture2D texture = LoadTextureFromImage(img);
 	UnloadImage(img);
 	return texture;
+}
+
+int UtilsFunctionLibrary::SetIndexArray(const int index, const int maxArrayLength)
+{
+	if (index >= maxArrayLength)
+	{
+		return std::abs(maxArrayLength - index);
+	}
+	if (index < 0)
+	{
+		return maxArrayLength - std::abs(index);
+	}
+	return index;
 }
 

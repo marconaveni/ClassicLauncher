@@ -4,6 +4,7 @@
 #include "GameListManager.h"
 #include "Math.h"
 #include "Print.h"
+#include "UtilsFunctionLibrary.h"
 
 
 ImageLoader* ImageLoader::GetInstance()
@@ -14,11 +15,19 @@ ImageLoader* ImageLoader::GetInstance()
 
 void ImageLoader::LoadImage(const char* path, Vector2 size, int index)
 {
-	for (int i = 0; i < 30; i++)
+	const int maxLength = static_cast<int>(GameListManager::GetInstance()->gameList.size());
+	const int count = Math::Clamp(maxLength, 0, 15);
+	for (int i = count * -1; i < count; i++)
 	{
-		const int indexFinal = Math::Clamp(index + i, 0, static_cast<int>(GameListManager::GetInstance()->gameList.size()) - 1);
+		//const int indexFinal = Math::Clamp(index + i, 0, static_cast<int>(GameListManager::GetInstance()->gameList.size()) - 1);
+		const int indexFinal = UtilsFunctionLibrary::SetIndexArray(index + i, maxLength);
+
+		LOG(LOGWARNING, TextFormat("index = %d", index));
+		LOG(LOGWARNING, TextFormat("index + i = %d", index + i));
+		LOG(LOGWARNING, TextFormat("indexFinal = %d", indexFinal));
 		if (!IsTextureReady(GameListManager::GetInstance()->gameList[indexFinal].texture))
 		{
+
 			// Add the callback to the queue
 			{
 				std::string pathImage = GameListManager::GetInstance()->gameList[indexFinal].image;

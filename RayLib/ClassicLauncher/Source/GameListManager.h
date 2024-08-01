@@ -54,6 +54,11 @@ struct GameList
 	{
 	}
 
+	~GameList()
+	{
+		UnloadTexture(texture);
+	}
+
 	bool operator==(const GameList& a) const
 	{
 		return (mapIndex == a.mapIndex);

@@ -3,6 +3,7 @@
 #include "Math.h"
 #include "StringFunctionLibrary.h"
 #include "Types.h"
+#include "UtilsFunctionLibrary.h"
 
 GameListManager* GameListManager::GetInstance()
 {
@@ -98,26 +99,31 @@ void GameListManager::LoadSystemList()
 
 void GameListManager::AddId(const int newId)
 {
-	if (currentList != SystemListSelect)
-	{
-		idSystemList = Math::Clamp(idSystemList += newId,0,static_cast<int>(systemList.size()) - 1);
-	}
-	else
-	{
-	}
-		idGameList = Math::Clamp(idGameList += newId, 0, static_cast<int>(gameList.size()) - 1);
+	//if (currentList != SystemListSelect)
+	//{
+	//	idSystemList = Math::Clamp(idSystemList += newId,0,static_cast<int>(systemList.size()) - 1);
+	//}
+	//else
+	//{
+	//}
+	//idGameList = Math::Clamp(idGameList += newId, 0, static_cast<int>(gameList.size()) - 1);
+
+	//idGameList += newId;
+	idGameList = UtilsFunctionLibrary::SetIndexArray(idGameList += newId, static_cast<int>(gameList.size()));
+
 }
 
 void GameListManager::ChangeId(const int newId)
 {
-	if (currentList != SystemListSelect)
-	{
-		idSystemList = Math::Clamp(newId, 0, static_cast<int>(systemList.size()) - 1);
-	}
-	else
-	{
-	}
-		idGameList = Math::Clamp( newId, 0, static_cast<int>(gameList.size()) - 1);
+	//if (currentList != SystemListSelect)
+	//{
+	//	idSystemList = Math::Clamp(newId, 0, static_cast<int>(systemList.size()) - 1);
+	//}
+	//else
+	//{
+	//}
+
+	idGameList = Math::Clamp(newId, 0, static_cast<int>(gameList.size()) - 1);
 }
 
 int GameListManager::GetId() const

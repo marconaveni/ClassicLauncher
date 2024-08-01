@@ -6,6 +6,7 @@
 #include "ObjectManager.h"
 #include "Print.h"
 #include "TextureManager.h"
+#include "UtilsFunctionLibrary.h"
 
 
 Grid::Grid(Texture2D* textureReference, Vector2 position, Rectangle rectangleTexture)
@@ -81,10 +82,20 @@ void Grid::SetFocus(const int newId)
 
 void Grid::SetCovers()
 {
+	GameListManager* manager = GameListManager::GetInstance();
+
+
+
 	for (int i = 0; i < 10; i++)
 	{
-		int x = Math::Clamp(GameListManager::GetInstance()->GetId() + i - idFocus, 0, GameListManager::GetInstance()->GetAllGameList().size() - 1);
-		cardsContainer[i].SetCover(&GameListManager::GetInstance()->GetAllGameList()[x].texture);
+		int indexFinal = UtilsFunctionLibrary::SetIndexArray(manager->GetId() + i - idFocus, static_cast<int>(manager->GetAllGameList().size()));
+		indexFinal = Math::Clamp(indexFinal, 0, manager->GetAllGameList().size() - 1);
+		if (manager->GetAllGameList().empty())
+		{
+			//cardsContainer[i].SetCover(&manager->GetAllGameList()[indexFinal].texture);
+			//continue;
+		}
+		cardsContainer[i].SetCover(&manager->GetAllGameList()[indexFinal].texture);
 	}
 }
 
@@ -96,6 +107,8 @@ void Grid::Tick()
 	if (IsKeyDown(KEY_B))
 	{
 		cardsContainer[idFocus].StartAnimationClick();
+		GameListManager::GetInstance()->GetAllGameList().clear();
+		//SetCovers();
 	}
 
 	if (IsKeyDown(KEY_V) && !bLeft)
@@ -103,6 +116,7 @@ void Grid::Tick()
 		SetFocus(3);
 	}
 
+	PRINT_STRING(TextFormat("idGamelist %d", GameListManager::GetInstance()->GetId()), 0.2f, "getid", BLUE);
 
 	constexpr int speed = 22;
 
