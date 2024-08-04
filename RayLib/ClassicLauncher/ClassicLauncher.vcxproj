@@ -31,6 +31,7 @@
     <ClCompile Include="Source\ImageLoader.cpp" />
     <ClCompile Include="Source\MainScreen.cpp" />
     <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\MiniCovers.cpp" />
     <ClCompile Include="Source\Object.cpp" />
     <ClCompile Include="Source\ObjectManager.cpp" />
     <ClCompile Include="Source\Print.cpp" />
@@ -58,7 +59,9 @@
     <ClInclude Include="Source\ImageLoader.h" />
     <ClInclude Include="Source\MainScreen.h" />
     <ClInclude Include="Source\Math.h" />
+    <ClInclude Include="Source\MiniCovers.h" />
     <ClInclude Include="Source\Process.h" />
+    <ClInclude Include="Source\RaylibCpp.h" />
     <ClInclude Include="Source\SoundComponent.h" />
     <ClInclude Include="Source\StringFunctionLibrary.h" />
     <ClInclude Include="Source\TextureManager.h" />

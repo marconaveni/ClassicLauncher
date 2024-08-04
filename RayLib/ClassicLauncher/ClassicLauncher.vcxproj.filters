@@ -77,6 +77,9 @@
     <ClCompile Include="Source\GameListManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\MiniCovers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -149,6 +152,12 @@
       <Filter>Header Files\External Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameListManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RaylibCpp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MiniCovers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

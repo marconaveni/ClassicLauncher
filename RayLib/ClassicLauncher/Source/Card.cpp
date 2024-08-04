@@ -14,14 +14,14 @@ void Card::CreateCard(Texture2D* textureReference, Vector2 position, Rectangle r
 	cardMain = std::make_shared<Object>(textureReference, position, rectangleTexture);
 	cardFavorite = std::make_shared<Object>(textureReference, position, rectangleFavorite);
 	cardSelected = std::make_shared<Object>(textureReference, position, rectangleSelected);
-	cover = std::make_shared<Object>(textureReference, position, Rectangle{0,0,230,230});
+	cover = std::make_shared<Object>(textureReference, position, Rectangle{0,0,240,216});
 	cardSelected->position.color.SetColorAlpha(0);
 	id = idCard;
 }
 
 void Card::ResetCover() const
 {
-	cover->SetTexture(defaultTexture, Rectangle{ 0,0,230,230 });
+	cover->SetTexture(defaultTexture, Rectangle{ 0,0,240,216 });
 }
 
 void Card::RegisterCard() const

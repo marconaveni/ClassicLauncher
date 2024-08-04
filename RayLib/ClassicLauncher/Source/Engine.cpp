@@ -23,12 +23,12 @@ void Engine::BeginPlay()
 	TextureManager::GetInstance()->LoadResources();
 	mainScreen = std::make_shared<MainScreen>();
 
-
-	std::shared_ptr<Card> cards;
-
 	ObjectManager::GetInstance()->RegisterObject(mainScreen);
 	ObjectManager::GetInstance()->RegisterObject(mainScreen->grid);
+	ObjectManager::GetInstance()->RegisterObject(mainScreen->miniCovers);
+	
 	mainScreen->grid->RegisterCards();
+	mainScreen->miniCovers->RegisterCovers();
 
 	ObjectManager::GetInstance()->BeginPlay();
 	VideoPlayerComponent::GetInstance()->BeginPlay();
@@ -46,7 +46,7 @@ void Engine::BeginPlay()
 
 
 	// Set the callback to be called when images are loaded
-	ImageLoader::GetInstance()->SetCallbackLoadTexture([](const Image& img, const int i) {
+	ImageLoader::GetInstance()->SetCallbackLoadTexture([](Image img, const int i) {
 		ImageLoader::GetInstance()->CreateTextures(img, i);
 		});
 
@@ -87,8 +87,9 @@ void Engine::Tick()
 	}
 	if (IsKeyReleased(KEY_S))
 	{
-		SoundComponent::GetInstance()->PlayMusic();
-		mainScreen->grid->SetCovers();
+		//SoundComponent::GetInstance()->PlayMusic();
+		//mainScreen->grid->SetCovers();
+		mainScreen->miniCovers->SetCovers();
 	}
 	if (IsKeyReleased(KEY_I))
 	{

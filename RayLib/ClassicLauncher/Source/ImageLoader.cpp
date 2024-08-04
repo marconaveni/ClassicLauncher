@@ -17,7 +17,7 @@ void ImageLoader::LoadImage(const char* path, Vector2 size, int index)
 {
 	rangeImages.clear();
 	const int maxLength = GameListManager::GetInstance()->GetGameListSize();
-	const int count = Math::Clamp(maxLength, 0, 15);
+	const int count = Math::Clamp(maxLength, 0, 16);
 	for (int i = count * -1; i < count; i++)
 	{
 		const int indexFinal = UtilsFunctionLibrary::SetIndexArray(index + i, maxLength);
@@ -29,10 +29,10 @@ void ImageLoader::LoadImage(const char* path, Vector2 size, int index)
 		{
 			std::string pathImage = GameListManager::GetInstance()->gameList[indexFinal]->image;
 			Image img = ::LoadImage(pathImage.c_str());
-			//Vector2 newSize{ Math::Clamp(img.width, 0, 228) , Math::Clamp(img.height, 0, 204) };
-			Vector2 newSize{ (float)img.width, (float)img.height };
-			UtilsFunctionLibrary::SetSizeWithProportion(newSize, 228, 204);
-			ImageResize(&img, newSize.x, newSize.y);
+
+			//Vector2 newSize{ (float)img.width, (float)img.height };
+			//UtilsFunctionLibrary::SetSizeWithProportion(newSize, 228, 204);
+			//ImageResize(&img, newSize.x, newSize.y);
 
 			// Add the callback to the queue
 			{
@@ -73,13 +73,25 @@ void ImageLoader::SetCallbackUnloadTexture(std::function<void(std::vector<int>&)
 	this->callbackUnloadTexture = callback;
 }
 
-void ImageLoader::CreateTextures(const Image& image, int index)
+void ImageLoader::ImageResize(Image& image, const int newWidth, const int newHeight)
+{
+	Vector2 newSize{ (float)image.width, (float)image.height };
+	UtilsFunctionLibrary::SetSizeWithProportion(newSize, newWidth, newHeight);
+	::ImageResize(&image, (int)newSize.x, (int)newSize.y);
+}
+
+void ImageLoader::CreateTextures(Image& image, int index)
 {
 	PRINT_STRING("Executou callback");
 
-	Texture2D texture = LoadTextureFromImage(image);
+	ImageResize(image, 228, 204);
+	const Texture2D texture = LoadTextureFromImage(image);
+	ImageResize(image, 28, 40);
+	const Texture2D textureMini = LoadTextureFromImage(image);
 	UnloadTexture(GameListManager::GetInstance()->gameList[index]->texture);
+	UnloadTexture(GameListManager::GetInstance()->gameList[index]->textureMini);
 	GameListManager::GetInstance()->gameList[index]->texture = texture;
+	GameListManager::GetInstance()->gameList[index]->textureMini = textureMini;
 	UnloadImage(image);
 }
 
@@ -100,7 +112,9 @@ void ImageLoader::UnloadGameListTextureOutRange(const std::vector<int>& range)
 		{
 			PRINT_STRING("Descarregou imagem");
 			UnloadTexture(GameListManager::GetInstance()->gameList[i]->texture);
+			UnloadTexture(GameListManager::GetInstance()->gameList[i]->textureMini);
 			GameListManager::GetInstance()->gameList[i]->texture = Texture2D();
+			GameListManager::GetInstance()->gameList[i]->textureMini = Texture2D();
 		}
 	}
 }

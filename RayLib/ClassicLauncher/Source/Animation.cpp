@@ -63,7 +63,7 @@ void Animation::UpdateAnimation()
 				static_cast<float>(duration)
 			);
 
-			currentPosition.color.SetColor(r, g, b, a);
+			currentPosition.color.SetColor((int)r, (int)g, (int)b, (int)a);
 
 			currentTime++;
 			return;

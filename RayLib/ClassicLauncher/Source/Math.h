@@ -11,35 +11,74 @@ public:
         return Max(Min<T>(value, max), min);
     }
 
-    static constexpr float Clamp(const int value, const int min, const int max)
-    {
-        return Max(Min<float>(static_cast<float>(value), static_cast<float>(max)), static_cast<float>(min));
-    }
+	static constexpr float Clamp(const float value, const float min, const float max) { return Clamp<float>(value, min, max); }
+	static constexpr double Clamp(const double value, const double min, const double max) { return Clamp<double>(value, min, max); }
 
-    static constexpr float Clamp(const float value, const int min, const int max)
-    {
-        return Max(Min<float>(value, static_cast<float>(max)), static_cast<float>(min));
-    }
+    //template <typename T, typename X>
+    //static constexpr X Clamp(T value, T min, T max)
+    //{
+    //    return Max(Min<T>(value, max), min);
+    //}
 
-    static constexpr float Clamp(const float value, const float min, const int max)
-    {
-        return Max(Min<float>(value, static_cast<float>(max)), min);
-    }
+    //template <typename T, typename X>
+    //static constexpr T Clamp(X value, T min, T max)
+    //{
+    //    return Max(Min<T>(value, max), min);
+    //}
 
-    static constexpr float Clamp(const float value, const int min, const float max)
-    {
-        return Max(Min<float>(value, max), static_cast<float>(min));
-    }
+    //template <typename T, typename X>
+    //static constexpr T Clamp(X value, X min, T max)
+    //{
+    //    return Max(Min<T>(value, max), min);
+    //}
 
-    static constexpr float Clamp(const int value, const float min, const int max)
-    {
-        return Max(Min<float>(static_cast<float>(value), static_cast<float>(max)), min);
-    }
+    //template <typename T, typename X>
+    //static constexpr T Clamp(X value, X min, X max)
+    //{
+    //    return Max(Min<T>(value, max), min);
+    //}
 
-    static constexpr float Clamp(const int value, const int min, const float max)
-    {
-        return Max(Min<float>(static_cast<float>(value), max), static_cast<float>(min));
-    }
+    //template <typename T, typename X>
+    //static constexpr T Clamp(X value, T min, X max)
+    //{
+    //    return Max(Min<T>(value, max), min);
+    //}
+
+    //template <typename T, typename X>
+    //static constexpr T Clamp(T value, X min, T max)
+    //{
+    //    return Max(Min<T>(value, max), min);
+    //}
+
+    //static constexpr float Clamp(const int value, const int min, const int max)
+    //{
+    //    return Max(Min<float>(static_cast<float>(value), static_cast<float>(max)), static_cast<float>(min));
+    //}
+
+    //static constexpr float Clamp(const float value, const int min, const int max)
+    //{
+    //    return Max(Min<float>(value, static_cast<float>(max)), static_cast<float>(min));
+    //}
+
+    //static constexpr float Clamp(const float value, const float min, const int max)
+    //{
+    //    return Max(Min<float>(value, static_cast<float>(max)), min);
+    //}
+
+    //static constexpr float Clamp(const float value, const int min, const float max)
+    //{
+    //    return Max(Min<float>(value, max), static_cast<float>(min));
+    //}
+
+    //static constexpr float Clamp(const int value, const float min, const int max)
+    //{
+    //    return Max(Min<float>(static_cast<float>(value), static_cast<float>(max)), min);
+    //}
+
+    //static constexpr float Clamp(const int value, const int min, const float max)
+    //{
+    //    return Max(Min<float>(static_cast<float>(value), max), static_cast<float>(min));
+    //}
 
     template <typename T>
     static constexpr T Max(T a, T b)

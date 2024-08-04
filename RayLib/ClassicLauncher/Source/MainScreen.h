@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "Grid.h"
+#include "MiniCovers.h"
 #include "Object.h"
 
 
@@ -15,6 +16,7 @@ public:
 
 	
 	std::shared_ptr<Grid> grid;
+	std::shared_ptr<MiniCovers> miniCovers;
 	
 	MainScreen();
 	

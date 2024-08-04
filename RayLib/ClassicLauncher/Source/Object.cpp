@@ -24,10 +24,17 @@ Object::~Object() = default;
 
 void Object::Draw()
 {
+
+	if (spriteResource.texture == nullptr)
+	{
+		return;
+	}
+
 	if(!IsTextureReady(*spriteResource.texture))
 	{
 		return;
 	}
+
 	const Vector2 positionRender = { round(position.position.x), round(position.position.y) };
 	const Rectangle destination{
 		 positionRender.x + (spriteResource.source.width / 2 - spriteResource.source.width * position.scale.x / 2),

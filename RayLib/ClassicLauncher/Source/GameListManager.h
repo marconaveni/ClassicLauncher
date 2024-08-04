@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "Date.h"
-#include "raylib.h"
+#include "RaylibCpp.h"
 #include "External/tinyxml2.h"
 
 
@@ -45,6 +45,7 @@ struct GameList
 	DateTime releaseDate;
 	DateTime lastPlayed;
 	Texture2D texture;
+	Texture2D textureMini;
 
 	GameList()
 		: mapIndex(-1)
@@ -52,6 +53,7 @@ struct GameList
 		, bFavorite(false)
 		, playCount(0)
 		, texture()
+		, textureMini()
 	{
 	}
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "raylib.h"
+#include "RaylibCpp.h"
 #include <queue>
 #include <mutex>
 #include <condition_variable>
@@ -44,7 +44,9 @@ public:
 
 	void SetCallbackUnloadTexture(std::function<void(std::vector<int>&)> callback);
 
-	void CreateTextures(const Image& image, int index);
+	void ImageResize(Image& image, const int newWidth, const int newHeight);
+
+	void CreateTextures(Image& image, int index);
 
 	void UnloadGameListTextureOutRange(const std::vector<int>& range);
 };
