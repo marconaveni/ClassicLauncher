@@ -9,8 +9,6 @@ MainScreen::MainScreen()
     miniCovers = std::make_shared<MiniCovers>();
 }
 
-MainScreen::~MainScreen() = default;
-
 void MainScreen::BeginPlay()
 {
     Object::BeginPlay();
@@ -40,3 +38,4 @@ void MainScreen::Collision()
 {
     //Object::Collision();
 }
+

@@ -11,7 +11,7 @@
 enum Direction { None, Left, Right };
 
 
-class Grid : public Object
+class Grid final : public Object
 {
 
     std::vector<Card> cardsContainer;
@@ -28,7 +28,6 @@ public:
     Animation animation2;
 
     Grid(Texture2D* textureReference, Vector2 positionGrid, Rectangle rectangleTexture);
-    ~Grid() override;
     void BeginPlay() override;
     void Tick() override;
     void Draw() override;
@@ -38,4 +37,5 @@ public:
     void RegisterCards() const;
     void SetFocus(int newId);
     void SetCovers();
+
 };

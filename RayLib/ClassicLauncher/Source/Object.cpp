@@ -19,8 +19,6 @@ Object::Object()
 {
 }
 
-Object::~Object() = default;
-
 
 void Object::Draw()
 {

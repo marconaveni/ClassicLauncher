@@ -68,13 +68,36 @@ public:
 	friend class ObjectManager;
 
 	Object(Texture2D* textureReference, Vector2 position, Rectangle rectangleTexture);
-	Object();
-	virtual ~Object();
 
-	//int id;
-	//Vector2 position;
+	Object();
+
+	Object(const Object&) = default;  	// Copy constructor
+
+	Object& operator=(const Object&) = default;  // Copy assignment operator
+
+	Object(Object&& other) noexcept       // Move constructor
+		: bRegisterObject(other.bRegisterObject),
+		bToFrontRender(other.bToFrontRender),
+		position(other.position),
+		spriteResource(other.spriteResource)
+	{
+	}
+
+	Object& operator=(Object&& other) noexcept  // Move assignment operator
+	{
+		if (this != &other)
+		{
+			bRegisterObject = other.bRegisterObject;  // Move data from 'other' to 'this' object
+			bToFrontRender = other.bToFrontRender;
+			position = other.position;
+			spriteResource = other.spriteResource;
+		}
+		return *this;
+	}
+
+	virtual ~Object() = default;
+
 	Sprite spriteResource;
-	//float scale;
 
 	void SetTexture(Texture2D* textureReference);
 

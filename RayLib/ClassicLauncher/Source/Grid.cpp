@@ -21,7 +21,7 @@ Grid::Grid(Texture2D* textureReference, const Vector2 positionGrid, const Rectan
 	{
 		const float x = static_cast<float>(256 * (i - 2));
 		Card card;
-		card.CreateCard(TextureManager::GetInstance()->GetSprite("sprite"), Vector2{ x - 120, 130 }, Rectangle{ 528, 15, 246, 270 }, i);
+		card.CreateCard(TextureManager::GetInstance()->GetSprite("sprite"), Vector2{ x - 120, 228 }, Rectangle{ 528, 15, 246, 270 }, i);
 		cardsContainer.push_back(card);
 	}
 
@@ -31,10 +31,10 @@ Grid::Grid(Texture2D* textureReference, const Vector2 positionGrid, const Rectan
 
 	//cardsContainer[0].cardSelected->SetColor(255, 0, 0);
 }
-
-Grid::~Grid()
-{
-}
+//
+//Grid::~Grid()
+//{
+//}
 
 void Grid::BeginPlay()
 {
@@ -90,6 +90,7 @@ void Grid::SetCovers()
 	for (int i = 0; i < 10; i++)
 	{
 		int indexFinal = UtilsFunctionLibrary::SetIndexArray(manager->GetId() + i - idFocus, manager->GetGameListSize());
+		indexFinal = UtilsFunctionLibrary::SetIndexArray(indexFinal, manager->GetGameListSize());
 		indexFinal = Math::Clamp(indexFinal, 0, manager->GetGameListSize() - 1);
 		if (!manager->GetAllGameList().empty())
 		{

@@ -22,6 +22,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Animation.cpp" />
+    <ClCompile Include="Source\AnimationFrame.cpp" />
     <ClCompile Include="Source\Card.cpp" />
     <ClCompile Include="Source\Date.cpp" />
     <ClCompile Include="Source\Engine.cpp" />
@@ -33,6 +34,7 @@
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\MiniCovers.cpp" />
     <ClCompile Include="Source\Object.cpp" />
+    <ClCompile Include="Source\ObjectAnimated.cpp" />
     <ClCompile Include="Source\ObjectManager.cpp" />
     <ClCompile Include="Source\Print.cpp" />
     <ClCompile Include="Source\Process.cpp" />
@@ -49,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Animation.h" />
+    <ClInclude Include="Source\AnimationFrame.h" />
     <ClInclude Include="Source\Card.h" />
     <ClInclude Include="Source\Date.h" />
     <ClInclude Include="Source\Engine.h" />
@@ -60,6 +63,7 @@
     <ClInclude Include="Source\MainScreen.h" />
     <ClInclude Include="Source\Math.h" />
     <ClInclude Include="Source\MiniCovers.h" />
+    <ClInclude Include="Source\ObjectAnimated.h" />
     <ClInclude Include="Source\Process.h" />
     <ClInclude Include="Source\RaylibCpp.h" />
     <ClInclude Include="Source\SoundComponent.h" />

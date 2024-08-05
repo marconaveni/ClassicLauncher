@@ -2,9 +2,12 @@
 
 #include "GameListManager.h"
 #include "ObjectManager.h"
+#include "TextureManager.h"
+#include "Types.h"
 #include "UtilsFunctionLibrary.h"
 
 MiniCovers::MiniCovers()
+	:positionY(505.0f)
 {
 	CreateCovers();
 }
@@ -16,6 +19,8 @@ void MiniCovers::CreateCovers()
 		auto cover = std::make_shared<Object>(nullptr, Vector2{ static_cast<float>(205 + (29 * i))   ,530 }, Rectangle{ 0,0,28,40 });
 		objectsCover.push_back(cover);
 	}
+
+	arrow = std::make_shared<ObjectAnimated>(TextureManager::GetInstance()->GetSprite("sprite"), Vector2{ 0   ,0 }, Rectangle{ 0,0,30,18 });
 }
 
 void MiniCovers::RegisterCovers() const
@@ -24,6 +29,7 @@ void MiniCovers::RegisterCovers() const
 	{
 		ObjectManager::GetInstance()->RegisterObject(cover);
 	}
+	ObjectManager::GetInstance()->RegisterObject(arrow);
 }
 
 void MiniCovers::SetCovers() const
@@ -50,17 +56,32 @@ void MiniCovers::SetPosition(const int size) const
 	const int x = (1280 - (29 * size)) / 2;
 	for (int i = 0; i < 30; i++)
 	{
-		objectsCover[i]->position.position = Vector2{ static_cast<float>(x + (29 * i)),500 };
+		objectsCover[i]->position.position = Vector2{ static_cast<float>(x + (29 * i)), positionY + 21 };
 	}
+
+	const float arrowPositionX = (size % 2 == 0) ? 640 : 625;
+	arrow->position.position = Vector2{ arrowPositionX , positionY };
 }
 
 void MiniCovers::BeginPlay()
 {
 	Object::BeginPlay();
+
+	const std::vector<Vector2> frames = {
+		Vector2{ 798,1017 },
+		Vector2{ 834,1017 },
+		Vector2{ 870,1017 }
+	};
+
+	arrow->AddAnimation("frame", frames);
+	arrow->SetAnimationSpeed(0.1f);
+	arrow->ChangeAnimation("frame");
 }
 
 void MiniCovers::Tick()
 {
 	Object::Tick();
 	SetCovers();
+
+
 }

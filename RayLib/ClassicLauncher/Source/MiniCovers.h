@@ -2,15 +2,20 @@
 #include <vector>
 
 #include "Object.h"
+#include "ObjectAnimated.h"
 #include "raylib.h"
 
 class MiniCovers : public Object
 {
 public:
 
+	float positionY;
+
 	std::vector<Texture2D> covers;
 
 	std::vector<std::shared_ptr<Object>> objectsCover;
+
+	std::shared_ptr<ObjectAnimated> arrow;
 
 	MiniCovers();
 
