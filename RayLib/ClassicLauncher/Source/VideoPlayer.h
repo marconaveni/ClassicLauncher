@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vlc/vlc.h>
-#include <iostream>
 #include "RaylibCpp.h"
 #include <functional>
 
@@ -12,11 +11,11 @@ struct Proportion
 {
 
 	double proportion;
-	int simplifiedWidth;
-	int simplifiedHeight;
+	unsigned int simplifiedWidth;
+	unsigned int simplifiedHeight;
 
 
-	Proportion(int width, int height) 
+	Proportion(const unsigned int width, const unsigned int height)
 		: proportion(0), simplifiedWidth(0), simplifiedHeight(0)
 	{
 		SetProportion(width, height);
@@ -24,12 +23,12 @@ struct Proportion
 
 	Proportion() : proportion(0), simplifiedWidth(0), simplifiedHeight(0) {}
 
-	void SetProportion(int width, int height) 
+	void SetProportion(const unsigned int width, const unsigned int height)
 	{
 		if (width != simplifiedWidth && height != simplifiedHeight 
 			&& width > 0 && height > 0)
 		{
-			const int commonDivisor = gcd(width, height);
+			const unsigned int commonDivisor = gcd(width, height);
 			proportion = static_cast<double>(width) / height;
 			simplifiedWidth = width / commonDivisor;
 			simplifiedHeight = height / commonDivisor;
@@ -40,9 +39,9 @@ private:
 
 
 
-	int gcd(int a, int b) {
+	unsigned int gcd(unsigned int a, unsigned int b) {
 		while (b != 0) {
-			int temp = b;
+			unsigned int temp = b;
 			b = a % b;
 			a = temp;
 		}
@@ -65,8 +64,8 @@ private:
 	Image image;
 	Texture2D texture;
 	Texture2D textureDefault;
-	int width;
-	int height;
+	unsigned int width;
+	unsigned int height;
 	Proportion proportion;
 
 	EndVideoCallback endVideoCallback;

@@ -1,5 +1,6 @@
 #pragma once
 #include <map>
+#include <string>
 #include "RaylibCpp.h"
 
 
@@ -8,7 +9,7 @@ class TextureManager
 
 	TextureManager() = default;
 
-	std::map<const char*, Texture2D> sprites;
+	std::map<std::string, Texture2D> sprites;
 
 public:
 
@@ -16,7 +17,7 @@ public:
 
 	void LoadResources();
 
-	Texture2D* GetSprite(const char* name);
+	Texture2D* GetSprite(const std::string& name);
 
 	void EndPlay();
 	

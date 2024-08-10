@@ -3,6 +3,7 @@
 
 #include "Object.h"
 #include "ObjectAnimated.h"
+#include <memory>
 #include "raylib.h"
 
 class MiniCovers : public Object

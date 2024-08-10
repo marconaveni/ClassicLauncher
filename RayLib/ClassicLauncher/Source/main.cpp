@@ -27,6 +27,7 @@
 #include "Date.h"
 #include "GameListManager.h"
 #include "StringFunctionLibrary.h"
+#include "TextureManager.h"
 
 void UpdateDrawFrame();
 
@@ -140,7 +141,7 @@ void UpdateDrawFrame()
 
 	Render::GetInstance()->DrawRender();
 
-
+	//DrawTexture(LoadTexture("Resources/themes/default/sprite.png"), 0, 0, RED);
 	PRINT_STRING(TextFormat("Hello World"), 0.2f, "testmessage", BLUE);
 	DateTime dt;
 	DateTime dty;

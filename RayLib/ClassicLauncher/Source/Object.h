@@ -2,7 +2,7 @@
 
 #include "Math.h"
 #include "RaylibCpp.h"
-
+#include <algorithm>
 
 struct Sprite
 {

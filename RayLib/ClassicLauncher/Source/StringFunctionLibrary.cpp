@@ -8,14 +8,15 @@
 
 std::string StringFunctionLibrary::NormalizePath(const std::string& path)
 {
-#ifdef _WIN32
 	std::string convertedPath = path;
+#ifdef _WIN32
 	ReplaceString(convertedPath, "/", "\\");
+#else
+	ReplaceString(convertedPath, "\\", "/");
+#endif
+
 	convertedPath = RemoveDuplicateSlashes(convertedPath);
 	return convertedPath;
-#else
-	return path;
-#endif
 }
 
 

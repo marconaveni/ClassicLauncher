@@ -14,14 +14,14 @@ void TextureManager::LoadResources()
 	sprites["ref"] = UtilsFunctionLibrary::LoadTexture("Resources/themes/default/ref.png");
 }
 
-Texture2D* TextureManager::GetSprite(const char* name)
+Texture2D* TextureManager::GetSprite(const std::string& name)
 {
 	return &sprites[name];
 }
 
 void TextureManager::EndPlay()
 {
-	std::map<const char*, Texture2D>::iterator it;
+	std::map<std::string, Texture2D>::iterator it;
 	for (it = sprites.begin(); it != sprites.end(); ++it) {
 		UnloadTexture(it->second);
 	}

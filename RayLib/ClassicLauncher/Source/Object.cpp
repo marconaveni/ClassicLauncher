@@ -25,15 +25,18 @@ void Object::Draw()
 
 	if (spriteResource.texture == nullptr)
 	{
+		//std::cout << "sem textura " << position.position.x << "\n";
 		return;
 	}
 
 	if(!IsTextureReady(*spriteResource.texture))
 	{
+		
+		//std::cout << " textura nao pronta" << position.position.x << "\n";
 		return;
 	}
 
-	const Vector2 positionRender = { round(position.position.x), round(position.position.y) };
+	const Vector2 positionRender = { static_cast<float>(round(position.position.x)), static_cast<float>(round(position.position.y)) };
 	const Rectangle destination{
 		 positionRender.x + (spriteResource.source.width / 2 - spriteResource.source.width * position.scale.x / 2),
 		 positionRender.y + (spriteResource.source.height / 2 - spriteResource.source.height * position.scale.y / 2),

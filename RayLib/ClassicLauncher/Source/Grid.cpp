@@ -27,14 +27,8 @@ Grid::Grid(Texture2D* textureReference, const Vector2 positionGrid, const Rectan
 
 	SetFocus(3);
 	ImageLoader::GetInstance()->StartLoadingLoadTexture("", Vector2{ 0 ,0}, GameListManager::GetInstance()->GetId());
-	
 
-	//cardsContainer[0].cardSelected->SetColor(255, 0, 0);
 }
-//
-//Grid::~Grid()
-//{
-//}
 
 void Grid::BeginPlay()
 {

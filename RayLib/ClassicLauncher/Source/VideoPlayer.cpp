@@ -1,4 +1,7 @@
 #include "VideoPlayer.h"
+
+#include <iostream>
+
 #include "Types.h"
 #include "Print.h"
 
@@ -88,7 +91,7 @@ void VideoPlayer::PlayVideo(const char* videoPath)
 	media = libvlc_media_new_path(inst, videoPath); // Cria um novo media
 	if (!media)
 	{
-		std::cerr << "Não foi possível carregar o arquivo de mídia: " << videoPath << std::endl;
+		std::cerr << "Não foi possível carregar o arquivo de mídia: " << videoPath << '\n';
 		return;
 	}
 
@@ -108,8 +111,9 @@ void VideoPlayer::DrawVideoFrame(const Rectangle videoSize)
 	else if (IsVideoPlaying())
 	{
 
-		width = libvlc_video_get_width(mediaPlayer); // Obtém a largura e altura do vídeo
-		height = libvlc_video_get_height(mediaPlayer);
+		//width = libvlc_video_get_width(mediaPlayer); // Obtém a largura e altura do vídeo
+		//height = libvlc_video_get_height(mediaPlayer);
+		libvlc_video_get_size(mediaPlayer, 0, &width, &height);
 		proportion.SetProportion(width, height);
 
 		Image resizedFrame = ImageCopy(image);
