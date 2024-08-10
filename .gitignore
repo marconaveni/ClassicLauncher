@@ -101,8 +101,11 @@ dependencies.zip
 # RayLib/ClassicLauncher/*
 RayLib/ClassicLauncher/.idea/
 RayLib/ClassicLauncher/.vs/
+RayLib/ClassicLauncher/.vscode/
 RayLib/ClassicLauncher/packages/
+RayLib/ClassicLauncher/Build/
 RayLib/ClassicLauncher/x64/
 RayLib/ClassicLauncher/Resources/
+RayLib/ClassicLauncher/Source/Resources/
 RayLib/ClassicLauncher/UnitTest/x64/
 

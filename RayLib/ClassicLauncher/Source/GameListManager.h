@@ -60,6 +60,7 @@ struct GameList
 	~GameList()
 	{
 		UnloadTexture(texture);
+		UnloadTexture(textureMini);
 	}
 
 	bool operator==(const GameList& a) const

@@ -22,11 +22,16 @@ void Print::PrintOnScreen(const char* text, const float duration, const char* la
 #ifdef _DEBUG
 
 	bool found = false;
+
 	std::string labelCompare;
 
-	if (label != nullptr && label != "")
+	if(label != nullptr)
 	{
 		labelCompare = label;
+	}
+
+	if (labelCompare != "")
+	{
 
 		for (Message& msg : messages)
 		{
