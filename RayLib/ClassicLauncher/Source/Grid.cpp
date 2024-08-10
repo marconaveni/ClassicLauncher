@@ -3,7 +3,6 @@
 #include "GameListManager.h"
 #include "ImageLoader.h"
 #include "Math.h"
-#include "ObjectManager.h"
 #include "Print.h"
 #include "TextureManager.h"
 #include "UtilsFunctionLibrary.h"
@@ -26,7 +25,7 @@ Grid::Grid(Texture2D* textureReference, const Vector2 positionGrid, const Rectan
 	}
 
 	SetFocus(3);
-	ImageLoader::GetInstance()->StartLoadingLoadTexture("", Vector2{ 0 ,0}, GameListManager::GetInstance()->GetId());
+	ImageLoader::GetInstance()->StartLoadingLoadTexture( GameListManager::GetInstance()->GetId());
 
 }
 
@@ -49,6 +48,7 @@ void Grid::EndDraw()
 void Grid::EndPlay()
 {
 	Object::EndPlay();
+	GameListManager::GetInstance()->ClearGameList();
 }
 
 void Grid::Collision()
@@ -81,6 +81,15 @@ void Grid::SetCovers()
 {
 	GameListManager* manager = GameListManager::GetInstance();
 
+
+	if (manager->GetAllGameList().empty())
+	{
+		for (int i = 0; i < 10; i++)
+		{
+			cardsContainer[i].SetCover(nullptr);
+		}
+	}
+
 	for (int i = 0; i < 10; i++)
 	{
 		int indexFinal = UtilsFunctionLibrary::SetIndexArray(manager->GetId() + i - idFocus, manager->GetGameListSize());
@@ -96,17 +105,11 @@ void Grid::SetCovers()
 void Grid::Tick()
 {
 	Object::Tick();
-	SetCovers();
 
 	if (IsKeyDown(KEY_B))
 	{
 		cardsContainer[idFocus].StartAnimationClick();
-		for (auto& card : cardsContainer)
-		{
-			card.ResetCover();
-		}
-		GameListManager::GetInstance()->GetAllGameList().clear();
-		GameListManager::GetInstance()->GetAllGameList().shrink_to_fit();
+		GameListManager::GetInstance()->ClearGameList();
 	}
 
 	if (IsKeyDown(KEY_V) && !bLeft)
@@ -116,6 +119,7 @@ void Grid::Tick()
 
 	PRINT_STRING(TextFormat("idGamelist %d", GameListManager::GetInstance()->GetId()), 0.2f, "getid", BLUE);
 
+	SetCovers();
 	constexpr int speed = 22;
 
 	if (IsKeyDown(KEY_LEFT) && !bRight)
@@ -123,7 +127,7 @@ void Grid::Tick()
 		if (!bLeft)
 		{
 			GameListManager::GetInstance()->AddId(-1);
-			ImageLoader::GetInstance()->StartLoadingLoadTexture("", Vector2{ 0 ,0}, GameListManager::GetInstance()->GetId());
+			ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetId());
 			cardsContainer[idFocus].StartAnimationLostFocus();
 			cardsContainer[idFocus].bFocus = false;
 			idFocus--;
@@ -137,7 +141,7 @@ void Grid::Tick()
 		if (!bRight)
 		{
 			GameListManager::GetInstance()->AddId(1);
-			ImageLoader::GetInstance()->StartLoadingLoadTexture("", Vector2{ 0 , 0}, GameListManager::GetInstance()->GetId());
+			ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetId());
 			cardsContainer[idFocus].StartAnimationLostFocus();
 			cardsContainer[idFocus].bFocus = false;
 			idFocus++;

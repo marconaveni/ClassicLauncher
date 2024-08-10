@@ -7,7 +7,7 @@
 Print::Print()
 {
 #ifdef _DEBUG
-	fontTtf = LoadFontEx("Resources/fonts/roboto.ttf", 16, 0, 250);
+	fontTtf = LoadFontEx("Resources/fonts/roboto.ttf", 16, nullptr, 250);
 #endif
 }
 
@@ -30,7 +30,7 @@ void Print::PrintOnScreen(const char* text, const float duration, const char* la
 		labelCompare = label;
 	}
 
-	if (labelCompare != "")
+	if (!labelCompare.empty())
 	{
 
 		for (Message& msg : messages)

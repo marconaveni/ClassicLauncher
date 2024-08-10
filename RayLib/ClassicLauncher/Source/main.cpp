@@ -26,73 +26,18 @@
 #include "Types.h"
 #include "Date.h"
 #include "GameListManager.h"
-#include "StringFunctionLibrary.h"
 #include "TextureManager.h"
-
-void UpdateDrawFrame();
-
-
-
-#include <clocale>
 #include "External/tinyxml2.h"
 
 
 
-std::vector<std::string> teste()
-{
-	const char* locale = setlocale(LC_CTYPE, "");
-	std::vector<std::string> out;
-	tinyxml2::XMLDocument doc;
-	//doc.LoadFile("gamelist.xml");
-
-	if(doc.LoadFile("gamelist.xml") != tinyxml2::XMLError::XML_SUCCESS)
-	{
-		std::cout << "erro ao carregar"  <<"\n";
-		return out;
-	}
-
-	std::vector<const char*> elems = { "name"/*, "desc", "image", "video", "developer"*/ };
-
-	tinyxml2::XMLElement* pRootElement = doc.RootElement();
-	tinyxml2::XMLElement* pGame = pRootElement->FirstChildElement("game");
-	std::cout << pRootElement->ChildElementCount("game") << '\n';
 
 
-
-
-
-
-	while (pGame) {
-		for (std::size_t i{}; i < elems.size(); ++i) {
-			tinyxml2::XMLElement* ptr = pGame->FirstChildElement(elems[i]);
-			std::string str = ptr->GetText();
-			if (str == "3 Ninjas Kick Back")
-			{
-				ptr->SetText(std::string{ "á é í ã ç" }.c_str());
-				//std::cout << "1 Ninja  bom" << "\n";
-			}
-			//out.emplace_back(ptr->GetText());
-		   // std::cout << (i == elems.size() - 1 ? "\n" : "");
-		}
-		pGame = pGame->NextSiblingElement("game");
-	}
-
-	const wchar_t* l = L"\xE1";
-	//char l[] = u8"á";
-	unsigned char x[] = "é";
-	const char* y = "é";
-
-
-	std::cout << "localization: " << locale << "\n";
-	doc.SaveFile("teste.xml");
-	return out;
-}
+void UpdateDrawFrame();
 
 
 int main()
 {
-
-	//teste();
 
 	GameListManager::GetInstance()->LoadSystemList();
 	GameListManager::GetInstance()->LoadGameList();

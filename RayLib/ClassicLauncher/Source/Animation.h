@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <vector>
+
 
 #include "Object.h"
 
@@ -64,7 +64,6 @@ public:
 
 	Animation();
 
-	//std::vector<Object*> objectsAnimation;
 	void StartAnimation(int durationAnimation, const Position& startAnimationPosition, const Position& finalAnimationPosition, Ease::Ease typeAnimation = Ease::EaseLinearNone, bool bForceReset = true);
 	void UpdateAnimation();
 	void FinishAnimation();

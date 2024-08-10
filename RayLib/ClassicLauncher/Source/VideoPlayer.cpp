@@ -8,9 +8,9 @@
 // Callback de bloqueio para fornecer o buffer de vídeo
 void* lock(void* data, void** p_pixels)
 {
-	Image* frame = (Image*)data;
+	Image* frame = static_cast<Image*>(data);
 	*p_pixels = frame->data;
-	return NULL;
+	return nullptr;
 }
 
 // Callback de desbloqueio após a cópia do buffer de vídeo

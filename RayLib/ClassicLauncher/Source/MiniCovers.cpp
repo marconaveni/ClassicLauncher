@@ -37,14 +37,24 @@ void MiniCovers::SetCovers() const
 	GameListManager* manager = GameListManager::GetInstance();
 
 	const int size = manager->GetGameListSize() < 30 ? manager->GetGameListSize() : 30;
+
+	if(size == 0)
+	{
+		for (int i = 0; i < 30; i++)
+		{
+			objectsCover[i]->SetTexture(nullptr, Rectangle{ 0,0, 0,0 });
+		}
+	}
+
+
 	for (int i = 0; i < size; i++)
 	{
-		int indexFinal = UtilsFunctionLibrary::SetIndexArray(manager->GetId() + i - (std::round(size / 2)), manager->GetGameListSize());
+		int indexFinal = UtilsFunctionLibrary::SetIndexArray(manager->GetId() + i - static_cast<int>(std::round(size / 2)), manager->GetGameListSize());
 		indexFinal = Math::Clamp(indexFinal, 0, manager->GetGameListSize() - 1);
 		if (!manager->GetAllGameList().empty())
 		{
 			Texture2D* texture = &manager->GetAllGameList()[indexFinal]->textureMini;
-			objectsCover[i]->SetTexture(texture, Rectangle{ 0,0, (float)texture->width, (float)texture->height });
+			objectsCover[i]->SetTexture(texture, Rectangle{ 0,0, static_cast<float>(texture->width), static_cast<float>(texture->height) });
 		}
 	}
 
@@ -59,7 +69,7 @@ void MiniCovers::SetPosition(const int size) const
 		objectsCover[i]->position.position = Vector2{ static_cast<float>(x + (29 * i)), positionY + 21 };
 	}
 
-	const float arrowPositionX = (size % 2 == 0) ? 640 : 625;
+	const float arrowPositionX = (size % 2 == 0) ? 640.0f : 625.0f;
 	arrow->position.position = Vector2{ arrowPositionX , positionY };
 }
 

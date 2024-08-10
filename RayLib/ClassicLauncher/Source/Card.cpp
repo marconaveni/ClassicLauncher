@@ -14,7 +14,7 @@ void Card::CreateCard(Texture2D* textureReference, Vector2 position, Rectangle r
 	cardMain = std::make_shared<Object>(textureReference, position, rectangleTexture);
 	cardFavorite = std::make_shared<Object>(textureReference, position, rectangleFavorite);
 	cardSelected = std::make_shared<Object>(textureReference, position, rectangleSelected);
-	cover = std::make_shared<Object>(textureReference, position, Rectangle{0,0,240,216});
+	cover = std::make_shared<Object>(textureReference, position, Rectangle{ 0,0,240,216 });
 	cardSelected->position.color.SetColorAlpha(0);
 	id = idCard;
 }
@@ -40,7 +40,7 @@ void Card::AddPosition(const Vector2 newPosition)
 	cardSelected->position.position = currentPosition.position;
 	cover->position.position.x = currentPosition.position.x + offSetCover.x;
 	cover->position.position.y = currentPosition.position.y + offSetCover.y;
-	
+
 }
 
 void Card::ChangePosition(const Position& newPosition)
@@ -99,7 +99,7 @@ void Card::StartAnimationFocus()
 void Card::StartAnimationLostFocus()
 {
 	Position newPosition = currentPosition;
-	newPosition.color.SetColorAlpha(0);  
+	newPosition.color.SetColorAlpha(0);
 	animationLostFocus.StartAnimation(10, currentPosition, newPosition, Ease::EaseLinearNone, false);
 
 }
@@ -117,7 +117,19 @@ void Card::StartAnimationClick()
 
 void Card::SetCover(Texture2D* textureReference)
 {
-	cover->SetTexture(textureReference,Rectangle{0,0,(float)textureReference->width,(float)textureReference->height});
-	offSetCover.x = (240.0f - (float)textureReference->width) / 2;
-	offSetCover.y = (216.0f - (float)textureReference->height) / 2;
+
+	if (textureReference != nullptr)
+	{
+		cover->SetTexture(textureReference, Rectangle{ 0,0,static_cast<float>(textureReference->width),static_cast<float>(textureReference->height) });
+		offSetCover.x = (240.0f - static_cast<float>(textureReference->width)) / 2;
+		offSetCover.y = (216.0f - static_cast<float>(textureReference->height)) / 2;
+	}
+	else
+	{
+		cover->SetTexture(defaultTexture, Rectangle{ 0,0,240,216 });
+		offSetCover.x = 0;
+		offSetCover.y = 0;
+	}
+
+
 }

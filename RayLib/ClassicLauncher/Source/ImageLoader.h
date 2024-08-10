@@ -28,17 +28,13 @@ public:
 	std::function<void(Image, int)> callback;
 	std::function<void(std::vector<int>&)> callbackUnloadTexture;
 
-	std::vector<Texture2D> coversTextures;
-
 	Texture2D tileSet;
 
 	static ImageLoader* GetInstance();
 
-	void LoadImage(const char* path, Vector2 size, int index);
+	void LoadImage(int index);
 
-	void StartLoadingLoadTexture(const char* path, Vector2 size, int index);
-
-	//void StartLoadingUnLoadTexture(std::vector<int> rangeImages);
+	void StartLoadingLoadTexture(int index);
 
 	void SetCallbackLoadTexture(std::function<void(Image, int)> callback);
 

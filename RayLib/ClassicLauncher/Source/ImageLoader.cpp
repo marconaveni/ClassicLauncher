@@ -13,7 +13,7 @@ ImageLoader* ImageLoader::GetInstance()
 	return &object;
 }
 
-void ImageLoader::LoadImage(const char* path, Vector2 size, int index)
+void ImageLoader::LoadImage(int index)
 {
 	rangeImages.clear();
 	const int maxLength = GameListManager::GetInstance()->GetGameListSize();
@@ -22,9 +22,9 @@ void ImageLoader::LoadImage(const char* path, Vector2 size, int index)
 	{
 		const int indexFinal = UtilsFunctionLibrary::SetIndexArray(index + i, maxLength);
 
-		LOG(LOGWARNING, TextFormat("index = %d", index));
-		LOG(LOGWARNING, TextFormat("index + i = %d", index + i));
-		LOG(LOGWARNING, TextFormat("indexFinal = %d", indexFinal));
+		//LOG(LOGWARNING, TextFormat("index = %d", index));
+		//LOG(LOGWARNING, TextFormat("index + i = %d", index + i));
+		//LOG(LOGWARNING, TextFormat("indexFinal = %d", indexFinal));
 		if (!IsTextureReady(GameListManager::GetInstance()->gameList[indexFinal]->texture))
 		{
 			std::string pathImage = GameListManager::GetInstance()->gameList[indexFinal]->image;
@@ -53,9 +53,9 @@ void ImageLoader::LoadImage(const char* path, Vector2 size, int index)
 
 }
 
-void ImageLoader::StartLoadingLoadTexture(const char* path, Vector2 size, int index)
+void ImageLoader::StartLoadingLoadTexture(int index)
 {
-	std::thread loadThread(&ImageLoader::LoadImage, this, path, size, index);
+	std::thread loadThread(&ImageLoader::LoadImage, this, index);
 	loadThread.detach(); // Detach the thread so it runs independently
 }
 

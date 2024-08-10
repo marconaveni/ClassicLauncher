@@ -9,8 +9,6 @@ class Engine
 	Engine() = default;
 
 public:
-
-	float x = 0;
 	
 	std::shared_ptr<MainScreen> mainScreen;
 

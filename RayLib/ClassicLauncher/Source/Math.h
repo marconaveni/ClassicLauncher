@@ -93,12 +93,12 @@ public:
     }
 
 
-    static float Random(float min, float max)
+	static float Random(const float min, const float max)
     {
         std::random_device rd;
         std::default_random_engine eng(rd());
-        std::uniform_real_distribution<float> distr(min, max);
-        return distr(eng);
+        std::uniform_real_distribution<float> distribution(min, max);
+        return distribution(eng);
     }
 
 

@@ -18,7 +18,7 @@ void GameListManager::LoadGameList()
 		return;
 	}
 
-	const std::string pathXml = StringFunctionLibrary::NormalizePath(systemList[idSystemList].romPath + "\\gamelist.xml");
+	const std::string pathXml = StringFunctionLibrary::NormalizePath(systemList[idSystemList]->romPath + "\\gamelist.xml");
 	if (documentSystemListXml.LoadFile(pathXml.c_str()) != tinyxml2::XMLError::XML_SUCCESS)
 	{
 		return;
@@ -78,17 +78,17 @@ void GameListManager::LoadSystemList()
 	while (pSystem)
 	{
 
-		SystemList systems;
-		systems.mapIndex = index;
-		systems.executable = IsValidElement(pSystem, "executable") ? StringFunctionLibrary::NormalizePath(pSystem->FirstChildElement("executable")->GetText()) : "";
-		systems.arguments = IsValidElement(pSystem, "arguments") ? StringFunctionLibrary::NormalizePath(pSystem->FirstChildElement("arguments")->GetText()) : "";
-		systems.romPath = IsValidElement(pSystem, "rompath") ? StringFunctionLibrary::NormalizePath(pSystem->FirstChildElement("rompath")->GetText()) : "";
-		systems.systemName = IsValidElement(pSystem, "systemname") ? pSystem->FirstChildElement("systemname")->GetText() : "";
-		systems.systemLabel = IsValidElement(pSystem, "systemlabel") ? pSystem->FirstChildElement("systemlabel")->GetText() : "";
-		systems.image = IsValidElement(pSystem, "image") ? pSystem->FirstChildElement("image")->GetText() : "";
-		systems.screenshot = IsValidElement(pSystem, "thumbnail") ? pSystem->FirstChildElement("thumbnail")->GetText() : "";
-		systems.video = IsValidElement(pSystem, "video") ? pSystem->FirstChildElement("video")->GetText() : "";
-		systems.desc = IsValidElement(pSystem, "desc") ? pSystem->FirstChildElement("desc")->GetText() : "";
+		auto systems = std::make_shared<SystemList>();
+		systems->mapIndex = index;
+		systems->executable = IsValidElement(pSystem, "executable") ? StringFunctionLibrary::NormalizePath(pSystem->FirstChildElement("executable")->GetText()) : "";
+		systems->arguments = IsValidElement(pSystem, "arguments") ? StringFunctionLibrary::NormalizePath(pSystem->FirstChildElement("arguments")->GetText()) : "";
+		systems->romPath = IsValidElement(pSystem, "rompath") ? StringFunctionLibrary::NormalizePath(pSystem->FirstChildElement("rompath")->GetText()) : "";
+		systems->systemName = IsValidElement(pSystem, "systemname") ? pSystem->FirstChildElement("systemname")->GetText() : "";
+		systems->systemLabel = IsValidElement(pSystem, "systemlabel") ? pSystem->FirstChildElement("systemlabel")->GetText() : "";
+		systems->image = IsValidElement(pSystem, "image") ? pSystem->FirstChildElement("image")->GetText() : "";
+		systems->screenshot = IsValidElement(pSystem, "thumbnail") ? pSystem->FirstChildElement("thumbnail")->GetText() : "";
+		systems->video = IsValidElement(pSystem, "video") ? pSystem->FirstChildElement("video")->GetText() : "";
+		systems->desc = IsValidElement(pSystem, "desc") ? pSystem->FirstChildElement("desc")->GetText() : "";
 		systemList.push_back(systems);
 
 		pSystem = pSystem->NextSiblingElement("system");
@@ -148,7 +148,19 @@ GameList* GameListManager::GetCurrentGameList()
 
 SystemList* GameListManager::GetCurrentSystemList()
 {
-	return &systemList[idSystemList];
+	return systemList[idSystemList].get();
+}
+
+void GameListManager::ClearSystemList()
+{
+	systemList.clear();
+	systemList.shrink_to_fit();
+}
+
+void GameListManager::ClearGameList()
+{
+	gameList.clear();
+	gameList.shrink_to_fit();
 }
 
 void GameListManager::ReplaceCurrentPath(GameList* game) const
@@ -159,10 +171,10 @@ void GameListManager::ReplaceCurrentPath(GameList* game) const
 	dotSlash = ".\\";
 	slash = "\\";
 #endif
-	StringFunctionLibrary::ReplaceString(game->path, dotSlash, systemList[idSystemList].romPath + slash);
-	StringFunctionLibrary::ReplaceString(game->image, dotSlash, systemList[idSystemList].romPath + slash);
-	StringFunctionLibrary::ReplaceString(game->thumbnail, dotSlash, systemList[idSystemList].romPath + slash);
-	StringFunctionLibrary::ReplaceString(game->video, dotSlash, systemList[idSystemList].romPath + slash);
+	StringFunctionLibrary::ReplaceString(game->path, dotSlash, systemList[idSystemList]->romPath + slash);
+	StringFunctionLibrary::ReplaceString(game->image, dotSlash, systemList[idSystemList]->romPath + slash);
+	StringFunctionLibrary::ReplaceString(game->thumbnail, dotSlash, systemList[idSystemList]->romPath + slash);
+	StringFunctionLibrary::ReplaceString(game->video, dotSlash, systemList[idSystemList]->romPath + slash);
 }
 
 bool GameListManager::IsValidElement(const tinyxml2::XMLElement* pElement, const char* name)

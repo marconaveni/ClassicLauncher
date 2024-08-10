@@ -4,7 +4,7 @@
 #include <memory>
 #include <string>
 #include <vector>
-
+#include <utility>
 #include "Date.h"
 #include "RaylibCpp.h"
 #include "External/tinyxml2.h"
@@ -57,10 +57,82 @@ struct GameList
 	{
 	}
 
+	GameList(const GameList&) = default;  	// Copy constructor
+
+	GameList& operator=(const GameList&) = default;
+
+	GameList(GameList&& other) noexcept       // Move constructor
+		: mapIndex(other.mapIndex)
+		, path(std::move(other.path))
+		, name(std::move(other.name))
+		, desc(std::move(other.desc))
+		, rating(std::move(other.rating))
+		, developer(std::move(other.developer))
+		, publisher(std::move(other.publisher))
+		, genre(std::move(other.genre))
+		, players(std::move(other.players))
+		, hash(std::move(other.hash))
+		, image(std::move(other.image))
+		, thumbnail(std::move(other.thumbnail))
+		, video(std::move(other.video))
+		, genreId(std::move(other.genreId))
+		, bFavorite(other.bFavorite)
+		, playCount(other.playCount)
+		, executable(std::move(other.executable))
+		, arguments(std::move(other.arguments))
+		, releaseDate(other.releaseDate)
+		, lastPlayed(other.lastPlayed)
+		, texture(other.texture)
+		, textureMini(other.textureMini)
+	{
+		// Reset the textures in the source object to prevent double deletion
+		other.texture.id = 0;
+		other.textureMini.id = 0;
+	}
+
+	GameList& operator=(GameList&& other) noexcept  // Move assignment operator
+	{
+		if (this != &other)
+		{
+			// Clean up current resources
+			UnloadTexture(texture);
+			UnloadTexture(textureMini);
+
+			// Move data
+			mapIndex = other.mapIndex;
+			path = std::move(other.path);
+			name = std::move(other.name);
+			desc = std::move(other.desc);
+			rating = std::move(other.rating);
+			developer = std::move(other.developer);
+			publisher = std::move(other.publisher);
+			genre = std::move(other.genre);
+			players = std::move(other.players);
+			hash = std::move(other.hash);
+			image = std::move(other.image);
+			thumbnail = std::move(other.thumbnail);
+			video = std::move(other.video);
+			genreId = std::move(other.genreId);
+			bFavorite = other.bFavorite;
+			playCount = other.playCount;
+			executable = std::move(other.executable);
+			arguments = std::move(other.arguments);
+			releaseDate = other.releaseDate;
+			lastPlayed = other.lastPlayed;
+			texture = other.texture;
+			textureMini = other.textureMini;
+
+			// Reset the textures in the source object to prevent double deletion
+			other.texture.id = 0;
+			other.textureMini.id = 0;
+		}
+		return *this;
+	}
+
 	~GameList()
 	{
 		UnloadTexture(texture);
-		UnloadTexture(textureMini);
+		//UnloadTexture(textureMini);
 	}
 
 	bool operator==(const GameList& a) const
@@ -90,12 +162,21 @@ struct SystemList
 	std::string screenshot;
 	std::string video;
 	std::string desc;
+	Texture2D texture;
+	Texture2D textureMini;
 
 	SystemList()
 		: mapIndex(-1)
+		, texture()
+		, textureMini()
 	{
 	}
 
+	~SystemList()
+	{
+		UnloadTexture(texture);
+		UnloadTexture(textureMini);
+	}
 
 };
 
@@ -129,7 +210,7 @@ private:
 	tinyxml2::XMLDocument documentGameListXml;
 	tinyxml2::XMLDocument documentSystemListXml;
 	std::vector< std::shared_ptr<GameList> > gameList;
-	std::vector<SystemList> systemList;
+	std::vector< std::shared_ptr<SystemList> > systemList;
 
 public:
 
@@ -143,6 +224,8 @@ public:
 	std::vector<std::shared_ptr<GameList>>& GetAllGameList();
 	GameList* GetCurrentGameList();
 	SystemList* GetCurrentSystemList();
+	void ClearSystemList();
+	void ClearGameList();
 
 private:
 

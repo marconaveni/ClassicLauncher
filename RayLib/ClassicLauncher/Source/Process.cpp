@@ -23,7 +23,7 @@ void Process::CreateProc(unsigned int& ProcessId, std::string FullPath, bool Hid
     }
     else
     {
-        printf("Erro ao criar o processo. Codigo de erro: %d\n", GetLastError());
+        printf("Erro ao criar o processo. Codigo de erro: %lu\n", GetLastError());
     }
 }
 

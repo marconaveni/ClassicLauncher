@@ -41,10 +41,13 @@ void SoundComponent::LoadPathMusics(const char* path)
 		//PRINT_STRING(TextFormat("teste %s", files.paths[i]));
 		musics.push_back(files.paths[i]);
 	}
-	if (musics.size() > 1) {
-		LoadCurrentMusic(musics[Math::Random(0, musics.size())].c_str());
+	if (musics.size() > 1) 
+	{
+		const int size = static_cast<int> ( Math::Random(0.0f, static_cast<float>(musics.size())) );
+		LoadCurrentMusic(musics[size].c_str());
 	}
-	else if (musics.size() == 1) {
+	else if (musics.size() == 1) 
+	{
 		LoadCurrentMusic(musics[0].c_str());
 	}
 	UnloadDirectoryFiles(files);
@@ -68,7 +71,8 @@ void SoundComponent::Tick()
 
 		if (!IsMusicStreamPlaying(currentMusic) && stateSound == StateSound::Ended)
 		{
-			LoadCurrentMusic(musics[Math::Random(0, musics.size())].c_str());
+			const int size = static_cast<int> (Math::Random(0.0f, static_cast<float>(musics.size())));
+			LoadCurrentMusic(musics[size].c_str());
 			PlayMusic();
 		}
 
