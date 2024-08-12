@@ -6,7 +6,9 @@
 #include <vector>
 #include <utility>
 #include "Date.h"
+#include "Print.h"
 #include "RaylibCpp.h"
+#include "UtilsFunctionLibrary.h"
 #include "External/tinyxml2.h"
 
 
@@ -59,8 +61,6 @@ struct GameList
 
 	GameList(const GameList&) = default;  	// Copy constructor
 
-	GameList& operator=(const GameList&) = default;
-
 	GameList(GameList&& other) noexcept       // Move constructor
 		: mapIndex(other.mapIndex)
 		, path(std::move(other.path))
@@ -89,6 +89,8 @@ struct GameList
 		other.texture.id = 0;
 		other.textureMini.id = 0;
 	}
+
+	GameList& operator=(const GameList&) = default;  // Copy assignment operator
 
 	GameList& operator=(GameList&& other) noexcept  // Move assignment operator
 	{
@@ -131,8 +133,9 @@ struct GameList
 
 	~GameList()
 	{
-		UnloadTexture(texture);
-		//UnloadTexture(textureMini);
+		LOG(LOGWARNING, TextFormat("descarregou textura %s", name.c_str() ));
+		UtilsFunctionLibrary::UnloadClearTexture(texture);
+		UtilsFunctionLibrary::UnloadClearTexture(textureMini);
 	}
 
 	bool operator==(const GameList& a) const
@@ -209,8 +212,8 @@ private:
 
 	tinyxml2::XMLDocument documentGameListXml;
 	tinyxml2::XMLDocument documentSystemListXml;
-	std::vector< std::shared_ptr<GameList> > gameList;
-	std::vector< std::shared_ptr<SystemList> > systemList;
+	std::vector<GameList> gameList;
+	std::vector<SystemList> systemList;
 
 public:
 
@@ -221,7 +224,8 @@ public:
 	void ChangeId(const int newId);
 	int GetId() const;
 	int GetGameListSize() const;
-	std::vector<std::shared_ptr<GameList>>& GetAllGameList();
+	std::vector<GameList>* GetAllGameList();
+	GameList* GetCurrentGameList(int index);
 	GameList* GetCurrentGameList();
 	SystemList* GetCurrentSystemList();
 	void ClearSystemList();

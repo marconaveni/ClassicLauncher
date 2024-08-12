@@ -4,6 +4,7 @@
 
 #include "Types.h"
 #include "Print.h"
+#include "UtilsFunctionLibrary.h"
 
 // Callback de bloqueio para fornecer o buffer de vídeo
 void* lock(void* data, void** p_pixels)
@@ -122,13 +123,12 @@ void VideoPlayer::DrawVideoFrame(const Rectangle videoSize)
 		texture = LoadTextureFromImage(resizedFrame);
 		//GenTextureMipmaps(&texture);
 		//SetTextureFilter(texture, TEXTURE_FILTER_POINT);
-		UnloadImage(resizedFrame);
 		DrawTexture(texture, static_cast<int>(videoSize.x), static_cast<int>(videoSize.y), WHITE);
-
+		UnloadImage(resizedFrame);
 	}
-	else if(IsVideoStopped())
+	else if (IsVideoStopped())
 	{
-		DrawTextureRec(textureDefault, videoSize, Vector2{ videoSize.x, videoSize.y }, WHITE);
+		//DrawTextureRec(textureDefault, videoSize, Vector2{ videoSize.x, videoSize.y }, WHITE);
 	}
 }
 
@@ -136,7 +136,8 @@ void VideoPlayer::UnloadVideoFrame()
 {
 	if (IsVideoPlaying())
 	{
-		UnloadTexture(texture);
+		UtilsFunctionLibrary::UnloadClearTexture(texture);
+		texture = Texture2D();
 	}
 }
 
@@ -152,7 +153,9 @@ void VideoPlayer::Pause()
 
 void VideoPlayer::Stop()
 {
+	UtilsFunctionLibrary::UnloadClearTexture(texture);
 	libvlc_media_player_stop(mediaPlayer);
+	endVideoCallback();
 }
 
 void VideoPlayer::CloseVideo()

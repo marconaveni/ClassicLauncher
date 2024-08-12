@@ -1,24 +1,6 @@
 ﻿
 
-
-//int main() {
-//	std::string str = "AstÃ©rix & ObÃ©lix";
-//
-//	// Decodificar a string de UTF-8
-//	std::string corrected_str = decode_utf8(str);
-//
-//	std::cout << corrected_str << std::endl;
-//
-//	return 0;
-//}
-
-
-
 #include <iostream>
-//
-
-
-
 #include "raylib.h"
 #include "Render.h"
 #include "Engine.h"
@@ -30,17 +12,13 @@
 #include "External/tinyxml2.h"
 
 
-
-
-
 void UpdateDrawFrame();
 
 
 int main()
 {
 
-	GameListManager::GetInstance()->LoadSystemList();
-	GameListManager::GetInstance()->LoadGameList();
+
 	SetConfigFlags(FLAG_VSYNC_HINT); //vsync only enable in fullscreen set before InitWindow
 	InitWindow(screenWidth, screenHeight, TITLE);
 	SetWindowState(FLAG_WINDOW_RESIZABLE);

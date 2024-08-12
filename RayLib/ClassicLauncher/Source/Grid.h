@@ -27,7 +27,7 @@ public:
     Animation animation;
     Animation animation2;
 
-    Grid(Texture2D* textureReference, Vector2 positionGrid, Rectangle rectangleTexture);
+    Grid();
     void BeginPlay() override;
     void Tick() override;
     void Draw() override;

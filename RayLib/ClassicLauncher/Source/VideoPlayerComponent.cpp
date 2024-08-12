@@ -37,7 +37,7 @@ void VideoPlayerComponent::Tick()
 		UtilsFunctionLibrary::SetSizeWithProportion(newSize, 1280, 720);
 		position.width = newSize.x;
 		position.height = newSize.y;
-		position.x = Render::GetInstance()->GetScreenWidthGame() / 2 - position.width / 2 ;
+		position.x = static_cast<float>(Render::GetInstance()->GetScreenWidthGame()) / 2 - position.width / 2 ;
 	}
 }
 
@@ -64,6 +64,11 @@ void VideoPlayerComponent::Play()
 void VideoPlayerComponent::Pause()
 {
 	videoPlayer.Pause();
+}
+
+void VideoPlayerComponent::Stop()
+{
+	videoPlayer.Stop();
 }
 
 

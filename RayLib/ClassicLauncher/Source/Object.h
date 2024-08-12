@@ -2,7 +2,7 @@
 
 #include "Math.h"
 #include "RaylibCpp.h"
-#include <algorithm>
+//#include <algorithm>
 
 struct Sprite
 {
@@ -73,8 +73,6 @@ public:
 
 	Object(const Object&) = default;  	// Copy constructor
 
-	Object& operator=(const Object&) = default;  // Copy assignment operator
-
 	Object(Object&& other) noexcept       // Move constructor
 		: bRegisterObject(other.bRegisterObject),
 		bToFrontRender(other.bToFrontRender),
@@ -82,6 +80,8 @@ public:
 		spriteResource(other.spriteResource)
 	{
 	}
+
+	Object& operator=(const Object&) = default;  // Copy assignment operator
 
 	Object& operator=(Object&& other) noexcept  // Move assignment operator
 	{

@@ -51,3 +51,9 @@ int UtilsFunctionLibrary::SetIndexArray(const int index, const int maxArrayLengt
 	return index;
 }
 
+void UtilsFunctionLibrary::UnloadClearTexture(Texture2D& texture)
+{
+	UnloadTexture(texture);
+	texture = Texture2D();
+}
+

@@ -25,9 +25,9 @@ void ImageLoader::LoadImage(int index)
 		//LOG(LOGWARNING, TextFormat("index = %d", index));
 		//LOG(LOGWARNING, TextFormat("index + i = %d", index + i));
 		//LOG(LOGWARNING, TextFormat("indexFinal = %d", indexFinal));
-		if (!IsTextureReady(GameListManager::GetInstance()->gameList[indexFinal]->texture))
+		if (!IsTextureReady(GameListManager::GetInstance()->gameList[indexFinal].texture))
 		{
-			std::string pathImage = GameListManager::GetInstance()->gameList[indexFinal]->image;
+			std::string pathImage = GameListManager::GetInstance()->gameList[indexFinal].image;
 			Image img = ::LoadImage(pathImage.c_str());
 
 			//Vector2 newSize{ (float)img.width, (float)img.height };
@@ -88,10 +88,10 @@ void ImageLoader::CreateTextures(Image& image, int index)
 	const Texture2D texture = LoadTextureFromImage(image);
 	ImageResize(image, 28, 40);
 	const Texture2D textureMini = LoadTextureFromImage(image);
-	UnloadTexture(GameListManager::GetInstance()->gameList[index]->texture);
-	UnloadTexture(GameListManager::GetInstance()->gameList[index]->textureMini);
-	GameListManager::GetInstance()->gameList[index]->texture = texture;
-	GameListManager::GetInstance()->gameList[index]->textureMini = textureMini;
+	UnloadTexture(GameListManager::GetInstance()->gameList[index].textureMini);
+	UnloadTexture(GameListManager::GetInstance()->gameList[index].texture);
+	GameListManager::GetInstance()->gameList[index].textureMini = textureMini;
+	GameListManager::GetInstance()->gameList[index].texture = texture;
 	UnloadImage(image);
 }
 
@@ -108,13 +108,12 @@ void ImageLoader::UnloadGameListTextureOutRange(const std::vector<int>& range)
 				break;
 			}
 		}
-		if (!bRange && IsTextureReady(GameListManager::GetInstance()->gameList[i]->texture))
+		if (!bRange && IsTextureReady(GameListManager::GetInstance()->gameList[i].texture))
 		{
 			PRINT_STRING("Descarregou imagem");
-			UnloadTexture(GameListManager::GetInstance()->gameList[i]->texture);
-			UnloadTexture(GameListManager::GetInstance()->gameList[i]->textureMini);
-			GameListManager::GetInstance()->gameList[i]->texture = Texture2D();
-			GameListManager::GetInstance()->gameList[i]->textureMini = Texture2D();
+			UtilsFunctionLibrary::UnloadClearTexture(GameListManager::GetInstance()->gameList[i].textureMini);
+			UtilsFunctionLibrary::UnloadClearTexture(GameListManager::GetInstance()->gameList[i].texture);
 		}
 	}
+
 }

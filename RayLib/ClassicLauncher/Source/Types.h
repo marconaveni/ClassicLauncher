@@ -11,6 +11,8 @@ using uint = unsigned int;
 
 
 #define PATH_SOUND "Resources/musics"
+#define PATH_SOUND_CLICK "Resources/themes/default/click.wav"
+#define PATH_SOUND_CURSOR "Resources/themes/default/cursor.wav"
 #define PATH_FONTS "Resources/fonts"
 #define PATH_SYSTEM_XML "Resources/systemlist.xml"
 

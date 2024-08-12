@@ -36,6 +36,7 @@
     <ClCompile Include="Source\Object.cpp" />
     <ClCompile Include="Source\ObjectAnimated.cpp" />
     <ClCompile Include="Source\ObjectManager.cpp" />
+    <ClCompile Include="Source\PlatformProcess.cpp" />
     <ClCompile Include="Source\Print.cpp" />
     <ClCompile Include="Source\Process.cpp" />
     <ClCompile Include="Source\Render.cpp" />
@@ -64,6 +65,7 @@
     <ClInclude Include="Source\Math.h" />
     <ClInclude Include="Source\MiniCovers.h" />
     <ClInclude Include="Source\ObjectAnimated.h" />
+    <ClInclude Include="Source\PlatformProcess.h" />
     <ClInclude Include="Source\Process.h" />
     <ClInclude Include="Source\RaylibCpp.h" />
     <ClInclude Include="Source\SoundComponent.h" />

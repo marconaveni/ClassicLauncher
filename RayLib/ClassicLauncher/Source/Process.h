@@ -4,10 +4,12 @@
 
 class Process
 {
-	static void CreateProc(unsigned int& ProcessId, std::string FullPath, bool Hidden, std::string OptionalWorkingDirectory);
+public:
 
-	static bool IsApplicationRunning(unsigned int ProcessId);
+	static void CreateProc(unsigned int& processId, std::string fullPath, std::string optionalWorkingDirectory);
 
-	static bool CloseApplicationRunning(unsigned int ProcessId);
+	static bool IsApplicationRunning(unsigned int processId);
+
+	static bool CloseApplicationRunning(unsigned int processId);
 };
 

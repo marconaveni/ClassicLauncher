@@ -16,4 +16,5 @@ public:
 	static void ReplaceString (std::string& value, const std::string& from, const std::string& to);
 
 	static std::string RemoveDuplicateSlashes(const std::string& input);
+
 };

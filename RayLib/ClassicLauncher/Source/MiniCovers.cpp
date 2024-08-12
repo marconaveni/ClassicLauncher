@@ -51,9 +51,9 @@ void MiniCovers::SetCovers() const
 	{
 		int indexFinal = UtilsFunctionLibrary::SetIndexArray(manager->GetId() + i - static_cast<int>(std::round(size / 2)), manager->GetGameListSize());
 		indexFinal = Math::Clamp(indexFinal, 0, manager->GetGameListSize() - 1);
-		if (!manager->GetAllGameList().empty())
+		if (size > 0)
 		{
-			Texture2D* texture = &manager->GetAllGameList()[indexFinal]->textureMini;
+			Texture2D* texture = &manager->GetCurrentGameList(indexFinal)->textureMini;
 			objectsCover[i]->SetTexture(texture, Rectangle{ 0,0, static_cast<float>(texture->width), static_cast<float>(texture->height) });
 		}
 	}

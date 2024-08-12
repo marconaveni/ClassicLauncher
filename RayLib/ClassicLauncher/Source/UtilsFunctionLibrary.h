@@ -14,4 +14,6 @@ public:
 	static Texture2D LoadTexture(const std::string& path, int width = 0, int height = 0);
 
 	static int SetIndexArray(const int index, const int maxArrayLength);
+
+	static void UnloadClearTexture(Texture2D& texture);
 };

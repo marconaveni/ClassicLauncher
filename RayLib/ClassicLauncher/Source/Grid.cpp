@@ -4,18 +4,23 @@
 #include "ImageLoader.h"
 #include "Math.h"
 #include "Print.h"
+#include "SoundComponent.h"
 #include "TextureManager.h"
 #include "UtilsFunctionLibrary.h"
 
 
-Grid::Grid(Texture2D* textureReference, const Vector2 positionGrid, const Rectangle rectangleTexture)
-	: Object(textureReference, positionGrid, rectangleTexture)
-	, positionX(0)
+Grid::Grid()
+	: positionX(0)
 	, bLeft(false)
 	, bRight(false)
 	, lastDirection(None)
 	, idFocus(0)
 {
+
+	// todo for construction layout
+	SetTexture(TextureManager::GetInstance()->GetSprite("ref"), Rectangle{ 0, 0, 1280, 720 }); 
+
+
 	for (int i = 0; i < 10; i++)
 	{
 		const float x = static_cast<float>(256 * (i - 2));
@@ -82,7 +87,7 @@ void Grid::SetCovers()
 	GameListManager* manager = GameListManager::GetInstance();
 
 
-	if (manager->GetAllGameList().empty())
+	if (manager->GetGameListSize() == 0)
 	{
 		for (int i = 0; i < 10; i++)
 		{
@@ -95,9 +100,9 @@ void Grid::SetCovers()
 		int indexFinal = UtilsFunctionLibrary::SetIndexArray(manager->GetId() + i - idFocus, manager->GetGameListSize());
 		indexFinal = UtilsFunctionLibrary::SetIndexArray(indexFinal, manager->GetGameListSize());
 		indexFinal = Math::Clamp(indexFinal, 0, manager->GetGameListSize() - 1);
-		if (!manager->GetAllGameList().empty())
+		if (manager->GetGameListSize() > 0)
 		{
-			cardsContainer[i].SetCover(&manager->GetAllGameList()[indexFinal]->texture);
+			cardsContainer[i].SetCover(&manager->GetCurrentGameList(indexFinal)->texture);
 		}
 	}
 }
@@ -126,6 +131,7 @@ void Grid::Tick()
 	{
 		if (!bLeft)
 		{
+			SoundComponent::GetInstance()->PlayCursor();
 			GameListManager::GetInstance()->AddId(-1);
 			ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetId());
 			cardsContainer[idFocus].StartAnimationLostFocus();
@@ -140,13 +146,14 @@ void Grid::Tick()
 	{
 		if (!bRight)
 		{
+			SoundComponent::GetInstance()->PlayCursor();
 			GameListManager::GetInstance()->AddId(1);
 			ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetId());
 			cardsContainer[idFocus].StartAnimationLostFocus();
 			cardsContainer[idFocus].bFocus = false;
 			idFocus++;
-			cardsContainer[idFocus].StartAnimationFocus();
 			cardsContainer[idFocus].bFocus = true;
+			cardsContainer[idFocus].StartAnimationFocus();
 		}
 		bRight = true;
 	}

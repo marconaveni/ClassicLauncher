@@ -29,6 +29,7 @@ public:
     void EndPlay();
     void Play();
     void Pause();
+    void Stop();
     void SetVolume(int volume);
     void SetCustomSize(bool bEnable, Vector2 newSize);
     std::string GetProportion();

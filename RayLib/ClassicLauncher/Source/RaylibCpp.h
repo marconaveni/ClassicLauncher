@@ -28,6 +28,12 @@ struct Vector2D
 };
 
 
+struct TextureImage
+{
+	int id;
+	Texture2D texture;
+};
+
 struct Colors
 {
 
