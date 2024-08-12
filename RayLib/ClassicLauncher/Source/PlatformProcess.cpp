@@ -1,5 +1,6 @@
 #include "PlatformProcess.h"
 
+#include "Print.h"
 #include "Process.h"
 #include "SoundComponent.h"
 
@@ -24,11 +25,11 @@ void PlatformProcess::Tick()
 	Object::Tick();
 	if (Process::IsApplicationRunning(processId))
 	{
-		printf("running\n");
+		LOG(LOGINFO, "running\n");
 		if (!bRunning)
 		{
 			SoundComponent::GetInstance()->PauseMusic();
-			printf("open app\n");
+			LOG(LOGINFO, "open app\n");
 			bRunning = true;
 		}
 	}
@@ -37,7 +38,7 @@ void PlatformProcess::Tick()
 		if (bRunning)
 		{
 			SoundComponent::GetInstance()->PlayMusic();
-			printf("close app\n");
+			LOG(LOGINFO, "close app\n");
 			bRunning = false;
 		}
 	}
@@ -45,7 +46,7 @@ void PlatformProcess::Tick()
 
 	if (IsGamepadButtonReleased(0, 5))
 	{
-		printf("pressed\n");
+		LOG(LOGINFO, "pressed\n");
 		Process::CloseApplicationRunning(processId);
 	}
 }

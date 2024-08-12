@@ -38,7 +38,7 @@ void MiniCovers::SetCovers() const
 
 	const int size = manager->GetGameListSize() < 30 ? manager->GetGameListSize() : 30;
 
-	if(size == 0)
+	if (size == 0)
 	{
 		for (int i = 0; i < 30; i++)
 		{
@@ -53,8 +53,17 @@ void MiniCovers::SetCovers() const
 		indexFinal = Math::Clamp(indexFinal, 0, manager->GetGameListSize() - 1);
 		if (size > 0)
 		{
-			Texture2D* texture = &manager->GetCurrentGameList(indexFinal)->textureMini;
-			objectsCover[i]->SetTexture(texture, Rectangle{ 0,0, static_cast<float>(texture->width), static_cast<float>(texture->height) });
+			std::string* image = &manager->GetCurrentGameList(indexFinal)->image;
+			if (!image->empty())
+			{
+				Texture2D* texture = &manager->GetCurrentGameList(indexFinal)->textureMini;
+				objectsCover[i]->SetTexture(texture, Rectangle{ 0,0, static_cast<float>(texture->width), static_cast<float>(texture->height) });
+			}
+			else
+			{
+				Texture2D* texture = TextureManager::GetInstance()->GetSprite("sprite");
+				objectsCover[i]->SetTexture(texture, Rectangle{ 1260,1060, 28, 28 });
+			}
 		}
 	}
 

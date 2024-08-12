@@ -18,10 +18,8 @@ std::string wstring_to_utf8(const std::wstring& wstr) {
 }
 
 
-void Process::CreateProc(unsigned int& processId, std::string fullPath, std::string optionalWorkingDirectory)
+void Process::CreateProc(unsigned int& processId, const std::string& fullPath, const std::string& optionalWorkingDirectory)
 {
-    //std::wstring path(L"D:\\Jogos\\Need For Speed Underground 2\\SPEED2.EXE");
-    //std::wstring dir(L"D:\\Jogos\\Need For Speed Underground 2\\");
 
     std::wstring path = utf8_to_wstring(fullPath);
     std::wstring dir = utf8_to_wstring(optionalWorkingDirectory);
@@ -43,7 +41,7 @@ void Process::CreateProc(unsigned int& processId, std::string fullPath, std::str
         &processInfo
     ))
     {
-        printf("aberto:");
+        printf("open:");
         //WaitForSingleObject(processInfo.hProcess, INFINITE);
         processId = static_cast<unsigned int>(processInfo.dwProcessId);
 
@@ -53,7 +51,7 @@ void Process::CreateProc(unsigned int& processId, std::string fullPath, std::str
     }
     else
     {
-        printf("Erro ao criar o processo. Codigo de erro: %lu\n", GetLastError());
+        printf("Error on create a process: %lu\n", GetLastError());
     }
 }
 

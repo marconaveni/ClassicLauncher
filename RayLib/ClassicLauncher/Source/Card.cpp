@@ -2,10 +2,10 @@
 
 #include "ObjectManager.h"
 #include "Print.h"
+#include "TextureManager.h"
 
 void Card::CreateCard(Texture2D* textureReference, Vector2 position, Rectangle rectangleTexture, const int idCard)
 {
-	defaultTexture = textureReference;
 	currentPosition.position = position;
 	Rectangle rectangleFavorite = rectangleTexture;
 	Rectangle rectangleSelected = rectangleTexture;
@@ -14,14 +14,14 @@ void Card::CreateCard(Texture2D* textureReference, Vector2 position, Rectangle r
 	cardMain = std::make_shared<Object>(textureReference, position, rectangleTexture);
 	cardFavorite = std::make_shared<Object>(textureReference, position, rectangleFavorite);
 	cardSelected = std::make_shared<Object>(textureReference, position, rectangleSelected);
-	cover = std::make_shared<Object>(textureReference, position, Rectangle{ 0,0,240,216 });
+	cover = std::make_shared<Object>(textureReference, position, Rectangle{ 0,0,0,0 });
 	cardSelected->position.color.SetColorAlpha(0);
 	id = idCard;
 }
 
-void Card::ResetCover() const
+void Card::ResetCover()
 {
-	cover->SetTexture(defaultTexture, Rectangle{ 0,0,240,216 });
+	SetCover(nullptr);
 }
 
 void Card::RegisterCard() const
@@ -121,14 +121,14 @@ void Card::SetCover(Texture2D* textureReference)
 	if (textureReference != nullptr)
 	{
 		cover->SetTexture(textureReference, Rectangle{ 0,0,static_cast<float>(textureReference->width),static_cast<float>(textureReference->height) });
-		offSetCover.x = (240.0f - static_cast<float>(textureReference->width)) / 2;
-		offSetCover.y = (216.0f - static_cast<float>(textureReference->height)) / 2;
+		offSetCover.x = (240.0f - static_cast<float>(textureReference->width)) / 2.0f;
+		offSetCover.y = (216.0f - static_cast<float>(textureReference->height)) / 2.0f;
 	}
 	else
 	{
-		cover->SetTexture(defaultTexture, Rectangle{ 0,0,240,216 });
-		offSetCover.x = 0;
-		offSetCover.y = 0;
+		cover->SetTexture(TextureManager::GetInstance()->GetSprite("sprite"), Rectangle{ 1086,1086,204,204 });
+		offSetCover.x = (240.0f - 204.0f) / 2.0f;
+		offSetCover.y = (216.0f - 204.0f) / 2.0f;
 	}
 
 

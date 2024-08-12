@@ -61,27 +61,28 @@ void MainScreen::Tick()
 
     if (IsKeyReleased(KEY_UP))
     {
-        SoundComponent::GetInstance()->PlayClick();
-        VideoPlayerComponent::GetInstance()->PlayVideo(GameListManager::GetInstance()->GetCurrentGameList()->video.c_str());
+        SoundComponent::GetInstance()->PlayCursor();
+        VideoPlayerComponent::GetInstance()->Stop();
     }
     if (IsKeyReleased(KEY_DOWN))
     {
-        SoundComponent::GetInstance()->PlayCursor();
-        VideoPlayerComponent::GetInstance()->Stop();
+        SoundComponent::GetInstance()->PlayClick();
+        VideoPlayerComponent::GetInstance()->PlayVideo(GameListManager::GetInstance()->GetCurrentGameList()->video.c_str());
     }
     if (IsKeyReleased(KEY_A))
     {
         SoundComponent::GetInstance()->PauseMusic();
     }
-    if (IsKeyReleased(KEY_S))
+    if (IsKeyReleased(KEY_ENTER))
     {
+        SoundComponent::GetInstance()->PlayClick();
         std::string fullPath = GameListManager::GetInstance()->GetCurrentSystemList()->executable;
         fullPath.append(" ");
         fullPath.append(GameListManager::GetInstance()->GetCurrentSystemList()->arguments);
         fullPath.append(" \"");
         fullPath.append(GameListManager::GetInstance()->GetCurrentGameList()->path);
         fullPath.append("\" ");
-        std::string optionalWorkingDirectory = GetDirectoryPath(GameListManager::GetInstance()->GetCurrentSystemList()->executable.c_str());
+        const std::string optionalWorkingDirectory = GetDirectoryPath(GameListManager::GetInstance()->GetCurrentSystemList()->executable.c_str());
         platformProcess->CreateProc(fullPath, optionalWorkingDirectory);
     }
 }

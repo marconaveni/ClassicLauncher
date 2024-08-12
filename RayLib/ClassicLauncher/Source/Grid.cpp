@@ -91,7 +91,7 @@ void Grid::SetCovers()
 	{
 		for (int i = 0; i < 10; i++)
 		{
-			cardsContainer[i].SetCover(nullptr);
+			cardsContainer[i].ResetCover();
 		}
 	}
 
@@ -102,7 +102,9 @@ void Grid::SetCovers()
 		indexFinal = Math::Clamp(indexFinal, 0, manager->GetGameListSize() - 1);
 		if (manager->GetGameListSize() > 0)
 		{
-			cardsContainer[i].SetCover(&manager->GetCurrentGameList(indexFinal)->texture);
+			Texture2D* texture = &manager->GetCurrentGameList(indexFinal)->texture;
+			std::string* image = &manager->GetCurrentGameList(indexFinal)->image;
+			cardsContainer[i].SetCover(!image->empty() ? texture  : nullptr);
 		}
 	}
 }

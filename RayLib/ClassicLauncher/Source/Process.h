@@ -6,7 +6,7 @@ class Process
 {
 public:
 
-	static void CreateProc(unsigned int& processId, std::string fullPath, std::string optionalWorkingDirectory);
+	static void CreateProc(unsigned int& processId, const std::string& fullPath, const std::string& optionalWorkingDirectory);
 
 	static bool IsApplicationRunning(unsigned int processId);
 

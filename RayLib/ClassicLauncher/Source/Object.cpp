@@ -6,7 +6,6 @@ Object::Object(Texture2D* textureReference, const Vector2 position, const Rectan
 	: bRegisterObject(false)
 	, bToFrontRender(false)
 	, position(position)
-	//, id(-1)
 	, spriteResource(textureReference, rectangleTexture)
 {
 }
@@ -14,25 +13,20 @@ Object::Object(Texture2D* textureReference, const Vector2 position, const Rectan
 Object::Object()
 	: bRegisterObject(false)
 	, bToFrontRender(false)
-	//, id(-1)
 	, spriteResource(Sprite{})
 {
 }
-
 
 void Object::Draw()
 {
 
 	if (spriteResource.texture == nullptr)
 	{
-		//std::cout << "sem textura " << position.position.x << "\n";
 		return;
 	}
 
 	if(!IsTextureReady(*spriteResource.texture))
 	{
-		
-		//std::cout << " textura nao pronta" << position.position.x << "\n";
 		return;
 	}
 
@@ -44,20 +38,8 @@ void Object::Draw()
 		spriteResource.source.height * position.scale.y
 	};
 	DrawTexturePro(*spriteResource.texture, spriteResource.source, destination, Vector2{}, 0, position.color.GetColor()); //draw texture
-	//DrawTextureRec(*spriteResource.texture, spriteResource.source, positionRender, color); //draw texture
-}
 
-//void Object::SetColor(const unsigned char r, const unsigned char g, const unsigned char b)
-//{
-//	position.color.SetColor(Color{ r,g,b,WHITE }); .r = r;
-//	position.color.g = g;
-//	position.color.b = b;
-//}
-//
-//void Object::SetOpacity(const unsigned char opacity)
-//{
-//	position.color.a = opacity;
-//}
+}
 
 void Object::SetTexture(Texture2D* textureReference)
 {
