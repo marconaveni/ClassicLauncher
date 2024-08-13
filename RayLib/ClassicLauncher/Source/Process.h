@@ -11,5 +11,11 @@ public:
 	static bool IsApplicationRunning(unsigned int processId);
 
 	static bool CloseApplicationRunning(unsigned int processId);
+
+	
+#ifndef _WIN32
+
+	
+#endif
 };
 

@@ -69,4 +69,68 @@ std::string StringFunctionLibrary::RemoveDuplicateSlashes(const std::string& inp
 }
 
 
+std::vector<std::string> StringFunctionLibrary::SplitString(const std::string& input)
+{
+	std::vector<std::string> tokens;
+	std::string token;
+	bool insideQuotes = false;
 
+	for (const char c : input)
+	{
+		if (!isspace(static_cast<unsigned char>(c)) || insideQuotes)
+		{
+			token += c;
+			if (c == '\"')
+			{
+				insideQuotes = !insideQuotes;
+			}
+		}
+		else
+		{
+			token = Trim(token);
+			if (!token.empty())
+			{
+				tokens.push_back(token);
+				token.clear();
+			}
+		}
+	}
+
+	if (!token.empty())
+	{
+		tokens.push_back(Trim(token));
+	}
+	return tokens;
+}
+
+std::string StringFunctionLibrary::Ltrim(const std::string& s)
+{
+    size_t start = 0;
+	for (size_t i = 0; i < s.size(); ++i) 
+	{
+		if (!isspace(static_cast<unsigned char>(s[i]))) {
+			start = i;
+			break;
+		}
+	}
+	return s.substr(start);
+}
+
+std::string StringFunctionLibrary::Rtrim(const std::string& s)
+{
+	size_t end = s.size();
+	for (size_t i = s.size(); i > 0; --i)
+	{
+		if (!isspace(static_cast<unsigned char>(s[i - 1]))) 
+		{
+			end = i;
+			break;
+		}
+	}
+	return s.substr(0, end);
+}
+
+std::string StringFunctionLibrary::Trim(const std::string& s)
+{
+    return Ltrim(Rtrim(s));
+}

@@ -40,6 +40,7 @@ void PlatformProcess::Tick()
 			SoundComponent::GetInstance()->PlayMusic();
 			LOG(LOGINFO, "close app\n");
 			bRunning = false;
+			processId = 0;
 		}
 	}
 

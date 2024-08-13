@@ -96,21 +96,105 @@ bool Process::CloseApplicationRunning(const unsigned int processId)
 #else
 
 
-void Process::CreateProc(unsigned int& processId, std::string fullPath, std::string optionalWorkingDirectory)
+#include <iostream>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include <cstring>
+#include <vector>
+#include "StringFunctionLibrary.h"
+
+
+void Process::CreateProc(unsigned int& processId, const std::string& fullPath, const std::string& optionalWorkingDirectory)
 {
 
+    std::vector<std::string> paths = StringFunctionLibrary::SplitString(fullPath);
+
+    for (auto& path : paths)
+    {
+        StringFunctionLibrary::ReplaceString(path,"\"" , "");
+    }
+    
+
+    pid_t pid = fork();
+    if (pid == -1) 
+    {
+        std::cerr << "Falha ao criar o processo filho." << std::endl;         // Erro ao criar o processo filho
+        return;
+    }
+
+    if (pid == 0) // Processo filho
+    {
+        
+        std::vector<char*> args;// Criar um array de ponteiros para char
+        for (const auto& arg : paths) {
+            args.push_back(const_cast<char*>(arg.c_str())); // Converte std::string para char*
+        }
+        args.push_back(nullptr);
+        
+        if (execvp(args[0], args.data()) == -1) {
+            std::cerr << "Falha ao executar o programa." << std::endl;
+            return;
+        }
+    }
+
+    processId = pid;
 }
 
 bool Process::IsApplicationRunning(const unsigned int processId)
 {
-    bool bApplicationRunning = true;
+    bool bApplicationRunning;
+    int status;
+    
+    pid_t result = waitpid(processId, &status, WNOHANG);  // Verifica se o processo ainda está em execução
+
+    if (result == 0) 
+    {
+        bApplicationRunning = true;
+        std::cout << "O processo filho ainda está em execução..." << std::endl;
+    } 
+    else if (result == processId) 
+    {
+        
+        if (WIFEXITED(status))  // Processo filho terminou
+        {
+            std::cout << "O processo filho terminou com o status: " << WEXITSTATUS(status) << std::endl;
+        } 
+        else
+        {
+            std::cout << "O processo filho não terminou corretamente." << std::endl;        
+        }
+        bApplicationRunning = false;
+    } 
+    else
+    {
+        bApplicationRunning = false;
+        //std::cerr << "Erro ao monitorar o processo filho." << std::endl;                
+    }
+
     return bApplicationRunning;
 }
 
 bool Process::CloseApplicationRunning(const unsigned int processId)
 {
-    bool bApplicationRunning;
-    return bApplicationRunning;
+    
+    if(processId == 0) 
+    {
+        return false;
+    }
+
+    if (kill(processId, SIGTERM) == 0) // Tenta enviar o sinal SIGTERM para o processo
+    {
+        std::cout << "O sinal SIGTERM foi enviado com sucesso para o processo." << std::endl;
+        return true;
+    }
+    else
+    {
+        std::cerr << "Erro ao tentar fechar o processo: " << strerror(errno) << std::endl;
+        return false;
+    }
+
+    
 }
 
 

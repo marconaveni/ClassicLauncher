@@ -1,6 +1,7 @@
 ﻿#include "ObjectManager.h"
 
 #include <random>
+#include <algorithm>
 
 
 ObjectManager* ObjectManager::GetInstance()

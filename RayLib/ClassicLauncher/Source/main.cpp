@@ -17,8 +17,6 @@ void UpdateDrawFrame();
 
 int main()
 {
-
-
 	SetConfigFlags(FLAG_VSYNC_HINT); //vsync only enable in fullscreen set before InitWindow
 	InitWindow(screenWidth, screenHeight, TITLE);
 	SetWindowState(FLAG_WINDOW_RESIZABLE);
