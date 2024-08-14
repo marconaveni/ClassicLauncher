@@ -7,11 +7,11 @@
 #include "GameListManager.h"
 #include "Types.h"
 
-MainScreen::MainScreen()
+MainScreen::MainScreen() : bIsImageLoaderCallback(false)
 {
-    grid = std::make_shared<Grid>();
-    miniCovers = std::make_shared<MiniCovers>();
-    platformProcess = std::make_shared<PlatformProcess>();
+	grid = std::make_shared<Grid>();
+	miniCovers = std::make_shared<MiniCovers>();
+	platformProcess = std::make_shared<PlatformProcess>();
 }
 
 void MainScreen::Initialize(const std::shared_ptr<MainScreen>& mainScreenRef)
@@ -28,12 +28,12 @@ void MainScreen::Initialize(const std::shared_ptr<MainScreen>& mainScreenRef)
     SoundComponent::GetInstance()->PlayMusic();
 
     // Set the callback to be called when images are loaded
-    ImageLoader::GetInstance()->SetCallbackLoadTexture([](Image img, const int i) {
-        ImageLoader::GetInstance()->CreateTextures(img, i);
+    ImageLoader::GetInstance()->SetCallbackLoadTexture([](Image img, const int indexList, const int indexGame) {
+        ImageLoader::GetInstance()->CreateTextures(img, indexList, indexGame);
         });
 
-    ImageLoader::GetInstance()->SetCallbackUnloadTexture([](const std::vector<int>& range) {
-        ImageLoader::GetInstance()->UnloadGameListTextureOutRange(range);
+    ImageLoader::GetInstance()->SetCallbackUnloadTexture([](const std::vector<int>& range, const int indexList) {
+        ImageLoader::GetInstance()->UnloadGameListTextureOutRange(range, indexList);
         });
 }
 
@@ -46,17 +46,24 @@ void MainScreen::Tick()
 {
     Object::Tick();
 
+
     // Check for callback execution
     {
+		bIsImageLoaderCallback = false;
+
         std::unique_lock<std::mutex> lock(ImageLoader::GetInstance()->queueMutex);
         if (!ImageLoader::GetInstance()->callbackQueue.empty())
         {
+			bIsImageLoaderCallback = true;
             auto cb = ImageLoader::GetInstance()->callbackQueue.front();
             ImageLoader::GetInstance()->callbackQueue.pop();
             lock.unlock();
             cb();
         }
     }
+
+
+    PRINT_STRING(TextFormat("GameList Name: %s", GameListManager::GetInstance()->GetCurrentGameList()->name.c_str()), 0.2f, "nameGame", BLUE);
 
 
     if (IsKeyReleased(KEY_UP))
@@ -73,17 +80,40 @@ void MainScreen::Tick()
     {
         SoundComponent::GetInstance()->PauseMusic();
     }
-    if (IsKeyReleased(KEY_ENTER))
+    if (IsKeyReleased(KEY_ENTER) /*&& !bIsImageLoaderCallback*/)
     {
         SoundComponent::GetInstance()->PlayClick();
-        std::string fullPath = GameListManager::GetInstance()->GetCurrentSystemList()->executable;
-        fullPath.append(" ");
-        fullPath.append(GameListManager::GetInstance()->GetCurrentSystemList()->arguments);
-        fullPath.append(" \"");
-        fullPath.append(GameListManager::GetInstance()->GetCurrentGameList()->path);
-        fullPath.append("\" ");
-        const std::string optionalWorkingDirectory = GetDirectoryPath(GameListManager::GetInstance()->GetCurrentSystemList()->executable.c_str());
-        platformProcess->CreateProc(fullPath, optionalWorkingDirectory);
+
+        if (GameListManager::GetInstance()->GetCurrentList() == GameListSelect)
+        {
+            std::string fullPath = GameListManager::GetInstance()->GetCurrentSystemList()->executable;
+            fullPath.append(" ");
+            fullPath.append(GameListManager::GetInstance()->GetCurrentSystemList()->arguments);
+            fullPath.append(" \"");
+            fullPath.append(GameListManager::GetInstance()->GetCurrentGameList()->path);
+            fullPath.append("\" ");
+            const std::string optionalWorkingDirectory = GetDirectoryPath(GameListManager::GetInstance()->GetCurrentSystemList()->executable.c_str());
+            //platformProcess->CreateProc(fullPath, optionalWorkingDirectory);
+        }
+        else
+        {
+            GameListManager::GetInstance()->ChangeSystemToGameList();
+            grid->SetFocus(3);
+            grid->SetCovers();
+            miniCovers->SetCovers();
+            ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetSystemId(), GameListManager::GetInstance()->GetGameId());
+        }
+    }
+    if (IsKeyReleased(KEY_BACKSPACE))
+    {
+        if (GameListManager::GetInstance()->GetCurrentList() == GameListSelect)
+        {
+            GameListManager::GetInstance()->ChangeGameToSystemList();
+            grid->SetFocus(3);
+            grid->SetCovers();
+            miniCovers->SetCovers();
+            ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetSystemId(), GameListManager::GetInstance()->GetGameId());
+        }
     }
 }
 

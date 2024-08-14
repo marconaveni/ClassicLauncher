@@ -11,6 +11,39 @@ GameListManager* GameListManager::GetInstance()
 	return &object;
 }
 
+void GameListManager::LoadSystemToGameList()
+{
+
+	for (const auto& system : systemList)
+	{
+		auto game = GameList();
+		game.mapIndex = system.mapIndex;
+		game.name = system.systemLabel;
+		game.desc = system.desc;
+		game.image = system.image;
+		game.executable = system.executable;
+		game.arguments = system.arguments;
+		ReplaceCurrentPath(&game);
+		gameList.push_back(game);
+	}
+	gameList.shrink_to_fit();
+}
+
+void GameListManager::ChangeSystemToGameList()
+{
+	idSystemList = idGameList;
+	currentList = GameListSelect;
+	ClearGameList();
+	LoadGameList();
+}
+
+void GameListManager::ChangeGameToSystemList()
+{
+	currentList = SystemListSelect;
+	ClearGameList();
+	LoadGameList();
+}
+
 void GameListManager::LoadGameList()
 {
 	if (systemList.empty())
@@ -18,14 +51,20 @@ void GameListManager::LoadGameList()
 		return;
 	}
 
+	if(currentList == SystemListSelect)
+	{
+		LoadSystemToGameList();
+		return;
+	}
+
 	const std::string pathXml = StringFunctionLibrary::NormalizePath(systemList[idSystemList].romPath + "\\gamelist.xml");
-	if (documentSystemListXml.LoadFile(pathXml.c_str()) != tinyxml2::XMLError::XML_SUCCESS)
+	if (documentGameListXml.LoadFile(pathXml.c_str()) != tinyxml2::XMLError::XML_SUCCESS)
 	{
 		return;
 	}
 
 
-	tinyxml2::XMLElement* pRootElement = documentSystemListXml.RootElement();
+	tinyxml2::XMLElement* pRootElement = documentGameListXml.RootElement();
 	tinyxml2::XMLElement* pGame = pRootElement->FirstChildElement("game");
 	int index = 0;
 
@@ -65,13 +104,13 @@ void GameListManager::LoadGameList()
 
 void GameListManager::LoadSystemList()
 {
-	if (documentGameListXml.LoadFile(PATH_SYSTEM_XML) != tinyxml2::XMLError::XML_SUCCESS)
+	if (documentSystemListXml.LoadFile(PATH_SYSTEM_XML) != tinyxml2::XMLError::XML_SUCCESS)
 	{
 		return;
 	}
 
 
-	tinyxml2::XMLElement* pRootElement = documentGameListXml.RootElement();
+	tinyxml2::XMLElement* pRootElement = documentSystemListXml.RootElement();
 	tinyxml2::XMLElement* pSystem = pRootElement->FirstChildElement("system");
 	int index = 0;
 
@@ -126,9 +165,14 @@ void GameListManager::ChangeId(const int newId)
 	idGameList = Math::Clamp(newId, 0, static_cast<int>(gameList.size()) - 1);
 }
 
-int GameListManager::GetId() const
+int GameListManager::GetGameId() const
 {
-	return  (currentList != SystemListSelect) ? idSystemList : idGameList;
+	return  idGameList;
+}
+
+int GameListManager::GetSystemId() const
+{
+	return idSystemList;
 }
 
 int GameListManager::GetGameListSize() const
@@ -160,12 +204,19 @@ void GameListManager::ClearSystemList()
 {
 	systemList.clear();
 	systemList.shrink_to_fit();
+	idSystemList = 0;
 }
 
 void GameListManager::ClearGameList()
 {
 	gameList.clear();
 	gameList.shrink_to_fit();
+	idGameList = 0;
+}
+
+CurrentList GameListManager::GetCurrentList() const
+{
+	return currentList;
 }
 
 void GameListManager::ReplaceCurrentPath(GameList* game) const

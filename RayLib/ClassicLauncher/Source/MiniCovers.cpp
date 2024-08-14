@@ -49,7 +49,7 @@ void MiniCovers::SetCovers() const
 
 	for (int i = 0; i < size; i++)
 	{
-		int indexFinal = UtilsFunctionLibrary::SetIndexArray(manager->GetId() + i - static_cast<int>(std::round(size / 2)), manager->GetGameListSize());
+		int indexFinal = UtilsFunctionLibrary::SetIndexArray(manager->GetGameId() + i - static_cast<int>(std::round(size / 2)), manager->GetGameListSize());
 		indexFinal = Math::Clamp(indexFinal, 0, manager->GetGameListSize() - 1);
 		if (size > 0)
 		{

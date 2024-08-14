@@ -13,49 +13,59 @@ ImageLoader* ImageLoader::GetInstance()
 	return &object;
 }
 
-void ImageLoader::LoadImage(int index)
+void ImageLoader::LoadImage(int indexList, int indexGame)
 {
-	rangeImages.clear();
+
 	const int maxLength = GameListManager::GetInstance()->GetGameListSize();
 	const int count = Math::Clamp(maxLength, 0, 16);
 	for (int i = count * -1; i < count; i++)
 	{
-		const int indexFinal = UtilsFunctionLibrary::SetIndexArray(index + i, maxLength);
+		const int indexGameFinal = UtilsFunctionLibrary::SetIndexArray(indexGame + i, maxLength);
 
-		//LOG(LOGWARNING, TextFormat("index = %d", index));
-		//LOG(LOGWARNING, TextFormat("index + i = %d", index + i));
-		//LOG(LOGWARNING, TextFormat("indexFinal = %d", indexFinal));
-		if (!IsTextureReady(GameListManager::GetInstance()->gameList[indexFinal].texture))
+		if (indexList != GameListManager::GetInstance()->idSystemList || indexGame > GameListManager::GetInstance()->GetGameListSize())
 		{
-			std::string pathImage = GameListManager::GetInstance()->gameList[indexFinal].image;
-			Image img = ::LoadImage(pathImage.c_str());
+			LOG(LOGINFO, "Cancelou LoadImage");
+			break;
+		}
+		GameList game = GameListManager::GetInstance()->gameList[indexGameFinal];
 
-			//Vector2 newSize{ (float)img.width, (float)img.height };
-			//UtilsFunctionLibrary::SetSizeWithProportion(newSize, 228, 204);
-			//ImageResize(&img, newSize.x, newSize.y);
+		if (!IsTextureReady(game.texture))
+		{
+
+			if (game.image.empty())
+			{
+				continue;
+			}
 
 			// Add the callback to the queue
 			{
+				Image img = ::LoadImage(game.image.c_str());
 				std::lock_guard<std::mutex> lock(queueMutex);
-				callbackQueue.push([this, img, indexFinal]() { callback(img, indexFinal); });
+				callbackQueue.push([this, img, indexList, indexGameFinal]() { callback(img, indexList, indexGameFinal); });
 			}
 			cv.notify_one();
 
 		}
-		rangeImages.push_back(indexFinal);
+		//rangeImages.push_back(indexGameFinal);
 	}
 
-	// Add the callback to the queue
-	{
-		callbackQueue.push([this]() { callbackUnloadTexture(rangeImages); });
-	}
-	cv.notify_one();
+	//// Add the callback to the queue
+	//{
+	//	callbackQueue.push([this, indexList]() { callbackUnloadTexture(rangeImages, indexList); });
+	//}
+	//cv.notify_one();
 
 }
 
-void ImageLoader::StartLoadingLoadTexture(int index)
+void ImageLoader::StartLoadingLoadTexture(int indexList, int indexGame)
 {
-	std::thread loadThread(&ImageLoader::LoadImage, this, index);
+
+	if (indexList != GameListManager::GetInstance()->idSystemList || indexGame > GameListManager::GetInstance()->GetGameListSize())
+	{
+		PRINT_STRING("Cancelou inicio callback");
+		return;
+	}
+	std::thread loadThread(&ImageLoader::LoadImage, this, indexList, indexGame);
 	loadThread.detach(); // Detach the thread so it runs independently
 }
 
@@ -63,12 +73,12 @@ void ImageLoader::StartLoadingLoadTexture(int index)
 //{
 //}
 
-void ImageLoader::SetCallbackLoadTexture(std::function<void(Image, int)> callback)
+void ImageLoader::SetCallbackLoadTexture(std::function<void(Image, int, int)> callback)
 {
 	this->callback = callback;
 }
 
-void ImageLoader::SetCallbackUnloadTexture(std::function<void(std::vector<int>&)> callback)
+void ImageLoader::SetCallbackUnloadTexture(std::function<void(std::vector<int>&, int)> callback)
 {
 	this->callbackUnloadTexture = callback;
 }
@@ -80,27 +90,48 @@ void ImageLoader::ImageResize(Image& image, const int newWidth, const int newHei
 	::ImageResize(&image, (int)newSize.x, (int)newSize.y);
 }
 
-void ImageLoader::CreateTextures(Image& image, int index)
+void ImageLoader::CreateTextures(Image& image, int indexList, int indexGame)
 {
-	PRINT_STRING("Executou callback");
 
 	ImageResize(image, 228, 204);
 	const Texture2D texture = LoadTextureFromImage(image);
 	ImageResize(image, 28, 40);
 	const Texture2D textureMini = LoadTextureFromImage(image);
-	UnloadTexture(GameListManager::GetInstance()->gameList[index].textureMini);
-	UnloadTexture(GameListManager::GetInstance()->gameList[index].texture);
-	GameListManager::GetInstance()->gameList[index].textureMini = textureMini;
-	GameListManager::GetInstance()->gameList[index].texture = texture;
+
+	if (GameListManager::GetInstance()->idSystemList == indexList && indexGame < GameListManager::GetInstance()->GetGameListSize())
+	{
+		GameList* game = &GameListManager::GetInstance()->gameList[indexGame];
+		UnloadTexture(game->textureMini);
+		UnloadTexture(game->texture);
+		game->textureMini = textureMini;
+		game->texture = texture;
+	}
+	//PRINT_STRING("Executou callback");
 	UnloadImage(image);
+
+
 }
 
-void ImageLoader::UnloadGameListTextureOutRange(const std::vector<int>& range)
+void ImageLoader::UnloadGameListTextureOutRange(const std::vector<int>& range, int indexList)
 {
-	for (int i = 0; i < GameListManager::GetInstance()->GetGameListSize(); i++)
+	rangeImages.clear();
+
+	const int indexGame = GameListManager::GetInstance()->GetGameId();
+	const int maxLength = GameListManager::GetInstance()->GetGameListSize();
+	const int count = Math::Clamp(maxLength, 0, 16);
+	for (int i = count * -1; i < count; i++)
+	{
+		const int indexGameFinal = UtilsFunctionLibrary::SetIndexArray(indexGame + i, maxLength);
+		rangeImages.push_back(indexGameFinal);
+	}
+
+
+	//return;
+	int i = 0;
+	while (i < GameListManager::GetInstance()->GetGameListSize())
 	{
 		bool bRange = false;
-		for (const int& id : range)
+		for (const int& id : rangeImages)
 		{
 			if (i == id)
 			{
@@ -114,6 +145,7 @@ void ImageLoader::UnloadGameListTextureOutRange(const std::vector<int>& range)
 			UtilsFunctionLibrary::UnloadClearTexture(GameListManager::GetInstance()->gameList[i].textureMini);
 			UtilsFunctionLibrary::UnloadClearTexture(GameListManager::GetInstance()->gameList[i].texture);
 		}
+		i++;
 	}
 
 }

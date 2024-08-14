@@ -30,7 +30,7 @@ Grid::Grid()
 	}
 
 	SetFocus(3);
-	ImageLoader::GetInstance()->StartLoadingLoadTexture( GameListManager::GetInstance()->GetId());
+	ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetSystemId(),  GameListManager::GetInstance()->GetGameId());
 
 }
 
@@ -97,7 +97,7 @@ void Grid::SetCovers()
 
 	for (int i = 0; i < 10; i++)
 	{
-		int indexFinal = UtilsFunctionLibrary::SetIndexArray(manager->GetId() + i - idFocus, manager->GetGameListSize());
+		int indexFinal = UtilsFunctionLibrary::SetIndexArray(manager->GetGameId() + i - idFocus, manager->GetGameListSize());
 		indexFinal = UtilsFunctionLibrary::SetIndexArray(indexFinal, manager->GetGameListSize());
 		indexFinal = Math::Clamp(indexFinal, 0, manager->GetGameListSize() - 1);
 		if (manager->GetGameListSize() > 0)
@@ -124,7 +124,7 @@ void Grid::Tick()
 		SetFocus(3);
 	}
 
-	PRINT_STRING(TextFormat("idGamelist %d", GameListManager::GetInstance()->GetId()), 0.2f, "getid", BLUE);
+	PRINT_STRING(TextFormat("idGamelist: %d", GameListManager::GetInstance()->GetGameId()), 0.2f, "getid", BLUE);
 
 	SetCovers();
 	constexpr int speed = 22;
@@ -135,7 +135,7 @@ void Grid::Tick()
 		{
 			SoundComponent::GetInstance()->PlayCursor();
 			GameListManager::GetInstance()->AddId(-1);
-			ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetId());
+			ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetSystemId(), GameListManager::GetInstance()->GetGameId());
 			cardsContainer[idFocus].StartAnimationLostFocus();
 			cardsContainer[idFocus].bFocus = false;
 			idFocus--;
@@ -150,7 +150,7 @@ void Grid::Tick()
 		{
 			SoundComponent::GetInstance()->PlayCursor();
 			GameListManager::GetInstance()->AddId(1);
-			ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetId());
+			ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetSystemId(), GameListManager::GetInstance()->GetGameId());
 			cardsContainer[idFocus].StartAnimationLostFocus();
 			cardsContainer[idFocus].bFocus = false;
 			idFocus++;
@@ -195,6 +195,8 @@ void Grid::Tick()
 			bRight = false;
 			bLeft = false;
 			//SetCovers();
+			std::vector<int> v;
+			ImageLoader::GetInstance()->UnloadGameListTextureOutRange(v, 0);
 		}
 
 	}

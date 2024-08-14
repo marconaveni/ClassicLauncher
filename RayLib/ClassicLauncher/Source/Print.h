@@ -55,7 +55,7 @@ public:
     
     void PrintOnScreen(const char* text, float duration = 2.0f, const char* label = nullptr, Color textColor = BLUE, bool log = false);
 
-    void Log(GameLog log, const char* text);
+    void Log(GameLog log = LOGINFO, const char* text = "Log");
 
     void DrawMessage();
 

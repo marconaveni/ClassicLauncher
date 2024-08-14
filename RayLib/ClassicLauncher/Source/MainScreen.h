@@ -12,6 +12,7 @@
 class MainScreen : public Object
 {
 
+	bool bIsImageLoaderCallback;
 
 public:
 

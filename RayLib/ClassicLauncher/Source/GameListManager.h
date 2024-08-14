@@ -97,8 +97,8 @@ struct GameList
 		if (this != &other)
 		{
 			// Clean up current resources
-			UnloadTexture(texture);
-			UnloadTexture(textureMini);
+			//UnloadTexture(texture);
+			//UnloadTexture(textureMini);
 
 			// Move data
 			mapIndex = other.mapIndex;
@@ -133,7 +133,7 @@ struct GameList
 
 	~GameList()
 	{
-		LOG(LOGWARNING, TextFormat("descarregou textura %s", name.c_str() ));
+		//LOG(LOGWARNING, TextFormat("descarregou textura %s", name.c_str() ));
 		UtilsFunctionLibrary::UnloadClearTexture(texture);
 		UtilsFunctionLibrary::UnloadClearTexture(textureMini);
 	}
@@ -215,14 +215,20 @@ private:
 	std::vector<GameList> gameList;
 	std::vector<SystemList> systemList;
 
+	void LoadSystemToGameList();
+
 public:
+
+	void ChangeSystemToGameList();
+	void ChangeGameToSystemList();
 
 	void LoadGameList();
 	void LoadSystemList();
 
 	void AddId(const int newId);
 	void ChangeId(const int newId);
-	int GetId() const;
+	int GetGameId() const;
+	int GetSystemId() const;
 	int GetGameListSize() const;
 	std::vector<GameList>* GetAllGameList();
 	GameList* GetCurrentGameList(int index);
@@ -230,6 +236,7 @@ public:
 	SystemList* GetCurrentSystemList();
 	void ClearSystemList();
 	void ClearGameList();
+	CurrentList GetCurrentList() const;
 
 private:
 
