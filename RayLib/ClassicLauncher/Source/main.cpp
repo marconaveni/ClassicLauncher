@@ -65,14 +65,20 @@ void FullscreenToggle()
 {
 	if (IsKeyReleased(KEY_F11))
 	{
+#ifdef _WIN32
 		ToggleBorderlessWindowed();
-#ifndef _WIN32
-		if (IsWindowState(FLAG_BORDERLESS_WINDOWED_MODE))
+#else
+		if(!IsWindowFullscreen()) 
+		{
+			SetWindowSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
+			ToggleFullscreen();
+		}
+		else 
 		{
 			SetWindowSize(screenWidth, screenHeight);
+			ToggleFullscreen();
 		}
-#endif
-
+#endif		
 	}
 }
 

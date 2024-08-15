@@ -4,6 +4,7 @@
 #include "StringFunctionLibrary.h"
 #include "Types.h"
 #include "UtilsFunctionLibrary.h"
+#include <algorithm>
 
 GameListManager* GameListManager::GetInstance()
 {

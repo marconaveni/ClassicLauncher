@@ -103,7 +103,7 @@ void MainScreen::Tick()
 			fullPath.append(GameListManager::GetInstance()->GetCurrentGameList()->path);
 			fullPath.append("\" ");
 			const std::string optionalWorkingDirectory = GetDirectoryPath(GameListManager::GetInstance()->GetCurrentSystemList()->executable.c_str());
-			//platformProcess->CreateProc(fullPath, optionalWorkingDirectory);
+			platformProcess->CreateProc(fullPath, optionalWorkingDirectory);
 		}
 		else
 		{
