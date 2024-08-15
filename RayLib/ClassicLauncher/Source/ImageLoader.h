@@ -9,52 +9,7 @@
 #include <map>
 
 
-struct TextureImage
-{
-	int id;
-	Texture2D texture;
 
-	TextureImage()
-		: id(-1)
-		, texture()
-	{}
-
-	~TextureImage()
-	{
-		::UnloadTexture(texture);
-	}
-
-	void UnloadTexture()
-	{
-		::UnloadTexture(texture);
-		texture = Texture2D();
-		id = -1;
-	}
-
-	void LoadTexture(const char* path)
-	{
-		texture = ::LoadTexture(path);
-	}
-
-	TextureImage(const TextureImage&) = default;  	// Copy constructor
-
-	TextureImage(TextureImage&& other) noexcept       // Move constructor
-		: id(other.id)
-		, texture(other.texture)
-	{}
-
-	TextureImage& operator=(const TextureImage&) = default;  // Copy assignment operator
-
-	TextureImage& operator=(TextureImage&& other) noexcept  // Move assignment operator
-	{
-		if (this != &other)
-		{
-			id = other.id;  // Move data from 'other' to 'this' object
-			texture = other.texture;
-		}
-		return *this;
-	}
-};
 
 
 class ImageLoader
@@ -76,26 +31,26 @@ public:
 	std::queue<std::function<void()>> callbackQueue;
 	std::mutex queueMutex;
 	std::condition_variable cv;
-	std::function<void(Image, int, int)> callback;
+	std::function<void(Image, Image, int)> callback;
 	std::function<void(std::vector<int>&, int)> callbackUnloadTexture;
 
 	Texture2D tileSet;
 
 	static ImageLoader* GetInstance();
 
-	void LoadImage(int indexList, int indexGame);
+	void StartLoadingLoadTexture(int indexGame);
 
-	void StartLoadingLoadTexture(int indexList, int indexGame);
+	void LoadImage(std::map<int, std::string> map);
 
-	void SetCallbackLoadTexture(std::function<void(Image, int, int)> callback);
+	void CreateTextures(Image& image, Image& imageMini, int indexGame);
+
+	void SetCallbackLoadTexture(std::function<void(Image, Image, int)> callback);
 
 	void SetCallbackUnloadTexture(std::function<void(std::vector<int>&, int)> callback);
 
-	void ImageResize(Image& image, const int newWidth, const int newHeight);
-
-	void CreateTextures(Image& image, int indexList, int indexGame);
-
 	void UnloadGameListTextureOutRange(const std::vector<int>& range, int indexList);
+
+	void ImageResize(Image& image, const int newWidth, const int newHeight);
 };
 
 

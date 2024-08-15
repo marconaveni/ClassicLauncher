@@ -25,6 +25,7 @@ public:
 	void RegisterCovers() const;
 
 	void SetCovers() const;
+	void ClearCovers() const;
 
 	void SetPosition(const int size) const;
 	void BeginPlay() override;

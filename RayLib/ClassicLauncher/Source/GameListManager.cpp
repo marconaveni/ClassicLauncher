@@ -32,6 +32,7 @@ void GameListManager::LoadSystemToGameList()
 void GameListManager::ChangeSystemToGameList()
 {
 	idSystemList = idGameList;
+	idGameList = 0;
 	currentList = GameListSelect;
 	ClearGameList();
 	LoadGameList();
@@ -39,6 +40,7 @@ void GameListManager::ChangeSystemToGameList()
 
 void GameListManager::ChangeGameToSystemList()
 {
+	idGameList = idSystemList;
 	currentList = SystemListSelect;
 	ClearGameList();
 	LoadGameList();
@@ -204,14 +206,12 @@ void GameListManager::ClearSystemList()
 {
 	systemList.clear();
 	systemList.shrink_to_fit();
-	idSystemList = 0;
 }
 
 void GameListManager::ClearGameList()
 {
 	gameList.clear();
 	gameList.shrink_to_fit();
-	idGameList = 0;
 }
 
 CurrentList GameListManager::GetCurrentList() const

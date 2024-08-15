@@ -37,5 +37,6 @@ public:
     void RegisterCards() const;
     void SetFocus(int newId);
     void SetCovers();
+    void ClearCovers();
 
 };

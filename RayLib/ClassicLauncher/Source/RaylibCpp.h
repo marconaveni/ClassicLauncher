@@ -3,6 +3,91 @@
 #include "raylib.h"
 #include "Math.h"
 
+enum class StatusImage
+{
+	Unload,
+	Loaded
+};
+
+struct TextureImage
+{
+	StatusImage statusImage;
+	Texture2D texture;
+
+	TextureImage()
+		: statusImage(StatusImage::Unload)
+		, texture()
+	{}
+
+	~TextureImage()
+	{
+		::UnloadTexture(texture);
+	}
+
+	void UnloadTexture()
+	{
+		::UnloadTexture(texture);
+		texture = Texture2D();
+		statusImage = StatusImage::Unload;
+	}
+
+	void LoadTexture(const char* path)
+	{
+		texture = ::LoadTexture(path);
+		if (IsTextureReady(texture))
+		{
+			statusImage = StatusImage::Loaded;
+		}
+	}
+
+	void LoadTexture(const Image& image)
+	{
+		texture = ::LoadTextureFromImage(image);
+		if (IsTextureReady(texture))
+		{
+			statusImage = StatusImage::Loaded;
+		}
+	}
+
+	TextureImage(const TextureImage&) = default;  	// Copy constructor
+
+	TextureImage(TextureImage&& other) noexcept       // Move constructor
+		: statusImage(other.statusImage)
+		, texture(other.texture)
+	{}
+
+	TextureImage& operator=(const TextureImage&) = default;  // Copy assignment operator
+
+	TextureImage& operator=(TextureImage&& other) noexcept  // Move assignment operator
+	{
+		if (this != &other)
+		{
+			statusImage = other.statusImage;  // Move data from 'other' to 'this' object
+			texture = other.texture;
+		}
+		other.texture.id = 0;
+		return *this;
+	}
+
+	TextureImage& operator=(const Texture2D& other) noexcept
+	{
+		statusImage = (IsTextureReady(other)) ? StatusImage::Loaded : StatusImage::Unload;
+		texture = other;
+		return *this;
+	}
+
+	TextureImage& operator=(const Texture2D&& other) noexcept
+	{
+		if (texture.id != other.id)
+		{
+			statusImage = (IsTextureReady(other)) ? StatusImage::Loaded : StatusImage::Unload;
+			texture = other;
+		}
+		return *this;
+	}
+};
+
+
 template<typename T>
 struct Vector2D
 {

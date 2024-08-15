@@ -29,5 +29,7 @@ public:
 	void EndDraw() override;
 	void EndPlay() override;
 	void Collision() override;
+
+	void ClearCovers();
 };
 

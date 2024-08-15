@@ -46,16 +46,16 @@ struct GameList
 	std::string arguments;
 	DateTime releaseDate;
 	DateTime lastPlayed;
-	Texture2D texture;
-	Texture2D textureMini;
+	//Texture2D texture;
+	//Texture2D textureMini;
 
 	GameList()
 		: mapIndex(-1)
 		, players("1")
 		, bFavorite(false)
 		, playCount(0)
-		, texture()
-		, textureMini()
+		//, texture()
+		//, textureMini()
 	{
 	}
 
@@ -82,12 +82,12 @@ struct GameList
 		, arguments(std::move(other.arguments))
 		, releaseDate(other.releaseDate)
 		, lastPlayed(other.lastPlayed)
-		, texture(other.texture)
-		, textureMini(other.textureMini)
+		//, texture(other.texture)
+		//, textureMini(other.textureMini)
 	{
 		// Reset the textures in the source object to prevent double deletion
-		other.texture.id = 0;
-		other.textureMini.id = 0;
+		//other.texture.id = 0;
+		//other.textureMini.id = 0;
 	}
 
 	GameList& operator=(const GameList&) = default;  // Copy assignment operator
@@ -121,12 +121,12 @@ struct GameList
 			arguments = std::move(other.arguments);
 			releaseDate = other.releaseDate;
 			lastPlayed = other.lastPlayed;
-			texture = other.texture;
-			textureMini = other.textureMini;
+			//texture = other.texture;
+			//textureMini = other.textureMini;
 
 			// Reset the textures in the source object to prevent double deletion
-			other.texture.id = 0;
-			other.textureMini.id = 0;
+			//other.texture.id = 0;
+			//other.textureMini.id = 0;
 		}
 		return *this;
 	}
@@ -134,8 +134,8 @@ struct GameList
 	~GameList()
 	{
 		//LOG(LOGWARNING, TextFormat("descarregou textura %s", name.c_str() ));
-		UtilsFunctionLibrary::UnloadClearTexture(texture);
-		UtilsFunctionLibrary::UnloadClearTexture(textureMini);
+		//UtilsFunctionLibrary::UnloadClearTexture(texture);
+		//UtilsFunctionLibrary::UnloadClearTexture(textureMini);
 	}
 
 	bool operator==(const GameList& a) const

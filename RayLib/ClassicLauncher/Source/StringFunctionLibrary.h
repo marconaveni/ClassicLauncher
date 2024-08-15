@@ -26,4 +26,6 @@ public:
 
 	static std::string Trim(const std::string& s);
 
+	static bool IsAllDigits(const std::string& str);
+
 };

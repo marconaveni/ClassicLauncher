@@ -5,6 +5,7 @@
 #include "SoundComponent.h"
 #include "VideoPlayerComponent.h"
 #include "GameListManager.h"
+#include "TextureManager.h"
 #include "Types.h"
 
 MainScreen::MainScreen() : bIsImageLoaderCallback(false)
@@ -28,8 +29,8 @@ void MainScreen::Initialize(const std::shared_ptr<MainScreen>& mainScreenRef)
     SoundComponent::GetInstance()->PlayMusic();
 
     // Set the callback to be called when images are loaded
-    ImageLoader::GetInstance()->SetCallbackLoadTexture([](Image img, const int indexList, const int indexGame) {
-        ImageLoader::GetInstance()->CreateTextures(img, indexList, indexGame);
+    ImageLoader::GetInstance()->SetCallbackLoadTexture([](Image image, Image imageMini, const int indexGame) {
+        ImageLoader::GetInstance()->CreateTextures(image, imageMini, indexGame);
         });
 
     ImageLoader::GetInstance()->SetCallbackUnloadTexture([](const std::vector<int>& range, const int indexList) {
@@ -78,7 +79,8 @@ void MainScreen::Tick()
     }
     if (IsKeyReleased(KEY_A))
     {
-        SoundComponent::GetInstance()->PauseMusic();
+        //SoundComponent::GetInstance()->PauseMusic();
+        TextureManager::GetInstance()->SetSprite("","");
     }
     if (IsKeyReleased(KEY_ENTER) /*&& !bIsImageLoaderCallback*/)
     {
@@ -97,22 +99,20 @@ void MainScreen::Tick()
         }
         else
         {
+			ClearCovers();
             GameListManager::GetInstance()->ChangeSystemToGameList();
             grid->SetFocus(3);
-            grid->SetCovers();
-            miniCovers->SetCovers();
-            ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetSystemId(), GameListManager::GetInstance()->GetGameId());
+            ImageLoader::GetInstance()->StartLoadingLoadTexture( GameListManager::GetInstance()->GetGameId());
         }
     }
     if (IsKeyReleased(KEY_BACKSPACE))
     {
         if (GameListManager::GetInstance()->GetCurrentList() == GameListSelect)
         {
+			ClearCovers();
             GameListManager::GetInstance()->ChangeGameToSystemList();
             grid->SetFocus(3);
-            grid->SetCovers();
-            miniCovers->SetCovers();
-            ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetSystemId(), GameListManager::GetInstance()->GetGameId());
+            ImageLoader::GetInstance()->StartLoadingLoadTexture( GameListManager::GetInstance()->GetGameId());
         }
     }
 }
@@ -135,5 +135,12 @@ void MainScreen::EndPlay()
 void MainScreen::Collision()
 {
     //Object::Collision();
+}
+
+void MainScreen::ClearCovers()
+{
+    TextureManager::GetInstance()->ClearCovers();
+    grid->ClearCovers();
+    miniCovers->ClearCovers();
 }
 

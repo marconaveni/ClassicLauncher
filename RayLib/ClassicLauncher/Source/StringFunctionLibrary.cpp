@@ -44,21 +44,21 @@ std::string StringFunctionLibrary::RemoveDuplicateSlashes(const std::string& inp
 	std::string result;
 	bool bPreviousIsSlash = false;
 
-	for (char c : input) 
+	for (char c : input)
 	{
 #ifdef _WIN32
 		if (c == '\\')
 #else
 		if (c == '/')
 #endif
-		
+
 		{
 			if (!bPreviousIsSlash) {
 				result += c;
 				bPreviousIsSlash = true;
 			}
 		}
-		else 
+		else
 		{
 			result += c;
 			bPreviousIsSlash = false;
@@ -105,8 +105,8 @@ std::vector<std::string> StringFunctionLibrary::SplitString(const std::string& i
 
 std::string StringFunctionLibrary::Ltrim(const std::string& s)
 {
-    size_t start = 0;
-	for (size_t i = 0; i < s.size(); ++i) 
+	size_t start = 0;
+	for (size_t i = 0; i < s.size(); ++i)
 	{
 		if (!isspace(static_cast<unsigned char>(s[i]))) {
 			start = i;
@@ -121,7 +121,7 @@ std::string StringFunctionLibrary::Rtrim(const std::string& s)
 	size_t end = s.size();
 	for (size_t i = s.size(); i > 0; --i)
 	{
-		if (!isspace(static_cast<unsigned char>(s[i - 1]))) 
+		if (!isspace(static_cast<unsigned char>(s[i - 1])))
 		{
 			end = i;
 			break;
@@ -132,5 +132,17 @@ std::string StringFunctionLibrary::Rtrim(const std::string& s)
 
 std::string StringFunctionLibrary::Trim(const std::string& s)
 {
-    return Ltrim(Rtrim(s));
+	return Ltrim(Rtrim(s));
+}
+
+bool StringFunctionLibrary::IsAllDigits(const std::string& str)
+{
+	for (const char c : str) 
+	{
+		if (!std::isdigit(c)) 
+		{
+			return false;
+		}
+	}
+	return true;
 }
