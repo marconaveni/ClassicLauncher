@@ -102,6 +102,7 @@ void GameListManager::LoadGameList()
 		index++;
 	}
 	gameList.shrink_to_fit();
+	GameListSortByName();
 }
 
 void GameListManager::LoadSystemList()
@@ -136,34 +137,16 @@ void GameListManager::LoadSystemList()
 		index++;
 	}
 	systemList.shrink_to_fit();
+	SystemListSortByName();
 }
 
 void GameListManager::AddId(const int newId)
 {
-	//if (currentList != SystemListSelect)
-	//{
-	//	idSystemList = Math::Clamp(idSystemList += newId,0,static_cast<int>(systemList.size()) - 1);
-	//}
-	//else
-	//{
-	//}
-	//idGameList = Math::Clamp(idGameList += newId, 0, static_cast<int>(gameList.size()) - 1);
-
-	//idGameList += newId;
 	idGameList = UtilsFunctionLibrary::SetIndexArray(idGameList += newId, static_cast<int>(gameList.size()));
-
 }
 
 void GameListManager::ChangeId(const int newId)
 {
-	//if (currentList != SystemListSelect)
-	//{
-	//	idSystemList = Math::Clamp(newId, 0, static_cast<int>(systemList.size()) - 1);
-	//}
-	//else
-	//{
-	//}
-
 	idGameList = Math::Clamp(newId, 0, static_cast<int>(gameList.size()) - 1);
 }
 
@@ -194,7 +177,7 @@ GameList* GameListManager::GetCurrentGameList(const int index)
 
 GameList* GameListManager::GetCurrentGameList()
 {
-	return &gameList[idGameList];
+	return (!gameList.empty()) ? &gameList[idGameList] : nullptr;
 }
 
 SystemList* GameListManager::GetCurrentSystemList()
@@ -217,6 +200,22 @@ void GameListManager::ClearGameList()
 CurrentList GameListManager::GetCurrentList() const
 {
 	return currentList;
+}
+
+void GameListManager::GameListSortByName()
+{
+	std::sort(gameList.begin(), gameList.end(),
+		[](const GameList& a, const GameList& b) {
+			return a.name < b.name;
+		});
+}
+
+void GameListManager::SystemListSortByName()
+{
+	std::sort(systemList.begin(), systemList.end(),
+		[](const SystemList& a, const SystemList& b) {
+			return a.systemLabel < b.systemLabel;
+		});
 }
 
 void GameListManager::ReplaceCurrentPath(GameList* game) const

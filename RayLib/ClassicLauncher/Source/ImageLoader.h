@@ -31,7 +31,7 @@ public:
 	std::queue<std::function<void()>> callbackQueue;
 	std::mutex queueMutex;
 	std::condition_variable cv;
-	std::function<void(Image, Image, int)> callback;
+	std::function<void(Image, Image, int)> callbackLoadTexture;
 	std::function<void(std::vector<int>&, int)> callbackUnloadTexture;
 
 	Texture2D tileSet;
@@ -48,7 +48,7 @@ public:
 
 	void SetCallbackUnloadTexture(std::function<void(std::vector<int>&, int)> callback);
 
-	void UnloadGameListTextureOutRange(const std::vector<int>& range, int indexList);
+	void UnloadGameListTextureOutRange();
 
 	void ImageResize(Image& image, const int newWidth, const int newHeight);
 };

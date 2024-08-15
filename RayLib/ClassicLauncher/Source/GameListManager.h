@@ -8,7 +8,6 @@
 #include "Date.h"
 #include "Print.h"
 #include "RaylibCpp.h"
-#include "UtilsFunctionLibrary.h"
 #include "External/tinyxml2.h"
 
 
@@ -51,11 +50,8 @@ struct GameList
 
 	GameList()
 		: mapIndex(-1)
-		, players("1")
 		, bFavorite(false)
 		, playCount(0)
-		//, texture()
-		//, textureMini()
 	{
 	}
 
@@ -165,21 +161,34 @@ struct SystemList
 	std::string screenshot;
 	std::string video;
 	std::string desc;
-	Texture2D texture;
-	Texture2D textureMini;
+	//Texture2D texture;
+	//Texture2D textureMini;
 
 	SystemList()
 		: mapIndex(-1)
-		, texture()
-		, textureMini()
+		//, texture()
+		//, textureMini()
 	{
 	}
 
-	~SystemList()
+	bool operator==(const SystemList& a) const
 	{
-		UnloadTexture(texture);
-		UnloadTexture(textureMini);
+		return (mapIndex == a.mapIndex);
 	}
+	bool operator>(const SystemList& a) const
+	{
+		return (mapIndex > a.mapIndex);
+	}
+	bool operator<(const SystemList& a) const
+	{
+		return (mapIndex < a.mapIndex);
+	}
+
+	//~SystemList()
+	//{
+	//	UnloadTexture(texture);
+	//	UnloadTexture(textureMini);
+	//}
 
 };
 
@@ -237,6 +246,9 @@ public:
 	void ClearSystemList();
 	void ClearGameList();
 	CurrentList GetCurrentList() const;
+
+	void GameListSortByName();
+	void SystemListSortByName();
 
 private:
 

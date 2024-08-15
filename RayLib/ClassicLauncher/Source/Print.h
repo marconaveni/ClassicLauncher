@@ -74,8 +74,9 @@ private:
 
 };
 
-
+//Log(category, text)
 #define LOG(category, text )  Print::GetInstance()->Log(category, text)
 
+//Print(message, duration,  label, textColor, log);
 #define PRINT_STRING(...)  Print::GetInstance()->PrintOnScreen(__VA_ARGS__)
 

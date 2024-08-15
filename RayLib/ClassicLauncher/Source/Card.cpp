@@ -62,7 +62,7 @@ void Card::Tick()
 {
 	currentPosition = cardSelected->position;
 
-	PRINT_STRING(TextFormat("%d position x %f", id, currentPosition.position.x), 0.2f, TextFormat("id%d", id));
+	//PRINT_STRING(TextFormat("%d position x %f", id, currentPosition.position.x), 0.2f, TextFormat("id%d", id));
 	animationLostFocus.UpdateAnimation();
 	animationFocus.UpdateAnimation();
 	animationClick.UpdateAnimation();

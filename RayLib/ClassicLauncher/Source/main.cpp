@@ -6,25 +6,21 @@
 #include "Engine.h"
 #include "Print.h"
 #include "Types.h"
-#include "Date.h"
-#include "GameListManager.h"
-#include "TextureManager.h"
-#include "External/tinyxml2.h"
 
 
 void UpdateDrawFrame();
-
+void FullscreenToggle();
 
 int main()
 {
 	SetConfigFlags(FLAG_VSYNC_HINT); //vsync only enable in fullscreen set before InitWindow
 	InitWindow(screenWidth, screenHeight, TITLE);
-	SetWindowState(FLAG_WINDOW_RESIZABLE);
+	SetWindowState(FLAG_WINDOW_RESIZABLE );
 	SetWindowMinSize(screenWidth, screenHeight);
 	SetWindowSize(screenWidth, screenHeight);
 	SetTargetFPS(60);
 	//SetExitKey(KEY_NULL);
-	//ToggleFullscreen(); 
+	//ToggleFullscreen();
 
 	InitAudioDevice();
 
@@ -45,14 +41,10 @@ int main()
 }
 
 
-
 void UpdateDrawFrame()
 {
 
-	if (IsKeyReleased(KEY_F11))
-	{
-		ToggleBorderlessWindowed();
-	}
+	FullscreenToggle();
 	Render::GetInstance()->BeginRender();
 	Engine::GetInstance()->Tick();
 	Render::GetInstance()->EndRender();
@@ -69,6 +61,20 @@ void UpdateDrawFrame()
 }
 
 
+void FullscreenToggle()
+{
+	if (IsKeyReleased(KEY_F11))
+	{
+		ToggleBorderlessWindowed();
+#ifndef _WIN32
+		if (IsWindowState(FLAG_BORDERLESS_WINDOWED_MODE))
+		{
+			SetWindowSize(screenWidth, screenHeight);
+		}
+#endif
+
+	}
+}
 
 
 

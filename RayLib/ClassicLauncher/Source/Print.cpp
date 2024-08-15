@@ -41,7 +41,7 @@ void Print::PrintOnScreen(const char* text, const float duration, const char* la
 				msg.textMessage = text;
 				msg.textColor = textColor;
 				if (log)
-					std::cout << "[LOGSCREEN] : " << msg.textMessage << "\n";
+					std::cout << " [LOGSCREEN] : " << msg.textMessage << "\n";
 				found = true;
 				break;
 			}

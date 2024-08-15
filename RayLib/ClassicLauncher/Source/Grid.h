@@ -1,9 +1,7 @@
 #pragma once
 
-#include <memory>
 #include <vector>
 
-#include "Animation.h"
 #include "Card.h"
 #include "Object.h"
 
@@ -23,9 +21,6 @@ class Grid final : public Object
     int idFocus;
 
 public:
-
-    Animation animation;
-    Animation animation2;
 
     Grid();
     void BeginPlay() override;

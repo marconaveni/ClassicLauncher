@@ -200,8 +200,7 @@ void Grid::Tick()
 			bRight = false;
 			bLeft = false;
 			//SetCovers();
-			std::vector<int> v;
-			ImageLoader::GetInstance()->UnloadGameListTextureOutRange(v, 0);
+			ImageLoader::GetInstance()->UnloadGameListTextureOutRange();
 		}
 
 	}
