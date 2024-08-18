@@ -57,7 +57,7 @@ void MainScreen::Tick()
 		if (!ImageLoader::GetInstance()->callbackQueue.empty())
 		{
 			bIsImageLoaderCallback = true;
-			auto cb = ImageLoader::GetInstance()->callbackQueue.front();
+			const auto cb = ImageLoader::GetInstance()->callbackQueue.front();
 			ImageLoader::GetInstance()->callbackQueue.pop();
 			lock.unlock();
 			cb();
