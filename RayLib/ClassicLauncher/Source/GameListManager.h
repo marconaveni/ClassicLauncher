@@ -7,7 +7,6 @@
 #include <utility>
 #include "Date.h"
 #include "Print.h"
-#include "RaylibCpp.h"
 #include "External/tinyxml2.h"
 
 
@@ -127,12 +126,12 @@ struct GameList
 		return *this;
 	}
 
-	~GameList()
-	{
+	~GameList() = default;
+	//{
 		//LOG(LOGWARNING, TextFormat("descarregou textura %s", name.c_str() ));
 		//UtilsFunctionLibrary::UnloadClearTexture(texture);
 		//UtilsFunctionLibrary::UnloadClearTexture(textureMini);
-	}
+	//}
 
 	bool operator==(const GameList& a) const
 	{
@@ -214,6 +213,8 @@ public:
 
 private:
 
+
+
 	CurrentList currentList;
 
 	int idSystemList;
@@ -228,9 +229,13 @@ private:
 
 public:
 
+	void Initialize();
+	void Tick();
+
 	void ChangeSystemToGameList();
 	void ChangeGameToSystemList();
 
+	void AsyncLoadGameList();
 	void LoadGameList();
 	void LoadSystemList();
 

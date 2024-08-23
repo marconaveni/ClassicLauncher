@@ -30,6 +30,15 @@ void GameListManager::LoadSystemToGameList()
 	gameList.shrink_to_fit();
 }
 
+void GameListManager::Initialize()
+{
+}
+
+void GameListManager::Tick()
+{
+	//threadLoad.CallbackExecution();
+}
+
 void GameListManager::ChangeSystemToGameList()
 {
 	idSystemList = idGameList;
@@ -47,6 +56,11 @@ void GameListManager::ChangeGameToSystemList()
 	LoadGameList();
 }
 
+void GameListManager::AsyncLoadGameList()
+{
+	//threadLoad.StartThread(&GameListManager::LoadGameList, this);
+}
+
 void GameListManager::LoadGameList()
 {
 	if (systemList.empty())
@@ -60,6 +74,7 @@ void GameListManager::LoadGameList()
 		return;
 	}
 
+	documentGameListXml.Clear();
 	const std::string pathXml = StringFunctionLibrary::NormalizePath(systemList[idSystemList].romPath + "\\gamelist.xml");
 	if (documentGameListXml.LoadFile(pathXml.c_str()) != tinyxml2::XMLError::XML_SUCCESS)
 	{
@@ -108,6 +123,7 @@ void GameListManager::LoadGameList()
 
 void GameListManager::LoadSystemList()
 {
+	documentSystemListXml.Clear();
 	if (documentSystemListXml.LoadFile(PATH_SYSTEM_XML) != tinyxml2::XMLError::XML_SUCCESS)
 	{
 		return;

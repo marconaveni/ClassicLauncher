@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.props" Condition="Exists('packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.props')" />
   <Import Project="packages\libcpr.1.10.5\build\native\libcpr.props" Condition="Exists('packages\libcpr.1.10.5\build\native\libcpr.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -51,6 +50,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Source\Animation.h" />
     <ClInclude Include="Source\AnimationFrame.h" />
     <ClInclude Include="Source\Card.h" />
@@ -71,6 +71,7 @@
     <ClInclude Include="Source\SoundComponent.h" />
     <ClInclude Include="Source\StringFunctionLibrary.h" />
     <ClInclude Include="Source\TextureManager.h" />
+    <ClInclude Include="Source\ThreadManager.h" />
     <ClInclude Include="Source\UtilsFunctionLibrary.h" />
     <ClInclude Include="Source\Types.h" />
     <ClInclude Include="Source\Object.h" />
@@ -79,6 +80,9 @@
     <ClInclude Include="Source\Render.h" />
     <ClInclude Include="Source\VideoPlayer.h" />
     <ClInclude Include="Source\VideoPlayerComponent.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ClassicLauncher.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -135,6 +139,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)Build\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ShortProjectName)\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)Build\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ShortProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
@@ -204,7 +212,6 @@
     <Import Project="packages\VideoLAN.LibVLC.Windows.3.0.20\build\VideoLAN.LibVLC.Windows.targets" Condition="Exists('packages\VideoLAN.LibVLC.Windows.3.0.20\build\VideoLAN.LibVLC.Windows.targets')" />
     <Import Project="packages\raylib.5.0.0\build\native\raylib.targets" Condition="Exists('packages\raylib.5.0.0\build\native\raylib.targets')" />
     <Import Project="packages\libcpr.1.10.5\build\native\libcpr.targets" Condition="Exists('packages\libcpr.1.10.5\build\native\libcpr.targets')" />
-    <Import Project="packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -214,7 +221,5 @@
     <Error Condition="!Exists('packages\raylib.5.0.0\build\native\raylib.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\raylib.5.0.0\build\native\raylib.targets'))" />
     <Error Condition="!Exists('packages\libcpr.1.10.5\build\native\libcpr.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\libcpr.1.10.5\build\native\libcpr.props'))" />
     <Error Condition="!Exists('packages\libcpr.1.10.5\build\native\libcpr.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\libcpr.1.10.5\build\native\libcpr.targets'))" />
-    <Error Condition="!Exists('packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.props'))" />
-    <Error Condition="!Exists('packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.targets'))" />
   </Target>
 </Project>

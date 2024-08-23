@@ -50,11 +50,11 @@ void MiniCovers::SetCovers() const
 		indexFinal = Math::Clamp(indexFinal, 0, manager->GetGameListSize() - 1);
 		if (size > 0)
 		{
-			
+
 			std::string* image = &manager->GetCurrentGameList(indexFinal)->image;
 			if (!image->empty())
 			{
-				Texture2D* texture = TextureManager::GetInstance()->GetCoverMini(indexFinal);
+				Texture2D* texture = &TextureManager::GetInstance()->GetCoverMini(indexFinal)->texture;
 				objectsCover[i]->SetTexture(texture, Rectangle{ 0,0, static_cast<float>(texture->width), static_cast<float>(texture->height) });
 			}
 			else
@@ -81,7 +81,14 @@ void MiniCovers::SetPosition(const int size) const
 	const int x = (1280 - (29 * size)) / 2;
 	for (int i = 0; i < 30; i++)
 	{
-		objectsCover[i]->position.position = Vector2{ static_cast<float>(x + (29 * i)), positionY + 21 };
+		if (i < size)
+		{
+			objectsCover[i]->position.position = Vector2{ static_cast<float>(x + (29 * i)), positionY + 21 };
+		}
+		else
+		{
+			objectsCover[i]->position.position = Vector2{ -100 , positionY + 21 };
+		}
 	}
 
 	const float arrowPositionX = (size % 2 == 0) ? 640.0f : 625.0f;

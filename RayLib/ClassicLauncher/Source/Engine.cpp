@@ -19,13 +19,13 @@ void Engine::BeginPlay()
 {
 	Print::GetInstance()->Log(LOGINFO, "Start Logging");
 
+	GameListManager::GetInstance()->Initialize();
 	GameListManager::GetInstance()->LoadSystemList();
 	GameListManager::GetInstance()->LoadGameList();
-
-	TextureManager::GetInstance()->LoadResources();
 	SoundComponent::GetInstance()->BeginPlay();
-
+	TextureManager::GetInstance()->LoadResources();
 	VideoPlayerComponent::GetInstance()->BeginPlay();
+	ImageLoader::GetInstance()->Initialize();
 
 	mainScreen = std::make_shared<MainScreen>();
 	mainScreen->Initialize(mainScreen);
@@ -39,6 +39,7 @@ void Engine::Tick()
 	ObjectManager::GetInstance()->Tick();
 	SoundComponent::GetInstance()->Tick();
 	VideoPlayerComponent::GetInstance()->Tick();
+	ImageLoader::GetInstance()->Tick();
 
 	ObjectManager::GetInstance()->Draw();
 	VideoPlayerComponent::GetInstance()->Draw();

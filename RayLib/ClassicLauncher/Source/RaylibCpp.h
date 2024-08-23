@@ -16,23 +16,27 @@ struct TextureImage
 
 	TextureImage()
 		: statusImage(StatusImage::Unload)
-		, texture()
+		, texture{}
 	{}
 
 	~TextureImage()
 	{
-		::UnloadTexture(texture);
+		UnloadTexture();
 	}
 
 	void UnloadTexture()
 	{
-		::UnloadTexture(texture);
-		texture = Texture2D();
-		statusImage = StatusImage::Unload;
+		if (texture.id != 0)
+		{
+			::UnloadTexture(texture);
+			statusImage = StatusImage::Unload;
+			texture = Texture2D();
+		}
 	}
 
 	void LoadTexture(const char* path)
 	{
+		UnloadTexture(); // Unload existing texture if any
 		texture = ::LoadTexture(path);
 		if (IsTextureReady(texture))
 		{
@@ -42,6 +46,7 @@ struct TextureImage
 
 	void LoadTexture(const Image& image)
 	{
+		UnloadTexture();
 		texture = ::LoadTextureFromImage(image);
 		if (IsTextureReady(texture))
 		{
@@ -54,7 +59,9 @@ struct TextureImage
 	TextureImage(TextureImage&& other) noexcept       // Move constructor
 		: statusImage(other.statusImage)
 		, texture(other.texture)
-	{}
+	{
+		other.texture.id = 0;
+	}
 
 	TextureImage& operator=(const TextureImage&) = default;  // Copy assignment operator
 
@@ -62,26 +69,33 @@ struct TextureImage
 	{
 		if (this != &other)
 		{
-			statusImage = other.statusImage;  // Move data from 'other' to 'this' object
+			UnloadTexture();  // Unload existing texture if any
+			statusImage = other.statusImage;
 			texture = other.texture;
+			other.texture.id = 0;
 		}
-		other.texture.id = 0;
 		return *this;
 	}
 
 	TextureImage& operator=(const Texture2D& other) noexcept
 	{
-		statusImage = (IsTextureReady(other)) ? StatusImage::Loaded : StatusImage::Unload;
-		texture = other;
+		if (this->texture.id != other.id)
+		{
+			UnloadTexture(); // Unload existing texture if any
+			statusImage = (IsTextureReady(other)) ? StatusImage::Loaded : StatusImage::Unload;
+			texture = other;
+		}
 		return *this;
 	}
 
-	TextureImage& operator=(const Texture2D&& other) noexcept
+	TextureImage& operator=(Texture2D&& other) noexcept
 	{
-		if (texture.id != other.id)
+		if (this->texture.id != other.id)
 		{
+			UnloadTexture(); // Unload existing texture if any
 			statusImage = (IsTextureReady(other)) ? StatusImage::Loaded : StatusImage::Unload;
 			texture = other;
+			other.id = 0;
 		}
 		return *this;
 	}

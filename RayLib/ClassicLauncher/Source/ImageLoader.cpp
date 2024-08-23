@@ -9,6 +9,22 @@
 #include "UtilsFunctionLibrary.h"
 
 
+
+void ImageLoader::Initialize()
+{
+	// Set the callback to be called when images are loaded
+	threadImage.SetCallback([this](const Image& image, const Image& imageMini, const int indexGame) {
+		CreateTextures(image, imageMini, indexGame);
+		UnloadImage(image);
+		UnloadImage(imageMini);
+		});
+}
+
+void ImageLoader::Tick()
+{
+	threadImage.CallbackExecution();
+}
+
 ImageLoader* ImageLoader::GetInstance()
 {
 	static ImageLoader object;
@@ -33,8 +49,7 @@ void ImageLoader::StartLoadingLoadTexture(const int indexGame)
 
 	if (!map.empty())
 	{
-		std::thread loadThread(&ImageLoader::LoadImage, this, map);
-		loadThread.detach(); // Detach the thread so it runs independently
+		threadImage.StartThread(&ImageLoader::LoadImage, this, map);
 	}
 }
 
@@ -44,7 +59,11 @@ void ImageLoader::LoadImage(std::map<int, std::string> map)
 	for (auto itr = map.begin(); itr != map.end(); ++itr) {
 
 
-		if(IsTextureReady(*TextureManager::GetInstance()->GetCover(itr->first)))
+		if(TextureManager::GetInstance()->GetCover(itr->first)->statusImage == StatusImage::Loaded)
+		{
+			continue;
+		}
+		if (TextureManager::GetInstance()->GetCoverMini(itr->first)->statusImage == StatusImage::Loaded)
 		{
 			continue;
 		}
@@ -52,45 +71,24 @@ void ImageLoader::LoadImage(std::map<int, std::string> map)
 		Image imageMini = ImageCopy(image);
 		int key = itr->first;
 
-		ImageResize(image, 228, 204);
-		ImageResize(imageMini, 28, 40);
+		UtilsFunctionLibrary::ImageResize(image, 228, 204);
+		UtilsFunctionLibrary::ImageResize(imageMini, 28, 40);
 
-		// Add the callback to the queue
-		{
-			std::lock_guard<std::mutex> lock(queueMutex);
-			callbackQueue.emplace([this, image, imageMini, key]() { callbackLoadTexture(image, imageMini, key); });
-		}
-		cv.notify_one();
+		//UnloadImage(image);
+		//UnloadImage(imageMini);
+
+		threadImage.Notify(image, imageMini, key);
 
 	}
 
 }
 
-void ImageLoader::CreateTextures(Image& image, Image& imageMini, int indexGame)
+void ImageLoader::CreateTextures(const Image& image, const Image& imageMini, const int indexGame)
 {
 	TextureManager::GetInstance()->SetCover(indexGame, image);
 	TextureManager::GetInstance()->SetCoverMini(indexGame, imageMini);
-	UnloadImage(image);
-	UnloadImage(imageMini);
-}
 
-void ImageLoader::SetCallbackLoadTexture(std::function<void(Image, Image, int)> callback)
-{
-	callbackLoadTexture = std::move(callback);
 }
-
-void ImageLoader::SetCallbackUnloadTexture(std::function<void(std::vector<int>&, int)> callback)
-{
-	callbackUnloadTexture = callback;
-}
-
-void ImageLoader::ImageResize(Image& image, const int newWidth, const int newHeight)
-{
-	Vector2 newSize{ static_cast<float>(image.width), static_cast<float>(image.height) };
-	UtilsFunctionLibrary::SetSizeWithProportion(newSize, newWidth, newHeight);
-	::ImageResize(&image, static_cast<int>(newSize.x), static_cast<int>(newSize.y));
-}
-
 
 void ImageLoader::UnloadGameListTextureOutRange()
 {

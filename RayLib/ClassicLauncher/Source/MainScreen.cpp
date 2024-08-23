@@ -8,11 +8,16 @@
 #include "TextureManager.h"
 #include "Types.h"
 
-MainScreen::MainScreen() : bIsImageLoaderCallback(false)
+MainScreen::MainScreen()
 {
 	grid = std::make_shared<Grid>();
 	miniCovers = std::make_shared<MiniCovers>();
 	platformProcess = std::make_shared<PlatformProcess>();
+
+	// Set the callback to be called when images are loaded
+	threadLoad.SetCallback([this]() {
+		ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetGameId());
+		});
 }
 
 
@@ -29,14 +34,7 @@ void MainScreen::Initialize(const std::shared_ptr<MainScreen>& mainScreenRef)
 	SoundComponent::GetInstance()->LoadUiSounds(PATH_SOUND_CLICK, PATH_SOUND_CURSOR);
 	SoundComponent::GetInstance()->PlayMusic();
 
-	// Set the callback to be called when images are loaded
-	ImageLoader::GetInstance()->SetCallbackLoadTexture([](Image image, Image imageMini, const int indexGame) {
-		ImageLoader::GetInstance()->CreateTextures(image, imageMini, indexGame);
-		});
 
-	ImageLoader::GetInstance()->SetCallbackUnloadTexture([](const std::vector<int>& range, const int indexList) {
-		//ImageLoader::GetInstance()->UnloadGameListTextureOutRange(range, indexList);
-		});
 }
 
 void MainScreen::BeginPlay()
@@ -49,25 +47,9 @@ void MainScreen::Tick()
 	Object::Tick();
 
 
-	// Check for callback execution
-	{
-		bIsImageLoaderCallback = false;
-
-		std::unique_lock<std::mutex> lock(ImageLoader::GetInstance()->queueMutex);
-		if (!ImageLoader::GetInstance()->callbackQueue.empty())
-		{
-			bIsImageLoaderCallback = true;
-			const auto cb = ImageLoader::GetInstance()->callbackQueue.front();
-			ImageLoader::GetInstance()->callbackQueue.pop();
-			lock.unlock();
-			cb();
-		}
-	}
-
-
 	if (GameListManager::GetInstance()->GetCurrentGameList() == nullptr)
 	{
-		LOG(LOGERROR, TextFormat("GameList is Empty \nLine %d in file %s", __LINE__ , __FILE__));
+		LOG(LOGERROR, TextFormat("GameList is Empty \nLine %d in file %s", __LINE__, __FILE__));
 		return;
 	}
 
@@ -108,9 +90,7 @@ void MainScreen::Tick()
 		else
 		{
 			ClearCovers();
-			GameListManager::GetInstance()->ChangeSystemToGameList();
-			grid->SetFocus(3);
-			ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetGameId());
+			threadLoad.StartThread(&MainScreen::ChangeGrid, this, GameListSelect);
 		}
 	}
 	if (IsKeyReleased(KEY_BACKSPACE))
@@ -118,11 +98,28 @@ void MainScreen::Tick()
 		if (GameListManager::GetInstance()->GetCurrentList() == GameListSelect)
 		{
 			ClearCovers();
-			GameListManager::GetInstance()->ChangeGameToSystemList();
-			grid->SetFocus(3);
-			ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetGameId());
+			threadLoad.StartThread(&MainScreen::ChangeGrid, this, SystemListSelect);
 		}
 	}
+
+	threadLoad.CallbackExecution();
+}
+
+void MainScreen::ChangeGrid(const CurrentList list)
+{
+	
+	grid->SetFocus(3);
+	if (list == SystemListSelect)
+	{
+		GameListManager::GetInstance()->ChangeGameToSystemList();
+	}
+	else
+	{
+		GameListManager::GetInstance()->ChangeSystemToGameList();
+	}
+
+	threadLoad.Notify();
+	//ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetGameId());
 }
 
 void MainScreen::Draw()

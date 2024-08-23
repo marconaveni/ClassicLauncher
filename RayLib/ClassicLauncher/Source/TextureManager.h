@@ -13,6 +13,9 @@ class TextureManager
 	std::map<int, TextureImage> covers;
 	std::map<int, TextureImage> coversMini;
 
+	int countClear;
+	//int count;
+
 public:
 
 	static TextureManager* GetInstance();
@@ -20,8 +23,8 @@ public:
 	void LoadResources();
 
 	Texture2D* GetSprite(const std::string& name);
-	Texture2D* GetCover(const int id);
-	Texture2D* GetCoverMini(const int id);
+	TextureImage* GetCover(const int id);
+	TextureImage* GetCoverMini(const int id);
 
 	StatusImage GetStatusImage(const std::string& name);
 

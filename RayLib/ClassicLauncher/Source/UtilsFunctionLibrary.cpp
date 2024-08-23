@@ -26,13 +26,20 @@ void UtilsFunctionLibrary::SetSizeWithProportion(Vector2& texture, const int wid
 
 }
 
+void UtilsFunctionLibrary::ImageResize(Image& image, const int newWidth, const int newHeight)
+{
+	Vector2 newSize{ static_cast<float>(image.width), static_cast<float>(image.height) };
+	SetSizeWithProportion(newSize, newWidth, newHeight);
+	::ImageResize(&image, static_cast<int>(newSize.x), static_cast<int>(newSize.y));
+}
+
 
 Texture2D UtilsFunctionLibrary::LoadTexture(const std::string& path, int width, int height)
 {
 	Image img = LoadImage(path.c_str());
 	width = (width > 0) ? width : img.width;
 	height = (height > 0) ? height : img.height;
-	ImageResize(&img, width, height);
+	::ImageResize(&img, width, height);
 	const Texture2D texture = LoadTextureFromImage(img);
 	UnloadImage(img);
 	return texture;
