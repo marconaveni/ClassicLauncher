@@ -99,6 +99,7 @@ dependencies.zip
 
 
 # RayLib/ClassicLauncher/*
+!RayLib/ClassicLauncher/*.sln
 RayLib/ClassicLauncher/.idea/*
 RayLib/ClassicLauncher/.vs/*
 RayLib/ClassicLauncher/.vscode/*
