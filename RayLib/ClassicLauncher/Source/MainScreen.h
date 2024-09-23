@@ -17,7 +17,7 @@ class MainScreen : public Object
 
 public:
 
-	ThreadManager<void> threadLoad;
+	ThreadManager<int> threadLoad;
 
 	std::shared_ptr<Grid> grid;
 	std::shared_ptr<MiniCovers> miniCovers;

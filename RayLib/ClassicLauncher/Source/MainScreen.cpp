@@ -9,14 +9,14 @@
 #include "Types.h"
 
 MainScreen::MainScreen()
+	:grid(std::make_shared<Grid>())
+	, miniCovers(std::make_shared<MiniCovers>())
+	, platformProcess(std::make_shared<PlatformProcess>())
 {
-	grid = std::make_shared<Grid>();
-	miniCovers = std::make_shared<MiniCovers>();
-	platformProcess = std::make_shared<PlatformProcess>();
 
 	// Set the callback to be called when images are loaded
-	threadLoad.SetCallback([this]() {
-		ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetGameId());
+	threadLoad.SetCallback([this](int gameId) {
+		ImageLoader::GetInstance()->StartLoadingLoadTexture(gameId);
 		});
 }
 
@@ -118,7 +118,7 @@ void MainScreen::ChangeGrid(const CurrentList list)
 		GameListManager::GetInstance()->ChangeSystemToGameList();
 	}
 
-	threadLoad.Notify();
+	threadLoad.Notify(GameListManager::GetInstance()->GetGameId());
 	//ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetGameId());
 }
 

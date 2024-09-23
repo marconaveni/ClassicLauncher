@@ -7,6 +7,7 @@
 #include "SoundComponent.h"
 #include "TextureManager.h"
 #include "UtilsFunctionLibrary.h"
+#include <algorithm>  
 
 
 Grid::Grid()
