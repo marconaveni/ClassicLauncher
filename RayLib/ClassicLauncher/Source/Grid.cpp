@@ -102,6 +102,10 @@ void Grid::SetCovers()
 		{
 			Texture2D* texture = &TextureManager::GetInstance()->GetCover(indexFinal)->texture;
 			const std::string* image = &manager->GetCurrentGameList(indexFinal)->image;
+			if(image == nullptr)
+			{
+				continue;
+			}
 			cardsContainer[i].SetCover(!image->empty() ? texture : nullptr);
 		}
 	}

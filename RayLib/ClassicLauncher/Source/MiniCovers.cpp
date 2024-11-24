@@ -51,8 +51,9 @@ void MiniCovers::SetCovers() const
 		if (size > 0)
 		{
 
-			std::string* image = &manager->GetCurrentGameList(indexFinal)->image;
-			if (!image->empty())
+			std::string image = manager->GetCurrentGameList(indexFinal)->image;
+
+			if (!image.empty())
 			{
 				Texture2D* texture = &TextureManager::GetInstance()->GetCoverMini(indexFinal)->texture;
 				objectsCover[i]->SetTexture(texture, Rectangle{ 0,0, static_cast<float>(texture->width), static_cast<float>(texture->height) });

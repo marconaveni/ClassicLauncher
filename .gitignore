@@ -1,5 +1,6 @@
 # Visual Studio 2015 user specific files
 .vs/
+.vscode/
 
 # Rider user specific files
 .idea/
@@ -109,4 +110,9 @@ RayLib/ClassicLauncher/Intermediate/*
 RayLib/ClassicLauncher/Resources/*
 RayLib/ClassicLauncher/Source/Resources/*
 RayLib/ClassicLauncher/UnitTest/x64/*
+
+
+
+Makefile
+build.sh
 

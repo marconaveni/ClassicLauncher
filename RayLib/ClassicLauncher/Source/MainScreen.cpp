@@ -90,7 +90,8 @@ void MainScreen::Tick()
 		else
 		{
 			ClearCovers();
-			threadLoad.StartThread(&MainScreen::ChangeGrid, this, GameListSelect);
+			//threadLoad.StartThread(&MainScreen::ChangeGrid, this, GameListSelect);
+			MainScreen::ChangeGrid(GameListSelect);
 		}
 	}
 	if (IsKeyReleased(KEY_BACKSPACE))
@@ -98,11 +99,12 @@ void MainScreen::Tick()
 		if (GameListManager::GetInstance()->GetCurrentList() == GameListSelect)
 		{
 			ClearCovers();
-			threadLoad.StartThread(&MainScreen::ChangeGrid, this, SystemListSelect);
+			//threadLoad.StartThread(&MainScreen::ChangeGrid, this, SystemListSelect);
+			MainScreen::ChangeGrid(SystemListSelect);
 		}
 	}
 
-	threadLoad.CallbackExecution();
+	//threadLoad.CallbackExecution();
 }
 
 void MainScreen::ChangeGrid(const CurrentList list)
@@ -118,8 +120,8 @@ void MainScreen::ChangeGrid(const CurrentList list)
 		GameListManager::GetInstance()->ChangeSystemToGameList();
 	}
 
-	threadLoad.Notify(GameListManager::GetInstance()->GetGameId());
-	//ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetGameId());
+	//threadLoad.Notify(GameListManager::GetInstance()->GetGameId());
+	ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetGameId());
 }
 
 void MainScreen::Draw()
