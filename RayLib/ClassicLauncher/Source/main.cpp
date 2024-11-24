@@ -7,6 +7,8 @@
 #include "Print.h"
 #include "Types.h"
 
+Vector2 ScreenPosition = {0};
+
 
 void UpdateDrawFrame();
 void FullscreenToggle();
@@ -69,6 +71,7 @@ void FullscreenToggle()
 #else
 		if(!IsWindowFullscreen()) 
 		{
+			ScreenPosition = GetWindowPosition();      
 			SetWindowSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
 			ToggleFullscreen();
 		}
@@ -76,6 +79,7 @@ void FullscreenToggle()
 		{
 			ToggleFullscreen();
 			SetWindowSize(screenWidth, screenHeight);
+			SetWindowPosition(ScreenPosition.x , ScreenPosition.y);  
 		}
 #endif		
 	}
