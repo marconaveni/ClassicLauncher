@@ -101,7 +101,7 @@ namespace ClassicLauncher
 		{
 		case LOG_TRACE: std::cout << "\x1b[36m" << "TRACE: "; break;
 		case LOG_DEBUG: std::cout << "\x1b[34m" << "DEBUG: "; break;
-		case LOG_INFO: std::cout << "\x1b[30m" << "INFO: "; break;
+		case LOG_INFO: std::cout << "\x1b[37m" << "INFO: "; break;
 		case LOG_WARNING: std::cout << "\x1B[33m" << "WARNING: "; break;
 		case LOG_ERROR: std::cout << "\x1B[31m" << "ERROR: "; break;
 		case LOG_FATAL: std::cout << "\x1B[41m" << "FATAL: "; break;

@@ -1,6 +1,7 @@
 #include "Application.h"
-#include "Render.h"
-#include "Resouces.h"
+#include "Graphics/Render.h"
+#include "Utils/Resouces.h"
+#include "Utils/Core.h"
 #include "raylib.h"
 
 namespace ClassicLauncher
@@ -45,12 +46,16 @@ namespace ClassicLauncher
 
         InitAudioDevice();
         
-        print.LoadFont(UtilsFunctionLibrary::GetHomeDir() + Resources::roboto , 16, 0);
+        const std::string fontFile = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::roboto);
+        const std::string musicDir = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::musicsFolder);
+        const std::string audioClickFile = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::clickAudio);
+        const std::string audioCursorFile = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::cursorAudio);
+        print.LoadFont(fontFile, 16, 0);
         render.LoadRender(specification.width, specification.height);
         audioManager.Init();
-        audioManager.LoadMusics(UtilsFunctionLibrary::GetHomeDir() + Resources::musicsFolder);
-        audioManager.LoadCLick(UtilsFunctionLibrary::GetHomeDir() + Resources::clickAudio);
-        audioManager.LoadCursor(UtilsFunctionLibrary::GetHomeDir() + Resources::cursorAudio);
+        audioManager.LoadMusics(musicDir);
+        audioManager.LoadCLick(audioClickFile);
+        audioManager.LoadCursor(audioCursorFile);
 
 
 

@@ -12,18 +12,18 @@ namespace ClassicLauncher
     namespace Resources 
     {
         //files
-        inline std::string clickAudio = "Resources/themes/default/click.wav";
-        inline std::string cursorAudio = "Resources/themes/default/cursor.wav";
-        inline std::string roboto = "Resources/fonts/roboto.ttf";
-        inline std::string systemlist = "Resources/systemlist.xml";
+        inline std::string clickAudio = "ClassicLauncher/themes/default/click.wav";
+        inline std::string cursorAudio = "ClassicLauncher/themes/default/cursor.wav";
+        inline std::string roboto = "ClassicLauncher/fonts/roboto.ttf";
+        inline std::string systemlist = "ClassicLauncher/systemlist.xml";
 
         //folders
-        inline std::string fontsFolder = "Resources/fonts";
-        inline std::string musicsFolder = "Resources/musics";
-        inline std::string themesFolder = "Resources/themes";
+        inline std::string fontsFolder = "ClassicLauncher/fonts";
+        inline std::string musicsFolder = "ClassicLauncher/musics";
+        inline std::string themesFolder = "ClassicLauncher/themes";
 
         //folder default
-        inline std::string themesDefaultFolder = "Resources/themes/default";
+        inline std::string themesDefaultFolder = "ClassicLauncher/themes/default";
     }
 }
 

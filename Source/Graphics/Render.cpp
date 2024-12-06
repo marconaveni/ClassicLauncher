@@ -1,6 +1,6 @@
 ﻿#include "Render.h"
 
-#include "Math.h"
+#include "Utils/Math.h"
 #include "raymath.h" // Required for: Vector2Clamp()
 #include "raylib.h"
 

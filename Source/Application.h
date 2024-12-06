@@ -1,10 +1,10 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include "Render.h"
-#include "Sprite.h"
-#include "Core.h"
-#include "AudioManager.h"
+#include "Graphics/Render.h"
+#include "Graphics/Sprite.h"
+#include "Utils/Core.h"
+#include "Audio/AudioManager.h"
 #include <vector>
 #include <memory>
 
