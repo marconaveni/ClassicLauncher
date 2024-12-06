@@ -75,7 +75,7 @@ void UImageLoader::AddImageRange(const EButtonsGame Input, const int32 IndexCard
 		if (IndexLoad != -1 && IndexUnload != -1)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("FirstIndex %d  IndexCard %d LastIndex %d"), FirstIndex, IndexCard, LastIndex);
-			const FString PathImage = GameData[IndexLoad].imageFormated;
+			const FString PathImage = GameData[IndexLoad].ImageFormatted;
 			const EClassicImageFormat Format = UClassicFunctionLibrary::GetFormatImage(PathImage);
 			FLoadImageDelegate Out;
 			Out.BindDynamic(this, &UImageLoader::OutLoadImage);
@@ -112,7 +112,7 @@ void UImageLoader::AddImageLoop(int32 IndexCard, TArray<FGameData>& GameData, co
 			Index = (FirstIndex >= 0) ? FirstIndex : GameData.Num() - 1;
 			FirstIndex = Index - 1;
 		}
-		const FString PathImage = GameData[Index].imageFormated;
+		const FString PathImage = GameData[Index].ImageFormatted;
 		const EClassicImageFormat Format = UClassicFunctionLibrary::GetFormatImage(PathImage);
 		FLoadImageDelegate Out;
 		Out.BindDynamic(this, &UImageLoader::OutLoopImage);

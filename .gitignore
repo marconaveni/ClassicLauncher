@@ -1,5 +1,6 @@
 # Visual Studio 2015 user specific files
 .vs/
+.vscode/
 
 # Rider user specific files
 .idea/
@@ -96,4 +97,22 @@ Config/config.xml
 !7zip/7za.exe
 !7zip/7zxa.dll
 dependencies.zip
+
+
+# RayLib/ClassicLauncher/*
+!RayLib/ClassicLauncher/*.sln
+RayLib/ClassicLauncher/.idea/*
+RayLib/ClassicLauncher/.vs/*
+RayLib/ClassicLauncher/.vscode/*
+RayLib/ClassicLauncher/packages/*
+RayLib/ClassicLauncher/Build/*
+RayLib/ClassicLauncher/Intermediate/*
+RayLib/ClassicLauncher/Resources/*
+RayLib/ClassicLauncher/Source/Resources/*
+RayLib/ClassicLauncher/UnitTest/x64/*
+
+
+
+Makefile
+build.sh
 

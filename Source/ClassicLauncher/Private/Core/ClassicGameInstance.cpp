@@ -8,9 +8,9 @@
 #include "Misc/OutputDeviceNull.h"
 
 UClassicGameInstance::UClassicGameInstance()
-{
-	SlotGame = TEXT("save_c1");
-}
+	: ClassicSaveGameInstance(nullptr)
+	  , SlotGame(TEXT("save_c2"))
+{}
 
 void UClassicGameInstance::Init()
 {
@@ -39,7 +39,7 @@ bool UClassicGameInstance::SaveGameSystem(const TArray<FGameSystem>& GameSystem,
 bool UClassicGameInstance::DeleteGameSystemSave(const int32 Slot)
 {
 	ClassicSaveGameInstance->GameSystemsSave.Empty();
-	return  UGameplayStatics::DeleteGameInSlot(SlotGame, Slot);
+	return UGameplayStatics::DeleteGameInSlot(SlotGame, Slot);
 }
 
 void UClassicGameInstance::UpdateTheme()

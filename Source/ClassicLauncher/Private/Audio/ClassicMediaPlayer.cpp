@@ -231,19 +231,17 @@ void AClassicMediaPlayer::SetVolumeSave()
 
 bool AClassicMediaPlayer::CreateRuntimeAudioImporter(URuntimeAudioImporterLibrary*& RuntimeAudioImporter)
 {
-	RuntimeAudioImporter = URuntimeAudioImporterLibrary::CreateRuntimeAudioImporter();
-
-	if (RuntimeAudioImporter != nullptr)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to create audio importer"));
-		return false;
-	}
 	return true;
 }
 
 void AClassicMediaPlayer::ImportAudioClick(FString Path, FOnAudioFinalize Out)
 {
-	if (!CreateRuntimeAudioImporter(RuntimeAudioImporterClick)) return;
+	RuntimeAudioImporterClick = URuntimeAudioImporterLibrary::CreateRuntimeAudioImporter();
+	if (RuntimeAudioImporterClick == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to create audio importer RuntimeAudioImporterClick"));
+		return;
+	}
 
 	RuntimeAudioImporterClick->OnResultNative.AddWeakLambda(this, [this, Out](URuntimeAudioImporterLibrary* Importer, UImportedSoundWave* ImportedSoundWave, ERuntimeImportStatus Status)
 	{
@@ -269,7 +267,12 @@ void AClassicMediaPlayer::ImportAudioClick(FString Path, FOnAudioFinalize Out)
 
 void AClassicMediaPlayer::ImportAudioCursor(FString Path, FOnAudioFinalize Out)
 {
-	if (!CreateRuntimeAudioImporter(RuntimeAudioImporterCursor)) return;
+	RuntimeAudioImporterCursor = URuntimeAudioImporterLibrary::CreateRuntimeAudioImporter();
+	if (RuntimeAudioImporterCursor == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to create audio importer RuntimeAudioImporterCursor"));
+		return;
+	}
 
 	RuntimeAudioImporterCursor->OnResultNative.AddWeakLambda(this, [this, Out](URuntimeAudioImporterLibrary* Importer, UImportedSoundWave* ImportedSoundWave, ERuntimeImportStatus Status)
 	{
