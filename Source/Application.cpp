@@ -4,6 +4,7 @@
 #include "Utils/Core.h"
 #include "raylib.h"
 
+
 namespace ClassicLauncher
 {
 
@@ -57,8 +58,28 @@ namespace ClassicLauncher
         audioManager.LoadCLick(audioClickFile);
         audioManager.LoadCursor(audioCursorFile);
 
+        Image img = {
+              Resources::iconData,
+              Resources::iconWidth,
+              Resources::iconHeight,
+              1,
+              Resources::iconFormat,
+        };
+
+        SetWindowIcon(img);
 
 
+
+        std::string paths[] = {
+            ""
+        };
+
+        for (const auto& path : paths)
+        {
+            auto spt = std::make_shared<Sprite>();
+            spt->Load(path);
+            sprites.push_back(spt);
+        }
 
 
         Loop();

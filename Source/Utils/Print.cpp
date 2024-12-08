@@ -67,7 +67,7 @@ namespace ClassicLauncher
 
     	int count = 0;
 		std::string message = text;
-		std::string splitMessage = "";
+		std::string splitMessage;
 		std::string labelCompare = label;
 		for (const char c : message)		
 		{
@@ -84,7 +84,7 @@ namespace ClassicLauncher
 			splitMessage += c;
 		}
 
-		labelCompare = (labelCompare != "") ? labelCompare : std::to_string(Math::Random(1, 3000));
+		labelCompare = (!labelCompare.empty()) ? labelCompare : std::to_string(Math::Random(1, 3000));
 		InternalPrintOnScreen(splitMessage, duration, labelCompare, textColor, bLog, size);
 	
 	}
