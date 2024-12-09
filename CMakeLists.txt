@@ -11,20 +11,23 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/extern
 )
 
-set(graphics
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/Render.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/Render.h"
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/Sprite.h"
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/Sprite.cpp"
-)
-set(src
-    "${CMAKE_SOURCE_DIR}/Source/Main.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Application.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Application.h"
-)
 set(audio
     "${CMAKE_SOURCE_DIR}/Source/Audio/AudioManager.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Audio/AudioManager.h"
+)
+set(graphics
+    "${CMAKE_SOURCE_DIR}/Source/Graphics/Render.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Graphics/Render.h"
+    "${CMAKE_SOURCE_DIR}/Source/Graphics/Sprite.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Graphics/Sprite.h"
+    "${CMAKE_SOURCE_DIR}/Source/Graphics/SpriteManager.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Graphics/SpriteManager.h"
+)
+set(entity
+    "${CMAKE_SOURCE_DIR}/Source/Entity/Entity.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Entity/Entity.h"
+    "${CMAKE_SOURCE_DIR}/Source/Entity/EntityManager.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Entity/EntityManager.h"
 )
 set(utils
     "${CMAKE_SOURCE_DIR}/Source/Utils/Core.h"
@@ -37,11 +40,19 @@ set(utils
     "${CMAKE_SOURCE_DIR}/Source/Utils/UtilsFunctionLibrary.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Utils/UtilsFunctionLibrary.h"
 )
+set(src
+    "${CMAKE_SOURCE_DIR}/Source/Main.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Application.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Application.h"
+    "${CMAKE_SOURCE_DIR}/Source/GuiComponent.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/GuiComponent.h"
+)
 
 source_group("Source"            FILES ${src})
 source_group("Source\\Graphics"  FILES ${graphics})
 source_group("Source\\Audio"     FILES ${audio})
 source_group("Source\\Utils"     FILES ${utils})
+source_group("Source\\Entity"     FILES ${entity})
 
 # Lista de arquivos fonte
 set(srcs   
@@ -49,6 +60,7 @@ set(srcs
     ${graphics}
     ${audio}
     ${utils}
+    ${entity}
 )
 
 # Adiciona o executável

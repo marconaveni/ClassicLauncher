@@ -3,8 +3,11 @@
 
 #include "Graphics/Render.h"
 #include "Graphics/Sprite.h"
+#include "Graphics/SpriteManager.h"
 #include "Utils/Core.h"
 #include "Audio/AudioManager.h"
+#include "Entity/Entity.h"
+#include "Entity/EntityManager.h"
 #include <vector>
 #include <memory>
 
@@ -26,10 +29,9 @@ namespace ClassicLauncher
         ApplicationSpecification specification;
         Render render;
         Print print;
-        //TextureManager textureManager;
         AudioManager audioManager;
-        std::vector<std::shared_ptr<Sprite>> sprites;
-
+        EntityManager entityManager;
+        SpriteManager spriteManager;
 
     public:
         Application();

@@ -2,6 +2,7 @@
 #include "Graphics/Render.h"
 #include "Utils/Resouces.h"
 #include "Utils/Core.h"
+#include "GuiComponent.h"
 #include "raylib.h"
 
 
@@ -10,7 +11,7 @@ namespace ClassicLauncher
 
     static Application* instanceApplication = nullptr;
 
-    Application::Application()
+    Application::Application() :entityManager(&this->spriteManager)
     {   
         if (instanceApplication == nullptr)
         {
@@ -41,7 +42,7 @@ namespace ClassicLauncher
         SetWindowMinSize(specification.width, specification.height);
         SetWindowSize(specification.width, specification.height);
         SetTargetFPS(60);
-        ChangeDirectory(UtilsFunctionLibrary::GetHomeDir().c_str());
+        //ChangeDirectory(UtilsFunctionLibrary::GetHomeDir().c_str());
         // SetExitKey(KEY_NULL);
         // ToggleFullscreen();
 
@@ -58,6 +59,16 @@ namespace ClassicLauncher
         audioManager.LoadCLick(audioClickFile);
         audioManager.LoadCursor(audioCursorFile);
 
+        auto teste = entityManager.CreateEntity<GuiComponent>();
+        teste.get()->textureName = "teste";
+        auto teste2 = entityManager.CreateEntity<GuiComponent>();
+        teste2.get()->textureName = "teste2";
+
+        teste.get()->AddChild(teste.get());
+
+        teste.get()->x = 200;
+        teste2.get()->x = 230;
+
         Image img = {
               Resources::iconData,
               Resources::iconWidth,
@@ -68,28 +79,10 @@ namespace ClassicLauncher
 
         SetWindowIcon(img);
 
-
-
-        std::string paths[] = {
-            ""
-        };
-
-        for (const auto& path : paths)
-        {
-            auto spt = std::make_shared<Sprite>();
-            spt->Load(path);
-            sprites.push_back(spt);
-        }
-
+        
 
         Loop();
-
-        for(auto& spt : sprites)
-        {
-            spt->Unload();
-        }
-
-        
+    
         End();
         CloseWindow();
         CloseAudioDevice();
@@ -102,14 +95,13 @@ namespace ClassicLauncher
             ToggleFullscreen();
             
             render.BeginRender();
-            Update();
+            Update(); // update logic
+            entityManager.Draw(); // draw in texture render
             render.EndRender();
             
             BeginDrawing();
             ClearBackground(BLACK);
-
-            Draw();
-
+            Draw(); // draw on screen
             EndDrawing();
             EndRender();
         }
@@ -118,17 +110,7 @@ namespace ClassicLauncher
     void Application::Update()
     {
         // Aqui vai logica 
-        int x = 0;
-        for(auto& spt : sprites)
-        {
-            Texture2D* texture = spt->GetSprite();
-            if(texture)
-            {
-                print.PrintOnScreen(TEXT("textura carregada com sucesso?"), 2.0f ,"home33");
-                DrawTexture(*texture, x , 200 , WHITE);
-                x += 220;
-            }
-        }
+
         DrawText(TEXT("%s", audioManager.GetMusicName().c_str()), 200, 300, 20, BLACK);
         print.PrintOnScreen(TEXT("Select Game:\n1 - one\n2 - two\n3 - three"), 2.0f ,"home", RED);
         print.PrintOnScreen(TEXT("========================================"), 2.0f ,"homse", BLUE);
@@ -137,7 +119,15 @@ namespace ClassicLauncher
 
         if(IsKeyReleased(KEY_L))
         {
-            sprites.clear();
+            spriteManager.DeleteSprite("teste");
+        }
+        if(IsKeyReleased(KEY_K))
+        {
+            spriteManager.LoadSprite("teste", "path/", 280 , 400 , true);
+        }
+        if(IsKeyReleased(KEY_J))
+        {
+            spriteManager.UpdateSprite("teste2", "path/", 280 , 400 , true);
         }
 
         if(IsKeyReleased(KEY_A))
@@ -178,7 +168,7 @@ namespace ClassicLauncher
     void Application::Draw()
     {
         render.DrawRender();
-        print.DrawMessage();
+        print.DrawMessage();    
     }
 
     void Application::EndRender()
@@ -190,11 +180,12 @@ namespace ClassicLauncher
         render.Unload();
         print.Unload();
         audioManager.Unload();
+        spriteManager.UnloadSprites();
     }
 
     void Application::ToggleFullscreen()
     {
-        if (IsKeyReleased(KEY_F11))
+        if (IsKeyReleased(KEY_F11) || (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyReleased(KEY_ENTER)))
         {
 #ifdef _WIN32
             ToggleBorderlessWindowed();
