@@ -36,13 +36,17 @@ namespace ClassicLauncher
 
     void Application::Init()
     {
+
+
+	    gameListManager.Initialize();
+
         SetConfigFlags(FLAG_VSYNC_HINT); // vsync only enable in fullscreen set before InitWindow
         InitWindow(specification.width, specification.height, specification.title);
         SetWindowState(FLAG_WINDOW_RESIZABLE);
         SetWindowMinSize(specification.width, specification.height);
         SetWindowSize(specification.width, specification.height);
         SetTargetFPS(60);
-        //ChangeDirectory(UtilsFunctionLibrary::GetHomeDir().c_str());
+        ChangeDirectory(UtilsFunctionLibrary::GetHomeDir().c_str());
         // SetExitKey(KEY_NULL);
         // ToggleFullscreen();
 
@@ -110,6 +114,11 @@ namespace ClassicLauncher
     void Application::Update()
     {
         // Aqui vai logica 
+
+        SystemList* systemList = gameListManager.GetCurrentSystemList();
+        print.PrintOnScreen(TEXT("name game %s" , systemList->systemName.c_str() ), 2.0f ,"systemlist", BLUE);
+
+        
 
         DrawText(TEXT("%s", audioManager.GetMusicName().c_str()), 200, 300, 20, BLACK);
         print.PrintOnScreen(TEXT("Select Game:\n1 - one\n2 - two\n3 - three"), 2.0f ,"home", RED);
@@ -185,7 +194,7 @@ namespace ClassicLauncher
 
     void Application::ToggleFullscreen()
     {
-        if (IsKeyReleased(KEY_F11) || (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyReleased(KEY_ENTER)))
+        if (IsKeyReleased(KEY_F11) || (IsKeyDown(KEY_LEFT_ALT) && IsKeyReleased(KEY_ENTER)))
         {
 #ifdef _WIN32
             ToggleBorderlessWindowed();

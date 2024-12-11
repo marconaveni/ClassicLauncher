@@ -23,6 +23,8 @@ namespace ClassicLauncher
         //folder default
         inline std::string themesDefaultFolder = "ClassicLauncher/themes/default";
 
+        //system list
+        inline std::string systemList = "ClassicLauncher/systemlist.xml";
 
         // Image data information
         constexpr int iconWidth = 16;

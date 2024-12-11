@@ -11,6 +11,14 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/extern
 )
 
+message("local de variavel " ${CMAKE_SOURCE_DIR})
+
+set(data
+    "${CMAKE_SOURCE_DIR}/Source/Data/Date.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Data/Date.h"
+    "${CMAKE_SOURCE_DIR}/Source/Data/GameListManager.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Data/GameListManager.h"
+)
 set(audio
     "${CMAKE_SOURCE_DIR}/Source/Audio/AudioManager.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Audio/AudioManager.h"
@@ -48,19 +56,28 @@ set(src
     "${CMAKE_SOURCE_DIR}/Source/GuiComponent.h"
 )
 
+set(extern 
+    "${CMAKE_SOURCE_DIR}/extern/tinyxml2/tinyxml2.cpp"
+    "${CMAKE_SOURCE_DIR}/extern/tinyxml2/tinyxml2.h"
+)
+
 source_group("Source"            FILES ${src})
+source_group("Source\\Data"     FILES ${data})
 source_group("Source\\Graphics"  FILES ${graphics})
 source_group("Source\\Audio"     FILES ${audio})
 source_group("Source\\Utils"     FILES ${utils})
 source_group("Source\\Entity"     FILES ${entity})
+source_group("Extern"     FILES ${extern})
 
 # Lista de arquivos fonte
 set(srcs   
     ${src}  
+    ${data}  
     ${graphics}
     ${audio}
     ${utils}
     ${entity}
+    ${extern}
 )
 
 # Adiciona o executável

@@ -8,6 +8,7 @@
 #include "Audio/AudioManager.h"
 #include "Entity/Entity.h"
 #include "Entity/EntityManager.h"
+#include "Data/GameListManager.h"
 #include <vector>
 #include <memory>
 
@@ -32,6 +33,7 @@ namespace ClassicLauncher
         AudioManager audioManager;
         EntityManager entityManager;
         SpriteManager spriteManager;
+        GameListManager gameListManager;
 
     public:
         Application();
