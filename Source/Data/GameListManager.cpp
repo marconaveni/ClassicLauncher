@@ -181,6 +181,11 @@ namespace ClassicLauncher
 		return static_cast<int>(gameList.size());
 	}
 
+	std::vector<GameList>& GameListManager::GetAllGameList()
+	{
+		return gameList;
+	}
+
 	GameList* GameListManager::GetCurrentGameList(const int index)
 	{
 		return &gameList[index];

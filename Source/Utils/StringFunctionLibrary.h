@@ -5,22 +5,19 @@
 #include <string>
 #include <vector>
 
-namespace ClassicLauncher
+namespace ClassicLauncher::StringFunctionLibrary
 {
-	namespace StringFunctionLibrary 
-	{
 
-		std::string NormalizePath(const std::string& path);
-		void ReplaceString (std::string& value, const char* from, const char* to);
-		void ReplaceString (std::string& value, const std::string& from, const std::string& to);
-		std::string RemoveDuplicateSlashes(const std::string& input);
-		std::vector<std::string> SplitString(const std::string& input);
-		std::string Ltrim(const std::string& s);
-		std::string Rtrim(const std::string& s);
-		std::string Trim(const std::string& s);
-		bool IsAllDigits(const std::string& str);
+	std::string NormalizePath(const std::string& path);
+	void ReplaceString (std::string& value, const char* from, const char* to);
+	void ReplaceString (std::string& value, const std::string& from, const std::string& to);
+	std::string RemoveDuplicateSlashes(const std::string& input);
+	std::vector<std::string> SplitString(const std::string& input);
+	std::string Ltrim(const std::string& s);
+	std::string Rtrim(const std::string& s);
+	std::string Trim(const std::string& s);
+	bool IsAllDigits(const std::string& str);
 
-	}
 }
 
 #endif

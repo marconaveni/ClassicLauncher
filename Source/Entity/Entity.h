@@ -21,9 +21,6 @@ namespace ClassicLauncher
         bool bToDelete = false;
         friend class EntityManager;
 
-    protected:
-
-
     public:
 
         Entity() = default;
@@ -36,8 +33,15 @@ namespace ClassicLauncher
 
         int x = 0;
         int y = 0;
+        int width = 0;
+        int height = 0;
+        float sourceX = 0;
+        float sourceY = 0;
+        float scale = 1;
         std::string textureName;
+
     protected:
+
         int relativeX = 0;
         int relativeY = 0;
     };

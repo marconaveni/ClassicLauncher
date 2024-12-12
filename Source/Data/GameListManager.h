@@ -1,5 +1,5 @@
-#ifndef GAMELISTMANAGER_H
-#define GAMELISTMANAGER_H
+#ifndef GAME_LIST_MANAGER_H
+#define GAME_LIST_MANAGER_H
 
 
 #include <memory>
@@ -148,6 +148,7 @@ namespace ClassicLauncher
 		int GetGameId() const;
 		int GetSystemId() const;
 		int GetGameListSize() const;
+		std::vector<GameList>& GetAllGameList();
 		GameList* GetCurrentGameList(int index);
 		GameList* GetCurrentGameList();
 		SystemList* GetCurrentSystemList();

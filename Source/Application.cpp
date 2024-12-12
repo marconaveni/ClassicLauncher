@@ -63,15 +63,6 @@ namespace ClassicLauncher
         audioManager.LoadCLick(audioClickFile);
         audioManager.LoadCursor(audioCursorFile);
 
-        auto teste = entityManager.CreateEntity<GuiComponent>();
-        teste.get()->textureName = "teste";
-        auto teste2 = entityManager.CreateEntity<GuiComponent>();
-        teste2.get()->textureName = "teste2";
-
-        teste.get()->AddChild(teste.get());
-
-        teste.get()->x = 200;
-        teste2.get()->x = 230;
 
         Image img = {
               Resources::iconData,
@@ -82,8 +73,6 @@ namespace ClassicLauncher
         };
 
         SetWindowIcon(img);
-
-        
 
         Loop();
     
@@ -132,11 +121,24 @@ namespace ClassicLauncher
         }
         if(IsKeyReleased(KEY_K))
         {
-            spriteManager.LoadSprite("teste", "path/", 280 , 400 , true);
         }
         if(IsKeyReleased(KEY_J))
         {
-            spriteManager.UpdateSprite("teste2", "path/", 280 , 400 , true);
+            
+            gameListManager.ChangeSystemToGameList();
+
+            int x = 0;
+            for (auto& gameList : gameListManager.GetAllGameList())
+            {
+                const std::string nameId = "cover_" + std::to_string(gameList.mapIndex);
+				spriteManager.LoadSprite(gameList.name , gameList.image, 280 , 400 , true);
+                const auto guiComponent = entityManager.CreateEntity<GuiComponent>();
+                guiComponent->textureName = gameList.name;
+                guiComponent->x = x;
+                guiComponent->y = 100;
+                guiComponent->scale = 0.3f;
+                x += 300;
+            }
         }
 
         if(IsKeyReleased(KEY_A))
@@ -157,18 +159,22 @@ namespace ClassicLauncher
         }
         if(IsKeyReleased(KEY_LEFT))
         {
+            gameListManager.AddId(-1);
+            gameListManager.ChangeSystemToGameList();
             audioManager.PlayClick();
             print.PrintOnScreen(TEXT("Click"), 2.0f);
         }
         if(IsKeyReleased(KEY_RIGHT))
         {
+            gameListManager.AddId(+1);
+            gameListManager.ChangeSystemToGameList();
             audioManager.PlayCursor();
             print.PrintOnScreen(TEXT("Cursor"), 2.0f);
         }
         if(IsKeyReleased(KEY_UP))
         {
-            std::string home_dir = UtilsFunctionLibrary::GetHomeDir();
-            print.Log(LOG_DEBUG, TEXT("GetHomeDir %s", home_dir.c_str()));
+            std::string homeDir = UtilsFunctionLibrary::GetHomeDir();
+            print.Log(LOG_DEBUG, TEXT("GetHomeDir %s", homeDir.c_str()));
             print.Log(LOG_DEBUG, TEXT("GetWorkingDirectory %s", UtilsFunctionLibrary::GetWorkingDirectory().c_str()));
         }
 

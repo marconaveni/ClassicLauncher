@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.28)
 project(ClassicLauncher LANGUAGES CXX)
 
 # Configurações de compilação
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Adiciona diretórios de cabeçalhos
@@ -11,7 +11,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/extern
 )
 
-message("local de variavel " ${CMAKE_SOURCE_DIR})
+message("is source dir is: " ${CMAKE_SOURCE_DIR})
 
 set(data
     "${CMAKE_SOURCE_DIR}/Source/Data/Date.cpp"

@@ -1,5 +1,5 @@
-#ifndef SPRITEMANAGER_H
-#define SPRITEMANAGER_H
+#ifndef SPRITE_MANAGER_H
+#define SPRITE_MANAGER_H
 
 #include "Sprite.h"
 #include "raylib.h"
@@ -26,4 +26,4 @@ namespace ClassicLauncher
     
 }
 
-#endif // SPRITEMANAGER_H
+#endif // SPRITE_MANAGER_H
