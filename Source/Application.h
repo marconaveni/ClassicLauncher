@@ -9,12 +9,13 @@
 #include "Entity/Entity.h"
 #include "Entity/EntityManager.h"
 #include "Data/GameListManager.h"
+#include "Guis/GuiWindow.h"
 #include <vector>
 #include <memory>
 
 namespace ClassicLauncher
 {
-
+    class GuiWindow;
 
     struct ApplicationSpecification
     {
@@ -27,6 +28,7 @@ namespace ClassicLauncher
 
     class Application 
     {
+    
         ApplicationSpecification specification;
         Render render;
         Print print;
@@ -35,11 +37,15 @@ namespace ClassicLauncher
         SpriteManager spriteManager;
         GameListManager gameListManager;
 
+        std::shared_ptr<GuiWindow> guiWindow;
+
     public:
         Application();
         ~Application();
         static Application& Get();
+        ApplicationSpecification GetSpecification();
         Print* GetPrint();
+        SpriteManager* GetSpriteManager();
         void Init();
 
     private:

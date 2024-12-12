@@ -20,6 +20,7 @@ namespace ClassicLauncher::Resources
 
 	//folder default
 	inline std::string themesDefaultFolder = "ClassicLauncher/themes/default";
+	inline std::string themesSprite = "ClassicLauncher/themes/default/sprite.png";
 
 	//system list
 	inline std::string systemList = "ClassicLauncher/systemlist.xml";

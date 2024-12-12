@@ -4,6 +4,7 @@
 #include "Utils/Core.h"
 #include "GuiComponent.h"
 #include "raylib.h"
+#include "Guis/GuiWindow.h"
 
 
 namespace ClassicLauncher
@@ -29,9 +30,19 @@ namespace ClassicLauncher
         return *instanceApplication;
     }
 
+    ApplicationSpecification Application::GetSpecification()
+    {
+        return specification;
+    }
+
     Print* Application::GetPrint()
     {
         return &print;
+    }
+
+    SpriteManager* Application::GetSpriteManager()
+    {
+        return &spriteManager;
     }
 
     void Application::Init()
@@ -56,12 +67,17 @@ namespace ClassicLauncher
         const std::string musicDir = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::musicsFolder);
         const std::string audioClickFile = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::clickAudio);
         const std::string audioCursorFile = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::cursorAudio);
+        const std::string refpath = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::themesDefaultFolder + "/ref.png");
+        const std::string sprite = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::themesSprite);
+        
         print.LoadFont(fontFile, 16, 0);
         render.LoadRender(specification.width, specification.height);
         audioManager.Init();
         audioManager.LoadMusics(musicDir);
         audioManager.LoadCLick(audioClickFile);
         audioManager.LoadCursor(audioCursorFile);
+        spriteManager.LoadSprite("ref", refpath);
+        spriteManager.LoadSprite("sprite", sprite);
 
 
         Image img = {
@@ -73,6 +89,9 @@ namespace ClassicLauncher
         };
 
         SetWindowIcon(img);
+
+        guiWindow = entityManager.CreateEntity<GuiWindow>();
+        guiWindow->Init(this);
 
         Loop();
     
@@ -89,7 +108,6 @@ namespace ClassicLauncher
             
             render.BeginRender();
             Update(); // update logic
-            entityManager.Draw(); // draw in texture render
             render.EndRender();
             
             BeginDrawing();
@@ -102,6 +120,9 @@ namespace ClassicLauncher
 
     void Application::Update()
     {
+
+        entityManager.UpdateAll();
+        entityManager.Draw(); // draw in texture render
         // Aqui vai logica 
 
         GameList* systemList = gameListManager.GetCurrentGameList();
@@ -121,13 +142,14 @@ namespace ClassicLauncher
         }
         if(IsKeyReleased(KEY_K))
         {
+            gameListManager.ChangeSystemToGameList();
         }
         if(IsKeyReleased(KEY_J))
         {
             
-            gameListManager.ChangeSystemToGameList();
 
             int x = 0;
+            int c = 0;
             for (auto& gameList : gameListManager.GetAllGameList())
             {
                 const std::string nameId = "cover_" + std::to_string(gameList.mapIndex);
@@ -137,9 +159,11 @@ namespace ClassicLauncher
                 guiComponent->x = x;
                 guiComponent->y = 100;
 
-                guiComponent->scaleWidth = 100;
-                guiComponent->scaleHeight = 100;
+                //guiComponent->scaleWidth = 100;
+                //guiComponent->scaleHeight = 100;
                 x += 300;
+                c++;
+                if(c > 64) break;
             }
         }
 

@@ -36,11 +36,11 @@ namespace ClassicLauncher
     void Sprite::Load(const std::string file, const int width, const int height, bool bAspectRatio)
     {
 
-        if(!FileExists(file.c_str()))
-        {
-            TraceLog(LOG_WARNING, "%s not found", file.c_str());
-            return;
-        }
+        // if(!FileExists(file.c_str()))
+        // {
+        //     TraceLog(LOG_WARNING, "%s not found", file.c_str());
+        //     return;
+        // }
         if(!bKeepRunning && !bTextureLoaded && !bImageLoaded) 
         {
             Join();

@@ -5,6 +5,7 @@ namespace ClassicLauncher
 
     void GuiComponent::Update()
     {
+        Entity::Update();
         for (auto& entity : entityChildrens)
         {
             entity->relativeX = x;

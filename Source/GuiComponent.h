@@ -14,8 +14,8 @@ namespace ClassicLauncher
     public:
         GuiComponent() = default;
         virtual ~GuiComponent() = default;
-        virtual EntityType GetType() const override { return EntityType::GuiComponent; }
-        virtual void Update();
+        virtual EntityType GetType() const override { return EntityType::GuiComponentClass; }
+        void Update() override;
         virtual void AddChild(GuiComponent* entityChildren);
         virtual void RemoveChild();
         virtual void SelfDelete() override;

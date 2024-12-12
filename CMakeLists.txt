@@ -31,6 +31,10 @@ set(graphics
     "${CMAKE_SOURCE_DIR}/Source/Graphics/SpriteManager.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Graphics/SpriteManager.h"
 )
+set(guis
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiWindow.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiWindow.h"
+)
 set(entity
     "${CMAKE_SOURCE_DIR}/Source/Entity/Entity.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Entity/Entity.h"
@@ -61,22 +65,24 @@ set(extern
     "${CMAKE_SOURCE_DIR}/extern/tinyxml2/tinyxml2.h"
 )
 
-source_group("Source"            FILES ${src})
-source_group("Source\\Data"     FILES ${data})
-source_group("Source\\Graphics"  FILES ${graphics})
 source_group("Source\\Audio"     FILES ${audio})
-source_group("Source\\Utils"     FILES ${utils})
+source_group("Source\\Data"     FILES ${data})
 source_group("Source\\Entity"     FILES ${entity})
+source_group("Source\\Graphics"  FILES ${graphics})
+source_group("Source\\Guis"  FILES ${guis})
+source_group("Source\\Utils"     FILES ${utils})
+source_group("Source"            FILES ${src})
 source_group("Extern"     FILES ${extern})
 
 # Lista de arquivos fonte
 set(srcs   
-    ${src}  
+    ${audio}
     ${data}  
     ${graphics}
-    ${audio}
-    ${utils}
+    ${guis}
     ${entity}
+    ${utils}
+    ${src}  
     ${extern}
 )
 

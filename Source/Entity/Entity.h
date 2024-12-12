@@ -11,7 +11,8 @@ namespace ClassicLauncher
     enum class EntityType
     {
         None = 0,
-        GuiComponent = 1,
+        GuiComponentClass = 1,
+        GuiWindowClass = 2,
     };
 
 
