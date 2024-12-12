@@ -20,6 +20,7 @@ namespace ClassicLauncher
         Sprite& operator = (const Sprite&) = delete;
         ~Sprite();
         void Load(const std::string file, const int width = 0, const int height = 0, bool bAspectRatio = true);
+        void Load(const Image& newImage, const int width = 0, const int height = 0, bool bAspectRatio = true);
         void Stop();
         void Join();
 
@@ -37,7 +38,8 @@ namespace ClassicLauncher
 
     public:
 
-        Texture2D* GetSprite();
+        Texture2D* GetTexture();
+        Image* GetImage();
         void ResizeImage(const int width, const int height, bool bAspectRatio);
         void Unload();
         void UnloadTexture();

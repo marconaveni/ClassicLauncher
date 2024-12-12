@@ -104,8 +104,8 @@ namespace ClassicLauncher
     {
         // Aqui vai logica 
 
-        SystemList* systemList = gameListManager.GetCurrentSystemList();
-        print.PrintOnScreen(TEXT("name game %s" , systemList->systemName.c_str() ), 2.0f ,"systemlist", BLUE);
+        GameList* systemList = gameListManager.GetCurrentGameList();
+        print.PrintOnScreen(TEXT("name game %s" , systemList->name.c_str() ), 2.0f ,"systemlist", BLUE);
 
         
 
@@ -136,7 +136,9 @@ namespace ClassicLauncher
                 guiComponent->textureName = gameList.name;
                 guiComponent->x = x;
                 guiComponent->y = 100;
-                guiComponent->scale = 0.3f;
+
+                guiComponent->scaleWidth = 100;
+                guiComponent->scaleHeight = 100;
                 x += 300;
             }
         }
@@ -160,16 +162,12 @@ namespace ClassicLauncher
         if(IsKeyReleased(KEY_LEFT))
         {
             gameListManager.AddId(-1);
-            gameListManager.ChangeSystemToGameList();
-            audioManager.PlayClick();
-            print.PrintOnScreen(TEXT("Click"), 2.0f);
+            audioManager.PlayCursor();
         }
         if(IsKeyReleased(KEY_RIGHT))
         {
-            gameListManager.AddId(+1);
-            gameListManager.ChangeSystemToGameList();
+            gameListManager.AddId(1);
             audioManager.PlayCursor();
-            print.PrintOnScreen(TEXT("Cursor"), 2.0f);
         }
         if(IsKeyReleased(KEY_UP))
         {

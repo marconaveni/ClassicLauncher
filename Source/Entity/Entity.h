@@ -37,6 +37,8 @@ namespace ClassicLauncher
         int height = 0;
         float sourceX = 0;
         float sourceY = 0;
+        float scaleWidth = 0;
+        float scaleHeight = 0;
         float scale = 1;
         std::string textureName;
 

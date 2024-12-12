@@ -51,6 +51,19 @@ namespace ClassicLauncher
         }
     }
 
+    void Sprite::Load(const Image& newImage, const int width, const int height, bool bAspectRatio)
+    {
+        if (IsImageValid(newImage))
+        {
+            Unload();
+            image = ImageCopy(newImage);
+            filePath = "[loaded from memory]";
+            ResizeImage(width, height, bAspectRatio);
+            bImageLoaded = IsImageValid(image);
+            TraceLog(LOG_DEBUG, "Image copied successfully");
+        }
+    }
+
     void Sprite::Stop()
     {        
         bKeepRunning = false; // Sinaliza para encerrar      
@@ -87,7 +100,7 @@ namespace ClassicLauncher
         Stop();
     }
 
-    Texture2D* Sprite::GetSprite()
+    Texture2D* Sprite::GetTexture()
     {
         if (!bTextureLoaded && bImageLoaded)
         {
@@ -99,6 +112,15 @@ namespace ClassicLauncher
         if (bTextureLoaded)
         {
             return &texture;
+        }
+        return nullptr;
+    }
+
+    Image* Sprite::GetImage()
+    {
+        if (bImageLoaded)
+        {
+            return &image;
         }
         return nullptr;
     }

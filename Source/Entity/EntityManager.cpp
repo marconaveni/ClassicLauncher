@@ -32,14 +32,13 @@ namespace ClassicLauncher
                 const int height = entity->height > 0 ? entity->height : texture->height;
                 const float sourceX = entity->sourceX;
                 const float sourceY = entity->sourceY;
+                const float scaleWidth = entity->scaleWidth > 0 ? entity->scaleWidth : width ;
+                const float scaleHeight = entity->scaleHeight > 0 ?  entity->scaleHeight : height;
                 const float scale = entity->scale;
 
-                float t = 0;
-                if (IsKeyDown(KEY_B))
-                    t = 10;
 
                 const Rectangle source = { sourceX, sourceY, (float)width, (float)height };
-                const Rectangle dest = { (float)x, (float)y, (float)width * scale, (float)height * scale };
+                const Rectangle dest = { (float)x, (float)y, scaleWidth * scale, scaleHeight * scale};
                 const Vector2 origin = { 0.0f, 0.0f };
 
                 DrawTexturePro(*texture, source, dest, origin, 0, WHITE);

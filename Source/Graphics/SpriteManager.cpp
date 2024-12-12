@@ -13,6 +13,11 @@ namespace ClassicLauncher
         spriteMap[name].Load(fileName, width, height, bAspectRatio);
     }
 
+    void SpriteManager::LoadSprite(std::string name, const Image& image, const int width, const int height, bool bAspectRatio)
+    {
+        spriteMap[name].Load(image, width, height, bAspectRatio);
+    }
+
     void SpriteManager::UpdateSprite(std::string name, std::string fileName, const int width, const int height, bool bAspectRatio)
     {
         spriteMap[name].Unload();
@@ -21,7 +26,7 @@ namespace ClassicLauncher
 
     Texture2D* SpriteManager::GetSprite(std::string name)
     {
-        return spriteMap[name].GetSprite();
+        return spriteMap[name].GetTexture();
     }
 
     bool SpriteManager::DeleteSprite(std::string name)

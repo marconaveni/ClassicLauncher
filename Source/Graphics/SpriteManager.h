@@ -18,6 +18,7 @@ namespace ClassicLauncher
         
         SpriteManager();
         void LoadSprite(std::string name, std::string fileName, const int width = 0, const int height = 0, bool bAspectRatio = true);
+        void LoadSprite(std::string name, const Image& image, const int width = 0, const int height = 0, bool bAspectRatio = true);
         void UpdateSprite(std::string name, std::string fileName, const int width = 0, const int height = 0, bool bAspectRatio = true);
         Texture2D* GetSprite(std::string name);
         bool DeleteSprite(std::string name);
