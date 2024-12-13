@@ -176,9 +176,10 @@ namespace ClassicLauncher
 		return idSystemList;
 	}
 
-	int GameListManager::GetGameListSize() const
+	int GameListManager::GetGameListSize()
 	{
-		return static_cast<int>(gameList.size());
+		const int size = static_cast<int>(gameList.size());
+		return size;
 	}
 
 	std::vector<GameList>& GameListManager::GetAllGameList()

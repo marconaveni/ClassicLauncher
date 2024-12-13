@@ -3,23 +3,27 @@
 
 #include "GuiComponent.h"
 #include "Application.h"
+#include "GuiGrid.h"
+#include <memory>
 
 namespace ClassicLauncher
 {
 
     class Application;
+    class GuiGrid;
 
     class GuiWindow : public GuiComponent
     {
 
         Application* app;
+        std::shared_ptr<GuiGrid> guiGrid;
 
     public:
         GuiWindow() = default;
         virtual ~GuiWindow() = default;
         virtual EntityType GetType() const override { return EntityType::GuiWindowClass; }
         virtual void Update() override;
-        void Init(Application* appRef);
+        void Init();
     };
 
 }

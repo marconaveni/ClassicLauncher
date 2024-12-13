@@ -46,6 +46,8 @@ namespace ClassicLauncher
         ApplicationSpecification GetSpecification();
         Print* GetPrint();
         SpriteManager* GetSpriteManager();
+        EntityManager* GetEntityManager();
+        GameListManager* GetGameListManager();
         void Init();
 
     private:

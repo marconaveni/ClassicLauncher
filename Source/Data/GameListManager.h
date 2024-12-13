@@ -147,7 +147,7 @@ namespace ClassicLauncher
 		void ChangeId(const int newId);
 		int GetGameId() const;
 		int GetSystemId() const;
-		int GetGameListSize() const;
+		int GetGameListSize();
 		std::vector<GameList>& GetAllGameList();
 		GameList* GetCurrentGameList(int index);
 		GameList* GetCurrentGameList();

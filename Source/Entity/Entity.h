@@ -13,6 +13,7 @@ namespace ClassicLauncher
         None = 0,
         GuiComponentClass = 1,
         GuiWindowClass = 2,
+        GuiCardClass = 3,
     };
 
 

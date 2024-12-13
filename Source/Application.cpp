@@ -45,6 +45,16 @@ namespace ClassicLauncher
         return &spriteManager;
     }
 
+    EntityManager* Application::GetEntityManager()
+    {
+        return &entityManager;
+    }
+
+    GameListManager* Application::GetGameListManager()
+    {
+        return &gameListManager;
+    }
+
     void Application::Init()
     {
 
@@ -91,7 +101,7 @@ namespace ClassicLauncher
         SetWindowIcon(img);
 
         guiWindow = entityManager.CreateEntity<GuiWindow>();
-        guiWindow->Init(this);
+        guiWindow->Init();
 
         Loop();
     
