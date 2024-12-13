@@ -15,7 +15,11 @@ namespace ClassicLauncher
 
     void GuiComponent::AddChild(GuiComponent* entityChildren)
     {
-        entityChildrens.emplace_back(entityChildren);
+        if(entityChildren->parent != this) 
+        {
+            entityChildren->parent = this;
+            entityChildrens.emplace_back(entityChildren);
+        }
     }
 
     void GuiComponent::RemoveChild()

@@ -33,8 +33,8 @@ namespace ClassicLauncher
         Render render;
         Print print;
         AudioManager audioManager;
-        EntityManager entityManager;
         SpriteManager spriteManager;
+        EntityManager entityManager;
         GameListManager gameListManager;
 
         std::shared_ptr<GuiWindow> guiWindow;
@@ -45,6 +45,7 @@ namespace ClassicLauncher
         static Application& Get();
         ApplicationSpecification GetSpecification();
         Print* GetPrint();
+        AudioManager* GetAudioManager();
         SpriteManager* GetSpriteManager();
         EntityManager* GetEntityManager();
         GameListManager* GetGameListManager();

@@ -41,28 +41,17 @@ namespace ClassicLauncher
 	}
 
 
-
     void GuiGrid::End()
     {
 		GuiComponent::End();
 		//GameListManager::GetInstance()->ClearGameList();
     }
 
-
-	void GuiGrid::RegisterCards() const
-	{
-		// for (const auto& cardContainer : cardsContainer)
-		// {
-		// 	//cardContainer.RegisterCard();
-		// }
-	}
-
-
 	void GuiGrid::SetFocus(const int newId)
 	{
 		if(cardsContainer[idFocus]->IsFocus() && idFocus == newId) return;
 
-		cardsContainer[idFocus]->SetFocus();
+		cardsContainer[idFocus]->RemoveFocus();
 		//cardsContainer[idFocus].StartAnimationLostFocus();
 		idFocus = newId;
 		//cardsContainer[newId].StartAnimationFocus();
@@ -86,6 +75,7 @@ namespace ClassicLauncher
 			indexFinal = Math::Clamp(indexFinal, 0, manager->GetGameListSize() - 1);
 			if (manager->GetGameListSize() > 0)
 			{
+				TraceLog(LOG_DEBUG, "index final %d line %d", indexFinal , __LINE__ );
 				// Texture2D* texture = &TextureManager::GetInstance()->GetCover(indexFinal)->texture;
 				// const std::string* image = &manager->GetCurrentGameList(indexFinal)->image;
 				// if(image == nullptr)
@@ -127,14 +117,11 @@ namespace ClassicLauncher
 		{
 			if (!bLeft)
 			{
-				// SoundComponent::GetInstance()->PlayCursor();
-				// GameListManager::GetInstance()->AddId(-1);
+				app->GetAudioManager()->PlayCursor();
+				app->GetGameListManager()->AddId(-1);
+				SetFocus(idFocus - 1);
 				// ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetGameId());
-				// cardsContainer[idFocus].StartAnimationLostFocus();
-				// cardsContainer[idFocus].bFocus = false;
-				idFocus--;
-				// cardsContainer[idFocus].StartAnimationFocus();
-				// cardsContainer[idFocus].bFocus = true;
+
 			}
 			bLeft = true;
 		}
@@ -142,14 +129,10 @@ namespace ClassicLauncher
 		{
 			if (!bRight)
 			{
-				// SoundComponent::GetInstance()->PlayCursor();
-				// GameListManager::GetInstance()->AddId(1);
+				app->GetAudioManager()->PlayCursor();
+				app->GetGameListManager()->AddId(1);
+				SetFocus(idFocus + 1);
 				// ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetGameId());
-				// cardsContainer[idFocus].StartAnimationLostFocus();
-				// cardsContainer[idFocus].bFocus = false;
-				idFocus++;
-				// cardsContainer[idFocus].bFocus = true;
-				// cardsContainer[idFocus].StartAnimationFocus();
 			}
 			bRight = true;
 		}

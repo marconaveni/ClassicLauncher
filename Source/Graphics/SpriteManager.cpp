@@ -24,9 +24,14 @@ namespace ClassicLauncher
         spriteMap[name].Load(fileName, width, height, bAspectRatio);
     }
 
-    Texture2D* SpriteManager::GetSprite(std::string name)
+    Texture2D* SpriteManager::GetTexture(std::string name)
     {
         return spriteMap[name].GetTexture();
+    }
+
+    Image* SpriteManager::GetImage(std::string name)
+    {
+        return spriteMap[name].GetImage();
     }
 
     bool SpriteManager::DeleteSprite(std::string name)

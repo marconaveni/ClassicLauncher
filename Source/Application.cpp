@@ -40,6 +40,11 @@ namespace ClassicLauncher
         return &print;
     }
 
+    AudioManager* Application::GetAudioManager()
+    {
+        return &audioManager;
+    }
+
     SpriteManager* Application::GetSpriteManager()
     {
         return &spriteManager;
@@ -57,7 +62,6 @@ namespace ClassicLauncher
 
     void Application::Init()
     {
-
 
 	    gameListManager.Initialize();
 
@@ -192,16 +196,6 @@ namespace ClassicLauncher
         {
             audioManager.Play();
             print.PrintOnScreen(TEXT("Play music"), 2.0f);
-        }
-        if(IsKeyReleased(KEY_LEFT))
-        {
-            gameListManager.AddId(-1);
-            audioManager.PlayCursor();
-        }
-        if(IsKeyReleased(KEY_RIGHT))
-        {
-            gameListManager.AddId(1);
-            audioManager.PlayCursor();
         }
         if(IsKeyReleased(KEY_UP))
         {

@@ -23,7 +23,7 @@ namespace ClassicLauncher
         for (auto& entity : entities)
         {
             entity->Draw();
-            Texture2D* texture = spriteManagerReference->GetSprite(entity->textureName);
+            Texture2D* texture = spriteManagerReference->GetTexture(entity->textureName);
             if(texture)
             {
                 const int x = entity->x + entity->relativeX;
@@ -35,14 +35,15 @@ namespace ClassicLauncher
                 const float scaleWidth = entity->scaleWidth > 0 ? entity->scaleWidth : width ;
                 const float scaleHeight = entity->scaleHeight > 0 ?  entity->scaleHeight : height;
                 const float scale = entity->scale;
+                const float rotation = entity->rotation;
 
 
                 const Rectangle source = { sourceX, sourceY, (float)width, (float)height };
-                const Rectangle dest = { (float)x, (float)y, scaleWidth * scale, scaleHeight * scale};
-                const Vector2 origin = { 0.0f, 0.0f };
+                const Vector2 origin = { (float)width / 2.0f, (float)height / 2.0f };
+                const Rectangle dest = { (float)x + origin.x, (float)y + origin.y, scaleWidth * scale, scaleHeight * scale};
+                const Color color = {entity->red, entity->green, entity->blue, entity->alpha};
 
-                DrawTexturePro(*texture, source, dest, origin, 0, WHITE);
-                //DrawTexture(*texture, x, y, WHITE);
+                DrawTexturePro(*texture, source, dest, origin, rotation, color);
             }
         }  
     }

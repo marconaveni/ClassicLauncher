@@ -11,6 +11,7 @@ namespace ClassicLauncher
     {
     private:
 	    std::vector<GuiComponent*> entityChildrens;
+        GuiComponent* parent;
     public:
         GuiComponent() = default;
         virtual ~GuiComponent() = default;

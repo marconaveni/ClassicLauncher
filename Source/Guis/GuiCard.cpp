@@ -4,51 +4,36 @@
 
 namespace ClassicLauncher
 {
+
+
     GuiCard::GuiCard(int x, int y)
     {
         this->x = x;
         this->y = y;
+
+        CreateCard(cardMain, 528, 15, 255);
+        CreateCard(cardFavorite, 783, 15, 0);
+        CreateCard(cardSelected, 273, 15, 0);
+        CreateCard(cover, 0, 0, 255);
+        
+        SetCover();
+          
+    }
+
+    void GuiCard::CreateCard(std::shared_ptr<GuiComponent>& card, int sourceX, int sourceY, unsigned char alpha)
+    {
+
         Application* app = &Application::Get();
-        cardMain = app->GetEntityManager()->CreateEntity<GuiComponent>();
-        cardSelected = app->GetEntityManager()->CreateEntity<GuiComponent>();
-        cardFavorite = app->GetEntityManager()->CreateEntity<GuiComponent>();
-        cover = app->GetEntityManager()->CreateEntity<GuiComponent>();
-        
-        cardMain->textureName = "sprite";
-        cardSelected->textureName = "sprite";
-        cardFavorite->textureName = "sprite";
-        cover->textureName = "sprite";
 
-        cardMain->width = 246;
-        cardMain->height = 270;
-        cardMain->sourceX = 528;
-        cardMain->sourceY = 15;
+        card = app->GetEntityManager()->CreateEntity<GuiComponent>();
+        card->textureName = "sprite";
+        card->width = 246;
+        card->height = 270;
+        card->sourceX = sourceX;
+        card->sourceY = sourceY;
+        card->alpha = alpha;
 
-
-        cardSelected->width = 246;
-        cardSelected->height = 270;
-        cardSelected->sourceX = 273;
-        cardSelected->sourceY = 15;
-
-        cardFavorite->width = 246;
-        cardFavorite->height = 270;
-        cardFavorite->sourceX = 783;
-        cardFavorite->sourceY = 15;
-
-        cover->width = 144;
-        cover->height = 114;
-        cover->sourceX = 1116;
-        cover->sourceY = 1131;
-        cover->x = 50;
-        cover->y = 50;
-        
-
-
-        AddChild(cardMain.get());
-        AddChild(cardSelected.get());
-        AddChild(cardFavorite.get());
-        AddChild(cover.get());
-        
+        AddChild(card.get());
     }
 
     void GuiCard::Update()
@@ -61,6 +46,37 @@ namespace ClassicLauncher
     void GuiCard::SetFocus()
     {
         bFocus = true;
+        cardSelected->alpha = 255;
+    }
+
+    void GuiCard::RemoveFocus()
+    {
+        bFocus = false;
+        cardSelected->alpha = 0;
+    }
+
+    void GuiCard::SetCover(std::string name)
+    {
+        if(name.empty())
+        {
+            cover->width = 144;
+            cover->height = 114;
+            cover->sourceX = 1116;
+            cover->sourceY = 1131;
+            cover->x = 50;
+            cover->y = 50;
+            cover->textureName = "sprite";
+        }
+        else
+        {
+            cover->width = 0;
+            cover->height = 0;
+            cover->sourceX = 0;
+            cover->sourceY = 0;
+            cover->x = 0;
+            cover->y = 0;
+            cover->textureName = name;
+        }
     }
 
     bool GuiCard::IsFocus()

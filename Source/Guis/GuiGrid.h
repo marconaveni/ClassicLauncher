@@ -38,7 +38,6 @@ namespace ClassicLauncher
         void Update() override;
         void Draw() override;
         void End() override;
-        void RegisterCards() const;
         void SetFocus(int newId);
         void SetCovers();
         void ClearCovers();
