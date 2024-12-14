@@ -41,7 +41,7 @@ namespace ClassicLauncher
         void End() override;
         void SetFocus(int newId);
         void SetCovers();
-        EntityType GetType() const override { return EntityType::GuiGrid; }
+        EntityType GetType() const override { return EntityType::GuiGridClass; }
     };
 
 }

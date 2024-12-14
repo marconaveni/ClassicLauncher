@@ -14,7 +14,7 @@ namespace ClassicLauncher
         GuiComponentClass = 1,
         GuiWindowClass = 2,
         GuiCardClass = 3,
-        GuiGrid = 4,
+        GuiGridClass = 4,
     };
 
 
@@ -32,7 +32,7 @@ namespace ClassicLauncher
         virtual void Update() {}
         virtual void Draw() {}
         virtual void End() {}
-        virtual void SelfDelete() { bToDelete = true; };
+        virtual void SelfDelete() { bToDelete = true; }
 
         int x = 0;
         int y = 0;
