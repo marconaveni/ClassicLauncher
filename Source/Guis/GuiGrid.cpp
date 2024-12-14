@@ -4,6 +4,7 @@
 #include "Utils/Core.h"
 #include <algorithm>  
 #include <memory>  
+#include <map>  
 
 namespace ClassicLauncher
 {
@@ -32,7 +33,7 @@ namespace ClassicLauncher
 		}
 
 		SetFocus(3);
-		//ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetGameId());
+		SetCovers();
     }
 
     void GuiGrid::Draw()
@@ -62,6 +63,7 @@ namespace ClassicLauncher
 	void GuiGrid::SetCovers()
 	{
 		GameListManager* manager = app->GetGameListManager();
+		SpriteManager* SpriteManager = app->GetSpriteManager();
 
 		if (manager->GetGameListSize() == 0)
 		{
@@ -73,16 +75,16 @@ namespace ClassicLauncher
 			int indexFinal = UtilsFunctionLibrary::SetIndexArray(manager->GetGameId() + i - idFocus, manager->GetGameListSize());
 			indexFinal = UtilsFunctionLibrary::SetIndexArray(indexFinal, manager->GetGameListSize());
 			indexFinal = Math::Clamp(indexFinal, 0, manager->GetGameListSize() - 1);
+
 			if (manager->GetGameListSize() > 0)
 			{
 				TraceLog(LOG_DEBUG, "index final %d line %d", indexFinal , __LINE__ );
-				// Texture2D* texture = &TextureManager::GetInstance()->GetCover(indexFinal)->texture;
-				// const std::string* image = &manager->GetCurrentGameList(indexFinal)->image;
-				// if(image == nullptr)
-				// {
-				// 	continue;
-				// }
-				// cardsContainer[i].SetCover(!image->empty() ? texture : nullptr);
+				const std::string name = std::to_string(indexFinal) + "_CV";
+				const std::string path = manager->GetCurrentGameList(indexFinal)->image;
+
+				SpriteManager->LoadSprite(name, path, 228, 204);
+				cardsContainer[i]->SetCover(name);
+				
 			}
 		}
 	}
@@ -99,6 +101,7 @@ namespace ClassicLauncher
 
 		if (IsKeyDown(KEY_B))
 		{
+			SetCovers();
 			// cardsContainer[idFocus].StartAnimationClick();
 			// GameListManager::GetInstance()->ClearGameList();
 		}
@@ -110,7 +113,6 @@ namespace ClassicLauncher
 
 		//PRINT_STRING(TextFormat("idGamelist: %d", GameListManager::GetInstance()->GetGameId()), 0.2f, "getid", BLUE);
 
-		SetCovers();
 		constexpr int speed = 22;
 
 		if (IsKeyDown(KEY_LEFT) && !bRight)
@@ -170,7 +172,7 @@ namespace ClassicLauncher
 				positionX = 0;
 				bRight = false;
 				bLeft = false;
-				//SetCovers();
+				SetCovers();
 				//ImageLoader::GetInstance()->UnloadGameListTextureOutRange();
 			}
 

@@ -7,6 +7,13 @@ namespace ClassicLauncher
     {
     }
 
+    void SpriteManager::LoadSprites(const std::vector<std::map<std::string, std::string>>& paths, const int width, const int height, bool bAspectRatio)
+    {
+        for(auto& path : paths)
+        {
+            LoadSprite(path.begin()->first, path.begin()->second, width, height, bAspectRatio);
+        }         
+    }
 
     void SpriteManager::LoadSprite(std::string name, std::string fileName, const int width, const int height, bool bAspectRatio)
     {

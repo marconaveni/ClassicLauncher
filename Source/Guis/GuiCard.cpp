@@ -39,6 +39,22 @@ namespace ClassicLauncher
     void GuiCard::Update()
     {
         GuiComponent::Update();
+
+        Application* app = &Application::Get();
+        Texture2D* textureReference = app->GetSpriteManager()->GetTexture(cover->textureName);
+
+        if (textureReference != nullptr)
+        {
+            //cover->SetTexture(textureReference, Rectangle{ 0,0,static_cast<float>(textureReference->width),static_cast<float>(textureReference->height) });
+            cover->x = (240.0f - static_cast<float>(textureReference->width)) / 2.0f;
+            cover->y = (216.0f - static_cast<float>(textureReference->height)) / 2.0f;
+        }
+        else
+        {
+            //cover->SetTexture(TextureManager::GetInstance()->GetSprite("sprite"), Rectangle{ 1086,1086,204,204 });
+            cover->x = (240.0f - 204.0f) / 2.0f;
+            cover->y = (216.0f - 204.0f) / 2.0f;
+        }
         //x++;
         //TraceLog(LOG_WARNING, "relative x %d" , relativeX);
     }
