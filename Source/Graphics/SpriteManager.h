@@ -3,7 +3,7 @@
 
 #include "Sprite.h"
 #include "raylib.h"
-#include <map>
+#include <unordered_map>
 #include <vector>
 #include <string>
 
@@ -13,12 +13,11 @@ namespace ClassicLauncher
     {
     private:
         
-        std::map<std::string,Sprite> spriteMap;
+        std::unordered_map<std::string,Sprite> spriteMap;
 
     public:
         
         SpriteManager();
-        void LoadSprites(const std::vector<std::map<std::string, std::string>>& paths, const int width = 0, const int height = 0, bool bAspectRatio = true);
         void LoadSprite(std::string name, std::string fileName, const int width = 0, const int height = 0, bool bAspectRatio = true);
         void LoadSprite(std::string name, const Image& image, const int width = 0, const int height = 0, bool bAspectRatio = true);
         void UpdateSprite(std::string name, std::string fileName, const int width = 0, const int height = 0, bool bAspectRatio = true);

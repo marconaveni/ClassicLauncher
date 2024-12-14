@@ -4,7 +4,7 @@
 #include "Utils/Core.h"
 #include <algorithm>  
 #include <memory>  
-#include <map>  
+
 
 namespace ClassicLauncher
 {
@@ -16,6 +16,7 @@ namespace ClassicLauncher
 		, bRight(false)
 		, lastDirection(None)
 		, idFocus(0)
+		, speed(22)
 	{
 	}
 
@@ -65,10 +66,7 @@ namespace ClassicLauncher
 		GameListManager* manager = app->GetGameListManager();
 		SpriteManager* SpriteManager = app->GetSpriteManager();
 
-		if (manager->GetGameListSize() == 0)
-		{
-			ClearCovers();
-		}
+		if (manager->GetGameListSize() == 0) return;
 
 		for (int i = 0; i < 10; i++)
 		{
@@ -76,22 +74,23 @@ namespace ClassicLauncher
 			indexFinal = UtilsFunctionLibrary::SetIndexArray(indexFinal, manager->GetGameListSize());
 			indexFinal = Math::Clamp(indexFinal, 0, manager->GetGameListSize() - 1);
 
-			if (manager->GetGameListSize() > 0)
-			{
-				TraceLog(LOG_DEBUG, "index final %d line %d", indexFinal , __LINE__ );
-				const std::string name = std::to_string(indexFinal) + "_CV";
-				const std::string path = manager->GetCurrentGameList(indexFinal)->image;
 
+			TraceLog(LOG_DEBUG, "index final %d line %d", indexFinal , __LINE__ );
+			const std::string name = std::to_string(indexFinal) + "_CV";
+			const std::string path = manager->GetCurrentGameList(indexFinal)->image;
+
+			if(!path.empty())
+			{
 				SpriteManager->LoadSprite(name, path, 228, 204);
 				cardsContainer[i]->SetCover(name);
-				
 			}
+			else
+			{
+				cardsContainer[i]->SetCover();
+			}
+				
+			
 		}
-	}
-
-	void GuiGrid::ClearCovers()
-	{
-
 	}
 
 	void GuiGrid::Update()
@@ -99,21 +98,18 @@ namespace ClassicLauncher
 		GuiComponent::Update();
 
 
-		if (IsKeyDown(KEY_B))
+		//SetFocus(3);
+		if (IsKeyReleased(KEY_V) && !bLeft)
 		{
-			SetCovers();
-			// cardsContainer[idFocus].StartAnimationClick();
-			// GameListManager::GetInstance()->ClearGameList();
+			speed = 22;
+		}
+		if (IsKeyReleased(KEY_B) && !bLeft)
+		{
+			speed = 88;
 		}
 
-		if (IsKeyDown(KEY_V) && !bLeft)
-		{
-			SetFocus(3);
-		}
 
-		//PRINT_STRING(TextFormat("idGamelist: %d", GameListManager::GetInstance()->GetGameId()), 0.2f, "getid", BLUE);
 
-		constexpr int speed = 22;
 
 		if (IsKeyDown(KEY_LEFT) && !bRight)
 		{
@@ -122,8 +118,6 @@ namespace ClassicLauncher
 				app->GetAudioManager()->PlayCursor();
 				app->GetGameListManager()->AddId(-1);
 				SetFocus(idFocus - 1);
-				// ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetGameId());
-
 			}
 			bLeft = true;
 		}
@@ -134,7 +128,6 @@ namespace ClassicLauncher
 				app->GetAudioManager()->PlayCursor();
 				app->GetGameListManager()->AddId(1);
 				SetFocus(idFocus + 1);
-				// ImageLoader::GetInstance()->StartLoadingLoadTexture(GameListManager::GetInstance()->GetGameId());
 			}
 			bRight = true;
 		}

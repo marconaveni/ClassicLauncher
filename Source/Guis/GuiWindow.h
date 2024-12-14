@@ -24,6 +24,8 @@ namespace ClassicLauncher
         virtual EntityType GetType() const override { return EntityType::GuiWindowClass; }
         virtual void Update() override;
         void Init();
+        void ChangeGrid(const CurrentList list);
+        void ClearCovers();
     };
 
 }

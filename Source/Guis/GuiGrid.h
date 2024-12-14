@@ -30,6 +30,7 @@ namespace ClassicLauncher
         bool bRight;
         Direction lastDirection;
         int idFocus;
+        unsigned int speed;
 
     public:
 
@@ -40,7 +41,6 @@ namespace ClassicLauncher
         void End() override;
         void SetFocus(int newId);
         void SetCovers();
-        void ClearCovers();
 
     };
 

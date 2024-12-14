@@ -18,9 +18,62 @@ namespace ClassicLauncher
         AddChild(guiGrid.get());
     }
 
+
     void GuiWindow::Update()
     {
         GuiComponent::Update();
+
+        if (IsKeyReleased(KEY_ENTER))
+        {
+            app->GetAudioManager()->PlayClick();
+
+            if (app->GetGameListManager()->GetCurrentList() == GameListSelect)
+            {
+                std::string fullPath = app->GetGameListManager()->GetCurrentSystemList()->executable;
+                fullPath.append(" ");
+                fullPath.append(app->GetGameListManager()->GetCurrentSystemList()->arguments);
+                fullPath.append(" \"");
+                fullPath.append(app->GetGameListManager()->GetCurrentGameList()->path);
+                fullPath.append("\" ");
+                const std::string optionalWorkingDirectory = GetDirectoryPath(app->GetGameListManager()->GetCurrentSystemList()->executable.c_str());
+                //platformProcess->CreateProc(fullPath, optionalWorkingDirectory);
+            }
+            else
+            {
+                ChangeGrid(GameListSelect);
+            }
+        }
+        if (IsKeyReleased(KEY_BACKSPACE))
+        {
+            if (app->GetGameListManager()->GetCurrentList() == GameListSelect)
+            {
+                ChangeGrid(SystemListSelect);
+            }
+        }
+    }
+
+    void GuiWindow::ChangeGrid(const CurrentList list)
+    {
+        ClearCovers();
+        guiGrid->SetFocus(3);
+        if (list == SystemListSelect)
+        {
+            app->GetGameListManager()->ChangeGameToSystemList();
+        }
+        else
+        {
+            app->GetGameListManager()->ChangeSystemToGameList();
+        }
+        guiGrid->SetCovers();
+    }
+
+    void GuiWindow::ClearCovers()
+    {
+        int size = app->GetGameListManager()->GetGameListSize();
+        for (int i = 0; i < size; i++)
+        {
+            app->GetSpriteManager()->DeleteSprite(std::to_string(i) + "_CV");
+        }
     }
 
 } // namespace ClassicLauncher

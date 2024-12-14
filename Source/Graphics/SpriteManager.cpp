@@ -7,14 +7,6 @@ namespace ClassicLauncher
     {
     }
 
-    void SpriteManager::LoadSprites(const std::vector<std::map<std::string, std::string>>& paths, const int width, const int height, bool bAspectRatio)
-    {
-        for(auto& path : paths)
-        {
-            LoadSprite(path.begin()->first, path.begin()->second, width, height, bAspectRatio);
-        }         
-    }
-
     void SpriteManager::LoadSprite(std::string name, std::string fileName, const int width, const int height, bool bAspectRatio)
     {
         spriteMap[name].Load(fileName, width, height, bAspectRatio);
@@ -33,6 +25,11 @@ namespace ClassicLauncher
 
     Texture2D* SpriteManager::GetTexture(std::string name)
     {
+        auto it = spriteMap.find(name);
+        if (it == spriteMap.end())
+        {
+            return nullptr;
+        }
         return spriteMap[name].GetTexture();
     }
 
@@ -43,6 +40,15 @@ namespace ClassicLauncher
 
     bool SpriteManager::DeleteSprite(std::string name)
     {
+        // auto it = spriteMap.find(name);
+        // if (it != spriteMap.end())
+        // {
+        //     it->second.~Sprite();// deleta o objeto Sprite da memória
+        //     spriteMap.erase(it); // remove a referência do spriteMap
+        //     return true;
+        // }
+
+        spriteMap[name].Unload();
         spriteMap.erase(name);
         return false;
     }
