@@ -41,4 +41,5 @@ namespace ClassicLauncher
     };
 
 }
+
 #endif

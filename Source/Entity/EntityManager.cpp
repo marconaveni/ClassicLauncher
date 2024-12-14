@@ -23,7 +23,7 @@ namespace ClassicLauncher
         for (auto& entity : entities)
         {
             entity->Draw();
-            Texture2D* texture = spriteManagerReference->GetTexture(entity->textureName);
+            const Texture2D* texture = spriteManagerReference->GetTexture(entity->textureName);
             if(texture)
             {
                 const int x = entity->x + entity->relativeX;

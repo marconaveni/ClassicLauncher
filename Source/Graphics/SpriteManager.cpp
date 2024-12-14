@@ -7,12 +7,12 @@ namespace ClassicLauncher
     {
     }
 
-    void SpriteManager::LoadSprite(std::string name, std::string fileName, const int width, const int height, bool bAspectRatio)
+    void SpriteManager::LoadSprite(const std::string& name, const std::string& fileName, const int width, const int height, bool bAspectRatio)
     {
         spriteMap[name].Load(fileName, width, height, bAspectRatio);
     }
 
-    void SpriteManager::LoadSprite(std::string name, const Image& image, const int width, const int height, bool bAspectRatio)
+    void SpriteManager::LoadSprite(const std::string& name, const Image& image, const int width, const int height, bool bAspectRatio)
     {
         spriteMap[name].Load(image, width, height, bAspectRatio);
     }
@@ -23,7 +23,7 @@ namespace ClassicLauncher
         spriteMap[name].Load(fileName, width, height, bAspectRatio);
     }
 
-    Texture2D* SpriteManager::GetTexture(std::string name)
+    Texture2D* SpriteManager::GetTexture(const std::string& name)
     {
         auto it = spriteMap.find(name);
         if (it == spriteMap.end())

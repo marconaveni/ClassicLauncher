@@ -1,5 +1,5 @@
-#ifndef GUICOMPONENT_H
-#define GUICOMPONENT_H
+#ifndef GUI_COMPONENT_H
+#define GUI_COMPONENT_H
 
 #include "Entity/Entity.h"
 #include <memory>
@@ -14,7 +14,7 @@ namespace ClassicLauncher
         GuiComponent* parent;
     public:
         GuiComponent() = default;
-        virtual ~GuiComponent() = default;
+        virtual ~GuiComponent() override = default;
         virtual EntityType GetType() const override { return EntityType::GuiComponentClass; }
         void Update() override;
         virtual void AddChild(GuiComponent* entityChildren);
@@ -25,4 +25,4 @@ namespace ClassicLauncher
 
 }
 
-#endif // GUICOMPONENT_H
+#endif // GUI_COMPONENT_H

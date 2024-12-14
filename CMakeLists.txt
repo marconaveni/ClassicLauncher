@@ -14,8 +14,8 @@ include_directories(
 message("is source dir is: " ${CMAKE_SOURCE_DIR})
 
 set(data
-    "${CMAKE_SOURCE_DIR}/Source/Data/Date.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Data/Date.h"
+    "${CMAKE_SOURCE_DIR}/Source/Data/DateTime.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Data/DateTime.h"
     "${CMAKE_SOURCE_DIR}/Source/Data/GameListManager.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Data/GameListManager.h"
 )

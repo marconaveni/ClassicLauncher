@@ -23,7 +23,7 @@ namespace ClassicLauncher
 
     public:
         GuiCard(int x, int y);
-        virtual ~GuiCard() = default;
+        virtual ~GuiCard() override = default;
         virtual EntityType GetType() const override { return EntityType::GuiCardClass; }
         void Update() override;
         void SetFocus();

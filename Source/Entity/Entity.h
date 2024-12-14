@@ -8,12 +8,13 @@ namespace ClassicLauncher
 {
 
 
-    enum class EntityType
+    enum class EntityType : uint8_t
     {
         None = 0,
         GuiComponentClass = 1,
         GuiWindowClass = 2,
         GuiCardClass = 3,
+        GuiGrid = 4,
     };
 
 
@@ -28,9 +29,9 @@ namespace ClassicLauncher
         Entity() = default;
         virtual ~Entity() = default;
         virtual EntityType GetType() const = 0;
-        virtual void Update() {};
-        virtual void Draw() {};
-        virtual void End() {};
+        virtual void Update() {}
+        virtual void Draw() {}
+        virtual void End() {}
         virtual void SelfDelete() { bToDelete = true; };
 
         int x = 0;

@@ -26,9 +26,6 @@ namespace ClassicLauncher
         {
             bIsRunning = true;
             workerThread = std::thread(&AudioManager::Update, this);
-            // workerThread = std::thread([this]() {
-            //     this->Update();
-            // }); 
         }
     }
 
@@ -197,7 +194,7 @@ namespace ClassicLauncher
             Stop();
             bIsRunning = false;
 
-            for (auto &music : musics)
+            for (auto& music : musics)
             {
                 UnloadMusicStream(music.music);
             }

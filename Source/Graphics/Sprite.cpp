@@ -33,15 +33,9 @@ namespace ClassicLauncher
         TraceLog(LOG_TRACE, "Sprite - thread stopped");     
     }
 
-    void Sprite::Load(const std::string file, const int width, const int height, bool bAspectRatio)
+    void Sprite::Load(const std::string& file, const int width, const int height, bool bAspectRatio)
     {
-
-        // if(!FileExists(file.c_str()))
-        // {
-        //     TraceLog(LOG_WARNING, "%s not found", file.c_str());
-        //     return;
-        // }
-        if(!bKeepRunning && !bTextureLoaded && !bImageLoaded) 
+        if (!bKeepRunning && !bTextureLoaded && !bImageLoaded) 
         {
             Join();
             bKeepRunning = true;
@@ -51,7 +45,7 @@ namespace ClassicLauncher
         }
     }
 
-    void Sprite::Load(const Image& newImage, const int width, const int height, bool bAspectRatio)
+    void Sprite::Load(const Image& newImage, const int width, const int height, const bool bAspectRatio)
     {
         if (IsImageValid(newImage))
         {
@@ -107,7 +101,7 @@ namespace ClassicLauncher
             texture = ::LoadTextureFromImage(image);
             bTextureLoaded = IsTextureValid(texture);
             TraceLog(LOG_DEBUG, "Texture loaded [ID %d] from Image - %s", texture.id, filePath.c_str());
-            //UnloadImage();
+            UnloadImage();
         }
         if (bTextureLoaded)
         {
@@ -128,7 +122,7 @@ namespace ClassicLauncher
     void Sprite::ResizeImage(const int width, const int height, bool bAspectRatio)
     {
         std::lock_guard<std::mutex> guard(mutexSprite);
-        if(width > 0 && height > 0 && IsImageValid(image))
+        if (width > 0 && height > 0 && IsImageValid(image))
         {
             if(bAspectRatio)
             {
@@ -153,7 +147,7 @@ namespace ClassicLauncher
 
     void Sprite::UnloadTexture()
     {
-        if(bTextureLoaded && IsTextureValid(texture))
+        if (bTextureLoaded && IsTextureValid(texture))
         {
             ::UnloadTexture(texture);
             TraceLog(LOG_DEBUG, "Unloaded Texture [ID %d] from - %s" , texture.id, filePath.c_str());
@@ -164,7 +158,7 @@ namespace ClassicLauncher
 
     void Sprite::UnloadImage()
     {
-        if(bImageLoaded && IsImageValid(image))
+        if (bImageLoaded && IsImageValid(image))
         {
             ::UnloadImage(image);
             TraceLog(LOG_DEBUG, "Unloaded Image from - %s" , filePath.c_str());

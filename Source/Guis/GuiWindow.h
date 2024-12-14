@@ -20,7 +20,7 @@ namespace ClassicLauncher
 
     public:
         GuiWindow() = default;
-        virtual ~GuiWindow() = default;
+        virtual ~GuiWindow() override = default;
         virtual EntityType GetType() const override { return EntityType::GuiWindowClass; }
         virtual void Update() override;
         void Init();

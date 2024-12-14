@@ -11,22 +11,22 @@ namespace ClassicLauncher
 
 
 	GuiGrid::GuiGrid()
-		: positionX(0)
-		, bLeft(false)
-		, bRight(false)
-		, lastDirection(None)
-		, idFocus(0)
-		, speed(22)
+		:	app(&Application::Get())
+	      , positionX(0)
+		  , bLeft(false)
+		  , bRight(false)
+		  , lastDirection(None)
+		  , idFocus(0)
+		  , speed(22)
 	{
 	}
 
     void GuiGrid::Init()
     {
-		app = &Application::Get();
 
 		for (int i = 0; i < 10; i++)
 		{
-			const float x = static_cast<float>(256 * (i - 2));
+			const int x = 256 * (i - 2);
 			auto card = app->GetEntityManager()->CreateEntity<GuiCard>(x - 120, 228);
         	AddChild(card.get());
 			cardsContainer.emplace_back(card);
@@ -46,7 +46,6 @@ namespace ClassicLauncher
     void GuiGrid::End()
     {
 		GuiComponent::End();
-		//GameListManager::GetInstance()->ClearGameList();
     }
 
 	void GuiGrid::SetFocus(const int newId)
@@ -74,7 +73,6 @@ namespace ClassicLauncher
 			indexFinal = UtilsFunctionLibrary::SetIndexArray(indexFinal, manager->GetGameListSize());
 			indexFinal = Math::Clamp(indexFinal, 0, manager->GetGameListSize() - 1);
 
-
 			TraceLog(LOG_DEBUG, "index final %d line %d", indexFinal , __LINE__ );
 			const std::string name = std::to_string(indexFinal) + "_CV";
 			const std::string path = manager->GetCurrentGameList(indexFinal)->image;
@@ -88,8 +86,7 @@ namespace ClassicLauncher
 			{
 				cardsContainer[i]->SetCover();
 			}
-				
-			
+
 		}
 	}
 
@@ -98,7 +95,6 @@ namespace ClassicLauncher
 		GuiComponent::Update();
 
 
-		//SetFocus(3);
 		if (IsKeyReleased(KEY_V) && !bLeft)
 		{
 			speed = 22;
@@ -107,8 +103,6 @@ namespace ClassicLauncher
 		{
 			speed = 88;
 		}
-
-
 
 
 		if (IsKeyDown(KEY_LEFT) && !bRight)
@@ -142,7 +136,7 @@ namespace ClassicLauncher
 		}
 
 
-		for (auto& cardContainer : cardsContainer)
+		for (const auto& cardContainer : cardsContainer)
 		{
 			if (positionX > -256 && positionX < 0 && bRight)
 			{
