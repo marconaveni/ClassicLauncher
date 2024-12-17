@@ -92,6 +92,7 @@ namespace ClassicLauncher
         audioManager.LoadCursor(audioCursorFile);
         spriteManager.LoadSprite("ref", refpath);
         spriteManager.LoadSprite("sprite", sprite);
+        spriteManager.LoadSprite("transparent", GenImageColor(1, 1, Color(0, 0, 0, 0)));
 
 
         Image img = {
@@ -136,6 +137,7 @@ namespace ClassicLauncher
     {
 
         entityManager.UpdateAll();
+        entityManager.UpdatePositionAll();
         entityManager.Draw(); // draw in texture render
         // Aqui vai logica 
 

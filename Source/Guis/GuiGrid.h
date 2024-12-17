@@ -19,7 +19,7 @@ namespace ClassicLauncher
     enum Direction { None, Left, Right };
 
 
-    class GuiGrid final : public GuiComponent
+    class GuiGrid : public GuiComponent
     {
         
         Application* app;

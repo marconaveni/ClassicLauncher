@@ -12,8 +12,8 @@ namespace ClassicLauncher
         this->y = y;
 
         CreateCard(cardMain, 528, 15, 255);
-        CreateCard(cardFavorite, 783, 15, 0);
-        CreateCard(cardSelected, 273, 15, 0);
+        CreateCard(cardFavorite, 783, 15, 100);
+        CreateCard(cardSelected, 273, 15, 100);
         CreateCard(cover, 0, 0, 255);
         
         SetCover();

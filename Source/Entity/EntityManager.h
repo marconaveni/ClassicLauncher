@@ -32,6 +32,7 @@ namespace ClassicLauncher
         }
 
         void UpdateAll();
+        void UpdatePositionAll();
         void Draw();
         void End();
             

@@ -27,10 +27,10 @@ namespace ClassicLauncher
 		for (int i = 0; i < 10; i++)
 		{
 			const int x = 256 * (i - 2);
-			auto card = app->GetEntityManager()->CreateEntity<GuiCard>(x - 120, 228);
+			auto card = app->GetEntityManager()->CreateEntity<GuiCard>(x - 120, 0);
+			//auto card = app->GetEntityManager()->CreateEntity<GuiCard>(0, 228);
         	AddChild(card.get());
 			cardsContainer.emplace_back(card);
-
 		}
 
 		SetFocus(3);
@@ -63,7 +63,7 @@ namespace ClassicLauncher
 	void GuiGrid::SetCovers()
 	{
 		GameListManager* manager = app->GetGameListManager();
-		SpriteManager* SpriteManager = app->GetSpriteManager();
+		SpriteManager* spriteManager = app->GetSpriteManager();
 
 		if (manager->GetGameListSize() == 0) return;
 
@@ -79,7 +79,7 @@ namespace ClassicLauncher
 
 			if(!path.empty())
 			{
-				SpriteManager->LoadSprite(name, path, 228, 204);
+				spriteManager->LoadSprite(name, path, 228, 204);
 				cardsContainer[i]->SetCover(name);
 			}
 			else
@@ -94,10 +94,12 @@ namespace ClassicLauncher
 	{
 		GuiComponent::Update();
 
+		y = 228;
 
-		if (IsKeyReleased(KEY_V) && !bLeft)
+ 		if (IsKeyReleased(KEY_V) && !bLeft)
 		{
 			speed = 22;
+
 		}
 		if (IsKeyReleased(KEY_B) && !bLeft)
 		{
@@ -160,6 +162,7 @@ namespace ClassicLauncher
 				bRight = false;
 				bLeft = false;
 				SetCovers();
+				//x = 0;
 				//ImageLoader::GetInstance()->UnloadGameListTextureOutRange();
 			}
 
@@ -189,7 +192,7 @@ namespace ClassicLauncher
 			{
 				cardsContainer[i]->x = cardPositions[i];
 			}
-		}
+		} 
 
 	}
 

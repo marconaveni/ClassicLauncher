@@ -1,6 +1,7 @@
 #include "GuiWindow.h"
 #include "Utils/UtilsFunctionLibrary.h"
 #include "Utils/Resouces.h"
+#include "Guis/GuiMiniCover.h"
 
 namespace ClassicLauncher
 {
@@ -14,14 +15,21 @@ namespace ClassicLauncher
         textureName = "ref";
         
         guiGrid = app->GetEntityManager()->CreateEntity<GuiGrid>();
+        miniCover = app->GetEntityManager()->CreateEntity<GuiMiniCover>();
+        
         guiGrid->Init();
+        miniCover->Init();
+
         AddChild(guiGrid.get());
+		AddChild(miniCover.get());
     }
 
 
     void GuiWindow::Update()
     {
         GuiComponent::Update();
+
+        //rootY += 1;
 
         if (IsKeyReleased(KEY_ENTER))
         {
@@ -73,6 +81,7 @@ namespace ClassicLauncher
         for (int i = 0; i < size; i++)
         {
             app->GetSpriteManager()->DeleteSprite(std::to_string(i) + "_CV");
+            app->GetSpriteManager()->DeleteSprite(std::to_string(i) + "_MCV");
         }
     }
 

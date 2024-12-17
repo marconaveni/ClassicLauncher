@@ -11,12 +11,14 @@ namespace ClassicLauncher
 
     class Application;
     class GuiGrid;
+    class GuiMiniCover;
 
     class GuiWindow : public GuiComponent
     {
 
         Application* app;
         std::shared_ptr<GuiGrid> guiGrid;
+        std::shared_ptr<GuiMiniCover> miniCover;
 
     public:
         GuiWindow() = default;

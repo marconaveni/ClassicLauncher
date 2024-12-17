@@ -38,6 +38,8 @@ set(guis
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiCard.h"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiGrid.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiGrid.h"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiMiniCover.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiMiniCover.h"
 )
 set(entity
     "${CMAKE_SOURCE_DIR}/Source/Entity/Entity.cpp"

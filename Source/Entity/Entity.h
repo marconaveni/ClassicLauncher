@@ -8,13 +8,14 @@ namespace ClassicLauncher
 {
 
 
-    enum class EntityType : uint8_t
+    enum class EntityType
     {
         None = 0,
         GuiComponentClass = 1,
         GuiWindowClass = 2,
         GuiCardClass = 3,
         GuiGridClass = 4,
+        GuiMiniCoverClass = 5,
     };
 
 
@@ -30,6 +31,7 @@ namespace ClassicLauncher
         virtual ~Entity() = default;
         virtual EntityType GetType() const = 0;
         virtual void Update() {}
+        virtual void UpdatePosition() {}
         virtual void Draw() {}
         virtual void End() {}
         virtual void SelfDelete() { bToDelete = true; }
@@ -50,10 +52,9 @@ namespace ClassicLauncher
         unsigned char alpha = 255;        // Color alpha value
         std::string textureName;
 
-    protected:
-
-        int relativeX = 0;
-        int relativeY = 0;
+        int rootX = 0;
+        int rootY = 0;
+    
     };
   
 

@@ -1,24 +1,33 @@
 #include "GuiComponent.h"
+#include "Utils/Core.h"
+#include "raylib.h"
 
 namespace ClassicLauncher
 {
 
     void GuiComponent::Update()
     {
+        //relativeX;
+        //relativeY = 0;
         Entity::Update();
-        for (auto& entity : entityChildrens)
+    }
+
+    void GuiComponent::UpdatePosition()
+    {
+
+        for (auto& entity : childEntities)
         {
-            entity->relativeX = x;
-            entity->relativeY = y;
+            entity->rootX = this->x + rootX;
+            entity->rootY = this->y + rootY;
         }
     }
 
-    void GuiComponent::AddChild(GuiComponent* entityChildren)
+    void GuiComponent::AddChild(GuiComponent* childEntity)
     {
-        if(entityChildren->parent != this) 
+        if(childEntity->parent != this) 
         {
-            entityChildren->parent = this;
-            entityChildrens.emplace_back(entityChildren);
+            childEntity->parent = this;
+            childEntities.emplace_back(childEntity);
         }
     }
 
@@ -26,14 +35,28 @@ namespace ClassicLauncher
     {
     }
 
+    std::vector<GuiComponent*> GuiComponent::GetChilds()
+    {
+        return childEntities;
+    }
+
     void GuiComponent::SelfDelete()
     {
         Entity::SelfDelete();
-        for (auto& entity : entityChildrens)
+        for (auto& entity : childEntities)
         {
             entity->SelfDelete();
         }
         
     }
 
+    GuiComponent* GuiComponent::GetRootEntity()
+    {
+        GuiComponent* rootParent = parent;
+        if(rootParent != nullptr) 
+        {
+            rootParent = rootParent->GetRootEntity();
+        }
+        return (rootParent != nullptr) ? rootParent : this;
+    }
 }

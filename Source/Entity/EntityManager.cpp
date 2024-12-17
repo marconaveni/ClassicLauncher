@@ -17,17 +17,24 @@ namespace ClassicLauncher
         }  
     }
 
+    void EntityManager::UpdatePositionAll()
+    {
+        for (auto& entity : entities)
+        {
+            entity->UpdatePosition();
+        }  
+    }
+
     void EntityManager::Draw()
     {
 
         for (auto& entity : entities)
         {
-            entity->Draw();
             const Texture2D* texture = spriteManagerReference->GetTexture(entity->textureName);
             if(texture)
             {
-                const int x = entity->x + entity->relativeX;
-                const int y = entity->y + entity->relativeY;
+                const int x = entity->x + entity->rootX;
+                const int y = entity->y + entity->rootY;
                 const int width = entity->width > 0 ? entity->width : texture->width;
                 const int height = entity->height > 0 ? entity->height : texture->height;
                 const float sourceX = entity->sourceX;
@@ -43,6 +50,7 @@ namespace ClassicLauncher
                 const Rectangle dest = { (float)x + origin.x, (float)y + origin.y, scaleWidth * scale, scaleHeight * scale};
                 const Color color = {entity->red, entity->green, entity->blue, entity->alpha};
 
+                entity->Draw();
                 DrawTexturePro(*texture, source, dest, origin, rotation, color);
             }
         }  
