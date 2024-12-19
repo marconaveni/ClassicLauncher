@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <memory>
 #include "Core.h"
+#include "Guis/GuiMiniCover.h"
 
 namespace ClassicLauncher
 {
@@ -18,13 +19,16 @@ namespace ClassicLauncher
         {
             const int x = 256 * (i - 2);
             auto card = mApplication->GetEntityManager()->CreateEntity<GuiCard>(x - 120, 0);
-            // auto card = app->GetEntityManager()->CreateEntity<GuiCard>(0, 228);
             AddChild(card.get());
             mGuiCards.emplace_back(card);
         }
 
-        SetFocus(3);
+        mMiniCover = mApplication->GetEntityManager()->CreateEntity<GuiMiniCover>();
+        mMiniCover->Init();
+        AddChild(mMiniCover.get());
+
         SetCovers();
+        SetFocus(3);
     }
 
     void GuiHorizontalBox::Draw()
@@ -75,6 +79,32 @@ namespace ClassicLauncher
             {
                 mGuiCards[i]->SetCover();
             }
+        }
+        mMiniCover->SetCovers();
+    }
+
+    void GuiHorizontalBox::ChangeList(const CurrentList list)
+    {
+        ClearCovers();
+        SetFocus(3);
+        if (list == SystemListSelect)
+        {
+            mApplication->GetGameListManager()->ChangeGameToSystemList();
+        }
+        else
+        {
+            mApplication->GetGameListManager()->ChangeSystemToGameList();
+        }
+        SetCovers();
+    }
+
+    void GuiHorizontalBox::ClearCovers()
+    {
+        int size = mApplication->GetGameListManager()->GetGameListSize();
+        for (int i = 0; i < size; i++)
+        {
+            mApplication->GetSpriteManager()->DeleteSprite(std::to_string(i) + "_CV");
+            mApplication->GetSpriteManager()->DeleteSprite(std::to_string(i) + "_MCV");
         }
     }
 
@@ -147,8 +177,7 @@ namespace ClassicLauncher
                 bRight = false;
                 bLeft = false;
                 SetCovers();
-                // x = 0;
-                // ImageLoader::GetInstance()->UnloadGameListTextureOutRange();
+                // todo: add clean textures of vram outside of the screen
             }
         }
 

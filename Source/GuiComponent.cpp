@@ -1,6 +1,5 @@
 #include "GuiComponent.h"
 
-
 namespace ClassicLauncher
 {
 
@@ -13,7 +12,6 @@ namespace ClassicLauncher
 
     void GuiComponent::UpdatePosition()
     {
-
         for (auto& entity : mChildEntities)
         {
             entity->rootX = this->x + rootX;
@@ -30,9 +28,14 @@ namespace ClassicLauncher
         }
     }
 
-    void GuiComponent::RemoveChild() {}
+    void GuiComponent::RemoveChild()
+    {
+    }
 
-    std::vector<GuiComponent*> GuiComponent::GetChilds() { return mChildEntities; }
+    std::vector<GuiComponent*> GuiComponent::GetChilds()
+    {
+        return mChildEntities;
+    }
 
     void GuiComponent::SelfDelete()
     {

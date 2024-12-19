@@ -8,7 +8,7 @@ namespace ClassicLauncher
 {
 
     Render::Render()
-        : renderTexture(), width(0), height(0), newWidth(0), newHeight(0), scale(1), bMaintainAspectRatio(true), virtualMouse(Vector2{ 0 })
+        : renderTexture(), width(0), height(0), newWidth(0), newHeight(0), scale(1), bMaintainAspectRatio(true), virtualMouse{}
     {
     }
 
@@ -53,7 +53,10 @@ namespace ClassicLauncher
         ClearBackground(LIGHTGRAY);
     }
 
-    void Render::EndRender() { EndTextureMode(); }
+    void Render::EndRender()
+    {
+        EndTextureMode();
+    }
 
     void Render::DrawRender() const
     {
@@ -64,9 +67,7 @@ namespace ClassicLauncher
 
         const Texture2D texture = renderTexture.texture;
         const Rectangle source = Rectangle{ 0.0f, 0.0f, textureWidth, -textureHeight };
-        const Rectangle dest = Rectangle{
-            (screenWidth - (newWidth * scale)) * 0.5f, (screenHeight - (newHeight * scale)) * 0.5f, newWidth * scale, newHeight * scale
-        };
+        const Rectangle dest = Rectangle{ (screenWidth - (newWidth * scale)) * 0.5f, (screenHeight - (newHeight * scale)) * 0.5f, newWidth * scale, newHeight * scale };
 
         // Draw render texture to screen, properly scaled
         DrawTexturePro(texture, source, dest, Vector2{ 0 }, 0.0f, WHITE);
@@ -75,6 +76,10 @@ namespace ClassicLauncher
     void Render::Unload()
     {
         if (IsTextureValid(renderTexture.texture))
+        {
+            UnloadRenderTexture(renderTexture);
+        }
+        if (IsTextureValid(renderTexture.depth))
         {
             UnloadRenderTexture(renderTexture);
         }
@@ -87,10 +92,19 @@ namespace ClassicLauncher
         return Vector2{ scaleWidth, scaleHeight };
     }
 
-    Vector2 Render::GetMousePositionRender() const { return virtualMouse; }
+    Vector2 Render::GetMousePositionRender() const
+    {
+        return virtualMouse;
+    }
 
-    int Render::GetWidthRender() const { return (bMaintainAspectRatio) ? static_cast<int>(width) : GetScreenWidth(); }
+    int Render::GetWidthRender() const
+    {
+        return (bMaintainAspectRatio) ? static_cast<int>(width) : GetScreenWidth();
+    }
 
-    int Render::GetHeightRender() const { return (bMaintainAspectRatio) ? static_cast<int>(height) : GetScreenHeight(); }
+    int Render::GetHeightRender() const
+    {
+        return (bMaintainAspectRatio) ? static_cast<int>(height) : GetScreenHeight();
+    }
 
 }  // namespace ClassicLauncher

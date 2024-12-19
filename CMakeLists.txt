@@ -1,11 +1,29 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.5)
 project(ClassicLauncher LANGUAGES CXX)
 
-# Configurações de compilação
+# Compile configurations
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Adiciona diretórios de cabeçalhos
+# cache options default values
+option(CLASSIC_LAUCHER_FSANITIZE "Enable address sanitizer" OFF)
+option(CLASSIC_LAUCHER_FLAGS "Enable warning/error flags" OFF)
+
+if(CLASSIC_LAUCHER_FLAGS)
+    set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wpedantic")
+endif()
+
+if (CLASSIC_LAUCHER_FSANITIZE)
+    message("fsanitize is enabled")
+    set(CMAKE_CXX_FLAGS_DEBUG "-g -fsanitize=address")
+else()
+    message("fsanitize is disabled")
+    set(CMAKE_CXX_FLAGS_DEBUG "-g")
+endif()
+
+set(CMAKE_CXX_FLAGS_RELEASE "-O2 ")
+
+# Add header files
 include_directories(
     ${CMAKE_SOURCE_DIR}/Source
     ${CMAKE_SOURCE_DIR}/extern
@@ -52,7 +70,7 @@ set(utils
     "${CMAKE_SOURCE_DIR}/Source/Utils/Math.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/Print.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Utils/Print.h"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/Resouces.h"
+    "${CMAKE_SOURCE_DIR}/Source/Utils/Resources.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/StringFunctionLibrary.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Utils/StringFunctionLibrary.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/UtilsFunctionLibrary.cpp"
@@ -81,7 +99,7 @@ source_group("Source\\Utils"     FILES ${utils})
 source_group("Source"            FILES ${src})
 source_group("Extern"     FILES ${extern})
 
-# Lista de arquivos fonte
+# List of source files
 set(srcs   
     ${audio}
     ${data}  
@@ -93,7 +111,7 @@ set(srcs
     ${extern}
 )
 
-# Adiciona o executável
+# Add the executable
 add_executable(ClassicLauncher ${srcs})
 
 
@@ -106,7 +124,7 @@ if(WIN32)
     # Submodule Raylib 
     add_subdirectory(extern/raylib)
 
-    # Pré-processadores para o alvo
+    # Preprocessors definitions
     target_compile_definitions(ClassicLauncher PRIVATE
     _CRT_SECURE_NO_WARNINGS
     _CONSOLE
@@ -117,13 +135,18 @@ if(WIN32)
     target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
 else()
 
+    set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+
+    # Submodule Raylib
+    add_subdirectory(extern/raylib)
+
     # Add `_DEBUG` only Debug build
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         target_compile_definitions(ClassicLauncher PRIVATE _DEBUG)
     endif()
 
     # Linux
-    target_link_libraries(${PROJECT_NAME} raylib GL m pthread dl rt vlc)
+    target_link_libraries(${PROJECT_NAME} raylib GL m pthread dl rt)
 endif()
 
 

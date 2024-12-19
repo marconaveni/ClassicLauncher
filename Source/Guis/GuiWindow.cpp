@@ -1,6 +1,5 @@
 #include "GuiWindow.h"
-#include "Guis/GuiMiniCover.h"
-#include "Utils/Resouces.h"
+#include "Utils/Resources.h"
 #include "Utils/UtilsFunctionLibrary.h"
 
 namespace ClassicLauncher
@@ -14,13 +13,8 @@ namespace ClassicLauncher
         textureName = "ref";
 
         mGuiHorizontalBox = mApplication->GetEntityManager()->CreateEntity<GuiHorizontalBox>();
-        mMiniCover = mApplication->GetEntityManager()->CreateEntity<GuiMiniCover>();
-
         mGuiHorizontalBox->Init();
-        mMiniCover->Init();
-
         AddChild(mGuiHorizontalBox.get());
-        AddChild(mMiniCover.get());
     }
 
     void GuiWindow::Update()
@@ -46,41 +40,42 @@ namespace ClassicLauncher
             }
             else
             {
-                ChangeGrid(GameListSelect);
+                ChangeList(GameListSelect);
             }
         }
         if (IsKeyReleased(KEY_BACKSPACE))
         {
             if (mApplication->GetGameListManager()->GetCurrentList() == GameListSelect)
             {
-                ChangeGrid(SystemListSelect);
+                ChangeList(SystemListSelect);
             }
         }
     }
 
-    void GuiWindow::ChangeGrid(const CurrentList list)
+    void GuiWindow::ChangeList(const CurrentList list)
     {
-        ClearCovers();
-        mGuiHorizontalBox->SetFocus(3);
-        if (list == SystemListSelect)
-        {
-            mApplication->GetGameListManager()->ChangeGameToSystemList();
-        }
-        else
-        {
-            mApplication->GetGameListManager()->ChangeSystemToGameList();
-        }
-        mGuiHorizontalBox->SetCovers();
+        mGuiHorizontalBox->ChangeList(list);
+        // ClearCovers();
+        // mGuiHorizontalBox->SetFocus(3);
+        // if (list == SystemListSelect)
+        // {
+        //     mApplication->GetGameListManager()->ChangeGameToSystemList();
+        // }
+        // else
+        // {
+        //     mApplication->GetGameListManager()->ChangeSystemToGameList();
+        // }
+        // mGuiHorizontalBox->SetCovers();
     }
 
     void GuiWindow::ClearCovers()
     {
-        int size = mApplication->GetGameListManager()->GetGameListSize();
-        for (int i = 0; i < size; i++)
-        {
-            mApplication->GetSpriteManager()->DeleteSprite(std::to_string(i) + "_CV");
-            mApplication->GetSpriteManager()->DeleteSprite(std::to_string(i) + "_MCV");
-        }
+        // int size = mApplication->GetGameListManager()->GetGameListSize();
+        // for (int i = 0; i < size; i++)
+        // {
+        //     mApplication->GetSpriteManager()->DeleteSprite(std::to_string(i) + "_CV");
+        //     mApplication->GetSpriteManager()->DeleteSprite(std::to_string(i) + "_MCV");
+        // }
     }
 
 }  // namespace ClassicLauncher

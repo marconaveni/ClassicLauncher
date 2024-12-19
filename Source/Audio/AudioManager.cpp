@@ -6,7 +6,7 @@ namespace ClassicLauncher
 {
 
     AudioManager::AudioManager()
-        : bIsRunning(false), bIsPlayClick(false), bIsPlayCursor(false), status(StatusAudio::Stop), clickMusic{ 0 }, cursorMusic{ 0 }, musics(), idMusic(0)
+        : bIsRunning(false), bIsPlayClick(false), bIsPlayCursor(false), status(StatusAudio::Stop), clickMusic{}, cursorMusic{}, musics(), idMusic(0)
     {
     }
 
@@ -22,7 +22,7 @@ namespace ClassicLauncher
 
     void AudioManager::LoadMusic(const std::string& path)
     {
-        AudioMusic audioMusic{ 0 };
+        AudioMusic audioMusic{};
         audioMusic.music = LoadMusicStream(path.c_str());
 
         if (!IsMusicValid(audioMusic.music))

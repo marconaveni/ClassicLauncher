@@ -2,14 +2,15 @@
 #include "Graphics/Render.h"
 #include "GuiComponent.h"
 #include "Guis/GuiWindow.h"
-#include "Utils/Resouces.h"
+#include "Utils/Resources.h"
 
 namespace ClassicLauncher
 {
 
     static Application* sInstanceApplication = nullptr;
 
-    Application::Application() : mEntityManager(&this->mSpriteManager)
+    Application::Application()
+        : mEntityManager(&this->mSpriteManager)
     {
         if (sInstanceApplication == nullptr)
         {
@@ -86,9 +87,9 @@ namespace ClassicLauncher
         mAudioManager.LoadMusics(musicDir);
         mAudioManager.LoadCLick(audioClickFile);
         mAudioManager.LoadCursor(audioCursorFile);
+        mSpriteManager.Init();
         mSpriteManager.LoadSprite("ref", refPath);
         mSpriteManager.LoadSprite("sprite", sprite);
-        mSpriteManager.LoadSprite("transparent", GenImageColor(1, 1, Color{ 0, 0, 0, 0 }));
 
         Image img = {
             Resources::iconData, Resources::iconWidth, Resources::iconHeight, 1, Resources::iconFormat,

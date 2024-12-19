@@ -19,6 +19,7 @@ namespace ClassicLauncher
 
         Application* mApplication;
         std::vector<std::shared_ptr<GuiComponent>> mGuiCovers;
+        int mSize;
 
     public:
 
@@ -28,10 +29,13 @@ namespace ClassicLauncher
         void Init();
         void Update() override;
         void End() override;
-        void SetPosition(int numCovers);
         void SetCovers();
         void SetCover(std::string name, GuiComponent* miniCover);
         void ClearCovers();
+
+    private:
+
+        void SetPosition(int numCovers);
     };
 
 }  // namespace ClassicLauncher

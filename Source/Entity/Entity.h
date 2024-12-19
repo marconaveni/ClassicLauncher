@@ -12,7 +12,7 @@ namespace ClassicLauncher
         GuiComponentClass = 1,
         GuiWindowClass = 2,
         GuiCardClass = 3,
-        GuiGridClass = 4,
+        GuiHorizontalBoxClass = 4,
         GuiMiniCoverClass = 5,
     };
 

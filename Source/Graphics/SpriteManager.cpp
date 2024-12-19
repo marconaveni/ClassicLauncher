@@ -6,6 +6,13 @@ namespace ClassicLauncher
     {
     }
 
+    void SpriteManager::Init()
+    {
+        Image transparentImage = GenImageColor(1, 1, Color{ 0, 0, 0, 0 });
+        LoadSprite("transparent", transparentImage);
+        UnloadImage(transparentImage);
+    }
+
     void SpriteManager::LoadSprite(const std::string& name, const std::string& fileName, const int width, const int height, bool bAspectRatio)
     {
         mSpriteMap[name].Load(fileName, width, height, bAspectRatio);

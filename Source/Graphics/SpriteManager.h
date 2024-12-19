@@ -18,6 +18,7 @@ namespace ClassicLauncher
     public:
 
         SpriteManager();
+        void Init();
         void LoadSprite(const std::string& name, const std::string& fileName, const int width = 0, const int height = 0, bool bAspectRatio = true);
         void LoadSprite(const std::string& name, const Image& image, const int width = 0, const int height = 0, bool bAspectRatio = true);
         void UpdateSprite(std::string name, std::string fileName, const int width = 0, const int height = 0, bool bAspectRatio = true);

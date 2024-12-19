@@ -2,7 +2,7 @@
 
 #include <algorithm>
 #include "Utils/Math.h"
-#include "Utils/Resouces.h"
+#include "Utils/Resources.h"
 #include "Utils/StringFunctionLibrary.h"
 #include "Utils/UtilsFunctionLibrary.h"
 

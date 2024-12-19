@@ -40,7 +40,7 @@ jobs:
       run: ctest -C ${{env.BUILD_TYPE}}
 
     - name: Upload Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: build-artifacts  # Artifacts
-        path: ${{github.workspace}}/build  # paths
+        name: Classic-Launcher-windows-x64  # Artifacts
+        path: ${{github.workspace}}/build/Release  # paths

@@ -4,7 +4,7 @@
 namespace ClassicLauncher
 {
 
-    GuiCard::GuiCard(int x, int y)
+    GuiCard::GuiCard(int x, int y) 
     {
         this->x = x;
         this->y = y;

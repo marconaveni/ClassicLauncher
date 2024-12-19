@@ -11,13 +11,11 @@ namespace ClassicLauncher
 
     class Application;
     class GuiHorizontalBox;
-    class GuiMiniCover;
 
     class GuiWindow : public GuiComponent
     {
         Application* mApplication;
         std::shared_ptr<GuiHorizontalBox> mGuiHorizontalBox;
-        std::shared_ptr<GuiMiniCover> mMiniCover;
 
     public:
 
@@ -26,7 +24,7 @@ namespace ClassicLauncher
         virtual EntityType GetType() const override { return EntityType::GuiWindowClass; }
         virtual void Update() override;
         void Init();
-        void ChangeGrid(const CurrentList list);
+        void ChangeList(const CurrentList list);
         void ClearCovers();
     };
 

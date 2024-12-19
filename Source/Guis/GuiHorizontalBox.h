@@ -12,6 +12,7 @@ namespace ClassicLauncher
 {
 
     class GuiComponent;
+    class GuiMiniCover;
     class Application;
     class GuiCard;
 
@@ -25,6 +26,7 @@ namespace ClassicLauncher
     class GuiHorizontalBox : public GuiComponent
     {
         Application* mApplication;
+        std::shared_ptr<GuiMiniCover> mMiniCover;
         std::vector<std::shared_ptr<GuiCard>> mGuiCards;
         float mCardPositions[10]{ -632, -376, -120, 136, 392, 648, 904, 1160, 1416, 1672 };
         int mPositionX;
@@ -43,7 +45,12 @@ namespace ClassicLauncher
         void End() override;
         void SetFocus(int newId);
         void SetCovers();
-        EntityType GetType() const override { return EntityType::GuiGridClass; }
+        EntityType GetType() const override { return EntityType::GuiHorizontalBoxClass; }
+        void ChangeList(const CurrentList list);
+
+    private:
+
+        void ClearCovers();
     };
 
 }  // namespace ClassicLauncher

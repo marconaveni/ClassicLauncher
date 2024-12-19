@@ -5,27 +5,20 @@
 namespace ClassicLauncher
 {
     GuiMiniCover::GuiMiniCover()
-        : mApplication(&Application::Get())
+        : mApplication(&Application::Get()), mSize(32)
     {
     }
 
     void GuiMiniCover::Init()
     {
         x = 20;
-        y = 526;
-        for (int i = 0; i < 30; i++)
+        y = 298;
+        for (int i = 0; i < mSize; i++)
         {
             const int x = 29 * i;
             auto miniCover = mApplication->GetEntityManager()->CreateEntity<GuiComponent>();
             miniCover->x = x;
-
-            miniCover->width = 144;
-            miniCover->height = 114;
-            miniCover->sourceX = 1116;
-            miniCover->sourceY = 1131;
-            miniCover->scaleWidth = 29;
-            miniCover->scaleHeight = 29;
-            miniCover->textureName = "sprite";
+            miniCover->textureName = "transparent";
 
             AddChild(miniCover.get());
             mGuiCovers.emplace_back(miniCover);
@@ -35,8 +28,6 @@ namespace ClassicLauncher
     void GuiMiniCover::Update()
     {
         GuiComponent::Update();
-        ClearCovers();
-        SetCovers();
     }
 
     void GuiMiniCover::End()
@@ -46,8 +37,7 @@ namespace ClassicLauncher
 
     void GuiMiniCover::SetPosition(int numCovers)
     {
-        const int size = (1280 - (29 * numCovers)) / 2;
-        x = size;
+        x = (1280 - (29 * numCovers)) / 2;
 
         // const float arrowPositionX = (numCovers % 2 == 0) ? 640.0f : 625.0f;
         // arrow->position.position = Vector2{ arrowPositionX , positionY };
@@ -55,13 +45,14 @@ namespace ClassicLauncher
 
     void GuiMiniCover::SetCovers()
     {
+        ClearCovers();
         GameListManager* pManager = mApplication->GetGameListManager();
         SpriteManager* pSpriteManager = mApplication->GetSpriteManager();
         const int gameListSize = pManager->GetGameListSize();
 
         if (gameListSize == 0) return;
 
-        const int numCovers = gameListSize < 30 ? gameListSize : 30;
+        const int numCovers = gameListSize < mSize ? gameListSize : mSize;
 
         for (int i = 0; i < numCovers; i++)
         {
@@ -70,15 +61,17 @@ namespace ClassicLauncher
             indexFinal = Math::Clamp(indexFinal, 0, gameListSize - 1);
 
             const std::string fileName = pManager->GetCurrentGameList(indexFinal)->image;
+            std::string name = "sprite";
+
             if (!fileName.empty())
             {
-                const std::string name = std::to_string(indexFinal) + "_MCV";
+                name = std::to_string(indexFinal) + "_MCV";
                 pSpriteManager->LoadSprite(name, fileName, 28, 45);
-                SetCover(name, mGuiCovers[i].get());
             }
-            else
+
+            if (i - 1 >= 0 && i <= mGuiCovers.size() - 2)
             {
-                SetCover("sprite", mGuiCovers[i].get());
+                SetCover(name, mGuiCovers.at(i).get());
             }
         }
 
