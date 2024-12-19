@@ -1,12 +1,12 @@
 #ifndef GUI_GRID_H
 #define GUI_GRID_H
 
-#include <vector>
 #include <memory>
+#include <vector>
 
+#include "Application.h"
 #include "GuiCard.h"
 #include "GuiComponent.h"
-#include "Application.h"
 
 namespace ClassicLauncher
 {
@@ -15,22 +15,25 @@ namespace ClassicLauncher
     class Application;
     class GuiCard;
 
-
-    enum Direction { None, Left, Right };
-
+    enum Direction
+    {
+        None,
+        Left,
+        Right
+    };
 
     class GuiGrid : public GuiComponent
     {
-        
-        Application* app;
-        std::vector<std::shared_ptr<GuiCard>> cardsContainer;
-        float cardPositions[10] { -632 , -376 , -120 , 136 , 392 , 648, 904, 1160, 1416, 1672 };
-        int positionX;
+
+        Application* mApplication;
+        std::vector<std::shared_ptr<GuiCard>> mGuiCards;
+        float mCardPositions[10]{ -632, -376, -120, 136, 392, 648, 904, 1160, 1416, 1672 };
+        int mPositionX;
         bool bLeft;
         bool bRight;
-        Direction lastDirection;
-        int idFocus;
-        unsigned int speed;
+        Direction mLastDirection;
+        int mIdFocus;
+        unsigned int mSpeed;
 
     public:
 
@@ -44,6 +47,6 @@ namespace ClassicLauncher
         EntityType GetType() const override { return EntityType::GuiGridClass; }
     };
 
-}
+}  // namespace ClassicLauncher
 
-#endif // GUI_GRID_H
+#endif  // GUI_GRID_H

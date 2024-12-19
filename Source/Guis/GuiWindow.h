@@ -1,10 +1,10 @@
 #ifndef GUI_WINDOW_H
 #define GUI_WINDOW_H
 
-#include "GuiComponent.h"
-#include "Application.h"
-#include "GuiGrid.h"
 #include <memory>
+#include "Application.h"
+#include "GuiComponent.h"
+#include "GuiGrid.h"
 
 namespace ClassicLauncher
 {
@@ -16,11 +16,12 @@ namespace ClassicLauncher
     class GuiWindow : public GuiComponent
     {
 
-        Application* app;
-        std::shared_ptr<GuiGrid> guiGrid;
-        std::shared_ptr<GuiMiniCover> miniCover;
+        Application* mApplication;
+        std::shared_ptr<GuiGrid> mGuiGrid;
+        std::shared_ptr<GuiMiniCover> mMiniCover;
 
     public:
+
         GuiWindow() = default;
         virtual ~GuiWindow() override = default;
         virtual EntityType GetType() const override { return EntityType::GuiWindowClass; }
@@ -30,6 +31,6 @@ namespace ClassicLauncher
         void ClearCovers();
     };
 
-}
+}  // namespace ClassicLauncher
 
-#endif // GUI_WINDOW_H
+#endif  // GUI_WINDOW_H

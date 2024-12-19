@@ -5,6 +5,7 @@
 #include "Print.h"
 #include "UtilsFunctionLibrary.h"
 #include "StringFunctionLibrary.h"
+#include "Data/Vector2Ex.h"
 
 #define TEXT(...) TextFormat(__VA_ARGS__)
 

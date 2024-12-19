@@ -3,7 +3,6 @@
 
 #include "raylib.h"
 
-
 namespace ClassicLauncher
 {
 
@@ -32,14 +31,16 @@ namespace ClassicLauncher
         Vector2 GetMousePositionRender() const;
 
     private:
+
         int GetWidthRender() const;
         int GetHeightRender() const;
 
     public:
-        int GetScreenWidthGame() const;
-        int GetScreenHeightGame() const;
+
+        int GetScreenWidthGame() const { return static_cast<int>(width); }
+        int GetScreenHeightGame() const { return static_cast<int>(height); }
     };
 
-}
+}  // namespace ClassicLauncher
 
 #endif

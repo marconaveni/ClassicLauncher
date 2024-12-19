@@ -3,6 +3,4 @@
 namespace ClassicLauncher
 {
 
-
-} // namespace ClassicLauncher
-
+}  // namespace ClassicLauncher

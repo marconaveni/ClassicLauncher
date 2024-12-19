@@ -5,13 +5,13 @@
 namespace ClassicLauncher
 {
     EntityManager::EntityManager(SpriteManager* spriteManagerReference)
-    : spriteManagerReference(spriteManagerReference)
+    : mSpriteManagerReference(spriteManagerReference)
     {
     }
 
     void EntityManager::UpdateAll()
     {
-        for (auto& entity : entities)
+        for (auto& entity : mEntities)
         {
             entity->Update();
         }  
@@ -19,7 +19,7 @@ namespace ClassicLauncher
 
     void EntityManager::UpdatePositionAll()
     {
-        for (auto& entity : entities)
+        for (auto& entity : mEntities)
         {
             entity->UpdatePosition();
         }  
@@ -28,9 +28,9 @@ namespace ClassicLauncher
     void EntityManager::Draw()
     {
 
-        for (auto& entity : entities)
+        for (auto& entity : mEntities)
         {
-            const Texture2D* texture = spriteManagerReference->GetTexture(entity->textureName);
+            const Texture2D* texture = mSpriteManagerReference->GetTexture(entity->textureName);
             if(texture)
             {
                 const int x = entity->x + entity->rootX;
@@ -58,7 +58,7 @@ namespace ClassicLauncher
 
     void EntityManager::End()
     {
-        for (auto& entity : entities)
+        for (auto& entity : mEntities)
         {
             entity->End();
         } 

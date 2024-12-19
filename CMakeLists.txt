@@ -18,6 +18,7 @@ set(data
     "${CMAKE_SOURCE_DIR}/Source/Data/DateTime.h"
     "${CMAKE_SOURCE_DIR}/Source/Data/GameListManager.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Data/GameListManager.h"
+    "${CMAKE_SOURCE_DIR}/Source/Data/Vector2Ex.h"
 )
 set(audio
     "${CMAKE_SOURCE_DIR}/Source/Audio/AudioManager.cpp"

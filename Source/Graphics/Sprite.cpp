@@ -1,28 +1,17 @@
-
 #include "Sprite.h"
-#include <iostream>
 #include <chrono>
+#include <iostream>
 
 #include <atomic>
 #include <string>
 #include <thread>
-#include "raylib.h"
 #include "Utils/UtilsFunctionLibrary.h"
-
+#include "raylib.h"
 
 namespace ClassicLauncher
 {
 
-    Sprite::Sprite()
-      : bKeepRunning(false)
-      , bImageLoaded(false)
-      , bTextureLoaded(false)
-      , workerThread()
-      , image()
-      , texture()
-      , filePath()
-    {
-    }
+    Sprite::Sprite() : bKeepRunning(false), bImageLoaded(false), bTextureLoaded(false), workerThread(), image(), texture(), filePath() {}
 
     Sprite::~Sprite()
     {
@@ -30,12 +19,12 @@ namespace ClassicLauncher
         Stop();
         Join();
         Unload();
-        TraceLog(LOG_TRACE, "Sprite - thread stopped");     
+        TraceLog(LOG_TRACE, "Sprite - thread stopped");
     }
 
     void Sprite::Load(const std::string& file, const int width, const int height, bool bAspectRatio)
     {
-        if (!bKeepRunning && !bTextureLoaded && !bImageLoaded) 
+        if (!bKeepRunning && !bTextureLoaded && !bImageLoaded)
         {
             Join();
             bKeepRunning = true;
@@ -59,8 +48,8 @@ namespace ClassicLauncher
     }
 
     void Sprite::Stop()
-    {        
-        bKeepRunning = false; // Sinaliza para encerrar      
+    {
+        bKeepRunning = false;  // Sinaliza para encerrar
     }
 
     void Sprite::Join()
@@ -74,10 +63,10 @@ namespace ClassicLauncher
     void Sprite::LoadImage(const int width, const int height, bool bAspectRatio)
     {
         TraceLog(LOG_TRACE, "LoadImage - started ");
-        //std::this_thread::sleep_for(std::chrono::seconds(1)); //for test
+        // std::this_thread::sleep_for(std::chrono::seconds(1)); //for test
         if (bKeepRunning)
         {
-            //std::this_thread::sleep_for(std::chrono::seconds(1)); //for test
+            // std::this_thread::sleep_for(std::chrono::seconds(1)); //for test
             image = ::LoadImage(filePath.c_str());
             if (IsImageValid(image))
             {
@@ -124,7 +113,7 @@ namespace ClassicLauncher
         std::lock_guard<std::mutex> guard(mutexSprite);
         if (width > 0 && height > 0 && IsImageValid(image))
         {
-            if(bAspectRatio)
+            if (bAspectRatio)
             {
                 UtilsFunctionLibrary::ImageResize(image, width, height);
             }
@@ -132,7 +121,7 @@ namespace ClassicLauncher
             {
                 ImageResize(&image, width, height);
             }
-            if(bTextureLoaded)
+            if (bTextureLoaded)
             {
                 UpdateTexture(texture, image.data);
             }
@@ -150,7 +139,7 @@ namespace ClassicLauncher
         if (bTextureLoaded && IsTextureValid(texture))
         {
             ::UnloadTexture(texture);
-            TraceLog(LOG_DEBUG, "Unloaded Texture [ID %d] from - %s" , texture.id, filePath.c_str());
+            TraceLog(LOG_DEBUG, "Unloaded Texture [ID %d] from - %s", texture.id, filePath.c_str());
             texture = { 0 };
             bTextureLoaded = false;
         }
@@ -161,11 +150,10 @@ namespace ClassicLauncher
         if (bImageLoaded && IsImageValid(image))
         {
             ::UnloadImage(image);
-            TraceLog(LOG_DEBUG, "Unloaded Image from - %s" , filePath.c_str());
+            TraceLog(LOG_DEBUG, "Unloaded Image from - %s", filePath.c_str());
             image = { 0 };
             bImageLoaded = false;
         }
     }
 
-} // namespace ClassicLauncher
-
+}  // namespace ClassicLauncher

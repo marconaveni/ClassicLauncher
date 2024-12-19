@@ -1,199 +1,173 @@
 #include "GuiGrid.h"
 
-
+#include <algorithm>
+#include <memory>
 #include "Utils/Core.h"
-#include <algorithm>  
-#include <memory>  
-
 
 namespace ClassicLauncher
 {
 
-
-	GuiGrid::GuiGrid()
-		:	app(&Application::Get())
-	      , positionX(0)
-		  , bLeft(false)
-		  , bRight(false)
-		  , lastDirection(None)
-		  , idFocus(0)
-		  , speed(22)
-	{
-	}
+    GuiGrid::GuiGrid() : mApplication(&Application::Get()), mPositionX(0), bLeft(false), bRight(false), mLastDirection(None), mIdFocus(0), mSpeed(22) {}
 
     void GuiGrid::Init()
     {
 
-		for (int i = 0; i < 10; i++)
-		{
-			const int x = 256 * (i - 2);
-			auto card = app->GetEntityManager()->CreateEntity<GuiCard>(x - 120, 0);
-			//auto card = app->GetEntityManager()->CreateEntity<GuiCard>(0, 228);
-        	AddChild(card.get());
-			cardsContainer.emplace_back(card);
-		}
+        for (int i = 0; i < 10; i++)
+        {
+            const int x = 256 * (i - 2);
+            auto card = mApplication->GetEntityManager()->CreateEntity<GuiCard>(x - 120, 0);
+            // auto card = app->GetEntityManager()->CreateEntity<GuiCard>(0, 228);
+            AddChild(card.get());
+            mGuiCards.emplace_back(card);
+        }
 
-		SetFocus(3);
-		SetCovers();
+        SetFocus(3);
+        SetCovers();
     }
 
-    void GuiGrid::Draw()
-	{
-		GuiComponent::Draw();
-	}
+    void GuiGrid::Draw() { GuiComponent::Draw(); }
 
+    void GuiGrid::End() { GuiComponent::End(); }
 
-    void GuiGrid::End()
+    void GuiGrid::SetFocus(const int newId)
     {
-		GuiComponent::End();
+        if (mGuiCards[mIdFocus]->IsFocus() && mIdFocus == newId) return;
+
+        mGuiCards[mIdFocus]->RemoveFocus();
+        // cardsContainer[idFocus].StartAnimationLostFocus();
+        mIdFocus = newId;
+        // cardsContainer[newId].StartAnimationFocus();
+        mGuiCards[newId]->SetFocus();
+        bLeft = true;
     }
 
-	void GuiGrid::SetFocus(const int newId)
-	{
-		if(cardsContainer[idFocus]->IsFocus() && idFocus == newId) return;
+    void GuiGrid::SetCovers()
+    {
+        GameListManager* manager = mApplication->GetGameListManager();
+        SpriteManager* spriteManager = mApplication->GetSpriteManager();
 
-		cardsContainer[idFocus]->RemoveFocus();
-		//cardsContainer[idFocus].StartAnimationLostFocus();
-		idFocus = newId;
-		//cardsContainer[newId].StartAnimationFocus();
-		cardsContainer[newId]->SetFocus();
-		bLeft = true;
-	}
+        if (manager->GetGameListSize() == 0) return;
 
-	void GuiGrid::SetCovers()
-	{
-		GameListManager* manager = app->GetGameListManager();
-		SpriteManager* spriteManager = app->GetSpriteManager();
+        for (int i = 0; i < 10; i++)
+        {
+            int indexFinal = UtilsFunctionLibrary::SetIndexArray(manager->GetGameId() + i - mIdFocus, manager->GetGameListSize());
+            indexFinal = UtilsFunctionLibrary::SetIndexArray(indexFinal, manager->GetGameListSize());
+            indexFinal = Math::Clamp(indexFinal, 0, manager->GetGameListSize() - 1);
 
-		if (manager->GetGameListSize() == 0) return;
+            TraceLog(LOG_DEBUG, "index final %d line %d", indexFinal, __LINE__);
+            const std::string name = std::to_string(indexFinal) + "_CV";
+            const std::string path = manager->GetCurrentGameList(indexFinal)->image;
 
-		for (int i = 0; i < 10; i++)
-		{
-			int indexFinal = UtilsFunctionLibrary::SetIndexArray(manager->GetGameId() + i - idFocus, manager->GetGameListSize());
-			indexFinal = UtilsFunctionLibrary::SetIndexArray(indexFinal, manager->GetGameListSize());
-			indexFinal = Math::Clamp(indexFinal, 0, manager->GetGameListSize() - 1);
+            if (!path.empty())
+            {
+                spriteManager->LoadSprite(name, path, 228, 204);
+                mGuiCards[i]->SetCover(name);
+            }
+            else
+            {
+                mGuiCards[i]->SetCover();
+            }
+        }
+    }
 
-			TraceLog(LOG_DEBUG, "index final %d line %d", indexFinal , __LINE__ );
-			const std::string name = std::to_string(indexFinal) + "_CV";
-			const std::string path = manager->GetCurrentGameList(indexFinal)->image;
+    void GuiGrid::Update()
+    {
+        GuiComponent::Update();
 
-			if(!path.empty())
-			{
-				spriteManager->LoadSprite(name, path, 228, 204);
-				cardsContainer[i]->SetCover(name);
-			}
-			else
-			{
-				cardsContainer[i]->SetCover();
-			}
+        y = 228;
 
-		}
-	}
+        if (IsKeyReleased(KEY_V) && !bLeft)
+        {
+            mSpeed = 22;
+        }
+        if (IsKeyReleased(KEY_B) && !bLeft)
+        {
+            mSpeed = 88;
+        }
 
-	void GuiGrid::Update()
-	{
-		GuiComponent::Update();
+        if (IsKeyDown(KEY_LEFT) && !bRight)
+        {
+            if (!bLeft)
+            {
+                mApplication->GetAudioManager()->PlayCursor();
+                mApplication->GetGameListManager()->AddId(-1);
+                SetFocus(mIdFocus - 1);
+            }
+            bLeft = true;
+        }
+        if (IsKeyDown(KEY_RIGHT) && !bLeft)
+        {
+            if (!bRight)
+            {
+                mApplication->GetAudioManager()->PlayCursor();
+                mApplication->GetGameListManager()->AddId(1);
+                SetFocus(mIdFocus + 1);
+            }
+            bRight = true;
+        }
 
-		y = 228;
+        if (bRight)
+        {
+            mPositionX = mPositionX - mSpeed;
+        }
+        else if (bLeft)
+        {
+            mPositionX = mPositionX + mSpeed;
+        }
 
- 		if (IsKeyReleased(KEY_V) && !bLeft)
-		{
-			speed = 22;
+        for (const auto& cardContainer : mGuiCards)
+        {
+            if (mPositionX > -256 && mPositionX < 0 && bRight)
+            {
+                if (mIdFocus < 3 || mIdFocus > 6)
+                {
+                    cardContainer->x -= mSpeed;
+                }
+                mLastDirection = Left;
+            }
+            else if (mPositionX > 0 && mPositionX < 256 && bLeft)
+            {
+                if (mIdFocus < 3 || mIdFocus > 6)
+                {
+                    cardContainer->x += mSpeed;
+                }
+                mLastDirection = Right;
+            }
+            else if (mPositionX <= -256 || mPositionX >= 256)
+            {
+                mPositionX = 0;
+                bRight = false;
+                bLeft = false;
+                SetCovers();
+                // x = 0;
+                // ImageLoader::GetInstance()->UnloadGameListTextureOutRange();
+            }
+        }
 
-		}
-		if (IsKeyReleased(KEY_B) && !bLeft)
-		{
-			speed = 88;
-		}
+        if (mIdFocus < 3 || mIdFocus > 6)
+        {
 
+            if (mLastDirection == Left && mPositionX == 0)
+            {
+                std::rotate(mGuiCards.begin(), mGuiCards.begin() + 1, mGuiCards.end());
+                mLastDirection = None;
+                mIdFocus = Math::Clamp(mIdFocus, 3, 6);
+            }
+            else if (mLastDirection == Right && mPositionX == 0)
+            {
+                std::rotate(mGuiCards.rbegin(), mGuiCards.rbegin() + 1, mGuiCards.rend());
+                mLastDirection = None;
+                mIdFocus = Math::Clamp(mIdFocus, 3, 6);
+            }
+        }
 
-		if (IsKeyDown(KEY_LEFT) && !bRight)
-		{
-			if (!bLeft)
-			{
-				app->GetAudioManager()->PlayCursor();
-				app->GetGameListManager()->AddId(-1);
-				SetFocus(idFocus - 1);
-			}
-			bLeft = true;
-		}
-		if (IsKeyDown(KEY_RIGHT) && !bLeft)
-		{
-			if (!bRight)
-			{
-				app->GetAudioManager()->PlayCursor();
-				app->GetGameListManager()->AddId(1);
-				SetFocus(idFocus + 1);
-			}
-			bRight = true;
-		}
+        if (!bLeft && !bRight)
+        {
+            for (size_t i = 0; i < mGuiCards.size(); i++)
+            {
+                mGuiCards[i]->x = mCardPositions[i];
+            }
+        }
+    }
 
-		if (bRight)
-		{
-			positionX = positionX - speed;
-		}
-		else if (bLeft)
-		{
-			positionX = positionX + speed;
-		}
-
-
-		for (const auto& cardContainer : cardsContainer)
-		{
-			if (positionX > -256 && positionX < 0 && bRight)
-			{
-				if (idFocus < 3 || idFocus > 6)
-				{
-					cardContainer->x -= speed;
-				}
-				lastDirection = Left;
-			}
-			else if (positionX > 0 && positionX < 256 && bLeft)
-			{
-				if (idFocus < 3 || idFocus > 6)
-				{
-					cardContainer->x += speed;
-				}
-				lastDirection = Right;
-			}
-			else if (positionX <= -256 || positionX >= 256)
-			{
-				positionX = 0;
-				bRight = false;
-				bLeft = false;
-				SetCovers();
-				//x = 0;
-				//ImageLoader::GetInstance()->UnloadGameListTextureOutRange();
-			}
-
-		}
-
-		if (idFocus < 3 || idFocus > 6)
-		{
-
-			if (lastDirection == Left && positionX == 0)
-			{
-				std::rotate(cardsContainer.begin(), cardsContainer.begin() + 1, cardsContainer.end());
-				lastDirection = None;
-				idFocus = Math::Clamp(idFocus, 3, 6);
-			}
-			else if (lastDirection == Right && positionX == 0)
-			{
-				std::rotate(cardsContainer.rbegin(), cardsContainer.rbegin() + 1, cardsContainer.rend());
-				lastDirection = None;
-				idFocus = Math::Clamp(idFocus, 3, 6);
-			}
-
-		}
-
-		if (!bLeft && !bRight)
-		{
-			for (size_t i = 0; i < cardsContainer.size(); i++)
-			{
-				cardsContainer[i]->x = cardPositions[i];
-			}
-		} 
-
-	}
-
-} //
+}  // namespace ClassicLauncher

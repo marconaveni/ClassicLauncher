@@ -2,9 +2,9 @@
 #define SPRITE_H
 
 #include <atomic>
+#include <mutex>
 #include <string>
 #include <thread>
-#include <mutex>
 #include "raylib.h"
 
 namespace ClassicLauncher
@@ -12,12 +12,12 @@ namespace ClassicLauncher
 
     class Sprite
     {
-    
+
     public:
 
         Sprite();
         Sprite(const Sprite&) = delete;
-        Sprite& operator = (const Sprite&) = delete;
+        Sprite& operator=(const Sprite&) = delete;
         ~Sprite();
         void Load(const std::string& file, const int width = 0, const int height = 0, bool bAspectRatio = true);
         void Load(const Image& newImage, const int width = 0, const int height = 0, bool bAspectRatio = true);
@@ -46,8 +46,6 @@ namespace ClassicLauncher
         void UnloadImage();
     };
 
-
-} // ClassicLauncher
-
+}  // namespace ClassicLauncher
 
 #endif

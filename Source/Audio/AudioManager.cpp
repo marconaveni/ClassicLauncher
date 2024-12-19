@@ -1,28 +1,26 @@
 #include "AudioManager.h"
-#include "Utils/Core.h"
 #include <chrono>
-
+#include "Utils/Core.h"
 
 namespace ClassicLauncher
 {
 
-
     AudioManager::AudioManager()
-     : bIsRunning(false)
-     , bIsPlayClick(false)
-     , bIsPlayCursor(false)
-     , status(StatusAudio::Stop)
-     , clickMusic{ 0 }
-     , cursorMusic{ 0 }
-     , musics()
-     , idMusic(0)
+        : bIsRunning(false)
+        , bIsPlayClick(false)
+        , bIsPlayCursor(false)
+        , status(StatusAudio::Stop)
+        , clickMusic{ 0 }
+        , cursorMusic{ 0 }
+        , musics()
+        , idMusic(0)
     {
     }
 
     void AudioManager::Init()
     {
         Unload();
-        if (!bIsRunning) 
+        if (!bIsRunning)
         {
             bIsRunning = true;
             workerThread = std::thread(&AudioManager::Update, this);
@@ -31,10 +29,10 @@ namespace ClassicLauncher
 
     void AudioManager::LoadMusic(const std::string& path)
     {
-        AudioMusic audioMusic  { 0 } ;
+        AudioMusic audioMusic{ 0 };
         audioMusic.music = LoadMusicStream(path.c_str());
 
-        if(!IsMusicValid(audioMusic.music))
+        if (!IsMusicValid(audioMusic.music))
         {
             return;
         }
@@ -43,7 +41,6 @@ namespace ClassicLauncher
         audioMusic.name = GetFileNameWithoutExt(path.c_str());
         musics.emplace_back(audioMusic);
     }
-
 
     void AudioManager::LoadMusics(const std::string& path, bool bAutoPlay)
     {
@@ -57,21 +54,15 @@ namespace ClassicLauncher
         ChangeMusic(bAutoPlay);
     }
 
-    void AudioManager::LoadCursor(const std::string& path)
-    {
-        cursorMusic = LoadSound(path.c_str());
-    }
+    void AudioManager::LoadCursor(const std::string& path) { cursorMusic = LoadSound(path.c_str()); }
 
-    void AudioManager::LoadCLick(const std::string& path)
-    {
-        clickMusic = LoadSound(path.c_str());
-    }
+    void AudioManager::LoadCLick(const std::string& path) { clickMusic = LoadSound(path.c_str()); }
 
     void AudioManager::Play()
     {
         if (!musics.empty())
         {
-            Music& currentMusic = musics[idMusic].music; 
+            Music& currentMusic = musics[idMusic].music;
             if (status != StatusAudio::Playing)
             {
                 PlayMusicStream(currentMusic);
@@ -80,21 +71,15 @@ namespace ClassicLauncher
         }
     }
 
-    void AudioManager::PlayClick()
-    {
-        bIsPlayClick = true;
-    }
+    void AudioManager::PlayClick() { bIsPlayClick = true; }
 
-    void AudioManager::PlayCursor()
-    {
-        bIsPlayCursor = true;
-    }
+    void AudioManager::PlayCursor() { bIsPlayCursor = true; }
 
     void AudioManager::Pause()
     {
         if (!musics.empty())
         {
-            Music& currentMusic = musics[idMusic].music; 
+            Music& currentMusic = musics[idMusic].music;
             if (status == StatusAudio::Playing)
             {
                 PauseMusicStream(currentMusic);
@@ -107,7 +92,7 @@ namespace ClassicLauncher
     {
         if (!musics.empty())
         {
-            Music& currentMusic = musics[idMusic].music; 
+            Music& currentMusic = musics[idMusic].music;
             status = StatusAudio::Stop;
             StopMusicStream(currentMusic);
         }
@@ -115,22 +100,22 @@ namespace ClassicLauncher
 
     std::string AudioManager::GetMusicName()
     {
-        if (!musics.empty()) 
+        if (!musics.empty())
         {
-            return musics[idMusic].name;      
+            return musics[idMusic].name;
         }
         return std::string();
     }
 
     void AudioManager::ChangeMusic(bool bAutoPlay)
     {
-        if (!musics.empty()) 
+        if (!musics.empty())
         {
             Stop();
             idMusic = (musics.size() > 1) ? GenerateId() : 0;
             const Music& currentMusic = musics[idMusic].music;
-            SeekMusicStream(currentMusic, 0); 
-            if(bAutoPlay)
+            SeekMusicStream(currentMusic, 0);
+            if (bAutoPlay)
             {
                 Play();
             }
@@ -142,54 +127,53 @@ namespace ClassicLauncher
         int newId = idMusic;
         while (newId == idMusic)
         {
-            newId = static_cast<int>(Math::Random(0.0f, static_cast<float>(musics.size()))) ;
+            newId = static_cast<int>(Math::Random(0.0f, static_cast<float>(musics.size())));
         }
-        
-        return newId;  
+
+        return newId;
     }
 
     void AudioManager::Stream(const Music& music)
     {
-        if(IsMusicValid(music))
+        if (IsMusicValid(music))
         {
             UpdateMusicStream(music);
         }
     }
 
-
     void AudioManager::Update()
     {
-        while (bIsRunning) 
+        while (bIsRunning)
         {
-            
+
             std::lock_guard<std::mutex> lock(musicMutex);
 
-            if(!musics.empty() && status == StatusAudio::Playing)
+            if (!musics.empty() && status == StatusAudio::Playing)
             {
-                Music& currentMusic = musics[idMusic].music; 
+                Music& currentMusic = musics[idMusic].music;
                 Stream(currentMusic);
                 if (GetMusicTimeLength(currentMusic) - 1 < GetMusicTimePlayed(currentMusic))
                 {
                     ChangeMusic();
                 }
             }
-            if(IsSoundValid(clickMusic) && bIsPlayClick)
+            if (IsSoundValid(clickMusic) && bIsPlayClick)
             {
                 PlaySound(clickMusic);
                 bIsPlayClick = !bIsPlayClick;
             }
-            if(IsSoundValid(cursorMusic) && bIsPlayCursor)
+            if (IsSoundValid(cursorMusic) && bIsPlayCursor)
             {
                 PlaySound(cursorMusic);
                 bIsPlayCursor = !bIsPlayCursor;
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(10)); // wait
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));  // wait
         }
     }
 
     void AudioManager::Unload()
     {
-        if (bIsRunning) 
+        if (bIsRunning)
         {
             Stop();
             bIsRunning = false;
@@ -199,16 +183,13 @@ namespace ClassicLauncher
                 UnloadMusicStream(music.music);
             }
             musics.clear();
-            if (workerThread.joinable()) 
+            if (workerThread.joinable())
             {
-                workerThread.join(); // Espera a thread finalizar
+                workerThread.join();  // Espera a thread finalizar
             }
         }
     }
 
-    AudioManager::~AudioManager()
-    {
-        Unload();
-    }
+    AudioManager::~AudioManager() { Unload(); }
 
-}
+}  // namespace ClassicLauncher

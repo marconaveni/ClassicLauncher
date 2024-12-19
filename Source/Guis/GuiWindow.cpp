@@ -1,50 +1,48 @@
 #include "GuiWindow.h"
-#include "Utils/UtilsFunctionLibrary.h"
-#include "Utils/Resouces.h"
 #include "Guis/GuiMiniCover.h"
+#include "Utils/Resouces.h"
+#include "Utils/UtilsFunctionLibrary.h"
 
 namespace ClassicLauncher
 {
 
-
     void GuiWindow::Init()
     {
-        app = &Application::Get();
-        width = app->GetSpecification().width;
-        height = app->GetSpecification().height;
+        mApplication = &Application::Get();
+        width = mApplication->GetSpecification().width;
+        height = mApplication->GetSpecification().height;
         textureName = "ref";
-        
-        guiGrid = app->GetEntityManager()->CreateEntity<GuiGrid>();
-        miniCover = app->GetEntityManager()->CreateEntity<GuiMiniCover>();
-        
-        guiGrid->Init();
-        miniCover->Init();
 
-        AddChild(guiGrid.get());
-		AddChild(miniCover.get());
+        mGuiGrid = mApplication->GetEntityManager()->CreateEntity<GuiGrid>();
+        mMiniCover = mApplication->GetEntityManager()->CreateEntity<GuiMiniCover>();
+
+        mGuiGrid->Init();
+        mMiniCover->Init();
+
+        AddChild(mGuiGrid.get());
+        AddChild(mMiniCover.get());
     }
-
 
     void GuiWindow::Update()
     {
         GuiComponent::Update();
 
-        //rootY += 1;
+        // rootY += 1;
 
         if (IsKeyReleased(KEY_ENTER))
         {
-            app->GetAudioManager()->PlayClick();
+            mApplication->GetAudioManager()->PlayClick();
 
-            if (app->GetGameListManager()->GetCurrentList() == GameListSelect)
+            if (mApplication->GetGameListManager()->GetCurrentList() == GameListSelect)
             {
-                std::string fullPath = app->GetGameListManager()->GetCurrentSystemList()->executable;
+                std::string fullPath = mApplication->GetGameListManager()->GetCurrentSystemList()->executable;
                 fullPath.append(" ");
-                fullPath.append(app->GetGameListManager()->GetCurrentSystemList()->arguments);
+                fullPath.append(mApplication->GetGameListManager()->GetCurrentSystemList()->arguments);
                 fullPath.append(" \"");
-                fullPath.append(app->GetGameListManager()->GetCurrentGameList()->path);
+                fullPath.append(mApplication->GetGameListManager()->GetCurrentGameList()->path);
                 fullPath.append("\" ");
-                const std::string optionalWorkingDirectory = GetDirectoryPath(app->GetGameListManager()->GetCurrentSystemList()->executable.c_str());
-                //platformProcess->CreateProc(fullPath, optionalWorkingDirectory);
+                const std::string optionalWorkingDirectory = GetDirectoryPath(mApplication->GetGameListManager()->GetCurrentSystemList()->executable.c_str());
+                // platformProcess->CreateProc(fullPath, optionalWorkingDirectory);
             }
             else
             {
@@ -53,7 +51,7 @@ namespace ClassicLauncher
         }
         if (IsKeyReleased(KEY_BACKSPACE))
         {
-            if (app->GetGameListManager()->GetCurrentList() == GameListSelect)
+            if (mApplication->GetGameListManager()->GetCurrentList() == GameListSelect)
             {
                 ChangeGrid(SystemListSelect);
             }
@@ -63,26 +61,26 @@ namespace ClassicLauncher
     void GuiWindow::ChangeGrid(const CurrentList list)
     {
         ClearCovers();
-        guiGrid->SetFocus(3);
+        mGuiGrid->SetFocus(3);
         if (list == SystemListSelect)
         {
-            app->GetGameListManager()->ChangeGameToSystemList();
+            mApplication->GetGameListManager()->ChangeGameToSystemList();
         }
         else
         {
-            app->GetGameListManager()->ChangeSystemToGameList();
+            mApplication->GetGameListManager()->ChangeSystemToGameList();
         }
-        guiGrid->SetCovers();
+        mGuiGrid->SetCovers();
     }
 
     void GuiWindow::ClearCovers()
     {
-        int size = app->GetGameListManager()->GetGameListSize();
+        int size = mApplication->GetGameListManager()->GetGameListSize();
         for (int i = 0; i < size; i++)
         {
-            app->GetSpriteManager()->DeleteSprite(std::to_string(i) + "_CV");
-            app->GetSpriteManager()->DeleteSprite(std::to_string(i) + "_MCV");
+            mApplication->GetSpriteManager()->DeleteSprite(std::to_string(i) + "_CV");
+            mApplication->GetSpriteManager()->DeleteSprite(std::to_string(i) + "_MCV");
         }
     }
 
-} // namespace ClassicLauncher
+}  // namespace ClassicLauncher

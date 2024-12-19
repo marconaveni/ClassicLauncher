@@ -1,17 +1,17 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
+#include <memory>
+#include <vector>
+#include "Audio/AudioManager.h"
+#include "Data/GameListManager.h"
+#include "Entity/Entity.h"
+#include "Entity/EntityManager.h"
 #include "Graphics/Render.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/SpriteManager.h"
-#include "Utils/Core.h"
-#include "Audio/AudioManager.h"
-#include "Entity/Entity.h"
-#include "Entity/EntityManager.h"
-#include "Data/GameListManager.h"
 #include "Guis/GuiWindow.h"
-#include <vector>
-#include <memory>
+#include "Utils/Core.h"
 
 namespace ClassicLauncher
 {
@@ -26,20 +26,21 @@ namespace ClassicLauncher
         int posWindowY = 0;
     };
 
-    class Application 
+    class Application
     {
-    
-        ApplicationSpecification specification;
-        Render render;
-        Print print;
-        AudioManager audioManager;
-        SpriteManager spriteManager;
-        EntityManager entityManager;
-        GameListManager gameListManager;
 
-        std::shared_ptr<GuiWindow> guiWindow;
+        ApplicationSpecification mSpecification;
+        Render mRender;
+        Print mPrint;
+        AudioManager mAudioManager;
+        SpriteManager mSpriteManager;
+        EntityManager mEntityManager;
+        GameListManager mGameListManager;
+
+        std::shared_ptr<GuiWindow> mGuiWindow;
 
     public:
+
         Application();
         ~Application();
         static Application& Get();
@@ -52,16 +53,15 @@ namespace ClassicLauncher
         void Init();
 
     private:
+
         void Loop();
         void Update();
         void Draw();
         void EndRender();
         void End();
         void ToggleFullscreen();
-
     };
-    
-} // namespace ClassicLauncher
 
+}  // namespace ClassicLauncher
 
-#endif 
+#endif

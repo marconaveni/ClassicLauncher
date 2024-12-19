@@ -14,8 +14,8 @@ namespace ClassicLauncher
     {
     private:
 
-        std::vector<std::shared_ptr<Entity>> entities;
-        SpriteManager* spriteManagerReference;
+        std::vector<std::shared_ptr<Entity>> mEntities;
+        SpriteManager* mSpriteManagerReference;
 
     public:
 
@@ -27,7 +27,7 @@ namespace ClassicLauncher
         {
             static_assert(std::is_base_of<Entity, T>::value, "T deve herdar de Entity");
             auto entity = std::make_shared<T>(std::forward<Args>(args)...);
-            entities.emplace_back(entity);
+            mEntities.emplace_back(entity);
             return entity;
         }
 

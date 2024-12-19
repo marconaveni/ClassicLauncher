@@ -1,23 +1,20 @@
 #include "GuiCard.h"
 #include "Application.h"
 
-
 namespace ClassicLauncher
 {
-
 
     GuiCard::GuiCard(int x, int y)
     {
         this->x = x;
         this->y = y;
 
-        CreateCard(cardMain, 528, 15, 255);
-        CreateCard(cardFavorite, 783, 15, 100);
-        CreateCard(cardSelected, 273, 15, 100);
-        CreateCard(cover, 0, 0, 255);
-        
+        CreateCard(mCardMain, 528, 15, 255);
+        CreateCard(mCardFavorite, 783, 15, 100);
+        CreateCard(mCardSelected, 273, 15, 100);
+        CreateCard(mCover, 0, 0, 255);
+
         SetCover();
-          
     }
 
     void GuiCard::CreateCard(std::shared_ptr<GuiComponent>& card, int sourceX, int sourceY, unsigned char alpha)
@@ -41,56 +38,51 @@ namespace ClassicLauncher
         GuiComponent::Update();
 
         Application* app = &Application::Get();
-        Texture2D* textureReference = app->GetSpriteManager()->GetTexture(cover->textureName);
+        Texture2D* textureReference = app->GetSpriteManager()->GetTexture(mCover->textureName);
 
-        if (textureReference != nullptr && cover->textureName != "sprite")
+        if (textureReference != nullptr && mCover->textureName != "sprite")
         {
-            cover->x = (240.0f - static_cast<float>(textureReference->width)) / 2.0f;
-            cover->y = (216.0f - static_cast<float>(textureReference->height)) / 2.0f;
+            mCover->x = (240.0f - static_cast<float>(textureReference->width)) / 2.0f;
+            mCover->y = (216.0f - static_cast<float>(textureReference->height)) / 2.0f;
         }
-
     }
 
     void GuiCard::SetFocus()
     {
         bFocus = true;
-        cardSelected->alpha = 255;
+        mCardSelected->alpha = 255;
     }
 
     void GuiCard::RemoveFocus()
     {
         bFocus = false;
-        cardSelected->alpha = 0;
+        mCardSelected->alpha = 0;
     }
 
     void GuiCard::SetCover(std::string name)
     {
-        if(name.empty())
+        if (name.empty())
         {
-            cover->width = 144;
-            cover->height = 114;
-            cover->sourceX = 1116;
-            cover->sourceY = 1131;
-            cover->x = 50;
-            cover->y = 50;
-            cover->textureName = "sprite";
+            mCover->width = 144;
+            mCover->height = 114;
+            mCover->sourceX = 1116;
+            mCover->sourceY = 1131;
+            mCover->x = 50;
+            mCover->y = 50;
+            mCover->textureName = "sprite";
         }
         else
         {
-            cover->width = 0;
-            cover->height = 0;
-            cover->sourceX = 0;
-            cover->sourceY = 0;
-            cover->x = 0;
-            cover->y = 0;
-            cover->textureName = name;
+            mCover->width = 0;
+            mCover->height = 0;
+            mCover->sourceX = 0;
+            mCover->sourceY = 0;
+            mCover->x = 0;
+            mCover->y = 0;
+            mCover->textureName = name;
         }
     }
 
-    bool GuiCard::IsFocus()
-    {
-        return bFocus;
-    }
+    bool GuiCard::IsFocus() { return bFocus; }
 
-} // namespace ClassicLauncher
-
+}  // namespace ClassicLauncher

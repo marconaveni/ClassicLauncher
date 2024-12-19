@@ -3,10 +3,8 @@
 
 #include <string>
 
-
 namespace ClassicLauncher
 {
-
 
     enum class EntityType
     {
@@ -17,7 +15,6 @@ namespace ClassicLauncher
         GuiGridClass = 4,
         GuiMiniCoverClass = 5,
     };
-
 
     class Entity
     {
@@ -46,18 +43,16 @@ namespace ClassicLauncher
         float scaleHeight = 0;
         float scale = 1;
         float rotation = 0;
-        unsigned char red = 255;        // Color red value
-        unsigned char green = 255;        // Color green value
-        unsigned char blue = 255;        // Color blue value
-        unsigned char alpha = 255;        // Color alpha value
+        unsigned char red = 255;    // Color red value
+        unsigned char green = 255;  // Color green value
+        unsigned char blue = 255;   // Color blue value
+        unsigned char alpha = 255;  // Color alpha value
         std::string textureName;
 
         int rootX = 0;
         int rootY = 0;
-    
     };
-  
 
-}
+}  // namespace ClassicLauncher
 
-#endif // ENTITY_H
+#endif  // ENTITY_H

@@ -1,42 +1,36 @@
 #include "SpriteManager.h"
 
-
 namespace ClassicLauncher
 {
-    SpriteManager::SpriteManager()
-    {
-    }
+    SpriteManager::SpriteManager() {}
 
     void SpriteManager::LoadSprite(const std::string& name, const std::string& fileName, const int width, const int height, bool bAspectRatio)
     {
-        spriteMap[name].Load(fileName, width, height, bAspectRatio);
+        mSpriteMap[name].Load(fileName, width, height, bAspectRatio);
     }
 
     void SpriteManager::LoadSprite(const std::string& name, const Image& image, const int width, const int height, bool bAspectRatio)
     {
-        spriteMap[name].Load(image, width, height, bAspectRatio);
+        mSpriteMap[name].Load(image, width, height, bAspectRatio);
     }
 
     void SpriteManager::UpdateSprite(std::string name, std::string fileName, const int width, const int height, bool bAspectRatio)
     {
-        spriteMap[name].Unload();
-        spriteMap[name].Load(fileName, width, height, bAspectRatio);
+        mSpriteMap[name].Unload();
+        mSpriteMap[name].Load(fileName, width, height, bAspectRatio);
     }
 
     Texture2D* SpriteManager::GetTexture(const std::string& name)
     {
-        auto it = spriteMap.find(name);
-        if (it == spriteMap.end())
+        auto it = mSpriteMap.find(name);
+        if (it == mSpriteMap.end())
         {
             return nullptr;
         }
-        return spriteMap[name].GetTexture();
+        return mSpriteMap[name].GetTexture();
     }
 
-    Image* SpriteManager::GetImage(std::string name)
-    {
-        return spriteMap[name].GetImage();
-    }
+    Image* SpriteManager::GetImage(std::string name) { return mSpriteMap[name].GetImage(); }
 
     bool SpriteManager::DeleteSprite(std::string name)
     {
@@ -48,14 +42,11 @@ namespace ClassicLauncher
         //     return true;
         // }
 
-        spriteMap[name].Unload();
-        spriteMap.erase(name);
+        mSpriteMap[name].Unload();
+        mSpriteMap.erase(name);
         return false;
     }
 
-    void SpriteManager::UnloadSprites()
-    {
-        spriteMap.clear();
-    }
+    void SpriteManager::UnloadSprites() { mSpriteMap.clear(); }
 
-} // namespace ClassicLauncher
+}  // namespace ClassicLauncher

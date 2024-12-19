@@ -1,115 +1,86 @@
 #include "Application.h"
 #include "Graphics/Render.h"
-#include "Utils/Resouces.h"
-#include "Utils/Core.h"
 #include "GuiComponent.h"
-#include "raylib.h"
 #include "Guis/GuiWindow.h"
-
+#include "Utils/Core.h"
+#include "Utils/Resouces.h"
+#include "raylib.h"
 
 namespace ClassicLauncher
 {
 
-    static Application* instanceApplication = nullptr;
+    static Application* sInstanceApplication = nullptr;
 
-    Application::Application() :entityManager(&this->spriteManager)
-    {   
-        if (instanceApplication == nullptr)
+    Application::Application() : mEntityManager(&this->mSpriteManager)
+    {
+        if (sInstanceApplication == nullptr)
         {
-            instanceApplication = this;
+            sInstanceApplication = this;
         }
     }
 
-    Application::~Application()
-    {
-        instanceApplication = nullptr;    
-    }
+    Application::~Application() { sInstanceApplication = nullptr; }
 
-    Application& Application::Get()
-    {
-        return *instanceApplication;
-    }
+    Application& Application::Get() { return *sInstanceApplication; }
 
-    ApplicationSpecification Application::GetSpecification()
-    {
-        return specification;
-    }
+    ApplicationSpecification Application::GetSpecification() { return mSpecification; }
 
-    Print* Application::GetPrint()
-    {
-        return &print;
-    }
+    Print* Application::GetPrint() { return &mPrint; }
 
-    AudioManager* Application::GetAudioManager()
-    {
-        return &audioManager;
-    }
+    AudioManager* Application::GetAudioManager() { return &mAudioManager; }
 
-    SpriteManager* Application::GetSpriteManager()
-    {
-        return &spriteManager;
-    }
+    SpriteManager* Application::GetSpriteManager() { return &mSpriteManager; }
 
-    EntityManager* Application::GetEntityManager()
-    {
-        return &entityManager;
-    }
+    EntityManager* Application::GetEntityManager() { return &mEntityManager; }
 
-    GameListManager* Application::GetGameListManager()
-    {
-        return &gameListManager;
-    }
+    GameListManager* Application::GetGameListManager() { return &mGameListManager; }
 
     void Application::Init()
     {
 
-	    gameListManager.Initialize();
+        mGameListManager.Initialize();
 
-        SetConfigFlags(FLAG_VSYNC_HINT); // vsync only enable in fullscreen set before InitWindow
-        InitWindow(specification.width, specification.height, specification.title);
+        SetConfigFlags(FLAG_VSYNC_HINT);  // vsync only enable in fullscreen set before InitWindow
+        InitWindow(mSpecification.width, mSpecification.height, mSpecification.title);
         SetWindowState(FLAG_WINDOW_RESIZABLE);
-        SetWindowMinSize(specification.width, specification.height);
-        SetWindowSize(specification.width, specification.height);
+        SetWindowMinSize(mSpecification.width, mSpecification.height);
+        SetWindowSize(mSpecification.width, mSpecification.height);
         SetTargetFPS(60);
         ChangeDirectory(UtilsFunctionLibrary::GetHomeDir().c_str());
         // SetExitKey(KEY_NULL);
         // ToggleFullscreen();
 
         InitAudioDevice();
-        
+
         const std::string fontFile = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::roboto);
         const std::string musicDir = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::musicsFolder);
         const std::string audioClickFile = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::clickAudio);
         const std::string audioCursorFile = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::cursorAudio);
-        const std::string refpath = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::themesDefaultFolder + "/ref.png");
+        const std::string refPath =
+            StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::themesDefaultFolder + "/ref.png");
         const std::string sprite = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::themesSprite);
-        
-        print.LoadFont(fontFile, 16, 0);
-        render.LoadRender(specification.width, specification.height);
-        audioManager.Init();
-        audioManager.LoadMusics(musicDir);
-        audioManager.LoadCLick(audioClickFile);
-        audioManager.LoadCursor(audioCursorFile);
-        spriteManager.LoadSprite("ref", refpath);
-        spriteManager.LoadSprite("sprite", sprite);
-        spriteManager.LoadSprite("transparent", GenImageColor(1, 1, Color(0, 0, 0, 0)));
 
+        mPrint.LoadFont(fontFile, 16, 0);
+        mRender.LoadRender(mSpecification.width, mSpecification.height);
+        mAudioManager.Init();
+        mAudioManager.LoadMusics(musicDir);
+        mAudioManager.LoadCLick(audioClickFile);
+        mAudioManager.LoadCursor(audioCursorFile);
+        mSpriteManager.LoadSprite("ref", refPath);
+        mSpriteManager.LoadSprite("sprite", sprite);
+        mSpriteManager.LoadSprite("transparent", GenImageColor(1, 1, Color{0, 0, 0, 0}));
 
         Image img = {
-              Resources::iconData,
-              Resources::iconWidth,
-              Resources::iconHeight,
-              1,
-              Resources::iconFormat,
+            Resources::iconData, Resources::iconWidth, Resources::iconHeight, 1, Resources::iconFormat,
         };
 
         SetWindowIcon(img);
 
-        guiWindow = entityManager.CreateEntity<GuiWindow>();
-        guiWindow->Init();
+        mGuiWindow = mEntityManager.CreateEntity<GuiWindow>();
+        mGuiWindow->Init();
 
         Loop();
-    
+
         End();
         CloseWindow();
         CloseAudioDevice();
@@ -120,14 +91,14 @@ namespace ClassicLauncher
         while (!WindowShouldClose())
         {
             ToggleFullscreen();
-            
-            render.BeginRender();
-            Update(); // update logic
-            render.EndRender();
-            
+
+            mRender.BeginRender();
+            Update();  // update logic
+            mRender.EndRender();
+
             BeginDrawing();
             ClearBackground(BLACK);
-            Draw(); // draw on screen
+            Draw();  // draw on screen
             EndDrawing();
             EndRender();
         }
@@ -136,94 +107,68 @@ namespace ClassicLauncher
     void Application::Update()
     {
 
-        entityManager.UpdateAll();
-        entityManager.UpdatePositionAll();
-        entityManager.Draw(); // draw in texture render
-        // Aqui vai logica 
+        mEntityManager.UpdateAll();
+        mEntityManager.UpdatePositionAll();
+        mEntityManager.Draw();  // draw in texture render
 
-        GameList* systemList = gameListManager.GetCurrentGameList();
-        print.PrintOnScreen(TEXT("name game %s" , systemList->name.c_str() ), 2.0f ,"systemlist", BLUE);
+        // Aqui vai logica
+        GameList* systemList = mGameListManager.GetCurrentGameList();
+        mPrint.PrintOnScreen(TEXT("name game %s", systemList->name.c_str()), 2.0f, "systemlist", BLUE);
 
-        
+        DrawText(TEXT("%s", mAudioManager.GetMusicName().c_str()), 200, 300, 20, BLACK);
+        mPrint.PrintOnScreen(TEXT("Select Game:\n1 - one\n2 - two\n3 - three"), 2.0f, "home", RED);
+        mPrint.PrintOnScreen(TEXT("========================================"), 2.0f, "homse", BLUE);
+        mPrint.PrintOnScreen(TEXT("Select Game:\n4 - four\n5 - five\n6 - six"), 2.0f, "teste", GREEN);
+        mPrint.PrintOnScreen(TEXT("%.6f ", GetFrameTime()), 2.0f, "teste", GREEN);
+        // print.PrintOnScreen(TEXT("abc"), 2.0f );
 
-        DrawText(TEXT("%s", audioManager.GetMusicName().c_str()), 200, 300, 20, BLACK);
-        print.PrintOnScreen(TEXT("Select Game:\n1 - one\n2 - two\n3 - three"), 2.0f ,"home", RED);
-        print.PrintOnScreen(TEXT("========================================"), 2.0f ,"homse", BLUE);
-        print.PrintOnScreen(TEXT("Select Game:\n4 - four\n5 - five\n6 - six"), 2.0f, "teste", GREEN);
-        //print.PrintOnScreen(TEXT("abc"), 2.0f );
-
-        if(IsKeyReleased(KEY_L))
+        if (IsKeyReleased(KEY_L))
         {
-            spriteManager.DeleteSprite("teste");
+            mSpriteManager.DeleteSprite("teste");
         }
-        if(IsKeyReleased(KEY_K))
+        if (IsKeyReleased(KEY_K))
         {
-            gameListManager.ChangeSystemToGameList();
-        }
-        if(IsKeyReleased(KEY_J))
-        {
-            
-
-            int x = 0;
-            int c = 0;
-            for (auto& gameList : gameListManager.GetAllGameList())
-            {
-                const std::string nameId = "cover_" + std::to_string(gameList.mapIndex);
-				spriteManager.LoadSprite(gameList.name , gameList.image, 280 , 400 , true);
-                const auto guiComponent = entityManager.CreateEntity<GuiComponent>();
-                guiComponent->textureName = gameList.name;
-                guiComponent->x = x;
-                guiComponent->y = 100;
-
-                //guiComponent->scaleWidth = 100;
-                //guiComponent->scaleHeight = 100;
-                x += 300;
-                c++;
-                if(c > 64) break;
-            }
+            mGameListManager.ChangeSystemToGameList();
         }
 
-        if(IsKeyReleased(KEY_A))
+        if (IsKeyReleased(KEY_A))
         {
-            audioManager.ChangeMusic();
-            print.PrintOnScreen(TEXT("Changed music"), 2.0f);
+            mAudioManager.ChangeMusic();
+            mPrint.PrintOnScreen(TEXT("Changed music"), 2.0f);
         }
 
-        if(IsKeyReleased(KEY_S))
+        if (IsKeyReleased(KEY_S))
         {
-            audioManager.Pause();
-            print.PrintOnScreen(TEXT("Pause music"), 2.0f);
+            mAudioManager.Pause();
+            mPrint.PrintOnScreen(TEXT("Pause music"), 2.0f);
         }
-        if(IsKeyReleased(KEY_D))
+        if (IsKeyReleased(KEY_D))
         {
-            audioManager.Play();
-            print.PrintOnScreen(TEXT("Play music"), 2.0f);
+            mAudioManager.Play();
+            mPrint.PrintOnScreen(TEXT("Play music"), 2.0f);
         }
-        if(IsKeyReleased(KEY_UP))
+        if (IsKeyReleased(KEY_UP))
         {
             std::string homeDir = UtilsFunctionLibrary::GetHomeDir();
-            print.Log(LOG_DEBUG, TEXT("GetHomeDir %s", homeDir.c_str()));
-            print.Log(LOG_DEBUG, TEXT("GetWorkingDirectory %s", UtilsFunctionLibrary::GetWorkingDirectory().c_str()));
+            mPrint.Log(LOG_DEBUG, TEXT("GetHomeDir %s", homeDir.c_str()));
+            mPrint.Log(LOG_DEBUG, TEXT("GetWorkingDirectory %s", UtilsFunctionLibrary::GetWorkingDirectory().c_str()));
         }
-
     }
 
     void Application::Draw()
     {
-        render.DrawRender();
-        print.DrawMessage();    
+        mRender.DrawRender();
+        mPrint.DrawMessage();
     }
 
-    void Application::EndRender()
-    {
-    }
+    void Application::EndRender() {}
 
     void Application::End()
     {
-        render.Unload();
-        print.Unload();
-        audioManager.Unload();
-        spriteManager.UnloadSprites();
+        mRender.Unload();
+        mPrint.Unload();
+        mAudioManager.Unload();
+        mSpriteManager.UnloadSprites();
     }
 
     void Application::ToggleFullscreen()
@@ -245,10 +190,10 @@ namespace ClassicLauncher
             else
             {
                 ::ToggleFullscreen();
-                SetWindowSize(specification.width , specification.height);
+                SetWindowSize(specification.width, specification.height);
                 SetWindowPosition(specification.posWindowX, specification.posWindowY);
             }
 #endif
         }
     }
-}
+}  // namespace ClassicLauncher

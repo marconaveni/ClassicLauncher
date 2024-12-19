@@ -4,5 +4,4 @@ int main()
 {
     ClassicLauncher::Application app;
     app.Init();
-} 
-
+}

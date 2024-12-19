@@ -1,12 +1,12 @@
 #ifndef GUI_MINI_COVER_H
 #define GUI_MINI_COVER_H
 
-#include <vector>
 #include <memory>
 #include <string>
+#include <vector>
 
-#include "GuiComponent.h"
 #include "Application.h"
+#include "GuiComponent.h"
 
 namespace ClassicLauncher
 {
@@ -17,8 +17,8 @@ namespace ClassicLauncher
     {
     private:
 
-        Application* app;
-        std::vector<std::shared_ptr<GuiComponent>> guiCovers;
+        Application* mApplication;
+        std::vector<std::shared_ptr<GuiComponent>> mGuiCovers;
 
     public:
 
@@ -32,12 +32,8 @@ namespace ClassicLauncher
         void SetCovers();
         void SetCover(std::string name, GuiComponent* miniCover);
         void ClearCovers();
-
     };
 
+}  // namespace ClassicLauncher
 
-
-
-}
-
-#endif // GUI_MINI_COVER_H
+#endif  // GUI_MINI_COVER_H
