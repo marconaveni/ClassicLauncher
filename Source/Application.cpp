@@ -37,7 +37,6 @@ namespace ClassicLauncher
 
     void Application::Init()
     {
-
         mGameListManager.Initialize();
 
         SetConfigFlags(FLAG_VSYNC_HINT);  // vsync only enable in fullscreen set before InitWindow
@@ -68,7 +67,7 @@ namespace ClassicLauncher
         mAudioManager.LoadCursor(audioCursorFile);
         mSpriteManager.LoadSprite("ref", refPath);
         mSpriteManager.LoadSprite("sprite", sprite);
-        mSpriteManager.LoadSprite("transparent", GenImageColor(1, 1, Color{0, 0, 0, 0}));
+        mSpriteManager.LoadSprite("transparent", GenImageColor(1, 1, Color{ 0, 0, 0, 0 }));
 
         Image img = {
             Resources::iconData, Resources::iconWidth, Resources::iconHeight, 1, Resources::iconFormat,
@@ -106,7 +105,6 @@ namespace ClassicLauncher
 
     void Application::Update()
     {
-
         mEntityManager.UpdateAll();
         mEntityManager.UpdatePositionAll();
         mEntityManager.Draw();  // draw in texture render
@@ -180,18 +178,18 @@ namespace ClassicLauncher
 #else
             if (!IsWindowFullscreen())
             {
-                specification.posWindowX = GetWindowPosition().x;
-                specification.posWindowY = GetWindowPosition().y;
-                specification.width = GetScreenWidth();
-                specification.height = GetScreenHeight();
+                mSpecification.posWindowX = GetWindowPosition().x;
+                mSpecification.posWindowY = GetWindowPosition().y;
+                mSpecification.width = GetScreenWidth();
+                mSpecification.height = GetScreenHeight();
                 SetWindowSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
                 ::ToggleFullscreen();
             }
             else
             {
                 ::ToggleFullscreen();
-                SetWindowSize(specification.width, specification.height);
-                SetWindowPosition(specification.posWindowX, specification.posWindowY);
+                SetWindowSize(mSpecification.width, mSpecification.height);
+                SetWindowPosition(mSpecification.posWindowX, mSpecification.posWindowY);
             }
 #endif
         }
