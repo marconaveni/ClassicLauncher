@@ -1,5 +1,5 @@
-#ifndef GUI_GRID_H
-#define GUI_GRID_H
+#ifndef GUI_HORIZONTAL_BOX_H
+#define GUI_HORIZONTAL_BOX_H
 
 #include <memory>
 #include <vector>
@@ -22,9 +22,8 @@ namespace ClassicLauncher
         Right
     };
 
-    class GuiGrid : public GuiComponent
+    class GuiHorizontalBox : public GuiComponent
     {
-
         Application* mApplication;
         std::vector<std::shared_ptr<GuiCard>> mGuiCards;
         float mCardPositions[10]{ -632, -376, -120, 136, 392, 648, 904, 1160, 1416, 1672 };
@@ -37,7 +36,7 @@ namespace ClassicLauncher
 
     public:
 
-        GuiGrid();
+        GuiHorizontalBox();
         void Init();
         void Update() override;
         void Draw() override;
@@ -49,4 +48,4 @@ namespace ClassicLauncher
 
 }  // namespace ClassicLauncher
 
-#endif  // GUI_GRID_H
+#endif  // GUI_HORIZONTAL_BOX_H

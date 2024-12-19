@@ -19,7 +19,6 @@ namespace ClassicLauncher
 
     void GuiCard::CreateCard(std::shared_ptr<GuiComponent>& card, int sourceX, int sourceY, unsigned char alpha)
     {
-
         Application* app = &Application::Get();
 
         card = app->GetEntityManager()->CreateEntity<GuiComponent>();
@@ -83,6 +82,9 @@ namespace ClassicLauncher
         }
     }
 
-    bool GuiCard::IsFocus() { return bFocus; }
+    bool GuiCard::IsFocus()
+    {
+        return bFocus;
+    }
 
 }  // namespace ClassicLauncher

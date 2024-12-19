@@ -11,7 +11,10 @@
 namespace ClassicLauncher
 {
 
-    Sprite::Sprite() : bKeepRunning(false), bImageLoaded(false), bTextureLoaded(false), workerThread(), image(), texture(), filePath() {}
+    Sprite::Sprite()
+        : bKeepRunning(false), bImageLoaded(false), bTextureLoaded(false), workerThread(), image(), texture(), filePath()
+    {
+    }
 
     Sprite::~Sprite()
     {

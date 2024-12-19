@@ -18,15 +18,15 @@ namespace ClassicLauncher
 
         void Update(float deltaTime)
         {
-            if (mSpriteIndices.empty()) return;  
+            if (mSpriteIndices.empty()) return;
 
             mAlpha += (1.0f / mTimeAnimation) * deltaTime;
             mCurrentTime += deltaTime;
 
             if (mAlpha >= 1.0f)
             {
-                mAlpha = 0.0f;          
-                ++mCurrentSpriteIndex;  
+                mAlpha = 0.0f;
+                ++mCurrentSpriteIndex;
 
                 if (mCurrentSpriteIndex >= mSpriteIndices.size())
                 {
@@ -40,7 +40,7 @@ namespace ClassicLauncher
 
     private:
 
-        float mTimeAnimation;            // Duração total para avançar para o próximo sprite
+        float mTimeAnimation;             // Duração total para avançar para o próximo sprite
         float mCurrentTime;               // Tempo decorrido total
         float mAlpha;                     // Fator interpolante entre 0 e 1
         std::vector<int> mSpriteIndices;  // Vetor com os índices ou IDs dos sprites

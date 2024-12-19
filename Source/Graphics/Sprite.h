@@ -12,7 +12,6 @@ namespace ClassicLauncher
 
     class Sprite
     {
-
     public:
 
         Sprite();

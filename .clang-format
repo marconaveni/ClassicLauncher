@@ -4,9 +4,10 @@ IndentWidth: 4
 BreakBeforeBraces: Allman
 PointerAlignment: Left
 SpacesBeforeTrailingComments: 2
-ColumnLimit: 150
+ColumnLimit: 170
 AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortFunctionsOnASingleLine: InlineOnly
 NamespaceIndentation: All
 IncludeBlocks: Preserve
 AccessModifierOffset: -4
@@ -16,7 +17,7 @@ KeepEmptyLines:
   AtStartOfFile: false
 EmptyLineBeforeAccessModifier: Always
 EmptyLineAfterAccessModifier: Always
-PackConstructorInitializers: NextLine
+PackConstructorInitializers: NextLineOnly
 BreakConstructorInitializers: BeforeComma
 Cpp11BracedListStyle: false
 RemoveEmptyLinesInUnwrappedLines: false 

@@ -18,7 +18,7 @@ set(data
     "${CMAKE_SOURCE_DIR}/Source/Data/DateTime.h"
     "${CMAKE_SOURCE_DIR}/Source/Data/GameListManager.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Data/GameListManager.h"
-    "${CMAKE_SOURCE_DIR}/Source/Data/Vector2Ex.h"
+    "${CMAKE_SOURCE_DIR}/Source/Data/Vector2.h"
 )
 set(audio
     "${CMAKE_SOURCE_DIR}/Source/Audio/AudioManager.cpp"
@@ -37,8 +37,8 @@ set(guis
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiWindow.h"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiCard.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiCard.h"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiGrid.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiGrid.h"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiHorizontalBox.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiHorizontalBox.h"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiMiniCover.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiMiniCover.h"
 )
@@ -49,7 +49,6 @@ set(entity
     "${CMAKE_SOURCE_DIR}/Source/Entity/EntityManager.h"
 )
 set(utils
-    "${CMAKE_SOURCE_DIR}/Source/Utils/Core.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/Math.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/Print.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Utils/Print.h"
@@ -60,6 +59,7 @@ set(utils
     "${CMAKE_SOURCE_DIR}/Source/Utils/UtilsFunctionLibrary.h"
 )
 set(src
+    "${CMAKE_SOURCE_DIR}/Source/Core.h"
     "${CMAKE_SOURCE_DIR}/Source/Main.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Application.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Application.h"

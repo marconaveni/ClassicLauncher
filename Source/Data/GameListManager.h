@@ -78,7 +78,6 @@ namespace ClassicLauncher
 
     class GameListManager
     {
-
     public:
 
         GameListManager() : currentList(SystemListSelect), idSystemList(0), idGameList(0) {}

@@ -1,21 +1,32 @@
-#ifndef VECTOR_2_EX_H
-#define VECTOR_2_EX_H
+#ifndef VECTOR_2_H
+#define VECTOR_2_H
 
 #include <string>
 #include "raylib.h"
 
 namespace ClassicLauncher
 {
-    class RectangleEx : public ::Vector2
+    class Vector2 : public ::Vector2
     {
-
     public:
 
-        RectangleEx(const Vector2& vec) : Vector2{ vec.x, vec.y } {}
-        RectangleEx(float x, float y) : Vector2{ x, y } {}
-        RectangleEx(float x) : Vector2{ x, 0 } {}
-        RectangleEx() : Vector2{ 0, 0 } {}
-        RectangleEx& operator=(const ::Vector2& vector)
+        Vector2(const Vector2& vec)
+            : ::Vector2{ vec.x, vec.y }
+        {
+        }
+        Vector2(float x, float y)
+            : ::Vector2{ x, y }
+        {
+        }
+        Vector2(float x)
+            : Vector2{ x, 0 }
+        {
+        }
+        Vector2()
+            : Vector2{ 0, 0 }
+        {
+        }
+        Vector2& operator=(const ::Vector2& vector)
         {
             Set(vector);
             return *this;
@@ -46,4 +57,4 @@ namespace ClassicLauncher
 
 }  // namespace ClassicLauncher
 
-#endif  // VECTOR_2_EX_H
+#endif  // VECTOR_2_H

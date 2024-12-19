@@ -13,13 +13,13 @@ namespace ClassicLauncher
         height = mApplication->GetSpecification().height;
         textureName = "ref";
 
-        mGuiGrid = mApplication->GetEntityManager()->CreateEntity<GuiGrid>();
+        mGuiHorizontalBox = mApplication->GetEntityManager()->CreateEntity<GuiHorizontalBox>();
         mMiniCover = mApplication->GetEntityManager()->CreateEntity<GuiMiniCover>();
 
-        mGuiGrid->Init();
+        mGuiHorizontalBox->Init();
         mMiniCover->Init();
 
-        AddChild(mGuiGrid.get());
+        AddChild(mGuiHorizontalBox.get());
         AddChild(mMiniCover.get());
     }
 
@@ -61,7 +61,7 @@ namespace ClassicLauncher
     void GuiWindow::ChangeGrid(const CurrentList list)
     {
         ClearCovers();
-        mGuiGrid->SetFocus(3);
+        mGuiHorizontalBox->SetFocus(3);
         if (list == SystemListSelect)
         {
             mApplication->GetGameListManager()->ChangeGameToSystemList();
@@ -70,7 +70,7 @@ namespace ClassicLauncher
         {
             mApplication->GetGameListManager()->ChangeSystemToGameList();
         }
-        mGuiGrid->SetCovers();
+        mGuiHorizontalBox->SetCovers();
     }
 
     void GuiWindow::ClearCovers()

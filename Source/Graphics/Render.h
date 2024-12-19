@@ -8,7 +8,6 @@ namespace ClassicLauncher
 
     class Render
     {
-
         RenderTexture renderTexture;
         float width;
         float height;

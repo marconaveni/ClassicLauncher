@@ -1,17 +1,19 @@
-#include "GuiGrid.h"
+#include "GuiHorizontalBox.h"
 
 #include <algorithm>
 #include <memory>
-#include "Utils/Core.h"
+#include "Core.h"
 
 namespace ClassicLauncher
 {
 
-    GuiGrid::GuiGrid() : mApplication(&Application::Get()), mPositionX(0), bLeft(false), bRight(false), mLastDirection(None), mIdFocus(0), mSpeed(22) {}
-
-    void GuiGrid::Init()
+    GuiHorizontalBox::GuiHorizontalBox()
+        : mApplication(&Application::Get()), mPositionX(0), bLeft(false), bRight(false), mLastDirection(None), mIdFocus(0), mSpeed(22)
     {
+    }
 
+    void GuiHorizontalBox::Init()
+    {
         for (int i = 0; i < 10; i++)
         {
             const int x = 256 * (i - 2);
@@ -25,11 +27,17 @@ namespace ClassicLauncher
         SetCovers();
     }
 
-    void GuiGrid::Draw() { GuiComponent::Draw(); }
+    void GuiHorizontalBox::Draw()
+    {
+        GuiComponent::Draw();
+    }
 
-    void GuiGrid::End() { GuiComponent::End(); }
+    void GuiHorizontalBox::End()
+    {
+        GuiComponent::End();
+    }
 
-    void GuiGrid::SetFocus(const int newId)
+    void GuiHorizontalBox::SetFocus(const int newId)
     {
         if (mGuiCards[mIdFocus]->IsFocus() && mIdFocus == newId) return;
 
@@ -41,7 +49,7 @@ namespace ClassicLauncher
         bLeft = true;
     }
 
-    void GuiGrid::SetCovers()
+    void GuiHorizontalBox::SetCovers()
     {
         GameListManager* manager = mApplication->GetGameListManager();
         SpriteManager* spriteManager = mApplication->GetSpriteManager();
@@ -70,7 +78,7 @@ namespace ClassicLauncher
         }
     }
 
-    void GuiGrid::Update()
+    void GuiHorizontalBox::Update()
     {
         GuiComponent::Update();
 
@@ -146,7 +154,6 @@ namespace ClassicLauncher
 
         if (mIdFocus < 3 || mIdFocus > 6)
         {
-
             if (mLastDirection == Left && mPositionX == 0)
             {
                 std::rotate(mGuiCards.begin(), mGuiCards.begin() + 1, mGuiCards.end());

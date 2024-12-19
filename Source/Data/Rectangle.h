@@ -10,17 +10,44 @@ namespace ClassicLauncher
     {
     public:
 
-        Rectangle(const ::Rectangle& rect) : ::Rectangle{ rect.x, rect.y, rect.width, rect.height } {}
+        Rectangle(const ::Rectangle& rect)
+            : ::Rectangle{ rect.x, rect.y, rect.width, rect.height }
+        {
+        }
 
-        Rectangle(float x, float y, float width, float height) : ::Rectangle{ x, y, width, height } {}
-        Rectangle(float x, float y, float width) : ::Rectangle{ x, y, width, 0 } {}
-        Rectangle(float x, float y) : ::Rectangle{ x, y, 0, 0 } {}
-        Rectangle(float x) : ::Rectangle{ x, 0, 0, 0 } {}
-        Rectangle() : ::Rectangle{ 0, 0, 0, 0 } {}
+        Rectangle(float x, float y, float width, float height)
+            : ::Rectangle{ x, y, width, height }
+        {
+        }
+        Rectangle(float x, float y, float width)
+            : ::Rectangle{ x, y, width, 0 }
+        {
+        }
+        Rectangle(float x, float y)
+            : ::Rectangle{ x, y, 0, 0 }
+        {
+        }
+        Rectangle(float x)
+            : ::Rectangle{ x, 0, 0, 0 }
+        {
+        }
+        Rectangle()
+            : ::Rectangle{ 0, 0, 0, 0 }
+        {
+        }
 
-        Rectangle(::Vector2 position, ::Vector2 size) : ::Rectangle{ position.x, position.y, size.x, size.y } {}
-        Rectangle(::Vector2 size) : ::Rectangle{ 0, 0, size.x, size.y } {}
-        Rectangle(::Vector4 rect) : ::Rectangle{ rect.x, rect.y, rect.z, rect.w } {}
+        Rectangle(::Vector2 position, ::Vector2 size)
+            : ::Rectangle{ position.x, position.y, size.x, size.y }
+        {
+        }
+        Rectangle(::Vector2 size)
+            : ::Rectangle{ 0, 0, size.x, size.y }
+        {
+        }
+        Rectangle(::Vector4 rect)
+            : ::Rectangle{ rect.x, rect.y, rect.z, rect.w }
+        {
+        }
 
         void SetX(float x) { this->x = x; }
         void SetY(float y) { this->y = y; }
@@ -58,15 +85,15 @@ namespace ClassicLauncher
             this->x = vec.x;
             this->y = vec.y;
         }
-        void SetSize(float x, float y)
+        void SetSize(float width, float y)
         {
-            this->x = x;
-            this->y = y;
+            this->width = width;
+            this->height = y;
         }
         void SetSize(const ::Vector2& vec)
         {
-            this->x = vec.x;
-            this->y = vec.y;
+            this->width = vec.x;
+            this->height = vec.y;
         }
 
         std::string ToString() const

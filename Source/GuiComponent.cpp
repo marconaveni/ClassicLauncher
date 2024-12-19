@@ -1,5 +1,5 @@
 #include "GuiComponent.h"
-#include "Utils/Core.h"
+
 
 namespace ClassicLauncher
 {

@@ -2,9 +2,7 @@
 #include "Graphics/Render.h"
 #include "GuiComponent.h"
 #include "Guis/GuiWindow.h"
-#include "Utils/Core.h"
 #include "Utils/Resouces.h"
-#include "raylib.h"
 
 namespace ClassicLauncher
 {
@@ -19,21 +17,45 @@ namespace ClassicLauncher
         }
     }
 
-    Application::~Application() { sInstanceApplication = nullptr; }
+    Application::~Application()
+    {
+        sInstanceApplication = nullptr;
+    }
 
-    Application& Application::Get() { return *sInstanceApplication; }
+    Application& Application::Get()
+    {
+        return *sInstanceApplication;
+    }
 
-    ApplicationSpecification Application::GetSpecification() { return mSpecification; }
+    ApplicationSpecification Application::GetSpecification()
+    {
+        return mSpecification;
+    }
 
-    Print* Application::GetPrint() { return &mPrint; }
+    Print* Application::GetPrint()
+    {
+        return &mPrint;
+    }
 
-    AudioManager* Application::GetAudioManager() { return &mAudioManager; }
+    AudioManager* Application::GetAudioManager()
+    {
+        return &mAudioManager;
+    }
 
-    SpriteManager* Application::GetSpriteManager() { return &mSpriteManager; }
+    SpriteManager* Application::GetSpriteManager()
+    {
+        return &mSpriteManager;
+    }
 
-    EntityManager* Application::GetEntityManager() { return &mEntityManager; }
+    EntityManager* Application::GetEntityManager()
+    {
+        return &mEntityManager;
+    }
 
-    GameListManager* Application::GetGameListManager() { return &mGameListManager; }
+    GameListManager* Application::GetGameListManager()
+    {
+        return &mGameListManager;
+    }
 
     void Application::Init()
     {
@@ -55,8 +77,7 @@ namespace ClassicLauncher
         const std::string musicDir = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::musicsFolder);
         const std::string audioClickFile = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::clickAudio);
         const std::string audioCursorFile = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::cursorAudio);
-        const std::string refPath =
-            StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::themesDefaultFolder + "/ref.png");
+        const std::string refPath = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::themesDefaultFolder + "/ref.png");
         const std::string sprite = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::themesSprite);
 
         mPrint.LoadFont(fontFile, 16, 0);
@@ -159,7 +180,9 @@ namespace ClassicLauncher
         mPrint.DrawMessage();
     }
 
-    void Application::EndRender() {}
+    void Application::EndRender()
+    {
+    }
 
     void Application::End()
     {

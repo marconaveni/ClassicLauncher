@@ -2,7 +2,9 @@
 
 namespace ClassicLauncher
 {
-    SpriteManager::SpriteManager() {}
+    SpriteManager::SpriteManager()
+    {
+    }
 
     void SpriteManager::LoadSprite(const std::string& name, const std::string& fileName, const int width, const int height, bool bAspectRatio)
     {
@@ -30,7 +32,10 @@ namespace ClassicLauncher
         return mSpriteMap[name].GetTexture();
     }
 
-    Image* SpriteManager::GetImage(std::string name) { return mSpriteMap[name].GetImage(); }
+    Image* SpriteManager::GetImage(std::string name)
+    {
+        return mSpriteMap[name].GetImage();
+    }
 
     bool SpriteManager::DeleteSprite(std::string name)
     {
@@ -47,6 +52,9 @@ namespace ClassicLauncher
         return false;
     }
 
-    void SpriteManager::UnloadSprites() { mSpriteMap.clear(); }
+    void SpriteManager::UnloadSprites()
+    {
+        mSpriteMap.clear();
+    }
 
 }  // namespace ClassicLauncher

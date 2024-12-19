@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 #include "Audio/AudioManager.h"
+#include "Core.h"
 #include "Data/GameListManager.h"
 #include "Entity/Entity.h"
 #include "Entity/EntityManager.h"
@@ -11,7 +12,6 @@
 #include "Graphics/Sprite.h"
 #include "Graphics/SpriteManager.h"
 #include "Guis/GuiWindow.h"
-#include "Utils/Core.h"
 
 namespace ClassicLauncher
 {
@@ -28,7 +28,6 @@ namespace ClassicLauncher
 
     class Application
     {
-
         ApplicationSpecification mSpecification;
         Render mRender;
         Print mPrint;

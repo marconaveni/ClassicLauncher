@@ -1,19 +1,12 @@
 #include "AudioManager.h"
 #include <chrono>
-#include "Utils/Core.h"
+#include "Core.h"
 
 namespace ClassicLauncher
 {
 
     AudioManager::AudioManager()
-        : bIsRunning(false)
-        , bIsPlayClick(false)
-        , bIsPlayCursor(false)
-        , status(StatusAudio::Stop)
-        , clickMusic{ 0 }
-        , cursorMusic{ 0 }
-        , musics()
-        , idMusic(0)
+        : bIsRunning(false), bIsPlayClick(false), bIsPlayCursor(false), status(StatusAudio::Stop), clickMusic{ 0 }, cursorMusic{ 0 }, musics(), idMusic(0)
     {
     }
 
@@ -44,7 +37,6 @@ namespace ClassicLauncher
 
     void AudioManager::LoadMusics(const std::string& path, bool bAutoPlay)
     {
-
         FilePathList files = LoadDirectoryFiles(path.c_str());
         for (unsigned int i = 0; i < files.count; i++)
         {
@@ -54,9 +46,15 @@ namespace ClassicLauncher
         ChangeMusic(bAutoPlay);
     }
 
-    void AudioManager::LoadCursor(const std::string& path) { cursorMusic = LoadSound(path.c_str()); }
+    void AudioManager::LoadCursor(const std::string& path)
+    {
+        cursorMusic = LoadSound(path.c_str());
+    }
 
-    void AudioManager::LoadCLick(const std::string& path) { clickMusic = LoadSound(path.c_str()); }
+    void AudioManager::LoadCLick(const std::string& path)
+    {
+        clickMusic = LoadSound(path.c_str());
+    }
 
     void AudioManager::Play()
     {
@@ -71,9 +69,15 @@ namespace ClassicLauncher
         }
     }
 
-    void AudioManager::PlayClick() { bIsPlayClick = true; }
+    void AudioManager::PlayClick()
+    {
+        bIsPlayClick = true;
+    }
 
-    void AudioManager::PlayCursor() { bIsPlayCursor = true; }
+    void AudioManager::PlayCursor()
+    {
+        bIsPlayCursor = true;
+    }
 
     void AudioManager::Pause()
     {
@@ -145,7 +149,6 @@ namespace ClassicLauncher
     {
         while (bIsRunning)
         {
-
             std::lock_guard<std::mutex> lock(musicMutex);
 
             if (!musics.empty() && status == StatusAudio::Playing)
@@ -190,6 +193,9 @@ namespace ClassicLauncher
         }
     }
 
-    AudioManager::~AudioManager() { Unload(); }
+    AudioManager::~AudioManager()
+    {
+        Unload();
+    }
 
 }  // namespace ClassicLauncher

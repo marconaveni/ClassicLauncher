@@ -4,20 +4,19 @@
 #include <memory>
 #include "Application.h"
 #include "GuiComponent.h"
-#include "GuiGrid.h"
+#include "GuiHorizontalBox.h"
 
 namespace ClassicLauncher
 {
 
     class Application;
-    class GuiGrid;
+    class GuiHorizontalBox;
     class GuiMiniCover;
 
     class GuiWindow : public GuiComponent
     {
-
         Application* mApplication;
-        std::shared_ptr<GuiGrid> mGuiGrid;
+        std::shared_ptr<GuiHorizontalBox> mGuiHorizontalBox;
         std::shared_ptr<GuiMiniCover> mMiniCover;
 
     public:
