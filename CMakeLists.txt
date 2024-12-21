@@ -18,7 +18,6 @@ if (CLASSIC_LAUCHER_FSANITIZE)
     set(CMAKE_CXX_FLAGS_DEBUG "-g -fsanitize=address")
 else()
     message("fsanitize is disabled")
-    set(CMAKE_CXX_FLAGS_DEBUG "-g")
 endif()
 
 set(CMAKE_CXX_FLAGS_RELEASE "-O2 ")
