@@ -70,7 +70,6 @@ namespace ClassicLauncher
         SetTargetFPS(60);
         ChangeDirectory(UtilsFunctionLibrary::GetHomeDir().c_str());
         // SetExitKey(KEY_NULL);
-        // ToggleFullscreen();
 
         InitAudioDevice();
 
@@ -97,7 +96,7 @@ namespace ClassicLauncher
 
         SetWindowIcon(img);
 
-        mGuiWindow = mEntityManager.CreateEntity<GuiWindow>();
+        mGuiWindow = mEntityManager.CreateEntity<GuiWindow>("GuiWindow");
         mGuiWindow->Init();
 
         Loop();
@@ -133,23 +132,13 @@ namespace ClassicLauncher
 
         // Aqui vai logica
         GameList* systemList = mGameListManager.GetCurrentGameList();
-        mPrint.PrintOnScreen(TEXT("name game %s", systemList->name.c_str()), 2.0f, "systemlist", BLUE);
+        DrawText(TEXT("%s", mAudioManager.GetMusicName().c_str()), 10, 10, 20, WHITE);
 
-        DrawText(TEXT("%s", mAudioManager.GetMusicName().c_str()), 200, 300, 20, BLACK);
-        mPrint.PrintOnScreen(TEXT("Select Game:\n1 - one\n2 - two\n3 - three"), 2.0f, "home", RED);
-        mPrint.PrintOnScreen(TEXT("========================================"), 2.0f, "homse", BLUE);
-        mPrint.PrintOnScreen(TEXT("Select Game:\n4 - four\n5 - five\n6 - six"), 2.0f, "teste", GREEN);
-        mPrint.PrintOnScreen(TEXT("%.6f ", GetFrameTime()), 2.0f, "teste", GREEN);
-        // print.PrintOnScreen(TEXT("abc"), 2.0f );
-
-        if (IsKeyReleased(KEY_L))
-        {
-            mSpriteManager.DeleteSprite("teste");
-        }
-        if (IsKeyReleased(KEY_K))
-        {
-            mGameListManager.ChangeSystemToGameList();
-        }
+        mPrint.PrintOnScreen(TEXT("\n\n========================================"), 2.0f, "line", GREEN);
+        mPrint.PrintOnScreen(TEXT("%d fps", GetFPS()), 2.0f, "fps", GREEN);
+        mPrint.PrintOnScreen(TEXT("%.6f ms", GetFrameTime()), 2.0f, "ms", GREEN);
+        mPrint.PrintOnScreen(TEXT("========================================"), 2.0f, "line2");
+        mPrint.PrintOnScreen(TEXT("Current game list %s", systemList->name.c_str()), 2.0f, "gameList");
 
         if (IsKeyReleased(KEY_A))
         {
@@ -169,9 +158,14 @@ namespace ClassicLauncher
         }
         if (IsKeyReleased(KEY_UP))
         {
+            // mEntityManager.SetZOrder(mGuiWindow.get(), 1);
             std::string homeDir = UtilsFunctionLibrary::GetHomeDir();
             mPrint.Log(LOG_DEBUG, TEXT("GetHomeDir %s", homeDir.c_str()));
             mPrint.Log(LOG_DEBUG, TEXT("GetWorkingDirectory %s", UtilsFunctionLibrary::GetWorkingDirectory().c_str()));
+        }
+        if (IsKeyDown(KEY_DOWN))
+        {
+            mGuiWindow->SetBringToFront();
         }
     }
 

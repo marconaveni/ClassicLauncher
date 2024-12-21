@@ -8,5 +8,6 @@
 #include "Data/Vector2.h"
 
 #define TEXT(...) TextFormat(__VA_ARGS__)
+#define TEXTBOOL(a) TextFormat("%s", a == true ? "true" : "false")
 
 #endif

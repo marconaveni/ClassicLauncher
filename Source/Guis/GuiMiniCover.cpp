@@ -16,7 +16,7 @@ namespace ClassicLauncher
         for (int i = 0; i < mSize; i++)
         {
             const int x = 29 * i;
-            auto miniCover = mApplication->GetEntityManager()->CreateEntity<GuiComponent>();
+            auto miniCover = mApplication->GetEntityManager()->CreateEntity<GuiComponent>("miniCover");
             miniCover->x = x;
             miniCover->textureName = "transparent";
 

@@ -46,16 +46,13 @@ namespace ClassicLauncher
 
     bool SpriteManager::DeleteSprite(std::string name)
     {
-        // auto it = spriteMap.find(name);
-        // if (it != spriteMap.end())
-        // {
-        //     it->second.~Sprite();// deleta o objeto Sprite da memória
-        //     spriteMap.erase(it); // remove a referência do spriteMap
-        //     return true;
-        // }
-
-        mSpriteMap[name].Unload();
-        mSpriteMap.erase(name);
+        auto it = mSpriteMap.find(name);
+        if (it != mSpriteMap.end())
+        {
+            it->second.Unload();
+            mSpriteMap.erase(it); 
+            return true;
+        }
         return false;
     }
 

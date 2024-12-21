@@ -9,13 +9,7 @@ namespace ClassicLauncher
 {
     class GuiComponent : public Entity
     {
-    private:
 
-        std::vector<GuiComponent*> mChildEntities;
-
-    protected:
-
-        GuiComponent* mParent = nullptr;
 
     public:
 
@@ -23,12 +17,7 @@ namespace ClassicLauncher
         virtual ~GuiComponent() override = default;
         virtual EntityType GetType() const override { return EntityType::GuiComponentClass; }
         virtual void Update() override;
-        virtual void UpdatePosition() override;
-        virtual void AddChild(GuiComponent* entityChildren);
-        virtual void RemoveChild();
-        virtual std::vector<GuiComponent*> GetChilds();
-        virtual void SelfDelete() override;
-        GuiComponent* GetRootEntity();
+
     };
 
 }  // namespace ClassicLauncher

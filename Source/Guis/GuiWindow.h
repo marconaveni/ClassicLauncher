@@ -25,7 +25,6 @@ namespace ClassicLauncher
         virtual void Update() override;
         void Init();
         void ChangeList(const CurrentList list);
-        void ClearCovers();
     };
 
 }  // namespace ClassicLauncher

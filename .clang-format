@@ -8,6 +8,7 @@ ColumnLimit: 170
 AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortIfStatementsOnASingleLine: WithoutElse
 AllowShortFunctionsOnASingleLine: InlineOnly
+AllowShortLambdasOnASingleLine: None
 NamespaceIndentation: All
 IncludeBlocks: Preserve
 AccessModifierOffset: -4

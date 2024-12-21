@@ -2,6 +2,8 @@
 #define ENTITY_H
 
 #include <string>
+#include <vector>
+#include "Core.h"
 
 namespace ClassicLauncher
 {
@@ -18,20 +20,44 @@ namespace ClassicLauncher
 
     class Entity
     {
+    private:
+
+        friend class EntityManager;
 
         bool bToDelete = false;
-        friend class EntityManager;
+        bool bToDraw = true;
+        bool bScissorMode = false;
+        bool bVisible = true;
+        bool bBringToFront = false;
+        int mZOrder = 0;
+        std::vector<Entity*> mChildEntities;
+        std::string nameId;
+
+    protected:
+
+        Entity* mParent = nullptr;
 
     public:
 
         Entity() = default;
         virtual ~Entity() = default;
+        bool operator<(const Entity& entity) const { return mZOrder < entity.mZOrder; }
+        bool operator>(const Entity& entity) const { return mZOrder > entity.mZOrder; }
         virtual EntityType GetType() const = 0;
         virtual void Update() {}
-        virtual void UpdatePosition() {}
         virtual void Draw() {}
         virtual void End() {}
-        virtual void SelfDelete() { bToDelete = true; }
+        virtual void UpdatePosition();               // Update the position of the entity
+        virtual void SelfDelete();                   // Delete the entity and all its children
+        virtual void AddChild(Entity* childEntity);  // Add a child to the entity
+        virtual void RemoveChild();                  // Remove a child from the entity
+        std::vector<Entity*>& GetChilds();
+        Entity* GetRootEntity();
+        void EnableScissorMode(float x, float y, float width, float height);
+        void DisableScissorMode() { bScissorMode = false; }
+        void SetVisible(bool bEnable) { bVisible = bEnable; }
+        int GetZOrder() const { return mZOrder; }
+        void SetBringToFront() { bBringToFront = true; }
 
         int x = 0;
         int y = 0;
@@ -47,10 +73,15 @@ namespace ClassicLauncher
         unsigned char green = 255;  // Color green value
         unsigned char blue = 255;   // Color blue value
         unsigned char alpha = 255;  // Color alpha value
-        std::string textureName;
-
         int rootX = 0;
         int rootY = 0;
+
+        std::string textureName;
+        Rectangle scissorArea;
+
+    private:
+
+        void SetZOrder(int zOrder);
     };
 
 }  // namespace ClassicLauncher

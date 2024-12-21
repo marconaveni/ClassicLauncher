@@ -12,7 +12,7 @@ namespace ClassicLauncher
         height = mApplication->GetSpecification().height;
         textureName = "ref";
 
-        mGuiHorizontalBox = mApplication->GetEntityManager()->CreateEntity<GuiHorizontalBox>();
+        mGuiHorizontalBox = mApplication->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
         mGuiHorizontalBox->Init();
         AddChild(mGuiHorizontalBox.get());
     }
@@ -55,27 +55,6 @@ namespace ClassicLauncher
     void GuiWindow::ChangeList(const CurrentList list)
     {
         mGuiHorizontalBox->ChangeList(list);
-        // ClearCovers();
-        // mGuiHorizontalBox->SetFocus(3);
-        // if (list == SystemListSelect)
-        // {
-        //     mApplication->GetGameListManager()->ChangeGameToSystemList();
-        // }
-        // else
-        // {
-        //     mApplication->GetGameListManager()->ChangeSystemToGameList();
-        // }
-        // mGuiHorizontalBox->SetCovers();
-    }
-
-    void GuiWindow::ClearCovers()
-    {
-        // int size = mApplication->GetGameListManager()->GetGameListSize();
-        // for (int i = 0; i < size; i++)
-        // {
-        //     mApplication->GetSpriteManager()->DeleteSprite(std::to_string(i) + "_CV");
-        //     mApplication->GetSpriteManager()->DeleteSprite(std::to_string(i) + "_MCV");
-        // }
     }
 
 }  // namespace ClassicLauncher

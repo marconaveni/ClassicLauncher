@@ -18,12 +18,12 @@ namespace ClassicLauncher
         for (int i = 0; i < 10; i++)
         {
             const int x = 256 * (i - 2);
-            auto card = mApplication->GetEntityManager()->CreateEntity<GuiCard>(x - 120, 0);
+            auto card = mApplication->GetEntityManager()->CreateEntity<GuiCard>("GuiCard", x - 120, 0);
             AddChild(card.get());
             mGuiCards.emplace_back(card);
         }
 
-        mMiniCover = mApplication->GetEntityManager()->CreateEntity<GuiMiniCover>();
+        mMiniCover = mApplication->GetEntityManager()->CreateEntity<GuiMiniCover>("MiniCover");
         mMiniCover->Init();
         AddChild(mMiniCover.get());
 
@@ -103,8 +103,13 @@ namespace ClassicLauncher
         int size = mApplication->GetGameListManager()->GetGameListSize();
         for (int i = 0; i < size; i++)
         {
-            mApplication->GetSpriteManager()->DeleteSprite(std::to_string(i) + "_CV");
-            mApplication->GetSpriteManager()->DeleteSprite(std::to_string(i) + "_MCV");
+            bool bResult1 = mApplication->GetSpriteManager()->DeleteSprite(std::to_string(i) + "_CV");
+            bool bResult2 = mApplication->GetSpriteManager()->DeleteSprite(std::to_string(i) + "_MCV");
+
+            if (!bResult1 || !bResult2)
+            {
+                TraceLog(LOG_WARNING, "Error deleting sprite %d", i);
+            }
         }
     }
 

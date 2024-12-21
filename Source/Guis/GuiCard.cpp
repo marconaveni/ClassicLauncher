@@ -10,8 +10,8 @@ namespace ClassicLauncher
         this->y = y;
 
         CreateCard(mCardMain, 528, 15, 255);
-        CreateCard(mCardFavorite, 783, 15, 100);
-        CreateCard(mCardSelected, 273, 15, 100);
+        CreateCard(mCardFavorite, 783, 15, 0);
+        CreateCard(mCardSelected, 273, 15, 0);
         CreateCard(mCover, 0, 0, 255);
 
         SetCover();
@@ -21,7 +21,7 @@ namespace ClassicLauncher
     {
         Application* app = &Application::Get();
 
-        card = app->GetEntityManager()->CreateEntity<GuiComponent>();
+        card = app->GetEntityManager()->CreateEntity<GuiComponent>("card");
         card->textureName = "sprite";
         card->width = 246;
         card->height = 270;
