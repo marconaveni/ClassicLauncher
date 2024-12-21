@@ -8,8 +8,11 @@ namespace ClassicLauncher
     void GuiWindow::Init()
     {
         mApplication = &Application::Get();
-        width = mApplication->GetSpecification().width;
-        height = mApplication->GetSpecification().height;
+        //width = mApplication->GetSpecification().width;
+        //height = mApplication->GetSpecification().height;
+        mProperties.width = mApplication->GetSpecification().width;
+        mProperties.height = mApplication->GetSpecification().height;
+
         textureName = "ref";
 
         mGuiHorizontalBox = mApplication->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");

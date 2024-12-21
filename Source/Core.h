@@ -4,6 +4,7 @@
 #include "Data/Color.h"
 #include "Data/Rectangle.h"
 #include "Data/Vector2.h"
+#include "Data/TransformProperties.h"
 #include "Utils/Math.h"
 #include "Utils/Print.h"
 #include "Utils/StringFunctionLibrary.h"

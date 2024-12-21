@@ -7,8 +7,8 @@ namespace ClassicLauncher
     {
         for (auto& entity : mChildEntities)
         {
-            entity->rootX = this->x + rootX;
-            entity->rootY = this->y + rootY;
+            entity->mProperties.rootX = this->mProperties.x + mProperties.rootX;
+            entity->mProperties.rootY = this->mProperties.y + mProperties.rootY;
         }
     }
 

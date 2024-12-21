@@ -130,7 +130,13 @@ namespace ClassicLauncher
             return;
         }
 
-        messages.erase(std::remove_if(messages.begin(), messages.end(), [](Message& message) { return !message.IsTimeElapsed(); }), messages.end());
+        messages.erase(std::remove_if(messages.begin(),
+                                      messages.end(),
+                                      [](Message& message)
+                                      {
+                                          return !message.IsTimeElapsed();
+                                      }),
+                       messages.end());
 
         float y = 16;
 

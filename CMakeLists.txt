@@ -38,6 +38,7 @@ set(data
     "${CMAKE_SOURCE_DIR}/Source/Data/GameListManager.h"
     "${CMAKE_SOURCE_DIR}/Source/Data/Rectangle.h"
     "${CMAKE_SOURCE_DIR}/Source/Data/Vector2.h"
+    "${CMAKE_SOURCE_DIR}/Source/Data/TransformProperties.h"
 )
 set(audio
     "${CMAKE_SOURCE_DIR}/Source/Audio/AudioManager.cpp"
@@ -48,6 +49,7 @@ set(graphics
     "${CMAKE_SOURCE_DIR}/Source/Graphics/Render.h"
     "${CMAKE_SOURCE_DIR}/Source/Graphics/Sprite.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Graphics/Sprite.h"
+    "${CMAKE_SOURCE_DIR}/Source/Graphics/SpriteAnimator.h"
     "${CMAKE_SOURCE_DIR}/Source/Graphics/SpriteManager.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Graphics/SpriteManager.h"
 )

@@ -9,13 +9,19 @@ namespace ClassicLauncher
 
     void GuiMiniCover::Init()
     {
-        x = 20;
-        y = 298;
+
+        // x = 20;
+        // y = 298;
+        mProperties.x = 20;
+        mProperties.y = 298;
+
         for (int i = 0; i < mSize; i++)
         {
             const int x = 29 * i;
             auto miniCover = mApplication->GetEntityManager()->CreateEntity<GuiComponent>("miniCover");
-            miniCover->x = x;
+            // miniCover->x = x;
+            miniCover->mProperties.x = x;
+
             miniCover->textureName = "transparent";
 
             AddChild(miniCover.get());
@@ -33,9 +39,9 @@ namespace ClassicLauncher
         GuiComponent::End();
     }
 
-    void GuiMiniCover::SetPosition(int numCovers)
+    void GuiMiniCover::SetPositionCovers(int numCovers)
     {
-        x = (1280 - (29 * numCovers)) / 2;
+        mProperties.x = (1280 - (29 * numCovers)) / 2;
 
         // const float arrowPositionX = (numCovers % 2 == 0) ? 640.0f : 625.0f;
         // arrow->position.position = Vector2{ arrowPositionX , positionY };
@@ -73,7 +79,7 @@ namespace ClassicLauncher
             }
         }
 
-        SetPosition(numCovers);
+        SetPositionCovers(numCovers);
     }
 
     void GuiMiniCover::SetCover(std::string name, GuiComponent* miniCover)
@@ -81,21 +87,22 @@ namespace ClassicLauncher
         miniCover->textureName = name;
         if (name == "sprite")
         {
-            miniCover->width = 144;
-            miniCover->height = 114;
-            miniCover->sourceX = 1116;
-            miniCover->sourceY = 1131;
-            miniCover->scaleWidth = 29;
-            miniCover->scaleHeight = 29;
+            miniCover->mProperties.width = 144;
+            miniCover->mProperties.height = 114;
+            miniCover->mProperties.sourceX = 1116;
+            miniCover->mProperties.sourceY = 1131;
+            miniCover->mProperties.scaleWidth = 29;
+            miniCover->mProperties.scaleHeight = 29;
+
         }
         else
-        {
-            miniCover->width = 0;
-            miniCover->height = 0;
-            miniCover->sourceX = 0;
-            miniCover->sourceY = 0;
-            miniCover->scaleWidth = 0;
-            miniCover->scaleHeight = 0;
+        {                      
+            miniCover->mProperties.width = 0;
+            miniCover->mProperties.height = 0;
+            miniCover->mProperties.sourceX = 0;
+            miniCover->mProperties.sourceY = 0;
+            miniCover->mProperties.scaleWidth = 0;
+            miniCover->mProperties.scaleHeight = 0;
         }
     }
 

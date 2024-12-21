@@ -59,23 +59,7 @@ namespace ClassicLauncher
         int GetZOrder() const { return mZOrder; }
         void SetBringToFront() { bBringToFront = true; }
 
-        int x = 0;
-        int y = 0;
-        int width = 0;
-        int height = 0;
-        float sourceX = 0;
-        float sourceY = 0;
-        float scaleWidth = 0;
-        float scaleHeight = 0;
-        float scale = 1;
-        float rotation = 0;
-        unsigned char red = 255;    // Color red value
-        unsigned char green = 255;  // Color green value
-        unsigned char blue = 255;   // Color blue value
-        unsigned char alpha = 255;  // Color alpha value
-        int rootX = 0;
-        int rootY = 0;
-
+        TransformProperties mProperties;
         std::string textureName;
         Rectangle scissorArea;
 

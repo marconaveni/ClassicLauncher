@@ -35,7 +35,7 @@ namespace ClassicLauncher
 
     private:
 
-        void SetPosition(int numCovers);
+        void SetPositionCovers(int numCovers);
     };
 
 }  // namespace ClassicLauncher

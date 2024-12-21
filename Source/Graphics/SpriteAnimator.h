@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include "Core.h"
 
 namespace ClassicLauncher
 {
@@ -11,7 +12,10 @@ namespace ClassicLauncher
     {
     public:
 
-        SpriteAnimator(float timeAnimation, const std::vector<int>& spriteIndices)
+        SpriteAnimator()
+            : mTimeAnimation(0.0f), mCurrentTime(0.0f), mAlpha(0.0f), mSpriteIndices(), mCurrentSpriteIndex(0) {};
+
+        SpriteAnimator(float timeAnimation, const std::vector<Rectangle>& spriteIndices)
             : mTimeAnimation(timeAnimation), mCurrentTime(0.0f), mAlpha(0.0f), mSpriteIndices(spriteIndices), mCurrentSpriteIndex(0) {};
 
         void Update(float deltaTime)
@@ -28,21 +32,21 @@ namespace ClassicLauncher
 
                 if (mCurrentSpriteIndex >= mSpriteIndices.size())
                 {
-                    mCurrentSpriteIndex = 0;  // Reinicia a animação (loop)
+                    mCurrentSpriteIndex = 0;  // Restart Animation (loop)
                 }
             }
         }
 
         // Retorna o índice atual do sprite
-        int GetCurrentSprite() const { return mSpriteIndices[mCurrentSpriteIndex]; }
+        Rectangle GetCurrentSprite() const { return mSpriteIndices[mCurrentSpriteIndex]; }
 
     private:
 
-        float mTimeAnimation;             // Duração total para avançar para o próximo sprite
-        float mCurrentTime;               // Tempo decorrido total
-        float mAlpha;                     // Fator interpolante entre 0 e 1
-        std::vector<int> mSpriteIndices;  // Vetor com os índices ou IDs dos sprites
-        size_t mCurrentSpriteIndex;       // Índice atual do sprite
+        float mTimeAnimation;                   // Total duration to advance to the next sprite
+        float mCurrentTime;                     // Total elapsed time
+        float mAlpha;                           // Interpolating factor between 0 and 1
+        std::vector<Rectangle> mSpriteIndices;  // Vector with the indices or IDs of the sprites
+        size_t mCurrentSpriteIndex;             // Current sprite index
     };
 
 }  // namespace ClassicLauncher

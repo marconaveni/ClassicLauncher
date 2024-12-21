@@ -115,7 +115,9 @@ namespace ClassicLauncher
     {
         GuiComponent::Update();
 
-        y = 228;
+        
+        // y = 228;
+        mProperties.y = 228;
 
         if (IsKeyReleased(KEY_V) && !bLeft)
         {
@@ -162,7 +164,7 @@ namespace ClassicLauncher
             {
                 if (mIdFocus < 3 || mIdFocus > 6)
                 {
-                    cardContainer->x -= mSpeed;
+                    cardContainer->mProperties.x -= mSpeed;
                 }
                 mLastDirection = Left;
             }
@@ -170,7 +172,7 @@ namespace ClassicLauncher
             {
                 if (mIdFocus < 3 || mIdFocus > 6)
                 {
-                    cardContainer->x += mSpeed;
+                    cardContainer->mProperties.x += mSpeed;
                 }
                 mLastDirection = Right;
             }
@@ -204,7 +206,8 @@ namespace ClassicLauncher
         {
             for (size_t i = 0; i < mGuiCards.size(); i++)
             {
-                mGuiCards[i]->x = mCardPositions[i];
+                mGuiCards[i]->mProperties.x = mCardPositions[i];
+
             }
         }
     }
