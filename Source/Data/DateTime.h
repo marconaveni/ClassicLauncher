@@ -23,9 +23,7 @@ namespace ClassicLauncher
     public:
 
         DateTime()
-            : year(1900), month(1), day(1), hour(0), minute(0), second(0), currentTime()
-        {
-        }
+            : year(1900), month(1), day(1), hour(0), minute(0), second(0), currentTime() {};
 
         void GetCurrentTimeAndDate()
         {
@@ -42,22 +40,23 @@ namespace ClassicLauncher
         }
 
         DateTime& operator=(const std::string& value);
-        DateTime& operator=(const char* value);
-        bool operator<(const DateTime& a) const;
-        bool operator>(const DateTime& a) const;
-        bool operator==(const DateTime& a) const;
-        bool operator!=(const DateTime& a) const;
-        bool operator>=(const DateTime& a) const;
-        bool operator<=(const DateTime& a) const;
+        DateTime& operator=(const char* value) { return *this = std::string{ value }; };
+        bool operator<(const DateTime& a) const { return CompareDates(a); };
+        bool operator>(const DateTime& a) const { return a.CompareDates(*this); };
+        bool operator!=(const DateTime& a) const { return !(*this == a); };
+        bool operator>=(const DateTime& a) const { return !(*this < a); };
+        bool operator<=(const DateTime& a) const { return !(*this > a); };
+        bool operator==(const DateTime& a) const
+        {
+            return (year == a.year) && (month == a.month) && (day == a.day) && (hour == a.hour) && (minute == a.minute) && (second == a.second);
+        };
 
         std::string FormatDateTimeToXml() const;
 
     private:
 
         bool CompareDates(const DateTime& a) const;
-
         void ValidateDateTime();
-
         static std::string ZeroDigits(const int value);
     };
 

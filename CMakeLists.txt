@@ -6,14 +6,14 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # cache options default values
-option(CLASSIC_LAUCHER_FSANITIZE "Enable address sanitizer" OFF)
-option(CLASSIC_LAUCHER_FLAGS "Enable warning/error flags" OFF)
+option(CLASSIC_LAUNCHER_FSANITIZE "Enable address sanitizer" OFF)
+option(CLASSIC_LAUNCHER_FLAGS "Enable warning/error flags" OFF)
 
-if(CLASSIC_LAUCHER_FLAGS)
+if(CLASSIC_LAUNCHER_FLAGS)
     set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wpedantic")
 endif()
 
-if (CLASSIC_LAUCHER_FSANITIZE)
+if (CLASSIC_LAUNCHER_FSANITIZE)
     message("fsanitize is enabled")
     set(CMAKE_CXX_FLAGS_DEBUG "-g -fsanitize=address")
 else()
@@ -31,10 +31,12 @@ include_directories(
 message("is source dir is: " ${CMAKE_SOURCE_DIR})
 
 set(data
+    "${CMAKE_SOURCE_DIR}/Source/Data/Color.h"
     "${CMAKE_SOURCE_DIR}/Source/Data/DateTime.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Data/DateTime.h"
     "${CMAKE_SOURCE_DIR}/Source/Data/GameListManager.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Data/GameListManager.h"
+    "${CMAKE_SOURCE_DIR}/Source/Data/Rectangle.h"
     "${CMAKE_SOURCE_DIR}/Source/Data/Vector2.h"
 )
 set(audio

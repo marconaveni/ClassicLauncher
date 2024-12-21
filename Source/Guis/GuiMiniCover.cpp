@@ -5,9 +5,7 @@
 namespace ClassicLauncher
 {
     GuiMiniCover::GuiMiniCover()
-        : mApplication(&Application::Get()), mSize(32)
-    {
-    }
+        : mApplication(&Application::Get()), mSize(32) {};
 
     void GuiMiniCover::Init()
     {

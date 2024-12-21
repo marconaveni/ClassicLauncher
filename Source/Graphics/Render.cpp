@@ -75,13 +75,10 @@ namespace ClassicLauncher
 
     void Render::Unload()
     {
-        if (IsTextureValid(renderTexture.texture))
+        if (IsRenderTextureValid(renderTexture))
         {
             UnloadRenderTexture(renderTexture);
-        }
-        if (IsTextureValid(renderTexture.depth))
-        {
-            UnloadRenderTexture(renderTexture);
+            renderTexture = RenderTexture{};
         }
     }
 

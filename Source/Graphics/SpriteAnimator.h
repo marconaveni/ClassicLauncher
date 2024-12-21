@@ -12,9 +12,7 @@ namespace ClassicLauncher
     public:
 
         SpriteAnimator(float timeAnimation, const std::vector<int>& spriteIndices)
-            : mTimeAnimation(timeAnimation), mCurrentTime(0.0f), mAlpha(0.0f), mSpriteIndices(spriteIndices), mCurrentSpriteIndex(0)
-        {
-        }
+            : mTimeAnimation(timeAnimation), mCurrentTime(0.0f), mAlpha(0.0f), mSpriteIndices(spriteIndices), mCurrentSpriteIndex(0) {};
 
         void Update(float deltaTime)
         {

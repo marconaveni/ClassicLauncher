@@ -53,16 +53,14 @@ namespace ClassicLauncher
     {
         if (bScissorMode)
         {
-            scissorArea.x = Math::Max(x, scissorArea.x);
-            scissorArea.y = Math::Max(y, scissorArea.y);
-            scissorArea.width = Math::Min(width, scissorArea.width);
-            scissorArea.height = Math::Min(height, scissorArea.height);
+            scissorArea.SetPosition(Math::Max(x, scissorArea.x), Math::Max(y, scissorArea.y));
+            scissorArea.SetSize(Math::Min(width, scissorArea.width), Math::Min(height, scissorArea.height));
         }
         else
         {
-            scissorArea = { x, y, width, height };
+            scissorArea.Set(x, y, width, height);
         }
-        
+
         bScissorMode = true;
         for (auto& childEntity : mChildEntities)
         {
@@ -73,10 +71,6 @@ namespace ClassicLauncher
     void Entity::SetZOrder(int zOrder)
     {
         mZOrder = zOrder;
-        // for (auto& childEntity : mChildEntities)
-        // {
-        //     childEntity->SetZOrder(zOrder);
-        // }
     }
 
 }  // namespace ClassicLauncher

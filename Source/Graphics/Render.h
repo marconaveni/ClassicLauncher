@@ -1,7 +1,7 @@
 ﻿#ifndef RENDER_H
 #define RENDER_H
 
-#include "raylib.h"
+#include "Core.h"
 
 namespace ClassicLauncher
 {

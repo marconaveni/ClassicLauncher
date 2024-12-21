@@ -10,22 +10,18 @@ namespace ClassicLauncher
     {
     public:
 
-        Vector2(const Vector2& vec)
-            : ::Vector2{ vec.x, vec.y }
-        {
-        }
+        Vector2(const ::Vector2& vec)
+            : ::Vector2{ vec.x, vec.y } {};
+
         Vector2(float x, float y)
-            : ::Vector2{ x, y }
-        {
-        }
+            : ::Vector2{ x, y } {};
+
         Vector2(float x)
-            : Vector2{ x, 0 }
-        {
-        }
+            : Vector2{ x, 0 } {};
+
         Vector2()
-            : Vector2{ 0, 0 }
-        {
-        }
+            : Vector2{ 0, 0 } {};
+
         Vector2& operator=(const ::Vector2& vector)
         {
             Set(vector);
@@ -50,7 +46,7 @@ namespace ClassicLauncher
             y = vec.y;
         }
 
-        std::string ToString() const { return "Vector2Ex(" + std::to_string(x) + ", " + std::to_string(y) + ")"; }
+        std::string ToString() const { return "Vector2(x: " + std::to_string(x) + ", y: " + std::to_string(y) + ")"; }
         int GetIntX() const { return static_cast<int>(x); }
         int GetIntY() const { return static_cast<int>(y); }
     };

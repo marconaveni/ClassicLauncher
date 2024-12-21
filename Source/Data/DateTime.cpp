@@ -23,8 +23,7 @@ namespace ClassicLauncher
         }
 
         // Validate date and time ranges
-        if (month < 1 || month > 12 || day < 1 || day > maxDay || hour < 0 || hour > 23 ||
-            minute < 0 || minute > 59 || second < 0 || second > 59)
+        if (month < 1 || month > 12 || day < 1 || day > maxDay || hour < 0 || hour > 23 || minute < 0 || minute > 59 || second < 0 || second > 59)
         {
             // Reset to default values if validation fails
             year = 1900;
@@ -38,12 +37,9 @@ namespace ClassicLauncher
 
     DateTime& DateTime::operator=(const std::string& value)
     {
-        if (value.size() != 15 || value[8] != 'T' || !std::isdigit(value[0]) ||
-            !std::isdigit(value[1]) || !std::isdigit(value[2]) || !std::isdigit(value[3]) ||
-            !std::isdigit(value[4]) || !std::isdigit(value[5]) || !std::isdigit(value[6]) ||
-            !std::isdigit(value[7]) || !std::isdigit(value[9]) || !std::isdigit(value[10]) ||
-            !std::isdigit(value[11]) || !std::isdigit(value[12]) || !std::isdigit(value[13]) ||
-            !std::isdigit(value[14]))
+        if (value.size() != 15 || value[8] != 'T' || !std::isdigit(value[0]) || !std::isdigit(value[1]) || !std::isdigit(value[2]) || !std::isdigit(value[3]) ||
+            !std::isdigit(value[4]) || !std::isdigit(value[5]) || !std::isdigit(value[6]) || !std::isdigit(value[7]) || !std::isdigit(value[9]) ||
+            !std::isdigit(value[10]) || !std::isdigit(value[11]) || !std::isdigit(value[12]) || !std::isdigit(value[13]) || !std::isdigit(value[14]))
         {
             return *this;
         }
@@ -56,27 +52,8 @@ namespace ClassicLauncher
         second = std::stoi(value.substr(13, 2));
 
         ValidateDateTime();
-
         return *this;
     }
-
-    DateTime& DateTime::operator=(const char* value) { return *this = std::string{ value }; }
-
-    bool DateTime::operator<(const DateTime& a) const { return CompareDates(a); }
-
-    bool DateTime::operator>(const DateTime& a) const { return a.CompareDates(*this); }
-
-    bool DateTime::operator==(const DateTime& a) const
-    {
-        return (year == a.year) && (month == a.month) && (day == a.day) && (hour == a.hour) &&
-               (minute == a.minute) && (second == a.second);
-    }
-
-    bool DateTime::operator!=(const DateTime& a) const { return !(*this == a); }
-
-    bool DateTime::operator>=(const DateTime& a) const { return !(*this < a); }
-
-    bool DateTime::operator<=(const DateTime& a) const { return !(*this > a); }
 
     bool DateTime::CompareDates(const DateTime& a) const
     {
@@ -92,8 +69,7 @@ namespace ClassicLauncher
     std::string DateTime::FormatDateTimeToXml() const
     {
         std::ostringstream value;
-        value << ZeroDigits(year) << ZeroDigits(month) << ZeroDigits(day) << "T" << ZeroDigits(hour)
-              << ZeroDigits(minute) << ZeroDigits(second);
+        value << ZeroDigits(year) << ZeroDigits(month) << ZeroDigits(day) << "T" << ZeroDigits(hour) << ZeroDigits(minute) << ZeroDigits(second);
         return value.str();
     }
 

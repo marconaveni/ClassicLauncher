@@ -9,9 +9,7 @@ namespace ClassicLauncher
 {
 
     GuiHorizontalBox::GuiHorizontalBox()
-        : mApplication(&Application::Get()), mPositionX(0), bLeft(false), bRight(false), mLastDirection(None), mIdFocus(0), mSpeed(22)
-    {
-    }
+        : mApplication(&Application::Get()), mPositionX(0), bLeft(false), bRight(false), mLastDirection(None), mIdFocus(0), mSpeed(22) {};
 
     void GuiHorizontalBox::Init()
     {

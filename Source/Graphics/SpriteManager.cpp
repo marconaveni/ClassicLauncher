@@ -1,5 +1,6 @@
 #include "SpriteManager.h"
 
+
 namespace ClassicLauncher
 {
     SpriteManager::SpriteManager()
@@ -8,7 +9,7 @@ namespace ClassicLauncher
 
     void SpriteManager::Init()
     {
-        Image transparentImage = GenImageColor(1, 1, Color{ 0, 0, 0, 0 });
+        Image transparentImage = GenImageColor(1, 1, Color::Blank());
         LoadSprite("transparent", transparentImage);
         UnloadImage(transparentImage);
     }

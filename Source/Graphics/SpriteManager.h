@@ -4,8 +4,9 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include "Core.h"
 #include "Sprite.h"
-#include "raylib.h"
+
 
 namespace ClassicLauncher
 {

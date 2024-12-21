@@ -5,7 +5,7 @@
 #include <mutex>
 #include <string>
 #include <thread>
-#include "raylib.h"
+#include "Core.h"
 
 namespace ClassicLauncher
 {

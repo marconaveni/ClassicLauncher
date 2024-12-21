@@ -47,8 +47,8 @@ namespace ClassicLauncher
         DateTime releaseDate;
         DateTime lastPlayed;
 
-        GameList() : mapIndex(-1), bFavorite(false), playCount(0) {}
-
+        GameList()
+            : mapIndex(-1), bFavorite(false), playCount(0) {};
         ~GameList() = default;
 
         bool operator==(const GameList& a) const { return (mapIndex == a.mapIndex); }
@@ -69,7 +69,10 @@ namespace ClassicLauncher
         std::string video;
         std::string desc;
 
-        SystemList() : mapIndex(-1) {}
+        SystemList()
+            : mapIndex(-1)
+        {
+        }
 
         bool operator==(const SystemList& a) const { return (mapIndex == a.mapIndex); }
         bool operator>(const SystemList& a) const { return (mapIndex > a.mapIndex); }
@@ -80,7 +83,8 @@ namespace ClassicLauncher
     {
     public:
 
-        GameListManager() : currentList(SystemListSelect), idSystemList(0), idGameList(0) {}
+        GameListManager()
+            : currentList(SystemListSelect), idSystemList(0), idGameList(0) {};
 
     private:
 

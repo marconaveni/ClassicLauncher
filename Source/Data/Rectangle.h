@@ -11,44 +11,32 @@ namespace ClassicLauncher
     public:
 
         Rectangle(const ::Rectangle& rect)
-            : ::Rectangle{ rect.x, rect.y, rect.width, rect.height }
-        {
-        }
+            : ::Rectangle{ rect.x, rect.y, rect.width, rect.height } {};
 
         Rectangle(float x, float y, float width, float height)
-            : ::Rectangle{ x, y, width, height }
-        {
-        }
+            : ::Rectangle{ x, y, width, height } {};
+
         Rectangle(float x, float y, float width)
-            : ::Rectangle{ x, y, width, 0 }
-        {
-        }
+            : ::Rectangle{ x, y, width, 0 } {};
+
         Rectangle(float x, float y)
-            : ::Rectangle{ x, y, 0, 0 }
-        {
-        }
+            : ::Rectangle{ x, y, 0, 0 } {};
+
         Rectangle(float x)
-            : ::Rectangle{ x, 0, 0, 0 }
-        {
-        }
+            : ::Rectangle{ x, 0, 0, 0 } {};
+
         Rectangle()
-            : ::Rectangle{ 0, 0, 0, 0 }
-        {
-        }
+            : ::Rectangle{ 0, 0, 0, 0 } {};
 
         Rectangle(::Vector2 position, ::Vector2 size)
-            : ::Rectangle{ position.x, position.y, size.x, size.y }
-        {
-        }
-        Rectangle(::Vector2 size)
-            : ::Rectangle{ 0, 0, size.x, size.y }
-        {
-        }
-        Rectangle(::Vector4 rect)
-            : ::Rectangle{ rect.x, rect.y, rect.z, rect.w }
-        {
-        }
+            : ::Rectangle{ position.x, position.y, size.x, size.y } {};
 
+        Rectangle(::Vector2 size)
+            : ::Rectangle{ 0, 0, size.x, size.y } {};
+
+        Rectangle(::Vector4 rect)
+            : ::Rectangle{ rect.x, rect.y, rect.z, rect.w } {};
+            
         void SetX(float x) { this->x = x; }
         void SetY(float y) { this->y = y; }
         void SetWidth(float width) { this->width = width; }
@@ -85,10 +73,10 @@ namespace ClassicLauncher
             this->x = vec.x;
             this->y = vec.y;
         }
-        void SetSize(float width, float y)
+        void SetSize(float width, float height)
         {
             this->width = width;
-            this->height = y;
+            this->height = height;
         }
         void SetSize(const ::Vector2& vec)
         {
@@ -98,12 +86,13 @@ namespace ClassicLauncher
 
         std::string ToString() const
         {
-            return "RectangleEx(" + std::to_string(x) + ", " + std::to_string(y) + std::to_string(width) + ", " + std::to_string(height) + ")";
+            return "Rectangle( x: " + std::to_string(x) + ", y: " + std::to_string(y) + ", width: " + std::to_string(width) + ", height: " + std::to_string(height) + ")";
         }
         int GetIntX() const { return static_cast<int>(x); }
         int GetIntY() const { return static_cast<int>(y); }
         int GetIntWidth() const { return static_cast<int>(width); }
         int GetIntHeight() const { return static_cast<int>(height); }
+        Vector2 GetPosition() const { return { x, y }; }
     };
 
 }  // namespace ClassicLauncher

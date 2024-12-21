@@ -1,12 +1,9 @@
 #include "Sprite.h"
+#include <atomic>
 #include <chrono>
 #include <iostream>
-
-#include <atomic>
 #include <string>
 #include <thread>
-#include "Utils/UtilsFunctionLibrary.h"
-#include "raylib.h"
 
 namespace ClassicLauncher
 {
