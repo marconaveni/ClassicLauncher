@@ -31,6 +31,9 @@ namespace ClassicLauncher
         void RemoveFocus();
         void SetCover(std::string name = "");
         bool IsFocus();
+        virtual void AnimationStarted(std::string name) override;
+        virtual void AnimationUpdate(std::string name) override;
+        virtual void AnimationFinished(std::string name) override;
     };
 
 }  // namespace ClassicLauncher

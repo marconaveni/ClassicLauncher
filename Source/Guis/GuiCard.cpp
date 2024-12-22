@@ -37,6 +37,13 @@ namespace ClassicLauncher
     {
         GuiComponent::Update();
 
+        if(IsKeyReleased(KEY_Q))
+        {
+            TransformProperties target = mCardMain->mProperties;
+            target.scale = 1.5f;
+            mCardMain->StartAnimation("card", 0.8f, mCardMain->mProperties, target, Ease::EaseLinearNone, true);
+        }
+
         Application* pApplication = &Application::Get();
         Texture2D* textureReference = pApplication->GetSpriteManager()->GetTexture(mCover->mTextureName);
 
@@ -89,6 +96,18 @@ namespace ClassicLauncher
     bool GuiCard::IsFocus()
     {
         return bFocus;
+    }
+
+    void GuiCard::AnimationStarted(std::string name)
+    {
+    }
+
+    void GuiCard::AnimationUpdate(std::string name)
+    {
+    }
+
+    void GuiCard::AnimationFinished(std::string name)
+    {
     }
 
 }  // namespace ClassicLauncher

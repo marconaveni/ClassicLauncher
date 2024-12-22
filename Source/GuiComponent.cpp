@@ -7,24 +7,80 @@ namespace ClassicLauncher
     void GuiComponent::Update()
     {
         Entity::Update();
-        for (auto& animation : mAnimations)
+        for (auto& spriteAnimation : mSpriteAnimations)
         {
-            animation.second.Update(::GetFrameTime());
-            Rectangle rec = animation.second.GetCurrentSprite();
+            spriteAnimation.second.Update(::GetFrameTime());
+            Rectangle rec = spriteAnimation.second.GetCurrentSprite();
             mProperties.sourceX = rec.x;
             mProperties.sourceY = rec.y;
             mProperties.width = rec.width;
             mProperties.height = rec.height;
-        }        
+        }
+
+        for (auto& animation : mAnimations)
+        {
+            const std::string& name = animation.first;
+            Animation& anim = animation.second;
+
+            if (anim.bStart)
+            {
+                AnimationStarted(name);
+                anim.bStart = false;
+            }
+            anim.UpdateAnimation();
+            if (anim.bRunning)
+            {
+                AnimationUpdate(name);
+                mProperties.x = anim.mCurrentTransform.x;
+                mProperties.y = anim.mCurrentTransform.y;
+                mProperties.scale = anim.mCurrentTransform.scale;
+                mProperties.rotation = anim.mCurrentTransform.rotation;
+            }
+            if (anim.bFinish)
+            {
+                AnimationFinished(name);
+                if (anim.bReset)
+                {
+                    anim.ResetAnimation();
+                    mProperties.x = anim.mCurrentTransform.x;
+                    mProperties.y = anim.mCurrentTransform.y;
+                    mProperties.scale = anim.mCurrentTransform.scale;
+                    mProperties.rotation = anim.mCurrentTransform.rotation;
+                }
+            }
+        }
+    }
+
+    void GuiComponent::AnimationStarted(std::string name)
+    {
+    }
+
+    void GuiComponent::AnimationUpdate(std::string name)
+    {
+    }
+
+    void GuiComponent::AnimationFinished(std::string name)
+    {
+    }
+
+    void GuiComponent::StartAnimation(const std::string& name,
+                                      float durationAnimation,
+                                      const TransformProperties& startAnimationTransform,
+                                      const TransformProperties& finalAnimationTransform,
+                                      Ease typeAnimation,
+                                      bool bForceReset)
+    {
+        Animation& anim = mAnimations[name];
+        anim.StartAnimation(durationAnimation, startAnimationTransform, finalAnimationTransform, typeAnimation, bForceReset);
     }
 
     void GuiComponent::AddAnimationFrame(const std::string& name, const float timeAnimation, const std::vector<Rectangle>& spriteIndices)
     {
-        if (mAnimations.find(name) != mAnimations.end())
+        if (mSpriteAnimations.find(name) != mSpriteAnimations.end())
         {
-            mAnimations.erase(name);
+            mSpriteAnimations.erase(name);
         }
-        mAnimations[name] = SpriteAnimator(timeAnimation, spriteIndices);
+        mSpriteAnimations[name] = SpriteAnimator(timeAnimation, spriteIndices);
     }
 
 }  // namespace ClassicLauncher

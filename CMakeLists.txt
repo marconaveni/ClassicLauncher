@@ -30,6 +30,15 @@ include_directories(
 
 message("is source dir is: " ${CMAKE_SOURCE_DIR})
 
+# Source files
+set(animations
+    "${CMAKE_SOURCE_DIR}/Source/Animations/Animation.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Animations/Animation.h"
+)
+set(audio
+    "${CMAKE_SOURCE_DIR}/Source/Audio/AudioManager.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Audio/AudioManager.h"
+)
 set(data
     "${CMAKE_SOURCE_DIR}/Source/Data/Color.h"
     "${CMAKE_SOURCE_DIR}/Source/Data/DateTime.cpp"
@@ -39,10 +48,6 @@ set(data
     "${CMAKE_SOURCE_DIR}/Source/Data/Rectangle.h"
     "${CMAKE_SOURCE_DIR}/Source/Data/Vector2.h"
     "${CMAKE_SOURCE_DIR}/Source/Data/TransformProperties.h"
-)
-set(audio
-    "${CMAKE_SOURCE_DIR}/Source/Audio/AudioManager.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Audio/AudioManager.h"
 )
 set(graphics
     "${CMAKE_SOURCE_DIR}/Source/Graphics/Render.cpp"
@@ -91,8 +96,10 @@ set(src
 set(extern 
     "${CMAKE_SOURCE_DIR}/extern/tinyxml2/tinyxml2.cpp"
     "${CMAKE_SOURCE_DIR}/extern/tinyxml2/tinyxml2.h"
+    "${CMAKE_SOURCE_DIR}/extern/reasings/reasings.h"
 )
 
+source_group("Source\\Animations" FILES ${animations})
 source_group("Source\\Audio"     FILES ${audio})
 source_group("Source\\Data"     FILES ${data})
 source_group("Source\\Entity"     FILES ${entity})
@@ -104,6 +111,7 @@ source_group("Extern"     FILES ${extern})
 
 # List of source files
 set(srcs   
+    ${animations}
     ${audio}
     ${data}  
     ${graphics}

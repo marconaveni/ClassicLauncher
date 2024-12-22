@@ -48,7 +48,7 @@ namespace ClassicLauncher
         const Texture2D* texture = mSpriteManagerReference->GetTexture(entity->mTextureName);
         if (texture && entity->bToDraw)
         {
-            const TransformProperties& properties = entity->mProperties;
+            TransformProperties& properties = entity->mProperties;
 
             const float x = properties.x + properties.rootX;
             const float y = properties.y + properties.rootY;
@@ -58,6 +58,9 @@ namespace ClassicLauncher
             const float sourceY = properties.sourceY;
             const float scaleWidth = properties.scaleWidth > 0.0f ? properties.scaleWidth : width;
             const float scaleHeight = properties.scaleHeight > 0.0f ? properties.scaleHeight : height;
+
+            //properties.scale = 2.0f;
+
 
             const Rectangle source = { sourceX, sourceY, width, height };
             const Vector2 origin = { width / 2.0f, height / 2.0f };
