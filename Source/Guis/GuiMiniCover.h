@@ -19,6 +19,7 @@ namespace ClassicLauncher
 
         Application* mApplication;
         std::vector<std::shared_ptr<GuiComponent>> mGuiCovers;
+        std::shared_ptr<GuiComponent> mArrow;
         int mSize;
 
     public:

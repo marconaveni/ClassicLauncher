@@ -10,8 +10,6 @@ namespace ClassicLauncher
     void GuiMiniCover::Init()
     {
 
-        // x = 20;
-        // y = 298;
         mProperties.x = 20;
         mProperties.y = 298;
 
@@ -19,14 +17,19 @@ namespace ClassicLauncher
         {
             const int x = 29 * i;
             auto miniCover = mApplication->GetEntityManager()->CreateEntity<GuiComponent>("miniCover");
-            // miniCover->x = x;
             miniCover->mProperties.x = x;
-
             miniCover->mTextureName = "transparent";
-
             AddChild(miniCover.get());
             mGuiCovers.emplace_back(miniCover);
         }
+
+        std::vector<Rectangle> recs = { { 798.0f, 1017.0f, 30.0f, 18.0f }, { 834.0f, 1017.0f, 30.0f, 18.0f }, { 870.0f, 1017.0f, 30.0f, 18.0f } };
+
+        mArrow = mApplication->GetEntityManager()->CreateEntity<GuiComponent>("arrow");
+        mArrow->mProperties.y = -21.0f;
+        mArrow->mTextureName = "sprite";
+        mArrow->AddAnimationFrame("frame", 0.2f, recs);
+        AddChild(mArrow.get());
     }
 
     void GuiMiniCover::Update()
@@ -41,10 +44,8 @@ namespace ClassicLauncher
 
     void GuiMiniCover::SetPositionCovers(int numCovers)
     {
-        mProperties.x = (1280 - (29 * numCovers)) / 2;
-
-        // const float arrowPositionX = (numCovers % 2 == 0) ? 640.0f : 625.0f;
-        // arrow->position.position = Vector2{ arrowPositionX , positionY };
+        mProperties.x = (1280 - (29 * numCovers)) / 2.0f;
+        mArrow->mProperties.x = (numCovers % 2 == 0) ? -mProperties.x + 640.0f : -mProperties.x + 625.0f;
     }
 
     void GuiMiniCover::SetCovers()
@@ -56,7 +57,7 @@ namespace ClassicLauncher
 
         if (gameListSize == 0) return;
 
-        const int numCovers = gameListSize < mSize ? gameListSize : mSize;
+        const int numCovers = gameListSize < mSize ? gameListSize + 1 : mSize;
 
         for (int i = 0; i < numCovers; i++)
         {
@@ -93,10 +94,9 @@ namespace ClassicLauncher
             miniCover->mProperties.sourceY = 1131;
             miniCover->mProperties.scaleWidth = 29;
             miniCover->mProperties.scaleHeight = 29;
-
         }
         else
-        {                      
+        {
             miniCover->mProperties.width = 0;
             miniCover->mProperties.height = 0;
             miniCover->mProperties.sourceX = 0;

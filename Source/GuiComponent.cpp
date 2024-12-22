@@ -1,4 +1,5 @@
 #include "GuiComponent.h"
+#include "Graphics/SpriteAnimator.h"
 
 namespace ClassicLauncher
 {
@@ -9,6 +10,11 @@ namespace ClassicLauncher
         for (auto& animation : mAnimations)
         {
             animation.second.Update(::GetFrameTime());
+            Rectangle rec = animation.second.GetCurrentSprite();
+            mProperties.sourceX = rec.x;
+            mProperties.sourceY = rec.y;
+            mProperties.width = rec.width;
+            mProperties.height = rec.height;
         }        
     }
 

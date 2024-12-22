@@ -75,11 +75,11 @@ namespace ClassicLauncher
             const Vector2 vec = Application::Get().GetRender()->GetMousePositionRender();
             if (CheckCollisionPointRec(vec, recLine))
             {
-                ::DrawRectangleLinesEx(recLine, 2, Color::Red());
+                //::DrawRectangleLinesEx(recLine, 2, Color::Red());
             }
             else
             {
-                ::DrawRectangleLinesEx(recLine, 1, Color::Cyan());
+                //::DrawRectangleLinesEx(recLine, 1, Color::Cyan());
             }
 #endif
         }
