@@ -30,7 +30,7 @@ namespace ClassicLauncher
             static_assert(std::is_base_of<Entity, T>::value, "T deve herdar de Entity");
             auto entity = std::make_shared<T>(std::forward<Args>(args)...);
             const int counter = std::count(typeCount.begin(), typeCount.end(), entity->GetType());
-            entity->nameId = std::to_string(counter) + "_" + name;
+            entity->mNameId = std::to_string(counter) + "_" + name;
             entity->SetZOrder(mEntities.size());
             mEntities.emplace_back(entity);
             typeCount.emplace_back(entity->GetType());

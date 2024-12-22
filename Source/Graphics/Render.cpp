@@ -70,7 +70,7 @@ namespace ClassicLauncher
         const Rectangle dest = Rectangle{ (screenWidth - (newWidth * scale)) * 0.5f, (screenHeight - (newHeight * scale)) * 0.5f, newWidth * scale, newHeight * scale };
 
         // Draw render texture to screen, properly scaled
-        DrawTexturePro(texture, source, dest, Vector2{ 0 }, 0.0f, WHITE);
+        DrawTexturePro(texture, source, dest, Vector2{}, 0.0f, WHITE);
     }
 
     void Render::Unload()

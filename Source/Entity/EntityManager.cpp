@@ -1,13 +1,11 @@
 #include "EntityManager.h"
 #include <algorithm>  // std::sort
-
+#include "Application.h"
 
 namespace ClassicLauncher
 {
     EntityManager::EntityManager(SpriteManager* spriteManagerReference)
-        : mSpriteManagerReference(spriteManagerReference)
-    {
-    }
+        : mSpriteManagerReference(spriteManagerReference) {};
 
     void EntityManager::SetVisibleAll(Entity* entity, bool bVisible)
     {
@@ -47,32 +45,43 @@ namespace ClassicLauncher
 
     void EntityManager::DrawEntity(Entity* entity)
     {
-        const Texture2D* texture = mSpriteManagerReference->GetTexture(entity->textureName);
+        const Texture2D* texture = mSpriteManagerReference->GetTexture(entity->mTextureName);
         if (texture && entity->bToDraw)
         {
+            const TransformProperties& properties = entity->mProperties;
 
+            const float x = properties.x + properties.rootX;
+            const float y = properties.y + properties.rootY;
+            const float width = properties.width > 0.0f ? properties.width : texture->width;
+            const float height = properties.height > 0.0f ? properties.height : texture->height;
+            const float sourceX = properties.sourceX;
+            const float sourceY = properties.sourceY;
+            const float scaleWidth = properties.scaleWidth > 0.0f ? properties.scaleWidth : width;
+            const float scaleHeight = properties.scaleHeight > 0.0f ? properties.scaleHeight : height;
 
-            const int x = entity->mProperties.x + entity->mProperties.rootX;
-            const int y = entity->mProperties.y + entity->mProperties.rootY;
-            const int width = entity->mProperties.width > 0 ? entity->mProperties.width : texture->width;
-            const int height = entity->mProperties.height > 0 ? entity->mProperties.height : texture->height;
-            const float sourceX = entity->mProperties.sourceX;
-            const float sourceY = entity->mProperties.sourceY;
-            const float scaleWidth = entity->mProperties.scaleWidth > 0 ? entity->mProperties.scaleWidth : width;
-            const float scaleHeight = entity->mProperties.scaleHeight > 0 ? entity->mProperties.scaleHeight : height;
-            const float scale = entity->mProperties.scale;
-            const float rotation = entity->mProperties.rotation;
-
-            const Rectangle source = { sourceX, sourceY, (float)width, (float)height };
-            const Vector2 origin = { (float)width / 2.0f, (float)height / 2.0f };
-            const Rectangle dest = { (float)x + origin.x, (float)y + origin.y, scaleWidth * scale, scaleHeight * scale };
-            const Color color = { entity->mProperties.red, entity->mProperties.green, entity->mProperties.blue, entity->mProperties.alpha };
-
+            const Rectangle source = { sourceX, sourceY, width, height };
+            const Vector2 origin = { width / 2.0f, height / 2.0f };
+            const Rectangle dest = { x + origin.x, y + origin.y, scaleWidth * properties.scale, scaleHeight * properties.scale };
 
             entity->Draw();
-            ::DrawTexturePro(*texture, source, dest, origin, rotation, color);
+            ::DrawTexturePro(*texture, source, dest, origin, properties.rotation, properties.color);
+
             entity->bToDraw = false;
             entity->bBringToFront = false;
+
+#ifdef _DEBUG
+
+            const Rectangle recLine = { x, y, scaleWidth * properties.scale, scaleHeight * properties.scale };
+            const Vector2 vec = Application::Get().GetRender()->GetMousePositionRender();
+            if (CheckCollisionPointRec(vec, recLine))
+            {
+                ::DrawRectangleLinesEx(recLine, 2, Color::Red());
+            }
+            else
+            {
+                ::DrawRectangleLinesEx(recLine, 1, Color::Cyan());
+            }
+#endif
         }
     }
 
@@ -88,7 +97,7 @@ namespace ClassicLauncher
             }
             if (entity->bScissorMode)
             {
-                const Rectangle scissorArea = entity->scissorArea;
+                const Rectangle scissorArea = entity->mScissorArea;
                 BeginScissorMode(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height);
             }
             DrawEntity(entity.get());
@@ -102,13 +111,13 @@ namespace ClassicLauncher
         {
             if (entity->bScissorMode)
             {
-                const Rectangle scissorArea = entity->scissorArea;
-               // BeginScissorMode(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height);
+                const Rectangle scissorArea = entity->mScissorArea;
+                BeginScissorMode(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height);
             }
             DrawEntity(entity);
             if (entity->bScissorMode)
             {
-               // EndScissorMode();
+                EndScissorMode();
             }
         }
     }

@@ -42,9 +42,9 @@ namespace ClassicLauncher
         }
         void SetOpacity(const int alpha)
         {
+            a = alpha;
             if (alpha < 0) a = 0;
             if (alpha > 255) a = 255;
-            a = alpha;
         }
 
         int GetColorRed() const { return r; }

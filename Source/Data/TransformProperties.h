@@ -10,22 +10,19 @@ namespace ClassicLauncher
 
     public:
 
-        int x = 0;
-        int y = 0;
-        int width = 0;
-        int height = 0;
+        float rootX = 0;
+        float rootY = 0;
+        float x = 0;
+        float y = 0;
+        float width = 0;
+        float height = 0;
         float sourceX = 0;
         float sourceY = 0;
         float scaleWidth = 0;
         float scaleHeight = 0;
         float scale = 1;
         float rotation = 0;
-        unsigned char red = 255;    // Color red value
-        unsigned char green = 255;  // Color green value
-        unsigned char blue = 255;   // Color blue value
-        unsigned char alpha = 255;  // Color alpha value
-        int rootX = 0;
-        int rootY = 0;
+        Color color = { 255, 255, 255, 255 };
     };
 
 }  // namespace ClassicLauncher

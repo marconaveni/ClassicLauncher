@@ -53,18 +53,18 @@ namespace ClassicLauncher
     {
         if (bScissorMode)
         {
-            scissorArea.SetPosition(Math::Max(x, scissorArea.x), Math::Max(y, scissorArea.y));
-            scissorArea.SetSize(Math::Min(width, scissorArea.width), Math::Min(height, scissorArea.height));
+            mScissorArea.SetPosition(Math::Max(x, mScissorArea.x), Math::Max(y, mScissorArea.y));
+            mScissorArea.SetSize(Math::Min(width, mScissorArea.width), Math::Min(height, mScissorArea.height));
         }
         else
         {
-            scissorArea.Set(x, y, width, height);
+            mScissorArea.Set(x, y, width, height);
         }
 
         bScissorMode = true;
         for (auto& childEntity : mChildEntities)
         {
-            childEntity->EnableScissorMode(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height);
+            childEntity->EnableScissorMode(mScissorArea.x, mScissorArea.y, mScissorArea.width, mScissorArea.height);
         }
     }
 

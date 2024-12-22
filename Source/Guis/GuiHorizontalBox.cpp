@@ -115,8 +115,6 @@ namespace ClassicLauncher
     {
         GuiComponent::Update();
 
-        
-        // y = 228;
         mProperties.y = 228;
 
         if (IsKeyReleased(KEY_V) && !bLeft)

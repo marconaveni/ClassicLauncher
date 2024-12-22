@@ -13,7 +13,7 @@ namespace ClassicLauncher
         mProperties.width = mApplication->GetSpecification().width;
         mProperties.height = mApplication->GetSpecification().height;
 
-        textureName = "ref";
+        mTextureName = "ref";
 
         mGuiHorizontalBox = mApplication->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
         mGuiHorizontalBox->Init();

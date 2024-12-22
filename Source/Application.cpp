@@ -33,6 +33,11 @@ namespace ClassicLauncher
         return mSpecification;
     }
 
+    Render* Application::GetRender()
+    {
+        return &mRender;
+    }
+
     Print* Application::GetPrint()
     {
         return &mPrint;

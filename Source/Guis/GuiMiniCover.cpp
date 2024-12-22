@@ -22,7 +22,7 @@ namespace ClassicLauncher
             // miniCover->x = x;
             miniCover->mProperties.x = x;
 
-            miniCover->textureName = "transparent";
+            miniCover->mTextureName = "transparent";
 
             AddChild(miniCover.get());
             mGuiCovers.emplace_back(miniCover);
@@ -84,7 +84,7 @@ namespace ClassicLauncher
 
     void GuiMiniCover::SetCover(std::string name, GuiComponent* miniCover)
     {
-        miniCover->textureName = name;
+        miniCover->mTextureName = name;
         if (name == "sprite")
         {
             miniCover->mProperties.width = 144;

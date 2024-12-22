@@ -44,6 +44,7 @@ namespace ClassicLauncher
         ~Application();
         static Application& Get();
         ApplicationSpecification GetSpecification();
+        Render* GetRender();
         Print* GetPrint();
         AudioManager* GetAudioManager();
         SpriteManager* GetSpriteManager();

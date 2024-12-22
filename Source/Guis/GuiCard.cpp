@@ -7,8 +7,8 @@ namespace ClassicLauncher
     GuiCard::GuiCard(int x, int y)
     {
 
-        this->mProperties.x = x;
-        this->mProperties.y = y;
+        mProperties.x = x;
+        mProperties.y = y;
 
         CreateCard(mCardMain, 528, 15, 255);
         CreateCard(mCardFavorite, 783, 15, 0);
@@ -27,8 +27,8 @@ namespace ClassicLauncher
         card->mProperties.height = 270;
         card->mProperties.sourceX = sourceX;
         card->mProperties.sourceY = sourceY;
-        card->mProperties.alpha = alpha;
-        card->textureName = "sprite";
+        card->mProperties.color.SetOpacity(alpha);
+        card->mTextureName = "sprite";
 
         AddChild(card.get());
     }
@@ -38,9 +38,9 @@ namespace ClassicLauncher
         GuiComponent::Update();
 
         Application* pApplication = &Application::Get();
-        Texture2D* textureReference = pApplication->GetSpriteManager()->GetTexture(mCover->textureName);
+        Texture2D* textureReference = pApplication->GetSpriteManager()->GetTexture(mCover->mTextureName);
 
-        if (textureReference != nullptr && mCover->textureName != "sprite")
+        if (textureReference != nullptr && mCover->mTextureName != "sprite")
         {
             mCover->mProperties.x = (240.0f - static_cast<float>(textureReference->width)) / 2.0f;
             mCover->mProperties.y = (216.0f - static_cast<float>(textureReference->height)) / 2.0f;
@@ -50,14 +50,14 @@ namespace ClassicLauncher
     void GuiCard::SetFocus()
     {
         bFocus = true;
-        mCardSelected->mProperties.alpha = 255;
-        mCardSelected->mProperties.alpha = 255;
+        mCardSelected->mProperties.color.SetOpacity(255);
+        mCardSelected->mProperties.color.SetOpacity(255);
     }
 
     void GuiCard::RemoveFocus()
     {
         bFocus = false;
-        mCardSelected->mProperties.alpha = 0;
+        mCardSelected->mProperties.color.SetOpacity(0);
     }
 
     void GuiCard::SetCover(std::string name)
@@ -70,7 +70,7 @@ namespace ClassicLauncher
             mCover->mProperties.sourceY = 1131;
             mCover->mProperties.x = 50;
             mCover->mProperties.y = 50;
-            mCover->textureName = "sprite";
+            mCover->mTextureName = "sprite";
 
         }
         else
@@ -81,7 +81,7 @@ namespace ClassicLauncher
             mCover->mProperties.sourceY = 0;
             mCover->mProperties.x = 0;
             mCover->mProperties.y = 0;
-            mCover->textureName = name;
+            mCover->mTextureName = name;
         }
 
     }

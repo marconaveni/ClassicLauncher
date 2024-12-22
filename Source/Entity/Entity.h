@@ -31,7 +31,7 @@ namespace ClassicLauncher
         bool bBringToFront = false;
         int mZOrder = 0;
         std::vector<Entity*> mChildEntities;
-        std::string nameId;
+        std::string mNameId;
 
     protected:
 
@@ -60,8 +60,8 @@ namespace ClassicLauncher
         void SetBringToFront() { bBringToFront = true; }
 
         TransformProperties mProperties;
-        std::string textureName;
-        Rectangle scissorArea;
+        std::string mTextureName;
+        Rectangle mScissorArea;
 
     private:
 

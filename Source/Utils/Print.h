@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 #include "Core.h"
-#include "raylib.h"
 
 namespace ClassicLauncher
 {
@@ -50,9 +49,9 @@ namespace ClassicLauncher
     private:
 
         void InternalPrintOnScreen(const std::string& text, float duration, const std::string& label, const Color& textColor, bool bLog, int sizeY);
-        Font fontTtf;
         int size;
         float spacing;
+        Font fontTtf;
         std::vector<Message> messages;
         TraceLogLevel levelLog;
     };

@@ -6,7 +6,7 @@
 namespace ClassicLauncher
 {
     Print::Print()
-        : size(20), spacing(1)
+        : size(20), spacing(1), fontTtf()
     {
 #ifdef _DEBUG
         SetTraceLogLevel(LOG_ALL);
@@ -60,6 +60,9 @@ namespace ClassicLauncher
 
     void Print::PrintOnScreen(const char* text, const float duration, const char* label, const Color& textColor, const bool bLog)
     {
+
+#ifdef _DEBUG
+
         int count = 0;
         std::string message = text;
         std::string splitMessage;
@@ -81,6 +84,7 @@ namespace ClassicLauncher
 
         labelCompare = (!labelCompare.empty()) ? labelCompare : std::to_string(Math::Random(1, 3000));
         InternalPrintOnScreen(splitMessage, duration, labelCompare, textColor, bLog, size);
+#endif
     }
 
     void Print::Log(int messageType, const char* text, va_list args)
