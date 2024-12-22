@@ -13,11 +13,11 @@ namespace ClassicLauncher
                                    const Ease typeAnimation,
                                    const bool bForceReset)
     {
-        bRunning = true; 
+        bRunning = true;
         bStart = true;
         bFinish = false;
         mCurrentTime = 0.0f;
-        mDuration = durationAnimation / GetFrameTime(); 
+        mDuration = durationAnimation / GetFrameTime();
         mStartTransform = startAnimation;
         mCurrentTransform = startAnimation;
         mFinalTransform = finalAnimation;
@@ -36,25 +36,10 @@ namespace ClassicLauncher
                 mCurrentTransform.y = GetAnimation(mCurrentTime, mStartTransform.y, mFinalTransform.y - mStartTransform.y, mDuration);
                 mCurrentTransform.scale = GetAnimation(mCurrentTime, mStartTransform.scale, mFinalTransform.scale - mStartTransform.scale, mDuration);
                 mCurrentTransform.rotation = GetAnimation(mCurrentTime, mStartTransform.rotation, mFinalTransform.rotation - mStartTransform.rotation, mDuration);
-
-                // const float r = GetAnimation(static_cast<float>(currentTime),
-                //                              static_cast<float>(startPosition.color.GetColorRed()),
-                //                              static_cast<float>(finalPosition.color.GetColorRed() - startPosition.color.GetColorRed()),
-                //                              static_cast<float>(duration));
-                // const float g = GetAnimation(static_cast<float>(currentTime),
-                //                              static_cast<float>(startPosition.color.GetColorGreen()),
-                //                              static_cast<float>(finalPosition.color.GetColorGreen() - startPosition.color.GetColorGreen()),
-                //                              static_cast<float>(duration));
-                // const float b = GetAnimation(static_cast<float>(currentTime),
-                //                              static_cast<float>(startPosition.color.GetColorBlue()),
-                //                              static_cast<float>(finalPosition.color.GetColorBlue() - startPosition.color.GetColorBlue()),
-                //                              static_cast<float>(duration));
-                // const float a = GetAnimation(static_cast<float>(currentTime),
-                //                              static_cast<float>(startPosition.color.GetColorAlpha()),
-                //                              static_cast<float>(finalPosition.color.GetColorAlpha() - startPosition.color.GetColorAlpha()),
-                //                              static_cast<float>(duration));
-
-                // currentPosition.color.SetColor(static_cast<int>(r), static_cast<int>(g), static_cast<int>(b), static_cast<int>(a));
+				mCurrentTransform.color.r = GetAnimation(mCurrentTime, mStartTransform.color.r, mFinalTransform.color.r - mStartTransform.color.r, mDuration);
+				mCurrentTransform.color.g = GetAnimation(mCurrentTime, mStartTransform.color.g, mFinalTransform.color.g - mStartTransform.color.g, mDuration);
+				mCurrentTransform.color.b = GetAnimation(mCurrentTime, mStartTransform.color.b, mFinalTransform.color.b - mStartTransform.color.b, mDuration);
+				mCurrentTransform.color.a = GetAnimation(mCurrentTime, mStartTransform.color.a, mFinalTransform.color.a - mStartTransform.color.a, mDuration);
 
                 mCurrentTime++;
                 return;

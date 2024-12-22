@@ -27,13 +27,14 @@ namespace ClassicLauncher
         virtual ~GuiCard() override = default;
         virtual EntityType GetType() const override { return EntityType::GuiCardClass; }
         void Update() override;
-        void SetFocus();
-        void RemoveFocus();
+        void SetFocus(bool bForce = false);
+        void RemoveFocus(bool bForce = false);
         void SetCover(std::string name = "");
         bool IsFocus();
         virtual void AnimationStarted(std::string name) override;
         virtual void AnimationUpdate(std::string name) override;
         virtual void AnimationFinished(std::string name) override;
+        void Click();
     };
 
 }  // namespace ClassicLauncher

@@ -26,7 +26,7 @@ namespace ClassicLauncher
         AddChild(mMiniCover.get());
 
         SetCovers();
-        SetFocus(3);
+        SetFocus(3, true);
     }
 
     void GuiHorizontalBox::Draw()
@@ -39,15 +39,11 @@ namespace ClassicLauncher
         GuiComponent::End();
     }
 
-    void GuiHorizontalBox::SetFocus(const int newId)
+    void GuiHorizontalBox::SetFocus(const int newId, bool bForce)
     {
-        if (mGuiCards[mIdFocus]->IsFocus() && mIdFocus == newId) return;
-
-        mGuiCards[mIdFocus]->RemoveFocus();
-        // cardsContainer[idFocus].StartAnimationLostFocus();
+        mGuiCards[mIdFocus]->RemoveFocus(bForce);
         mIdFocus = newId;
-        // cardsContainer[newId].StartAnimationFocus();
-        mGuiCards[newId]->SetFocus();
+        mGuiCards[newId]->SetFocus(bForce);
         bLeft = true;
     }
 
@@ -96,6 +92,11 @@ namespace ClassicLauncher
         SetCovers();
     }
 
+    void GuiHorizontalBox::Click()
+    {
+        mGuiCards[mIdFocus]->Click();
+    }
+
     void GuiHorizontalBox::ClearCovers()
     {
         int size = mApplication->GetGameListManager()->GetGameListSize();
@@ -117,11 +118,16 @@ namespace ClassicLauncher
 
         mProperties.y = 228;
 
-        if (IsKeyReleased(KEY_V) && !bLeft)
+        if (IsKeyReleased(KEY_ENTER))
+        {
+            Click();
+        }
+
+        if (IsKeyReleased(KEY_V))
         {
             mSpeed = 22;
         }
-        if (IsKeyReleased(KEY_B) && !bLeft)
+        if (IsKeyReleased(KEY_B))
         {
             mSpeed = 88;
         }
@@ -205,7 +211,6 @@ namespace ClassicLauncher
             for (size_t i = 0; i < mGuiCards.size(); i++)
             {
                 mGuiCards[i]->mProperties.x = mCardPositions[i];
-
             }
         }
     }

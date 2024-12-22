@@ -43,10 +43,11 @@ namespace ClassicLauncher
         void Update() override;
         void Draw() override;
         void End() override;
-        void SetFocus(int newId);
+        void SetFocus(int newId, bool bForce = false);
         void SetCovers();
         EntityType GetType() const override { return EntityType::GuiHorizontalBoxClass; }
         void ChangeList(const CurrentList list);
+        void Click();
 
     private:
 

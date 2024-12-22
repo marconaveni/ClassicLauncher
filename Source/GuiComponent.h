@@ -22,9 +22,11 @@ namespace ClassicLauncher
         virtual EntityType GetType() const override { return EntityType::GuiComponentClass; }
         virtual void Update() override;
 
-        virtual void AnimationStarted(std::string name);
-        virtual void AnimationUpdate(std::string name);
-        virtual void AnimationFinished(std::string name);
+        virtual void AnimationStarted(std::string name) {}
+        virtual void AnimationUpdate(std::string name) {}
+        virtual void AnimationFinished(std::string name) {}
+
+        Animation& GetAnimation(const std::string& name) { return mAnimations[name]; }
 
         void StartAnimation(const std::string& name,
                             float durationAnimation,

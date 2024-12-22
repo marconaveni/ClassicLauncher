@@ -8,9 +8,8 @@ namespace ClassicLauncher
 {
     class Color : public ::Color
     {
-    public:
 
-        int amount = 0;
+    public:
 
         // Default white
         Color()
@@ -27,24 +26,30 @@ namespace ClassicLauncher
             a = color.a;
         }
 
-        void SetColor(const int red, const int green, const int blue)
+        void SetColor(int red, int green, int blue)
         {
+            if (red < 0) red = 0;
+            else if (red > 255) red = 255;
+            if (green < 0) green = 0;
+            else if (green > 255) green = 255;
+            if (blue < 0) blue = 0;
+            else if (blue > 255) blue = 255;
+            
             r = red;
             g = green;
             b = blue;
+
         }
-        void SetColor(const int red, const int green, const int blue, const int alpha)
+        void SetColor(int red, int green, int blue, int alpha)
         {
-            r = red;
-            g = green;
-            b = blue;
-            a = alpha;
+            SetColor(red, green, blue);
+            SetOpacity(alpha);
         }
-        void SetOpacity(const int alpha)
+        void SetOpacity(int alpha)
         {
+            if (alpha < 0) alpha = 0;
+            if (alpha > 255) alpha = 255;
             a = alpha;
-            if (alpha < 0) a = 0;
-            if (alpha > 255) a = 255;
         }
 
         int GetColorRed() const { return r; }

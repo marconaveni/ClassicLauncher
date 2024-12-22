@@ -35,32 +35,19 @@ namespace ClassicLauncher
                 mProperties.y = anim.mCurrentTransform.y;
                 mProperties.scale = anim.mCurrentTransform.scale;
                 mProperties.rotation = anim.mCurrentTransform.rotation;
+                mProperties.color = anim.mCurrentTransform.color;
             }
             if (anim.bFinish)
             {
                 AnimationFinished(name);
-                if (anim.bReset)
-                {
-                    anim.ResetAnimation();
-                    mProperties.x = anim.mCurrentTransform.x;
-                    mProperties.y = anim.mCurrentTransform.y;
-                    mProperties.scale = anim.mCurrentTransform.scale;
-                    mProperties.rotation = anim.mCurrentTransform.rotation;
-                }
+                anim.ResetAnimation();
+                mProperties.x = anim.mCurrentTransform.x;
+                mProperties.y = anim.mCurrentTransform.y;
+                mProperties.scale = anim.mCurrentTransform.scale;
+                mProperties.rotation = anim.mCurrentTransform.rotation;
+                mProperties.color = anim.mCurrentTransform.color;
             }
         }
-    }
-
-    void GuiComponent::AnimationStarted(std::string name)
-    {
-    }
-
-    void GuiComponent::AnimationUpdate(std::string name)
-    {
-    }
-
-    void GuiComponent::AnimationFinished(std::string name)
-    {
     }
 
     void GuiComponent::StartAnimation(const std::string& name,
