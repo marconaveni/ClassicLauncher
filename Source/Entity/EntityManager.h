@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
 #include "Core.h"
 #include "Entity.h"
@@ -10,14 +11,16 @@
 
 namespace ClassicLauncher
 {
+    class TimerBase;
 
     class EntityManager
     {
     private:
 
         std::vector<std::shared_ptr<Entity>> mEntities;
-        std::vector<EntityType> typeCount;
+        std::vector<EntityType> mTypeCount;
         SpriteManager* mSpriteManagerReference;
+        std::vector<std::shared_ptr<TimerBase>> mTimers;
 
     public:
 
@@ -29,11 +32,11 @@ namespace ClassicLauncher
         {
             static_assert(std::is_base_of<Entity, T>::value, "T deve herdar de Entity");
             auto entity = std::make_shared<T>(std::forward<Args>(args)...);
-            const int counter = std::count(typeCount.begin(), typeCount.end(), entity->GetType());
+            const int counter = std::count(mTypeCount.begin(), mTypeCount.end(), entity->GetType());
             entity->mNameId = std::to_string(counter) + "_" + name;
             entity->SetZOrder(mEntities.size());
             mEntities.emplace_back(entity);
-            typeCount.emplace_back(entity->GetType());
+            mTypeCount.emplace_back(entity->GetType());
             return entity;
         }
 
@@ -49,6 +52,16 @@ namespace ClassicLauncher
                 }
             }
             return entities;
+        }
+
+        template <typename T>
+        std::shared_ptr<Timer<T>> SetTimer(void (T::*callbackFunction)(), T* targetEntity, float delay, bool bLooped = false)
+        {
+            static_assert(std::is_base_of<Entity, T>::value, "T deve herdar de Entity");
+            auto timer = std::make_shared<Timer<T>>();
+            timer->SetTimer(callbackFunction, targetEntity, delay, bLooped);
+            mTimers.emplace_back(std::static_pointer_cast<TimerBase>(timer));
+            return timer;
         }
 
         void SetVisibleAll(Entity* entity, bool bVisible);
