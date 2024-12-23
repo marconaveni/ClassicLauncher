@@ -5,6 +5,7 @@
 #include "Application.h"
 #include "GuiComponent.h"
 #include "GuiHorizontalBox.h"
+#include "Core.h"
 
 namespace ClassicLauncher
 {
@@ -16,7 +17,7 @@ namespace ClassicLauncher
     {
         Application* mApplication;
         std::shared_ptr<GuiHorizontalBox> mGuiHorizontalBox;
-
+        Timer<GuiWindow>* mTimer;
     public:
 
         GuiWindow() = default;
@@ -25,6 +26,7 @@ namespace ClassicLauncher
         virtual void Update() override;
         void Init();
         void ChangeList(const CurrentList list);
+        void Click();
     };
 
 }  // namespace ClassicLauncher

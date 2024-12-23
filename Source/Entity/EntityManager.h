@@ -55,13 +55,16 @@ namespace ClassicLauncher
         }
 
         template <typename T>
-        std::shared_ptr<Timer<T>> SetTimer(void (T::*callbackFunction)(), T* targetEntity, float delay, bool bLooped = false)
+        void SetTimer(Timer<T>*& timer, void (T::*callbackFunction)(), T* targetEntity, float delay, bool bLooped = false)
         {
-            static_assert(std::is_base_of<Entity, T>::value, "T deve herdar de Entity");
-            auto timer = std::make_shared<Timer<T>>();
+            if (timer == nullptr)
+            {
+                static_assert(std::is_base_of<Entity, T>::value, "T deve herdar de Entity");
+                auto newTimer = std::make_shared<Timer<T>>();
+                mTimers.emplace_back(std::static_pointer_cast<TimerBase>(newTimer));
+                timer = newTimer.get();
+            }
             timer->SetTimer(callbackFunction, targetEntity, delay, bLooped);
-            mTimers.emplace_back(std::static_pointer_cast<TimerBase>(timer));
-            return timer;
         }
 
         void SetVisibleAll(Entity* entity, bool bVisible);

@@ -7,6 +7,7 @@ namespace ClassicLauncher
     EntityManager::EntityManager(SpriteManager* spriteManagerReference)
         : mSpriteManagerReference(spriteManagerReference) {};
 
+
     void EntityManager::SetVisibleAll(Entity* entity, bool bVisible)
     {
         for (auto& entity : entity->GetChilds())
@@ -33,6 +34,10 @@ namespace ClassicLauncher
             entity->bToDraw = entity->bVisible;
             entity->Update();
         }
+        for (auto& timer : mTimers)
+        {
+            timer->Update();
+        }
     }
 
     void EntityManager::UpdatePositionAll()
@@ -58,8 +63,6 @@ namespace ClassicLauncher
             const float sourceY = properties.sourceY;
             const float scaleWidth = properties.scaleWidth > 0.0f ? properties.scaleWidth : width;
             const float scaleHeight = properties.scaleHeight > 0.0f ? properties.scaleHeight : height;
-
-            //properties.scale = 2.0f;
 
 
             const Rectangle source = { sourceX, sourceY, width, height };

@@ -79,6 +79,8 @@ set(utils
     "${CMAKE_SOURCE_DIR}/Source/Utils/Print.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Utils/Print.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/Resources.h"
+    "${CMAKE_SOURCE_DIR}/Source/Utils/Timer.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Utils/Timer.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/StringFunctionLibrary.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Utils/StringFunctionLibrary.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/UtilsFunctionLibrary.cpp"

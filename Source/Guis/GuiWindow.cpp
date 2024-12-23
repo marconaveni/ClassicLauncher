@@ -1,6 +1,5 @@
 #include "GuiWindow.h"
 #include "Utils/Resources.h"
-#include "Utils/UtilsFunctionLibrary.h"
 
 namespace ClassicLauncher
 {
@@ -8,8 +7,6 @@ namespace ClassicLauncher
     void GuiWindow::Init()
     {
         mApplication = &Application::Get();
-        //width = mApplication->GetSpecification().width;
-        //height = mApplication->GetSpecification().height;
         mProperties.width = mApplication->GetSpecification().width;
         mProperties.height = mApplication->GetSpecification().height;
 
@@ -26,8 +23,15 @@ namespace ClassicLauncher
 
         // rootY += 1;
 
+        //mTimer.Update();
+
         if (IsKeyReleased(KEY_ENTER))
         {
+
+            mApplication->GetEntityManager()->SetTimer(mTimer, &GuiWindow::Click, this, 5.0f, false);
+
+            //mTimer.SetTimer(&GuiWindow::Click, this, 5.0f, false);
+
             mApplication->GetAudioManager()->PlayClick();
 
             if (mApplication->GetGameListManager()->GetCurrentList() == GameListSelect)
@@ -58,6 +62,11 @@ namespace ClassicLauncher
     void GuiWindow::ChangeList(const CurrentList list)
     {
         mGuiHorizontalBox->ChangeList(list);
+    }
+
+    void GuiWindow::Click()
+    {
+        TraceLog(LOG_INFO, "Click");
     }
 
 }  // namespace ClassicLauncher

@@ -9,6 +9,7 @@
 #include "Utils/Print.h"
 #include "Utils/StringFunctionLibrary.h"
 #include "Utils/UtilsFunctionLibrary.h"
+#include "Utils/Timer.h"
 #include "raylib.h"
 
 #define TEXT(...) TextFormat(__VA_ARGS__)
