@@ -35,7 +35,7 @@ namespace ClassicLauncher
         auto it = mSpriteMap.find(name);
         if (it == mSpriteMap.end())
         {
-            return nullptr;
+            return mSpriteMap["transparent"].GetTexture();
         }
         return mSpriteMap[name].GetTexture();
     }

@@ -60,7 +60,7 @@ namespace ClassicLauncher
         void SetBringToFront() { bBringToFront = true; }
 
         TransformProperties mProperties;
-        std::string mTextureName;
+        std::string mTextureName = "transparent";
         Rectangle mScissorArea;
 
     private:

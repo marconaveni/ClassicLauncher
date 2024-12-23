@@ -80,7 +80,6 @@ namespace ClassicLauncher
     void GuiHorizontalBox::ChangeList(const CurrentList list)
     {
         ClearCovers();
-        SetFocus(3);
         if (list == SystemListSelect)
         {
             mApplication->GetGameListManager()->ChangeGameToSystemList();
@@ -90,6 +89,7 @@ namespace ClassicLauncher
             mApplication->GetGameListManager()->ChangeSystemToGameList();
         }
         SetCovers();
+        SetFocus(3, true);
     }
 
     void GuiHorizontalBox::Click()
@@ -118,10 +118,8 @@ namespace ClassicLauncher
 
         mProperties.y = 228;
 
-        if (IsKeyReleased(KEY_ENTER))
-        {
-            Click();
-        }
+            
+        
 
         if (IsKeyReleased(KEY_V))
         {

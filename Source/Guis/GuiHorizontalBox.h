@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <vector>
+#include <string>
 
 #include "Application.h"
 #include "GuiCard.h"
@@ -22,6 +23,13 @@ namespace ClassicLauncher
         Left,
         Right
     };
+
+    struct HistoryPosition
+    {
+        int id = 0;
+        int indexCardFocus = 3;
+    };
+    
 
     class GuiHorizontalBox : public GuiComponent
     {

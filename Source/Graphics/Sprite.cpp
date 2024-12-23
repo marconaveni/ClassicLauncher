@@ -140,7 +140,7 @@ namespace ClassicLauncher
         {
             ::UnloadTexture(texture);
             TraceLog(LOG_DEBUG, "Unloaded Texture [ID %d] from - %s", texture.id, filePath.c_str());
-            texture = { 0 };
+            texture = {};
             bTextureLoaded = false;
         }
     }
@@ -151,7 +151,7 @@ namespace ClassicLauncher
         {
             ::UnloadImage(image);
             TraceLog(LOG_DEBUG, "Unloaded Image from - %s", filePath.c_str());
-            image = { 0 };
+            image = {};
             bImageLoaded = false;
         }
     }

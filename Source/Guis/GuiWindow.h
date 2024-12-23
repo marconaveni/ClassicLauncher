@@ -25,8 +25,8 @@ namespace ClassicLauncher
         virtual EntityType GetType() const override { return EntityType::GuiWindowClass; }
         virtual void Update() override;
         void Init();
-        void ChangeList(const CurrentList list);
-        void Click();
+        void OnClick();
+        void OnBack();
     };
 
 }  // namespace ClassicLauncher

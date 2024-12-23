@@ -21,14 +21,14 @@ namespace ClassicLauncher
     {
     private:
 
-        float mDelay;           // Tempo de atraso
-        float mDuration;        // Tempo de duracao
-        float mCurrentTime;     // Tempo atual
-        bool bFunctionCalled;   // Controle de chamada da função
-        bool bLoop;             // Indica se o timer é cíclico
-        bool bActive;           // Indica se o timer está ativo
-        T* mTargetEntity;       // Entidade alvo
-        void (T::*callback)();  // Ponteiro para a função a ser chamada
+        float mDelay;           // Delay time before the timer triggers
+        float mDuration;        // Duration of the timer
+        float mCurrentTime;     // Current elapsed time
+        bool bFunctionCalled;   // Flag to check if the function has been called
+        bool bLoop;             // Flag to determine if the timer is looping
+        bool bActive;           // Flag to check if the timer is active
+        T* mTargetEntity;       // Pointer to the target entity
+        void (T::*callback)();  // Pointer to the callback function to be called
 
     public:
 
@@ -43,6 +43,8 @@ namespace ClassicLauncher
             bActive = true;
             Reset();
         }
+
+    private:
 
         void Update()
         {
@@ -61,16 +63,18 @@ namespace ClassicLauncher
                 }
                 else
                 {
-                    bFunctionCalled = true;  // Marca como já chamada
+                    bFunctionCalled = true;  // Mark the function as already called
                 }
             }
         }
+        
+    public:
 
         void Reset()
         {
-            mCurrentTime = 0.0f;                  // Reinicia o tempo atual
-            mDuration = mDelay / GetFrameTime();  // Reinicia o tempo inicial
-            bFunctionCalled = false;              // Reseta o estado de chamada
+            mCurrentTime = 0.0f;                  // Reset current time
+            mDuration = mDelay / GetFrameTime();  // Set duration based on frame time
+            bFunctionCalled = false;              // Reset the function called state
         }
 
         void Stop() { bFunctionCalled = true; }

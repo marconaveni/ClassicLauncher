@@ -137,9 +137,11 @@ namespace ClassicLauncher
 
         // Aqui vai logica
         GameList* systemList = mGameListManager.GetCurrentGameList();
-        DrawText(TEXT("%s", mAudioManager.GetMusicName().c_str()), 10, 10, 20, WHITE);
 
-        mPrint.PrintOnScreen(TEXT("\n\n========================================"), 2.0f, "line", GREEN);
+
+        mPrint.PrintOnScreen(TEXT("========================================"), 2.0f, "line0", Color::Lime());
+        mPrint.PrintOnScreen(TEXT("Music Playing %s", mAudioManager.GetMusicName().c_str()), 2.0f, "music", Color::Lime());
+        mPrint.PrintOnScreen(TEXT("========================================"), 2.0f, "line", GREEN);
         mPrint.PrintOnScreen(TEXT("%d fps", GetFPS()), 2.0f, "fps", GREEN);
         mPrint.PrintOnScreen(TEXT("%.6f ms", GetFrameTime()), 2.0f, "ms", GREEN);
         mPrint.PrintOnScreen(TEXT("========================================"), 2.0f, "line2");
