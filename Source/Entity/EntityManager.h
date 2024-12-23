@@ -60,6 +60,7 @@ namespace ClassicLauncher
             if (timer == nullptr)
             {
                 static_assert(std::is_base_of<Entity, T>::value, "T deve herdar de Entity");
+                TraceLog(LOG_ERROR,"Uma vez %d", targetEntity->GetType());
                 auto newTimer = std::make_shared<Timer<T>>();
                 mTimers.emplace_back(std::static_pointer_cast<TimerBase>(newTimer));
                 timer = newTimer.get();

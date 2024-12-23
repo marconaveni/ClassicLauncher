@@ -4,7 +4,7 @@
 #include <memory>
 #include <string>
 #include "GuiComponent.h"
-#include "raylib.h"
+#include "Core.h"
 
 namespace ClassicLauncher
 {
@@ -14,11 +14,18 @@ namespace ClassicLauncher
     {
     private:
 
+        float mDefaultCoverWidth = 204.0f;
+        float mDefaultCoverHeight = 204.0f;
+        float mContainerSize = 240.0f;
+
+        Timer<GuiCard>* mTimer;
+
         std::shared_ptr<GuiComponent> mCardMain;
         std::shared_ptr<GuiComponent> mCardSelected;
         std::shared_ptr<GuiComponent> mCardFavorite;
         std::shared_ptr<GuiComponent> mCover;
         bool bFocus;
+        bool bFront;
         void CreateCard(std::shared_ptr<GuiComponent>& card, int sourceX, int sourceY, unsigned char alpha);
 
     public:
@@ -31,9 +38,7 @@ namespace ClassicLauncher
         void RemoveFocus(bool bForce = false);
         void SetCover(std::string name = "");
         bool IsFocus();
-        virtual void AnimationStarted(std::string name) override;
-        virtual void AnimationUpdate(std::string name) override;
-        virtual void AnimationFinished(std::string name) override;
+        void Reset();
         void Click();
     };
 

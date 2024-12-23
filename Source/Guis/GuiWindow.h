@@ -17,7 +17,7 @@ namespace ClassicLauncher
     {
         Application* mApplication;
         std::shared_ptr<GuiHorizontalBox> mGuiHorizontalBox;
-        Timer<GuiWindow>* mTimer;
+        Timer<GuiWindow>* mTimer = nullptr;
     public:
 
         GuiWindow() = default;

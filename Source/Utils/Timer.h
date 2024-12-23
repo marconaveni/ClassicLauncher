@@ -67,7 +67,7 @@ namespace ClassicLauncher
                 }
             }
         }
-        
+
     public:
 
         void Reset()

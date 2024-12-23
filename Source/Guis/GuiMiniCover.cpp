@@ -74,7 +74,7 @@ namespace ClassicLauncher
                 pSpriteManager->LoadSprite(name, fileName, 28, 45);
             }
 
-            if (i - 1 >= 0 && i <= mGuiCovers.size() - 2)
+            if (i - 1 >= 0 && i <= static_cast<int>(mGuiCovers.size()) - 2)
             {
                 SetCover(name, mGuiCovers.at(i).get());
             }
@@ -88,12 +88,10 @@ namespace ClassicLauncher
         miniCover->mTextureName = name;
         if (name == "sprite")
         {
-            miniCover->mProperties.width = 144;
-            miniCover->mProperties.height = 114;
-            miniCover->mProperties.sourceX = 1116;
-            miniCover->mProperties.sourceY = 1131;
-            miniCover->mProperties.scaleWidth = 29;
-            miniCover->mProperties.scaleHeight = 29;
+            miniCover->mProperties.width = 28;
+            miniCover->mProperties.height = 28;
+            miniCover->mProperties.sourceX = 1260;
+            miniCover->mProperties.sourceY = 1056;
         }
         else
         {
@@ -101,8 +99,6 @@ namespace ClassicLauncher
             miniCover->mProperties.height = 0;
             miniCover->mProperties.sourceX = 0;
             miniCover->mProperties.sourceY = 0;
-            miniCover->mProperties.scaleWidth = 0;
-            miniCover->mProperties.scaleHeight = 0;
         }
     }
 

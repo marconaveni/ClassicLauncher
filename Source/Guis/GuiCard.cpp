@@ -6,6 +6,7 @@ namespace ClassicLauncher
 {
 
     GuiCard::GuiCard(int x, int y)
+        : mTimer(nullptr), GuiComponent()
     {
         mProperties.x = x;
         mProperties.y = y;
@@ -36,6 +37,14 @@ namespace ClassicLauncher
     void GuiCard::Update()
     {
         GuiComponent::Update();
+
+        if (bFront)
+        {
+            mCardSelected->SetBringToFront();
+            mCardMain->SetBringToFront();
+            mCardFavorite->SetBringToFront();
+            mCover->SetBringToFront();
+        }
 
         Application* pApplication = &Application::Get();
         Texture2D* textureReference = pApplication->GetSpriteManager()->GetTexture(mCover->mTextureName);
@@ -77,12 +86,12 @@ namespace ClassicLauncher
     {
         if (name.empty())
         {
-            mCover->mProperties.width = 144;
-            mCover->mProperties.height = 114;
-            mCover->mProperties.sourceX = 1116;
-            mCover->mProperties.sourceY = 1131;
-            mCover->mProperties.x = 50;
-            mCover->mProperties.y = 50;
+            mCover->mProperties.width = mDefaultCoverWidth;
+            mCover->mProperties.height = mDefaultCoverHeight;
+            mCover->mProperties.sourceX = 1086;
+            mCover->mProperties.sourceY = 1086;
+            mCover->mProperties.x = (240 - 204) / 2;
+            mCover->mProperties.y = (216 - 204) / 2;
             mCover->mTextureName = "sprite";
         }
         else
@@ -102,50 +111,63 @@ namespace ClassicLauncher
         return bFocus;
     }
 
-    void GuiCard::AnimationStarted(std::string name)
+    void GuiCard::Reset()
     {
-    }
-
-    void GuiCard::AnimationUpdate(std::string name)
-    {
-        mCardSelected->SetBringToFront();
-        mCardMain->SetBringToFront();
-        mCardFavorite->SetBringToFront();
-        mCover->SetBringToFront();
-    }
-
-    void GuiCard::AnimationFinished(std::string name)
-    {
+        bFront = false;
+        mCardSelected->mProperties.color.SetOpacity(bFocus ? 255.0f : 0.0f);
+        mCardMain->mProperties.color.SetOpacity(255);
+        mCover->mProperties.color.SetOpacity(255);
+        mCardSelected->mProperties.scale = 1.0f;
+        mCardMain->mProperties.scale = 1.0f;
+        mCover->mProperties.scale = 1.0f;
+        mCardSelected->mProperties.x = 0.0f;
+        mCardMain->mProperties.x = 0.0f;
+        mCover->mProperties.x = 0.0f;
+        mCardSelected->mProperties.y = 0.0f;
+        mCardMain->mProperties.y = 0.0f;
+        mCover->mProperties.y = 0.0f;
     }
 
     void GuiCard::Click()
     {
         Application* pApplication = &Application::Get();
+        if (!pApplication)
+        {
+            return;
+        }
+
         Texture2D* textureReference = pApplication->GetSpriteManager()->GetTexture(mCover->mTextureName);
+
         const float time = 0.3f;
         const float scale = 1.75f;
 
         TransformProperties target = mCardSelected->mProperties;
         TransformProperties targetCover = mCover->mProperties;
-        
+
         target.color.a = 0;
         target.scale = scale;
+
         target.x = (-target.width / 2 * target.scale) + target.width / 2;
         target.y = (-target.height / 2 * target.scale) + target.height / 2;
 
         targetCover.color.a = 0;
         targetCover.scale = scale;
-        float width = (textureReference != nullptr && mCover->mTextureName != "sprite") ? static_cast<float>(textureReference->width) : 144.0f;
-        float height = (textureReference != nullptr && mCover->mTextureName != "sprite") ? static_cast<float>(textureReference->height) : 114.0f;
-        width = (240.0f - width) / 2.0f;
-        height = (240.0f - height) / 2.0f;
-        targetCover.x = ((-240.0f + width) / 2 * targetCover.scale) + (240.0f + width) / 2;
-        targetCover.y = ((-240.0f + height) / 2 * targetCover.scale) + (240.0f + height) / 2;
 
-        mCardSelected->StartAnimation("card-zoom", time, mCardSelected->mProperties, target, Ease::EaseLinearNone, true);
-        mCardMain->StartAnimation("card-zoom", time, mCardMain->mProperties, target, Ease::EaseLinearNone, true);
-        mCover->StartAnimation("card-zoom", time, mCover->mProperties, targetCover, Ease::EaseLinearNone, true);
-        StartAnimation("card-zoom", time, mProperties, mProperties, Ease::EaseLinearNone, true);
+        float width = (textureReference != nullptr && mCover->mTextureName != "sprite") ? static_cast<float>(textureReference->width) : mDefaultCoverWidth;
+        float height = (textureReference != nullptr && mCover->mTextureName != "sprite") ? static_cast<float>(textureReference->height) : mDefaultCoverHeight;
+
+        width = (mContainerSize - width) / 2.0f;
+        height = (mContainerSize - height) / 2.0f;
+
+        targetCover.x = ((-mContainerSize + width) / 2 * targetCover.scale) + (mContainerSize + width) / 2;
+        targetCover.y = ((-mContainerSize + height) / 2 * targetCover.scale) + (mContainerSize + height) / 2;
+
+        mCardSelected->StartAnimation("card-zoom", time, mCardSelected->mProperties, target, Ease::EaseQuadInOut, false);
+        mCardMain->StartAnimation("card-zoom", time, mCardMain->mProperties, target, Ease::EaseQuadInOut, false);
+        mCover->StartAnimation("card-zoom", time, mCover->mProperties, targetCover, Ease::EaseQuadInOut, false);
+
+        // StartAnimation("card-zoom", time, mProperties, mProperties, Ease::EaseQuadInOut, true);
+        pApplication->GetEntityManager()->SetTimer(mTimer, &GuiCard::Reset, this, time * 2);
     }
 
 }  // namespace ClassicLauncher
