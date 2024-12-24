@@ -59,6 +59,8 @@ set(graphics
     "${CMAKE_SOURCE_DIR}/Source/Graphics/SpriteManager.h"
 )
 set(guis
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiBlackScreen.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiBlackScreen.h"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiWindow.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiWindow.h"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiCard.cpp"

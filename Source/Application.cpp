@@ -63,6 +63,11 @@ namespace ClassicLauncher
         return &mGameListManager;
     }
 
+    GuiBlackScreen* Application::GetGuiBlackScreen()
+    {
+        return mGuiWindow->GetGuiBlackScreen();
+    }
+
     void Application::Init()
     {
         mGameListManager.Initialize();

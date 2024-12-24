@@ -1,0 +1,68 @@
+#include "GuiBlackScreen.h"
+#include "Application.h"
+
+namespace ClassicLauncher
+{
+    GuiBlackScreen::GuiBlackScreen()
+    {
+        Application* pAplication = &Application::Get();
+        mProperties.color.SetOpacity(0);
+        mProperties.scaleWidth = 1280;
+        mProperties.scaleHeight = 720;
+
+        Image blackImage = GenImageColor(1, 1, Color::Black());
+        pAplication->GetSpriteManager()->LoadSprite("black", blackImage);
+        mTextureName = "black";
+        UnloadImage(blackImage);
+    }
+
+    void GuiBlackScreen::FadeIn()
+    {
+        mProperties.color.SetOpacity(0);
+        TransformProperties target = mProperties;
+        target.color.a = 255;
+        StartAnimation("fade-in", 0.3f, mProperties, target, Ease::EaseLinearNone, false);
+    }
+
+    void GuiBlackScreen::FadeOut()
+    {
+        mProperties.color.SetOpacity(255);
+        TransformProperties target = mProperties;
+        target.color.a = 0;
+        StartAnimation("fade-out", 0.3f, mProperties, target, Ease::EaseQuadOut, false);
+    }
+    
+    void GuiBlackScreen::FadeInFadeOut()
+    {
+        mProperties.color.SetOpacity(0);
+        TransformProperties target = mProperties;
+        target.color.a = 255;
+        StartAnimation("fade-in-out", 0.3f, mProperties, target, Ease::EaseLinearNone, false);
+    }
+
+    void GuiBlackScreen::KeepBlack()
+    {        
+        mProperties.color.SetOpacity(255);
+        TransformProperties target = mProperties;   
+        StartAnimation("keep", 1.0f, mProperties, target, Ease::EaseLinearNone, false);
+
+    }
+    
+    void GuiBlackScreen::Update()
+    {
+        GuiComponent::Update();
+        SetBringToFront();
+    }
+    
+    void GuiBlackScreen::AnimationFinished(std::string name)
+    {
+        if (name == "fade-in-out")
+        {
+            KeepBlack();
+        }
+        if (name == "keep")
+        {
+            FadeOut();
+        }
+    }
+}  // namespace  ClassicLauncher

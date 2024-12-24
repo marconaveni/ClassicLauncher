@@ -5,6 +5,7 @@
 #include "Application.h"
 #include "GuiComponent.h"
 #include "GuiHorizontalBox.h"
+#include "Guis/GuiBlackScreen.h"
 #include "Core.h"
 
 namespace ClassicLauncher
@@ -12,11 +13,13 @@ namespace ClassicLauncher
 
     class Application;
     class GuiHorizontalBox;
+    class GuiBlackScreen;
 
     class GuiWindow : public GuiComponent
     {
         Application* mApplication;
         std::shared_ptr<GuiHorizontalBox> mGuiHorizontalBox;
+        std::shared_ptr<GuiBlackScreen> mGuiBlackScreen;
         Timer<GuiWindow>* mTimer = nullptr;
     public:
 
@@ -27,6 +30,7 @@ namespace ClassicLauncher
         void Init();
         void OnClick();
         void OnBack();
+        GuiBlackScreen* GetGuiBlackScreen() { return mGuiBlackScreen.get(); }
     };
 
 }  // namespace ClassicLauncher

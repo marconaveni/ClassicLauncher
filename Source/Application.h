@@ -16,6 +16,7 @@
 namespace ClassicLauncher
 {
     class GuiWindow;
+    class GuiBlackScreen;
 
     struct ApplicationSpecification
     {
@@ -50,6 +51,7 @@ namespace ClassicLauncher
         SpriteManager* GetSpriteManager();
         EntityManager* GetEntityManager();
         GameListManager* GetGameListManager();
+        GuiBlackScreen* GetGuiBlackScreen();
         void Init();
 
     private:

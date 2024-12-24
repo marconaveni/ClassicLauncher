@@ -13,6 +13,7 @@ namespace ClassicLauncher
         mGuiHorizontalBox = mApplication->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
         mGuiHorizontalBox->Init();
         AddChild(mGuiHorizontalBox.get());
+        mGuiBlackScreen = mApplication->GetEntityManager()->CreateEntity<GuiBlackScreen>("GuiBlackScreen");
     }
 
     void GuiWindow::Update()
@@ -33,10 +34,12 @@ namespace ClassicLauncher
         {
             mApplication->GetAudioManager()->PlayClick();
             mGuiHorizontalBox->Click();
+            mGuiBlackScreen->FadeInFadeOut();
             mApplication->GetEntityManager()->SetTimer(mTimer, &GuiWindow::OnClick, this, 0.5f, false);
         }
         if (IsKeyReleased(KEY_BACKSPACE))
         {
+            mGuiBlackScreen->FadeInFadeOut();
             mApplication->GetEntityManager()->SetTimer(mTimer, &GuiWindow::OnBack, this, 0.5f, false);
         }
     }

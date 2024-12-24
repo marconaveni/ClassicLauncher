@@ -47,6 +47,10 @@ namespace ClassicLauncher
         }
 
         Application* pApplication = &Application::Get();
+        if(pApplication == nullptr)
+        {
+            return;
+        }
         Texture2D* textureReference = pApplication->GetSpriteManager()->GetTexture(mCover->mTextureName);
         Animation anim = mCover->GetAnimation("card-zoom");
         if (textureReference != nullptr && mCover->mTextureName != "sprite" && !anim.bRunning)
@@ -135,6 +139,7 @@ namespace ClassicLauncher
         {
             return;
         }
+        bFront = true;
 
         Texture2D* textureReference = pApplication->GetSpriteManager()->GetTexture(mCover->mTextureName);
 
