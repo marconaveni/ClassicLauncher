@@ -4,7 +4,7 @@
 
 #include <windows.h>
 
-namespace ClassicLauncher
+namespace ClassicLauncher::Process
 {
 
     std::wstring utf8_to_wstring(const std::string& str)
@@ -23,7 +23,7 @@ namespace ClassicLauncher
         return strTo;
     }
 
-    void Process::CreateProc(unsigned int& processId, const std::string& fullPath, const std::string& optionalWorkingDirectory)
+    void CreateProc(unsigned int& processId, const std::string& fullPath, const std::string& optionalWorkingDirectory)
     {
         std::wstring path = utf8_to_wstring(fullPath);
         std::wstring dir = utf8_to_wstring(optionalWorkingDirectory);
@@ -48,7 +48,7 @@ namespace ClassicLauncher
         }
     }
 
-    bool Process::IsApplicationRunning(const unsigned int processId)
+    bool IsApplicationRunning(const unsigned int processId)
     {
         bool bApplicationRunning = true;
         HANDLE ProcessHandle = OpenProcess(SYNCHRONIZE, false, processId);
@@ -68,7 +68,7 @@ namespace ClassicLauncher
         return bApplicationRunning;
     }
 
-    bool Process::CloseApplicationRunning(const unsigned int processId)
+    bool CloseApplicationRunning(const unsigned int processId)
     {
         bool bApplicationRunning;
         HANDLE ProcessHandle = OpenProcess(PROCESS_TERMINATE, false, processId);
@@ -96,10 +96,10 @@ namespace ClassicLauncher
 #include <vector>
 #include "StringFunctionLibrary.h"
 
-namespace ClassicLauncher
+namespace ClassicLauncher::Process
 {
 
-    void Process::CreateProc(unsigned int& processId, const std::string& fullPath, const std::string& optionalWorkingDirectory)
+    void CreateProc(unsigned int& processId, const std::string& fullPath, const std::string& optionalWorkingDirectory)
     {
         std::vector<std::string> paths = StringFunctionLibrary::SplitString(fullPath);
 
@@ -134,7 +134,7 @@ namespace ClassicLauncher
         processId = pid;
     }
 
-    bool Process::IsApplicationRunning(const unsigned int processId)
+    bool IsApplicationRunning(const unsigned int processId)
     {
         bool bApplicationRunning;
         int status;
@@ -167,7 +167,7 @@ namespace ClassicLauncher
         return bApplicationRunning;
     }
 
-    bool Process::CloseApplicationRunning(const unsigned int processId)
+    bool CloseApplicationRunning(const unsigned int processId)
     {
         if (processId == 0)
         {

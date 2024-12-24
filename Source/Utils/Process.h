@@ -3,19 +3,14 @@
 
 #include <string>
 
-namespace ClassicLauncher
+namespace ClassicLauncher::Process
 {
 
-    class Process
-    {
-    public:
+    void CreateProc(unsigned int& processId, const std::string& fullPath, const std::string& optionalWorkingDirectory);
+    bool IsApplicationRunning(unsigned int processId);
+    bool CloseApplicationRunning(unsigned int processId);
 
-        static void CreateProc(unsigned int& processId, const std::string& fullPath, const std::string& optionalWorkingDirectory);
-        static bool IsApplicationRunning(unsigned int processId);
-        static bool CloseApplicationRunning(unsigned int processId);
-    };
-
-}  // namespace ClassicLauncher
+}  // namespace ClassicLauncher::Process
 
 #endif  // PROCESS_H
 
