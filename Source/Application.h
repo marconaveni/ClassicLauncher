@@ -12,11 +12,13 @@
 #include "Graphics/Sprite.h"
 #include "Graphics/SpriteManager.h"
 #include "Guis/GuiWindow.h"
+#include "Utils/ProcessManager.h"
 
 namespace ClassicLauncher
 {
     class GuiWindow;
     class GuiBlackScreen;
+    class ProcessManager;
 
     struct ApplicationSpecification
     {
@@ -36,6 +38,7 @@ namespace ClassicLauncher
         SpriteManager mSpriteManager;
         EntityManager mEntityManager;
         GameListManager mGameListManager;
+        ProcessManager mProcessManager;
 
         std::shared_ptr<GuiWindow> mGuiWindow;
 
@@ -52,14 +55,15 @@ namespace ClassicLauncher
         EntityManager* GetEntityManager();
         GameListManager* GetGameListManager();
         GuiBlackScreen* GetGuiBlackScreen();
+        ProcessManager* GetProcessManager();
         void Init();
+        void StatusRun();
 
     private:
 
         void Loop();
         void Update();
         void Draw();
-        void EndRender();
         void End();
         void ToggleFullscreen();
     };

@@ -34,7 +34,14 @@ namespace ClassicLauncher
         {
             mApplication->GetAudioManager()->PlayClick();
             mGuiHorizontalBox->Click();
-            mGuiBlackScreen->FadeInFadeOut();
+            if (mApplication->GetGameListManager()->GetCurrentList() == GameListSelect)
+            {
+                mGuiBlackScreen->FadeIn();
+            }
+            else
+            {
+                mGuiBlackScreen->FadeInFadeOut();
+            }
             mApplication->GetEntityManager()->SetTimer(mTimer, &GuiWindow::OnClick, this, 0.5f, false);
         }
         if (IsKeyReleased(KEY_BACKSPACE))
@@ -49,20 +56,12 @@ namespace ClassicLauncher
         TraceLog(LOG_INFO, "Click");
         if (mApplication->GetGameListManager()->GetCurrentList() == GameListSelect)
         {
-            std::string fullPath = mApplication->GetGameListManager()->GetCurrentSystemList()->executable;
-            fullPath.append(" ");
-            fullPath.append(mApplication->GetGameListManager()->GetCurrentSystemList()->arguments);
-            fullPath.append(" \"");
-            fullPath.append(mApplication->GetGameListManager()->GetCurrentGameList()->path);
-            fullPath.append("\" ");
-            const std::string optionalWorkingDirectory = GetDirectoryPath(mApplication->GetGameListManager()->GetCurrentSystemList()->executable.c_str());
-            // platformProcess->CreateProc(fullPath, optionalWorkingDirectory);
+            mApplication->GetProcessManager()->CreateProc(mApplication->GetGameListManager());
         }
         else
         {
             mGuiHorizontalBox->ChangeList(GameListSelect);
         }
-        
     }
 
     void GuiWindow::OnBack()

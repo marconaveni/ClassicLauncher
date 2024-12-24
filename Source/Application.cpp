@@ -68,6 +68,11 @@ namespace ClassicLauncher
         return mGuiWindow->GetGuiBlackScreen();
     }
 
+    ProcessManager* Application::GetProcessManager()
+    {
+        return &mProcessManager;
+    }
+
     void Application::Init()
     {
         mGameListManager.Initialize();
@@ -116,6 +121,29 @@ namespace ClassicLauncher
         CloseAudioDevice();
     }
 
+    void Application::StatusRun()
+    {
+        ProcessStatus status = mProcessManager.UpdateRun();
+
+        switch (status)
+        {
+            case ProcessStatus::None:
+                break;
+            case ProcessStatus::Open:
+                mAudioManager.Pause();
+                break;
+            case ProcessStatus::Running:
+                WaitTime(2.5);
+                break;
+            case ProcessStatus::Close:
+                GetGuiBlackScreen()->KeepBlack();
+                mAudioManager.ChangeMusic();
+                break;
+            default:
+                break;
+        }
+    }
+
     void Application::Loop()
     {
         while (!WindowShouldClose())
@@ -130,7 +158,6 @@ namespace ClassicLauncher
             ClearBackground(BLACK);
             Draw();  // draw on screen
             EndDrawing();
-            EndRender();
         }
     }
 
@@ -140,10 +167,10 @@ namespace ClassicLauncher
         mEntityManager.UpdatePositionAll();
         mEntityManager.Draw();  // draw in texture render
 
+        StatusRun();
+
         // Aqui vai logica
         GameList* systemList = mGameListManager.GetCurrentGameList();
-
-
         mPrint.PrintOnScreen(TEXT("========================================"), 2.0f, "line0", Color::Lime());
         mPrint.PrintOnScreen(TEXT("Music Playing %s", mAudioManager.GetMusicName().c_str()), 2.0f, "music", Color::Lime());
         mPrint.PrintOnScreen(TEXT("========================================"), 2.0f, "line", GREEN);
@@ -187,9 +214,6 @@ namespace ClassicLauncher
         mPrint.DrawMessage();
     }
 
-    void Application::EndRender()
-    {
-    }
 
     void Application::End()
     {

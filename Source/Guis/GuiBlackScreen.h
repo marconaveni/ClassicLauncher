@@ -17,9 +17,9 @@ namespace ClassicLauncher
         void FadeOut();
         void FadeInFadeOut();
         void KeepBlack();
+        void SetOpacity(int opacity);
         virtual void Update() override;
         virtual void AnimationFinished(std::string name) override;
-
     };
 
 }  // namespace ClassicLauncher

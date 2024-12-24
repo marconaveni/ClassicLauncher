@@ -42,7 +42,12 @@ namespace ClassicLauncher
         StartAnimation("keep", 1.0f, mProperties, target, Ease::EaseLinearNone, false);
 
     }
-    
+
+    void GuiBlackScreen::SetOpacity(int opacity)
+    {
+        mProperties.color.SetOpacity(opacity);
+    }
+
     void GuiBlackScreen::Update()
     {
         GuiComponent::Update();

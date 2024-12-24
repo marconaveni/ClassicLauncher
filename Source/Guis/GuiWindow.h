@@ -3,10 +3,10 @@
 
 #include <memory>
 #include "Application.h"
+#include "Core.h"
 #include "GuiComponent.h"
 #include "GuiHorizontalBox.h"
 #include "Guis/GuiBlackScreen.h"
-#include "Core.h"
 
 namespace ClassicLauncher
 {
@@ -21,6 +21,7 @@ namespace ClassicLauncher
         std::shared_ptr<GuiHorizontalBox> mGuiHorizontalBox;
         std::shared_ptr<GuiBlackScreen> mGuiBlackScreen;
         Timer<GuiWindow>* mTimer = nullptr;
+
     public:
 
         GuiWindow() = default;
