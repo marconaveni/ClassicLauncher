@@ -30,7 +30,6 @@ namespace ClassicLauncher
         template <typename T, typename... Args>
         std::shared_ptr<T> CreateEntity(const std::string& name, Args&&... args)
         {
-            static_assert(std::is_base_of<Entity, T>::value, "T deve herdar de Entity");
             auto entity = std::make_shared<T>(std::forward<Args>(args)...);
             const int counter = std::count(mTypeCount.begin(), mTypeCount.end(), entity->GetType());
             entity->mNameId = std::to_string(counter) + "_" + name;
@@ -59,8 +58,7 @@ namespace ClassicLauncher
         {
             if (timer == nullptr)
             {
-                static_assert(std::is_base_of<Entity, T>::value, "T deve herdar de Entity");
-                TraceLog(LOG_ERROR,"Uma vez %d", targetEntity->GetType());
+                static_assert(std::is_base_of<Entity, T>::value, "T must inherit from Entity");
                 auto newTimer = std::make_shared<Timer<T>>();
                 mTimers.emplace_back(std::static_pointer_cast<TimerBase>(newTimer));
                 timer = newTimer.get();

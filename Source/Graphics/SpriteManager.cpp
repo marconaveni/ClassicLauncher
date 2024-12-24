@@ -10,8 +10,11 @@ namespace ClassicLauncher
     void SpriteManager::Init()
     {
         Image transparentImage = GenImageColor(1, 1, Color::Blank());
+        Image blackImage = GenImageColor(1, 1, Color::Black());
         LoadSprite("transparent", transparentImage);
+        LoadSprite("black", blackImage);
         UnloadImage(transparentImage);
+        UnloadImage(blackImage);
     }
 
     void SpriteManager::LoadSprite(const std::string& name, const std::string& fileName, const int width, const int height, bool bAspectRatio)

@@ -102,12 +102,14 @@ namespace ClassicLauncher
         int size = mApplication->GetGameListManager()->GetGameListSize();
         for (int i = 0; i < size; i++)
         {
-            bool bResult1 = mApplication->GetSpriteManager()->DeleteSprite(std::to_string(i) + "_CV");
-            bool bResult2 = mApplication->GetSpriteManager()->DeleteSprite(std::to_string(i) + "_MCV");
+            const std::string coverName = std::to_string(i) + "_CV"; 
+            const std::string miniCoverName = std::to_string(i) + "_MCV"; 
+            bool bResult1 = mApplication->GetSpriteManager()->DeleteSprite(coverName);
+            bool bResult2 = mApplication->GetSpriteManager()->DeleteSprite(miniCoverName);
 
             if (!bResult1 || !bResult2)
             {
-                TraceLog(LOG_WARNING, "Error deleting sprite %d", i);
+                TraceLog(LOG_WARNING, "Sprite not deleted index: %d\nCover: %s\nMini Cover: %s ", i, coverName.c_str(), miniCoverName.c_str());
             }
         }
     }

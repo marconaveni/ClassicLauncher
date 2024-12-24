@@ -5,15 +5,10 @@ namespace ClassicLauncher
 {
     GuiBlackScreen::GuiBlackScreen()
     {
-        Application* pAplication = &Application::Get();
         mProperties.color.SetOpacity(0);
         mProperties.scaleWidth = 1280;
         mProperties.scaleHeight = 720;
-
-        Image blackImage = GenImageColor(1, 1, Color::Black());
-        pAplication->GetSpriteManager()->LoadSprite("black", blackImage);
         mTextureName = "black";
-        UnloadImage(blackImage);
     }
 
     void GuiBlackScreen::FadeIn()
