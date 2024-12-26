@@ -46,6 +46,7 @@ set(data
     "${CMAKE_SOURCE_DIR}/Source/Data/GameListManager.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Data/GameListManager.h"
     "${CMAKE_SOURCE_DIR}/Source/Data/Rectangle.h"
+    "${CMAKE_SOURCE_DIR}/Source/Data/Size.h"
     "${CMAKE_SOURCE_DIR}/Source/Data/Vector2.h"
     "${CMAKE_SOURCE_DIR}/Source/Data/TransformProperties.h"
 )
