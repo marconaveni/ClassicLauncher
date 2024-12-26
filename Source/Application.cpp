@@ -142,6 +142,7 @@ namespace ClassicLauncher
             case ProcessStatus::Close:
                 GetGuiBlackScreen()->KeepBlack();
                 mAudioManager.ChangeMusic();
+                InputManager::EnableInput();
                 break;
             default:
                 break;
@@ -170,6 +171,10 @@ namespace ClassicLauncher
         mEntityManager.UpdateAll();
         mEntityManager.UpdatePositionAll();
         mEntityManager.Draw();  // draw in texture render
+
+        //Log(LOG_CLASSIC_DEBUG, TEXTBOOL(InputManager::GetInputLeftFaceLeft()));
+
+
 
         StatusProcessRun();
 

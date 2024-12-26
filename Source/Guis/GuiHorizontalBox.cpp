@@ -9,7 +9,7 @@ namespace ClassicLauncher
 {
 
     GuiHorizontalBox::GuiHorizontalBox()
-        : mApplication(&Application::Get()), mPositionX(0), bLeft(false), bRight(false), mLastDirection(None), mIdFocus(0), mSpeed(22) {};
+        : mApplication(&Application::Get()), mPositionX(0), bLeft(false), bRight(false), mLastDirection(None), mIdFocus(0), mSpeed(22.0f) {};
 
     void GuiHorizontalBox::Init()
     {
@@ -125,15 +125,21 @@ namespace ClassicLauncher
 
         mProperties.y = 228;
 
-
-        mSpeed = 22;
-    
-        if (IsKeyDown(KEY_B))
+        if (InputManager::GamepadButtonRightThumb(Down))
         {
-            mSpeed = 88;
+            mSpeed = 255;
+        }
+        else if (InputManager::GetInputLeftFaceLeft(Down) || InputManager::GetInputLeftFaceRight(Down))
+        {
+            mSpeed += 0.35f;
+            mSpeed = Math::Clamp(mSpeed, 0.0f, 88.0f);
+        }
+        else
+        {
+            mSpeed = 22.0f;
         }
 
-        if (IsKeyDown(KEY_LEFT) && !bRight)
+        if (InputManager::GetInputLeftFaceLeft(Down) && !bRight)
         {
             if (!bLeft)
             {
@@ -143,7 +149,7 @@ namespace ClassicLauncher
             }
             bLeft = true;
         }
-        if (IsKeyDown(KEY_RIGHT) && !bLeft)
+        if (InputManager::GetInputLeftFaceRight(Down) && !bLeft)
         {
             if (!bRight)
             {

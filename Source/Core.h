@@ -11,6 +11,7 @@
 #include "Utils/StringFunctionLibrary.h"
 #include "Utils/Timer.h"
 #include "Utils/UtilsFunctionLibrary.h"
+#include "Input/InputManager.h"
 #include "raylib.h"
 
 #define TEXT(...) TextFormat(__VA_ARGS__)

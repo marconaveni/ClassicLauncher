@@ -42,7 +42,7 @@ namespace ClassicLauncher
         bool bRight;
         Direction mLastDirection;
         int mIdFocus;
-        unsigned int mSpeed;
+        float mSpeed;
 
     public:
 

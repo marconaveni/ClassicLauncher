@@ -30,8 +30,9 @@ namespace ClassicLauncher
             mTextureName = "transparent";
         }
 
-        if (IsKeyReleased(KEY_ENTER))
+        if (InputManager::GetInputRightFaceDown())  // accept
         {
+            InputManager::DisableInput();
             mApplication->GetAudioManager()->PlayClick();
             mGuiHorizontalBox->Click();
             if (mApplication->GetGameListManager()->GetCurrentList() == GameListSelect)
@@ -44,8 +45,9 @@ namespace ClassicLauncher
             }
             mApplication->GetEntityManager()->SetTimer(mTimer, &GuiWindow::OnClick, this, 0.5f, false);
         }
-        if (IsKeyReleased(KEY_BACKSPACE))
+        if (InputManager::GetInputRightFaceRight() && mApplication->GetGameListManager()->GetCurrentList() == GameListSelect)  // back
         {
+            InputManager::DisableInput();
             mGuiBlackScreen->FadeInFadeOut();
             mApplication->GetEntityManager()->SetTimer(mTimer, &GuiWindow::OnBack, this, 0.5f, false);
         }
@@ -61,6 +63,7 @@ namespace ClassicLauncher
         else
         {
             mGuiHorizontalBox->ChangeList(GameListSelect);
+            InputManager::EnableInput();
         }
     }
 
@@ -70,6 +73,7 @@ namespace ClassicLauncher
         if (mApplication->GetGameListManager()->GetCurrentList() == GameListSelect)
         {
             mGuiHorizontalBox->ChangeList(SystemListSelect);
+            InputManager::EnableInput();
         }
     }
 

@@ -71,6 +71,10 @@ set(guis
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiMiniCover.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiMiniCover.h"
 )
+set(input
+    "${CMAKE_SOURCE_DIR}/Source/Input/InputManager.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Input/InputManager.h"
+)
 set(entity
     "${CMAKE_SOURCE_DIR}/Source/Entity/Entity.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Entity/Entity.h"
@@ -117,6 +121,7 @@ source_group("Source\\Data"     FILES ${data})
 source_group("Source\\Entity"     FILES ${entity})
 source_group("Source\\Graphics"  FILES ${graphics})
 source_group("Source\\Guis"  FILES ${guis})
+source_group("Source\\Input"  FILES ${input})
 source_group("Source\\Utils"     FILES ${utils})
 source_group("Source"            FILES ${src})
 source_group("Extern"     FILES ${extern})
@@ -126,9 +131,10 @@ set(srcs
     ${animations}
     ${audio}
     ${data}  
+    ${entity}
     ${graphics}
     ${guis}
-    ${entity}
+    ${input}
     ${utils}
     ${src}  
     ${extern}
