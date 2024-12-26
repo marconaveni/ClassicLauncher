@@ -26,6 +26,7 @@ namespace ClassicLauncher
         Texture2D* GetTexture(const std::string& name);
         Image* GetImage(std::string name);
         bool DeleteSprite(std::string name);
+        int NumSpritesLoaded();
         void UnloadSprites();
     };
 

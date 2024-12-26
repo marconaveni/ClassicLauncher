@@ -60,6 +60,11 @@ namespace ClassicLauncher
         return false;
     }
 
+    int SpriteManager::NumSpritesLoaded()
+    {
+        return static_cast<int>(mSpriteMap.size()) ;
+    }
+
     void SpriteManager::UnloadSprites()
     {
         mSpriteMap.clear();

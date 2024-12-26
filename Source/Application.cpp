@@ -2,6 +2,7 @@
 #include "Graphics/Render.h"
 #include "GuiComponent.h"
 #include "Guis/GuiWindow.h"
+#include "Utils/Log.h"
 #include "Utils/Resources.h"
 
 namespace ClassicLauncher
@@ -75,6 +76,9 @@ namespace ClassicLauncher
 
     void Application::Init()
     {
+        LogLevel(LOG_CLASSIC_DEBUG, LOG_WARNING);
+        SetTraceLogCallback(TraceLogger);
+
         mGameListManager.Initialize();
 
         SetConfigFlags(FLAG_VSYNC_HINT);  // vsync only enable in fullscreen set before InitWindow
@@ -121,7 +125,7 @@ namespace ClassicLauncher
         CloseAudioDevice();
     }
 
-    void Application::StatusRun()
+    void Application::StatusProcessRun()
     {
         ProcessStatus status = mProcessManager.UpdateRun();
 
@@ -167,17 +171,36 @@ namespace ClassicLauncher
         mEntityManager.UpdatePositionAll();
         mEntityManager.Draw();  // draw in texture render
 
-        StatusRun();
+        StatusProcessRun();
 
-        // Aqui vai logica
         GameList* systemList = mGameListManager.GetCurrentGameList();
-        mPrint.PrintOnScreen(TEXT("========================================"), 2.0f, "line0", Color::Lime());
-        mPrint.PrintOnScreen(TEXT("Music Playing %s", mAudioManager.GetMusicName().c_str()), 2.0f, "music", Color::Lime());
-        mPrint.PrintOnScreen(TEXT("========================================"), 2.0f, "line", GREEN);
-        mPrint.PrintOnScreen(TEXT("%d fps", GetFPS()), 2.0f, "fps", GREEN);
-        mPrint.PrintOnScreen(TEXT("%.6f ms", GetFrameTime()), 2.0f, "ms", GREEN);
-        mPrint.PrintOnScreen(TEXT("========================================"), 2.0f, "line2");
-        mPrint.PrintOnScreen(TEXT("Current game list %s", systemList->name.c_str()), 2.0f, "gameList");
+        PRINT(TEXT("========================================"), 2.0f, "line0", Color::Lime());
+        PRINT(TEXT("Music Playing %s", mAudioManager.GetMusicName().c_str()), 2.0f, "music", Color::Lime());
+        PRINT(TEXT("========================================"), 2.0f, "line", Color::Green());
+        PRINT(TEXT("%d fps", GetFPS()), 2.0f, "fps", Color::Green());
+        PRINT(TEXT("%.6f ms", GetFrameTime()), 2.0f, "ms", Color::Green());
+        PRINT(TEXT("========================================"), 2.0f, "line2");
+        PRINT(TEXT("Current game list %s", systemList->name.c_str()), 2.0f, "gameList");
+
+#ifdef _DEBUG
+
+        if (IsKeyReleased(KEY_ONE))
+        {
+            LogLevel(LOG_CLASSIC_DEBUG, LOG_WARNING);
+            Log(LOG_CLASSIC_DEBUG, "Enable LOG_CLASSIC_DEBUG, LOG_WARNING");
+        }
+        if (IsKeyReleased(KEY_TWO))
+        {
+            LogLevel(LOG_CLASSIC_DEBUG, LOG_ALL);
+            Log(LOG_CLASSIC_DEBUG, "Enable LOG_CLASSIC_DEBUG, LOG_ALL");
+        }
+        if (IsKeyReleased(KEY_THREE))
+        {
+            LogLevel(LOG_CLASSIC_ALL, LOG_ALL);
+            Log(LOG_CLASSIC_DEBUG, "Enable LOG_CLASSIC_ALL, LOG_ALL");
+        }
+
+#endif
 
         if (IsKeyReleased(KEY_A))
         {
@@ -199,8 +222,9 @@ namespace ClassicLauncher
         {
             // mEntityManager.SetZOrder(mGuiWindow.get(), 1);
             std::string homeDir = UtilsFunctionLibrary::GetHomeDir();
-            mPrint.Log(LOG_DEBUG, TEXT("GetHomeDir %s", homeDir.c_str()));
-            mPrint.Log(LOG_DEBUG, TEXT("GetWorkingDirectory %s", UtilsFunctionLibrary::GetWorkingDirectory().c_str()));
+
+            Log(LOG_CLASSIC_DEBUG, TEXT("GetHomeDir %s", homeDir.c_str()));
+            Log(LOG_CLASSIC_DEBUG, TEXT("GetWorkingDirectory %s", UtilsFunctionLibrary::GetWorkingDirectory().c_str()));
         }
         if (IsKeyDown(KEY_DOWN))
         {
@@ -213,7 +237,6 @@ namespace ClassicLauncher
         mRender.DrawRender();
         mPrint.DrawMessage();
     }
-
 
     void Application::End()
     {

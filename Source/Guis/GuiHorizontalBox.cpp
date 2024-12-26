@@ -25,7 +25,7 @@ namespace ClassicLauncher
         mMiniCover->Init();
         AddChild(mMiniCover.get());
 
-        SetCovers();
+        //SetCovers();
         SetFocus(3, true);
     }
 
@@ -60,7 +60,6 @@ namespace ClassicLauncher
             indexFinal = UtilsFunctionLibrary::SetIndexArray(indexFinal, manager->GetGameListSize());
             indexFinal = Math::Clamp(indexFinal, 0, manager->GetGameListSize() - 1);
 
-            TraceLog(LOG_DEBUG, "index final %d line %d", indexFinal, __LINE__);
             const std::string name = std::to_string(indexFinal) + "_CV";
             const std::string path = manager->GetCurrentGameList(indexFinal)->image;
 
@@ -74,7 +73,10 @@ namespace ClassicLauncher
                 mGuiCards[i]->SetCover();
             }
         }
+
         mMiniCover->SetCovers();
+
+        Log(LOG_CLASSIC_DEBUG, "Num Sprites Loaded after SetCovers %d", spriteManager->NumSpritesLoaded()); 
     }
 
     void GuiHorizontalBox::ChangeList(const CurrentList list)
@@ -88,7 +90,7 @@ namespace ClassicLauncher
         {
             mApplication->GetGameListManager()->ChangeSystemToGameList();
         }
-        SetCovers();
+        //SetCovers();
         SetFocus(3, true);
     }
 
@@ -100,18 +102,21 @@ namespace ClassicLauncher
     void GuiHorizontalBox::ClearCovers()
     {
         int size = mApplication->GetGameListManager()->GetGameListSize();
+        SpriteManager* spriteManager = mApplication->GetSpriteManager();
         for (int i = 0; i < size; i++)
         {
-            const std::string coverName = std::to_string(i) + "_CV"; 
-            const std::string miniCoverName = std::to_string(i) + "_MCV"; 
-            bool bResult1 = mApplication->GetSpriteManager()->DeleteSprite(coverName);
-            bool bResult2 = mApplication->GetSpriteManager()->DeleteSprite(miniCoverName);
+            const std::string coverName = std::to_string(i) + "_CV";
+            const std::string miniCoverName = std::to_string(i) + "_MCV";
+            bool bResult1 = spriteManager->DeleteSprite(coverName);
+            bool bResult2 = spriteManager->DeleteSprite(miniCoverName);
 
-            if (!bResult1 || !bResult2)
+            if (bResult1 && bResult2)
             {
-                TraceLog(LOG_WARNING, "Sprite not deleted index: %d\nCover: %s\nMini Cover: %s ", i, coverName.c_str(), miniCoverName.c_str());
+                Log(LOG_CLASSIC_TRACE, "Sprite deleted index: %d\n  > Cover: %s\n  > Mini Cover: %s ", i, coverName.c_str(), miniCoverName.c_str());
             }
         }
+
+        Log(LOG_CLASSIC_DEBUG, "Num Sprites Loaded after ClearCovers %d", spriteManager->NumSpritesLoaded());
     }
 
     void GuiHorizontalBox::Update()
@@ -120,14 +125,10 @@ namespace ClassicLauncher
 
         mProperties.y = 228;
 
-            
-        
 
-        if (IsKeyReleased(KEY_V))
-        {
-            mSpeed = 22;
-        }
-        if (IsKeyReleased(KEY_B))
+        mSpeed = 22;
+    
+        if (IsKeyDown(KEY_B))
         {
             mSpeed = 88;
         }

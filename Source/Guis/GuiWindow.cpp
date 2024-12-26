@@ -21,11 +21,11 @@ namespace ClassicLauncher
         GuiComponent::Update();
 
         // rootY += 1;
-        if (IsKeyReleased(KEY_ONE))
+        if (IsKeyReleased(KEY_F1))
         {
             mTextureName = "ref";
         }
-        if (IsKeyReleased(KEY_TWO))
+        if (IsKeyReleased(KEY_F2))
         {
             mTextureName = "transparent";
         }
@@ -53,7 +53,7 @@ namespace ClassicLauncher
 
     void GuiWindow::OnClick()
     {
-        TraceLog(LOG_INFO, "Click");
+        Log(LOG_CLASSIC_INFO, "Called OnClick");
         if (mApplication->GetGameListManager()->GetCurrentList() == GameListSelect)
         {
             mApplication->GetProcessManager()->CreateProc(mApplication->GetGameListManager());
@@ -66,6 +66,7 @@ namespace ClassicLauncher
 
     void GuiWindow::OnBack()
     {
+        Log(LOG_CLASSIC_INFO, "Called OnBack");
         if (mApplication->GetGameListManager()->GetCurrentList() == GameListSelect)
         {
             mGuiHorizontalBox->ChangeList(SystemListSelect);

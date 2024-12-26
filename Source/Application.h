@@ -57,7 +57,7 @@ namespace ClassicLauncher
         GuiBlackScreen* GetGuiBlackScreen();
         ProcessManager* GetProcessManager();
         void Init();
-        void StatusRun();
+        void StatusProcessRun();
 
     private:
 

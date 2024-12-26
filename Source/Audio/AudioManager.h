@@ -30,15 +30,15 @@ namespace ClassicLauncher
     private:
 
         std::mutex musicMutex;
-        std::thread workerThread;         // Thread para o trabalho
-        std::atomic<bool> bIsRunning;     // Sinaliza se a thread deve continuar
-        std::atomic<bool> bIsPlayClick;   // Sinaliza se a thread deve continuar
-        std::atomic<bool> bIsPlayCursor;  // Sinaliza se a thread deve continuar
-        std::atomic<StatusAudio> status;  // Sinaliza se a thread deve continuar
-        Sound clickMusic;                 // Struct music
-        Sound cursorMusic;                // Struct music
-        std::vector<AudioMusic> musics;   // Struct music
-        int idMusic;                      // Struct music
+        std::thread workerThread;         // Thread work
+        std::atomic<bool> bIsRunning;     // Thread is Running 
+        std::atomic<bool> bIsPlayClick;   // Sinaliza para a thread tocar clickMusic
+        std::atomic<bool> bIsPlayCursor;  // Sinaliza para a thread tocar cursorMusic
+        std::atomic<StatusAudio> status;  // Status Current Audio Music
+        Sound clickMusic;                 // Struct Sound
+        Sound cursorMusic;                // Struct Sound
+        std::vector<AudioMusic> musics;   // Array Struct Audio musics
+        int idMusic;                      // id music
 
     public:
 

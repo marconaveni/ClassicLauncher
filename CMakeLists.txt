@@ -77,6 +77,8 @@ set(entity
     "${CMAKE_SOURCE_DIR}/Source/Entity/EntityManager.h"
 )
 set(utils
+    "${CMAKE_SOURCE_DIR}/Source/Utils/Log.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Utils/Log.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/Math.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/Print.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Utils/Print.h"

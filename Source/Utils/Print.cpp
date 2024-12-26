@@ -3,19 +3,12 @@
 #include <iostream>
 #include "Math.h"
 
+
 namespace ClassicLauncher
 {
     Print::Print()
         : size(20), spacing(1), fontTtf()
     {
-#ifdef _DEBUG
-        SetTraceLogLevel(LOG_ALL);
-        levelLog = LOG_ALL;
-#else
-        SetTraceLogLevel(LOG_ERROR);
-        levelLog = LOG_ERROR;
-#endif
-        SetTraceLogCallback(&Print::Log);
     }
 
     void Print::InternalPrintOnScreen(const std::string& text, float duration, const std::string& label, const Color& textColor, bool bLog, int sizeY)
@@ -85,45 +78,6 @@ namespace ClassicLauncher
         labelCompare = (!labelCompare.empty()) ? labelCompare : std::to_string(Math::Random(1, 3000));
         InternalPrintOnScreen(splitMessage, duration, labelCompare, textColor, bLog, size);
 #endif
-    }
-
-    void Print::Log(int messageType, const char* text, va_list args)
-    {
-#ifndef _DEBUG
-        if (messageType < LOG_ERROR)
-        {
-            return;
-        }
-#endif
-        switch (messageType)
-        {
-            case LOG_TRACE:
-                std::cout << "\x1b[36m" << "TRACE: ";
-                break;
-            case LOG_DEBUG:
-                std::cout << "\x1b[34m" << "DEBUG: ";
-                break;
-            case LOG_INFO:
-                std::cout << "\x1b[37m" << "INFO: ";
-                break;
-            case LOG_WARNING:
-                std::cout << "\x1B[33m" << "WARNING: ";
-                break;
-            case LOG_ERROR:
-                std::cout << "\x1B[31m" << "ERROR: ";
-                break;
-            case LOG_FATAL:
-                std::cout << "\x1B[41m" << "FATAL: ";
-                break;
-        }
-
-        vprintf(text, args);
-        std::cout << "\x1B[0m\n";
-    }
-
-    void Print::Log(TraceLogLevel logLevel, const char* text)
-    {
-        TraceLog(logLevel, text);
     }
 
     void Print::DrawMessage()

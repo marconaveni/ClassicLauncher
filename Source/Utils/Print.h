@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include "Core.h"
+#include "Log.h"
 
 namespace ClassicLauncher
 {
@@ -19,7 +20,10 @@ namespace ClassicLauncher
         Color textColor;
         int size;
 
-        Message() : textMessage(""), duration(0), label(""), start(), end(), textColor(), size(0) {}
+        Message()
+            : textMessage(""), duration(0), label(""), start(), end(), textColor(), size(0)
+        {
+        }
 
         void SetStart() { start = std::chrono::steady_clock::now(); }
 
@@ -39,9 +43,7 @@ namespace ClassicLauncher
     public:
 
         Print();
-        void PrintOnScreen(const char* text, float duration = 2.0f, const char* label = "", const Color& textColor = Color{ 0, 230, 230, 230 }, bool bLog = false);
-        static void Log(int messageType, const char* text, va_list args);
-        static void Log(TraceLogLevel logLevel, const char* text);
+        void PrintOnScreen(const char* text, float duration = 2.0f, const char* label = "", const Color& textColor = Color::Cyan(), bool bLog = false);
         void DrawMessage();
         void LoadFont(const std::string& path, int size = 20, float spacing = 1);
         void Unload();
