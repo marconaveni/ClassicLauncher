@@ -88,10 +88,11 @@ set(utils
     "${CMAKE_SOURCE_DIR}/Source/Utils/ProcessManager.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Utils/ProcessManager.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/Resources.h"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/Timer.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/Timer.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/StringFunctionLibrary.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Utils/StringFunctionLibrary.h"
+    "${CMAKE_SOURCE_DIR}/Source/Utils/ThreadManager.h"
+    "${CMAKE_SOURCE_DIR}/Source/Utils/Timer.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Utils/Timer.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/UtilsFunctionLibrary.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Utils/UtilsFunctionLibrary.h"
 )
