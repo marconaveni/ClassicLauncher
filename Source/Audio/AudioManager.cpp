@@ -6,7 +6,7 @@ namespace ClassicLauncher
 {
 
     AudioManager::AudioManager()
-        : bIsRunning(false), bIsPlayClick(false), bIsPlayCursor(false), status(StatusAudio::Stop), clickMusic{}, cursorMusic{}, musics(), idMusic(0)
+        : bIsRunning(false), bIsPlayClick(false), bIsPlayCursor(false), mStatusAudio(StatusAudioMusic::Stop), mClickSound{}, mCursorSound{}, mAudioMusics(), mIdAudioMusic(0)
     {
     }
 
@@ -16,7 +16,7 @@ namespace ClassicLauncher
         if (!bIsRunning)
         {
             bIsRunning = true;
-            workerThread = std::thread(&AudioManager::Update, this);
+            mWorkerThread = std::thread(&AudioManager::Update, this);
         }
     }
 
@@ -32,7 +32,7 @@ namespace ClassicLauncher
 
         audioMusic.music.looping = false;
         audioMusic.name = GetFileNameWithoutExt(path.c_str());
-        musics.emplace_back(audioMusic);
+        mAudioMusics.emplace_back(audioMusic);
     }
 
     void AudioManager::LoadMusics(const std::string& path, bool bAutoPlay)
@@ -48,23 +48,23 @@ namespace ClassicLauncher
 
     void AudioManager::LoadCursor(const std::string& path)
     {
-        cursorMusic = LoadSound(path.c_str());
+        mCursorSound = LoadSound(path.c_str());
     }
 
     void AudioManager::LoadCLick(const std::string& path)
     {
-        clickMusic = LoadSound(path.c_str());
+        mClickSound = LoadSound(path.c_str());
     }
 
     void AudioManager::Play()
     {
-        if (!musics.empty())
+        if (!mAudioMusics.empty())
         {
-            Music& currentMusic = musics[idMusic].music;
-            if (status != StatusAudio::Playing)
+            Music& currentMusic = mAudioMusics[mIdAudioMusic].music;
+            if (mStatusAudio != StatusAudioMusic::Playing)
             {
                 PlayMusicStream(currentMusic);
-                status = StatusAudio::Playing;
+                mStatusAudio = StatusAudioMusic::Playing;
             }
         }
     }
@@ -81,43 +81,43 @@ namespace ClassicLauncher
 
     void AudioManager::Pause()
     {
-        if (!musics.empty())
+        if (!mAudioMusics.empty())
         {
-            Music& currentMusic = musics[idMusic].music;
-            if (status == StatusAudio::Playing)
+            Music& currentMusic = mAudioMusics[mIdAudioMusic].music;
+            if (mStatusAudio == StatusAudioMusic::Playing)
             {
                 PauseMusicStream(currentMusic);
-                status = StatusAudio::Paused;
+                mStatusAudio = StatusAudioMusic::Paused;
             }
         }
     }
 
     void AudioManager::Stop()
     {
-        if (!musics.empty())
+        if (!mAudioMusics.empty())
         {
-            Music& currentMusic = musics[idMusic].music;
-            status = StatusAudio::Stop;
+            Music& currentMusic = mAudioMusics[mIdAudioMusic].music;
+            mStatusAudio = StatusAudioMusic::Stop;
             StopMusicStream(currentMusic);
         }
     }
 
     std::string AudioManager::GetMusicName()
     {
-        if (!musics.empty())
+        if (!mAudioMusics.empty())
         {
-            return musics[idMusic].name;
+            return mAudioMusics[mIdAudioMusic].name;
         }
         return std::string();
     }
 
     void AudioManager::ChangeMusic(bool bAutoPlay)
     {
-        if (!musics.empty())
+        if (!mAudioMusics.empty())
         {
             Stop();
-            idMusic = (musics.size() > 1) ? GenerateId() : 0;
-            const Music& currentMusic = musics[idMusic].music;
+            mIdAudioMusic = (mAudioMusics.size() > 1) ? GenerateId() : 0;
+            const Music& currentMusic = mAudioMusics[mIdAudioMusic].music;
             SeekMusicStream(currentMusic, 0);
             if (bAutoPlay)
             {
@@ -128,10 +128,10 @@ namespace ClassicLauncher
 
     int AudioManager::GenerateId()
     {
-        int newId = idMusic;
-        while (newId == idMusic)
+        int newId = mIdAudioMusic;
+        while (newId == mIdAudioMusic)
         {
-            newId = static_cast<int>(Math::Random(0.0f, static_cast<float>(musics.size())));
+            newId = static_cast<int>(Math::Random(0.0f, static_cast<float>(mAudioMusics.size())));
         }
 
         return newId;
@@ -149,25 +149,25 @@ namespace ClassicLauncher
     {
         while (bIsRunning)
         {
-            std::lock_guard<std::mutex> lock(musicMutex);
+            std::lock_guard<std::mutex> lock(mMusicMutex);
 
-            if (!musics.empty() && status == StatusAudio::Playing)
+            if (!mAudioMusics.empty() && mStatusAudio == StatusAudioMusic::Playing)
             {
-                Music& currentMusic = musics[idMusic].music;
+                Music& currentMusic = mAudioMusics[mIdAudioMusic].music;
                 Stream(currentMusic);
                 if (GetMusicTimeLength(currentMusic) - 1 < GetMusicTimePlayed(currentMusic))
                 {
                     ChangeMusic();
                 }
             }
-            if (IsSoundValid(clickMusic) && bIsPlayClick)
+            if (IsSoundValid(mClickSound) && bIsPlayClick)
             {
-                PlaySound(clickMusic);
+                PlaySound(mClickSound);
                 bIsPlayClick = !bIsPlayClick;
             }
-            if (IsSoundValid(cursorMusic) && bIsPlayCursor)
+            if (IsSoundValid(mCursorSound) && bIsPlayCursor)
             {
-                PlaySound(cursorMusic);
+                PlaySound(mCursorSound);
                 bIsPlayCursor = !bIsPlayCursor;
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(10));  // wait
@@ -181,14 +181,14 @@ namespace ClassicLauncher
             Stop();
             bIsRunning = false;
 
-            for (auto& music : musics)
+            for (auto& music : mAudioMusics)
             {
                 UnloadMusicStream(music.music);
             }
-            musics.clear();
-            if (workerThread.joinable())
+            mAudioMusics.clear();
+            if (mWorkerThread.joinable())
             {
-                workerThread.join();  // Espera a thread finalizar
+                mWorkerThread.join();  // Espera a thread finalizar
             }
         }
     }

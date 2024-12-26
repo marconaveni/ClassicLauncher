@@ -11,7 +11,7 @@
 namespace ClassicLauncher
 {
 
-    enum StatusAudio
+    enum StatusAudioMusic
     {
         Stop,
         Playing,
@@ -26,19 +26,18 @@ namespace ClassicLauncher
 
     class AudioManager
     {
-
     private:
 
-        std::mutex musicMutex;
-        std::thread workerThread;         // Thread work
-        std::atomic<bool> bIsRunning;     // Thread is Running 
-        std::atomic<bool> bIsPlayClick;   // Sinaliza para a thread tocar clickMusic
-        std::atomic<bool> bIsPlayCursor;  // Sinaliza para a thread tocar cursorMusic
-        std::atomic<StatusAudio> status;  // Status Current Audio Music
-        Sound clickMusic;                 // Struct Sound
-        Sound cursorMusic;                // Struct Sound
-        std::vector<AudioMusic> musics;   // Array Struct Audio musics
-        int idMusic;                      // id music
+        std::mutex mMusicMutex;
+        std::thread mWorkerThread;                   // Thread work
+        std::atomic<bool> bIsRunning;                // Thread is Running
+        std::atomic<bool> bIsPlayClick;              // Sinaliza para a thread tocar mClickSound
+        std::atomic<bool> bIsPlayCursor;             // Sinaliza para a thread tocar mCursorSound
+        std::atomic<StatusAudioMusic> mStatusAudio;  // Status Current Audio Music
+        Sound mClickSound;                           // Struct Sound
+        Sound mCursorSound;                          // Struct Sound
+        std::vector<AudioMusic> mAudioMusics;        // Array Struct Audio musics
+        int mIdAudioMusic;                           // id music
 
     public:
 
@@ -56,6 +55,7 @@ namespace ClassicLauncher
         void Stop();
         std::string GetMusicName();
         void ChangeMusic(bool bAutoPlay = true);
+        StatusAudioMusic GetStatusAudioMusic() { return mStatusAudio; }
 
     private:
 
