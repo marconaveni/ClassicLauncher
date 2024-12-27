@@ -8,19 +8,21 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # cache options default values
 option(CLASSIC_LAUNCHER_FSANITIZE "Enable address sanitizer" OFF)
 option(CLASSIC_LAUNCHER_FLAGS "Enable warning/error flags" OFF)
+option(CLASSIC_LAUNCHER_DEV "Enable dev mode" OFF)
 
 if(CLASSIC_LAUNCHER_FLAGS)
     set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wpedantic")
 endif()
 
 if (CLASSIC_LAUNCHER_FSANITIZE)
-    message("fsanitize is enabled")
     set(CMAKE_CXX_FLAGS_DEBUG "-g -fsanitize=address")
+    message("[Classic Launcher] fsanitize is enabled")
 else()
-    message("fsanitize is disabled")
+    message("[Classic Launcher] fsanitize is disabled")
 endif()
 
 set(CMAKE_CXX_FLAGS_RELEASE "-O2 ")
+
 
 # Add header files
 include_directories(
@@ -29,6 +31,19 @@ include_directories(
 )
 
 message("is source dir is: " ${CMAKE_SOURCE_DIR})
+
+if(MSVC)
+    if(CLASSIC_LAUNCHER_DEV)
+        add_compile_options(/MTd)
+        message("[Classic Launcher] set /MTd")
+    else()    
+        add_compile_options(/MT)
+        message("[Classic Launcher] set /MT")
+    endif()
+endif()
+
+
+
 
 # Source files
 set(animations
@@ -145,6 +160,7 @@ add_executable(ClassicLauncher ${srcs})
 
 
 if(WIN32)
+
 
     # Setting parameters for raylib
     set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE) # don't build the supplied examples

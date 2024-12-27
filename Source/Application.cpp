@@ -251,14 +251,11 @@ namespace ClassicLauncher
 
     void Application::ToggleFullscreen()
     {
-        Log(LOG_CLASSIC_WARNING, "%f", GetMonitorPosition(GetCurrentMonitor()).y  );
         if (IsKeyReleased(KEY_F11) || (IsKeyDown(KEY_LEFT_ALT) && IsKeyReleased(KEY_ENTER)))
         {
 #ifdef _WIN32
             if (!IsWindowState(FLAG_WINDOW_UNDECORATED))
             {
-                // SetWindowState(FLAG_WINDOW_ALWAYS_RUN);
-                // ToggleBorderlessWindowed();
                 mSpecification.posWindowX = GetWindowPosition().x;
                 mSpecification.posWindowY = GetWindowPosition().y;
                 mSpecification.width = GetScreenWidth();
@@ -267,7 +264,6 @@ namespace ClassicLauncher
                 SetWindowSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
                 const Vector2 positionMonitor(GetMonitorPosition(GetCurrentMonitor()));
                 SetWindowPosition(positionMonitor.GetIntX(), positionMonitor.GetIntY());
-                // ::ToggleFullscreen();
             }
             else
             {
