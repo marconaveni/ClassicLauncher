@@ -58,7 +58,7 @@ namespace ClassicLauncher::Process
         }
         else
         {
-            unsigned int WaitResult = WaitForSingleObject(ProcessHandle, INFINITE);
+            unsigned int WaitResult = WaitForSingleObject(ProcessHandle, 1000);
             if (WaitResult != WAIT_TIMEOUT)
             {
                 bApplicationRunning = false;

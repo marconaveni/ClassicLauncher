@@ -172,9 +172,7 @@ namespace ClassicLauncher
         mEntityManager.UpdatePositionAll();
         mEntityManager.Draw();  // draw in texture render
 
-        //Log(LOG_CLASSIC_DEBUG, TEXTBOOL(InputManager::GetInputLeftFaceLeft()));
-
-
+        // Log(LOG_CLASSIC_DEBUG, TEXTBOOL(InputManager::GetInputLeftFaceLeft()));
 
         StatusProcessRun();
 
@@ -253,10 +251,30 @@ namespace ClassicLauncher
 
     void Application::ToggleFullscreen()
     {
+        Log(LOG_CLASSIC_WARNING, "%f", GetMonitorPosition(GetCurrentMonitor()).y  );
         if (IsKeyReleased(KEY_F11) || (IsKeyDown(KEY_LEFT_ALT) && IsKeyReleased(KEY_ENTER)))
         {
 #ifdef _WIN32
-            ToggleBorderlessWindowed();
+            if (!IsWindowState(FLAG_WINDOW_UNDECORATED))
+            {
+                // SetWindowState(FLAG_WINDOW_ALWAYS_RUN);
+                // ToggleBorderlessWindowed();
+                mSpecification.posWindowX = GetWindowPosition().x;
+                mSpecification.posWindowY = GetWindowPosition().y;
+                mSpecification.width = GetScreenWidth();
+                mSpecification.height = GetScreenHeight();
+                SetWindowState(FLAG_WINDOW_UNDECORATED);
+                SetWindowSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
+                const Vector2 positionMonitor(GetMonitorPosition(GetCurrentMonitor()));
+                SetWindowPosition(positionMonitor.GetIntX(), positionMonitor.GetIntY());
+                // ::ToggleFullscreen();
+            }
+            else
+            {
+                SetWindowSize(mSpecification.width, mSpecification.height);
+                SetWindowPosition(mSpecification.posWindowX, mSpecification.posWindowY);
+                ClearWindowState(FLAG_WINDOW_UNDECORATED);
+            }
 #else
             if (!IsWindowFullscreen())
             {
