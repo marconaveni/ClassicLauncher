@@ -2,7 +2,7 @@
 #define UTILS_FUNCTION_LIBRARY_H
 
 #include <string>
-#include "raylib.h"
+#include "Core.h" 
 
 namespace ClassicLauncher::UtilsFunctionLibrary
 {

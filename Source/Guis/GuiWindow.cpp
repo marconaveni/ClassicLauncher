@@ -13,6 +13,9 @@ namespace ClassicLauncher
         mGuiHorizontalBox = mApplication->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
         mGuiHorizontalBox->Init();
         AddChild(mGuiHorizontalBox.get());
+
+        mGuiVideoPlayer = mApplication->GetEntityManager()->CreateEntity<GuiVideoPlayer>("GuiVideoPlayer");
+
         mGuiBlackScreen = mApplication->GetEntityManager()->CreateEntity<GuiBlackScreen>("GuiBlackScreen");
     }
 
@@ -21,6 +24,7 @@ namespace ClassicLauncher
         GuiComponent::Update();
 
         // rootY += 1;
+
         if (IsKeyReleased(KEY_F1))
         {
             mTextureName = "ref";
@@ -30,6 +34,19 @@ namespace ClassicLauncher
             mTextureName = "transparent";
         }
 
+        if (InputManager::GetInputLeftFaceUp())
+        {
+            mGuiVideoPlayer->Stop();
+            mApplication->GetAudioManager()->Play();
+        }
+        if (InputManager::GetInputLeftFaceDown())
+        {
+            const bool bIsplay = mGuiVideoPlayer->Init(mApplication->GetGameListManager()->GetCurrentGameList()->video, 640, 480);
+            if (bIsplay)
+            {
+                mApplication->GetAudioManager()->Pause();
+            }
+        }
         if (InputManager::GetInputRightFaceDown())  // accept
         {
             InputManager::DisableInput();

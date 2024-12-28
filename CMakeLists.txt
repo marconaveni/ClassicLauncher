@@ -11,11 +11,19 @@ option(CLASSIC_LAUNCHER_FLAGS "Enable warning/error flags" OFF)
 option(CLASSIC_LAUNCHER_DEV "Enable dev mode" OFF)
 
 if(CLASSIC_LAUNCHER_FLAGS)
-    set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wpedantic")
+    if(MSVC)
+        set(CMAKE_CXX_FLAGS "/W4")
+    else()
+        set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wpedantic")
+    endif()
 endif()
 
 if (CLASSIC_LAUNCHER_FSANITIZE)
-    set(CMAKE_CXX_FLAGS_DEBUG "-g -fsanitize=address")
+    if(MSVC)
+        set(CMAKE_CXX_FLAGS_DEBUG " /fsanitize=address")
+    else()
+        set(CMAKE_CXX_FLAGS_DEBUG "-g -fsanitize=address")
+    endif()
     message("[Classic Launcher] fsanitize is enabled")
 else()
     message("[Classic Launcher] fsanitize is disabled")
@@ -36,13 +44,50 @@ if(MSVC)
     if(CLASSIC_LAUNCHER_DEV)
         add_compile_options(/MTd)
         message("[Classic Launcher] set /MTd")
+        set(debug "_DEBUG")
     else()    
         add_compile_options(/MT)
         message("[Classic Launcher] set /MT")
     endif()
 endif()
 
+if(WIN32)  # setup libvlc windows
 
+    
+    set(EXTERN_LIBDIR ${CMAKE_CURRENT_SOURCE_DIR}/extern)
+    set(
+        CMAKE_PREFIX_PATH
+        ${EXTERN_LIBDIR}/libvlc
+        ${EXTERN_LIBDIR}/libvlc/x64
+    )
+
+    LIST(APPEND CMAKE_MODULE_PATH
+    ${CMAKE_CURRENT_SOURCE_DIR}/CMake/modules
+    )
+
+    # Tente encontrar a biblioteca VLC
+    find_package(VLC REQUIRED)
+
+    if(VLC_FOUND)
+        message(STATUS "[Classic Launcher] VLC founded!")
+        message(STATUS "[Classic Launcher] Include Directory: ${VLC_INCLUDE_DIR}")
+        message(STATUS "[Classic Launcher] Libraries: ${VLC_LIBRARIES}")
+    else()
+        message(FATAL_ERROR "VLC não foi encontrado!")
+    endif()
+
+    # Inclui os diretórios encontrados
+    include_directories(${VLC_INCLUDE_DIR})
+
+    # Caminho para os arquivos necessários
+    set(VLC_DLLS
+    ${EXTERN_LIBDIR}/libvlc/x64/libvlc.dll
+    ${EXTERN_LIBDIR}/libvlc/x64/libvlccore.dll
+    )
+    # plugins folder
+    set(VLC_PLUGINS_DIR ${EXTERN_LIBDIR}/libvlc/x64/plugins)
+
+endif() # end setup libvlc windows
 
 
 # Source files
@@ -77,14 +122,16 @@ set(graphics
 set(guis
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiBlackScreen.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiBlackScreen.h"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiWindow.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiWindow.h"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiCard.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiCard.h"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiHorizontalBox.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiHorizontalBox.h"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiMiniCover.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiMiniCover.h"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiVideoPlayer.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiVideoPlayer.h"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiWindow.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiWindow.h"
 )
 set(input
     "${CMAKE_SOURCE_DIR}/Source/Input/InputManager.cpp"
@@ -114,6 +161,10 @@ set(utils
     "${CMAKE_SOURCE_DIR}/Source/Utils/Timer.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/UtilsFunctionLibrary.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Utils/UtilsFunctionLibrary.h"
+    )
+set(video     
+    "${CMAKE_SOURCE_DIR}/Source/Video/VideoPlayer.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Video/VideoPlayer.h"
 )
 set(src
     "${CMAKE_SOURCE_DIR}/Source/Core.h"
@@ -138,6 +189,7 @@ source_group("Source\\Graphics"  FILES ${graphics})
 source_group("Source\\Guis"  FILES ${guis})
 source_group("Source\\Input"  FILES ${input})
 source_group("Source\\Utils"     FILES ${utils})
+source_group("Source\\Video"     FILES ${video})
 source_group("Source"            FILES ${src})
 source_group("Extern"     FILES ${extern})
 
@@ -151,6 +203,7 @@ set(srcs
     ${guis}
     ${input}
     ${utils}
+    ${video}
     ${src}  
     ${extern}
 )
@@ -174,10 +227,29 @@ if(WIN32)
     _CRT_SECURE_NO_WARNINGS
     _CONSOLE
     ssize_t=intptr_t
+    ${debug}
     )
 
     # Windows
-    target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
+    target_link_libraries(${PROJECT_NAME} PRIVATE raylib ${VLC_LIBRARIES})
+
+
+    # Regra para copiar as DLLs da libvlc para o diretório de build
+    foreach(DLL ${VLC_DLLS})
+    add_custom_command(TARGET ClassicLauncher POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${DLL}
+        $<TARGET_FILE_DIR:ClassicLauncher>
+    )
+    endforeach()
+
+    # Regra para copiar a pasta de plugins da libvlc para o diretório de build
+    add_custom_command(TARGET ClassicLauncher POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${VLC_PLUGINS_DIR}
+        $<TARGET_FILE_DIR:ClassicLauncher>/plugins
+    )
+
 else()
 
     set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)

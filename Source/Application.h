@@ -13,12 +13,14 @@
 #include "Graphics/SpriteManager.h"
 #include "Guis/GuiWindow.h"
 #include "Utils/ProcessManager.h"
+#include "Video/VideoPlayer.h"
 
 namespace ClassicLauncher
 {
     class GuiWindow;
     class GuiBlackScreen;
     class ProcessManager;
+    class VideoPlayer;
 
     struct ApplicationSpecification
     {
@@ -39,6 +41,7 @@ namespace ClassicLauncher
         EntityManager mEntityManager;
         GameListManager mGameListManager;
         ProcessManager mProcessManager;
+
 
         std::shared_ptr<GuiWindow> mGuiWindow;
 

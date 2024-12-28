@@ -8,6 +8,7 @@
 #include "Core.h"
 #include "Entity.h"
 #include "Graphics/SpriteManager.h"
+#include "Utils/Timer.h"
 
 namespace ClassicLauncher
 {

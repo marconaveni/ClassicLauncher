@@ -15,7 +15,7 @@
 #include "raylib.h"
 
 #define TEXT(...) TextFormat(__VA_ARGS__)
-#define TEXTBOOL(a) TextFormat("%s", a == true ? "true" : "false")
+#define TEXTBOOL(a) TextFormat("%s", (a) == true ? "true" : "false")
 #ifdef _DEBUG
     /* const char* text,
     * float duration ,

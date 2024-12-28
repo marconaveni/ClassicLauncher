@@ -247,6 +247,7 @@ namespace ClassicLauncher
         mPrint.Unload();
         mAudioManager.Unload();
         mSpriteManager.UnloadSprites();
+        mEntityManager.End();
     }
 
     void Application::ToggleFullscreen()
