@@ -21,6 +21,8 @@ namespace ClassicLauncher
 
         Application* mApplication;
         std::unique_ptr<VideoPlayer> mPlayer;
+        std::unique_ptr<VideoPlayer> mPlayerFullScreen;
+        std::string mFilePath;
 
     public:
 
@@ -28,10 +30,14 @@ namespace ClassicLauncher
         virtual ~GuiVideoPlayer() override = default;
         EntityType GetType() const override { return EntityType::GuiVideoPlayer; }
         bool Init(std::string path, int width, int height);
+        void InitFullscreen();
         void Stop();
+        void StopFullscreen();
         void Update() override;
         void Draw() override;
         void End() override;
+        bool IsPlaying();
+        bool IsPlayingFullscreen();
 
     private:
 

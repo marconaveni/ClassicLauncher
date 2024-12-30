@@ -15,7 +15,6 @@ namespace ClassicLauncher
         AddChild(mGuiHorizontalBox.get());
 
         mGuiVideoPlayer = mApplication->GetEntityManager()->CreateEntity<GuiVideoPlayer>("GuiVideoPlayer");
-
         mGuiBlackScreen = mApplication->GetEntityManager()->CreateEntity<GuiBlackScreen>("GuiBlackScreen");
     }
 
@@ -36,17 +35,28 @@ namespace ClassicLauncher
 
         if (InputManager::GetInputLeftFaceUp())
         {
+            if (mGuiVideoPlayer->IsPlayingFullscreen())
+            {
+                mGuiVideoPlayer->StopFullscreen();
+                return;
+            }
             mGuiVideoPlayer->Stop();
             mApplication->GetAudioManager()->Play();
         }
         if (InputManager::GetInputLeftFaceDown())
         {
+            if (mGuiVideoPlayer->IsPlaying())
+            {
+                mGuiVideoPlayer->InitFullscreen();
+                return;
+            }
             const bool bIsplay = mGuiVideoPlayer->Init(mApplication->GetGameListManager()->GetCurrentGameList()->video, 640, 480);
             if (bIsplay)
             {
                 mApplication->GetAudioManager()->Pause();
             }
         }
+
         if (InputManager::GetInputRightFaceDown())  // accept
         {
             InputManager::DisableInput();

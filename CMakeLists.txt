@@ -263,7 +263,7 @@ else()
     endif()
 
     # Linux
-    target_link_libraries(${PROJECT_NAME} raylib GL m pthread dl rt)
+    target_link_libraries(${PROJECT_NAME} raylib GL m pthread dl rt vlc)
 endif()
 
 
