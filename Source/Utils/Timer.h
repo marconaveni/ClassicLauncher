@@ -29,16 +29,16 @@ namespace ClassicLauncher
         bool bLoop;                      // Flag to determine if the timer is looping
         bool bActive;                    // Flag to check if the timer is active
         T* mTargetEntity;                // Pointer to the target entity
-        std::function<void()> callback;  // Pointer to the callback function to be called
+        std::function<void()> mCallback;  // Pointer to the callback function to be called
 
     public:
 
         Timer()
-            : mDelay(0), mDuration(0), mCurrentTime(0), bFunctionCalled(false), bLoop(false), bActive(false), callback(nullptr) {};
+            : mDelay(0), mDuration(0), mCurrentTime(0), bFunctionCalled(false), bLoop(false), bActive(false), mCallback(nullptr) {};
 
         void SetTimer(std::function<void()> callbackFunction, T* targetEntity, float delay, bool bLooped = false)
         {
-            callback = callbackFunction;
+            mCallback = callbackFunction;
             mTargetEntity = targetEntity;
             mDelay = delay;
             bActive = true;
@@ -56,7 +56,7 @@ namespace ClassicLauncher
                     mCurrentTime++;
                     return;
                 }
-                callback();
+                mCallback();
 
                 if (bLoop)
                 {
