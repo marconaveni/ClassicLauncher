@@ -87,7 +87,7 @@ namespace ClassicLauncher
         SetWindowMinSize(mSpecification.width, mSpecification.height);
         SetWindowSize(mSpecification.width, mSpecification.height);
         SetTargetFPS(60);
-        ChangeDirectory(UtilsFunctionLibrary::GetHomeDir().c_str());
+       // ChangeDirectory(UtilsFunctionLibrary::GetHomeDir().c_str());
         // SetExitKey(KEY_NULL);
 
         InitAudioDevice();
@@ -190,17 +190,17 @@ namespace ClassicLauncher
         if (IsKeyReleased(KEY_ONE))
         {
             LogLevel(LOG_CLASSIC_DEBUG, LOG_WARNING);
-            Log(LOG_CLASSIC_DEBUG, "Enable LOG_CLASSIC_DEBUG, LOG_WARNING");
+            LOG(LOG_CLASSIC_DEBUG, "Enable LOG_CLASSIC_DEBUG, LOG_WARNING");
         }
         if (IsKeyReleased(KEY_TWO))
         {
             LogLevel(LOG_CLASSIC_DEBUG, LOG_ALL);
-            Log(LOG_CLASSIC_DEBUG, "Enable LOG_CLASSIC_DEBUG, LOG_ALL");
+            LOG(LOG_CLASSIC_DEBUG, "Enable LOG_CLASSIC_DEBUG, LOG_ALL");
         }
         if (IsKeyReleased(KEY_THREE))
         {
             LogLevel(LOG_CLASSIC_ALL, LOG_ALL);
-            Log(LOG_CLASSIC_DEBUG, "Enable LOG_CLASSIC_ALL, LOG_ALL");
+            LOG(LOG_CLASSIC_DEBUG, "Enable LOG_CLASSIC_ALL, LOG_ALL");
         }
 
 #endif
@@ -226,8 +226,9 @@ namespace ClassicLauncher
             // mEntityManager.SetZOrder(mGuiWindow.get(), 1);
             std::string homeDir = UtilsFunctionLibrary::GetHomeDir();
 
-            Log(LOG_CLASSIC_DEBUG, TEXT("GetHomeDir %s", homeDir.c_str()));
-            Log(LOG_CLASSIC_DEBUG, TEXT("GetWorkingDirectory %s", UtilsFunctionLibrary::GetWorkingDirectory().c_str()));
+            LOG(LOG_CLASSIC_DEBUG, TEXT("GetHomeDir %s", homeDir.c_str()));
+            LOG(LOG_CLASSIC_DEBUG, TEXT("GetWorkingDirectory %s", UtilsFunctionLibrary::GetWorkingDirectory().c_str()));
+            LOG(LOG_CLASSIC_DEBUG, TEXT("GetApplicationDirectory %s", ::GetApplicationDirectory()));
         }
         if (IsKeyDown(KEY_DOWN))
         {

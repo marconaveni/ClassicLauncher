@@ -22,7 +22,7 @@ namespace ClassicLauncher
 
     void LogLevel(int classicLogType, int raylibLogType);
     void TraceLogger(int messageType, const char* text, va_list args);
-    void Log(int logType, const char* text, ...);
+    void LogClassic(int logType, const char* text, ...);
 
 }  // namespace ClassicLauncher
 

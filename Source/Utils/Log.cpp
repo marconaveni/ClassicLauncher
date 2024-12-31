@@ -1,5 +1,6 @@
 #include "Log.h"
 #include <iostream>
+#include <string>
 #include "raylib.h"
 
 namespace ClassicLauncher
@@ -22,55 +23,57 @@ namespace ClassicLauncher
     {
         if (messageType > 7 && messageType < sLogClassicLevel) return;
 
+        std::string textFinal;
+
         switch (messageType)
         {
             case LOG_TRACE:
-                std::cout << "\x1b[36m" << "[RAYLIB TRACE] ";
+                textFinal.append("\x1b[36m[RAYLIB TRACE] ");
                 break;
             case LOG_DEBUG:
-                std::cout << "\x1b[34m" << "[RAYLIB DEBUG] ";
+                textFinal.append("\x1b[34m[RAYLIB DEBUG] ");
                 break;
             case LOG_INFO:
-                std::cout << "\x1b[37m" << "[RAYLIB INFO] ";
+                textFinal.append("\x1b[37m[RAYLIB INFO] ");
                 break;
             case LOG_WARNING:
-                std::cout << "\x1B[33m" << "[RAYLIB WARNING] ";
+                textFinal.append("\x1B[33m[RAYLIB WARNING] ");
                 break;
             case LOG_ERROR:
-                std::cout << "\x1B[31m" << "[RAYLIB ERROR] ";
+                textFinal.append("\x1B[31m[RAYLIB ERROR] ");
                 break;
             case LOG_FATAL:
-                std::cout << "\x1B[41m" << "[RAYLIB FATAL] ";
+                textFinal.append("\x1B[41m[RAYLIB FATAL] ");
                 break;
             case LOG_CLASSIC_TRACE:
-                std::cout << "\x1b[36m" << "[TRACE] ";
+                textFinal.append("\x1b[36m[TRACE] ");
                 break;
             case LOG_CLASSIC_DEBUG:
-                std::cout << "\x1b[34m" << "[DEBUG] ";
+                textFinal.append("\x1b[34m[DEBUG] ");
                 break;
             case LOG_CLASSIC_INFO:
-                std::cout << "\x1b[37m" << "[INFO] ";
+                textFinal.append("\x1b[37m[INFO] ");
                 break;
             case LOG_CLASSIC_WARNING:
-                std::cout << "\x1B[33m" << "[WARNING] ";
+                textFinal.append("\x1B[33m[WARNING] ");
                 break;
             case LOG_CLASSIC_ERROR:
-                std::cout << "\x1B[31m" << "[ERROR] ";
+                textFinal.append("\x1B[31m[ERROR] ");
                 break;
             case LOG_CLASSIC_FATAL:
-                std::cout << "\x1B[41m" << "[FATAL] ";
+                textFinal.append("\x1B[41m[FATAL] ");
                 break;
         }
+        textFinal.append(text);
+        textFinal.append("\x1B[0m\n");
 
-
-        vprintf(text, args);
-        std::cout << "\x1B[0m\n";
+        vprintf(textFinal.c_str(), args);
     }
 
-    void Log(int logType, const char* text, ...)
+    void LogClassic(int logType, const char* text, ...)
     {
         if (logType > 7 && logType < sLogClassicLevel) return;
-        
+
         va_list args;
         va_start(args, text);
         TraceLogger(logType, text, args);

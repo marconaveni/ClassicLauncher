@@ -18,7 +18,7 @@ namespace ClassicLauncher
         Stop();
         Join();
         Unload();
-        Log(LOG_CLASSIC_TRACE, "Sprite - thread stopped and class destroyed");
+        LOG(LOG_CLASSIC_TRACE, "Sprite - thread stopped and class destroyed");
     }
 
     void Sprite::Load(const std::string& file, const int width, const int height, bool bAspectRatio)
@@ -28,7 +28,7 @@ namespace ClassicLauncher
             Join();
             bKeepRunning = true;
             filePath = file;
-            Log(LOG_CLASSIC_TRACE, "Sprite - starting thread");
+            LOG(LOG_CLASSIC_TRACE, "Sprite - starting thread");
             workerThread = std::thread(&Sprite::LoadImage, this, width, height, bAspectRatio);
         }
     }
@@ -42,7 +42,7 @@ namespace ClassicLauncher
             filePath = "[loaded from memory]";
             ResizeImage(width, height, bAspectRatio);
             bImageLoaded = IsImageValid(image);
-            Log(LOG_CLASSIC_TRACE, "Image copied successfully");
+            LOG(LOG_CLASSIC_TRACE, "Image copied successfully");
         }
     }
 
@@ -70,14 +70,14 @@ namespace ClassicLauncher
             {
                 ResizeImage(width, height, bAspectRatio);
                 bImageLoaded = IsImageValid(image);
-                Log(LOG_CLASSIC_TRACE, "Image loaded successfully from - \"%s\"", filePath.c_str());
+                LOG(LOG_CLASSIC_TRACE, "Image loaded successfully from - \"%s\"", filePath.c_str());
             }
             else
             {
-                Log(LOG_CLASSIC_WARNING, "Failed to load Image - \"%s\"", filePath.c_str());
+                LOG(LOG_CLASSIC_WARNING, "Failed to load Image - \"%s\"", filePath.c_str());
             }
         }
-        Log(LOG_CLASSIC_TRACE, "LoadImage - finished");
+        LOG(LOG_CLASSIC_TRACE, "LoadImage - finished");
         Stop();
     }
 
@@ -87,7 +87,7 @@ namespace ClassicLauncher
         {
             texture = ::LoadTextureFromImage(image);
             bTextureLoaded = IsTextureValid(texture);
-            Log(LOG_CLASSIC_TRACE, "Texture loaded [ID %d] from Image - \"%s\"", texture.id, filePath.c_str());
+            LOG(LOG_CLASSIC_TRACE, "Texture loaded [ID %d] from Image - \"%s\"", texture.id, filePath.c_str());
             UnloadImage();
         }
         if (bTextureLoaded)
@@ -137,7 +137,7 @@ namespace ClassicLauncher
         if (bTextureLoaded && IsTextureValid(texture))
         {
             ::UnloadTexture(texture);
-            Log(LOG_CLASSIC_TRACE, "Unloaded Texture [ID %d] from - \"%s\"", texture.id, filePath.c_str());
+            LOG(LOG_CLASSIC_TRACE, "Unloaded Texture [ID %d] from - \"%s\"", texture.id, filePath.c_str());
             texture = {};
             bTextureLoaded = false;
         }
@@ -148,7 +148,7 @@ namespace ClassicLauncher
         if (bImageLoaded && IsImageValid(image))
         {
             ::UnloadImage(image);
-            Log(LOG_CLASSIC_TRACE, "Unloaded Image from - %s", filePath.c_str());
+            LOG(LOG_CLASSIC_TRACE, "Unloaded Image from - %s", filePath.c_str());
             image = {};
             bImageLoaded = false;
         }

@@ -82,7 +82,7 @@ namespace ClassicLauncher
 
     void GuiWindow::OnClick()
     {
-        Log(LOG_CLASSIC_INFO, "Called OnClick");
+        LogClassic(LOG_CLASSIC_INFO, "Called OnClick");
         if (mApplication->GetGameListManager()->GetCurrentList() == GameListSelect)
         {
             mApplication->GetProcessManager()->CreateProc(mApplication->GetGameListManager());
@@ -96,7 +96,7 @@ namespace ClassicLauncher
 
     void GuiWindow::OnBack()
     {
-        Log(LOG_CLASSIC_INFO, "Called OnBack");
+        LogClassic(LOG_CLASSIC_INFO, "Called OnBack");
         if (mApplication->GetGameListManager()->GetCurrentList() == GameListSelect)
         {
             mGuiHorizontalBox->ChangeList(SystemListSelect);

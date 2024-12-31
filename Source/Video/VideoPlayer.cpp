@@ -1,5 +1,7 @@
 #include "VideoPlayer.h"
-#include <mutex>
+#include "Utils/Log.h"
+
+#define LOG(logLevel, ...) LogClassic((logLevel), __VA_ARGS__)
 
 namespace ClassicLauncher
 {
@@ -28,7 +30,8 @@ namespace ClassicLauncher
         c->frameId = frame;
         c->frameLock[frame] = true;
         c->countFrame++;
-        printf("frame unlock %d\n", c->countFrame);
+        LOG(LOG_CLASSIC_TRACE, "frame %d is ready \"c->frameLock[%d]\" is unlock", c->countFrame , c->frameLock[frame]);
+        //printf("frame unlock %d\n", c->countFrame);
         c->frameMutex[frame].unlock();
     }
 
@@ -58,7 +61,7 @@ namespace ClassicLauncher
             mVLC = libvlc_new(vlc_argc, vlc_argv);  // LibVLC initialization instance
             if (!mVLC)
             {
-                printf("LibVLC initialization failure.\n");
+                LOG(LOG_CLASSIC_FATAL, "LibVLC initialization failure.");
             }
         }
     }
@@ -78,25 +81,25 @@ namespace ClassicLauncher
     {
         if (path.empty())
         {
-            printf("path is empty.\n");
+            LOG(LOG_CLASSIC_WARNING, "path is empty.");
             return false;
         }
         if (!mVLC)
         {
-            printf("LibVLC not initializate.\n");
+            LOG(LOG_CLASSIC_ERROR, "LibVLC not initializate.");
             return false;
         }
 
         mMedia = libvlc_media_new_path(mVLC, path.c_str());
         if (!mMedia)
         {
-            printf("mMedia initialization failure.\n");
+            LOG(LOG_CLASSIC_ERROR, "mMedia initialization failure.");
             return false;
         }
         mMediaPlayer = libvlc_media_player_new_from_media(mMedia);
         if (!mMediaPlayer)
         {
-            printf("mMediaPlayer initialization failure.\n");
+            LOG(LOG_CLASSIC_ERROR, "mMediaPlayer initialization failure.\n");
             return false;
         }
 
@@ -193,12 +196,12 @@ namespace ClassicLauncher
             mContext.frameMutex[frame].lock();
             UpdateTexture(texture, mContext.image[frame].data);
             mContext.frameLock[frame] = false;
-             printf("frame update %d\n", mContext.countFrame);
+            LOG(LOG_CLASSIC_TRACE, "video texture updated %d", mContext.countFrame);
             mContext.frameMutex[frame].unlock();
         }
         else
         {
-            printf("chamou update sem frame estar pronto\n");
+            LOG(LOG_CLASSIC_TRACE, "video texture not updated \"mContext.frameLock[%d]\" is locked", mContext.frameLock[frame]);
         }
 
         if (IsVideoFinished())

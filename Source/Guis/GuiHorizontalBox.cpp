@@ -76,7 +76,7 @@ namespace ClassicLauncher
 
         mMiniCover->SetCovers();
 
-        Log(LOG_CLASSIC_DEBUG, "Num Sprites Loaded after SetCovers %d", spriteManager->NumSpritesLoaded()); 
+        LOG(LOG_CLASSIC_DEBUG, "Num Sprites Loaded after SetCovers %d", spriteManager->NumSpritesLoaded()); 
     }
 
     void GuiHorizontalBox::ChangeList(const CurrentList list)
@@ -112,11 +112,11 @@ namespace ClassicLauncher
 
             if (bResult1 && bResult2)
             {
-                Log(LOG_CLASSIC_TRACE, "Sprite deleted index: %d\n  > Cover: %s\n  > Mini Cover: %s ", i, coverName.c_str(), miniCoverName.c_str());
+                LOG(LOG_CLASSIC_TRACE, "Sprite deleted index: %d\n  > Cover: %s\n  > Mini Cover: %s ", i, coverName.c_str(), miniCoverName.c_str());
             }
         }
 
-        Log(LOG_CLASSIC_DEBUG, "Num Sprites Loaded after ClearCovers %d", spriteManager->NumSpritesLoaded());
+        LOG(LOG_CLASSIC_DEBUG, "Num Sprites Loaded after ClearCovers %d", spriteManager->NumSpritesLoaded());
     }
 
     void GuiHorizontalBox::Update()
