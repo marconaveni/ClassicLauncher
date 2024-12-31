@@ -41,10 +41,12 @@ namespace ClassicLauncher::Process
 
             CloseHandle(processInfo.hProcess);
             CloseHandle(processInfo.hThread);
+            return true;
         }
         else
         {
             printf("Error on create a process: %lu\n", GetLastError());
+            return false;
         }
     }
 
@@ -100,9 +102,9 @@ namespace ClassicLauncher::Process
 namespace ClassicLauncher::Process
 {
 
-    void CreateProc(unsigned int& processId, const std::string& fullPath, const std::string& optionalWorkingDirectory)
+    void CreateProc(int& processId, const std::string& fullPath, const std::string& optionalWorkingDirectory)
     {
-        std::vector<std::string> paths = StringFunctionLibrary::SplitString(fullPath);
+        std::vector<std::string> paths = StringFunctionLibrary::SplitString(fullPath);  
 
         for (auto& path : paths)
         {
@@ -112,33 +114,40 @@ namespace ClassicLauncher::Process
         pid_t pid = fork();
         if (pid == -1)
         {
-            LOG(LOG_CLASSIC_ERROR, "Failed to created child process.");  
+            LOG(LOG_CLASSIC_ERROR, "Failed to created child process.");
             return;
         }
 
         if (pid == 0)  // Child Process
         {
-            std::vector<char*> args;  
+            std::vector<char*> args;
             for (const auto& arg : paths)
             {
-                args.push_back(const_cast<char*>(arg.c_str()));  
+                args.push_back(const_cast<char*>(arg.c_str()));
             }
             args.push_back(nullptr);
 
             if (execvp(args[0], args.data()) == -1)
             {
                 LOG(LOG_CLASSIC_ERROR, "Failed to execute program.");
-                return;
+                _exit(1);  // execvp failed
             }
+            LOG(LOG_CLASSIC_ERROR, "process child. %d", pid);
+            _exit(0);  // exit the child process
+        }
+        else
+        {     
+            processId = pid;
         }
 
-        processId = pid;
     }
 
-    bool IsApplicationRunning(const unsigned int processId)
+    bool IsApplicationRunning(const int processId)
     {
-        bool bApplicationRunning;
-        int status;
+        if(processId == 0) return false;
+
+        bool bApplicationRunning = false;
+        int status = 0;
 
         pid_t result = waitpid(processId, &status, WNOHANG);  // process is running?
 
@@ -149,7 +158,7 @@ namespace ClassicLauncher::Process
         }
         else if (result == processId)
         {
-            if (WIFEXITED(status)) 
+            if (WIFEXITED(status))
             {
                 LOG(LOG_CLASSIC_DEBUG, "The child process terminated with status: %d ", WEXITSTATUS(status));
             }
@@ -167,12 +176,11 @@ namespace ClassicLauncher::Process
         return bApplicationRunning;
     }
 
-    bool CloseApplicationRunning(const unsigned int processId)
+    bool CloseApplicationRunning(const int processId)
     {
         return (processId != 0) && (kill(processId, SIGTERM) == 0);
     }
 
-        
 }  // namespace ClassicLauncher::Process
 
 #endif  //_WIN32

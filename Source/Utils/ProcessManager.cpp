@@ -1,6 +1,7 @@
 #include "ProcessManager.h"
 #include "Data/GameListManager.h"
 #include "Process.h"
+#include "Core.h"
 
 namespace ClassicLauncher
 {

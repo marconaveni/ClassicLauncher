@@ -18,8 +18,11 @@ namespace ClassicLauncher
     class ProcessManager
     {
     public:
-
+#if WIN32
         unsigned int processId;
+#else
+        int processId;
+#endif
         bool bRunning;
 
         ProcessManager();

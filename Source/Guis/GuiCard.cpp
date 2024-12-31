@@ -130,6 +130,10 @@ namespace ClassicLauncher
         mCardSelected->mProperties.y = 0.0f;
         mCardMain->mProperties.y = 0.0f;
         mCover->mProperties.y = 0.0f;
+        if(mCover->mTextureName == "sprite")
+        {
+            SetCover();
+        }
     }
 
     void GuiCard::Click()
