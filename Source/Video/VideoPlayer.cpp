@@ -1,23 +1,35 @@
 #include "VideoPlayer.h"
+#include <mutex>
 
 namespace ClassicLauncher
 {
     libvlc_instance_t* VideoPlayer::mVLC = nullptr;
+
     // VLC prepara para renderizar um frame de vídeo.
     void* lock(void* data, void** p_pixels)
     {
         struct VideoContext* c = (struct VideoContext*)data;
-        std::unique_lock<std::mutex> lock(c->frameMutex);
-        *p_pixels = c->image.data;  // Aloca o ponteiro para os pixels da imagem.
-        return NULL;                // Picture identifier, not needed here.
+
+        int frame = (c->frameId ^ 1);
+
+        c->frameMutex[frame].lock();
+        c->frameLock[frame] = false;
+        *p_pixels = c->image[frame].data;  // Aloca o ponteiro para os pixels da imagem.
+        return NULL;                       // Picture identifier, not needed here.
     }
 
     // VLC acabou de renderizar um frame de vídeo.
     void unlock(void* data, void* id, void* const* p_pixels)
     {
         struct VideoContext* c = (struct VideoContext*)data;
-        c->frameLock = true;
-        c->frameMutex.unlock();
+
+        int frame = (c->frameId ^ 1);
+
+        c->frameId = frame;
+        c->frameLock[frame] = true;
+        c->countFrame++;
+        printf("frame unlock %d\n", c->countFrame);
+        c->frameMutex[frame].unlock();
     }
 
     // VLC quer exibir um frame de vídeo.
@@ -125,13 +137,14 @@ namespace ClassicLauncher
         mWidthVideo = textureSize.GetIntX();
         mHeightVideo = textureSize.GetIntY();
 
-        mContext.image = { MemAlloc(mWidthVideo * mHeightVideo * 4),  // 4 bytes pixel (RGBA)
-                           mWidthVideo,
-                           mHeightVideo,
-                           1,
-                           PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 };
+        mContext.image[0] = { MemAlloc(mWidthVideo * mHeightVideo * 4),  // 4 bytes pixel (RGBA)
+                              mWidthVideo,
+                              mHeightVideo,
+                              1,
+                              PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 };
+        mContext.image[1] = ImageCopy(mContext.image[0]);
 
-        mContext.texture = LoadTextureFromImage(mContext.image);
+        texture = LoadTextureFromImage(mContext.image[0]);
 
         libvlc_video_set_format(mMediaPlayer, "RGBA", mWidthVideo, mHeightVideo, mWidthVideo * 4);
         libvlc_video_set_callbacks(mMediaPlayer, lock, unlock, display, &mContext);
@@ -173,16 +186,19 @@ namespace ClassicLauncher
     {
         if (!bIsEnabledVlC) return;
 
-        if (mContext.frameLock)
+        int frame = mContext.frameId;
+
+        if (mContext.frameLock[frame])
         {
-            std::unique_lock<std::mutex> lock(mContext.frameMutex);
-            UpdateTexture(mContext.texture, mContext.image.data);
-            mContext.frameMutex.unlock();
-            mContext.frameLock = false;
+            mContext.frameMutex[frame].lock();
+            UpdateTexture(texture, mContext.image[frame].data);
+            mContext.frameLock[frame] = false;
+             printf("frame update %d\n", mContext.countFrame);
+            mContext.frameMutex[frame].unlock();
         }
         else
         {
-            // printf("chamou update sem frame estar pronto\n");
+            printf("chamou update sem frame estar pronto\n");
         }
 
         if (IsVideoFinished())
@@ -211,21 +227,26 @@ namespace ClassicLauncher
         }
 
         // Release raylib resources
-        if (IsTextureValid(mContext.texture))
+        if (IsTextureValid(texture))
         {
-            UnloadTexture(mContext.texture);
-            mContext.texture = Texture2D();
+            UnloadTexture(texture);
+            texture = Texture2D();
         }
-        if (IsImageValid(mContext.image))
+        if (IsImageValid(mContext.image[0]))
         {
-            UnloadImage(mContext.image);
-            mContext.image = Image();
+            UnloadImage(mContext.image[0]);
+            mContext.image[0] = Image();
+        }
+        if (IsImageValid(mContext.image[1]))
+        {
+            UnloadImage(mContext.image[1]);
+            mContext.image[1] = Image();
         }
     }
 
     Texture2D* VideoPlayer::GetVideoTexture()
     {
-        return (IsTextureValid(mContext.texture)) ? &mContext.texture : nullptr;
+        return (IsTextureValid(texture)) ? &texture : nullptr;
     }
 
     Vector2 VideoPlayer::GetVideoSize()

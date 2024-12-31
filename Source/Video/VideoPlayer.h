@@ -12,10 +12,21 @@ namespace ClassicLauncher
 
     struct VideoContext
     {
-        Image image;        // Imagem que será atualizada
-        Texture2D texture;  // Textura da imagem para renderizar na tela
-        bool frameLock = false;
-        std::mutex frameMutex;
+        Image image[2];        // Imagem que será atualizada
+        std::mutex frameMutex[2];
+        bool frameLock[2];
+	    int	frameId;
+        int countFrame;
+
+        VideoContext()
+        {
+            image[0] = Image();
+            image[1] = Image();
+            frameLock[0] = false;
+            frameLock[1] = false;
+            frameId = 0;
+            countFrame = 0;
+        }
     };
 
     class VideoPlayer
@@ -29,6 +40,7 @@ namespace ClassicLauncher
         int mHeightVideo = 1;
 
         VideoContext mContext;
+        Texture2D texture;  // Textura da imagem para renderizar na tela
         bool bIsEnabledVlC;
         unsigned int mWidth;
         unsigned int mHeight;
