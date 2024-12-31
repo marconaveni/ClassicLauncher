@@ -16,7 +16,6 @@
 
 #define TEXT(...) TextFormat(__VA_ARGS__)
 #define TEXTBOOL(a) TextFormat("%s", (a) == true ? "true" : "false")
-#define LOG(logLevel, ...) LogClassic((logLevel), __VA_ARGS__)
 
 #ifdef _DEBUG
 /* const char* text,

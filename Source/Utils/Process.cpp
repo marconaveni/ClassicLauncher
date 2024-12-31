@@ -84,7 +84,7 @@ namespace ClassicLauncher::Process
         return bApplicationRunning;
     }
 
-}  // namespace ClassicLauncher
+}  // namespace ClassicLauncher::Process
 
 #else
 
@@ -94,6 +94,7 @@ namespace ClassicLauncher::Process
 #include <cstring>
 #include <iostream>
 #include <vector>
+#include "Log.h"
 #include "StringFunctionLibrary.h"
 
 namespace ClassicLauncher::Process
@@ -111,22 +112,22 @@ namespace ClassicLauncher::Process
         pid_t pid = fork();
         if (pid == -1)
         {
-            std::cerr << "Falha ao criar o processo filho." << std::endl;  // Erro ao criar o processo filho
+            LOG(LOG_CLASSIC_ERROR, "Failed to created child process.");  
             return;
         }
 
-        if (pid == 0)  // Processo filho
+        if (pid == 0)  // Child Process
         {
-            std::vector<char*> args;  // Criar um array de ponteiros para char
+            std::vector<char*> args;  
             for (const auto& arg : paths)
             {
-                args.push_back(const_cast<char*>(arg.c_str()));  // Converte std::string para char*
+                args.push_back(const_cast<char*>(arg.c_str()));  
             }
             args.push_back(nullptr);
 
             if (execvp(args[0], args.data()) == -1)
             {
-                std::cerr << "Falha ao executar o programa." << std::endl;
+                LOG(LOG_CLASSIC_ERROR, "Failed to execute program.");
                 return;
             }
         }
@@ -139,29 +140,28 @@ namespace ClassicLauncher::Process
         bool bApplicationRunning;
         int status;
 
-        pid_t result = waitpid(processId, &status, WNOHANG);  // Verifica se o processo ainda está em execução
+        pid_t result = waitpid(processId, &status, WNOHANG);  // process is running?
 
         if (result == 0)
         {
             bApplicationRunning = true;
-            std::cout << "O processo filho ainda está em execução..." << std::endl;
+            LOG(LOG_CLASSIC_TRACE, "The child process is running...");
         }
         else if (result == processId)
         {
-            if (WIFEXITED(status))  // Processo filho terminou
+            if (WIFEXITED(status)) 
             {
-                std::cout << "O processo filho terminou com o status: " << WEXITSTATUS(status) << std::endl;
+                LOG(LOG_CLASSIC_DEBUG, "The child process terminated with status: %d ", WEXITSTATUS(status));
             }
             else
             {
-                std::cout << "O processo filho não terminou corretamente." << std::endl;
+                LOG(LOG_CLASSIC_ERROR, "The child process terminated with error.");
             }
             bApplicationRunning = false;
         }
         else
         {
             bApplicationRunning = false;
-            // std::cerr << "Erro ao monitorar o processo filho." << std::endl;
         }
 
         return bApplicationRunning;
@@ -169,23 +169,10 @@ namespace ClassicLauncher::Process
 
     bool CloseApplicationRunning(const unsigned int processId)
     {
-        if (processId == 0)
-        {
-            return false;
-        }
-
-        if (kill(processId, SIGTERM) == 0)  // Tenta enviar o sinal SIGTERM para o processo
-        {
-            std::cout << "O sinal SIGTERM foi enviado com sucesso para o processo." << std::endl;
-            return true;
-        }
-        else
-        {
-            std::cerr << "Erro ao tentar fechar o processo: " << strerror(errno) << std::endl;
-            return false;
-        }
+        return (processId != 0) && (kill(processId, SIGTERM) == 0);
     }
 
-}  // namespace ClassicLauncher
+        
+}  // namespace ClassicLauncher::Process
 
 #endif  //_WIN32

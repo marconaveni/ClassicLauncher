@@ -14,4 +14,3 @@ namespace ClassicLauncher::Process
 
 #endif  // PROCESS_H
 
-#include <string>

@@ -172,7 +172,8 @@ namespace ClassicLauncher
         mCover->StartAnimation("card-zoom", time, mCover->mProperties, targetCover, Ease::EaseQuadInOut, false);
 
         // StartAnimation("card-zoom", time, mProperties, mProperties, Ease::EaseQuadInOut, true);
-        pApplication->GetEntityManager()->SetTimer(mTimer, &GuiCard::Reset, this, time * 2);
+        //pApplication->GetEntityManager()->SetTimer(mTimer, &GuiCard::Reset, this, time * 2);
+        pApplication->GetEntityManager()->SetTimer(mTimer, [this]() { this->Reset(); }, this, time * 2);
     }
 
 }  // namespace ClassicLauncher

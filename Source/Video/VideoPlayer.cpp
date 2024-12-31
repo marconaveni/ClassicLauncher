@@ -1,7 +1,6 @@
 #include "VideoPlayer.h"
 #include "Utils/Log.h"
 
-#define LOG(logLevel, ...) LogClassic((logLevel), __VA_ARGS__)
 
 namespace ClassicLauncher
 {
@@ -31,7 +30,6 @@ namespace ClassicLauncher
         c->frameLock[frame] = true;
         c->countFrame++;
         LOG(LOG_CLASSIC_TRACE, "frame %d is ready \"c->frameLock[%d]\" is unlock", c->countFrame , c->frameLock[frame]);
-        //printf("frame unlock %d\n", c->countFrame);
         c->frameMutex[frame].unlock();
     }
 

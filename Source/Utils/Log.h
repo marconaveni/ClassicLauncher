@@ -26,6 +26,6 @@ namespace ClassicLauncher
 
 }  // namespace ClassicLauncher
 
-
+#define LOG(logLevel, ...) LogClassic((logLevel), __VA_ARGS__)
 
 #endif  // LOG_H

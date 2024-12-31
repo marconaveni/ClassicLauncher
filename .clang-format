@@ -8,7 +8,7 @@ ColumnLimit: 170
 AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortIfStatementsOnASingleLine: WithoutElse
 AllowShortFunctionsOnASingleLine: InlineOnly
-AllowShortLambdasOnASingleLine: None
+AllowShortLambdasOnASingleLine: Inline
 NamespaceIndentation: All
 IncludeBlocks: Preserve
 AccessModifierOffset: -4
@@ -23,6 +23,5 @@ BreakConstructorInitializers: BeforeComma
 Cpp11BracedListStyle: false
 RemoveEmptyLinesInUnwrappedLines: false 
 TrailingCommentsAlignmentKinds: Leave
-# BreakBinaryOperations: OnePerLine
 BinPackArguments: false
 BinPackParameters: false

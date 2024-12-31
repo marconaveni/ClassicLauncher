@@ -1,6 +1,7 @@
 #ifndef TIMER_H
 #define TIMER_H
 
+#include <functional>
 #include "Entity/Entity.h"
 
 namespace ClassicLauncher
@@ -21,21 +22,21 @@ namespace ClassicLauncher
     {
     private:
 
-        float mDelay;           // Delay time before the timer triggers
-        float mDuration;        // Duration of the timer
-        float mCurrentTime;     // Current elapsed time
-        bool bFunctionCalled;   // Flag to check if the function has been called
-        bool bLoop;             // Flag to determine if the timer is looping
-        bool bActive;           // Flag to check if the timer is active
-        T* mTargetEntity;       // Pointer to the target entity
-        void (T::*callback)();  // Pointer to the callback function to be called
+        float mDelay;                    // Delay time before the timer triggers
+        float mDuration;                 // Duration of the timer
+        float mCurrentTime;              // Current elapsed time
+        bool bFunctionCalled;            // Flag to check if the function has been called
+        bool bLoop;                      // Flag to determine if the timer is looping
+        bool bActive;                    // Flag to check if the timer is active
+        T* mTargetEntity;                // Pointer to the target entity
+        std::function<void()> callback;  // Pointer to the callback function to be called
 
     public:
 
         Timer()
             : mDelay(0), mDuration(0), mCurrentTime(0), bFunctionCalled(false), bLoop(false), bActive(false), callback(nullptr) {};
 
-        void SetTimer(void (T::*callbackFunction)(), T* targetEntity, float delay, bool bLooped = false)
+        void SetTimer(std::function<void()> callbackFunction, T* targetEntity, float delay, bool bLooped = false)
         {
             callback = callbackFunction;
             mTargetEntity = targetEntity;
@@ -55,7 +56,7 @@ namespace ClassicLauncher
                     mCurrentTime++;
                     return;
                 }
-                (mTargetEntity->*callback)();
+                callback();
 
                 if (bLoop)
                 {

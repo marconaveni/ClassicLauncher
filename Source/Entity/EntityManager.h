@@ -1,6 +1,7 @@
 #ifndef ENTITY_MANAGER_H
 #define ENTITY_MANAGER_H
 
+#include <functional>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -55,7 +56,7 @@ namespace ClassicLauncher
         }
 
         template <typename T>
-        void SetTimer(Timer<T>*& timer, void (T::*callbackFunction)(), T* targetEntity, float delay, bool bLooped = false)
+        void SetTimer(Timer<T>*& timer, std::function<void()> callbackFunction, T* targetEntity, float delay, bool bLooped = false)
         {
             if (timer == nullptr)
             {
