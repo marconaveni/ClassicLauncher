@@ -70,13 +70,13 @@ namespace ClassicLauncher
             {
                 mGuiBlackScreen->FadeInFadeOut();
             }
-            mApplication->GetEntityManager()->SetTimer(mTimer, [this]() { this->OnClick(); }, this, 0.5f, false);
+            mApplication->GetEntityManager()->SetTimer(mTimer, CALLFUNCTION(OnClick, this), this, 0.5f, false);
         }
         if (InputManager::GetInputRightFaceRight() && mApplication->GetGameListManager()->GetCurrentList() == GameListSelect)  // back
         {
             InputManager::DisableInput();
             mGuiBlackScreen->FadeInFadeOut();
-            mApplication->GetEntityManager()->SetTimer(mTimer, [this]() { this->OnBack(); }, this, 0.5f, false);
+            mApplication->GetEntityManager()->SetTimer(mTimer, CALLFUNCTION(OnBack, this), this, 0.5f, false);
         }
     }
 

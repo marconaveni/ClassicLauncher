@@ -8,6 +8,7 @@ namespace ClassicLauncher
 {
     class Entity;
 
+
     class TimerBase
     {
     public:
@@ -82,5 +83,8 @@ namespace ClassicLauncher
     };
 
 }  // namespace ClassicLauncher
+
+#define CALLFUNCTION(functionName, object) [object]() { object->functionName(); }
+
 
 #endif  // TIMER_H

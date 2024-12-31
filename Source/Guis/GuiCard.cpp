@@ -47,7 +47,7 @@ namespace ClassicLauncher
         }
 
         Application* pApplication = &Application::Get();
-        if(pApplication == nullptr)
+        if (pApplication == nullptr)
         {
             return;
         }
@@ -171,9 +171,7 @@ namespace ClassicLauncher
         mCardMain->StartAnimation("card-zoom", time, mCardMain->mProperties, target, Ease::EaseQuadInOut, false);
         mCover->StartAnimation("card-zoom", time, mCover->mProperties, targetCover, Ease::EaseQuadInOut, false);
 
-        // StartAnimation("card-zoom", time, mProperties, mProperties, Ease::EaseQuadInOut, true);
-        //pApplication->GetEntityManager()->SetTimer(mTimer, &GuiCard::Reset, this, time * 2);
-        pApplication->GetEntityManager()->SetTimer(mTimer, [this]() { this->Reset(); }, this, time * 2);
+        pApplication->GetEntityManager()->SetTimer(mTimer, CALLFUNCTION(Reset, this), this, time * 2);
     }
 
 }  // namespace ClassicLauncher
