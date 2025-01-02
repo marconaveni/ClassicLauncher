@@ -85,7 +85,7 @@ namespace ClassicLauncher
         LogClassic(LOG_CLASSIC_INFO, "Called OnClick");
         if (mApplication->GetGameListManager()->GetCurrentList() == GameListSelect)
         {
-            mApplication->GetProcessManager()->CreateProc(mApplication);
+            mApplication->CreateProcess();
         }
         else
         {

@@ -103,7 +103,7 @@ namespace ClassicLauncher::Process
 namespace ClassicLauncher::Process
 {
 
-    void CreateProc(int& processId, const std::string& fullPath, const std::string& optionalWorkingDirectory)
+    void CreateProc(int& processId, const std::string& fullPath)
     {
         std::vector<std::string> paths = StringFunctionLibrary::SplitString(fullPath);  
 

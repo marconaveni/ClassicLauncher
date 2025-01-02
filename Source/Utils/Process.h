@@ -11,7 +11,7 @@ namespace ClassicLauncher::Process
     bool IsApplicationRunning(unsigned int processId);
     bool CloseApplicationRunning(unsigned int processId);
 #else
-    void CreateProc(int& processId, const std::string& fullPath, const std::string& optionalWorkingDirectory);
+    void CreateProc(int& processId, const std::string& fullPath);
     bool IsApplicationRunning(int processId);
     bool CloseApplicationRunning(int processId);
 #endif

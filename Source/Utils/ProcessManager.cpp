@@ -28,7 +28,7 @@ namespace ClassicLauncher
         mStatus = (status == 1) ? ProcessStatus::Open : ProcessStatus::Failed;
         StatusProcessRun(application);
 #else
-        Process::CreateProc(processId, fullPath, optionalWorkingDirectory);
+        Process::CreateProc(processId, fullPath);
 #endif
     }
 
@@ -67,7 +67,6 @@ namespace ClassicLauncher
         switch (mStatus)
         {
             case ProcessStatus::Open:
-                application->GetAudioManager()->Pause();
                 break;
             case ProcessStatus::Running:
                 WaitTime(2.5);

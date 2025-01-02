@@ -125,32 +125,9 @@ namespace ClassicLauncher
         CloseAudioDevice();
     }
 
-    void Application::StatusProcessRun()
-    {
-        ProcessStatus status = mProcessManager.UpdateRun();
-
-        switch (status)
-        {
-            case ProcessStatus::None:
-                break;
-            case ProcessStatus::Open:
-                mAudioManager.Pause();
-                break;
-            case ProcessStatus::Running:
-                WaitTime(2.5);
-                break;
-            case ProcessStatus::Close:
-                GetGuiBlackScreen()->KeepBlack();
-                mAudioManager.ChangeMusic();
-                InputManager::EnableInput();
-                break;
-            default:
-                break;
-        }
-    }
-
     void Application::CreateProcess()
     {
+        GetAudioManager()->Pause();
         GetProcessManager()->CreateProc(this);
     }
 
@@ -180,7 +157,7 @@ namespace ClassicLauncher
 
         // Log(LOG_CLASSIC_DEBUG, TEXTBOOL(InputManager::GetInputLeftFaceLeft()));
 
-        StatusProcessRun();
+        mProcessManager.StatusProcessRun(this);
 
         GameList* systemList = mGameListManager.GetCurrentGameList();
         PRINT(TEXT("========================================"), 2.0f, "line0", Color::Lime());
