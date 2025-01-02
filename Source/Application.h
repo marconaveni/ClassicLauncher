@@ -61,6 +61,7 @@ namespace ClassicLauncher
         ProcessManager* GetProcessManager();
         void Init();
         void StatusProcessRun();
+        void CreateProcess();
 
     private:
 

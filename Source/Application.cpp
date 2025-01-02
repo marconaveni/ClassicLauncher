@@ -149,6 +149,11 @@ namespace ClassicLauncher
         }
     }
 
+    void Application::CreateProcess()
+    {
+        GetProcessManager()->CreateProc(this);
+    }
+
     void Application::Loop()
     {
         while (!WindowShouldClose())
@@ -163,6 +168,7 @@ namespace ClassicLauncher
             ClearBackground(BLACK);
             Draw();  // draw on screen
             EndDrawing();
+
         }
     }
 

@@ -6,9 +6,11 @@
 namespace ClassicLauncher
 {
     class GameListManager;
+    class Application;
 
     enum class ProcessStatus
     {
+        Failed = -1,
         None = 0,
         Open = 1,
         Running = 2,
@@ -17,6 +19,8 @@ namespace ClassicLauncher
 
     class ProcessManager
     {
+
+        ProcessStatus mStatus;
     public:
 #if WIN32
         unsigned int processId;
@@ -24,11 +28,13 @@ namespace ClassicLauncher
         int processId;
 #endif
         bool bRunning;
+        bool bReadyRunApp = false;
 
         ProcessManager();
-        void CreateProc(GameListManager* gameListManager);
+        void CreateProc(Application* application);
         ProcessStatus UpdateRun();
         bool IsApplicationRunning();
+        void StatusProcessRun(Application* application);
     };
 
 }  // namespace ClassicLauncher

@@ -23,7 +23,7 @@ namespace ClassicLauncher::Process
         return strTo;
     }
 
-    void CreateProc(unsigned int& processId, const std::string& fullPath, const std::string& optionalWorkingDirectory)
+    void CreateProc(unsigned int& processId, const std::string& fullPath, const std::string& optionalWorkingDirectory, int& status)
     {
         std::wstring path = utf8_to_wstring(fullPath);
         std::wstring dir = utf8_to_wstring(optionalWorkingDirectory);
@@ -35,18 +35,19 @@ namespace ClassicLauncher::Process
         {
             printf("open:");
 
-            // WaitForSingleObject(processInfo.hProcess, INFINITE);
+            //WaitForSingleObject(processInfo.hProcess, INFINITE);
 
             processId = static_cast<unsigned int>(processInfo.dwProcessId);
 
             CloseHandle(processInfo.hProcess);
             CloseHandle(processInfo.hThread);
-            return true;
+            status = 1;
         }
         else
         {
             printf("Error on create a process: %lu\n", GetLastError());
-            return false;
+            processId = 0;
+            status = -1;
         }
     }
 
