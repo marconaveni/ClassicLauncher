@@ -76,6 +76,9 @@ namespace ClassicLauncher
 
     void Application::Init()
     {
+
+        Resources::SetClassicLauncherDir();
+
         LogLevel(LOG_CLASSIC_DEBUG, LOG_WARNING);
         SetTraceLogCallback(TraceLogger);
 
@@ -87,17 +90,16 @@ namespace ClassicLauncher
         SetWindowMinSize(mSpecification.width, mSpecification.height);
         SetWindowSize(mSpecification.width, mSpecification.height);
         SetTargetFPS(60);
-       // ChangeDirectory(UtilsFunctionLibrary::GetHomeDir().c_str());
         // SetExitKey(KEY_NULL);
 
         InitAudioDevice();
 
-        const std::string fontFile = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::roboto);
-        const std::string musicDir = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::musicsFolder);
-        const std::string audioClickFile =  StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::clickAudio);
-        const std::string audioCursorFile = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::cursorAudio);
-        const std::string refPath = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::themesDefaultFolder + "/ref.png");
-        const std::string sprite = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::themesSprite);
+        const std::string fontFile = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + Resources::roboto);
+        const std::string musicDir = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + Resources::musicsFolder);
+        const std::string audioClickFile = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + Resources::clickAudio);
+        const std::string audioCursorFile = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + Resources::cursorAudio);
+        const std::string refPath = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + Resources::themesDefaultFolder + "/ref.png");
+        const std::string sprite = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + Resources::themesSprite);
 
         mPrint.LoadFont(Resources::GetFont(), 16, 0);
         mRender.LoadRender(mSpecification.width, mSpecification.height);
@@ -115,9 +117,16 @@ namespace ClassicLauncher
 
         SetWindowIcon(img);
 
-        mGuiWindow = mEntityManager.CreateEntity<GuiWindow>("GuiWindow");
-        mGuiWindow->Init();
-
+        if (mGameListManager.GetGameListSize() > 0)
+        {
+            mGuiWindow = mEntityManager.CreateEntity<GuiWindow>("GuiWindow");
+            mGuiWindow->Init();
+        }
+        else
+        {
+            LOG(LOG_CLASSIC_ERROR, "system list is empty");
+            // todo create screen not found system list 
+        }
         Loop();
 
         End();
@@ -145,7 +154,6 @@ namespace ClassicLauncher
             ClearBackground(BLACK);
             Draw();  // draw on screen
             EndDrawing();
-
         }
     }
 
@@ -159,14 +167,17 @@ namespace ClassicLauncher
 
         mProcessManager.StatusProcessRun(this);
 
-        GameList* systemList = mGameListManager.GetCurrentGameList();
+        GameList* pSystemList = mGameListManager.GetCurrentGameList();
         PRINT(TEXT("========================================"), 2.0f, "line0", Color::Lime());
         PRINT(TEXT("Music Playing %s", mAudioManager.GetMusicName().c_str()), 2.0f, "music", Color::Lime());
         PRINT(TEXT("========================================"), 2.0f, "line", Color::Green());
         PRINT(TEXT("%d fps", GetFPS()), 2.0f, "fps", Color::Green());
         PRINT(TEXT("%.6f ms", GetFrameTime()), 2.0f, "ms", Color::Green());
         PRINT(TEXT("========================================"), 2.0f, "line2");
-        PRINT(TEXT("Current game list %s", systemList->name.c_str()), 2.0f, "gameList");
+        if (pSystemList)
+        {
+            PRINT(TEXT("Current game list %s", pSystemList->name.c_str()), 2.0f, "gameList");
+        }
 
 #ifdef _DEBUG
 
@@ -213,8 +224,8 @@ namespace ClassicLauncher
             LOG(LOG_CLASSIC_DEBUG, TEXT("GetWorkingDirectory %s", UtilsFunctionLibrary::GetWorkingDirectory().c_str()));
             LOG(LOG_CLASSIC_DEBUG, TEXT("GetApplicationDirectory %s", ::GetApplicationDirectory()));
         }
-        if (IsKeyDown(KEY_DOWN))
-        {
+        if (IsKeyDown(KEY_DOWN) && mGuiWindow)
+        { 
             mGuiWindow->SetBringToFront();
         }
     }

@@ -12,26 +12,28 @@ namespace ClassicLauncher::Resources
     std::string GetFont();
     std::string GetSprite();
     std::string GetLogo();
+    std::string GetClassicLauncherDir();
+    void SetClassicLauncherDir();
 
     bool CheckResources();
 
     // files
-    static std::string clickAudio = "ClassicLauncher/themes/default/click.wav";
-    static std::string cursorAudio = "ClassicLauncher/themes/default/cursor.wav";
-    static std::string roboto = "ClassicLauncher/fonts/roboto.ttf";
-    static std::string systemlist = "ClassicLauncher/systemlist.xml";
+    static std::string clickAudio = "themes/default/click.wav";
+    static std::string cursorAudio = "themes/default/cursor.wav";
+    static std::string roboto = "fonts/roboto.ttf";
+    static std::string systemlist = "systemlist.xml";
 
     // folders
-    static std::string fontsFolder = "ClassicLauncher/fonts";
-    static std::string musicsFolder = "ClassicLauncher/musics";
-    static std::string themesFolder = "ClassicLauncher/themes";
+    static std::string fontsFolder = "fonts";
+    static std::string musicsFolder = "musics";
+    static std::string themesFolder = "themes";
 
     // folder default
-    static std::string themesDefaultFolder = "ClassicLauncher/themes/default";
-    static std::string themesSprite = "ClassicLauncher/themes/default/sprite.png";
+    static std::string themesDefaultFolder = "themes/default";
+    static std::string themesSprite = "themes/default/sprite.png";
 
     // system list
-    static std::string systemList = "ClassicLauncher/systemlist.xml";
+    static std::string systemList = "systemlist.xml";
 
     // Image data information
     constexpr int iconWidth = 16;

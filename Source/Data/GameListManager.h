@@ -101,7 +101,6 @@ namespace ClassicLauncher
     public:
 
         void Initialize();
-        void Update();
         void ChangeSystemToGameList();
         void ChangeGameToSystemList();
         void LoadList();
@@ -123,7 +122,7 @@ namespace ClassicLauncher
 
     private:
 
-        void ReplaceCurrentPath(GameList* game) const;
+        void ReplaceCurrentPath(GameList* pGame) const;
         static bool IsValidElement(const tinyxml2::XMLElement* pElement, const char* name = "");
     };
 

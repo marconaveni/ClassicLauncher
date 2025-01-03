@@ -26,7 +26,11 @@ namespace ClassicLauncher
     {
         int width = 1280;
         int height = 720;
+#if _DEBUG
+        const char* title = "Classic Launcher [DEVMODE]";
+#else
         const char* title = "Classic Launcher";
+#endif
         int posWindowX = 0;
         int posWindowY = 0;
     };
@@ -41,8 +45,6 @@ namespace ClassicLauncher
         EntityManager mEntityManager;
         GameListManager mGameListManager;
         ProcessManager mProcessManager;
-
-
         std::shared_ptr<GuiWindow> mGuiWindow;
 
     public:
