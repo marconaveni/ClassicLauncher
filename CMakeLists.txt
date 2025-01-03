@@ -38,12 +38,13 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/extern
 )
 
-message("is source dir is: " ${CMAKE_SOURCE_DIR})
+message("[Classic Launcher] Source dir is: " ${CMAKE_SOURCE_DIR})
 
 if(MSVC)
     if(CLASSIC_LAUNCHER_DEV)
         add_compile_options(/MTd)
         message("[Classic Launcher] set /MTd")
+        message("[Classic Launcher] DevMode is enabled")
         set(debug "_DEBUG")
     else()    
         add_compile_options(/MT)
@@ -73,7 +74,7 @@ if(WIN32)  # setup libvlc windows
         message(STATUS "[Classic Launcher] Include Directory: ${VLC_INCLUDE_DIR}")
         message(STATUS "[Classic Launcher] Libraries: ${VLC_LIBRARIES}")
     else()
-        message(FATAL_ERROR "VLC não foi encontrado!")
+        message(FATAL_ERROR "[Classic Launcher] VLC not founded!")
     endif()
 
     # Inclui os diretórios encontrados

@@ -50,4 +50,5 @@
 # Builds
 build/
 extern/libvlc
+ClassicLauncherWinDependencies
 
