@@ -26,23 +26,23 @@ namespace ClassicLauncher
         float mDelay;                    // Delay time before the timer triggers
         float mDuration;                 // Duration of the timer
         float mCurrentTime;              // Current elapsed time
-        bool bFunctionCalled;            // Flag to check if the function has been called
-        bool bLoop;                      // Flag to determine if the timer is looping
-        bool bActive;                    // Flag to check if the timer is active
+        bool mIsFunctionCalled;            // Flag to check if the function has been called
+        bool mIsLoop;                      // Flag to determine if the timer is looping
+        bool mIsActive;                    // Flag to check if the timer is active
         T* mTargetEntity;                // Pointer to the target entity
         std::function<void()> mCallback;  // Pointer to the callback function to be called
 
     public:
 
         Timer()
-            : mDelay(0), mDuration(0), mCurrentTime(0), bFunctionCalled(false), bLoop(false), bActive(false), mCallback(nullptr) {};
+            : mDelay(0), mDuration(0), mCurrentTime(0), mIsFunctionCalled(false), mIsLoop(false), mIsActive(false), mCallback(nullptr) {};
 
         void SetTimer(std::function<void()> callbackFunction, T* targetEntity, float delay, bool bLooped = false)
         {
             mCallback = callbackFunction;
             mTargetEntity = targetEntity;
             mDelay = delay;
-            bActive = true;
+            mIsActive = true;
             Reset();
         }
 
@@ -50,7 +50,7 @@ namespace ClassicLauncher
 
         void Update()
         {
-            if (!bFunctionCalled && bActive)
+            if (!mIsFunctionCalled && mIsActive)
             {
                 if (mCurrentTime <= mDuration)
                 {
@@ -59,13 +59,13 @@ namespace ClassicLauncher
                 }
                 mCallback();
 
-                if (bLoop)
+                if (mIsLoop)
                 {
                     Reset();
                 }
                 else
                 {
-                    bFunctionCalled = true;  // Mark the function as already called
+                    mIsFunctionCalled = true;  // Mark the function as already called
                 }
             }
         }
@@ -76,10 +76,10 @@ namespace ClassicLauncher
         {
             mCurrentTime = 0.0f;                  // Reset current time
             mDuration = mDelay / GetFrameTime();  // Set duration based on frame time
-            bFunctionCalled = false;              // Reset the function called state
+            mIsFunctionCalled = false;              // Reset the function called state
         }
 
-        void Stop() { bFunctionCalled = true; }
+        void Stop() { mIsFunctionCalled = true; }
     };
 
 }  // namespace ClassicLauncher

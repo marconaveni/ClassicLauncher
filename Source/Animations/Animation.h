@@ -47,11 +47,11 @@ namespace ClassicLauncher
         float mCurrentTime;
         float mDuration;
 
-        bool bStart;
-        bool bRunning;
-        bool bFinish;
-        bool bReset;
-        bool bRelative;
+        bool mIsStart;
+        bool mIsRunning;
+        bool mIsFinish;
+        bool mIsReset;
+        bool mRelative;
 
         Ease mType;
 

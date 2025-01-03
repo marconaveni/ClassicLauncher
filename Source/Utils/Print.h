@@ -51,11 +51,10 @@ namespace ClassicLauncher
     private:
 
         void InternalPrintOnScreen(const std::string& text, float duration, const std::string& label, const Color& textColor, bool bLog, int sizeY);
-        int size;
-        float spacing;
-        Font fontTtf;
-        std::vector<Message> messages;
-        TraceLogLevel levelLog;
+        int mSize;
+        float mSpacing;
+        Font mFont;
+        std::vector<Message> mMessages;
     };
 
 }  // namespace ClassicLauncher

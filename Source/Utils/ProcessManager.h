@@ -23,18 +23,18 @@ namespace ClassicLauncher
         ProcessStatus mStatus;
     public:
 #if WIN32
-        unsigned int processId;
+        unsigned int mProcessId;
 #else
         int processId;
 #endif
-        bool bRunning;
-        bool bReadyRunApp = false;
+        bool mIsRunning;
+        bool mIsReadyRunApp = false;
 
         ProcessManager();
-        void CreateProc(Application* application);
+        void CreateProc(Application* pApplication);
         ProcessStatus UpdateRun();
         bool IsApplicationRunning();
-        void StatusProcessRun(Application* application);
+        void StatusProcessRun(Application* pApplication);
     };
 
 }  // namespace ClassicLauncher

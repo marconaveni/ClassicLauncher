@@ -9,7 +9,7 @@ namespace ClassicLauncher
 {
 
     Sprite::Sprite()
-        : bKeepRunning(false), bImageLoaded(false), bTextureLoaded(false), workerThread(), image(), texture(), filePath()
+        : mIsKeepRunning(false), mIsImageLoaded(false), mIsTextureLoaded(false), mWorkerThread(), mImage(), mTexture(), mFilePath()
     {
     }
 
@@ -23,13 +23,13 @@ namespace ClassicLauncher
 
     void Sprite::Load(const std::string& file, const int width, const int height, bool bAspectRatio)
     {
-        if (!bKeepRunning && !bTextureLoaded && !bImageLoaded)
+        if (!mIsKeepRunning && !mIsTextureLoaded && !mIsImageLoaded)
         {
             Join();
-            bKeepRunning = true;
-            filePath = file;
+            mIsKeepRunning = true;
+            mFilePath = file;
             LOG(LOG_CLASSIC_TRACE, "Sprite - starting thread");
-            workerThread = std::thread(&Sprite::LoadImage, this, width, height, bAspectRatio);
+            mWorkerThread = std::thread(&Sprite::LoadImage, this, width, height, bAspectRatio);
         }
     }
 
@@ -38,43 +38,43 @@ namespace ClassicLauncher
         if (IsImageValid(newImage))
         {
             Unload();
-            image = ImageCopy(newImage);
-            filePath = "[loaded from memory]";
+            mImage = ImageCopy(newImage);
+            mFilePath = "[loaded from memory]";
             ResizeImage(width, height, bAspectRatio);
-            bImageLoaded = IsImageValid(image);
+            mIsImageLoaded = IsImageValid(mImage);
             LOG(LOG_CLASSIC_TRACE, "Image copied successfully");
         }
     }
 
     void Sprite::Stop()
     {
-        bKeepRunning = false;  // Sinaliza para encerrar
+        mIsKeepRunning = false;  // Sinaliza para encerrar
     }
 
     void Sprite::Join()
     {
-        if (workerThread.joinable())
+        if (mWorkerThread.joinable())
         {
-            workerThread.join();
+            mWorkerThread.join();
         }
     }
 
     void Sprite::LoadImage(const int width, const int height, bool bAspectRatio)
     {
         // std::this_thread::sleep_for(std::chrono::seconds(1)); //for test
-        if (bKeepRunning)
+        if (mIsKeepRunning)
         {
             // std::this_thread::sleep_for(std::chrono::seconds(1)); //for test
-            image = ::LoadImage(filePath.c_str());
-            if (IsImageValid(image))
+            mImage = ::LoadImage(mFilePath.c_str());
+            if (IsImageValid(mImage))
             {
                 ResizeImage(width, height, bAspectRatio);
-                bImageLoaded = IsImageValid(image);
-                LOG(LOG_CLASSIC_TRACE, "Image loaded successfully from - \"%s\"", filePath.c_str());
+                mIsImageLoaded = IsImageValid(mImage);
+                LOG(LOG_CLASSIC_TRACE, "Image loaded successfully from - \"%s\"", mFilePath.c_str());
             }
             else
             {
-                LOG(LOG_CLASSIC_WARNING, "Failed to load Image - \"%s\"", filePath.c_str());
+                LOG(LOG_CLASSIC_WARNING, "Failed to load Image - \"%s\"", mFilePath.c_str());
             }
         }
         LOG(LOG_CLASSIC_TRACE, "LoadImage - finished");
@@ -83,45 +83,45 @@ namespace ClassicLauncher
 
     Texture2D* Sprite::GetTexture()
     {
-        if (!bTextureLoaded && bImageLoaded)
+        if (!mIsTextureLoaded && mIsImageLoaded)
         {
-            texture = ::LoadTextureFromImage(image);
-            bTextureLoaded = IsTextureValid(texture);
-            LOG(LOG_CLASSIC_TRACE, "Texture loaded [ID %d] from Image - \"%s\"", texture.id, filePath.c_str());
+            mTexture = ::LoadTextureFromImage(mImage);
+            mIsTextureLoaded = IsTextureValid(mTexture);
+            LOG(LOG_CLASSIC_TRACE, "Texture loaded [ID %d] from Image - \"%s\"", mTexture.id, mFilePath.c_str());
             UnloadImage();
         }
-        if (bTextureLoaded)
+        if (mIsTextureLoaded)
         {
-            return &texture;
+            return &mTexture;
         }
         return nullptr;
     }
 
     Image* Sprite::GetImage()
     {
-        if (bImageLoaded)
+        if (mIsImageLoaded)
         {
-            return &image;
+            return &mImage;
         }
         return nullptr;
     }
 
     void Sprite::ResizeImage(const int width, const int height, bool bAspectRatio)
     {
-        std::lock_guard<std::mutex> guard(mutexSprite);
-        if (width > 0 && height > 0 && IsImageValid(image))
+        std::lock_guard<std::mutex> guard(mMutexSprite);
+        if (width > 0 && height > 0 && IsImageValid(mImage))
         {
             if (bAspectRatio)
             {
-                UtilsFunctionLibrary::ImageResize(image, width, height);
+                UtilsFunctionLibrary::ImageResize(mImage, width, height);
             }
             else
             {
-                ImageResize(&image, width, height);
+                ImageResize(&mImage, width, height);
             }
-            if (bTextureLoaded)
+            if (mIsTextureLoaded)
             {
-                UpdateTexture(texture, image.data);
+                UpdateTexture(mTexture, mImage.data);
             }
         }
     }
@@ -134,23 +134,23 @@ namespace ClassicLauncher
 
     void Sprite::UnloadTexture()
     {
-        if (bTextureLoaded && IsTextureValid(texture))
+        if (mIsTextureLoaded && IsTextureValid(mTexture))
         {
-            ::UnloadTexture(texture);
-            LOG(LOG_CLASSIC_TRACE, "Unloaded Texture [ID %d] from - \"%s\"", texture.id, filePath.c_str());
-            texture = {};
-            bTextureLoaded = false;
+            ::UnloadTexture(mTexture);
+            LOG(LOG_CLASSIC_TRACE, "Unloaded Texture [ID %d] from - \"%s\"", mTexture.id, mFilePath.c_str());
+            mTexture = {};
+            mIsTextureLoaded = false;
         }
     }
 
     void Sprite::UnloadImage()
     {
-        if (bImageLoaded && IsImageValid(image))
+        if (mIsImageLoaded && IsImageValid(mImage))
         {
-            ::UnloadImage(image);
-            LOG(LOG_CLASSIC_TRACE, "Unloaded Image from - %s", filePath.c_str());
-            image = {};
-            bImageLoaded = false;
+            ::UnloadImage(mImage);
+            LOG(LOG_CLASSIC_TRACE, "Unloaded Image from - %s", mFilePath.c_str());
+            mImage = {};
+            mIsImageLoaded = false;
         }
     }
 

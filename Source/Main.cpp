@@ -2,6 +2,6 @@
 
 int main()
 {
-    ClassicLauncher::Application app;
-    app.Init();
+    ClassicLauncher::Application application;
+    application.Init();
 }

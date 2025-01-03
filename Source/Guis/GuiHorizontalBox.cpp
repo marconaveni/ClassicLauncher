@@ -9,7 +9,7 @@ namespace ClassicLauncher
 {
 
     GuiHorizontalBox::GuiHorizontalBox()
-        : mApplication(&Application::Get()), mPositionX(0), bLeft(false), bRight(false), mLastDirection(None), mIdFocus(0), mSpeed(22.0f) {};
+        : mApplication(&Application::Get()), mPositionX(0), mIsLeft(false), mIsRight(false), mLastDirection(None), mIdFocus(0), mSpeed(22.0f) {};
 
     void GuiHorizontalBox::Init()
     {
@@ -25,7 +25,6 @@ namespace ClassicLauncher
         mMiniCover->Init();
         AddChild(mMiniCover.get());
 
-        //SetCovers();
         SetFocus(3, true);
     }
 
@@ -44,7 +43,7 @@ namespace ClassicLauncher
         mGuiCards[mIdFocus]->RemoveFocus(bForce);
         mIdFocus = newId;
         mGuiCards[newId]->SetFocus(bForce);
-        bLeft = true;
+        mIsLeft = true;
     }
 
     void GuiHorizontalBox::SetCovers()
@@ -107,8 +106,8 @@ namespace ClassicLauncher
         {
             const std::string coverName = std::to_string(i) + "_CV";
             const std::string miniCoverName = std::to_string(i) + "_MCV";
-            bool bResult1 = spriteManager->DeleteSprite(coverName);
-            bool bResult2 = spriteManager->DeleteSprite(miniCoverName);
+            const bool bResult1 = spriteManager->DeleteSprite(coverName);
+            const bool bResult2 = spriteManager->DeleteSprite(miniCoverName);
 
             if (bResult1 && bResult2)
             {
@@ -139,39 +138,39 @@ namespace ClassicLauncher
             mSpeed = 22.0f;
         }
 
-        if (InputManager::GetInputLeftFaceLeft(Down) && !bRight)
+        if (InputManager::GetInputLeftFaceLeft(Down) && !mIsRight)
         {
-            if (!bLeft)
+            if (!mIsLeft)
             {
                 mApplication->GetAudioManager()->PlayCursor();
                 mApplication->GetGameListManager()->AddId(-1);
                 SetFocus(mIdFocus - 1);
             }
-            bLeft = true;
+            mIsLeft = true;
         }
-        if (InputManager::GetInputLeftFaceRight(Down) && !bLeft)
+        if (InputManager::GetInputLeftFaceRight(Down) && !mIsLeft)
         {
-            if (!bRight)
+            if (!mIsRight)
             {
                 mApplication->GetAudioManager()->PlayCursor();
                 mApplication->GetGameListManager()->AddId(1);
                 SetFocus(mIdFocus + 1);
             }
-            bRight = true;
+            mIsRight = true;
         }
 
-        if (bRight)
+        if (mIsRight)
         {
             mPositionX = mPositionX - mSpeed;
         }
-        else if (bLeft)
+        else if (mIsLeft)
         {
             mPositionX = mPositionX + mSpeed;
         }
 
         for (const auto& cardContainer : mGuiCards)
         {
-            if (mPositionX > -256 && mPositionX < 0 && bRight)
+            if (mPositionX > -256 && mPositionX < 0 && mIsRight)
             {
                 if (mIdFocus < 3 || mIdFocus > 6)
                 {
@@ -179,7 +178,7 @@ namespace ClassicLauncher
                 }
                 mLastDirection = Left;
             }
-            else if (mPositionX > 0 && mPositionX < 256 && bLeft)
+            else if (mPositionX > 0 && mPositionX < 256 && mIsLeft)
             {
                 if (mIdFocus < 3 || mIdFocus > 6)
                 {
@@ -190,8 +189,8 @@ namespace ClassicLauncher
             else if (mPositionX <= -256 || mPositionX >= 256)
             {
                 mPositionX = 0;
-                bRight = false;
-                bLeft = false;
+                mIsRight = false;
+                mIsLeft = false;
                 SetCovers();
                 // todo: add clean textures of vram outside of the screen
             }
@@ -213,7 +212,7 @@ namespace ClassicLauncher
             }
         }
 
-        if (!bLeft && !bRight)
+        if (!mIsLeft && !mIsRight)
         {
             for (size_t i = 0; i < mGuiCards.size(); i++)
             {

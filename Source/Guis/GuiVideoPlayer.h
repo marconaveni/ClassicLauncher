@@ -39,7 +39,6 @@ namespace ClassicLauncher
         bool IsPlaying();
         bool IsPlayingFullscreen();
 
-    private:
 
     };
 

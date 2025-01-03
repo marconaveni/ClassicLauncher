@@ -38,8 +38,8 @@ namespace ClassicLauncher
         std::vector<std::shared_ptr<GuiCard>> mGuiCards;
         float mCardPositions[10]{ -632, -376, -120, 136, 392, 648, 904, 1160, 1416, 1672 };
         int mPositionX;
-        bool bLeft;
-        bool bRight;
+        bool mIsLeft;
+        bool mIsRight;
         Direction mLastDirection;
         int mIdFocus;
         float mSpeed;

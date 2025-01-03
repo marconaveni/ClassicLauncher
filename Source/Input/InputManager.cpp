@@ -3,18 +3,18 @@
 namespace ClassicLauncher
 {
 
-    int mGamePadIdSelected = 0;
+    int sGamePadIdSelected = 0;
     int sAmoutDown = 0;
-    bool bDisableInput = false;
+    bool sDisableInput = false;
 
     void InputManager::EnableInput()
     {
-        bDisableInput = false;
+        sDisableInput = false;
     }
 
     void InputManager::DisableInput()
     {
-        bDisableInput = true;
+        sDisableInput = true;
     }
 
     bool InputManager::GetInputLeftFaceLeft(PressedType pressedType)
@@ -79,18 +79,18 @@ namespace ClassicLauncher
 
     bool InputManager::GetInput(PressedType pressedType, int key, int gamePad)
     {
-        if (bDisableInput) return false;
+        if (sDisableInput) return false;
 
         switch (pressedType)
         {
             case PressedType::Pressed:
-                return (IsKeyPressed(key) || IsGamepadButtonPressed(mGamePadIdSelected, gamePad)) && !IsKeyDown(KEY_LEFT_ALT);
+                return (IsKeyPressed(key) || IsGamepadButtonPressed(sGamePadIdSelected, gamePad)) && !IsKeyDown(KEY_LEFT_ALT);
             case PressedType::Down:
-                return (IsKeyDown(key) || IsGamepadButtonDown(mGamePadIdSelected, gamePad)) && !IsKeyDown(KEY_LEFT_ALT);
+                return (IsKeyDown(key) || IsGamepadButtonDown(sGamePadIdSelected, gamePad)) && !IsKeyDown(KEY_LEFT_ALT);
             case PressedType::Released:
-                return (IsKeyReleased(key) || IsGamepadButtonReleased(mGamePadIdSelected, gamePad)) && !IsKeyDown(KEY_LEFT_ALT);
+                return (IsKeyReleased(key) || IsGamepadButtonReleased(sGamePadIdSelected, gamePad)) && !IsKeyDown(KEY_LEFT_ALT);
             case PressedType::Up:
-                return (IsKeyUp(key) || IsGamepadButtonUp(mGamePadIdSelected, gamePad)) && !IsKeyDown(KEY_LEFT_ALT);
+                return (IsKeyUp(key) || IsGamepadButtonUp(sGamePadIdSelected, gamePad)) && !IsKeyDown(KEY_LEFT_ALT);
             default:
                 return false;
         }

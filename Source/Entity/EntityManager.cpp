@@ -12,7 +12,7 @@ namespace ClassicLauncher
     {
         for (auto& entity : entity->GetChilds())
         {
-            entity->bVisible = bVisible;
+            entity->mVisible = bVisible;
         }
     }
 
@@ -31,7 +31,7 @@ namespace ClassicLauncher
     {
         for (auto& entity : mEntities)
         {
-            entity->bToDraw = entity->bVisible;
+            entity->mToDraw = entity->mVisible;
             entity->Update();
         }
         for (auto& timer : mTimers)
@@ -51,7 +51,7 @@ namespace ClassicLauncher
     void EntityManager::DrawEntity(Entity* entity)
     {
         const Texture2D* texture = mSpriteManagerReference->GetTexture(entity->mTextureName);
-        if (texture && entity->bToDraw)
+        if (texture && entity->mToDraw)
         {
             TransformProperties& properties = entity->mProperties;
 
@@ -72,8 +72,8 @@ namespace ClassicLauncher
             entity->Draw();
             ::DrawTexturePro(*texture, source, dest, origin, properties.rotation, properties.color);
 
-            entity->bToDraw = false;
-            entity->bBringToFront = false;
+            entity->mToDraw = false;
+            entity->mBringToFront = false;
 
 #ifdef _DEBUG
 
@@ -96,18 +96,18 @@ namespace ClassicLauncher
         std::vector<Entity*> entitiesRenderFront;
         for (auto& entity : mEntities)
         {
-            if (entity->bBringToFront)
+            if (entity->mBringToFront)
             {
                 entitiesRenderFront.emplace_back(entity.get());
                 continue;
             }
-            if (entity->bScissorMode)
+            if (entity->mScissorMode)
             {
                 const Rectangle scissorArea = entity->mScissorArea;
                 BeginScissorMode(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height);
             }
             DrawEntity(entity.get());
-            if (entity->bScissorMode)
+            if (entity->mScissorMode)
             {
                 EndScissorMode();
             }
@@ -115,13 +115,13 @@ namespace ClassicLauncher
 
         for (auto& entity : entitiesRenderFront)
         {
-            if (entity->bScissorMode)
+            if (entity->mScissorMode)
             {
                 const Rectangle scissorArea = entity->mScissorArea;
                 BeginScissorMode(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height);
             }
             DrawEntity(entity);
-            if (entity->bScissorMode)
+            if (entity->mScissorMode)
             {
                 EndScissorMode();
             }

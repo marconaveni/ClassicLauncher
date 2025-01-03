@@ -6,16 +6,16 @@ namespace ClassicLauncher
 {
 
     AudioManager::AudioManager()
-        : bIsRunning(false), bIsPlayClick(false), bIsPlayCursor(false), mStatusAudio(StatusAudioMusic::Stop), mClickSound{}, mCursorSound{}, mAudioMusics(), mIdAudioMusic(0)
+        : mIsRunning(false), mIsPlayClick(false), mIsPlayCursor(false), mStatusAudio(StatusAudioMusic::Stop), mClickSound{}, mCursorSound{}, mAudioMusics(), mIdAudioMusic(0)
     {
     }
 
     void AudioManager::Init()
     {
         Unload();
-        if (!bIsRunning)
+        if (!mIsRunning)
         {
-            bIsRunning = true;
+            mIsRunning = true;
             mWorkerThread = std::thread(&AudioManager::Update, this);
         }
     }
@@ -71,12 +71,12 @@ namespace ClassicLauncher
 
     void AudioManager::PlayClick()
     {
-        bIsPlayClick = true;
+        mIsPlayClick = true;
     }
 
     void AudioManager::PlayCursor()
     {
-        bIsPlayCursor = true;
+        mIsPlayCursor = true;
     }
 
     void AudioManager::Pause()
@@ -147,7 +147,7 @@ namespace ClassicLauncher
 
     void AudioManager::Update()
     {
-        while (bIsRunning)
+        while (mIsRunning)
         {
             std::lock_guard<std::mutex> lock(mMusicMutex);
 
@@ -160,15 +160,15 @@ namespace ClassicLauncher
                     ChangeMusic();
                 }
             }
-            if (IsSoundValid(mClickSound) && bIsPlayClick)
+            if (IsSoundValid(mClickSound) && mIsPlayClick)
             {
                 PlaySound(mClickSound);
-                bIsPlayClick = !bIsPlayClick;
+                mIsPlayClick = !mIsPlayClick;
             }
-            if (IsSoundValid(mCursorSound) && bIsPlayCursor)
+            if (IsSoundValid(mCursorSound) && mIsPlayCursor)
             {
                 PlaySound(mCursorSound);
-                bIsPlayCursor = !bIsPlayCursor;
+                mIsPlayCursor = !mIsPlayCursor;
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(10));  // wait
         }
@@ -176,10 +176,10 @@ namespace ClassicLauncher
 
     void AudioManager::Unload()
     {
-        if (bIsRunning)
+        if (mIsRunning)
         {
             Stop();
-            bIsRunning = false;
+            mIsRunning = false;
 
             for (auto& music : mAudioMusics)
             {

@@ -25,11 +25,11 @@ namespace ClassicLauncher
 
         friend class EntityManager;
 
-        bool bToDelete = false;
-        bool bToDraw = true;
-        bool bScissorMode = false;
-        bool bVisible = true;
-        bool bBringToFront = false;
+        bool mToDelete = false;
+        bool mToDraw = true;
+        bool mScissorMode = false;
+        bool mVisible = true;
+        bool mBringToFront = false;
         int mZOrder = 0;
         std::vector<Entity*> mChildEntities;
         std::string mNameId;
@@ -55,10 +55,10 @@ namespace ClassicLauncher
         std::vector<Entity*>& GetChilds();
         Entity* GetRootEntity();
         void EnableScissorMode(float x, float y, float width, float height);
-        void DisableScissorMode() { bScissorMode = false; }
-        void SetVisible(bool bEnable) { bVisible = bEnable; }
+        void DisableScissorMode() { mScissorMode = false; }
+        void SetVisible(bool bEnable) { mVisible = bEnable; }
         int GetZOrder() const { return mZOrder; }
-        void SetBringToFront() { bBringToFront = true; }
+        void SetBringToFront() { mBringToFront = true; }
 
         TransformProperties mProperties;
         std::string mTextureName = "transparent";

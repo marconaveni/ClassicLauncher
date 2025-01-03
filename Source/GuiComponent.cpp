@@ -22,13 +22,13 @@ namespace ClassicLauncher
             const std::string& name = animation.first;
             Animation& anim = animation.second;
 
-            if (anim.bStart)
+            if (anim.mIsStart)
             {
                 AnimationStarted(name);
-                anim.bStart = false;
+                anim.mIsStart = false;
             }
             anim.UpdateAnimation();
-            if (anim.bRunning)
+            if (anim.mIsRunning)
             {
                 AnimationUpdate(name);
                 mProperties.x = anim.mCurrentTransform.x;
@@ -37,7 +37,7 @@ namespace ClassicLauncher
                 mProperties.rotation = anim.mCurrentTransform.rotation;
                 mProperties.color = anim.mCurrentTransform.color;
             }
-            if (anim.bFinish)
+            if (anim.mIsFinish)
             {
                 AnimationFinished(name);
                 anim.ResetAnimation();

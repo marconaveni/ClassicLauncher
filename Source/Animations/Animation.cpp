@@ -5,7 +5,7 @@ namespace ClassicLauncher
 {
 
     Animation::Animation()
-        : mCurrentTime(0), mDuration(0), bStart(false), bRunning(false), bFinish(false), bReset(false), bRelative(false), mType(Ease::EaseLinearNone) {};
+        : mCurrentTime(0), mDuration(0), mIsStart(false), mIsRunning(false), mIsFinish(false), mIsReset(false), mRelative(false), mType(Ease::EaseLinearNone) {};
 
     void Animation::StartAnimation(const float durationAnimation,
                                    const TransformProperties& startAnimation,
@@ -13,22 +13,22 @@ namespace ClassicLauncher
                                    const Ease typeAnimation,
                                    const bool bForceReset)
     {
-        bRunning = true;
-        bStart = true;
-        bFinish = false;
+        mIsRunning = true;
+        mIsStart = true;
+        mIsFinish = false;
         mCurrentTime = 0.0f;
         mDuration = durationAnimation / GetFrameTime();
         mStartTransform = startAnimation;
         mCurrentTransform = startAnimation;
         mFinalTransform = finalAnimation;
-        bReset = bForceReset;
+        mIsReset = bForceReset;
         mType = typeAnimation;
     }
 
     void Animation::UpdateAnimation()
     {
-        bFinish = false;
-        if (bRunning)
+        mIsFinish = false;
+        if (mIsRunning)
         {
             if (mCurrentTime <= mDuration)
             {
@@ -51,25 +51,25 @@ namespace ClassicLauncher
 
     void Animation::FinishAnimation()
     {
-        bFinish = true;
+        mIsFinish = true;
         ResetAnimation();
     }
 
     void Animation::ResetAnimation()
     {
-        bRunning = false;
-        mCurrentTransform = (bReset) ? mStartTransform : mFinalTransform;
+        mIsRunning = false;
+        mCurrentTransform = (mIsReset) ? mStartTransform : mFinalTransform;
         mCurrentTime = 0;
     }
 
     bool Animation::GetAnimationIsRun() const
     {
-        return bRunning;
+        return mIsRunning;
     }
 
     bool Animation::GetAnimationFinish() const
     {
-        return bFinish;
+        return mIsFinish;
     }
 
     float Animation::GetAnimation(const float t, const float b, const float c, const float d) const

@@ -25,14 +25,14 @@ namespace ClassicLauncher
 
     private:
 
-        std::mutex mutexSprite;
-        std::atomic<bool> bKeepRunning;
-        std::atomic<bool> bImageLoaded;
-        std::atomic<bool> bTextureLoaded;
-        std::thread workerThread;
-        Image image;
-        Texture2D texture;
-        std::string filePath;
+        std::mutex mMutexSprite;
+        std::atomic<bool> mIsKeepRunning;
+        std::atomic<bool> mIsImageLoaded;
+        std::atomic<bool> mIsTextureLoaded;
+        std::thread mWorkerThread;
+        Image mImage;
+        Texture2D mTexture;
+        std::string mFilePath;
         void LoadImage(const int width, const int height, bool bAspectRatio);
 
     public:

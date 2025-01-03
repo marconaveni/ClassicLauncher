@@ -8,14 +8,14 @@ namespace ClassicLauncher
 
     class Render
     {
-        RenderTexture renderTexture;
-        float width;
-        float height;
-        float newWidth;
-        float newHeight;
-        float scale;
-        bool bMaintainAspectRatio;
-        Vector2 virtualMouse;
+        RenderTexture mRenderTexture;
+        float mWidth;
+        float mHeight;
+        float mNewWidth;
+        float mNewHeight;
+        float mScale;
+        bool mIsMaintainAspectRatio;
+        Vector2 mVirtualMouse;
         void RenderValues();
 
     public:
@@ -36,8 +36,8 @@ namespace ClassicLauncher
 
     public:
 
-        int GetScreenWidthGame() const { return static_cast<int>(width); }
-        int GetScreenHeightGame() const { return static_cast<int>(height); }
+        int GetScreenWidthGame() const { return static_cast<int>(mWidth); }
+        int GetScreenHeightGame() const { return static_cast<int>(mHeight); }
     };
 
 }  // namespace ClassicLauncher

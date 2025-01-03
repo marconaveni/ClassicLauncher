@@ -14,7 +14,7 @@ namespace ClassicLauncher
 
     void Entity::SelfDelete()
     {
-        bToDelete = true;
+        mToDelete = true;
         for (auto& entity : mChildEntities)
         {
             entity->SelfDelete();
@@ -51,7 +51,7 @@ namespace ClassicLauncher
 
     void Entity::EnableScissorMode(float x, float y, float width, float height)
     {
-        if (bScissorMode)
+        if (mScissorMode)
         {
             mScissorArea.SetPosition(Math::Max(x, mScissorArea.x), Math::Max(y, mScissorArea.y));
             mScissorArea.SetSize(Math::Min(width, mScissorArea.width), Math::Min(height, mScissorArea.height));
@@ -61,7 +61,7 @@ namespace ClassicLauncher
             mScissorArea.Set(x, y, width, height);
         }
 
-        bScissorMode = true;
+        mScissorMode = true;
         for (auto& childEntity : mChildEntities)
         {
             childEntity->EnableScissorMode(mScissorArea.x, mScissorArea.y, mScissorArea.width, mScissorArea.height);

@@ -38,7 +38,7 @@ namespace ClassicLauncher
     {
         GuiComponent::Update();
 
-        if (bFront)
+        if (mIsFront)
         {
             mCardSelected->SetBringToFront();
             mCardMain->SetBringToFront();
@@ -52,8 +52,8 @@ namespace ClassicLauncher
             return;
         }
         Texture2D* textureReference = pApplication->GetSpriteManager()->GetTexture(mCover->mTextureName);
-        Animation anim = mCover->GetAnimation("card-zoom");
-        if (textureReference != nullptr && mCover->mTextureName != "sprite" && !anim.bRunning)
+        Animation pAnim = mCover->GetAnimation("card-zoom");
+        if (textureReference != nullptr && mCover->mTextureName != "sprite" && !pAnim.mIsRunning)
         {
             mCover->mProperties.x = (240.0f - static_cast<float>(textureReference->width)) / 2.0f;
             mCover->mProperties.y = (216.0f - static_cast<float>(textureReference->height)) / 2.0f;
@@ -62,7 +62,7 @@ namespace ClassicLauncher
 
     void GuiCard::SetFocus(bool bForce)
     {
-        bFocus = true;
+        mIsFocus = true;
         if (bForce)
         {
             mCardSelected->mProperties.color.SetOpacity(255);
@@ -75,7 +75,7 @@ namespace ClassicLauncher
 
     void GuiCard::RemoveFocus(bool bForce)
     {
-        bFocus = false;
+        mIsFocus = false;
         if (bForce)
         {
             mCardSelected->mProperties.color.SetOpacity(0);
@@ -112,13 +112,13 @@ namespace ClassicLauncher
 
     bool GuiCard::IsFocus()
     {
-        return bFocus;
+        return mIsFocus;
     }
 
     void GuiCard::Reset()
     {
-        bFront = false;
-        mCardSelected->mProperties.color.SetOpacity(bFocus ? 255.0f : 0.0f);
+        mIsFront = false;
+        mCardSelected->mProperties.color.SetOpacity(mIsFocus ? 255.0f : 0.0f);
         mCardMain->mProperties.color.SetOpacity(255);
         mCover->mProperties.color.SetOpacity(255);
         mCardSelected->mProperties.scale = 1.0f;
@@ -143,7 +143,7 @@ namespace ClassicLauncher
         {
             return;
         }
-        bFront = true;
+        mIsFront = true;
 
         Texture2D* textureReference = pApplication->GetSpriteManager()->GetTexture(mCover->mTextureName);
 
