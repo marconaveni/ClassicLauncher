@@ -51,12 +51,14 @@ namespace ClassicLauncher::Resources
 
     void SetClassicLauncherDir()
     {
-        std::string path = GetResourcesPathFileAbs("portable.txt");
+#if WIN32
+        std::string path = GetResourcesPathFileAbs("portable.txt"); //portable mode is avaliable only windows system
         if (FileExists(path.c_str()))
         {
             sClassicLauncherPath = GetResourcesPathFileAbs(".ClassicLauncher/");
         }
         else
+#endif
         {
             sClassicLauncherPath = UtilsFunctionLibrary::GetHomeDir() + ".ClassicLauncher/";
             sClassicLauncherPath = StringFunctionLibrary::NormalizePath(sClassicLauncherPath);
