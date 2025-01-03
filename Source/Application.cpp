@@ -94,20 +94,20 @@ namespace ClassicLauncher
 
         const std::string fontFile = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::roboto);
         const std::string musicDir = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::musicsFolder);
-        const std::string audioClickFile = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::clickAudio);
+        const std::string audioClickFile =  StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::clickAudio);
         const std::string audioCursorFile = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::cursorAudio);
         const std::string refPath = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::themesDefaultFolder + "/ref.png");
         const std::string sprite = StringFunctionLibrary::NormalizePath(UtilsFunctionLibrary::GetHomeDir() + Resources::themesSprite);
 
-        mPrint.LoadFont(fontFile, 16, 0);
+        mPrint.LoadFont(Resources::GetFont(), 16, 0);
         mRender.LoadRender(mSpecification.width, mSpecification.height);
         mAudioManager.Init();
         mAudioManager.LoadMusics(musicDir);
-        mAudioManager.LoadCLick(audioClickFile);
-        mAudioManager.LoadCursor(audioCursorFile);
+        mAudioManager.LoadCLick(Resources::GetClickAudio());
+        mAudioManager.LoadCursor(Resources::GetCursorAudio());
         mSpriteManager.Init();
         mSpriteManager.LoadSprite("ref", refPath);
-        mSpriteManager.LoadSprite("sprite", sprite);
+        mSpriteManager.LoadSprite("sprite", Resources::GetSprite());
 
         Image img = {
             Resources::iconData, Resources::iconWidth, Resources::iconHeight, 1, Resources::iconFormat,

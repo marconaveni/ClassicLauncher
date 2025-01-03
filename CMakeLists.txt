@@ -153,6 +153,7 @@ set(utils
     "${CMAKE_SOURCE_DIR}/Source/Utils/Process.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/ProcessManager.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Utils/ProcessManager.h"
+    "${CMAKE_SOURCE_DIR}/Source/Utils/Resources.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Utils/Resources.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/StringFunctionLibrary.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Utils/StringFunctionLibrary.h"
@@ -266,6 +267,11 @@ else()
     target_link_libraries(${PROJECT_NAME} raylib GL m pthread dl rt vlc)
 endif()
 
+add_custom_command(TARGET ClassicLauncher POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/Resources
+    $<TARGET_FILE_DIR:ClassicLauncher>/Resources
+)
 
 # mkdir build
 # cd build

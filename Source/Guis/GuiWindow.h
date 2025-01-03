@@ -16,6 +16,7 @@ namespace ClassicLauncher
     class GuiHorizontalBox;
     class GuiBlackScreen;
     class GuiVideoPlayer;
+    class GuiComponent;
 
     class GuiWindow : public GuiComponent
     {
@@ -23,6 +24,7 @@ namespace ClassicLauncher
         std::shared_ptr<GuiHorizontalBox> mGuiHorizontalBox;
         std::shared_ptr<GuiBlackScreen> mGuiBlackScreen;
         std::shared_ptr<GuiVideoPlayer> mGuiVideoPlayer;
+        std::shared_ptr<GuiComponent> mGuiBackground;
         Timer<GuiWindow>* mTimer = nullptr;
 
     public:

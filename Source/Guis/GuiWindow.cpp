@@ -10,6 +10,16 @@ namespace ClassicLauncher
         mProperties.width = mApplication->GetSpecification().width;
         mProperties.height = mApplication->GetSpecification().height;
 
+        mGuiBackground = mApplication->GetEntityManager()->CreateEntity<GuiComponent>("GuiBackground");
+        mGuiBackground->mProperties.sourceX = 1047;
+        mGuiBackground->mProperties.sourceY = 195;
+        mGuiBackground->mProperties.width = 96;
+        mGuiBackground->mProperties.height = 87;
+        mGuiBackground->mProperties.scaleWidth = 1280;
+        mGuiBackground->mProperties.scaleHeight = 720;
+        mGuiBackground->mTextureName = "sprite";
+        AddChild(mGuiBackground.get());
+
         mGuiHorizontalBox = mApplication->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
         mGuiHorizontalBox->Init();
         AddChild(mGuiHorizontalBox.get());
@@ -24,14 +34,13 @@ namespace ClassicLauncher
 
         // rootY += 1;
 
-        if (IsKeyReleased(KEY_F1))
+#ifdef _DEBUG
+        if (IsKeyReleased(KEY_FOUR))
         {
-            mTextureName = "ref";
+            mTextureName = mTextureName != "ref" ? "ref" : "transparent";
+            mGuiBackground->mTextureName = mTextureName != "transparent" ? "transparent" : "sprite";
         }
-        if (IsKeyReleased(KEY_F2))
-        {
-            mTextureName = "transparent";
-        }
+#endif
 
         if (InputManager::GetInputLeftFaceUp())
         {
