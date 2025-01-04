@@ -8,7 +8,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # cache options default values
 option(CLASSIC_LAUNCHER_FSANITIZE "Enable address sanitizer" OFF)
 option(CLASSIC_LAUNCHER_FLAGS "Enable warning/error flags" OFF)
-option(CLASSIC_LAUNCHER_DEV "Enable dev mode" OFF)
 
 if(CLASSIC_LAUNCHER_FLAGS)
     if(MSVC)
@@ -16,6 +15,7 @@ if(CLASSIC_LAUNCHER_FLAGS)
     else()
         set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wpedantic")
     endif()
+    message(STATUS "[Classic Launcher] Add Flags")
 endif()
 
 if (CLASSIC_LAUNCHER_FSANITIZE)
@@ -24,9 +24,9 @@ if (CLASSIC_LAUNCHER_FSANITIZE)
     else()
         set(CMAKE_CXX_FLAGS_DEBUG "-g -fsanitize=address")
     endif()
-    message("[Classic Launcher] fsanitize is enabled")
+    message(STATUS "[Classic Launcher] fsanitize is enabled")
 else()
-    message("[Classic Launcher] fsanitize is disabled")
+    message(STATUS "[Classic Launcher] fsanitize is disabled")
 endif()
 
 set(CMAKE_CXX_FLAGS_RELEASE "-O2 ")
@@ -38,23 +38,33 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/extern
 )
 
-message("[Classic Launcher] Source dir is: " ${CMAKE_SOURCE_DIR})
+message(STATUS "[Classic Launcher] Source dir is: " ${CMAKE_SOURCE_DIR})
 
 if(MSVC)
-    if(CLASSIC_LAUNCHER_DEV)
+
+	set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -ENTRY:mainCRTStartup  /SUBSYSTEM:WINDOWS")
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         add_compile_options(/MTd)
-        message("[Classic Launcher] set /MTd")
-        message("[Classic Launcher] DevMode is enabled")
+        message(STATUS "[Classic Launcher] set /MTd")
+        message(STATUS "[Classic Launcher] DevMode is enabled")
         set(debug "_DEBUG")
     else()    
         add_compile_options(/MT)
-        message("[Classic Launcher] set /MT")
+        message(STATUS "[Classic Launcher] set /MT")
+      
     endif()
+
 endif()
 
-if(WIN32)  # setup libvlc windows
+if(MINGW)
+    set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -mwindows -e mainCRTStartup")
+endif()
 
+
+if(WIN32)  
     
+    # setup libvlc windows
+
     set(EXTERN_LIBDIR ${CMAKE_CURRENT_SOURCE_DIR}/extern)
     set(
         CMAKE_PREFIX_PATH
@@ -88,7 +98,7 @@ if(WIN32)  # setup libvlc windows
     # plugins folder
     set(VLC_PLUGINS_DIR ${EXTERN_LIBDIR}/libvlc/x64/plugins)
 
-endif() # end setup libvlc windows
+endif() # MSVC windows
 
 
 # Source files
@@ -277,4 +287,9 @@ add_custom_command(TARGET ClassicLauncher POST_BUILD
 # mkdir build
 # cd build
 # cmake -DCMAKE_BUILD_TYPE=Debug ..
+# cmake --build .
+
+# mkdir build
+# cd build
+# cmake -DCMAKE_BUILD_TYPE=Release ..
 # cmake --build .

@@ -53,41 +53,42 @@ namespace ClassicLauncher
 
     protected:
 
-        static InputManager& Get();
         int mGamePadIdSelected = 0;
         int mAmoutDown = 0;
         bool mDisableInput = false;
-        
+
+        // clang-format off
         InputMapper mInputs[18]{ 
-            InputMapper(unknown, 1, KEY_NULL ), 
-            InputMapper(leftFaceUp, 1, KEY_UP ), 
-            InputMapper(leftFaceRight, 2, KEY_RIGHT ), 
-            InputMapper(leftFaceDown, 3, KEY_DOWN ), 
-            InputMapper(leftFaceLeft, 4, KEY_LEFT ), 
-            InputMapper(rightFaceUp, 5, KEY_F ), 
-            InputMapper(rightFaceRight, 6, KEY_BACKSPACE ), 
-            InputMapper(rightFaceDown, 7, KEY_ENTER ), 
-            InputMapper(rightFaceLeft, 8, KEY_A ), 
-            InputMapper(leftTriggerFront, 9, KEY_Q ), 
-            InputMapper(leftTriggerBack, 10, KEY_Z ), 
-            InputMapper(rightTriggerFront, 11, KEY_E ), 
-            InputMapper(rightTriggerBack, 12, KEY_C ), 
-            InputMapper(middleFaceLeft, 13, KEY_ESCAPE ), 
-            InputMapper(middleFaceCenter, 14, KEY_F1 ), 
-            InputMapper(middleFaceRight, 15, KEY_S ), 
-            InputMapper(leftThumb, 16, KEY_N ), 
-            InputMapper(rightThumb, 17, KEY_M ) 
+            InputMapper(unknown, 0, KEY_NULL), 
+            InputMapper(leftFaceUp, 1, KEY_UP), 
+            InputMapper(leftFaceRight, 2, KEY_RIGHT), 
+            InputMapper(leftFaceDown, 3, KEY_DOWN), 
+            InputMapper(leftFaceLeft, 4, KEY_LEFT), 
+            InputMapper(rightFaceUp, 5, KEY_F), 
+            InputMapper(rightFaceRight, 6, KEY_BACKSPACE), 
+            InputMapper(rightFaceDown, 7, KEY_ENTER), 
+            InputMapper(rightFaceLeft, 8, KEY_A), 
+            InputMapper(leftTriggerFront, 9, KEY_Q), 
+            InputMapper(leftTriggerBack, 10, KEY_Z), 
+            InputMapper(rightTriggerFront, 11, KEY_E), 
+            InputMapper(rightTriggerBack, 12, KEY_C), 
+            InputMapper(middleFaceLeft, 13, KEY_ESCAPE), 
+            InputMapper(middleFaceCenter, 14, KEY_F1), 
+            InputMapper(middleFaceRight, 15, KEY_S), 
+            InputMapper(leftThumb, 16, KEY_N), 
+            InputMapper(rightThumb, 17, KEY_M) 
             };
+        // clang-format on
+        
 
     public:
 
-        static bool IsPress(InputName name) ;
+        static bool IsPress(InputName name);
         static bool IsDown(InputName name);
         static bool IsRelease(InputName name);
         static bool IsUp(InputName name);
         static void EnableInput();
         static void DisableInput();
-
     };
 
 }  // namespace ClassicLauncher
