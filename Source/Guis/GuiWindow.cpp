@@ -42,7 +42,8 @@ namespace ClassicLauncher
         }
 #endif
 
-        if (InputManager::GetInputLeftFaceUp())
+        //if (InputManager::GetInputLeftFaceUp())
+        if (InputManager::IsRelease(InputName::leftFaceUp))
         {
             if (mGuiVideoPlayer->IsPlayingFullscreen())
             {
@@ -52,7 +53,8 @@ namespace ClassicLauncher
             mGuiVideoPlayer->Stop();
             mApplication->GetAudioManager()->Play();
         }
-        if (InputManager::GetInputLeftFaceDown())
+        //if (InputManager::GetInputLeftFaceDown())
+        if (InputManager::IsRelease(InputName::leftFaceDown))
         {
             if (mGuiVideoPlayer->IsPlaying())
             {
@@ -66,7 +68,8 @@ namespace ClassicLauncher
             }
         }
 
-        if (InputManager::GetInputRightFaceDown())  // accept
+        //if (InputManager::GetInputRightFaceDown())  // accept
+        if (InputManager::IsRelease(InputName::rightFaceDown))
         {
             InputManager::DisableInput();
             mApplication->GetAudioManager()->PlayClick();
@@ -81,7 +84,7 @@ namespace ClassicLauncher
             }
             mApplication->GetEntityManager()->SetTimer(mTimer, CALLFUNCTION(OnClick, this), this, 0.5f, false);
         }
-        if (InputManager::GetInputRightFaceRight() && mApplication->GetGameListManager()->GetCurrentList() == GameListSelect)  // back
+        if (InputManager::IsRelease(InputName::rightFaceRight) && mApplication->GetGameListManager()->GetCurrentList() == GameListSelect)  // back
         {
             InputManager::DisableInput();
             mGuiBlackScreen->FadeInFadeOut();

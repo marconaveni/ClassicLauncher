@@ -159,6 +159,7 @@ namespace ClassicLauncher
 
     void Application::Update()
     {
+        mInputManager.UpdateInputState();
         mEntityManager.UpdateAll();
         mEntityManager.UpdatePositionAll();
         mEntityManager.Draw();  // draw in texture render
@@ -199,21 +200,21 @@ namespace ClassicLauncher
 
 #endif
 
-        if (IsKeyReleased(KEY_A))
+        if (InputManager::IsRelease(InputName::rightThumb))
         {
             mAudioManager.ChangeMusic();
-            mPrint.PrintOnScreen(TEXT("Changed music"), 2.0f);
+            mPrint.PrintOnScreen(TEXT("Changed music"), 5.0f);
         }
 
         if (IsKeyReleased(KEY_S))
         {
             mAudioManager.Pause();
-            mPrint.PrintOnScreen(TEXT("Pause music"), 2.0f);
+            mPrint.PrintOnScreen(TEXT("Pause music"), 5.0f);
         }
         if (IsKeyReleased(KEY_D))
         {
             mAudioManager.Play();
-            mPrint.PrintOnScreen(TEXT("Play music"), 2.0f);
+            mPrint.PrintOnScreen(TEXT("Play music"), 5.0f);
         }
         if (IsKeyReleased(KEY_UP))
         {

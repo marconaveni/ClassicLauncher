@@ -124,11 +124,12 @@ namespace ClassicLauncher
 
         mProperties.y = 228;
 
-        if (InputManager::GamepadButtonRightThumb(Down))
+        
+        if (InputManager::IsDown(InputName::rightTriggerFront))
         {
             mSpeed = 255;
         }
-        else if (InputManager::GetInputLeftFaceLeft(Down) || InputManager::GetInputLeftFaceRight(Down))
+        else if (InputManager::IsDown(InputName::leftFaceLeft) || InputManager::IsDown(InputName::leftFaceRight))
         {
             mSpeed += 0.35f;
             mSpeed = Math::Clamp(mSpeed, 0.0f, 88.0f);
@@ -137,8 +138,9 @@ namespace ClassicLauncher
         {
             mSpeed = 22.0f;
         }
-
-        if (InputManager::GetInputLeftFaceLeft(Down) && !mIsRight)
+        
+        
+        if (InputManager::IsDown(InputName::leftFaceLeft) && !mIsRight)
         {
             if (!mIsLeft)
             {
@@ -148,7 +150,8 @@ namespace ClassicLauncher
             }
             mIsLeft = true;
         }
-        if (InputManager::GetInputLeftFaceRight(Down) && !mIsLeft)
+
+        if (InputManager::IsDown(InputName::leftFaceRight) && !mIsLeft)
         {
             if (!mIsRight)
             {

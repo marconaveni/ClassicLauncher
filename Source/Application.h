@@ -21,6 +21,7 @@ namespace ClassicLauncher
     class GuiBlackScreen;
     class ProcessManager;
     class VideoPlayer;
+    class InputManager;
 
     struct ApplicationSpecification
     {
@@ -46,6 +47,7 @@ namespace ClassicLauncher
         GameListManager mGameListManager;
         ProcessManager mProcessManager;
         std::shared_ptr<GuiWindow> mGuiWindow;
+        InputManager mInputManager;
 
     public:
 
