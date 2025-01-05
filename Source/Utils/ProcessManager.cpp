@@ -28,7 +28,7 @@ namespace ClassicLauncher
         mStatus = (status == 1) ? ProcessStatus::Open : ProcessStatus::Failed;
         StatusProcessRun(pApplication);
 #else
-        Process::CreateProc(processId, fullPath);
+        Process::CreateProc(mProcessId, fullPath);
 #endif
     }
 

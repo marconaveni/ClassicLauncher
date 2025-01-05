@@ -25,7 +25,7 @@ namespace ClassicLauncher
 #if WIN32
         unsigned int mProcessId;
 #else
-        int processId;
+        int mProcessId;
 #endif
         bool mIsRunning;
         bool mIsReadyRunApp = false;
