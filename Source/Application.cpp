@@ -90,16 +90,13 @@ namespace ClassicLauncher
         SetWindowMinSize(mSpecification.width, mSpecification.height);
         SetWindowSize(mSpecification.width, mSpecification.height);
         SetTargetFPS(60);
-        // SetExitKey(KEY_NULL);
-
+#ifndef _DEBUG
+        SetExitKey(KEY_NULL);
+#endif
         InitAudioDevice();
 
-        const std::string fontFile = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + Resources::roboto);
-        const std::string musicDir = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + Resources::musicsFolder);
-        const std::string audioClickFile = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + Resources::clickAudio);
-        const std::string audioCursorFile = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + Resources::cursorAudio);
-        const std::string refPath = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + Resources::themesDefaultFolder + "/ref.png");
-        const std::string sprite = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + Resources::themesSprite);
+        const std::string musicDir = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "musics");  // theme dir
+        const std::string refPath = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/default/ref.png"); // theme dir
 
         mPrint.LoadFont(Resources::GetFont(), 16, 0);
         mRender.LoadRender(mSpecification.width, mSpecification.height);
@@ -111,11 +108,13 @@ namespace ClassicLauncher
         mSpriteManager.LoadSprite("ref", refPath);
         mSpriteManager.LoadSprite("sprite", Resources::GetSprite());
 
-        Image img = {
-            Resources::iconData, Resources::iconWidth, Resources::iconHeight, 1, Resources::iconFormat,
+        Image imgs[3] = {
+            LoadImage(Resources::GetIcon(16).c_str()),
+            LoadImage(Resources::GetIcon(32).c_str()),
+            LoadImage(Resources::GetIcon(64).c_str())
         };
 
-        SetWindowIcon(img);
+        SetWindowIcons(imgs , 3);
 
         if (mGameListManager.GetGameListSize() > 0)
         {
@@ -130,8 +129,14 @@ namespace ClassicLauncher
         Loop();
 
         End();
-        CloseWindow();
         CloseAudioDevice();
+        CloseWindow();
+
+        for (auto &img : imgs)
+        {
+            UnloadImage(img);
+        }
+        
     }
 
     void Application::CreateProcess()

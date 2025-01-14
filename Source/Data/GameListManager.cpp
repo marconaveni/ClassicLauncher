@@ -122,7 +122,7 @@ namespace ClassicLauncher
         using namespace StringFunctionLibrary;
 
         mDocumentSystemListXml.Clear();
-        const std::string systemListPath = NormalizePath(Resources::GetClassicLauncherDir() + Resources::systemList);
+        const std::string systemListPath = NormalizePath(Resources::GetClassicLauncherDir() + "systemlist.xml");
         if (mDocumentSystemListXml.LoadFile(systemListPath.c_str()) != tinyxml2::XMLError::XML_SUCCESS)
         {
             return;

@@ -5,14 +5,19 @@ namespace ClassicLauncher
 {
     void GuiTextBox::LoadNewFont(const char* path, int size, int spacing)
     {
+        mPathFont = path;
+        mSize = size;
+        mSpacing = spacing;
+        UpdateFont(path);
+    }
+
+    void GuiTextBox::UpdateFont(const char* path)
+    {
         if (IsFontValid(mFont))
         {
             UnloadFont(mFont);
         }
-        mPathFont = path;
-        mSize = size;
-        mSpacing = spacing;
-        mFont = LoadFontEx(path, size, NULL, 0);
+        mFont = LoadFontEx(path, mSize, NULL, 0);
     }
 
     GuiTextBox::GuiTextBox(const char* path, int size, int spacing)

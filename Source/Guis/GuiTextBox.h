@@ -43,6 +43,7 @@ namespace ClassicLauncher
         GuiTextBox(const char* path, int size = 16, int spacing = 0);
         ~GuiTextBox() = default;
         void LoadNewFont(const char* path, int size = 16, int spacing = 0);
+        void UpdateFont(const char* path);
         virtual EntityType GetType() const override { return EntityType::GuiTextBox; }
         virtual void Update() override;
         virtual void Draw() override;

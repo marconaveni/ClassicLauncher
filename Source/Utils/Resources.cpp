@@ -35,6 +35,11 @@ namespace ClassicLauncher::Resources
         return GetResourcesPathFileAbs("Resources/textures/sprite.png");
     }
 
+    std::string GetIcon(int size)
+    {
+        return GetResourcesPathFileAbs(TEXT("Resources/textures/logo%dx%d.png", size, size));
+    }
+
     std::string GetLogo()
     {
         return GetResourcesPathFileAbs("Resources/textures/logo.png");

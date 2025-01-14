@@ -28,6 +28,11 @@ namespace ClassicLauncher
     {
         for (auto& input : mInputs)
         {
+            if (mDisableInput)
+            {
+                input.CancelInput();
+                continue;
+            }
             const bool bKeyModifier = IsModifierKey();
             const int maxAmount = 18;
             const int key = input.keyPad;
@@ -83,6 +88,11 @@ namespace ClassicLauncher
     {
         if (!sInstanceInputManager) return;
         sInstanceInputManager->mDisableInput = true;
+        for (auto& input : sInstanceInputManager->mInputs)
+        {
+            input.CancelInput();
+            continue;
+        }
     }
 
 }  // namespace ClassicLauncher

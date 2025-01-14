@@ -41,6 +41,15 @@ namespace ClassicLauncher
 
         InputMapper(InputName name, int gamePad, int keyPad)
             : name(name), gamePad(gamePad), keyPad(keyPad) {};
+
+        void CancelInput()
+        {
+            bPress = false;
+            bDown = false;
+            bRelease = false;
+            bUp = false;
+            amoutDown = 0;
+        }
     };
 
     class InputManager
@@ -79,7 +88,6 @@ namespace ClassicLauncher
             InputMapper(rightThumb, 17, KEY_M) 
             };
         // clang-format on
-        
 
     public:
 
