@@ -25,7 +25,8 @@ namespace ClassicLauncher
         std::shared_ptr<GuiBlackScreen> mGuiBlackScreen;
         std::shared_ptr<GuiVideoPlayer> mGuiVideoPlayer;
         std::shared_ptr<GuiComponent> mGuiBackground;
-        Timer<GuiWindow>* mTimer = nullptr;
+        Timer<GuiWindow>* mClickTimer = nullptr;
+        Timer<GuiWindow>* mInputTimer = nullptr;
 
     public:
 

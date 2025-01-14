@@ -42,7 +42,6 @@ namespace ClassicLauncher
         }
 #endif
 
-        //if (InputManager::GetInputLeftFaceUp())
         if (InputManager::IsRelease(InputName::leftFaceUp))
         {
             if (mGuiVideoPlayer->IsPlayingFullscreen())
@@ -53,7 +52,7 @@ namespace ClassicLauncher
             mGuiVideoPlayer->Stop();
             mApplication->GetAudioManager()->Play();
         }
-        //if (InputManager::GetInputLeftFaceDown())
+
         if (InputManager::IsRelease(InputName::leftFaceDown))
         {
             if (mGuiVideoPlayer->IsPlaying())
@@ -68,7 +67,6 @@ namespace ClassicLauncher
             }
         }
 
-        //if (InputManager::GetInputRightFaceDown())  // accept
         if (InputManager::IsRelease(InputName::rightFaceDown))
         {
             InputManager::DisableInput();
@@ -82,13 +80,13 @@ namespace ClassicLauncher
             {
                 mGuiBlackScreen->FadeInFadeOut();
             }
-            mApplication->GetEntityManager()->SetTimer(mTimer, CALLFUNCTION(OnClick, this), this, 0.5f, false);
+            mApplication->GetEntityManager()->SetTimer(mClickTimer, CALLFUNCTION(OnClick, this), this, 0.5f, false);
         }
         if (InputManager::IsRelease(InputName::rightFaceRight) && mApplication->GetGameListManager()->GetCurrentList() == GameListSelect)  // back
         {
             InputManager::DisableInput();
             mGuiBlackScreen->FadeInFadeOut();
-            mApplication->GetEntityManager()->SetTimer(mTimer, CALLFUNCTION(OnBack, this), this, 0.5f, false);
+            mApplication->GetEntityManager()->SetTimer(mClickTimer, CALLFUNCTION(OnBack, this), this, 0.5f, false);
         }
     }
 
@@ -102,7 +100,7 @@ namespace ClassicLauncher
         else
         {
             mGuiHorizontalBox->ChangeList(GameListSelect);
-            InputManager::EnableInput();
+            mApplication->GetEntityManager()->SetTimer(mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
     }
 
@@ -112,7 +110,7 @@ namespace ClassicLauncher
         if (mApplication->GetGameListManager()->GetCurrentList() == GameListSelect)
         {
             mGuiHorizontalBox->ChangeList(SystemListSelect);
-            InputManager::EnableInput();
+            mApplication->GetEntityManager()->SetTimer(mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
     }
 
