@@ -3,7 +3,7 @@
 
 namespace ClassicLauncher
 {
-    void GuiTextBox::LoadNewFont(const char* path, int size, int spacing)
+    void GuiTextBox::LoadNewFont(const std::string& path, int size, int spacing)
     {
         mPathFont = path;
         mSize = size;
@@ -11,16 +11,16 @@ namespace ClassicLauncher
         UpdateFont(path);
     }
 
-    void GuiTextBox::UpdateFont(const char* path)
+    void GuiTextBox::UpdateFont(const std::string& path)
     {
         if (IsFontValid(mFont))
         {
             UnloadFont(mFont);
         }
-        mFont = LoadFontEx(path, mSize, NULL, 0);
+        mFont = LoadFontEx(path.data(), mSize, NULL, 250);
     }
 
-    GuiTextBox::GuiTextBox(const char* path, int size, int spacing)
+    GuiTextBox::GuiTextBox(const std::string& path, int size, int spacing)
         : mColor(Color::White())
         , mTextMovement(false)
         , mDesiredWidth(10)
@@ -66,7 +66,7 @@ namespace ClassicLauncher
     void GuiTextBox::Draw()
     {
         Vector2 posi = Vector2{ mProperties.x + mProperties.rootX + mOffset, mProperties.y + mProperties.rootY };
-        DrawTextEx(mFont, mText.c_str(), posi, mSize, mSpacing, mColor);
+        DrawTextEx(mFont, mText.data(), posi, mSize, mSpacing, mColor);
     }
 
     void GuiTextBox::End()
@@ -77,7 +77,7 @@ namespace ClassicLauncher
         }
     }
 
-    void GuiTextBox::SetText(const char* text)
+    void GuiTextBox::SetText(const std::string& text)
     {
         mText = text;
         mOffset = 0;
