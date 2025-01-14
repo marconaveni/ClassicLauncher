@@ -19,6 +19,8 @@ namespace ClassicLauncher
         mGuiTitle->mProperties.x = 400;
         mGuiTitle->mProperties.y = -75;
         mGuiTitle->SetText("Title");
+        mGuiTitle->SetDesiredWidth(1010);
+        mGuiTitle->SetTextOverflowPolicy(TextOverflowPolicy::clip);
         AddChild(mGuiTitle.get());
 
 
@@ -54,7 +56,8 @@ namespace ClassicLauncher
         mGuiCards[newId]->SetFocus(bForce);
         mIsLeft = true;
         mGuiTitle->SetText(mApplication->GetGameListManager()->GetCurrentGameList()->name.c_str());
-        mGuiTitle->mProperties.x = (1280 / 2) - (mGuiTitle->MeasureTextBox().GetIntX() / 2);
+        mGuiTitle->mProperties.x = (1280 / 2) - (mGuiTitle->GetMeasureTextBox().GetIntX() / 2);
+        mGuiTitle->mProperties.x = Math::Clamp(mGuiTitle->mProperties.x, 135, 1280);
     }
 
     void GuiHorizontalBox::SetCovers()
@@ -100,7 +103,6 @@ namespace ClassicLauncher
         {
             mApplication->GetGameListManager()->ChangeSystemToGameList();
         }
-        //SetCovers();
         SetFocus(3, true);
     }
 
