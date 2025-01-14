@@ -4,6 +4,7 @@
 #include <memory>
 #include "Core.h"
 #include "Guis/GuiMiniCover.h"
+#include "Utils/Resources.h"
 
 namespace ClassicLauncher
 {
@@ -13,6 +14,14 @@ namespace ClassicLauncher
 
     void GuiHorizontalBox::Init()
     {
+
+        mGuiTitle = mApplication->GetEntityManager()->CreateEntity<GuiTextBox>("GuiTitle", Resources::GetFont().c_str(), 48, 0);
+        mGuiTitle->mProperties.x = 400;
+        mGuiTitle->mProperties.y = -75;
+        mGuiTitle->SetText("Title");
+        AddChild(mGuiTitle.get());
+
+
         for (int i = 0; i < 10; i++)
         {
             const int x = 256 * (i - 2);
@@ -44,6 +53,8 @@ namespace ClassicLauncher
         mIdFocus = newId;
         mGuiCards[newId]->SetFocus(bForce);
         mIsLeft = true;
+        mGuiTitle->SetText(mApplication->GetGameListManager()->GetCurrentGameList()->name.c_str());
+        mGuiTitle->mProperties.x = (1280 / 2) - (mGuiTitle->MeasureTextBox().GetIntX() / 2);
     }
 
     void GuiHorizontalBox::SetCovers()
@@ -157,7 +168,7 @@ namespace ClassicLauncher
             {
                 mApplication->GetAudioManager()->PlayCursor();
                 mApplication->GetGameListManager()->AddId(1);
-                SetFocus(mIdFocus + 1);
+                SetFocus(mIdFocus + 1);              
             }
             mIsRight = true;
         }

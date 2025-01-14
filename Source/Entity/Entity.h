@@ -17,6 +17,7 @@ namespace ClassicLauncher
         GuiHorizontalBoxClass = 4,
         GuiMiniCoverClass = 5,
         GuiVideoPlayer = 6,
+        GuiTextBox = 7,
     };
 
     class Entity

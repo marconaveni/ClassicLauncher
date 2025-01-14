@@ -8,6 +8,7 @@
 #include "Application.h"
 #include "GuiCard.h"
 #include "GuiComponent.h"
+#include "Guis/GuiTextBox.h"
 
 namespace ClassicLauncher
 {
@@ -16,6 +17,7 @@ namespace ClassicLauncher
     class GuiMiniCover;
     class Application;
     class GuiCard;
+    class GuiTextBox;
 
     enum Direction
     {
@@ -34,6 +36,7 @@ namespace ClassicLauncher
     class GuiHorizontalBox : public GuiComponent
     {
         Application* mApplication;
+        std::shared_ptr<GuiTextBox> mGuiTitle;
         std::shared_ptr<GuiMiniCover> mMiniCover;
         std::vector<std::shared_ptr<GuiCard>> mGuiCards;
         float mCardPositions[10]{ -632, -376, -120, 136, 392, 648, 904, 1160, 1416, 1672 };

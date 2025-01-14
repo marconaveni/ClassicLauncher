@@ -139,6 +139,8 @@ set(guis
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiHorizontalBox.h"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiMiniCover.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiMiniCover.h"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiTextBox.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiTextBox.h"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiVideoPlayer.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiVideoPlayer.h"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiWindow.cpp"
