@@ -26,12 +26,6 @@ namespace ClassicLauncher
         Right
     };
 
-    struct HistoryPosition
-    {
-        int id = 0;
-        int indexCardFocus = 3;
-    };
-    
 
     class GuiHorizontalBox : public GuiComponent
     {
@@ -45,6 +39,7 @@ namespace ClassicLauncher
         bool mIsRight;
         Direction mLastDirection;
         int mIdFocus;
+        int mIdLastFocusSystem;
         float mSpeed;
 
     public:

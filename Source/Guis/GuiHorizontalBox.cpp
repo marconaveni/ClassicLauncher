@@ -10,7 +10,7 @@ namespace ClassicLauncher
 {
 
     GuiHorizontalBox::GuiHorizontalBox()
-        : mApplication(&Application::Get()), mPositionX(0), mIsLeft(false), mIsRight(false), mLastDirection(None), mIdFocus(0), mSpeed(22.0f) {};
+        : mApplication(&Application::Get()), mPositionX(0), mIsLeft(false), mIsRight(false), mLastDirection(None), mIdFocus(0),mIdLastFocusSystem(3), mSpeed(22.0f) {};
 
     void GuiHorizontalBox::Init()
     {
@@ -97,13 +97,16 @@ namespace ClassicLauncher
         ClearCovers();
         if (list == SystemListSelect)
         {
+            mApplication->GetGameListManager()->GetCurrentSystemList()->history.indexCardFocus = mIdFocus;
             mApplication->GetGameListManager()->ChangeGameToSystemList();
+            SetFocus(mIdLastFocusSystem, true);
         }
         else
         {
+            mIdLastFocusSystem = mIdFocus;
             mApplication->GetGameListManager()->ChangeSystemToGameList();
+            SetFocus(mApplication->GetGameListManager()->GetCurrentSystemList()->history.indexCardFocus, true);
         }
-        SetFocus(3, true);
     }
 
     void GuiHorizontalBox::Click()

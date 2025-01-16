@@ -83,10 +83,10 @@ namespace ClassicLauncher
     void GameListManager::ChangeSystemToGameList()
     {
         mIdSystemList = mIdGameList;
-        mIdGameList = 0;
         mCurrentList = GameListSelect;
         ClearGameList();
         LoadList();
+        mIdGameList = GetCurrentSystemList()->history.id;
     }
 
     void GameListManager::ChangeGameToSystemList()
@@ -157,11 +157,19 @@ namespace ClassicLauncher
     void GameListManager::AddId(const int newId)
     {
         mIdGameList = UtilsFunctionLibrary::SetIndexArray(mIdGameList += newId, static_cast<int>(mGameList.size()));
+        if (mCurrentList == CurrentList::GameListSelect)
+        {
+            mSystemList[mIdSystemList].history.id = mIdGameList;
+        }
     }
 
     void GameListManager::ChangeId(const int newId)
     {
         mIdGameList = Math::Clamp(newId, 0, static_cast<int>(mGameList.size()) - 1);
+        if (mCurrentList == CurrentList::GameListSelect)
+        {
+            mSystemList[mIdSystemList].history.id = mIdGameList;
+        }
     }
 
     int GameListManager::GetGameId() const

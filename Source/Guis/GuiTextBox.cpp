@@ -18,6 +18,7 @@ namespace ClassicLauncher
             UnloadFont(mFont);
         }
         mFont = LoadFontEx(path.data(), mSize, NULL, 250);
+        SetTextureFilter(mFont.texture,TEXTURE_FILTER_BILINEAR);
     }
 
     GuiTextBox::GuiTextBox(const std::string& path, int size, int spacing)

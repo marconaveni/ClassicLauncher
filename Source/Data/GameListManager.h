@@ -56,6 +56,12 @@ namespace ClassicLauncher
         bool operator<(const GameList& a) const { return (mapIndex < a.mapIndex); }
     };
 
+    struct HistoryPosition
+    {
+        int id = 0;
+        int indexCardFocus = 3;
+    };
+
     struct SystemList
     {
         int mapIndex;
@@ -68,6 +74,7 @@ namespace ClassicLauncher
         std::string screenshot;
         std::string video;
         std::string desc;
+        HistoryPosition history;
 
         SystemList()
             : mapIndex(-1)
