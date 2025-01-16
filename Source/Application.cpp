@@ -95,8 +95,8 @@ namespace ClassicLauncher
 #endif
         InitAudioDevice();
 
-        const std::string musicDir = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "musics");  // theme dir
-        const std::string refPath = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/default/ref.png"); // theme dir
+        const std::string musicDir = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "musics");                 // theme dir
+        const std::string refPath = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/default/ref.png");  // theme dir
 
         mPrint.LoadFont(Resources::GetFont(), 16, 0);
         mRender.LoadRender(mSpecification.width, mSpecification.height);
@@ -108,13 +108,13 @@ namespace ClassicLauncher
         mSpriteManager.LoadSprite("ref", refPath);
         mSpriteManager.LoadSprite("sprite", Resources::GetSprite());
 
-        Image imgs[3] = {
-            LoadImage(Resources::GetIcon(16).c_str()),
-            LoadImage(Resources::GetIcon(32).c_str()),
-            LoadImage(Resources::GetIcon(64).c_str())
-        };
+        Image imgs[5] = { LoadImage(Resources::GetIcon(16).c_str()),
+                          LoadImage(Resources::GetIcon(32).c_str()),
+                          LoadImage(Resources::GetIcon(48).c_str()),
+                          LoadImage(Resources::GetIcon(64).c_str()),
+                          LoadImage(Resources::GetIcon(128).c_str()) };
 
-        SetWindowIcons(imgs , 3);
+        SetWindowIcons(imgs, 5);
 
         if (mGameListManager.GetGameListSize() > 0)
         {
@@ -124,7 +124,7 @@ namespace ClassicLauncher
         else
         {
             LOG(LOG_CLASSIC_ERROR, "system list is empty");
-            // todo create screen not found system list 
+            // todo create screen not found system list
         }
         Loop();
 
@@ -132,11 +132,10 @@ namespace ClassicLauncher
         CloseAudioDevice();
         CloseWindow();
 
-        for (auto &img : imgs)
+        for (auto& img : imgs)
         {
             UnloadImage(img);
         }
-        
     }
 
     void Application::CreateProcess()
@@ -231,7 +230,7 @@ namespace ClassicLauncher
             LOG(LOG_CLASSIC_DEBUG, TEXT("GetApplicationDirectory %s", ::GetApplicationDirectory()));
         }
         if (IsKeyDown(KEY_DOWN) && mGuiWindow)
-        { 
+        {
             mGuiWindow->SetBringToFront();
         }
     }
