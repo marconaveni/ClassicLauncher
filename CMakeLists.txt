@@ -51,7 +51,7 @@ if(MSVC)
     else()    
         add_compile_options(/MT)
         message(STATUS "[Classic Launcher] set /MT")
-      
+        message(STATUS "[Classic Launcher] DevMode is disable")
     endif()
 
 endif()
@@ -181,19 +181,26 @@ set(video
     "${CMAKE_SOURCE_DIR}/Source/Video/VideoPlayer.h"
 )
 set(src
-    "${CMAKE_SOURCE_DIR}/Source/Core.h"
-    "${CMAKE_SOURCE_DIR}/Source/Main.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Application.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Application.h"
+    "${CMAKE_SOURCE_DIR}/Source/ClassicLauncher.h"
+    "${CMAKE_SOURCE_DIR}/Source/Core.h"
     "${CMAKE_SOURCE_DIR}/Source/GuiComponent.cpp"
     "${CMAKE_SOURCE_DIR}/Source/GuiComponent.h"
-)
-
+    "${CMAKE_SOURCE_DIR}/Source/Main.cpp"
+    )
+    
 set(extern 
     "${CMAKE_SOURCE_DIR}/extern/tinyxml2/tinyxml2.cpp"
     "${CMAKE_SOURCE_DIR}/extern/tinyxml2/tinyxml2.h"
     "${CMAKE_SOURCE_DIR}/extern/reasings/reasings.h"
 )
+    
+if(MSVC)
+    LIST(APPEND src
+        "${CMAKE_SOURCE_DIR}/Source/ClassicLauncher.rc"
+    )
+endif()
 
 source_group("Source\\Animations" FILES ${animations})
 source_group("Source\\Audio"     FILES ${audio})
