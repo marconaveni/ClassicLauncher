@@ -8,20 +8,24 @@ namespace ClassicLauncher
 {
 
     ProcessManager::ProcessManager()
-        : mProcessId(0), mIsRunning(false)
+        : mStatus(ProcessStatus::None), mProcessId(0), mIsRunning(false)
     {
     }
 
     void ProcessManager::CreateProc(Application* pApplication)
     {
         GameListManager* gameListManager = pApplication->GetGameListManager();
-        std::string fullPath = gameListManager->GetCurrentSystemList()->executable;
+        SystemList* system = gameListManager->GetCurrentSystemList();
+        GameList* game = gameListManager->GetCurrentGameList();
+        const std::string executable = (game->executable.empty()) ? system->executable : game->executable;
+        const std::string arguments = (game->arguments.empty()) ? system->arguments : game->arguments;
+        std::string fullPath = executable;
         fullPath.append(" ");
-        fullPath.append(gameListManager->GetCurrentSystemList()->arguments);
+        fullPath.append(arguments);
         fullPath.append(" \"");
-        fullPath.append(gameListManager->GetCurrentGameList()->path);
+        fullPath.append(game->path);
         fullPath.append("\" ");
-        const std::string optionalWorkingDirectory = GetDirectoryPath(gameListManager->GetCurrentSystemList()->executable.c_str());
+        const std::string optionalWorkingDirectory = GetDirectoryPath(executable.c_str());
 #if WIN32
         int status = -1;
         Process::CreateProc(mProcessId, fullPath, optionalWorkingDirectory, status);
@@ -63,7 +67,6 @@ namespace ClassicLauncher
 
     void ProcessManager::StatusProcessRun(Application* pApplication)
     {
-
         switch (mStatus)
         {
             case ProcessStatus::Open:

@@ -19,9 +19,10 @@ namespace ClassicLauncher
 
     class ProcessManager
     {
-
         ProcessStatus mStatus;
+
     public:
+
 #if WIN32
         unsigned int mProcessId;
 #else
