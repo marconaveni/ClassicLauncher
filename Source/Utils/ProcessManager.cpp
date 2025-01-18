@@ -19,12 +19,11 @@ namespace ClassicLauncher
         GameList* game = gameListManager->GetCurrentGameList();
         const std::string executable = (game->executable.empty()) ? system->executable : game->executable;
         const std::string arguments = (game->arguments.empty()) ? system->arguments : game->arguments;
+        std::string path = (game->path.empty()) ? "" : " \"" + game->path + "\" ";
         std::string fullPath = executable;
         fullPath.append(" ");
         fullPath.append(arguments);
-        fullPath.append(" \"");
-        fullPath.append(game->path);
-        fullPath.append("\" ");
+        fullPath.append(path);
         const std::string optionalWorkingDirectory = GetDirectoryPath(executable.c_str());
 #if WIN32
         int status = -1;
