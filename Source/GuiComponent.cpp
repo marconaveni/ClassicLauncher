@@ -33,7 +33,8 @@ namespace ClassicLauncher
                 AnimationUpdate(name);
                 mProperties.x = anim.mCurrentTransform.x;
                 mProperties.y = anim.mCurrentTransform.y;
-                mProperties.scale = anim.mCurrentTransform.scale;
+                mProperties.scaleX = anim.mCurrentTransform.scaleX;
+                mProperties.scaleY = anim.mCurrentTransform.scaleY;
                 mProperties.rotation = anim.mCurrentTransform.rotation;
                 mProperties.color = anim.mCurrentTransform.color;
             }
@@ -43,7 +44,8 @@ namespace ClassicLauncher
                 anim.ResetAnimation();
                 mProperties.x = anim.mCurrentTransform.x;
                 mProperties.y = anim.mCurrentTransform.y;
-                mProperties.scale = anim.mCurrentTransform.scale;
+                mProperties.scaleX = anim.mCurrentTransform.scaleX;
+                mProperties.scaleY = anim.mCurrentTransform.scaleY;
                 mProperties.rotation = anim.mCurrentTransform.rotation;
                 mProperties.color = anim.mCurrentTransform.color;
             }

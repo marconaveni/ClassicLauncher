@@ -9,6 +9,8 @@ namespace ClassicLauncher
     class Render
     {
         RenderTexture mRenderTexture;
+        Rectangle mSource;
+        Rectangle mDest;
         float mWidth;
         float mHeight;
         float mNewWidth;
@@ -22,9 +24,10 @@ namespace ClassicLauncher
 
         Render();
         void LoadRender(int screenWidth, int screenHeight);
+        void ClearRender();
         void BeginRender();
         void EndRender();
-        void DrawRender() const;
+        void DrawRender();
         void Unload();
         Vector2 GetRenderScale() const;
         Vector2 GetMousePositionRender() const;

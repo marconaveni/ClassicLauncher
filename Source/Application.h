@@ -22,6 +22,7 @@ namespace ClassicLauncher
     class ProcessManager;
     class VideoPlayer;
     class InputManager;
+    class Themes;
 
     struct ApplicationSpecification
     {
@@ -46,6 +47,7 @@ namespace ClassicLauncher
         EntityManager mEntityManager;
         GameListManager mGameListManager;
         ProcessManager mProcessManager;
+        Themes mThemes;
         std::shared_ptr<GuiWindow> mGuiWindow;
         InputManager mInputManager;
 
@@ -63,6 +65,7 @@ namespace ClassicLauncher
         GameListManager* GetGameListManager();
         GuiBlackScreen* GetGuiBlackScreen();
         ProcessManager* GetProcessManager();
+        Themes* GetThemes();
         void Init();
         void CreateProcess();
 

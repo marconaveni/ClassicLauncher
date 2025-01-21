@@ -9,6 +9,7 @@ namespace ClassicLauncher::UtilsFunctionLibrary
 
     void SetSizeWithProportion(Vector2& texture, const int widthResize, const int heightResize);
     void ImageResize(Image& image, const int newWidth, const int newHeight);
+    void ImageResizeNN(Image& image, const int newWidth, const int newHeight);
     Texture2D LoadTexture(const std::string& path, int width = 0, int height = 0);
     int SetIndexArray(const int index, const int maxArrayLength);
     void UnloadClearTexture(Texture2D& texture);

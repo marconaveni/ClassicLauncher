@@ -150,6 +150,10 @@ set(input
     "${CMAKE_SOURCE_DIR}/Source/Input/InputManager.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Input/InputManager.h"
 )
+set(themes
+    "${CMAKE_SOURCE_DIR}/Source/Themes/Themes.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Themes/Themes.h"
+)
 set(entity
     "${CMAKE_SOURCE_DIR}/Source/Entity/Entity.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Entity/Entity.h"
@@ -209,6 +213,7 @@ source_group("Source\\Entity"     FILES ${entity})
 source_group("Source\\Graphics"  FILES ${graphics})
 source_group("Source\\Guis"  FILES ${guis})
 source_group("Source\\Input"  FILES ${input})
+source_group("Source\\Themes"  FILES ${themes})
 source_group("Source\\Utils"     FILES ${utils})
 source_group("Source\\Video"     FILES ${video})
 source_group("Source"            FILES ${src})
@@ -223,6 +228,7 @@ set(srcs
     ${graphics}
     ${guis}
     ${input}
+    ${themes}
     ${utils}
     ${video}
     ${src}  

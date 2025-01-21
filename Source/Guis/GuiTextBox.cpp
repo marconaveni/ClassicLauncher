@@ -6,8 +6,8 @@ namespace ClassicLauncher
     void GuiTextBox::LoadNewFont(const std::string& path, int size, int spacing)
     {
         mPathFont = path;
-        mSize = size;
-        mSpacing = spacing;
+        mSize = size ;
+        mSpacing = spacing ;
         UpdateFont(path);
     }
 
@@ -17,8 +17,9 @@ namespace ClassicLauncher
         {
             UnloadFont(mFont);
         }
-        mFont = LoadFontEx(path.data(), mSize, NULL, 250);
-        SetTextureFilter(mFont.texture,TEXTURE_FILTER_BILINEAR);
+        const float scale = Themes::GetScaleTexture();
+        mFont = LoadFontEx(path.data(), mSize * scale , NULL, 250);
+        SetTextureFilter(mFont.texture,TEXTURE_FILTER_TRILINEAR);
     }
 
     GuiTextBox::GuiTextBox(const std::string& path, int size, int spacing)
@@ -67,7 +68,10 @@ namespace ClassicLauncher
     void GuiTextBox::Draw()
     {
         Vector2 posi = Vector2{ mProperties.x + mProperties.rootX + mOffset, mProperties.y + mProperties.rootY };
-        DrawTextEx(mFont, mText.data(), posi, mSize, mSpacing, mColor);
+        const float scale = Themes::GetScaleTexture();
+        posi.x = posi.x * scale;
+        posi.y = posi.y * scale;
+        DrawTextEx(mFont, mText.data(), posi, mSize * scale , mSpacing, mColor); 
     }
 
     void GuiTextBox::End()
@@ -90,7 +94,8 @@ namespace ClassicLauncher
 
         if (mTextOverflowPolicy == TextOverflowPolicy::clip)
         {
-            EnableScissorMode(0, 0, mDesiredWidth, 720);
+            const float scale = Themes::GetScaleTexture();
+            EnableScissorMode(0, 0, mDesiredWidth * scale, mMensuredText.y * scale);
         }
         else if (mTextOverflowPolicy == TextOverflowPolicy::none)
         {

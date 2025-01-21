@@ -54,7 +54,7 @@ namespace ClassicLauncher
 
         VideoPlayer();
         ~VideoPlayer();
-        bool Init(std::string path, int width, int height);
+        bool Init(std::string path, int width, int height, float scale = 1);
         void Play();
         void Pause();
         void Resume();

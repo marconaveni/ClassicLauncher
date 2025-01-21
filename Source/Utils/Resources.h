@@ -10,7 +10,7 @@ namespace ClassicLauncher::Resources
     std::string GetClickAudio();
     std::string GetCursorAudio();
     std::string GetFont();
-    std::string GetSprite();
+    std::string GetSprite(std::string scale = "");
     std::string GetIcon(int size);
     std::string GetLogo();
     std::string GetClassicLauncherDir();

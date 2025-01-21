@@ -20,6 +20,7 @@ namespace ClassicLauncher
     private:
 
         std::vector<std::shared_ptr<Entity>> mEntities;
+        std::vector<Entity*> mEntitiesOutRender;
         std::vector<EntityType> mTypeCount;
         SpriteManager* mSpriteManagerReference;
         std::vector<std::shared_ptr<TimerBase>> mTimers;
@@ -68,11 +69,13 @@ namespace ClassicLauncher
             timer->SetTimer(callbackFunction, targetEntity, delay, bLooped);
         }
 
+        void AddDrawOutRender(Entity* entitiesOutRender);
         void SetVisibleAll(Entity* entity, bool bVisible);
         void SetZOrder(Entity* entity, int zOrder);
         void UpdateAll();
         void UpdatePositionAll();
         void Draw();
+        void DrawOutRender();
         void End();
 
     private:

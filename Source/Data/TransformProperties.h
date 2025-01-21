@@ -5,9 +5,8 @@
 
 namespace ClassicLauncher
 {
-    class TransformProperties 
+    class TransformProperties
     {
-
     public:
 
         float rootX = 0;
@@ -20,9 +19,28 @@ namespace ClassicLauncher
         float sourceY = 0;
         float scaleWidth = 0;
         float scaleHeight = 0;
-        float scale = 1;
+        float scaleX = 1;
+        float scaleY = 1;
         float rotation = 0;
         Color color = { 255, 255, 255, 255 };
+
+        TransformProperties Multiply(const float m)
+        {
+            TransformProperties newTransf = *this;
+
+            newTransf.rootX = rootX * m;
+            newTransf.rootY = rootY * m;
+            newTransf.x = x * m;
+            newTransf.y = y * m;
+            newTransf.width = width * m;
+            newTransf.height = height * m;
+            newTransf.sourceX = sourceX * m;
+            newTransf.sourceY = sourceY * m;
+            newTransf.scaleWidth = scaleWidth * m;
+            newTransf.scaleHeight = scaleHeight * m;
+
+            return newTransf;
+        }
     };
 
 }  // namespace ClassicLauncher

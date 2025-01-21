@@ -74,12 +74,17 @@ namespace ClassicLauncher
         return &mProcessManager;
     }
 
+    Themes* Application::GetThemes()
+    {
+        return &mThemes;
+    }
+
     void Application::Init()
     {
-
         Resources::SetClassicLauncherDir();
 
         LogLevel(LOG_CLASSIC_DEBUG, LOG_WARNING);
+        //LogLevel(LOG_CLASSIC_ALL, LOG_ALL);
         SetTraceLogCallback(TraceLogger);
 
         mGameListManager.Initialize();
@@ -87,26 +92,29 @@ namespace ClassicLauncher
         SetConfigFlags(FLAG_VSYNC_HINT);  // vsync only enable in fullscreen set before InitWindow
         InitWindow(mSpecification.width, mSpecification.height, mSpecification.title);
         SetWindowState(FLAG_WINDOW_RESIZABLE);
-        SetWindowMinSize(mSpecification.width, mSpecification.height);
         SetWindowSize(mSpecification.width, mSpecification.height);
         SetTargetFPS(60);
+        SetWindowMinSize(mSpecification.width, mSpecification.height);
 #ifndef _DEBUG
         SetExitKey(KEY_NULL);
 #endif
         InitAudioDevice();
 
-        const std::string musicDir = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "musics");                 // theme dir
-        const std::string refPath = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/default/ref.png");  // theme dir
+        const std::string musicDir = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "musics");                   // theme dir
+        const std::string refPath = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/default/ref2x.png");  // theme dir
 
         mPrint.LoadFont(Resources::GetFont(), 16, 0);
         mRender.LoadRender(mSpecification.width, mSpecification.height);
+        
         mAudioManager.Init();
         mAudioManager.LoadMusics(musicDir);
         mAudioManager.LoadCLick(Resources::GetClickAudio());
         mAudioManager.LoadCursor(Resources::GetCursorAudio());
+        
         mSpriteManager.Init();
-        mSpriteManager.LoadSprite("ref", refPath);
-        mSpriteManager.LoadSprite("sprite", Resources::GetSprite());
+        mSpriteManager.LoadSprite("ref", refPath);  
+        
+        mThemes.LoadSprite(this);
 
         Image imgs[5] = { LoadImage(Resources::GetIcon(16).c_str()),
                           LoadImage(Resources::GetIcon(32).c_str()),
@@ -150,12 +158,14 @@ namespace ClassicLauncher
         {
             ToggleFullscreen();
 
+            BeginDrawing();
+            ClearBackground(BLACK);
+
+            mRender.ClearRender();
             mRender.BeginRender();
             Update();  // update logic
             mRender.EndRender();
 
-            BeginDrawing();
-            ClearBackground(BLACK);
             Draw();  // draw on screen
             EndDrawing();
         }
@@ -281,6 +291,7 @@ namespace ClassicLauncher
                 mSpecification.height = GetScreenHeight();
                 SetWindowSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
                 ::ToggleFullscreen();
+                SetConfigFlags(FLAG_VSYNC_HINT); 
             }
             else
             {

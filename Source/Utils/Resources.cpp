@@ -30,9 +30,13 @@ namespace ClassicLauncher::Resources
         return GetResourcesPathFileAbs("Resources/fonts/roboto.ttf");
     }
 
-    std::string GetSprite()
+    std::string GetSprite(std::string scale)
     {
-        return GetResourcesPathFileAbs("Resources/textures/sprite.png");
+        if (scale.empty())
+        {
+            return GetResourcesPathFileAbs("Resources/textures/sprite.png");
+        }
+        return GetResourcesPathFileAbs(TEXT("Resources/textures/sprite%sx.png", scale.c_str()));
     }
 
     std::string GetIcon(int size)
@@ -57,7 +61,7 @@ namespace ClassicLauncher::Resources
     void SetClassicLauncherDir()
     {
 #if WIN32
-        std::string path = GetResourcesPathFileAbs("portable.txt"); //portable mode is avaliable only windows system
+        std::string path = GetResourcesPathFileAbs("portable.txt");  // portable mode is avaliable only windows system
         if (FileExists(path.c_str()))
         {
             sClassicLauncherPath = GetResourcesPathFileAbs(".ClassicLauncher/");
@@ -67,7 +71,7 @@ namespace ClassicLauncher::Resources
         {
             sClassicLauncherPath = UtilsFunctionLibrary::GetHomeDir() + ".ClassicLauncher/";
             sClassicLauncherPath = StringFunctionLibrary::NormalizePath(sClassicLauncherPath);
-            if(!DirectoryExists(sClassicLauncherPath.c_str()))
+            if (!DirectoryExists(sClassicLauncherPath.c_str()))
             {
                 MakeDirectory(sClassicLauncherPath.c_str());
             }

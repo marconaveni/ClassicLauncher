@@ -55,8 +55,12 @@ namespace ClassicLauncher
         Animation pAnim = mCover->GetAnimation("card-zoom");
         if (textureReference != nullptr && mCover->mTextureName != "sprite" && !pAnim.mIsRunning)
         {
-            mCover->mProperties.x = (240.0f - static_cast<float>(textureReference->width)) / 2.0f;
-            mCover->mProperties.y = (216.0f - static_cast<float>(textureReference->height)) / 2.0f;
+            //spriteManager->LoadSprite(name, path, 228 * 2, 204 * 2);
+            const float scale = Themes::GetScaleTexture();
+            mCover->mProperties.x = (240.0f - static_cast<float>(textureReference->width / scale)) / 2.0f;
+            mCover->mProperties.y = (216.0f - static_cast<float>(textureReference->height / scale)) / 2.0f;
+            //mCover->mProperties.y = (246.0f) / 2.0f;
+            //mCover->mProperties.y = (216.0f * 2 - static_cast<float>(textureReference->height)) / 2.0f * 2;
         }
     }
 
@@ -121,9 +125,12 @@ namespace ClassicLauncher
         mCardSelected->mProperties.color.SetOpacity(mIsFocus ? 255.0f : 0.0f);
         mCardMain->mProperties.color.SetOpacity(255);
         mCover->mProperties.color.SetOpacity(255);
-        mCardSelected->mProperties.scale = 1.0f;
-        mCardMain->mProperties.scale = 1.0f;
-        mCover->mProperties.scale = 1.0f;
+        mCardSelected->mProperties.scaleX = 1.0f;
+        mCardSelected->mProperties.scaleY = 1.0f;
+        mCardMain->mProperties.scaleX = 1.0f;
+        mCardMain->mProperties.scaleY = 1.0f;
+        mCover->mProperties.scaleX = 1.0f;
+        mCover->mProperties.scaleY = 1.0f;
         mCardSelected->mProperties.x = 0.0f;
         mCardMain->mProperties.x = 0.0f;
         mCover->mProperties.x = 0.0f;
@@ -154,13 +161,15 @@ namespace ClassicLauncher
         TransformProperties targetCover = mCover->mProperties;
 
         target.color.a = 0;
-        target.scale = scale;
+        target.scaleX = scale;
+        target.scaleY = scale;
 
-        target.x = (-target.width / 2 * target.scale) + target.width / 2;
-        target.y = (-target.height / 2 * target.scale) + target.height / 2;
+        target.x = (-target.width / 2 * target.scaleX) + target.width / 2;
+        target.y = (-target.height / 2 * target.scaleY) + target.height / 2;
 
         targetCover.color.a = 0;
-        targetCover.scale = scale;
+        targetCover.scaleX = scale;
+        targetCover.scaleY = scale;
 
         float width = (textureReference != nullptr && mCover->mTextureName != "sprite") ? static_cast<float>(textureReference->width) : mDefaultCoverWidth;
         float height = (textureReference != nullptr && mCover->mTextureName != "sprite") ? static_cast<float>(textureReference->height) : mDefaultCoverHeight;
@@ -168,8 +177,8 @@ namespace ClassicLauncher
         width = (mContainerSize - width) / 2.0f;
         height = (mContainerSize - height) / 2.0f;
 
-        targetCover.x = ((-mContainerSize + width) / 2 * targetCover.scale) + (mContainerSize + width) / 2;
-        targetCover.y = ((-mContainerSize + height) / 2 * targetCover.scale) + (mContainerSize + height) / 2;
+        targetCover.x = ((-mContainerSize + width) / 2 * targetCover.scaleX) + (mContainerSize + width) / 2;
+        targetCover.y = ((-mContainerSize + height) / 2 * targetCover.scaleY) + (mContainerSize + height) / 2;
 
         mCardSelected->StartAnimation("card-zoom", time, mCardSelected->mProperties, target, Ease::EaseQuadInOut, false);
         mCardMain->StartAnimation("card-zoom", time, mCardMain->mProperties, target, Ease::EaseQuadInOut, false);

@@ -12,7 +12,8 @@ namespace ClassicLauncher
         mFilePath = path;
         mPlayer = nullptr;
         mPlayer = std::make_unique<VideoPlayer>();
-        const bool bIsplay = mPlayer->Init(path, width, height);
+        const float scale = Themes::GetScaleTexture();
+        const bool bIsplay = mPlayer->Init(path, width * scale, height * scale, scale);
         mPlayer->Play();
         return bIsplay;
     }
@@ -24,7 +25,8 @@ namespace ClassicLauncher
         mPlayer->Pause();
         mPlayerFullScreen = nullptr;
         mPlayerFullScreen = std::make_unique<VideoPlayer>();
-        mPlayerFullScreen->Init(mFilePath, 1280, 720);
+        const float scale = Themes::GetScaleTexture();
+        mPlayerFullScreen->Init(mFilePath, 1280 * scale, 720 * scale, scale);
         mPlayerFullScreen->Play();
     }
 
@@ -37,7 +39,7 @@ namespace ClassicLauncher
     void GuiVideoPlayer::StopFullscreen()
     {
         mPlayerFullScreen = nullptr;
-        
+
         if (!mPlayer) return;
 
         mPlayer->Resume();
@@ -73,8 +75,9 @@ namespace ClassicLauncher
         Texture2D* textureFullScreen = mPlayerFullScreen->GetVideoTexture();
         if (texture)
         {
-            const int x = (1280 / 2) - (textureFullScreen->width / 2);
-            DrawTexture(*textureFullScreen, x, 0, Color::White());
+            const float scale = Themes::GetScaleTexture();
+            const float x = (1280 * scale / 2) - (textureFullScreen->width / 2);
+            DrawTexture(*textureFullScreen, (int)x, 0, Color::White());
         }
     }
 
@@ -85,7 +88,7 @@ namespace ClassicLauncher
     }
 
     bool GuiVideoPlayer::IsPlaying()
-    {    
+    {
         return (!mPlayer) ? false : mPlayer->IsVideoPlaying();
     }
 

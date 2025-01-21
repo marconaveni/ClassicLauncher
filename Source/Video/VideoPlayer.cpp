@@ -75,7 +75,7 @@ namespace ClassicLauncher
         Unload();
     }
 
-    bool VideoPlayer::Init(std::string path, int width, int height)
+    bool VideoPlayer::Init(std::string path, int width, int height, float scale)
     {
         if (path.empty())
         {
@@ -101,8 +101,8 @@ namespace ClassicLauncher
             return false;
         }
 
-        mWidth = Math::Clamp(width, 0, 1280);
-        mHeight = Math::Clamp(height, 0, 720);
+        mWidth = Math::Clamp(width, 0, 1280 * scale);
+        mHeight = Math::Clamp(height, 0, 720 * scale);
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"

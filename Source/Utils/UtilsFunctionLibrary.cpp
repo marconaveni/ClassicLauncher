@@ -32,6 +32,13 @@ namespace ClassicLauncher
         ::ImageResize(&image, static_cast<int>(newSize.x), static_cast<int>(newSize.y));
     }
 
+    void UtilsFunctionLibrary::ImageResizeNN(Image& image, const int newWidth, const int newHeight)
+    {
+        Vector2 newSize{ static_cast<float>(image.width), static_cast<float>(image.height) };
+        SetSizeWithProportion(newSize, newWidth, newHeight);
+        ::ImageResizeNN(&image, static_cast<int>(newSize.x), static_cast<int>(newSize.y));
+    }
+
     Texture2D UtilsFunctionLibrary::LoadTexture(const std::string& path, int width, int height)
     {
         Image img = LoadImage(path.c_str());

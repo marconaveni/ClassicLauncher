@@ -37,20 +37,29 @@ namespace ClassicLauncher
 
     void Render::LoadRender(const int screenWidth, const int screenHeight)
     {
-        mWidth = screenWidth;
-        mHeight = screenHeight;
-        mRenderTexture = LoadRenderTexture(screenWidth, screenHeight);
-        GenTextureMipmaps(&mRenderTexture.texture);
+        const float scale = Themes::GetScaleTexture();
+        mWidth = screenWidth * scale;
+        mHeight = screenHeight * scale;
+
+        //mRenderTexture = LoadRenderTexture(1920, 1080);
+         mRenderTexture = LoadRenderTexture(mWidth, mHeight);
         SetTextureFilter(mRenderTexture.texture, TEXTURE_FILTER_TRILINEAR);
-        GenTextureMipmaps(&mRenderTexture.depth);
         SetTextureFilter(mRenderTexture.depth, TEXTURE_FILTER_TRILINEAR);
+        //  GenTextureMipmaps(&mRenderTexture.texture);
+        //  GenTextureMipmaps(&mRenderTexture.depth);
+    }
+
+    void Render::ClearRender()
+    {
+        BeginTextureMode(mRenderTexture);
+        ClearBackground(LIGHTGRAY);
+        EndTextureMode();
     }
 
     void Render::BeginRender()
     {
         RenderValues();
         BeginTextureMode(mRenderTexture);
-        ClearBackground(LIGHTGRAY);
     }
 
     void Render::EndRender()
@@ -58,19 +67,34 @@ namespace ClassicLauncher
         EndTextureMode();
     }
 
-    void Render::DrawRender() const
+    void Render::DrawRender()
     {
+        Texture* texture = &mRenderTexture.texture;
+
         const float screenWidth = static_cast<float>(GetScreenWidth());
         const float screenHeight = static_cast<float>(GetScreenHeight());
         const float textureWidth = static_cast<float>(mRenderTexture.texture.width);
         const float textureHeight = static_cast<float>(mRenderTexture.texture.height);
 
-        const Texture2D texture = mRenderTexture.texture;
-        const Rectangle source = Rectangle{ 0.0f, 0.0f, textureWidth, -textureHeight };
-        const Rectangle dest = Rectangle{ (screenWidth - (mNewWidth * mScale)) * 0.5f, (screenHeight - (mNewHeight * mScale)) * 0.5f, mNewWidth * mScale, mNewHeight * mScale };
+        mSource = Rectangle{ 0.0f, 0.0f, textureWidth, -textureHeight };
+        mDest = Rectangle{ (screenWidth - (mNewWidth * mScale)) * 0.5f, (screenHeight - (mNewHeight * mScale)) * 0.5f, mNewWidth * mScale, mNewHeight * mScale };
 
+        if (IsKeyReleased(KEY_K))
+        {
+            SetTextureFilter(*texture, TEXTURE_FILTER_POINT);
+            SetTextureFilter(mRenderTexture.depth, TEXTURE_FILTER_POINT);
+        }
+        if (IsKeyReleased(KEY_J))
+        {
+            SetTextureFilter(*texture, TEXTURE_FILTER_TRILINEAR);
+            SetTextureFilter(mRenderTexture.depth, TEXTURE_FILTER_TRILINEAR);
+        }
+        if (IsKeyReleased(KEY_H))
+        {
+            SetWindowSize(1920, 1080);
+        }
         // Draw render texture to screen, properly scaled
-        DrawTexturePro(texture, source, dest, Vector2{}, 0.0f, WHITE);
+        DrawTexturePro(*texture, mSource, mDest, Vector2{}, 0.0f, WHITE);
     }
 
     void Render::Unload()

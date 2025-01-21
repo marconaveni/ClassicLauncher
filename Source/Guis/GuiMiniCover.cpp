@@ -71,7 +71,8 @@ namespace ClassicLauncher
             if (!fileName.empty())
             {
                 name = std::to_string(indexFinal) + "_MCV";
-                pSpriteManager->LoadSprite(name, fileName, 28, 45);
+                const float scale = Themes::GetScaleTexture();
+                pSpriteManager->LoadSprite(name, fileName, 28 * scale, 45 * scale);
             }
 
             if (i - 1 >= 0 && i <= static_cast<int>(mGuiCovers.size()) - 2)

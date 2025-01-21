@@ -56,7 +56,8 @@ namespace ClassicLauncher
         mGuiCards[newId]->SetFocus(bForce);
         mIsLeft = true;
         mGuiTitle->SetText(mApplication->GetGameListManager()->GetCurrentGameList()->name.c_str());
-        mGuiTitle->mProperties.x = (1280 / 2) - (mGuiTitle->GetMeasureTextBox().GetIntX() / 2);
+        const float scale = Themes::GetScaleTexture();
+        mGuiTitle->mProperties.x = (1280 / 2) - ((mGuiTitle->GetMeasureTextBox().GetIntX() / 2) );
         mGuiTitle->mProperties.x = Math::Clamp(mGuiTitle->mProperties.x, 135, 1280);
     }
 
@@ -78,7 +79,8 @@ namespace ClassicLauncher
 
             if (!path.empty())
             {
-                spriteManager->LoadSprite(name, path, 228, 204);
+                const float scale = Themes::GetScaleTexture();
+                spriteManager->LoadSprite(name, path, 228 * scale, 204 * scale);
                 mGuiCards[i]->SetCover(name);
             }
             else
