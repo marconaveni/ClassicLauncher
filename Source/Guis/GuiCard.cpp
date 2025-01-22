@@ -9,7 +9,7 @@ namespace ClassicLauncher
         : mTimer(nullptr), GuiComponent()
     {
         mProperties.x = x;
-        mProperties.y = y;
+        mProperties.y = y - 6;
 
         CreateCard(mCardMain, 528, 15, 255);
         CreateCard(mCardFavorite, 783, 15, 0);
@@ -24,10 +24,10 @@ namespace ClassicLauncher
         Application* app = &Application::Get();
 
         card = app->GetEntityManager()->CreateEntity<GuiComponent>("card");
-        card->mProperties.width = 246;
-        card->mProperties.height = 270;
-        card->mProperties.sourceX = sourceX;
-        card->mProperties.sourceY = sourceY;
+        card->mProperties.width = 246 + 6;
+        card->mProperties.height = 270 + 6;
+        card->mProperties.sourceX = sourceX - 6;
+        card->mProperties.sourceY = sourceY - 6;
         card->mProperties.color.SetOpacity(alpha);
         card->mTextureName = "sprite";
 
@@ -55,12 +55,10 @@ namespace ClassicLauncher
         Animation pAnim = mCover->GetAnimation("card-zoom");
         if (textureReference != nullptr && mCover->mTextureName != "sprite" && !pAnim.mIsRunning)
         {
-            //spriteManager->LoadSprite(name, path, 228 * 2, 204 * 2);
             const float scale = Themes::GetScaleTexture();
-            mCover->mProperties.x = (240.0f - static_cast<float>(textureReference->width / scale)) / 2.0f;
-            mCover->mProperties.y = (216.0f - static_cast<float>(textureReference->height / scale)) / 2.0f;
-            //mCover->mProperties.y = (246.0f) / 2.0f;
-            //mCover->mProperties.y = (216.0f * 2 - static_cast<float>(textureReference->height)) / 2.0f * 2;
+            mCover->mProperties.x = 6 + (240.0f - static_cast<float>(textureReference->width / scale)) / 2.0f;
+            mCover->mProperties.y = 6 + (216.0f - static_cast<float>(textureReference->height / scale)) / 2.0f;
+
         }
     }
 
@@ -98,8 +96,8 @@ namespace ClassicLauncher
             mCover->mProperties.height = mDefaultCoverHeight;
             mCover->mProperties.sourceX = 1086;
             mCover->mProperties.sourceY = 1086;
-            mCover->mProperties.x = (240 - 204) / 2;
-            mCover->mProperties.y = (216 - 204) / 2;
+            mCover->mProperties.x = (240 - 204) / 2 + 6;
+            mCover->mProperties.y = (216 - 204) / 2 + 6;
             mCover->mTextureName = "sprite";
         }
         else
@@ -171,8 +169,9 @@ namespace ClassicLauncher
         targetCover.scaleX = scale;
         targetCover.scaleY = scale;
 
-        float width = (textureReference != nullptr && mCover->mTextureName != "sprite") ? static_cast<float>(textureReference->width) : mDefaultCoverWidth;
-        float height = (textureReference != nullptr && mCover->mTextureName != "sprite") ? static_cast<float>(textureReference->height) : mDefaultCoverHeight;
+        const float scaleTex = Themes::GetScaleTexture();
+        float width = (textureReference != nullptr && mCover->mTextureName != "sprite") ? static_cast<float>(textureReference->width / scaleTex) : mDefaultCoverWidth;
+        float height = (textureReference != nullptr && mCover->mTextureName != "sprite") ? static_cast<float>(textureReference->height / scaleTex) : mDefaultCoverHeight;
 
         width = (mContainerSize - width) / 2.0f;
         height = (mContainerSize - height) / 2.0f;

@@ -10,11 +10,10 @@ namespace ClassicLauncher
 {
 
     GuiHorizontalBox::GuiHorizontalBox()
-        : mApplication(&Application::Get()), mPositionX(0), mIsLeft(false), mIsRight(false), mLastDirection(None), mIdFocus(0),mIdLastFocusSystem(3), mSpeed(22.0f) {};
+        : mApplication(&Application::Get()), mPositionX(0), mIsLeft(false), mIsRight(false), mLastDirection(None), mIdFocus(0), mIdLastFocusSystem(3), mSpeed(22.0f) {};
 
     void GuiHorizontalBox::Init()
     {
-
         mGuiTitle = mApplication->GetEntityManager()->CreateEntity<GuiTextBox>("GuiTitle", Resources::GetFont().c_str(), 48, 0);
         mGuiTitle->mProperties.x = 400;
         mGuiTitle->mProperties.y = -75;
@@ -23,11 +22,10 @@ namespace ClassicLauncher
         mGuiTitle->SetTextOverflowPolicy(TextOverflowPolicy::clip);
         AddChild(mGuiTitle.get());
 
-
-        for (int i = 0; i < 10; i++)
+        for (int cardPosition : mCardPositions)
         {
-            const int x = 256 * (i - 2);
-            auto card = mApplication->GetEntityManager()->CreateEntity<GuiCard>("GuiCard", x - 120, 0);
+            const int x = cardPosition;
+            auto card = mApplication->GetEntityManager()->CreateEntity<GuiCard>("GuiCard", x , 0);
             AddChild(card.get());
             mGuiCards.emplace_back(card);
         }
@@ -57,7 +55,7 @@ namespace ClassicLauncher
         mIsLeft = true;
         mGuiTitle->SetText(mApplication->GetGameListManager()->GetCurrentGameList()->name.c_str());
         const float scale = Themes::GetScaleTexture();
-        mGuiTitle->mProperties.x = (1280 / 2) - ((mGuiTitle->GetMeasureTextBox().GetIntX() / 2) );
+        mGuiTitle->mProperties.x = (1280 / 2) - ((mGuiTitle->GetMeasureTextBox().GetIntX() / 2));
         mGuiTitle->mProperties.x = Math::Clamp(mGuiTitle->mProperties.x, 135, 1280);
     }
 
@@ -91,7 +89,7 @@ namespace ClassicLauncher
 
         mMiniCover->SetCovers();
 
-        LOG(LOG_CLASSIC_DEBUG, "Num Sprites Loaded after SetCovers %d", spriteManager->NumSpritesLoaded()); 
+        LOG(LOG_CLASSIC_DEBUG, "Num Sprites Loaded after SetCovers %d", spriteManager->NumSpritesLoaded());
     }
 
     void GuiHorizontalBox::ChangeList(const CurrentList list)
@@ -142,7 +140,6 @@ namespace ClassicLauncher
 
         mProperties.y = 228;
 
-        
         if (InputManager::IsDown(InputName::rightTriggerFront))
         {
             mSpeed = 255;
@@ -156,8 +153,7 @@ namespace ClassicLauncher
         {
             mSpeed = 22.0f;
         }
-        
-        
+
         if (InputManager::IsDown(InputName::leftFaceLeft) && !mIsRight)
         {
             if (!mIsLeft)
@@ -175,7 +171,7 @@ namespace ClassicLauncher
             {
                 mApplication->GetAudioManager()->PlayCursor();
                 mApplication->GetGameListManager()->AddId(1);
-                SetFocus(mIdFocus + 1);              
+                SetFocus(mIdFocus + 1);
             }
             mIsRight = true;
         }

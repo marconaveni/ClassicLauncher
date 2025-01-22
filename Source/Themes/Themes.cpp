@@ -72,7 +72,10 @@ namespace ClassicLauncher
         }
         else
         {
-            pApplication->GetSpriteManager()->LoadSprite("sprite", img);
+            const float w = 1290.0f * scale;
+            const float h = 1290.0f * scale;
+            pApplication->GetSpriteManager()->LoadSprite("sprite", img, (int)w, (int)h);
+            //pApplication->GetSpriteManager()->LoadSprite("sprite", img);
         }
 
         UnloadImage(img);

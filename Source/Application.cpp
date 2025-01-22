@@ -101,8 +101,10 @@ namespace ClassicLauncher
         InitAudioDevice();
 
         const std::string musicDir = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "musics");                   // theme dir
-        const std::string refPath = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/default/ref2x.png");  // theme dir
+        const std::string refPath = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/default/sref2x.png");  // theme dir
 
+        mThemes.LoadSprite(this);
+        
         mPrint.LoadFont(Resources::GetFont(), 16, 0);
         mRender.LoadRender(mSpecification.width, mSpecification.height);
         
@@ -114,7 +116,6 @@ namespace ClassicLauncher
         mSpriteManager.Init();
         mSpriteManager.LoadSprite("ref", refPath);  
         
-        mThemes.LoadSprite(this);
 
         Image imgs[5] = { LoadImage(Resources::GetIcon(16).c_str()),
                           LoadImage(Resources::GetIcon(32).c_str()),
