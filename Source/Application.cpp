@@ -84,7 +84,9 @@ namespace ClassicLauncher
         Resources::SetClassicLauncherDir();
 
         LogLevel(LOG_CLASSIC_DEBUG, LOG_WARNING);
-        //LogLevel(LOG_CLASSIC_ALL, LOG_ALL);
+#ifndef _DEBUG
+        LogLevel(LOG_CLASSIC_ALL, LOG_NONE);
+#endif
         SetTraceLogCallback(TraceLogger);
 
         mGameListManager.Initialize();
@@ -103,7 +105,8 @@ namespace ClassicLauncher
         const std::string musicDir = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "musics");                   // theme dir
         const std::string refPath = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/default/sref2x.png");  // theme dir
 
-        mThemes.LoadSprite(this);
+        mThemes.Init(this);
+        mThemes.LoadTheme(this);
         
         mPrint.LoadFont(Resources::GetFont(), 16, 0);
         mRender.LoadRender(mSpecification.width, mSpecification.height);

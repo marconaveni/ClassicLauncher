@@ -30,13 +30,9 @@ namespace ClassicLauncher::Resources
         return GetResourcesPathFileAbs("Resources/fonts/roboto.ttf");
     }
 
-    std::string GetSprite(std::string scale)
+    std::string GetSprite()
     {
-        if (scale.empty())
-        {
-            return GetResourcesPathFileAbs("Resources/textures/sprite.png");
-        }
-        return GetResourcesPathFileAbs(TEXT("Resources/textures/sprite%sx.png", scale.c_str()));
+        return GetResourcesPathFileAbs("Resources/textures/sprite.png");
     }
 
     std::string GetIcon(int size)

@@ -1,4 +1,5 @@
 #include "Themes.h"
+#include <math.h> /* modf */
 #include "Application.h"
 
 namespace ClassicLauncher
@@ -6,43 +7,8 @@ namespace ClassicLauncher
 
     static Themes* sInstanceThemes = nullptr;
 
-    float Themes::GetSpriteByResolution(std::string& file)
-    {
-        const int monitorWidth = GetMonitorWidth(GetCurrentMonitor());
-        if (monitorWidth <= 1280 && FileExists(Resources::GetSprite("1").c_str()))
-        {
-            file = Resources::GetSprite("1");
-            LOG(LOG_CLASSIC_DEBUG, "1x sprite path [%s]", Resources::GetSprite("1").c_str());
-            return 1.0f;
-        }
-        else if (monitorWidth <= 1920 && FileExists(Resources::GetSprite("1.5").c_str()))
-        {
-            file = Resources::GetSprite("1.5");
-            LOG(LOG_CLASSIC_DEBUG, "1.5x sprite path [%s]", Resources::GetSprite("1.5").c_str());
-            return 1.5f;
-        }
-        else if (monitorWidth <= 2560 && FileExists(Resources::GetSprite("2").c_str()))
-        {
-            file = Resources::GetSprite("2");
-            LOG(LOG_CLASSIC_DEBUG, "2x sprite path [%s]", Resources::GetSprite("2").c_str());
-            return 2.0f;
-        }
-        else if (monitorWidth <= 3840 && FileExists(Resources::GetSprite("3").c_str()))
-        {
-            file = Resources::GetSprite("3");
-            LOG(LOG_CLASSIC_DEBUG, "3x sprite path [%s]", Resources::GetSprite("3").c_str());
-            return 3.0f;
-        }
-        else
-        {
-            file = Resources::GetSprite();
-            LOG(LOG_CLASSIC_DEBUG, "Default sprite path  [%s] ", Resources::GetSprite("1.5").c_str());
-            return 0;
-        }
-    }
-
     Themes::Themes()
-        : mScaleTexture(0.0f)
+        : mScaleTexture(1.0f), mScaleSystem(1.0f)
     {
         if (sInstanceThemes == nullptr)
         {
@@ -55,30 +21,99 @@ namespace ClassicLauncher
         sInstanceThemes = nullptr;
     }
 
-    void Themes::LoadSprite(Application* pApplication)
+    std::vector<std::string> Themes::GetThemeDirs()
+    {
+        std::string path = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/" + mCurrentSystemName + "/");
+        std::vector<std::string> paths;
+        if (DirectoryExists(path.c_str()))
+        {
+            paths.push_back(path);
+        }
+        paths.push_back(Resources::GetResourcesPathFileAbs("Resources/textures/"));
+        return paths;
+    }
+
+    bool Themes::GetPathTheme(std::string& file, int monitorWidth, int monitorCompare, const std::string& path, float numScale)
+    {
+        if (monitorWidth <= monitorCompare && FileExists(path.c_str()))
+        {
+            file = path;
+            LOG(LOG_CLASSIC_DEBUG, "%.1f x sprite path [%s]", numScale, path.c_str());
+            return true;
+        }
+        return false;
+    }
+
+    float Themes::GetSpriteByResolution(std::string& file)
+    {
+        std::vector<std::string> paths;
+        paths = GetThemeDirs();
+        const int monitorWidth = GetMonitorWidth(GetCurrentMonitor());
+        float scales[4] = { 1.0f, 1.5f, 2.0f, 3.0f };
+        int widths[4] = { 1280, 1920, 2580, 3840 };
+
+        for (const auto& path : paths)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                float intPart;
+                float fractpart = modf(scales[i], &intPart);
+                std::string numText = (fractpart > 0) ? TEXT("%.1f", scales[i]) : TEXT("%.0f", intPart);
+
+                if (GetPathTheme(file, monitorWidth, widths[i], TEXT("%ssprite%sx.png", path.c_str(), numText.c_str()), scales[i]))
+                {
+                    return scales[i];
+                }
+            }
+        }
+
+        file = Resources::GetSprite();
+        LOG(LOG_CLASSIC_DEBUG, "Default sprite path  [%s] ", Resources::GetSprite().c_str());
+        return 1.0f;
+    }
+
+    void Themes::Init(Application* pApplication, float customScale)
+    {
+        std::vector<SystemList*> systems = pApplication->GetGameListManager()->GetAllSystemList();
+        for (auto& system : systems)
+        {
+            mCurrentSystemName = system->systemName;
+            std::string file;
+            system->scale = GetSpriteByResolution(file);
+            system->pathTheme = file;
+        }
+        mCurrentSystemName = "default";
+        mScaleSystem = GetSpriteByResolution(mPathThemeSystem);
+    }
+
+    void Themes::LoadTheme(Application* pApplication, float customScale)
     {
         std::string file;
-        const float newSize = GetSpriteByResolution(file);
-        const float scale = newSize > 0 ? newSize : Themes::GetScaleTexture();
-
-        Image img = LoadImage(file.c_str());
-        SetScaleTexture(scale);
-
-        if (newSize == 0)
+        if (pApplication->GetGameListManager()->GetCurrentList() == CurrentList::GameListSelect)
         {
-            const float w = 1290.0f * scale;
-            const float h = 1290.0f * scale;
-            pApplication->GetSpriteManager()->LoadSprite("sprite", img, (int)w, (int)h);
+            SystemList* pList = pApplication->GetGameListManager()->GetCurrentSystemList();
+            mCurrentSystemName = pList->systemName;
+            file = pList->pathTheme;
+            mScaleTexture = pList->scale;
         }
         else
         {
-            const float w = 1290.0f * scale;
-            const float h = 1290.0f * scale;
-            pApplication->GetSpriteManager()->LoadSprite("sprite", img, (int)w, (int)h);
-            //pApplication->GetSpriteManager()->LoadSprite("sprite", img);
+            mCurrentSystemName = "default";
+            file = mPathThemeSystem;
+            mScaleTexture = mScaleSystem;
         }
 
-        UnloadImage(img);
+        if (mLastPathLoaded != file)
+        {
+            //pApplication->GetSpriteManager()->UpdateSprite("sprite", file);
+            pApplication->GetSpriteManager()->DeleteSprite("sprite");
+            pApplication->GetSpriteManager()->LoadSprite("sprite", file);
+            mLastPathLoaded = file;
+        }
+
+        // std::string file;
+        // mCustomScaleTexture = customScale > 0 ? customScale : mCustomScaleTexture;
+        // mScaleTexture = GetSpriteByResolution(file);
     }
 
     Themes& Themes::Get()
@@ -86,22 +121,10 @@ namespace ClassicLauncher
         return *sInstanceThemes;
     }
 
-    void Themes::SetScaleTexture(float scale)
-    {
-        const float width = GetMonitorWidth(GetCurrentMonitor());
-        const float height = GetMonitorHeight(GetCurrentMonitor());
-        const float size = Math::Max(width, height);
-        mScaleTexture = scale > 0 ? scale : size / 1280.0f;
-        // sScaleTexture = size / 1280.0f;
-    }
-
     float Themes::GetScaleTexture()
     {
         if (sInstanceThemes == nullptr) return 0;
-        if (sInstanceThemes->mScaleTexture == 0)
-        {
-            sInstanceThemes->SetScaleTexture();
-        }
+
         return sInstanceThemes->mScaleTexture;
     }
 

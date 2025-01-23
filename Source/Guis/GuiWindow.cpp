@@ -100,6 +100,7 @@ namespace ClassicLauncher
         else
         {
             mGuiHorizontalBox->ChangeList(GameListSelect);
+            mApplication->GetThemes()->LoadTheme(mApplication);
             mApplication->GetEntityManager()->SetTimer(mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
     }
@@ -110,6 +111,7 @@ namespace ClassicLauncher
         if (mApplication->GetGameListManager()->GetCurrentList() == GameListSelect)
         {
             mGuiHorizontalBox->ChangeList(SystemListSelect);
+            mApplication->GetThemes()->LoadTheme(mApplication);
             mApplication->GetEntityManager()->SetTimer(mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
     }

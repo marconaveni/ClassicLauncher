@@ -75,9 +75,11 @@ namespace ClassicLauncher
         std::string video;
         std::string desc;
         HistoryPosition history;
+        std::string pathTheme;
+        float scale;
 
         SystemList()
-            : mapIndex(-1)
+            : mapIndex(-1), scale(1.0f)
         {
         }
 
@@ -117,7 +119,8 @@ namespace ClassicLauncher
         int GetGameId() const;
         int GetSystemId() const;
         int GetGameListSize();
-        std::vector<GameList>& GetAllGameList();
+        std::vector<GameList*> GetAllGameList();
+        std::vector<SystemList*> GetAllSystemList();
         GameList* GetCurrentGameList(int index);
         GameList* GetCurrentGameList();
         SystemList* GetCurrentSystemList();

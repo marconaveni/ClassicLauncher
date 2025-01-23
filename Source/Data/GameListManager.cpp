@@ -79,7 +79,6 @@ namespace ClassicLauncher
         LoadList();
     }
 
-
     void GameListManager::ChangeSystemToGameList()
     {
         mIdSystemList = mIdGameList;
@@ -187,9 +186,24 @@ namespace ClassicLauncher
         return static_cast<int>(mGameList.size());
     }
 
-    std::vector<GameList>& GameListManager::GetAllGameList()
+    std::vector<GameList*> GameListManager::GetAllGameList()
     {
-        return mGameList;
+        std::vector<GameList*> pGameList;
+        for (auto& game : mGameList)
+        {
+            pGameList.push_back(&game);
+        }
+        return pGameList;
+    }
+
+    std::vector<SystemList*> GameListManager::GetAllSystemList()
+    {
+        std::vector<SystemList*> pSystemList;
+        for (auto& game : mSystemList)
+        {
+            pSystemList.push_back(&game);
+        }
+        return pSystemList;
     }
 
     GameList* GameListManager::GetCurrentGameList(const int index)
