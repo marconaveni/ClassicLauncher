@@ -16,7 +16,7 @@ namespace ClassicLauncher
 
         float mDefaultCoverWidth = 204.0f;
         float mDefaultCoverHeight = 204.0f;
-        float mContainerSize = 240.0f;
+        Vector2 mContainerSize = { 252.0f, 228.0f };
 
         Timer<GuiCard>* mTimer;
 
@@ -27,6 +27,7 @@ namespace ClassicLauncher
         bool mIsFocus = false;
         bool mIsFront = false;
         void CreateCard(std::shared_ptr<GuiComponent>& card, int sourceX, int sourceY, unsigned char alpha);
+
 
     public:
 

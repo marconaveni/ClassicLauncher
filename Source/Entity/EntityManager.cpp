@@ -65,8 +65,8 @@ namespace ClassicLauncher
         {
             TransformProperties properties = entity->mProperties;
             properties = properties.Multiply(Themes::GetScaleTexture());
-            const float x = properties.x + properties.rootX;
-            const float y = properties.y + properties.rootY;
+            const float x = properties.x * properties.rootScaleX + properties.rootX;
+            const float y = properties.y * properties.rootScaleY + properties.rootY;
             const float width = properties.width > 0.0f ? properties.width : texture->width;
             const float height = properties.height > 0.0f ? properties.height : texture->height;
             const float sourceX = properties.sourceX;
@@ -76,7 +76,8 @@ namespace ClassicLauncher
 
             const Rectangle source = { sourceX, sourceY, width, height };
             const Vector2 origin = { width * 0.5f, height * 0.5f };
-            const Rectangle dest = { x + origin.x, y + origin.y, scaleWidth * properties.scaleX, scaleHeight * properties.scaleY };
+            const Vector2 scale = {  scaleWidth * properties.scaleX * properties.rootScaleX, scaleHeight * properties.scaleY * properties.rootScaleY };
+            const Rectangle dest = { x + origin.x , y + origin.y, scale.x, scale.y };
 
             if (entity->mScissorMode)
             {
@@ -86,7 +87,7 @@ namespace ClassicLauncher
 
             entity->Draw();
             ::DrawTexturePro(*texture, source, dest, origin, properties.rotation, properties.color);
-            const Rectangle RectangleDrawArea = { x, y, scaleWidth * properties.scaleX, scaleHeight * properties.scaleY };
+            const Rectangle RectangleDrawArea = { x, y, scale.x, scale.y };
 
 #ifdef _DEBUG
 

@@ -31,4 +31,6 @@
 #define PRINT(...)
 #endif
 
+// #define FORCE_THEME_1X  // force texture load debug 1x
+
 #endif  // CORE_H

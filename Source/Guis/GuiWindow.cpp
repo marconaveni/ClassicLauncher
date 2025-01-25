@@ -32,12 +32,27 @@ namespace ClassicLauncher
     {
         GuiComponent::Update();
 
-        // rootY += 1;
+        // mProperties.rootX += 1;
 
 #ifdef _DEBUG
+        if (IsKeyReleased(KEY_ONE))
+        {
+            mTextureName = mTextureName != "ref0" ? "ref0" : "transparent";
+            mGuiBackground->mTextureName = mTextureName != "transparent" ? "transparent" : "sprite";
+        }
+        if (IsKeyReleased(KEY_TWO))
+        {
+            mTextureName = mTextureName != "ref1" ? "ref1" : "transparent";
+            mGuiBackground->mTextureName = mTextureName != "transparent" ? "transparent" : "sprite";
+        }
+        if (IsKeyReleased(KEY_THREE))
+        {
+            mTextureName = mTextureName != "ref2" ? "ref2" : "transparent";
+            mGuiBackground->mTextureName = mTextureName != "transparent" ? "transparent" : "sprite";
+        }
         if (IsKeyReleased(KEY_FOUR))
         {
-            mTextureName = mTextureName != "ref" ? "ref" : "transparent";
+            mTextureName = mTextureName != "ref3" ? "ref3" : "transparent";
             mGuiBackground->mTextureName = mTextureName != "transparent" ? "transparent" : "sprite";
         }
 #endif
@@ -66,7 +81,10 @@ namespace ClassicLauncher
                 mApplication->GetAudioManager()->Pause();
             }
         }
-
+        if (InputManager::IsRelease(InputName::rightFaceLeft))
+        {
+            mGuiHorizontalBox->Click();
+        }
         if (InputManager::IsRelease(InputName::rightFaceDown))
         {
             InputManager::DisableInput();

@@ -8,6 +8,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # cache options default values
 option(CLASSIC_LAUNCHER_FSANITIZE "Enable address sanitizer" OFF)
 option(CLASSIC_LAUNCHER_FLAGS "Enable warning/error flags" OFF)
+option(FORCE_THEME_1X "Force Theme 1x" OFF)
+
+if(FORCE_THEME_1X)
+    message(STATUS "[Classic Launcher] FORCE_THEME_1X is enabled")
+    set(forcetheme FORCE_THEME_1X)
+else()
+    message(STATUS "[Classic Launcher] FORCE_THEME_1X is disabled")
+endif()
 
 if(CLASSIC_LAUNCHER_FLAGS)
     if(MSVC)
@@ -255,6 +263,7 @@ if(WIN32)
     _CONSOLE
     ssize_t=intptr_t
     ${debug}
+    ${forcetheme}
     )
 
     # Windows
@@ -286,7 +295,7 @@ else()
 
     # Add `_DEBUG` only Debug build
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        target_compile_definitions(ClassicLauncher PRIVATE _DEBUG)
+        target_compile_definitions(ClassicLauncher PRIVATE _DEBUG ${FORCE_THEME_1X})
     endif()
 
     # Linux

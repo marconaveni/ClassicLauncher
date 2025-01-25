@@ -27,8 +27,8 @@ namespace ClassicLauncher
 
         Themes();
         ~Themes();
-        void Init(Application* pApplication, float customScale = 0.0f);
-        void LoadTheme(Application* pApplication, float customScale = 0.0f);
+        void Init(Application* pApplication);
+        void LoadTheme(Application* pApplication);
         static Themes& Get();
         static float GetScaleTexture();
     };

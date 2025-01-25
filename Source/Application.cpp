@@ -29,67 +29,24 @@ namespace ClassicLauncher
         return *sInstanceApplication;
     }
 
-    ApplicationSpecification Application::GetSpecification()
-    {
-        return mSpecification;
-    }
-
-    Render* Application::GetRender()
-    {
-        return &mRender;
-    }
-
-    Print* Application::GetPrint()
-    {
-        return &mPrint;
-    }
-
-    AudioManager* Application::GetAudioManager()
-    {
-        return &mAudioManager;
-    }
-
-    SpriteManager* Application::GetSpriteManager()
-    {
-        return &mSpriteManager;
-    }
-
-    EntityManager* Application::GetEntityManager()
-    {
-        return &mEntityManager;
-    }
-
-    GameListManager* Application::GetGameListManager()
-    {
-        return &mGameListManager;
-    }
-
     GuiBlackScreen* Application::GetGuiBlackScreen()
     {
         return mGuiWindow->GetGuiBlackScreen();
     }
 
-    ProcessManager* Application::GetProcessManager()
-    {
-        return &mProcessManager;
-    }
-
-    Themes* Application::GetThemes()
-    {
-        return &mThemes;
-    }
-
     void Application::Init()
     {
-        Resources::SetClassicLauncherDir();
-
+#ifdef _DEBUG
         LogLevel(LOG_CLASSIC_DEBUG, LOG_WARNING);
-#ifndef _DEBUG
+#else
         LogLevel(LOG_CLASSIC_ALL, LOG_NONE);
 #endif
         SetTraceLogCallback(TraceLogger);
 
+        Resources::SetClassicLauncherDir();
         mGameListManager.Initialize();
+
+        InitAudioDevice();
 
         SetConfigFlags(FLAG_VSYNC_HINT);  // vsync only enable in fullscreen set before InitWindow
         InitWindow(mSpecification.width, mSpecification.height, mSpecification.title);
@@ -100,25 +57,34 @@ namespace ClassicLauncher
 #ifndef _DEBUG
         SetExitKey(KEY_NULL);
 #endif
-        InitAudioDevice();
 
-        const std::string musicDir = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "musics");                   // theme dir
-        const std::string refPath = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/default/sref2x.png");  // theme dir
+        const std::string musicDir = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "musics");  // theme dir
 
         mThemes.Init(this);
         mThemes.LoadTheme(this);
-        
+
         mPrint.LoadFont(Resources::GetFont(), 16, 0);
         mRender.LoadRender(mSpecification.width, mSpecification.height);
-        
+
         mAudioManager.Init();
         mAudioManager.LoadMusics(musicDir);
         mAudioManager.LoadCLick(Resources::GetClickAudio());
         mAudioManager.LoadCursor(Resources::GetCursorAudio());
-        
+
         mSpriteManager.Init();
-        mSpriteManager.LoadSprite("ref", refPath);  
-        
+
+#ifdef _DEBUG
+
+        // For visual reference you can upload up to four images to guide you
+        const std::string refPath0 = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref0.png");  
+        const std::string refPath1 = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref1.png");  
+        const std::string refPath2 = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref2.png");  
+        const std::string refPath3 = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref3.png");  
+        mSpriteManager.LoadSprite("ref0", refPath0);
+        mSpriteManager.LoadSprite("ref1", refPath1);
+        mSpriteManager.LoadSprite("ref2", refPath2);
+        mSpriteManager.LoadSprite("ref3", refPath3);
+#endif
 
         Image imgs[5] = { LoadImage(Resources::GetIcon(16).c_str()),
                           LoadImage(Resources::GetIcon(32).c_str()),
@@ -144,7 +110,7 @@ namespace ClassicLauncher
         CloseAudioDevice();
         CloseWindow();
 
-        for (auto& img : imgs)
+        for (Image& img : imgs)
         {
             UnloadImage(img);
         }
@@ -200,20 +166,23 @@ namespace ClassicLauncher
 
 #ifdef _DEBUG
 
-        if (IsKeyReleased(KEY_ONE))
+        if (IsKeyReleased(KEY_F1))
         {
             LogLevel(LOG_CLASSIC_DEBUG, LOG_WARNING);
-            LOG(LOG_CLASSIC_DEBUG, "Enable LOG_CLASSIC_DEBUG, LOG_WARNING");
+            LOG(LOG_CLASSIC_DEBUG, "Enabled LOG_CLASSIC_DEBUG, LOG_WARNING");
+            PRINT("Enabled LOG_CLASSIC_DEBUG, LOG_WARNING", 5.0f);
         }
-        if (IsKeyReleased(KEY_TWO))
+        if (IsKeyReleased(KEY_F2))
         {
             LogLevel(LOG_CLASSIC_DEBUG, LOG_ALL);
-            LOG(LOG_CLASSIC_DEBUG, "Enable LOG_CLASSIC_DEBUG, LOG_ALL");
+            LOG(LOG_CLASSIC_DEBUG, "Enabled LOG_CLASSIC_DEBUG, LOG_ALL");
+            PRINT("Enabled LOG_CLASSIC_DEBUG, LOG_ALL", 5.0f);
         }
-        if (IsKeyReleased(KEY_THREE))
+        if (IsKeyReleased(KEY_F3))
         {
             LogLevel(LOG_CLASSIC_ALL, LOG_ALL);
-            LOG(LOG_CLASSIC_DEBUG, "Enable LOG_CLASSIC_ALL, LOG_ALL");
+            LOG(LOG_CLASSIC_DEBUG, "Enabled LOG_CLASSIC_ALL, LOG_ALL");
+            PRINT("Enabled LOG_CLASSIC_ALL, LOG_ALL", 5.0f);
         }
 
 #endif
@@ -295,7 +264,7 @@ namespace ClassicLauncher
                 mSpecification.height = GetScreenHeight();
                 SetWindowSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
                 ::ToggleFullscreen();
-                SetConfigFlags(FLAG_VSYNC_HINT); 
+                SetConfigFlags(FLAG_VSYNC_HINT);
             }
             else
             {

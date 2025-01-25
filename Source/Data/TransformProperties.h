@@ -11,6 +11,8 @@ namespace ClassicLauncher
 
         float rootX = 0;
         float rootY = 0;
+        float rootScaleX = 1;
+        float rootScaleY = 1;
         float x = 0;
         float y = 0;
         float width = 0;

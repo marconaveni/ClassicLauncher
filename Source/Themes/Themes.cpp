@@ -46,6 +46,10 @@ namespace ClassicLauncher
 
     float Themes::GetSpriteByResolution(std::string& file)
     {
+#ifdef FORCE_THEME_1X
+        file = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/sprite-debug.png")  ;
+        return 1;
+#else
         std::vector<std::string> paths;
         paths = GetThemeDirs();
         const int monitorWidth = GetMonitorWidth(GetCurrentMonitor());
@@ -70,9 +74,10 @@ namespace ClassicLauncher
         file = Resources::GetSprite();
         LOG(LOG_CLASSIC_DEBUG, "Default sprite path  [%s] ", Resources::GetSprite().c_str());
         return 1.0f;
+#endif
     }
 
-    void Themes::Init(Application* pApplication, float customScale)
+    void Themes::Init(Application* pApplication)
     {
         std::vector<SystemList*> systems = pApplication->GetGameListManager()->GetAllSystemList();
         for (auto& system : systems)
@@ -86,7 +91,7 @@ namespace ClassicLauncher
         mScaleSystem = GetSpriteByResolution(mPathThemeSystem);
     }
 
-    void Themes::LoadTheme(Application* pApplication, float customScale)
+    void Themes::LoadTheme(Application* pApplication)
     {
         std::string file;
         if (pApplication->GetGameListManager()->GetCurrentList() == CurrentList::GameListSelect)
@@ -105,15 +110,10 @@ namespace ClassicLauncher
 
         if (mLastPathLoaded != file)
         {
-            //pApplication->GetSpriteManager()->UpdateSprite("sprite", file);
             pApplication->GetSpriteManager()->DeleteSprite("sprite");
             pApplication->GetSpriteManager()->LoadSprite("sprite", file);
             mLastPathLoaded = file;
         }
-
-        // std::string file;
-        // mCustomScaleTexture = customScale > 0 ? customScale : mCustomScaleTexture;
-        // mScaleTexture = GetSpriteByResolution(file);
     }
 
     Themes& Themes::Get()
@@ -127,5 +127,6 @@ namespace ClassicLauncher
 
         return sInstanceThemes->mScaleTexture;
     }
+
 
 }  // namespace ClassicLauncher

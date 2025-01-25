@@ -8,7 +8,6 @@ namespace ClassicLauncher
 {
     class Color : public ::Color
     {
-
     public:
 
         // Default white
@@ -26,19 +25,40 @@ namespace ClassicLauncher
             a = color.a;
         }
 
+        bool operator==(const ::Color& other) const { return r == other.r && g == other.g && b == other.b && a == other.a; }
+        bool operator!=(const ::Color& other) const { return !(*this == other); }
+
         void SetColor(int red, int green, int blue)
         {
-            if (red < 0) red = 0;
-            else if (red > 255) red = 255;
-            if (green < 0) green = 0;
-            else if (green > 255) green = 255;
-            if (blue < 0) blue = 0;
-            else if (blue > 255) blue = 255;
-            
+            if (red < 0)
+            {
+                red = 0;
+            }
+            else if (red > 255)
+            {
+                red = 255;
+            }
+
+            if (green < 0)
+            {
+                green = 0;
+            }
+            else if (green > 255)
+            {
+                green = 255;
+            }
+            if (blue < 0)
+            {
+                blue = 0;
+            }
+            else if (blue > 255)
+            {
+                blue = 255;
+            }
+
             r = red;
             g = green;
             b = blue;
-
         }
         void SetColor(int red, int green, int blue, int alpha)
         {
@@ -88,6 +108,7 @@ namespace ClassicLauncher
         static Color Magenta() { return MAGENTA; }
         static Color RayWhite() { return RAYWHITE; }
         static Color Cyan() { return Color{ 0, 255, 255, 255 }; }
+        static Color Transparent() { return BLANK; } // Blank use same value. 
     };
 
 }  // namespace ClassicLauncher

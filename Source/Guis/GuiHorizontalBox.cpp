@@ -14,9 +14,11 @@ namespace ClassicLauncher
 
     void GuiHorizontalBox::Init()
     {
+        mProperties.y = 0;
+
         mGuiTitle = mApplication->GetEntityManager()->CreateEntity<GuiTextBox>("GuiTitle", Resources::GetFont().c_str(), 48, 0);
         mGuiTitle->mProperties.x = 400;
-        mGuiTitle->mProperties.y = -75;
+        mGuiTitle->mProperties.y = 154;
         mGuiTitle->SetText("Title");
         mGuiTitle->SetDesiredWidth(1010);
         mGuiTitle->SetTextOverflowPolicy(TextOverflowPolicy::clip);
@@ -25,7 +27,7 @@ namespace ClassicLauncher
         for (int cardPosition : mCardPositions)
         {
             const int x = cardPosition;
-            auto card = mApplication->GetEntityManager()->CreateEntity<GuiCard>("GuiCard", x , 0);
+            auto card = mApplication->GetEntityManager()->CreateEntity<GuiCard>("GuiCard", x , 222);
             AddChild(card.get());
             mGuiCards.emplace_back(card);
         }
@@ -137,8 +139,6 @@ namespace ClassicLauncher
     void GuiHorizontalBox::Update()
     {
         GuiComponent::Update();
-
-        mProperties.y = 228;
 
         if (InputManager::IsDown(InputName::rightTriggerFront))
         {

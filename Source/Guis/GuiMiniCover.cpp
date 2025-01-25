@@ -10,8 +10,8 @@ namespace ClassicLauncher
     void GuiMiniCover::Init()
     {
 
-        mProperties.x = 20;
-        mProperties.y = 298;
+        mProperties.x = 1280.0f / 2.0f;
+        mProperties.y = 526.0f;
 
         for (int i = 0; i < mSize; i++)
         {

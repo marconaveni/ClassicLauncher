@@ -9,6 +9,8 @@ namespace ClassicLauncher
         {
             entity->mProperties.rootX = mProperties.x + mProperties.rootX;
             entity->mProperties.rootY = mProperties.y + mProperties.rootY;
+            entity->mProperties.rootScaleX = mProperties.scaleX; 
+            entity->mProperties.rootScaleY = mProperties.scaleY; 
         }
     }
 

@@ -56,16 +56,16 @@ namespace ClassicLauncher
         Application();
         ~Application();
         static Application& Get();
-        ApplicationSpecification GetSpecification();
-        Render* GetRender();
-        Print* GetPrint();
-        AudioManager* GetAudioManager();
-        SpriteManager* GetSpriteManager();
-        EntityManager* GetEntityManager();
-        GameListManager* GetGameListManager();
+        ApplicationSpecification GetSpecification() { return mSpecification; }
+        Render* GetRender() { return &mRender; }
+        Print* GetPrint() { return &mPrint; }
+        AudioManager* GetAudioManager() { return &mAudioManager; }
+        SpriteManager* GetSpriteManager() { return &mSpriteManager; }
+        EntityManager* GetEntityManager() { return &mEntityManager; }
+        GameListManager* GetGameListManager() { return &mGameListManager; }
+        ProcessManager* GetProcessManager() { return &mProcessManager; }
+        Themes* GetThemes() { return &mThemes; }
         GuiBlackScreen* GetGuiBlackScreen();
-        ProcessManager* GetProcessManager();
-        Themes* GetThemes();
         void Init();
         void CreateProcess();
 
