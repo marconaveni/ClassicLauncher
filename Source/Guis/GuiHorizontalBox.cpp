@@ -57,7 +57,7 @@ namespace ClassicLauncher
         mIsLeft = true;
         mGuiTitle->SetText(mApplication->GetGameListManager()->GetCurrentGameList()->name.c_str());
         const float scale = Themes::GetScaleTexture();
-        mGuiTitle->mProperties.x = (1280 / 2) - ((mGuiTitle->GetMeasureTextBox().GetIntX() / 2));
+        mGuiTitle->mProperties.x = (1280.0f / 2.0f) - ((mGuiTitle->GetMeasureTextBox().GetIntX() / 2));
         mGuiTitle->mProperties.x = Math::Clamp(mGuiTitle->mProperties.x, 135, 1280);
     }
 
@@ -80,7 +80,7 @@ namespace ClassicLauncher
             if (!path.empty())
             {
                 const float scale = Themes::GetScaleTexture();
-                spriteManager->LoadSprite(name, path, 228 * scale, 204 * scale);
+                spriteManager->LoadSprite(name, path, int(228.0f * scale), int(204.0f * scale));
                 mGuiCards[i]->SetCover(name);
             }
             else
@@ -178,11 +178,11 @@ namespace ClassicLauncher
 
         if (mIsRight)
         {
-            mPositionX = mPositionX - mSpeed;
+            mPositionX = mPositionX - (int)mSpeed;
         }
         else if (mIsLeft)
         {
-            mPositionX = mPositionX + mSpeed;
+            mPositionX = mPositionX + (int)mSpeed;
         }
 
         for (const auto& cardContainer : mGuiCards)
@@ -233,7 +233,7 @@ namespace ClassicLauncher
         {
             for (size_t i = 0; i < mGuiCards.size(); i++)
             {
-                mGuiCards[i]->mProperties.x = mCardPositions[i];
+                mGuiCards[i]->mProperties.x = (float)mCardPositions[i];
             }
         }
     }

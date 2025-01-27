@@ -20,10 +20,12 @@ namespace ClassicLauncher
     private:
 
         std::vector<std::shared_ptr<Entity>> mEntities;
-        std::vector<Entity*> mEntitiesOutRender;
+        std::vector<int> mIdEntitiesToDelete;
         std::vector<EntityType> mTypeCount;
         SpriteManager* mSpriteManagerReference;
         std::vector<std::shared_ptr<TimerBase>> mTimers;
+        bool mPreparedZOrder = false;
+        void SetZOrder();
 
     public:
 
@@ -34,9 +36,11 @@ namespace ClassicLauncher
         std::shared_ptr<T> CreateEntity(const std::string& name, Args&&... args)
         {
             auto entity = std::make_shared<T>(std::forward<Args>(args)...);
-            const int counter = std::count(mTypeCount.begin(), mTypeCount.end(), entity->GetType());
+            const int counter = (int)std::count(mTypeCount.begin(), mTypeCount.end(), entity->GetType());
             entity->mNameId = std::to_string(counter) + "_" + name;
-            entity->SetZOrder(mEntities.size());
+            entity->SetZOrder(0);
+            entity->mId = (int)mEntities.size();
+            entity->mIdZOrder = (int)mEntities.size();
             mEntities.emplace_back(entity);
             mTypeCount.emplace_back(entity->GetType());
             return entity;
@@ -69,18 +73,17 @@ namespace ClassicLauncher
             timer->SetTimer(callbackFunction, targetEntity, delay, bLooped);
         }
 
-        void AddDrawOutRender(Entity* entitiesOutRender);
         void SetVisibleAll(Entity* entity, bool bVisible);
         void SetZOrder(Entity* entity, int zOrder);
         void UpdateAll();
         void UpdatePositionAll();
         void Draw();
-        void DrawOutRender();
         void End();
 
     private:
 
         void DrawEntity(Entity* entity);
+        void DeleteEntitys();
     };
 
 }  // namespace ClassicLauncher

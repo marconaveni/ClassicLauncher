@@ -41,12 +41,9 @@ namespace ClassicLauncher
         mWidth = screenWidth * scale;
         mHeight = screenHeight * scale;
 
-        //mRenderTexture = LoadRenderTexture(1920, 1080);
-         mRenderTexture = LoadRenderTexture(mWidth, mHeight);
-        SetTextureFilter(mRenderTexture.texture, TEXTURE_FILTER_TRILINEAR);
-        SetTextureFilter(mRenderTexture.depth, TEXTURE_FILTER_TRILINEAR);
-        //  GenTextureMipmaps(&mRenderTexture.texture);
-        //  GenTextureMipmaps(&mRenderTexture.depth);
+        mRenderTexture = LoadRenderTexture(mWidth, mHeight);
+        SetTextureFilter(mRenderTexture.texture, TEXTURE_FILTER_BILINEAR);
+        SetTextureFilter(mRenderTexture.depth, TEXTURE_FILTER_BILINEAR);
     }
 
     void Render::ClearRender()
@@ -83,16 +80,14 @@ namespace ClassicLauncher
         {
             SetTextureFilter(*texture, TEXTURE_FILTER_POINT);
             SetTextureFilter(mRenderTexture.depth, TEXTURE_FILTER_POINT);
+
         }
         if (IsKeyReleased(KEY_J))
         {
-            SetTextureFilter(*texture, TEXTURE_FILTER_TRILINEAR);
-            SetTextureFilter(mRenderTexture.depth, TEXTURE_FILTER_TRILINEAR);
+            SetTextureFilter(*texture, TEXTURE_FILTER_BILINEAR);
+            SetTextureFilter(mRenderTexture.depth, TEXTURE_FILTER_BILINEAR);
         }
-        if (IsKeyReleased(KEY_H))
-        {
-            SetWindowSize(1920, 1080);
-        }
+
         // Draw render texture to screen, properly scaled
         DrawTexturePro(*texture, mSource, mDest, Vector2{}, 0.0f, WHITE);
     }

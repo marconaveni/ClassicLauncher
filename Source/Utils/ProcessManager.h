@@ -23,7 +23,7 @@ namespace ClassicLauncher
 
     public:
 
-#if WIN32
+#if _WIN32
         unsigned int mProcessId;
 #else
         int mProcessId;

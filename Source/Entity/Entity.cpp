@@ -7,6 +7,11 @@ namespace ClassicLauncher
     {
         for (auto& entity : mChildEntities)
         {
+            if(entity == nullptr)
+            {
+                RemoveChilds();
+                break;
+            }
             entity->mProperties.rootX = mProperties.x + mProperties.rootX;
             entity->mProperties.rootY = mProperties.y + mProperties.rootY;
             entity->mProperties.rootScaleX = mProperties.scaleX; 
@@ -32,8 +37,19 @@ namespace ClassicLauncher
         }
     }
 
-    void Entity::RemoveChild()
+    void Entity::RemoveChilds()
     {
+        std::vector<Entity*> tempChilds;
+
+        for (auto &child : mChildEntities)
+        {
+            if (child != nullptr)
+            {
+                tempChilds.push_back(child);
+            }
+        }
+        mChildEntities.clear();
+        mChildEntities.swap(tempChilds);
     }
 
     std::vector<Entity*>& Entity::GetChilds()

@@ -26,7 +26,7 @@ namespace ClassicLauncher
         std::shared_ptr<GuiComponent> mCover;
         bool mIsFocus = false;
         bool mIsFront = false;
-        void CreateCard(std::shared_ptr<GuiComponent>& card, int sourceX, int sourceY, unsigned char alpha);
+        void CreateCard(std::shared_ptr<GuiComponent>& card, int sourceX, int sourceY, unsigned char alpha, const char* title);
 
 
     public:

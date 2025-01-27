@@ -9,7 +9,6 @@ namespace ClassicLauncher
 
     void GuiMiniCover::Init()
     {
-
         mProperties.x = 1280.0f / 2.0f;
         mProperties.y = 526.0f;
 
@@ -35,6 +34,23 @@ namespace ClassicLauncher
     void GuiMiniCover::Update()
     {
         GuiComponent::Update();
+
+        Application* pApplication = &Application::Get();
+        if (pApplication == nullptr)
+        {
+            return;
+        }
+        for (auto& miniCover : mGuiCovers)
+        {
+            Texture2D* textureReference = pApplication->GetSpriteManager()->GetTexture(miniCover->mTextureName);
+            const float scale = Themes::GetScaleTexture();
+            if (textureReference != nullptr && miniCover->mTextureName != "sprite" && miniCover->mProperties.width == 0 && miniCover->mProperties.height == 0)
+            {
+                miniCover->mProperties.width = textureReference->width / scale;
+                miniCover->mProperties.height = textureReference->height / scale;
+                
+            }
+        }
     }
 
     void GuiMiniCover::End()
@@ -54,6 +70,7 @@ namespace ClassicLauncher
         GameListManager* pManager = mApplication->GetGameListManager();
         SpriteManager* pSpriteManager = mApplication->GetSpriteManager();
         const int gameListSize = pManager->GetGameListSize();
+        const float scale = Themes::GetScaleTexture();
 
         if (gameListSize == 0) return;
 
@@ -71,7 +88,6 @@ namespace ClassicLauncher
             if (!fileName.empty())
             {
                 name = std::to_string(indexFinal) + "_MCV";
-                const float scale = Themes::GetScaleTexture();
                 pSpriteManager->LoadSprite(name, fileName, 28 * scale, 45 * scale);
             }
 

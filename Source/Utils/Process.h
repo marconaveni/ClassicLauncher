@@ -6,7 +6,7 @@
 namespace ClassicLauncher::Process
 {
 
-#if WIN32
+#ifdef _WIN32
     void CreateProc(unsigned int& processId, const std::string& fullPath, const std::string& optionalWorkingDirectory, int& status);
     bool IsApplicationRunning(unsigned int processId);
     bool CloseApplicationRunning(unsigned int processId);

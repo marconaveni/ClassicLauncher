@@ -19,7 +19,6 @@ namespace ClassicLauncher
         }
         const float scale = Themes::GetScaleTexture();
         mFont = LoadFontEx(path.data(), mSize * scale , NULL, 250);
-        SetTextureFilter(mFont.texture,TEXTURE_FILTER_TRILINEAR);
     }
 
     GuiTextBox::GuiTextBox(const std::string& path, int size, int spacing)

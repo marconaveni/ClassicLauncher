@@ -7,8 +7,8 @@ namespace ClassicLauncher
     void GuiWindow::Init()
     {
         mApplication = &Application::Get();
-        mProperties.width = mApplication->GetSpecification().width;
-        mProperties.height = mApplication->GetSpecification().height;
+        mProperties.width = (float)mApplication->GetSpecification().width;
+        mProperties.height = (float)mApplication->GetSpecification().height;
 
         mGuiBackground = mApplication->GetEntityManager()->CreateEntity<GuiComponent>("GuiBackground");
         mGuiBackground->mProperties.sourceX = 1047;
@@ -26,6 +26,7 @@ namespace ClassicLauncher
 
         mGuiVideoPlayer = mApplication->GetEntityManager()->CreateEntity<GuiVideoPlayer>("GuiVideoPlayer");
         mGuiBlackScreen = mApplication->GetEntityManager()->CreateEntity<GuiBlackScreen>("GuiBlackScreen");
+        mApplication->GetEntityManager()->SetZOrder(mGuiBlackScreen.get(), 99);
     }
 
     void GuiWindow::Update()
@@ -55,6 +56,13 @@ namespace ClassicLauncher
             mTextureName = mTextureName != "ref3" ? "ref3" : "transparent";
             mGuiBackground->mTextureName = mTextureName != "transparent" ? "transparent" : "sprite";
         }
+
+        if (IsKeyReleased(KEY_NINE))
+        {
+           
+            
+        }
+
 #endif
 
         if (InputManager::IsRelease(InputName::leftFaceUp))
@@ -131,6 +139,21 @@ namespace ClassicLauncher
             mGuiHorizontalBox->ChangeList(SystemListSelect);
             mApplication->GetThemes()->LoadTheme(mApplication);
             mApplication->GetEntityManager()->SetTimer(mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
+        }
+    }
+
+    void GuiWindow::Teste()
+    {
+        if (IsKeyReleased(KEY_EIGHT))
+        {
+            mGuiHorizontalBox->SelfDelete();
+            // mGuiHorizontalBox.reset();
+            mGuiHorizontalBox = mApplication->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
+            if (mGuiHorizontalBox)
+            {
+                mGuiHorizontalBox->Init();
+                AddChild(mGuiHorizontalBox.get());
+            }
         }
     }
 

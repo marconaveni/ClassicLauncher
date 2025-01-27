@@ -37,6 +37,7 @@ namespace ClassicLauncher
         void Init();
         void OnClick();
         void OnBack();
+        void Teste();
         GuiBlackScreen* GetGuiBlackScreen() { return mGuiBlackScreen.get(); }
     };
 

@@ -32,6 +32,8 @@ namespace ClassicLauncher
         bool mVisible = true;
         bool mBringToFront = false;
         int mZOrder = 0;
+        int mIdZOrder = 0;
+        int mId = 0;
         std::vector<Entity*> mChildEntities;
         std::string mNameId;
 
@@ -43,7 +45,7 @@ namespace ClassicLauncher
 
         Entity() = default;
         virtual ~Entity() = default;
-        bool operator<(const Entity& entity) const { return mZOrder < entity.mZOrder; }
+        bool operator<(const Entity& entity) const { return entity.mId < mId; }
         bool operator>(const Entity& entity) const { return mZOrder > entity.mZOrder; }
         virtual EntityType GetType() const = 0;
         virtual void Update() {}
@@ -52,13 +54,14 @@ namespace ClassicLauncher
         virtual void UpdatePosition();               // Update the position of the entity
         virtual void SelfDelete();                   // Delete the entity and all its children
         virtual void AddChild(Entity* childEntity);  // Add a child to the entity
-        virtual void RemoveChild();                  // Remove a child from the entity
+        virtual void RemoveChilds();                 // Remove a child from the entity
         std::vector<Entity*>& GetChilds();
         Entity* GetRootEntity();
         void EnableScissorMode(float x, float y, float width, float height);
         void DisableScissorMode() { mScissorMode = false; }
         void SetVisible(bool bEnable) { mVisible = bEnable; }
         int GetZOrder() const { return mZOrder; }
+        int GetIdZOrder() const { return mIdZOrder; }
         void SetBringToFront() { mBringToFront = true; }
 
         TransformProperties mProperties;

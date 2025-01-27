@@ -147,6 +147,7 @@ namespace ClassicLauncher
         mEntityManager.UpdateAll();
         mEntityManager.UpdatePositionAll();
         mEntityManager.Draw();  // draw in texture render
+        mGuiWindow->Teste();
 
         // Log(LOG_CLASSIC_DEBUG, TEXTBOOL(InputManager::GetInputLeftFaceLeft()));
 
@@ -205,7 +206,7 @@ namespace ClassicLauncher
         }
         if (IsKeyReleased(KEY_UP))
         {
-            // mEntityManager.SetZOrder(mGuiWindow.get(), 1);
+            //mEntityManager.SetZOrder(mGuiWindow.get(), 1);
             std::string homeDir = UtilsFunctionLibrary::GetHomeDir();
 
             LOG(LOG_CLASSIC_DEBUG, TEXT("GetHomeDir %s", homeDir.c_str()));

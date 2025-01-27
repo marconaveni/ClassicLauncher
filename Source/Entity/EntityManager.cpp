@@ -4,13 +4,9 @@
 
 namespace ClassicLauncher
 {
+
     EntityManager::EntityManager(SpriteManager* spriteManagerReference)
         : mSpriteManagerReference(spriteManagerReference) {};
-
-    void EntityManager::AddDrawOutRender(Entity* entitiesOutRender)
-    {
-        mEntitiesOutRender.emplace_back(entitiesOutRender);
-    }
 
     void EntityManager::SetVisibleAll(Entity* entity, bool bVisible)
     {
@@ -20,10 +16,27 @@ namespace ClassicLauncher
         }
     }
 
+    void EntityManager::SetZOrder()
+    {
+        if (!mPreparedZOrder)
+        {
+            return;
+        }
+        std::sort(
+            mEntities.begin(), mEntities.end(), [](const std::shared_ptr<Entity>& a, const std::shared_ptr<Entity>& b) { return a->GetIdZOrder() < b->GetIdZOrder(); });
+        mPreparedZOrder = false;
+    }
+
     void EntityManager::SetZOrder(Entity* entity, int zOrder)
     {
+        const int multiply = (int)mEntities.size() * zOrder;
         entity->SetZOrder(zOrder);
-        std::sort(mEntities.begin(), mEntities.end(), [](const std::shared_ptr<Entity>& a, const std::shared_ptr<Entity>& b) { return a->GetZOrder() < b->GetZOrder(); });
+        entity->mIdZOrder = entity->mId + multiply;
+        mPreparedZOrder = true;
+
+        PRINT(TEXT("entity ZOrder %d", entity->GetZOrder()), 5.0f, "line344");
+        PRINT(TEXT("entity IdZOrder %d", entity->GetIdZOrder()), 5.0f, "lindde344");
+        PRINT(TEXT("entity Id %d", entity->mId), 5.0f, "line3d44");
     }
 
 #ifdef _DEBUG
@@ -39,15 +52,23 @@ namespace ClassicLauncher
             bEnable = !bEnable;
         }
 #endif
+        int id = 0;
         for (auto& entity : mEntities)
         {
             entity->mToDraw = entity->mVisible;
             entity->Update();
+            if (entity->mToDelete)
+            {
+                mIdEntitiesToDelete.push_back(id);
+            }
+            id++;
         }
         for (auto& timer : mTimers)
         {
             timer->Update();
         }
+        SetZOrder();
+        DeleteEntitys();
     }
 
     void EntityManager::UpdatePositionAll()
@@ -67,17 +88,16 @@ namespace ClassicLauncher
             properties = properties.Multiply(Themes::GetScaleTexture());
             const float x = properties.x * properties.rootScaleX + properties.rootX;
             const float y = properties.y * properties.rootScaleY + properties.rootY;
-            const float width = properties.width > 0.0f ? properties.width : texture->width;
-            const float height = properties.height > 0.0f ? properties.height : texture->height;
+            const float width = properties.width;
+            const float height = properties.height;
             const float sourceX = properties.sourceX;
             const float sourceY = properties.sourceY;
             const float scaleWidth = properties.scaleWidth > 0.0f ? properties.scaleWidth : width;
             const float scaleHeight = properties.scaleHeight > 0.0f ? properties.scaleHeight : height;
 
             const Rectangle source = { sourceX, sourceY, width, height };
-            const Vector2 origin = { width * 0.5f, height * 0.5f };
-            const Vector2 scale = {  scaleWidth * properties.scaleX * properties.rootScaleX, scaleHeight * properties.scaleY * properties.rootScaleY };
-            const Rectangle dest = { x + origin.x , y + origin.y, scale.x, scale.y };
+            const Vector2 scale = { (scaleWidth * properties.scaleX * properties.rootScaleX), (scaleHeight * properties.scaleY * properties.rootScaleY) };
+            const Rectangle dest = { x, y, scale.x, scale.y };
 
             if (entity->mScissorMode)
             {
@@ -86,11 +106,11 @@ namespace ClassicLauncher
             }
 
             entity->Draw();
-            ::DrawTexturePro(*texture, source, dest, origin, properties.rotation, properties.color);
-            const Rectangle RectangleDrawArea = { x, y, scale.x, scale.y };
+            ::DrawTexturePro(*texture, source, dest, Vector2{ 0, 0 }, properties.rotation, properties.color);
 
 #ifdef _DEBUG
 
+            const Rectangle& RectangleDrawArea = dest;  //{ x, y, scale.x, scale.y };
             const Vector2 vec = Application::Get().GetRender()->GetMousePositionRender();
             if (CheckCollisionPointRec(vec, RectangleDrawArea) && bEnable)
             {
@@ -140,21 +160,38 @@ namespace ClassicLauncher
         }
     }
 
-    void EntityManager::DrawOutRender()
-    {
-        for (auto& entity : mEntitiesOutRender)
-        {
-            entity->mToDraw = true;
-            DrawEntity(entity);
-        }
-    }
-
     void EntityManager::End()
     {
         for (auto& entity : mEntities)
         {
             entity->End();
         }
+        mEntities.clear();
+    }
+
+    void EntityManager::DeleteEntitys()
+    {
+        if (mIdEntitiesToDelete.size() == 0)
+        {
+            return;
+        }
+
+        mIdEntitiesToDelete.clear();
+
+        std::vector<std::shared_ptr<Entity>> temp;
+        for (auto& entity : mEntities)
+        {
+            if (entity->mToDelete)
+            {
+                entity.reset();
+                continue;
+            }
+            temp.emplace_back(entity);
+        }
+        mEntities.clear();
+        mEntities.swap(temp);
+        temp.clear();
+
     }
 
 }  // namespace ClassicLauncher

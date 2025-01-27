@@ -3,6 +3,10 @@
 
 namespace ClassicLauncher
 {
+    GuiComponent::~GuiComponent()
+    {
+        LOG(LOG_CLASSIC_WARNING, "detroyed %d", GetIdZOrder());
+    }
 
     void GuiComponent::Update()
     {

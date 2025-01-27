@@ -25,7 +25,7 @@ namespace ClassicLauncher
         fullPath.append(arguments);
         fullPath.append(path);
         const std::string optionalWorkingDirectory = GetDirectoryPath(executable.c_str());
-#if WIN32
+#if _WIN32
         int status = -1;
         Process::CreateProc(mProcessId, fullPath, optionalWorkingDirectory, status);
         mStatus = (status == 1) ? ProcessStatus::Open : ProcessStatus::Failed;
