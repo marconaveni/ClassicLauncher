@@ -189,11 +189,20 @@ namespace ClassicLauncher
             return;
         }
 
+        for (auto& entity : mEntities)
+        {
+            if (entity->mToDelete)
+            {
+                entity.reset();
+            }
+        }
+        
+
         mEntities.erase(std::remove_if(mEntities.begin(),
                                        mEntities.end(),
                                        [](const std::unique_ptr<Entity>& entity)
                                        {
-                                           return entity->mToDelete;  // Return true element
+                                           return !entity;  // Return true element
                                        }),
                         mEntities.end());
         mTimers.clear();

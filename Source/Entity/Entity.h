@@ -26,14 +26,14 @@ namespace ClassicLauncher
 
         friend class EntityManager;
 
-        bool mToDelete = false;
-        bool mToDraw = true;
-        bool mScissorMode = false;
-        bool mVisible = true;
-        bool mBringToFront = false;
-        int mZOrder = 0;
-        int mIdZOrder = 0;
-        int mId = 0;
+        bool mToDelete;
+        bool mToDraw;
+        bool mScissorMode;
+        bool mVisible;
+        bool mBringToFront;
+        int mZOrder;
+        int mIdZOrder;
+        int mId;
         std::vector<Entity*> mChildEntities;
         std::string mNameId;
 
@@ -43,7 +43,7 @@ namespace ClassicLauncher
 
     public:
 
-        Entity() = default;
+        Entity();
         virtual ~Entity() = default;
         bool operator<(const Entity& entity) const { return entity.mId < mId; }
         bool operator>(const Entity& entity) const { return mZOrder > entity.mZOrder; }

@@ -68,8 +68,6 @@ namespace ClassicLauncher
     {
         switch (mStatus)
         {
-            case ProcessStatus::Open:
-                break;
             case ProcessStatus::Running:
                 WaitTime(2.5);
                 break;

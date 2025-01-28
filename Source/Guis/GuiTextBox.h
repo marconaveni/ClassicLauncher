@@ -41,7 +41,7 @@ namespace ClassicLauncher
     public:
 
         GuiTextBox(const std::string& path, int size = 16, int spacing = 0);
-        ~GuiTextBox() = default;
+        ~GuiTextBox();
         void LoadNewFont(const std::string& path, int size = 16, int spacing = 0);
         void UpdateFont(const std::string& path);
         virtual EntityType GetType() const override { return EntityType::GuiTextBox; }
@@ -56,6 +56,7 @@ namespace ClassicLauncher
         void SetTextOverflowPolicy(TextOverflowPolicy textOverflowPolicy);
         void SetDesiredWidth(int newWidth);
         void SetOffSetMoveText(float speed, float maxDelay);
+        void UnloadText();
     };
 
 }  // namespace ClassicLauncher

@@ -3,7 +3,7 @@
 namespace ClassicLauncher
 {
     GuiVideoPlayer::GuiVideoPlayer()
-        : mFilePath()
+        : mApplication(nullptr), mPlayer(nullptr), mPlayerFullScreen(nullptr), mFilePath()
     {
     }
 

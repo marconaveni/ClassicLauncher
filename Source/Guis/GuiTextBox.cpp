@@ -6,8 +6,8 @@ namespace ClassicLauncher
     void GuiTextBox::LoadNewFont(const std::string& path, int size, int spacing)
     {
         mPathFont = path;
-        mSize = size ;
-        mSpacing = spacing ;
+        mSize = size;
+        mSpacing = spacing;
         UpdateFont(path);
     }
 
@@ -16,23 +16,35 @@ namespace ClassicLauncher
         if (IsFontValid(mFont))
         {
             UnloadFont(mFont);
+            mFont = Font();
         }
         const float scale = Themes::GetScaleTexture();
-        mFont = LoadFontEx(path.data(), mSize * scale , NULL, 250);
+        mFont = LoadFontEx(path.data(), mSize * scale, NULL, 250);
     }
 
     GuiTextBox::GuiTextBox(const std::string& path, int size, int spacing)
-        : mColor(Color::White())
+        : mFont(Font{ 0 })
+        , mText()
+        , mPathFont()
+        , mSize()
+        , mSpacing()
+        , mColor(Color::White())
         , mTextMovement(false)
         , mDesiredWidth(10)
         , mOffset(0)
         , mToLeft(true)
         , mDelay(0)
-        , mSpeed(0.50f)
-        , mMaxDelay(240)
+        , mMensuredText(Vector2())
+        , mSpeed(0.5f)
+        , mMaxDelay(240.0f)
         , mTextOverflowPolicy(TextOverflowPolicy::none)
     {
         LoadNewFont(path, size, spacing);
+    }
+
+    GuiTextBox::~GuiTextBox()
+    {
+        UnloadText();
     }
 
     void GuiTextBox::Update()
@@ -70,15 +82,12 @@ namespace ClassicLauncher
         const float scale = Themes::GetScaleTexture();
         posi.x = posi.x * scale;
         posi.y = posi.y * scale;
-        DrawTextEx(mFont, mText.data(), posi, mSize * scale , mSpacing, mColor); 
+        DrawTextEx(mFont, mText.data(), posi, mSize * scale, mSpacing, mColor);
     }
 
     void GuiTextBox::End()
     {
-        if (IsFontValid(mFont))
-        {
-            UnloadFont(mFont);
-        }
+        UnloadText();
     }
 
     void GuiTextBox::SetText(const std::string& text)
@@ -136,6 +145,15 @@ namespace ClassicLauncher
     {
         mSpeed = speed;
         mMaxDelay = maxDelay;
+    }
+
+    void GuiTextBox::UnloadText()
+    {
+        if (IsFontValid(mFont))
+        {
+            UnloadFont(mFont);
+            mFont = Font();
+        }
     }
 
 }  // namespace ClassicLauncher

@@ -2,6 +2,10 @@
 
 namespace ClassicLauncher
 {
+    Entity::Entity()
+        : mToDelete(false), mToDraw(true), mScissorMode(false), mVisible(true), mBringToFront(false), mZOrder(0), mIdZOrder(0), mId(0), mChildEntities(), mNameId()
+    {
+    }
 
     void Entity::UpdatePosition()
     {

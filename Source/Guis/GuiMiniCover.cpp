@@ -5,7 +5,7 @@
 namespace ClassicLauncher
 {
     GuiMiniCover::GuiMiniCover()
-        : mApplication(&Application::Get()), mSize(32) {};
+        : mApplication(&Application::Get()), mGuiCovers(), mArrow(nullptr), mSize(32) {};
 
     void GuiMiniCover::Init()
     {
@@ -48,7 +48,6 @@ namespace ClassicLauncher
             {
                 miniCover->mProperties.width = textureReference->width / scale;
                 miniCover->mProperties.height = textureReference->height / scale;
-                
             }
         }
     }
