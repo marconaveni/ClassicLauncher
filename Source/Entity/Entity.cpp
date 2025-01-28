@@ -7,15 +7,10 @@ namespace ClassicLauncher
     {
         for (auto& entity : mChildEntities)
         {
-            if(entity == nullptr)
-            {
-                RemoveChilds();
-                break;
-            }
             entity->mProperties.rootX = mProperties.x + mProperties.rootX;
             entity->mProperties.rootY = mProperties.y + mProperties.rootY;
-            entity->mProperties.rootScaleX = mProperties.scaleX; 
-            entity->mProperties.rootScaleY = mProperties.scaleY; 
+            entity->mProperties.rootScaleX = mProperties.scaleX;
+            entity->mProperties.rootScaleY = mProperties.scaleY;
         }
     }
 
@@ -25,6 +20,11 @@ namespace ClassicLauncher
         for (auto& entity : mChildEntities)
         {
             entity->SelfDelete();
+            Entity* e = GetRootEntity();
+            if (e != this)
+            {
+                e->RemoveChild(this);
+            }
         }
     }
 
@@ -37,19 +37,20 @@ namespace ClassicLauncher
         }
     }
 
-    void Entity::RemoveChilds()
+    void Entity::RemoveChild(Entity* childEntity)
     {
-        std::vector<Entity*> tempChilds;
+        mChildEntities.erase(std::remove_if(mChildEntities.begin(),
+                                            mChildEntities.end(),
+                                            [childEntity](const Entity* entity)
+                                            {
+                                                return entity == childEntity;  // Return true element
+                                            }),
+                             mChildEntities.end());
+    }
 
-        for (auto &child : mChildEntities)
-        {
-            if (child != nullptr)
-            {
-                tempChilds.push_back(child);
-            }
-        }
+    void Entity::RemoveAllChilds()
+    {
         mChildEntities.clear();
-        mChildEntities.swap(tempChilds);
     }
 
     std::vector<Entity*>& Entity::GetChilds()

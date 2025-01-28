@@ -22,19 +22,19 @@ namespace ClassicLauncher
         mGuiTitle->SetText("Title");
         mGuiTitle->SetDesiredWidth(1010);
         mGuiTitle->SetTextOverflowPolicy(TextOverflowPolicy::clip);
-        AddChild(mGuiTitle.get());
+        AddChild(mGuiTitle);
 
         for (int cardPosition : mCardPositions)
         {
             const int x = cardPosition;
             auto card = mApplication->GetEntityManager()->CreateEntity<GuiCard>("GuiCard", x , 222);
-            AddChild(card.get());
+            AddChild(card);
             mGuiCards.emplace_back(card);
         }
 
         mMiniCover = mApplication->GetEntityManager()->CreateEntity<GuiMiniCover>("MiniCover");
         mMiniCover->Init();
-        AddChild(mMiniCover.get());
+        AddChild(mMiniCover);
 
         SetFocus(3, true);
     }

@@ -8,6 +8,18 @@ namespace ClassicLauncher
     EntityManager::EntityManager(SpriteManager* spriteManagerReference)
         : mSpriteManagerReference(spriteManagerReference) {};
 
+    EntityManager::~EntityManager()
+    {
+        for (auto& entity : mEntities)
+        {
+            if (entity != nullptr)
+            {
+                entity = nullptr;  // Evita que o ponteiro continue apontando para um endereço inválido
+            }
+        }
+        mEntities.clear();  // Limpa o vetor
+    }
+
     void EntityManager::SetVisibleAll(Entity* entity, bool bVisible)
     {
         for (auto& entity : entity->GetChilds())
@@ -23,7 +35,7 @@ namespace ClassicLauncher
             return;
         }
         std::sort(
-            mEntities.begin(), mEntities.end(), [](const std::shared_ptr<Entity>& a, const std::shared_ptr<Entity>& b) { return a->GetIdZOrder() < b->GetIdZOrder(); });
+            mEntities.begin(), mEntities.end(), [](const std::unique_ptr<Entity>& a, const std::unique_ptr<Entity>& b) { return a->GetIdZOrder() < b->GetIdZOrder(); });
         mPreparedZOrder = false;
     }
 
@@ -52,31 +64,29 @@ namespace ClassicLauncher
             bEnable = !bEnable;
         }
 #endif
-        int id = 0;
+
         for (auto& entity : mEntities)
         {
             entity->mToDraw = entity->mVisible;
             entity->Update();
-            if (entity->mToDelete)
-            {
-                mIdEntitiesToDelete.push_back(id);
-            }
-            id++;
         }
         for (auto& timer : mTimers)
         {
             timer->Update();
         }
-        SetZOrder();
-        DeleteEntitys();
+        UpdatePositionAll();
     }
 
     void EntityManager::UpdatePositionAll()
     {
+        bool bIsDeleteEntities = false;
         for (auto& entity : mEntities)
         {
             entity->UpdatePosition();
+            bIsDeleteEntities = entity->mToDelete || bIsDeleteEntities;
         }
+        DeleteEntitys(bIsDeleteEntities);
+        SetZOrder();
     }
 
     void EntityManager::DrawEntity(Entity* entity)
@@ -164,34 +174,30 @@ namespace ClassicLauncher
     {
         for (auto& entity : mEntities)
         {
-            entity->End();
+            if (entity != nullptr)
+            {
+                entity->End();
+                entity->RemoveAllChilds();
+            }
         }
-        mEntities.clear();
     }
 
-    void EntityManager::DeleteEntitys()
+    void EntityManager::DeleteEntitys(bool bIsDeleteEntities)
     {
-        if (mIdEntitiesToDelete.size() == 0)
+        if (!bIsDeleteEntities)
         {
             return;
         }
 
-        mIdEntitiesToDelete.clear();
-
-        std::vector<std::shared_ptr<Entity>> temp;
-        for (auto& entity : mEntities)
-        {
-            if (entity->mToDelete)
-            {
-                entity.reset();
-                continue;
-            }
-            temp.emplace_back(entity);
-        }
-        mEntities.clear();
-        mEntities.swap(temp);
-        temp.clear();
-
+        mEntities.erase(std::remove_if(mEntities.begin(),
+                                       mEntities.end(),
+                                       [](const std::unique_ptr<Entity>& entity)
+                                       {
+                                           return entity->mToDelete;  // Return true element
+                                       }),
+                        mEntities.end());
+        mTimers.clear();
+        mPreparedZOrder = true;
     }
 
 }  // namespace ClassicLauncher

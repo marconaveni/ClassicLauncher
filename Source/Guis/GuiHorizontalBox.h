@@ -30,9 +30,9 @@ namespace ClassicLauncher
     class GuiHorizontalBox : public GuiComponent
     {
         Application* mApplication;
-        std::shared_ptr<GuiTextBox> mGuiTitle;
-        std::shared_ptr<GuiMiniCover> mMiniCover;
-        std::vector<std::shared_ptr<GuiCard>> mGuiCards;
+        GuiTextBox* mGuiTitle;
+        GuiMiniCover* mMiniCover;
+        std::vector<GuiCard*> mGuiCards;
         int mCardPositions[10]{ -632 - 6, -376 - 6, -120 - 6, 136 - 6, 392 - 6, 648 - 6, 904 - 6, 1160 - 6, 1416 - 6, 1672 - 6 };
         int mPositionX;
         bool mIsLeft;

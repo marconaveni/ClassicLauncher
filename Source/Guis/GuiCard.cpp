@@ -22,7 +22,7 @@ namespace ClassicLauncher
         SetCover();
     }
 
-    void GuiCard::CreateCard(std::shared_ptr<GuiComponent>& card, int sourceX, int sourceY, unsigned char alpha, const char* title)
+    void GuiCard::CreateCard(GuiComponent*& card, int sourceX, int sourceY, unsigned char alpha, const char* title)
     {
         Application* app = &Application::Get();
 
@@ -34,7 +34,7 @@ namespace ClassicLauncher
         card->mProperties.color.SetOpacity(alpha);
         card->mTextureName = "sprite";
 
-        AddChild(card.get());
+        AddChild(card);
     }
 
     void GuiCard::Update()
@@ -52,26 +52,26 @@ namespace ClassicLauncher
         if (IsKeyReleased(KEY_UP))
         {
             Application* p = &Application::Get();
-            p->GetEntityManager()->SetZOrder(mCardSelected.get(), mCardSelected->GetZOrder() - 1);
-            p->GetEntityManager()->SetZOrder(mCardMain.get(), mCardMain->GetZOrder() - 1);
-            p->GetEntityManager()->SetZOrder(mCardFavorite.get(), mCardFavorite->GetZOrder() - 1);
-            p->GetEntityManager()->SetZOrder(mCover.get(), mCover->GetZOrder() - 1);
+            p->GetEntityManager()->SetZOrder(mCardSelected, mCardSelected->GetZOrder() - 1);
+            p->GetEntityManager()->SetZOrder(mCardMain, mCardMain->GetZOrder() - 1);
+            p->GetEntityManager()->SetZOrder(mCardFavorite, mCardFavorite->GetZOrder() - 1);
+            p->GetEntityManager()->SetZOrder(mCover, mCover->GetZOrder() - 1);
         }
         if (IsKeyReleased(KEY_P))
         {
             Application* p = &Application::Get();
-            p->GetEntityManager()->SetZOrder(mCardSelected.get(), 0);
-            p->GetEntityManager()->SetZOrder(mCardMain.get(), 0);
-            p->GetEntityManager()->SetZOrder(mCardFavorite.get(), 0);
-            p->GetEntityManager()->SetZOrder(mCover.get(), 0);
+            p->GetEntityManager()->SetZOrder(mCardSelected, 0);
+            p->GetEntityManager()->SetZOrder(mCardMain, 0);
+            p->GetEntityManager()->SetZOrder(mCardFavorite, 0);
+            p->GetEntityManager()->SetZOrder(mCover, 0);
         }
         if (IsKeyReleased(KEY_DOWN))
         {
             Application* p = &Application::Get();
-            p->GetEntityManager()->SetZOrder(mCardSelected.get(), mCardSelected->GetZOrder() + 1);
-            p->GetEntityManager()->SetZOrder(mCardMain.get(), mCardMain->GetZOrder() + 1);
-            p->GetEntityManager()->SetZOrder(mCardFavorite.get(), mCardFavorite->GetZOrder() + 1);
-            p->GetEntityManager()->SetZOrder(mCover.get(), mCover->GetZOrder() + 1);
+            p->GetEntityManager()->SetZOrder(mCardSelected, mCardSelected->GetZOrder() + 1);
+            p->GetEntityManager()->SetZOrder(mCardMain, mCardMain->GetZOrder() + 1);
+            p->GetEntityManager()->SetZOrder(mCardFavorite, mCardFavorite->GetZOrder() + 1);
+            p->GetEntityManager()->SetZOrder(mCover, mCover->GetZOrder() + 1);
         }
 
         Application* pApplication = &Application::Get();

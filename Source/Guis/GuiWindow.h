@@ -21,10 +21,10 @@ namespace ClassicLauncher
     class GuiWindow : public GuiComponent
     {
         Application* mApplication;
-        std::shared_ptr<GuiHorizontalBox> mGuiHorizontalBox;
-        std::shared_ptr<GuiBlackScreen> mGuiBlackScreen;
-        std::shared_ptr<GuiVideoPlayer> mGuiVideoPlayer;
-        std::shared_ptr<GuiComponent> mGuiBackground;
+        GuiHorizontalBox* mGuiHorizontalBox;
+        GuiBlackScreen* mGuiBlackScreen;
+        GuiVideoPlayer* mGuiVideoPlayer;
+        GuiComponent* mGuiBackground;
         Timer<GuiWindow>* mClickTimer = nullptr;
         Timer<GuiWindow>* mInputTimer = nullptr;
 
@@ -34,11 +34,12 @@ namespace ClassicLauncher
         virtual ~GuiWindow() override = default;
         virtual EntityType GetType() const override { return EntityType::GuiWindowClass; }
         virtual void Update() override;
+        virtual void End() override;
         void Init();
         void OnClick();
         void OnBack();
         void Teste();
-        GuiBlackScreen* GetGuiBlackScreen() { return mGuiBlackScreen.get(); }
+        GuiBlackScreen* GetGuiBlackScreen() { return mGuiBlackScreen; }
     };
 
 }  // namespace ClassicLauncher

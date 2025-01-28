@@ -145,7 +145,6 @@ namespace ClassicLauncher
     {
         mInputManager.UpdateInputState();
         mEntityManager.UpdateAll();
-        mEntityManager.UpdatePositionAll();
         mEntityManager.Draw();  // draw in texture render
         mGuiWindow->Teste();
 

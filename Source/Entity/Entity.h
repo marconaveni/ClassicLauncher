@@ -54,7 +54,8 @@ namespace ClassicLauncher
         virtual void UpdatePosition();               // Update the position of the entity
         virtual void SelfDelete();                   // Delete the entity and all its children
         virtual void AddChild(Entity* childEntity);  // Add a child to the entity
-        virtual void RemoveChilds();                 // Remove a child from the entity
+        virtual void RemoveChild(Entity* childEntity);                 // Remove a child from the entity
+        virtual void RemoveAllChilds(); 
         std::vector<Entity*>& GetChilds();
         Entity* GetRootEntity();
         void EnableScissorMode(float x, float y, float width, float height);

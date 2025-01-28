@@ -14,13 +14,12 @@
 namespace ClassicLauncher
 {
     class TimerBase;
+    class Entity;
 
     class EntityManager
     {
     private:
-
-        std::vector<std::shared_ptr<Entity>> mEntities;
-        std::vector<int> mIdEntitiesToDelete;
+        std::vector<std::unique_ptr<Entity>> mEntities;
         std::vector<EntityType> mTypeCount;
         SpriteManager* mSpriteManagerReference;
         std::vector<std::shared_ptr<TimerBase>> mTimers;
@@ -30,20 +29,19 @@ namespace ClassicLauncher
     public:
 
         EntityManager(SpriteManager* spriteManagerReference);
-        ~EntityManager() = default;
+        ~EntityManager();
 
         template <typename T, typename... Args>
-        std::shared_ptr<T> CreateEntity(const std::string& name, Args&&... args)
+        T* CreateEntity(const std::string& name, Args&&... args)
         {
-            auto entity = std::make_shared<T>(std::forward<Args>(args)...);
-            const int counter = (int)std::count(mTypeCount.begin(), mTypeCount.end(), entity->GetType());
+            auto entity = std::make_unique<T>(std::forward<Args>(args)...);
+            const int counter = 0; //(int)std::count(mTypeCount.begin(), mTypeCount.end(), entity->GetType());
             entity->mNameId = std::to_string(counter) + "_" + name;
-            entity->SetZOrder(0);
-            entity->mId = (int)mEntities.size();
-            entity->mIdZOrder = (int)mEntities.size();
-            mEntities.emplace_back(entity);
-            mTypeCount.emplace_back(entity->GetType());
-            return entity;
+            entity->mId = static_cast<int>(mEntities.size());
+            entity->mIdZOrder = static_cast<int>(mEntities.size());
+            //mTypeCount.emplace_back(entity->GetType());
+            mEntities.push_back(std::move(entity));
+            return static_cast<T*>(mEntities.back().get());
         }
 
         template <typename T>
@@ -83,7 +81,7 @@ namespace ClassicLauncher
     private:
 
         void DrawEntity(Entity* entity);
-        void DeleteEntitys();
+        void DeleteEntitys(bool bIsDeleteEntities);
     };
 
 }  // namespace ClassicLauncher

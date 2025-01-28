@@ -18,7 +18,7 @@ namespace ClassicLauncher
             auto miniCover = mApplication->GetEntityManager()->CreateEntity<GuiComponent>("miniCover");
             miniCover->mProperties.x = x;
             miniCover->mTextureName = "transparent";
-            AddChild(miniCover.get());
+            AddChild(miniCover);
             mGuiCovers.emplace_back(miniCover);
         }
 
@@ -28,7 +28,7 @@ namespace ClassicLauncher
         mArrow->mProperties.y = -21.0f;
         mArrow->mTextureName = "sprite";
         mArrow->AddAnimationFrame("frame", 0.2f, recs);
-        AddChild(mArrow.get());
+        AddChild(mArrow);
     }
 
     void GuiMiniCover::Update()
@@ -93,7 +93,7 @@ namespace ClassicLauncher
 
             if (i - 1 >= 0 && i <= static_cast<int>(mGuiCovers.size()) - 2)
             {
-                SetCover(name, mGuiCovers.at(i).get());
+                SetCover(name, mGuiCovers.at(i));
             }
         }
 
@@ -123,7 +123,7 @@ namespace ClassicLauncher
     {
         for (auto& guiCover : mGuiCovers)
         {
-            SetCover("transparent", guiCover.get());
+            SetCover("transparent", guiCover);
         }
     }
 

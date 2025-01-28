@@ -20,13 +20,13 @@ namespace ClassicLauncher
 
         Timer<GuiCard>* mTimer;
 
-        std::shared_ptr<GuiComponent> mCardMain;
-        std::shared_ptr<GuiComponent> mCardSelected;
-        std::shared_ptr<GuiComponent> mCardFavorite;
-        std::shared_ptr<GuiComponent> mCover;
+        GuiComponent* mCardMain;
+        GuiComponent* mCardSelected;
+        GuiComponent* mCardFavorite;
+        GuiComponent* mCover;
         bool mIsFocus = false;
         bool mIsFront = false;
-        void CreateCard(std::shared_ptr<GuiComponent>& card, int sourceX, int sourceY, unsigned char alpha, const char* title);
+        void CreateCard(GuiComponent*& card, int sourceX, int sourceY, unsigned char alpha, const char* title);
 
 
     public:

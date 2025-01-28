@@ -48,7 +48,7 @@ namespace ClassicLauncher
         GameListManager mGameListManager;
         ProcessManager mProcessManager;
         Themes mThemes;
-        std::shared_ptr<GuiWindow> mGuiWindow;
+        GuiWindow* mGuiWindow;
         InputManager mInputManager;
 
     public:

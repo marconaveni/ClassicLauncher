@@ -18,15 +18,15 @@ namespace ClassicLauncher
         mGuiBackground->mProperties.scaleWidth = 1280;
         mGuiBackground->mProperties.scaleHeight = 720;
         mGuiBackground->mTextureName = "sprite";
-        AddChild(mGuiBackground.get());
+        AddChild(mGuiBackground);
 
         mGuiHorizontalBox = mApplication->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
         mGuiHorizontalBox->Init();
-        AddChild(mGuiHorizontalBox.get());
+        AddChild(mGuiHorizontalBox);
 
         mGuiVideoPlayer = mApplication->GetEntityManager()->CreateEntity<GuiVideoPlayer>("GuiVideoPlayer");
         mGuiBlackScreen = mApplication->GetEntityManager()->CreateEntity<GuiBlackScreen>("GuiBlackScreen");
-        mApplication->GetEntityManager()->SetZOrder(mGuiBlackScreen.get(), 99);
+       // mApplication->GetEntityManager()->SetZOrder(mGuiBlackScreen, 99);
     }
 
     void GuiWindow::Update()
@@ -116,6 +116,14 @@ namespace ClassicLauncher
         }
     }
 
+    void GuiWindow::End()
+    {
+        GuiHorizontalBox* mGuiHorizontalBox = nullptr;
+        GuiBlackScreen* mGuiBlackScreen = nullptr;
+        GuiVideoPlayer* mGuiVideoPlayer = nullptr;
+        GuiComponent* mGuiBackground = nullptr;
+    }
+
     void GuiWindow::OnClick()
     {
         LogClassic(LOG_CLASSIC_INFO, "Called OnClick");
@@ -152,7 +160,7 @@ namespace ClassicLauncher
             if (mGuiHorizontalBox)
             {
                 mGuiHorizontalBox->Init();
-                AddChild(mGuiHorizontalBox.get());
+                AddChild(mGuiHorizontalBox);
             }
         }
     }
