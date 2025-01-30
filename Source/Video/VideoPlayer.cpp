@@ -1,7 +1,6 @@
 #include "VideoPlayer.h"
 #include "Utils/Log.h"
 
-
 namespace ClassicLauncher
 {
     libvlc_instance_t* VideoPlayer::mVLC = nullptr;
@@ -29,7 +28,7 @@ namespace ClassicLauncher
         c->frameId = frame;
         c->frameLock[frame] = true;
         c->countFrame++;
-        LOG(LOG_CLASSIC_TRACE, "frame %d is ready \"c->frameLock[%d]\" is unlock", c->countFrame , c->frameLock[frame]);
+        LOG(LOG_CLASSIC_TRACE, "frame %d is ready \"c->frameLock[%d]\" is unlock", c->countFrame, c->frameLock[frame]);
         c->frameMutex[frame].unlock();
     }
 
@@ -67,16 +66,21 @@ namespace ClassicLauncher
     VideoPlayer::VideoPlayer()
         : mContext{}, bIsEnabledVlC(false), mWidth(0), mHeight(0), bLoop(false)
     {
+        LOG(LOG_CLASSIC_TRACE, "Initializing VideoPlayer...");
         StartVLCInstance();
+        LOG(LOG_CLASSIC_TRACE, "VideoPlayer initialized.");
     }
 
     VideoPlayer::~VideoPlayer()
     {
+        LOG(LOG_CLASSIC_TRACE, "Destroying VideoPlayer...");
         Unload();
+        LOG(LOG_CLASSIC_TRACE, "VideoPlayer destroyed.");
     }
 
     bool VideoPlayer::Init(std::string path, int width, int height, float scale)
     {
+        LOG(LOG_CLASSIC_INFO, "Initializing video with path: %s", path.c_str());
         if (path.empty())
         {
             LOG(LOG_CLASSIC_WARNING, "path is empty.");

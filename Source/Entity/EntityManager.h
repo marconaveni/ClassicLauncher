@@ -13,8 +13,9 @@
 
 namespace ClassicLauncher
 {
-    class TimerBase;
+    class Timer;
     class Entity;
+    struct TimerHandling;
 
     class EntityManager
     {
@@ -22,9 +23,11 @@ namespace ClassicLauncher
         std::vector<std::unique_ptr<Entity>> mEntities;
         std::vector<EntityType> mTypeCount;
         SpriteManager* mSpriteManagerReference;
-        std::vector<std::shared_ptr<TimerBase>> mTimers;
+        std::unordered_map<int, std::unique_ptr<Timer>> mTimers;
+        //std::vector<std::unique_ptr<Timer>> mTimers;
         bool mPreparedZOrder = false;
         void SetZOrder();
+        void ValidTimerHandling(TimerHandling& timerHandling);
 
     public:
 
@@ -58,19 +61,7 @@ namespace ClassicLauncher
             return entities;
         }
 
-        template <typename T>
-        void SetTimer(Timer<T>*& timer, std::function<void()> callbackFunction, T* targetEntity, float delay, bool bLooped = false)
-        {
-            if (timer == nullptr)
-            {
-                static_assert(std::is_base_of<Entity, T>::value, "T must inherit from Entity");
-                auto newTimer = std::make_shared<Timer<T>>();
-                mTimers.emplace_back(std::static_pointer_cast<TimerBase>(newTimer));
-                timer = newTimer.get();
-            }
-            timer->SetTimer(callbackFunction, targetEntity, delay, bLooped);
-        }
-
+        void SetTimer(TimerHandling& timerHandling, std::function<void()> callbackFunction, Entity* targetEntity, float delay, bool bLooped = false);
         void SetVisibleAll(Entity* entity, bool bVisible);
         void SetZOrder(Entity* entity, int zOrder);
         void UpdateAll();

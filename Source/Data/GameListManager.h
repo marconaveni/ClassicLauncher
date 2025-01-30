@@ -58,13 +58,19 @@ namespace ClassicLauncher
 
     struct HistoryPosition
     {
-        int id = 0;
-        int indexCardFocus = 3;
+        int id;
+        int indexCardFocus;
+
+        HistoryPosition()
+            : id(0), indexCardFocus(3)
+        {
+        }
     };
 
-    struct SystemList
+    struct GameSystemList
     {
-        int mapIndex;
+    public:
+        int mapIndex = -1;
         std::string executable;
         std::string arguments;
         std::string romPath;
@@ -76,16 +82,18 @@ namespace ClassicLauncher
         std::string desc;
         HistoryPosition history;
         std::string pathTheme;
-        float scale;
+        float scale = 1;
 
-        SystemList()
-            : mapIndex(-1), scale(1.0f)
-        {
-        }
+        // SystemList()
+        //     : mapIndex(-1), scale(1.0f), history()
+        // {
+        // };
 
-        bool operator==(const SystemList& a) const { return (mapIndex == a.mapIndex); }
-        bool operator>(const SystemList& a) const { return (mapIndex > a.mapIndex); }
-        bool operator<(const SystemList& a) const { return (mapIndex < a.mapIndex); }
+        ~GameSystemList() = default;
+
+        bool operator==(const GameSystemList& a) const { return (mapIndex == a.mapIndex); }
+        bool operator>(const GameSystemList& a) const { return (mapIndex > a.mapIndex); }
+        bool operator<(const GameSystemList& a) const { return (mapIndex < a.mapIndex); }
     };
 
     class GameListManager
@@ -103,7 +111,7 @@ namespace ClassicLauncher
         tinyxml2::XMLDocument mDocumentGameListXml;
         tinyxml2::XMLDocument mDocumentSystemListXml;
         std::vector<GameList> mGameList;
-        std::vector<SystemList> mSystemList;
+        std::vector<GameSystemList> mSystemList;
         void LoadGameList();
         void LoadSystemToGameList();
 
@@ -120,10 +128,10 @@ namespace ClassicLauncher
         int GetSystemId() const;
         int GetGameListSize();
         std::vector<GameList*> GetAllGameList();
-        std::vector<SystemList*> GetAllSystemList();
+        std::vector<GameSystemList*> GetAllSystemList();
         GameList* GetCurrentGameList(int index);
         GameList* GetCurrentGameList();
-        SystemList* GetCurrentSystemList();
+        GameSystemList* GetCurrentSystemList();
         void ClearSystemList();
         void ClearGameList();
         CurrentList GetCurrentList() const;

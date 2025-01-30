@@ -14,10 +14,33 @@ namespace ClassicLauncher
         {
             if (entity != nullptr)
             {
-                entity = nullptr;  // Evita que o ponteiro continue apontando para um endereço inválido
+                entity = nullptr;
             }
         }
         mEntities.clear();  // Limpa o vetor
+    }
+
+    void EntityManager::ValidTimerHandling(TimerHandling& timerHandling)
+    {
+        const int size = static_cast<int>(mTimers.size() - 1);
+        if (timerHandling.id < 0 || timerHandling.id > size)
+        {
+            timerHandling.id = -1;
+            return;
+        }
+    }
+
+    void EntityManager::SetTimer(TimerHandling& timerHandling, std::function<void()> callbackFunction, Entity* targetEntity, float delay, bool bLooped)
+    {
+        ValidTimerHandling(timerHandling);
+
+        if (timerHandling.id < 0)
+        {
+            std::unique_ptr<Timer> newTimer = std::make_unique<Timer>();
+            timerHandling.id = mTimers.size();
+            mTimers.insert(std::make_pair(timerHandling.id, std::move(newTimer)));
+        }
+        mTimers[timerHandling.id]->SetTimer(callbackFunction, targetEntity, delay, bLooped);
     }
 
     void EntityManager::SetVisibleAll(Entity* entity, bool bVisible)
@@ -72,7 +95,7 @@ namespace ClassicLauncher
         }
         for (auto& timer : mTimers)
         {
-            timer->Update();
+            timer.second->Update();
         }
         UpdatePositionAll();
     }
@@ -196,7 +219,6 @@ namespace ClassicLauncher
                 entity.reset();
             }
         }
-        
 
         mEntities.erase(std::remove_if(mEntities.begin(),
                                        mEntities.end(),
@@ -205,6 +227,11 @@ namespace ClassicLauncher
                                            return !entity;  // Return true element
                                        }),
                         mEntities.end());
+
+        for (auto& timer : mTimers)
+        {
+            timer.second.reset();
+        }
         mTimers.clear();
         mPreparedZOrder = true;
     }

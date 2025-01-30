@@ -26,7 +26,8 @@ namespace ClassicLauncher
 
         mGuiVideoPlayer = mApplication->GetEntityManager()->CreateEntity<GuiVideoPlayer>("GuiVideoPlayer");
         mGuiBlackScreen = mApplication->GetEntityManager()->CreateEntity<GuiBlackScreen>("GuiBlackScreen");
-       // mApplication->GetEntityManager()->SetZOrder(mGuiBlackScreen, 99);
+        mApplication->GetEntityManager()->SetZOrder(mGuiVideoPlayer, 5);
+        mApplication->GetEntityManager()->SetZOrder(mGuiBlackScreen, 99);
     }
 
     void GuiWindow::Update()
@@ -57,11 +58,6 @@ namespace ClassicLauncher
             mGuiBackground->mTextureName = mTextureName != "transparent" ? "transparent" : "sprite";
         }
 
-        if (IsKeyReleased(KEY_NINE))
-        {
-           
-            
-        }
 
 #endif
 
@@ -116,14 +112,6 @@ namespace ClassicLauncher
         }
     }
 
-    void GuiWindow::End()
-    {
-        GuiHorizontalBox* mGuiHorizontalBox = nullptr;
-        GuiBlackScreen* mGuiBlackScreen = nullptr;
-        GuiVideoPlayer* mGuiVideoPlayer = nullptr;
-        GuiComponent* mGuiBackground = nullptr;
-    }
-
     void GuiWindow::OnClick()
     {
         LogClassic(LOG_CLASSIC_INFO, "Called OnClick");
@@ -152,17 +140,17 @@ namespace ClassicLauncher
 
     void GuiWindow::Teste()
     {
-        if (IsKeyReleased(KEY_EIGHT))
-        {
-            mGuiHorizontalBox->SelfDelete();
-            // mGuiHorizontalBox.reset();
-            mGuiHorizontalBox = mApplication->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
-            if (mGuiHorizontalBox)
-            {
-                mGuiHorizontalBox->Init();
-                AddChild(mGuiHorizontalBox);
-            }
-        }
+        //if (IsKeyReleased(KEY_EIGHT))
+        //{
+        //    mGuiHorizontalBox->SelfDelete();
+        //    // mGuiHorizontalBox.reset();
+        //    mGuiHorizontalBox = mApplication->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
+        //    if (mGuiHorizontalBox)
+        //    {
+        //        mGuiHorizontalBox->Init();
+        //        AddChild(mGuiHorizontalBox);
+        //    }
+        //}
     }
 
 }  // namespace ClassicLauncher

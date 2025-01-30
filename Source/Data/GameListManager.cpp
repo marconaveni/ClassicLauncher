@@ -133,7 +133,7 @@ namespace ClassicLauncher
 
         while (pSystem)
         {
-            auto systems = SystemList();
+            GameSystemList systems;
             systems.mapIndex = index;
             systems.executable = IsValidElement(pSystem, "executable") ? NormalizePath(pSystem->FirstChildElement("executable")->GetText()) : "";
             systems.arguments = IsValidElement(pSystem, "arguments") ? NormalizePath(pSystem->FirstChildElement("arguments")->GetText()) : "";
@@ -196,9 +196,9 @@ namespace ClassicLauncher
         return pGameList;
     }
 
-    std::vector<SystemList*> GameListManager::GetAllSystemList()
+    std::vector<GameSystemList*> GameListManager::GetAllSystemList()
     {
-        std::vector<SystemList*> pSystemList;
+        std::vector<GameSystemList*> pSystemList;
         for (auto& game : mSystemList)
         {
             pSystemList.push_back(&game);
@@ -216,7 +216,7 @@ namespace ClassicLauncher
         return (!mGameList.empty()) ? &mGameList[mIdGameList] : nullptr;
     }
 
-    SystemList* GameListManager::GetCurrentSystemList()
+    GameSystemList* GameListManager::GetCurrentSystemList()
     {
         return &mSystemList[mIdSystemList];
     }
@@ -245,7 +245,7 @@ namespace ClassicLauncher
 
     void GameListManager::SystemListSortByName()
     {
-        std::sort(mSystemList.begin(), mSystemList.end(), [](const SystemList& a, const SystemList& b) { return a.systemLabel < b.systemLabel; });
+        std::sort(mSystemList.begin(), mSystemList.end(), [](const GameSystemList& a, const GameSystemList& b) { return a.systemLabel < b.systemLabel; });
     }
 
     void GameListManager::ReplaceCurrentPath(GameList* pGame) const

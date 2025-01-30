@@ -5,7 +5,9 @@ namespace ClassicLauncher
 {
 
     Animation::Animation()
-        : mCurrentTime(0), mDuration(0), mIsStart(false), mIsRunning(false), mIsFinish(false), mIsReset(false), mRelative(false), mType(Ease::EaseLinearNone) {};
+        : mCurrentTime(0), mDuration(0), mIsStart(false), mIsRunning(false), mIsFinish(false), mIsReset(false), mRelative(false), mType(Ease::EaseLinearNone)
+    {
+    }
 
     void Animation::StartAnimation(const float durationAnimation,
                                    const TransformProperties& startAnimation,
@@ -37,10 +39,10 @@ namespace ClassicLauncher
                 mCurrentTransform.scaleX = GetAnimation(mCurrentTime, mStartTransform.scaleX, mFinalTransform.scaleX - mStartTransform.scaleX, mDuration);
                 mCurrentTransform.scaleY = GetAnimation(mCurrentTime, mStartTransform.scaleY, mFinalTransform.scaleY - mStartTransform.scaleY, mDuration);
                 mCurrentTransform.rotation = GetAnimation(mCurrentTime, mStartTransform.rotation, mFinalTransform.rotation - mStartTransform.rotation, mDuration);
-				mCurrentTransform.color.r = GetAnimation(mCurrentTime, mStartTransform.color.r, mFinalTransform.color.r - mStartTransform.color.r, mDuration);
-				mCurrentTransform.color.g = GetAnimation(mCurrentTime, mStartTransform.color.g, mFinalTransform.color.g - mStartTransform.color.g, mDuration);
-				mCurrentTransform.color.b = GetAnimation(mCurrentTime, mStartTransform.color.b, mFinalTransform.color.b - mStartTransform.color.b, mDuration);
-				mCurrentTransform.color.a = GetAnimation(mCurrentTime, mStartTransform.color.a, mFinalTransform.color.a - mStartTransform.color.a, mDuration);
+                mCurrentTransform.color.r = GetAnimation(mCurrentTime, mStartTransform.color.r, mFinalTransform.color.r - mStartTransform.color.r, mDuration);
+                mCurrentTransform.color.g = GetAnimation(mCurrentTime, mStartTransform.color.g, mFinalTransform.color.g - mStartTransform.color.g, mDuration);
+                mCurrentTransform.color.b = GetAnimation(mCurrentTime, mStartTransform.color.b, mFinalTransform.color.b - mStartTransform.color.b, mDuration);
+                mCurrentTransform.color.a = GetAnimation(mCurrentTime, mStartTransform.color.a, mFinalTransform.color.a - mStartTransform.color.a, mDuration);
 
                 mCurrentTime++;
                 return;

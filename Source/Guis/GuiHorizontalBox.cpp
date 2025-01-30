@@ -114,6 +114,11 @@ namespace ClassicLauncher
     void GuiHorizontalBox::Click()
     {
         mGuiCards[mIdFocus]->Click();
+        for (GuiCard*& card : mGuiCards)
+        {
+            card->SetFrontCard();
+        }
+        
     }
 
     void GuiHorizontalBox::ClearCovers()

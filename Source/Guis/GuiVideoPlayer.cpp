@@ -9,11 +9,17 @@ namespace ClassicLauncher
 
     bool GuiVideoPlayer::Init(std::string path, int width, int height)
     {
+        if (path.empty())
+        {
+            return false;
+        }
         mFilePath = path;
         mPlayer = nullptr;
         mPlayer = std::make_unique<VideoPlayer>();
         const float scale = Themes::GetScaleTexture();
-        const bool bIsplay = mPlayer->Init(path, width * scale, height * scale, scale);
+        const int widthScale = static_cast<int>(width * scale);
+        const int heightScale = static_cast<int>(height * scale);
+        const bool bIsplay = mPlayer->Init(path, widthScale, heightScale, scale);
         mPlayer->Play();
         return bIsplay;
     }

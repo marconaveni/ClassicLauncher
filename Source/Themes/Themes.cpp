@@ -27,9 +27,9 @@ namespace ClassicLauncher
         std::vector<std::string> paths;
         if (DirectoryExists(path.c_str()))
         {
-            paths.push_back(path);
+            paths.emplace_back(path);
         }
-        paths.push_back(Resources::GetResourcesPathFileAbs("Resources/textures/"));
+        paths.emplace_back(Resources::GetResourcesPathFileAbs("Resources/textures/"));
         return paths;
     }
 
@@ -53,20 +53,16 @@ namespace ClassicLauncher
         std::vector<std::string> paths;
         paths = GetThemeDirs();
         const int monitorWidth = GetMonitorWidth(GetCurrentMonitor());
-        float scales[4] = { 1.0f, 1.5f, 2.0f, 3.0f };
-        int widths[4] = { 1280, 1920, 2580, 3840 };
+        int scales[3] = { 1, 2, 3 };
+        int widths[3] = { 1280, 2580, 3840 };
 
         for (const auto& path : paths)
         {
             for (int i = 0; i < 4; i++)
             {
-                float intPart;
-                float fractpart = modf(scales[i], &intPart);
-                std::string numText = (fractpart > 0) ? TEXT("%.1f", scales[i]) : TEXT("%.0f", intPart);
-
-                if (GetPathTheme(file, monitorWidth, widths[i], TEXT("%ssprite%sx.png", path.c_str(), numText.c_str()), scales[i]))
+                if (GetPathTheme(file, monitorWidth, widths[i], TEXT("%ssprite%dx.png", path.c_str(), scales[i]), scales[i]))
                 {
-                    return scales[i];
+                    return static_cast<float>(scales[i]);
                 }
             }
         }
@@ -79,7 +75,7 @@ namespace ClassicLauncher
 
     void Themes::Init(Application* pApplication)
     {
-        std::vector<SystemList*> systems = pApplication->GetGameListManager()->GetAllSystemList();
+        std::vector<GameSystemList*> systems = pApplication->GetGameListManager()->GetAllSystemList();
         for (auto& system : systems)
         {
             mCurrentSystemName = system->systemName;
@@ -96,7 +92,7 @@ namespace ClassicLauncher
         std::string file;
         if (pApplication->GetGameListManager()->GetCurrentList() == CurrentList::GameListSelect)
         {
-            SystemList* pList = pApplication->GetGameListManager()->GetCurrentSystemList();
+            GameSystemList* pList = pApplication->GetGameListManager()->GetCurrentSystemList();
             mCurrentSystemName = pList->systemName;
             file = pList->pathTheme;
             mScaleTexture = pList->scale;

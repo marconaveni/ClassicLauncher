@@ -212,10 +212,6 @@ namespace ClassicLauncher
             LOG(LOG_CLASSIC_DEBUG, TEXT("GetWorkingDirectory %s", UtilsFunctionLibrary::GetWorkingDirectory().c_str()));
             LOG(LOG_CLASSIC_DEBUG, TEXT("GetApplicationDirectory %s", ::GetApplicationDirectory()));
         }
-        if (IsKeyDown(KEY_DOWN) && mGuiWindow)
-        {
-            mGuiWindow->SetBringToFront();
-        }
     }
 
     void Application::Draw()

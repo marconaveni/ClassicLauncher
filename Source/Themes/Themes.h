@@ -9,7 +9,7 @@ namespace ClassicLauncher
 {
 
     class Application;
-    class SystemList;
+    //struct SystemList;
 
     class Themes
     {

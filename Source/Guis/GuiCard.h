@@ -18,7 +18,7 @@ namespace ClassicLauncher
         float mDefaultCoverHeight = 204.0f;
         Vector2 mContainerSize = { 252.0f, 228.0f };
 
-        Timer<GuiCard>* mTimer;
+        TimerHandling mTimer;
 
         GuiComponent* mCardMain;
         GuiComponent* mCardSelected;
@@ -41,6 +41,7 @@ namespace ClassicLauncher
         bool IsFocus();
         void Reset();
         void Click();
+        void SetFrontCard();
     };
 
 }  // namespace ClassicLauncher

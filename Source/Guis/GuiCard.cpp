@@ -6,7 +6,7 @@ namespace ClassicLauncher
 {
 
     GuiCard::GuiCard(int x, int y)
-        : mTimer(nullptr), GuiComponent()
+        : mTimer(), GuiComponent()
     {
         mProperties.x = x;
         mProperties.y = y;
@@ -40,39 +40,6 @@ namespace ClassicLauncher
     void GuiCard::Update()
     {
         GuiComponent::Update();
-
-        if (mIsFront)
-        {
-            mCardSelected->SetBringToFront();
-            mCardMain->SetBringToFront();
-            mCardFavorite->SetBringToFront();
-            mCover->SetBringToFront();
-        }
-
-        if (IsKeyReleased(KEY_UP))
-        {
-            Application* p = &Application::Get();
-            p->GetEntityManager()->SetZOrder(mCardSelected, mCardSelected->GetZOrder() - 1);
-            p->GetEntityManager()->SetZOrder(mCardMain, mCardMain->GetZOrder() - 1);
-            p->GetEntityManager()->SetZOrder(mCardFavorite, mCardFavorite->GetZOrder() - 1);
-            p->GetEntityManager()->SetZOrder(mCover, mCover->GetZOrder() - 1);
-        }
-        if (IsKeyReleased(KEY_P))
-        {
-            Application* p = &Application::Get();
-            p->GetEntityManager()->SetZOrder(mCardSelected, 0);
-            p->GetEntityManager()->SetZOrder(mCardMain, 0);
-            p->GetEntityManager()->SetZOrder(mCardFavorite, 0);
-            p->GetEntityManager()->SetZOrder(mCover, 0);
-        }
-        if (IsKeyReleased(KEY_DOWN))
-        {
-            Application* p = &Application::Get();
-            p->GetEntityManager()->SetZOrder(mCardSelected, mCardSelected->GetZOrder() + 1);
-            p->GetEntityManager()->SetZOrder(mCardMain, mCardMain->GetZOrder() + 1);
-            p->GetEntityManager()->SetZOrder(mCardFavorite, mCardFavorite->GetZOrder() + 1);
-            p->GetEntityManager()->SetZOrder(mCover, mCover->GetZOrder() + 1);
-        }
 
         Application* pApplication = &Application::Get();
         if (pApplication == nullptr)
@@ -197,6 +164,26 @@ namespace ClassicLauncher
         mCover->StartAnimation("card-zoom", time, mCover->mProperties, targetCover, Ease::EaseQuadInOut, false);
 
         pApplication->GetEntityManager()->SetTimer(mTimer, CALLFUNCTION(Reset, this), this, time * 3);
+    }
+
+    void GuiCard::SetFrontCard()
+    {
+        Application* p = &Application::Get();
+        if (mIsFront)
+        {
+            p->GetEntityManager()->SetZOrder(mCardSelected, 1);
+            p->GetEntityManager()->SetZOrder(mCardMain, 1);
+            p->GetEntityManager()->SetZOrder(mCardFavorite, 1);
+            p->GetEntityManager()->SetZOrder(mCover, 1);
+        }
+        else
+        {
+            Application* p = &Application::Get();
+            p->GetEntityManager()->SetZOrder(mCardSelected, 0);
+            p->GetEntityManager()->SetZOrder(mCardMain, 0);
+            p->GetEntityManager()->SetZOrder(mCardFavorite, 0);
+            p->GetEntityManager()->SetZOrder(mCover, 0);
+        }
     }
 
 }  // namespace ClassicLauncher

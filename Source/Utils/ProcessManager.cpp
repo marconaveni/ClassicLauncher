@@ -15,7 +15,7 @@ namespace ClassicLauncher
     void ProcessManager::CreateProc(Application* pApplication)
     {
         GameListManager* gameListManager = pApplication->GetGameListManager();
-        SystemList* system = gameListManager->GetCurrentSystemList();
+        GameSystemList* system = gameListManager->GetCurrentSystemList();
         GameList* game = gameListManager->GetCurrentGameList();
         const std::string executable = (game->executable.empty()) ? system->executable : game->executable;
         const std::string arguments = (game->arguments.empty()) ? system->arguments : game->arguments;
@@ -68,6 +68,9 @@ namespace ClassicLauncher
     {
         switch (mStatus)
         {
+            case ProcessStatus::None:
+            case ProcessStatus::Open:
+                break;
             case ProcessStatus::Running:
                 WaitTime(2.5);
                 break;
@@ -77,6 +80,8 @@ namespace ClassicLauncher
                 pApplication->GetAudioManager()->ChangeMusic();
                 InputManager::EnableInput();
                 break;
+            default:
+                break; 
         }
         mStatus = UpdateRun();
     }

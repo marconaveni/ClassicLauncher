@@ -30,17 +30,19 @@ namespace ClassicLauncher
 
     struct InputMapper
     {
-        int gamePad = 0;
-        int keyPad = 0;
-        int amoutDown = 0;
-        InputName name = unknown;
-        bool bPress = false;
-        bool bDown = false;
-        bool bRelease = false;
-        bool bUp = false;
+        int gamePad;
+        int keyPad;
+        int amoutDown;
+        InputName name;
+        bool bPress;
+        bool bDown;
+        bool bRelease;
+        bool bUp;
 
         InputMapper(InputName name, int gamePad, int keyPad)
-            : name(name), gamePad(gamePad), keyPad(keyPad) {};
+            : gamePad(gamePad), keyPad(keyPad), amoutDown(0), name(name), bPress(false), bDown(false), bRelease(false), bUp(false)
+        {
+        }
 
         void CancelInput()
         {

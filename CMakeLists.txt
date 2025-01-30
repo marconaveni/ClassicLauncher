@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.25)
 project(ClassicLauncher LANGUAGES CXX)
 
 # Compile configurations
@@ -19,7 +19,7 @@ endif()
 
 if(CLASSIC_LAUNCHER_FLAGS)
     if(MSVC)
-        set(CMAKE_CXX_FLAGS "/W3")
+        set(CMAKE_CXX_FLAGS " /EHsc /W3")
     else()
         set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wpedantic")
     endif()
@@ -31,7 +31,7 @@ if (CLASSIC_LAUNCHER_FSANITIZE)
         set(CMAKE_CXX_FLAGS_DEBUG "/MDd /fsanitize=address")
         set(CMAKE_EXE_LINKER_FLAGS_DEBUG "/fsanitize=address")
     else()
-        set(CMAKE_CXX_FLAGS "-g -fsanitize=address")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fsanitize=address")
         set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -fsanitize=address")
     endif()
     message(STATUS "[Classic Launcher] fsanitize is enabled")
@@ -54,7 +54,7 @@ if(MSVC)
 
 	set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -ENTRY:mainCRTStartup  /SUBSYSTEM:WINDOWS")
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        #add_compile_options(/MTd)
+        add_compile_options(/MTd)
         message(STATUS "[Classic Launcher] set /MTd")
         message(STATUS "[Classic Launcher] DevMode is enabled")
         set(debug "_DEBUG")
@@ -67,7 +67,14 @@ if(MSVC)
 endif()
 
 if(MINGW)
-    set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -mwindows -e mainCRTStartup")
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(debug "_DEBUG")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
+        message(STATUS "[Classic Launcher] DevMode is enabled")
+    else()    
+        set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -mwindows -e mainCRTStartup")
+        message(STATUS "[Classic Launcher] DevMode is disable")
+    endif()
 endif()
 
 
@@ -91,8 +98,8 @@ if(WIN32)
 
     if(VLC_FOUND)
         message(STATUS "[Classic Launcher] VLC founded!")
+        message(STATUS "[Classic Launcher] VLC Libraries: ${VLC_LIBRARIES}")
         message(STATUS "[Classic Launcher] Include Directory: ${VLC_INCLUDE_DIR}")
-        message(STATUS "[Classic Launcher] Libraries: ${VLC_LIBRARIES}")
     else()
         message(FATAL_ERROR "[Classic Launcher] VLC not founded!")
     endif()
@@ -108,7 +115,7 @@ if(WIN32)
     # plugins folder
     set(VLC_PLUGINS_DIR ${EXTERN_LIBDIR}/libvlc/x64/plugins)
 
-endif() # MSVC windows
+endif() # WIN32
 
 
 # Source files
@@ -288,6 +295,35 @@ if(WIN32)
         $<TARGET_FILE_DIR:ClassicLauncher>/plugins
     )
 
+elseif (UNIX AND NOT WIN32)
+    message(STATUS "[Classic Launcher] Configuração para Linux/ARM ativada")
+
+    set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+    set(PLATFORM "DRM" CACHE STRING "Define Raylib platform as DRM")
+    add_definitions(-DPLATFORM_DRM)
+
+    # Submodule Raylib
+    add_subdirectory(extern/raylib)
+
+    # Definições específicas para Debug
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        target_compile_definitions(ClassicLauncher PRIVATE _DEBUG ${FORCE_THEME_1X})
+    endif()
+
+    # -lraylib -lm -lpthread -lGLESv2 -lEGL -lvcos -lvchiq_arm -lgbm -ldrm
+    # Link for Raspberry Pi
+    target_link_libraries(${PROJECT_NAME}
+        raylib
+        m
+        pthread
+        GLESv2
+        EGL
+        vcos
+        vchiq_arm
+        gbm
+        drm
+        vlc
+)
 else()
 
     set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)

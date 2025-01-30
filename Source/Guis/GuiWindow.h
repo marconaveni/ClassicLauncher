@@ -25,8 +25,8 @@ namespace ClassicLauncher
         GuiBlackScreen* mGuiBlackScreen;
         GuiVideoPlayer* mGuiVideoPlayer;
         GuiComponent* mGuiBackground;
-        Timer<GuiWindow>* mClickTimer = nullptr;
-        Timer<GuiWindow>* mInputTimer = nullptr;
+        TimerHandling mClickTimer;
+        TimerHandling mInputTimer;
 
     public:
 
@@ -34,7 +34,6 @@ namespace ClassicLauncher
         virtual ~GuiWindow() override = default;
         virtual EntityType GetType() const override { return EntityType::GuiWindowClass; }
         virtual void Update() override;
-        virtual void End() override;
         void Init();
         void OnClick();
         void OnBack();

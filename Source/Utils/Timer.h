@@ -8,28 +8,26 @@ namespace ClassicLauncher
 {
     class Entity;
 
-
-    class TimerBase
+    struct TimerHandling
     {
-    public:
+        friend class EntityManager;
 
-        TimerBase() = default;
-        virtual ~TimerBase() = default;
-        virtual void Update() = 0;
+    private:
+
+        int id = -1;
     };
 
-    template <typename T>
-    class Timer : public TimerBase
+    class Timer
     {
     private:
 
-        float mDelay;                    // Delay time before the timer triggers
-        float mDuration;                 // Duration of the timer
-        float mCurrentTime;              // Current elapsed time
-        bool mIsFunctionCalled;            // Flag to check if the function has been called
-        bool mIsLoop;                      // Flag to determine if the timer is looping
-        bool mIsActive;                    // Flag to check if the timer is active
-        T* mTargetEntity;                // Pointer to the target entity
+        float mDelay;                     // Delay time before the timer triggers
+        float mDuration;                  // Duration of the timer
+        float mCurrentTime;               // Current elapsed time
+        bool mIsFunctionCalled;           // Flag to check if the function has been called
+        bool mIsLoop;                     // Flag to determine if the timer is looping
+        bool mIsActive;                   // Flag to check if the timer is active
+        Entity* mTargetEntity;            // Pointer to the target entity
         std::function<void()> mCallback;  // Pointer to the callback function to be called
 
     public:
@@ -37,16 +35,17 @@ namespace ClassicLauncher
         Timer()
             : mDelay(0), mDuration(0), mCurrentTime(0), mIsFunctionCalled(false), mIsLoop(false), mIsActive(false), mCallback(nullptr) {};
 
-        void SetTimer(std::function<void()> callbackFunction, T* targetEntity, float delay, bool bLooped = false)
+        ~Timer() = default;
+
+        void SetTimer(std::function<void()> callbackFunction, Entity* targetEntity, float delay, bool bIsLoop = false)
         {
             mCallback = callbackFunction;
             mTargetEntity = targetEntity;
             mDelay = delay;
             mIsActive = true;
+            mIsLoop = bIsLoop;
             Reset();
         }
-
-    private:
 
         void Update()
         {
@@ -70,13 +69,11 @@ namespace ClassicLauncher
             }
         }
 
-    public:
-
         void Reset()
         {
             mCurrentTime = 0.0f;                  // Reset current time
             mDuration = mDelay / GetFrameTime();  // Set duration based on frame time
-            mIsFunctionCalled = false;              // Reset the function called state
+            mIsFunctionCalled = false;            // Reset the function called state
         }
 
         void Stop() { mIsFunctionCalled = true; }
@@ -84,7 +81,10 @@ namespace ClassicLauncher
 
 }  // namespace ClassicLauncher
 
-#define CALLFUNCTION(functionName, object) [object]() { object->functionName(); }
-
+#define CALLFUNCTION(functionName, object) \
+    [object]()                             \
+    {                                      \
+        object->functionName();            \
+    }
 
 #endif  // TIMER_H
