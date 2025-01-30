@@ -142,14 +142,15 @@ namespace ClassicLauncher
     {
         //if (IsKeyReleased(KEY_EIGHT))
         //{
-        //    mGuiHorizontalBox->SelfDelete();
-        //    // mGuiHorizontalBox.reset();
-        //    mGuiHorizontalBox = mApplication->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
-        //    if (mGuiHorizontalBox)
+        //    if (mGuiHorizontalBox == nullptr)
         //    {
+        //        mGuiHorizontalBox = mApplication->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
         //        mGuiHorizontalBox->Init();
         //        AddChild(mGuiHorizontalBox);
+        //        return;
         //    }
+        //    mGuiHorizontalBox->SelfDelete();
+        //    mGuiHorizontalBox = nullptr;
         //}
     }
 

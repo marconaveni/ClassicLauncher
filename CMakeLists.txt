@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # cache options default values
 option(CLASSIC_LAUNCHER_FSANITIZE "Enable address sanitizer" OFF)
 option(CLASSIC_LAUNCHER_FLAGS "Enable warning/error flags" OFF)
+option(CLASSIC_RASPBERRY_PI "Enable Raspberry pi configuration" OFF)
 option(FORCE_THEME_1X "Force Theme 1x" OFF)
 
 if(FORCE_THEME_1X)
@@ -295,8 +296,8 @@ if(WIN32)
         $<TARGET_FILE_DIR:ClassicLauncher>/plugins
     )
 
-elseif (UNIX AND NOT WIN32)
-    message(STATUS "[Classic Launcher] Configuração para Linux/ARM ativada")
+elseif (CLASSIC_RASPBERRY_PI)
+    message(STATUS "[Classic Launcher] Raspberry pi native activated")
 
     set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
     set(PLATFORM "DRM" CACHE STRING "Define Raylib platform as DRM")
