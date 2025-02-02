@@ -34,18 +34,19 @@ namespace ClassicLauncher
                 continue;
             }
             const bool bKeyModifier = IsModifierKey();
-            const int maxAmount = 18;
+            const int maxAmount = static_cast<float>(0.4f / GetFrameTime());
             const int key = input.keyPad;
             const int gamePad = input.gamePad;
             input.bPress = (IsKeyPressed(key) || IsGamepadButtonPressed(mGamePadIdSelected, gamePad)) && !bKeyModifier && !mDisableInput;
             input.bDown = (IsKeyDown(key) || IsGamepadButtonDown(mGamePadIdSelected, gamePad)) && !bKeyModifier && !mDisableInput;
             input.bRelease = (IsKeyReleased(key) || IsGamepadButtonReleased(mGamePadIdSelected, gamePad)) && !bKeyModifier && !mDisableInput;
             input.bUp = (IsKeyUp(key) || IsGamepadButtonUp(mGamePadIdSelected, gamePad)) && !bKeyModifier && !mDisableInput;
+            const bool bDown = input.bDown;
 
             if (input.bDown)
             {
-                input.amoutDown = Math::Clamp(input.amoutDown + 1, 0, maxAmount);
-                input.bDown = (input.amoutDown == 1 || input.amoutDown == maxAmount);
+                input.amoutDown = Math::Clamp(input.amoutDown + 1, 0, maxAmount * 60);
+                input.bDown = (input.amoutDown == 1 || input.amoutDown >= maxAmount);
             }
             else
             {

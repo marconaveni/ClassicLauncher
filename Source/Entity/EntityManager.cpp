@@ -30,6 +30,19 @@ namespace ClassicLauncher
         }
     }
 
+    void EntityManager::SetNewEntities()
+    {
+        if (mTempEntities.size() > 0)
+        {
+            for (auto& entity : mTempEntities)
+            {
+                mEntities.push_back(std::move(entity));
+            }
+            mTempEntities.clear();
+            mPrepareNewOrdination = true;
+        }
+    }
+
     void EntityManager::SetTimer(TimerHandling& timerHandling, std::function<void()> callbackFunction, Entity* targetEntity, float delay, bool bLooped)
     {
         ValidTimerHandling(timerHandling);
@@ -53,21 +66,21 @@ namespace ClassicLauncher
 
     void EntityManager::SetZOrder()
     {
-        if (!mPreparedZOrder)
+        if (!mPrepareNewOrdination)
         {
             return;
         }
         std::sort(
             mEntities.begin(), mEntities.end(), [](const std::unique_ptr<Entity>& a, const std::unique_ptr<Entity>& b) { return a->GetIdZOrder() < b->GetIdZOrder(); });
-        mPreparedZOrder = false;
+        mPrepareNewOrdination = false;
     }
 
     void EntityManager::SetZOrder(Entity* entity, int zOrder)
     {
-        const int multiply = (int)mEntities.size() * zOrder;
+        const int multiply = GetEntitySize() * zOrder;
         entity->SetZOrder(zOrder);
         entity->mIdZOrder = entity->mId + multiply;
-        mPreparedZOrder = true;
+        mPrepareNewOrdination = true;
 
         PRINT(TEXT("entity ZOrder %d", entity->GetZOrder()), 5.0f, "line344");
         PRINT(TEXT("entity IdZOrder %d", entity->GetIdZOrder()), 5.0f, "lindde344");
@@ -87,6 +100,7 @@ namespace ClassicLauncher
             bEnable = !bEnable;
         }
 #endif
+        SetNewEntities();
 
         for (auto& entity : mEntities)
         {
@@ -170,26 +184,14 @@ namespace ClassicLauncher
                 EndScissorMode();
             }
             entity->mToDraw = false;
-            entity->mBringToFront = false;
         }
     }
 
     void EntityManager::Draw()
     {
-        std::vector<Entity*> entitiesRenderFront;
         for (auto& entity : mEntities)
         {
-            if (entity->mBringToFront)
-            {
-                entitiesRenderFront.emplace_back(entity.get());
-                continue;
-            }
             DrawEntity(entity.get());
-        }
-
-        for (auto& entity : entitiesRenderFront)
-        {
-            DrawEntity(entity);
         }
     }
 
@@ -233,7 +235,7 @@ namespace ClassicLauncher
             timer.second.reset();
         }
         mTimers.clear();
-        mPreparedZOrder = true;
+        mPrepareNewOrdination = true;
     }
 
 }  // namespace ClassicLauncher

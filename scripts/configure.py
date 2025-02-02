@@ -12,6 +12,7 @@ build_type = "Release"
 fsanitize = "-DCLASSIC_LAUNCHER_FSANITIZE=FALSE"
 raspberrypi = "-DCLASSIC_RASPBERRY_PI=FALSE"
 flags = "-DCLASSIC_LAUNCHER_FLAGS=FALSE"
+theme = "-DCLASSIC_FORCE_THEME_1X=FALSE"
 
  
 for arg in sys.argv:
@@ -26,6 +27,10 @@ for arg in sys.argv:
         raspberrypi = "-DCLASSIC_RASPBERRY_PI=TRUE"
     elif argl == "--flags" or argl == "-f":
         flags = "-DCLASSIC_LAUNCHER_FLAGS=TRUE"
+    elif argl == "--theme1x" or argl == "-t":
+        theme = "-DCLASSIC_FORCE_THEME_1X=TRUE"
+
+        
 
 
 try:
@@ -41,7 +46,7 @@ if not os.path.isdir(path_workspace):
 
 
 try:
-    subprocess.run(["cmake", "-B", path_workspace, f"-DCMAKE_BUILD_TYPE={build_type}", fsanitize , raspberrypi , flags], check=True) #cmake -B path/build -DCMAKE_BUILD_TYPE=build_type
+    subprocess.run(["cmake", "-B", path_workspace, f"-DCMAKE_BUILD_TYPE={build_type}", fsanitize , raspberrypi , flags, theme], check=True) #cmake -B path/build -DCMAKE_BUILD_TYPE=build_type
 except subprocess.CalledProcessError as e:
     print(f"Error cmake \": {e}")
     print("Please check your CMake installation.")

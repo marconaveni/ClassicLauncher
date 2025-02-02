@@ -66,6 +66,7 @@ namespace ClassicLauncher
             mCardSelected->mProperties.color.SetOpacity(255);
             return;
         }
+        mCardSelected->mProperties.color.SetOpacity(0);
         TransformProperties target = mCardSelected->mProperties;
         target.color.a = 255;
         mCardSelected->StartAnimation("card-focus", 0.2f, mCardSelected->mProperties, target, Ease::EaseLinearNone, false);
@@ -79,6 +80,7 @@ namespace ClassicLauncher
             mCardSelected->mProperties.color.SetOpacity(0);
             return;
         }
+        mCardSelected->mProperties.color.SetOpacity(255);
         TransformProperties target = mCardSelected->mProperties;
         target.color.a = 0;
         mCardSelected->StartAnimation("card-lost-focus", 0.2f, mCardSelected->mProperties, target, Ease::EaseLinearNone, false);
@@ -150,20 +152,21 @@ namespace ClassicLauncher
         target.x += (-target.width / 2 * target.scaleX) + target.width / 2;
         target.y += (-target.height / 2 * target.scaleY) + target.height / 2;
 
+        target.color.a = 0;
         StartAnimation("card-zoom", time, mProperties, target, Ease::EaseQuadInOut, true);
 
         TransformProperties targetMain = mCardMain->mProperties;
         TransformProperties targetSelected = mCardSelected->mProperties;
         TransformProperties targetCover = mCover->mProperties;
 
-        targetMain.color.a = 0;
-        targetSelected.color.a = 0;
-        targetCover.color.a = 0;
-        mCardMain->StartAnimation("card-zoom", time, mCardMain->mProperties, targetMain, Ease::EaseQuadInOut, false);
-        mCardSelected->StartAnimation("card-zoom", time, mCardSelected->mProperties, targetSelected, Ease::EaseQuadInOut, false);
-        mCover->StartAnimation("card-zoom", time, mCover->mProperties, targetCover, Ease::EaseQuadInOut, false);
+        //targetMain.color.a = 0;
+        //targetSelected.color.a = 0;
+        //targetCover.color.a = 0;
+        //mCardMain->StartAnimation("card-zoom", time, mCardMain->mProperties, targetMain, Ease::EaseQuadInOut, false);
+        //mCardSelected->StartAnimation("card-zoom", time, mCardSelected->mProperties, targetSelected, Ease::EaseQuadInOut, false);
+        //mCover->StartAnimation("card-zoom", time, mCover->mProperties, targetCover, Ease::EaseQuadInOut, false);
 
-        pApplication->GetEntityManager()->SetTimer(mTimer, CALLFUNCTION(Reset, this), this, time * 3);
+        pApplication->GetEntityManager()->SetTimer(mTimer, CALLFUNCTION(Reset, this), this, time * 2);
     }
 
     void GuiCard::SetFrontCard()

@@ -145,19 +145,28 @@ namespace ClassicLauncher
     {
         GuiComponent::Update();
 
+        if (IsKeyReleased(KEY_SEVEN))
+        {
+            //mApplication->GetEntityManager()->CreateEntity<GuiCard>("GuiCard", 10 , 10);
+            const int fps = GetFPS() == 60 ? 30 : 60;
+            SetTargetFPS(fps);
+        }
+        const float minSpeed = 20.0f * 60.0f * GetFrameTime();
+        const float maxSpeed = Math::Clamp(88.0f * 60.0f * GetFrameTime(), 0, 255);
         if (InputManager::IsDown(InputName::rightTriggerFront))
         {
             mSpeed = 255;
         }
         else if (InputManager::IsDown(InputName::leftFaceLeft) || InputManager::IsDown(InputName::leftFaceRight))
         {
-            mSpeed += 0.35f;
-            mSpeed = Math::Clamp(mSpeed, 0.0f, 88.0f);
+            mSpeed += 0.25f * 60.0f * GetFrameTime();
+            mSpeed = Math::Clamp(mSpeed, minSpeed, maxSpeed);
         }
         else
         {
-            mSpeed = 22.0f;
+            mSpeed = minSpeed;
         }
+        //PRINT(TEXT("mSpeed %.8f", mSpeed), 5.0f, "mspeed");
 
         if (InputManager::IsDown(InputName::leftFaceLeft) && !mIsRight)
         {
@@ -183,11 +192,11 @@ namespace ClassicLauncher
 
         if (mIsRight)
         {
-            mPositionX = mPositionX - (int)mSpeed;
+            mPositionX = mPositionX - mSpeed;
         }
         else if (mIsLeft)
         {
-            mPositionX = mPositionX + (int)mSpeed;
+            mPositionX = mPositionX + mSpeed;
         }
 
         for (const auto& cardContainer : mGuiCards)

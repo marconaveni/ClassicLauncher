@@ -82,6 +82,7 @@ namespace ClassicLauncher
         const float scale = Themes::GetScaleTexture();
         posi.x = posi.x * scale;
         posi.y = posi.y * scale;
+        mColor.a = mProperties.color.a;
         DrawTextEx(mFont, mText.data(), posi, mSize * scale, mSpacing, mColor);
     }
 

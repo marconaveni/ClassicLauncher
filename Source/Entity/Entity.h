@@ -30,7 +30,6 @@ namespace ClassicLauncher
         bool mToDraw;
         bool mScissorMode;
         bool mVisible;
-        bool mBringToFront;
         int mZOrder;
         int mIdZOrder;
         int mId;
@@ -63,7 +62,6 @@ namespace ClassicLauncher
         void SetVisible(bool bEnable) { mVisible = bEnable; }
         int GetZOrder() const { return mZOrder; }
         int GetIdZOrder() const { return mIdZOrder; }
-        void SetBringToFront() { mBringToFront = true; }
 
         TransformProperties mProperties;
         std::string mTextureName = "transparent";

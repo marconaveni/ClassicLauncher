@@ -3,7 +3,7 @@
 namespace ClassicLauncher
 {
     Entity::Entity()
-        : mToDelete(false), mToDraw(true), mScissorMode(false), mVisible(true), mBringToFront(false), mZOrder(0), mIdZOrder(0), mId(0), mChildEntities(), mNameId()
+        : mToDelete(false), mToDraw(true), mScissorMode(false), mVisible(true), mZOrder(0), mIdZOrder(0), mId(0), mChildEntities(), mNameId()
     {
     }
 
@@ -15,6 +15,7 @@ namespace ClassicLauncher
             entity->mProperties.rootY = mProperties.y + mProperties.rootY;
             entity->mProperties.rootScaleX = mProperties.scaleX;
             entity->mProperties.rootScaleY = mProperties.scaleY;
+            entity->mProperties.color.a = mProperties.color.a <= entity->mProperties.color.a ?  mProperties.color.a : entity->mProperties.color.a ;
         }
     }
 

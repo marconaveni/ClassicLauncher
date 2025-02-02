@@ -140,18 +140,18 @@ namespace ClassicLauncher
 
     void GuiWindow::Teste()
     {
-        //if (IsKeyReleased(KEY_EIGHT))
-        //{
-        //    if (mGuiHorizontalBox == nullptr)
-        //    {
-        //        mGuiHorizontalBox = mApplication->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
-        //        mGuiHorizontalBox->Init();
-        //        AddChild(mGuiHorizontalBox);
-        //        return;
-        //    }
-        //    mGuiHorizontalBox->SelfDelete();
-        //    mGuiHorizontalBox = nullptr;
-        //}
+        if (IsKeyReleased(KEY_EIGHT))
+        {
+            if (mGuiHorizontalBox == nullptr)
+            {
+                mGuiHorizontalBox = mApplication->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
+                mGuiHorizontalBox->Init();
+                AddChild(mGuiHorizontalBox);
+                return;
+            }
+            mGuiHorizontalBox->SelfDelete();
+            mGuiHorizontalBox = nullptr;
+        }
     }
 
 }  // namespace ClassicLauncher
