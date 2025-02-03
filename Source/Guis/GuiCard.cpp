@@ -24,9 +24,7 @@ namespace ClassicLauncher
 
     void GuiCard::CreateCard(GuiComponent*& card, int sourceX, int sourceY, unsigned char alpha, const char* title)
     {
-        Application* pApplication = GetApplication();
-
-        card = pApplication->GetEntityManager()->CreateEntity<GuiComponent>(title);
+        card = GetApplication()->GetEntityManager()->CreateEntity<GuiComponent>(title);
         card->mProperties.width = 252;
         card->mProperties.height = 276;
         card->mProperties.sourceX = sourceX;
@@ -41,12 +39,7 @@ namespace ClassicLauncher
     {
         GuiComponent::Update();
 
-        Application* pApplication = &Application::Get();
-        if (pApplication == nullptr)
-        {
-            return;
-        }
-        Texture2D* textureReference = pApplication->GetSpriteManager()->GetTexture(mCover->mTextureName);
+        Texture2D* textureReference = GetApplication()->GetSpriteManager()->GetTexture(mCover->mTextureName);
         Animation pAnim = mCover->GetAnimation("card-zoom");
         if (textureReference != nullptr && mCover->mTextureName != "sprite" && !pAnim.mIsRunning && mCover->mProperties.width == 0 && mCover->mProperties.height == 0)
         {

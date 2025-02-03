@@ -14,9 +14,7 @@
 namespace ClassicLauncher
 {
     class Entity;
-    class Timer;
     class TimerManager;
-    struct TimerHandling;
 
     class EntityManager
     {
@@ -27,11 +25,9 @@ namespace ClassicLauncher
         std::vector<EntityType> mTypeCount;
         SpriteManager* mSpriteManagerReference;
         TimerManager* mTimerManagerReference;
-        std::unordered_map<int, std::unique_ptr<Timer>> mTimers;
         bool mPrepareNewOrdination = false;
         bool mHasNewEntity = false;
         void SetZOrder();
-        //void ValidTimerHandling(TimerHandling& timerHandling);
         void SetNewEntities();
 
     public:

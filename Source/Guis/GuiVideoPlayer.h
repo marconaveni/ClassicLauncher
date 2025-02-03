@@ -19,7 +19,6 @@ namespace ClassicLauncher
     {
     private:
 
-        Application* mApplication;
         std::unique_ptr<VideoPlayer> mPlayer;
         std::unique_ptr<VideoPlayer> mPlayerFullScreen;
         std::string mFilePath;

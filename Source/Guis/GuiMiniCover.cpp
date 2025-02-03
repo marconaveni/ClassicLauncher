@@ -35,14 +35,9 @@ namespace ClassicLauncher
     {
         GuiComponent::Update();
 
-        Application* pApplication = &Application::Get();
-        if (pApplication == nullptr)
-        {
-            return;
-        }
         for (auto& miniCover : mGuiCovers)
         {
-            Texture2D* textureReference = pApplication->GetSpriteManager()->GetTexture(miniCover->mTextureName);
+            Texture2D* textureReference = GetApplication()->GetSpriteManager()->GetTexture(miniCover->mTextureName);
             const float scale = Themes::GetScaleTexture();
             if (textureReference != nullptr && miniCover->mTextureName != "sprite" && miniCover->mProperties.width == 0 && miniCover->mProperties.height == 0)
             {
