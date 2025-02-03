@@ -6,11 +6,11 @@ namespace ClassicLauncher
 
     void GuiWindow::Init()
     {
-        mApplication = &Application::Get();
-        mProperties.width = (float)mApplication->GetSpecification().width;
-        mProperties.height = (float)mApplication->GetSpecification().height;
+        Application* pApplication = GetApplication();
+        mProperties.width = (float)pApplication->GetSpecification().width;
+        mProperties.height = (float)pApplication->GetSpecification().height;
 
-        mGuiBackground = mApplication->GetEntityManager()->CreateEntity<GuiComponent>("GuiBackground");
+        mGuiBackground = pApplication->GetEntityManager()->CreateEntity<GuiComponent>("GuiBackground");
         mGuiBackground->mProperties.sourceX = 1047;
         mGuiBackground->mProperties.sourceY = 195;
         mGuiBackground->mProperties.width = 96;
@@ -20,14 +20,14 @@ namespace ClassicLauncher
         mGuiBackground->mTextureName = "sprite";
         AddChild(mGuiBackground);
 
-        mGuiHorizontalBox = mApplication->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
+        mGuiHorizontalBox = pApplication->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
         mGuiHorizontalBox->Init();
         AddChild(mGuiHorizontalBox);
 
-        mGuiVideoPlayer = mApplication->GetEntityManager()->CreateEntity<GuiVideoPlayer>("GuiVideoPlayer");
-        mGuiBlackScreen = mApplication->GetEntityManager()->CreateEntity<GuiBlackScreen>("GuiBlackScreen");
-        mApplication->GetEntityManager()->SetZOrder(mGuiVideoPlayer, 5);
-        mApplication->GetEntityManager()->SetZOrder(mGuiBlackScreen, 99);
+        mGuiVideoPlayer = pApplication->GetEntityManager()->CreateEntity<GuiVideoPlayer>("GuiVideoPlayer");
+        mGuiBlackScreen = pApplication->GetEntityManager()->CreateEntity<GuiBlackScreen>("GuiBlackScreen");
+        pApplication->GetEntityManager()->SetZOrder(mGuiVideoPlayer, 5);
+        pApplication->GetEntityManager()->SetZOrder(mGuiBlackScreen, 99);
     }
 
     void GuiWindow::Update()
@@ -61,6 +61,8 @@ namespace ClassicLauncher
 
 #endif
 
+        Application* pApplication = GetApplication();
+
         if (InputManager::IsRelease(InputName::leftFaceUp))
         {
             if (mGuiVideoPlayer->IsPlayingFullscreen())
@@ -69,7 +71,7 @@ namespace ClassicLauncher
                 return;
             }
             mGuiVideoPlayer->Stop();
-            mApplication->GetAudioManager()->Play();
+            pApplication->GetAudioManager()->Play();
         }
 
         if (InputManager::IsRelease(InputName::leftFaceDown))
@@ -79,10 +81,10 @@ namespace ClassicLauncher
                 mGuiVideoPlayer->InitFullscreen();
                 return;
             }
-            const bool bIsplay = mGuiVideoPlayer->Init(mApplication->GetGameListManager()->GetCurrentGameList()->video, 640, 480);
+            const bool bIsplay = mGuiVideoPlayer->Init(pApplication->GetGameListManager()->GetCurrentGameList()->video, 640, 480);
             if (bIsplay)
             {
-                mApplication->GetAudioManager()->Pause();
+                pApplication->GetAudioManager()->Pause();
             }
         }
         if (InputManager::IsRelease(InputName::rightFaceLeft))
@@ -92,9 +94,9 @@ namespace ClassicLauncher
         if (InputManager::IsRelease(InputName::rightFaceDown))
         {
             InputManager::DisableInput();
-            mApplication->GetAudioManager()->PlayClick();
+            pApplication->GetAudioManager()->PlayClick();
             mGuiHorizontalBox->Click();
-            if (mApplication->GetGameListManager()->GetCurrentList() == GameListSelect)
+            if (pApplication->GetGameListManager()->GetCurrentList() == GameListSelect)
             {
                 mGuiBlackScreen->FadeIn();
             }
@@ -102,39 +104,41 @@ namespace ClassicLauncher
             {
                 mGuiBlackScreen->FadeInFadeOut();
             }
-            mApplication->GetTimerManager()->SetTimer(mClickTimer, CALLFUNCTION(OnClick, this), this, 0.5f, false);
+            pApplication->GetTimerManager()->SetTimer(mClickTimer, CALLFUNCTION(OnClick, this), this, 0.5f, false);
         }
-        if (InputManager::IsRelease(InputName::rightFaceRight) && mApplication->GetGameListManager()->GetCurrentList() == GameListSelect)  // back
+        if (InputManager::IsRelease(InputName::rightFaceRight) && pApplication->GetGameListManager()->GetCurrentList() == GameListSelect)  // back
         {
             InputManager::DisableInput();
             mGuiBlackScreen->FadeInFadeOut();
-            mApplication->GetTimerManager()->SetTimer(mClickTimer, CALLFUNCTION(OnBack, this), this, 0.5f, false);
+            pApplication->GetTimerManager()->SetTimer(mClickTimer, CALLFUNCTION(OnBack, this), this, 0.5f, false);
         }
     }
 
     void GuiWindow::OnClick()
     {
-        LogClassic(LOG_CLASSIC_INFO, "Called OnClick");
-        if (mApplication->GetGameListManager()->GetCurrentList() == GameListSelect)
+        LOG(LOG_CLASSIC_INFO, "Called OnClick");
+        Application* pApplication = GetApplication();
+        if (pApplication->GetGameListManager()->GetCurrentList() == GameListSelect)
         {
-            mApplication->CreateProcess();
+            pApplication->CreateProcess();
         }
         else
         {
             mGuiHorizontalBox->ChangeList(GameListSelect);
-            mApplication->GetThemes()->LoadTheme(mApplication);
-            mApplication->GetTimerManager()->SetTimer(mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
+            pApplication->GetThemes()->LoadTheme(pApplication);
+            pApplication->GetTimerManager()->SetTimer(mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
     }
 
     void GuiWindow::OnBack()
     {
-        LogClassic(LOG_CLASSIC_INFO, "Called OnBack");
-        if (mApplication->GetGameListManager()->GetCurrentList() == GameListSelect)
+        LOG(LOG_CLASSIC_INFO, "Called OnBack");
+        Application* pApplication = GetApplication();
+        if (pApplication->GetGameListManager()->GetCurrentList() == GameListSelect)
         {
             mGuiHorizontalBox->ChangeList(SystemListSelect);
-            mApplication->GetThemes()->LoadTheme(mApplication);
-            mApplication->GetTimerManager()->SetTimer(mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
+            pApplication->GetThemes()->LoadTheme(pApplication);
+            pApplication->GetTimerManager()->SetTimer(mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
     }
 
@@ -145,7 +149,7 @@ namespace ClassicLauncher
         {
             if (mGuiHorizontalBox == nullptr)
             {
-                mGuiHorizontalBox = mApplication->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
+                mGuiHorizontalBox = GetApplication()->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
                 mGuiHorizontalBox->Init();
                 AddChild(mGuiHorizontalBox);
                 InputManager::EnableInput();

@@ -20,7 +20,6 @@ namespace ClassicLauncher
 
     class GuiWindow : public GuiComponent
     {
-        Application* mApplication;
         GuiHorizontalBox* mGuiHorizontalBox;
         GuiBlackScreen* mGuiBlackScreen;
         GuiVideoPlayer* mGuiVideoPlayer;

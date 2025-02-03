@@ -29,7 +29,6 @@ namespace ClassicLauncher
 
     class GuiHorizontalBox : public GuiComponent
     {
-        Application* mApplication;
         GuiTextBox* mGuiTitle;
         GuiMiniCover* mMiniCover;
         std::vector<GuiCard*> mGuiCards;

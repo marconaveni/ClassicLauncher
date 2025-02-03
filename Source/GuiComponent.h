@@ -14,10 +14,11 @@ namespace ClassicLauncher
     {
         std::map<std::string, SpriteAnimator> mSpriteAnimations;
         std::map<std::string, Animation> mAnimations;
+        Application* mApplication;
 
     public:
 
-        GuiComponent() = default;
+        GuiComponent();
         virtual ~GuiComponent() override = default;
         virtual EntityType GetType() const override { return EntityType::GuiComponentClass; }
         virtual void Update() override;
@@ -26,6 +27,7 @@ namespace ClassicLauncher
         virtual void AnimationUpdate(std::string name) {}
         virtual void AnimationFinished(std::string name) {}
 
+        Application* GetApplication(){ return mApplication; }
         Animation& GetAnimation(const std::string& name) { return mAnimations[name]; }
 
         void StartAnimation(const std::string& name,

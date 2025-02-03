@@ -5,7 +5,7 @@
 namespace ClassicLauncher
 {
     GuiMiniCover::GuiMiniCover()
-        : mApplication(&Application::Get()), mGuiCovers(), mArrow(nullptr), mSize(32) {};
+        : mGuiCovers(), mArrow(nullptr), mSize(32) {};
 
     void GuiMiniCover::Init()
     {
@@ -15,7 +15,7 @@ namespace ClassicLauncher
         for (int i = 0; i < mSize; i++)
         {
             const int x = 29 * i;
-            auto miniCover = mApplication->GetEntityManager()->CreateEntity<GuiComponent>("miniCover");
+            auto miniCover = GetApplication()->GetEntityManager()->CreateEntity<GuiComponent>("miniCover");
             miniCover->mProperties.x = x;
             miniCover->mTextureName = "transparent";
             AddChild(miniCover);
@@ -24,7 +24,7 @@ namespace ClassicLauncher
 
         std::vector<Rectangle> recs = { { 798.0f, 1017.0f, 30.0f, 18.0f }, { 834.0f, 1017.0f, 30.0f, 18.0f }, { 870.0f, 1017.0f, 30.0f, 18.0f } };
 
-        mArrow = mApplication->GetEntityManager()->CreateEntity<GuiComponent>("arrow");
+        mArrow = GetApplication()->GetEntityManager()->CreateEntity<GuiComponent>("arrow");
         mArrow->mProperties.y = -21.0f;
         mArrow->mTextureName = "sprite";
         mArrow->AddAnimationFrame("frame", 0.2f, recs);
@@ -66,8 +66,8 @@ namespace ClassicLauncher
     void GuiMiniCover::SetCovers()
     {
         ClearCovers();
-        GameListManager* pManager = mApplication->GetGameListManager();
-        SpriteManager* pSpriteManager = mApplication->GetSpriteManager();
+        GameListManager* pManager = GetApplication()->GetGameListManager();
+        SpriteManager* pSpriteManager = GetApplication()->GetSpriteManager();
         const int gameListSize = pManager->GetGameListSize();
         const float scale = Themes::GetScaleTexture();
 

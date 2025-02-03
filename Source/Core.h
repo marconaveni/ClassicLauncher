@@ -1,6 +1,7 @@
 #ifndef CORE_H
 #define CORE_H
 
+#include "Assert.h"
 #include "Data/Color.h"
 #include "Data/Rectangle.h"
 #include "Data/TransformProperties.h"

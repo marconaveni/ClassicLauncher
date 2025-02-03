@@ -1,8 +1,15 @@
 #include "GuiComponent.h"
 #include "Graphics/SpriteAnimator.h"
+#include "Application.h"
 
 namespace ClassicLauncher
 {
+    GuiComponent::GuiComponent()
+        : Entity()
+    {
+        mApplication = &Application::Get();
+        ASSERT(mApplication);
+    }
 
     void GuiComponent::Update()
     {

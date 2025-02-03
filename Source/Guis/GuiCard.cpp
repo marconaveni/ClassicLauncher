@@ -24,9 +24,9 @@ namespace ClassicLauncher
 
     void GuiCard::CreateCard(GuiComponent*& card, int sourceX, int sourceY, unsigned char alpha, const char* title)
     {
-        Application* app = &Application::Get();
+        Application* pApplication = GetApplication();
 
-        card = app->GetEntityManager()->CreateEntity<GuiComponent>(title);
+        card = pApplication->GetEntityManager()->CreateEntity<GuiComponent>(title);
         card->mProperties.width = 252;
         card->mProperties.height = 276;
         card->mProperties.sourceX = sourceX;

@@ -17,7 +17,6 @@ namespace ClassicLauncher
     {
     private:
 
-        Application* mApplication;
         std::vector<GuiComponent*> mGuiCovers;
         GuiComponent* mArrow;
         int mSize;
