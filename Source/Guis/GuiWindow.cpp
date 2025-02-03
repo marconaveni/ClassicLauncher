@@ -102,13 +102,13 @@ namespace ClassicLauncher
             {
                 mGuiBlackScreen->FadeInFadeOut();
             }
-            mApplication->GetEntityManager()->SetTimer(mClickTimer, CALLFUNCTION(OnClick, this), this, 0.5f, false);
+            mApplication->GetTimerManager()->SetTimer(mClickTimer, CALLFUNCTION(OnClick, this), this, 0.5f, false);
         }
         if (InputManager::IsRelease(InputName::rightFaceRight) && mApplication->GetGameListManager()->GetCurrentList() == GameListSelect)  // back
         {
             InputManager::DisableInput();
             mGuiBlackScreen->FadeInFadeOut();
-            mApplication->GetEntityManager()->SetTimer(mClickTimer, CALLFUNCTION(OnBack, this), this, 0.5f, false);
+            mApplication->GetTimerManager()->SetTimer(mClickTimer, CALLFUNCTION(OnBack, this), this, 0.5f, false);
         }
     }
 
@@ -123,7 +123,7 @@ namespace ClassicLauncher
         {
             mGuiHorizontalBox->ChangeList(GameListSelect);
             mApplication->GetThemes()->LoadTheme(mApplication);
-            mApplication->GetEntityManager()->SetTimer(mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
+            mApplication->GetTimerManager()->SetTimer(mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
     }
 
@@ -134,12 +134,13 @@ namespace ClassicLauncher
         {
             mGuiHorizontalBox->ChangeList(SystemListSelect);
             mApplication->GetThemes()->LoadTheme(mApplication);
-            mApplication->GetEntityManager()->SetTimer(mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
+            mApplication->GetTimerManager()->SetTimer(mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
     }
 
     void GuiWindow::Teste()
     {
+#ifdef _DEBUG
         if (IsKeyReleased(KEY_EIGHT))
         {
             if (mGuiHorizontalBox == nullptr)
@@ -147,11 +148,13 @@ namespace ClassicLauncher
                 mGuiHorizontalBox = mApplication->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
                 mGuiHorizontalBox->Init();
                 AddChild(mGuiHorizontalBox);
+                InputManager::EnableInput();
                 return;
             }
             mGuiHorizontalBox->SelfDelete();
             mGuiHorizontalBox = nullptr;
         }
+#endif
     }
 
 }  // namespace ClassicLauncher

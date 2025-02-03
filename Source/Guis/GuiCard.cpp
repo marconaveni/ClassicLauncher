@@ -159,14 +159,7 @@ namespace ClassicLauncher
         TransformProperties targetSelected = mCardSelected->mProperties;
         TransformProperties targetCover = mCover->mProperties;
 
-        //targetMain.color.a = 0;
-        //targetSelected.color.a = 0;
-        //targetCover.color.a = 0;
-        //mCardMain->StartAnimation("card-zoom", time, mCardMain->mProperties, targetMain, Ease::EaseQuadInOut, false);
-        //mCardSelected->StartAnimation("card-zoom", time, mCardSelected->mProperties, targetSelected, Ease::EaseQuadInOut, false);
-        //mCover->StartAnimation("card-zoom", time, mCover->mProperties, targetCover, Ease::EaseQuadInOut, false);
-
-        pApplication->GetEntityManager()->SetTimer(mTimer, CALLFUNCTION(Reset, this), this, time * 2);
+        pApplication->GetTimerManager()->SetTimer(mTimer, CALLFUNCTION(Reset, this), this, time * 2);
     }
 
     void GuiCard::SetFrontCard()

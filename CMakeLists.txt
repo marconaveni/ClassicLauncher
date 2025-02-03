@@ -52,30 +52,31 @@ include_directories(
 
 message(STATUS "[Classic Launcher] Source dir is: " ${CMAKE_SOURCE_DIR})
 
-if(MSVC)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message(STATUS "[Classic Launcher] DevMode is enabled")
+else()    
+    message(STATUS "[Classic Launcher] DevMode is disable")
+endif()
 
+
+if(MSVC)
 	set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -ENTRY:mainCRTStartup  /SUBSYSTEM:WINDOWS")
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         add_compile_options(/MTd)
         message(STATUS "[Classic Launcher] set /MTd")
-        message(STATUS "[Classic Launcher] DevMode is enabled")
         set(debug "_DEBUG")
     else()    
         add_compile_options(/MT)
         message(STATUS "[Classic Launcher] set /MT")
-        message(STATUS "[Classic Launcher] DevMode is disable")
     endif()
-
 endif()
 
 if(MINGW)
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         set(debug "_DEBUG")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
-        message(STATUS "[Classic Launcher] DevMode is enabled")
     else()    
         set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -mwindows -e mainCRTStartup")
-        message(STATUS "[Classic Launcher] DevMode is disable")
     endif()
 endif()
 
@@ -196,6 +197,8 @@ set(utils
     "${CMAKE_SOURCE_DIR}/Source/Utils/ThreadManager.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/Timer.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Utils/Timer.h"
+    "${CMAKE_SOURCE_DIR}/Source/Utils/TimerManager.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Utils/TimerManager.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/UtilsFunctionLibrary.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Utils/UtilsFunctionLibrary.h"
     )

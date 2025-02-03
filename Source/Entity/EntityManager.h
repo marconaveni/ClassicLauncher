@@ -13,8 +13,9 @@
 
 namespace ClassicLauncher
 {
-    class Timer;
     class Entity;
+    class Timer;
+    class TimerManager;
     struct TimerHandling;
 
     class EntityManager
@@ -25,17 +26,17 @@ namespace ClassicLauncher
         std::vector<std::unique_ptr<Entity>> mTempEntities;
         std::vector<EntityType> mTypeCount;
         SpriteManager* mSpriteManagerReference;
+        TimerManager* mTimerManagerReference;
         std::unordered_map<int, std::unique_ptr<Timer>> mTimers;
-        // std::vector<std::unique_ptr<Timer>> mTimers;
         bool mPrepareNewOrdination = false;
         bool mHasNewEntity = false;
         void SetZOrder();
-        void ValidTimerHandling(TimerHandling& timerHandling);
+        //void ValidTimerHandling(TimerHandling& timerHandling);
         void SetNewEntities();
 
     public:
 
-        EntityManager(SpriteManager* spriteManagerReference);
+        EntityManager(SpriteManager* spriteManagerReference, TimerManager* timerManagerReference);
         ~EntityManager();
 
         template <typename T, typename... Args>
@@ -66,14 +67,13 @@ namespace ClassicLauncher
         }
 
         inline int GetEntitySize() { return static_cast<int>(mEntities.size() + mTempEntities.size()); }
-
-        void SetTimer(TimerHandling& timerHandling, std::function<void()> callbackFunction, Entity* targetEntity, float delay, bool bLooped = false);
         void SetVisibleAll(Entity* entity, bool bVisible);
         void SetZOrder(Entity* entity, int zOrder);
         void UpdateAll();
         void UpdatePositionAll();
         void Draw();
         void End();
+        void ClearAllEntitys();
 
     private:
 

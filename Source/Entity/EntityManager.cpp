@@ -5,29 +5,14 @@
 namespace ClassicLauncher
 {
 
-    EntityManager::EntityManager(SpriteManager* spriteManagerReference)
-        : mSpriteManagerReference(spriteManagerReference) {};
+    EntityManager::EntityManager(SpriteManager* spriteManagerReference, TimerManager* timerManagerReference)
+        : mSpriteManagerReference(spriteManagerReference), mTimerManagerReference(timerManagerReference)
+    {
+    }
 
     EntityManager::~EntityManager()
     {
-        for (auto& entity : mEntities)
-        {
-            if (entity != nullptr)
-            {
-                entity = nullptr;
-            }
-        }
-        mEntities.clear();  // Limpa o vetor
-    }
-
-    void EntityManager::ValidTimerHandling(TimerHandling& timerHandling)
-    {
-        const int size = static_cast<int>(mTimers.size() - 1);
-        if (timerHandling.id < 0 || timerHandling.id > size)
-        {
-            timerHandling.id = -1;
-            return;
-        }
+        ClearAllEntitys();
     }
 
     void EntityManager::SetNewEntities()
@@ -41,19 +26,6 @@ namespace ClassicLauncher
             mTempEntities.clear();
             mPrepareNewOrdination = true;
         }
-    }
-
-    void EntityManager::SetTimer(TimerHandling& timerHandling, std::function<void()> callbackFunction, Entity* targetEntity, float delay, bool bLooped)
-    {
-        ValidTimerHandling(timerHandling);
-
-        if (timerHandling.id < 0)
-        {
-            std::unique_ptr<Timer> newTimer = std::make_unique<Timer>();
-            timerHandling.id = mTimers.size();
-            mTimers.insert(std::make_pair(timerHandling.id, std::move(newTimer)));
-        }
-        mTimers[timerHandling.id]->SetTimer(callbackFunction, targetEntity, delay, bLooped);
     }
 
     void EntityManager::SetVisibleAll(Entity* entity, bool bVisible)
@@ -81,10 +53,6 @@ namespace ClassicLauncher
         entity->SetZOrder(zOrder);
         entity->mIdZOrder = entity->mId + multiply;
         mPrepareNewOrdination = true;
-
-        PRINT(TEXT("entity ZOrder %d", entity->GetZOrder()), 5.0f, "line344");
-        PRINT(TEXT("entity IdZOrder %d", entity->GetIdZOrder()), 5.0f, "lindde344");
-        PRINT(TEXT("entity Id %d", entity->mId), 5.0f, "line3d44");
     }
 
 #ifdef _DEBUG
@@ -94,7 +62,6 @@ namespace ClassicLauncher
     void EntityManager::UpdateAll()
     {
 #ifdef _DEBUG
-
         if (IsKeyReleased(KEY_FIVE))
         {
             bEnable = !bEnable;
@@ -106,10 +73,6 @@ namespace ClassicLauncher
         {
             entity->mToDraw = entity->mVisible;
             entity->Update();
-        }
-        for (auto& timer : mTimers)
-        {
-            timer.second->Update();
         }
         UpdatePositionAll();
     }
@@ -199,12 +162,26 @@ namespace ClassicLauncher
     {
         for (auto& entity : mEntities)
         {
-            if (entity != nullptr)
-            {
-                entity->End();
-                entity->RemoveAllChilds();
-            }
+            entity->End();
+            entity->RemoveAllChilds();
         }
+        ClearAllEntitys();
+    }
+
+    void EntityManager::ClearAllEntitys()
+    {
+        if (mEntities.size() == 0)
+        {
+            return;
+        }
+
+        for (auto& entity : mEntities)
+        {
+            entity.reset();
+            entity = nullptr;
+        }
+        mEntities.clear();  // Limpa o vetor
+        mEntities.shrink_to_fit();
     }
 
     void EntityManager::DeleteEntitys(bool bIsDeleteEntities)
@@ -230,11 +207,7 @@ namespace ClassicLauncher
                                        }),
                         mEntities.end());
 
-        for (auto& timer : mTimers)
-        {
-            timer.second.reset();
-        }
-        mTimers.clear();
+        mTimerManagerReference->ClearAllTimers();
         mPrepareNewOrdination = true;
     }
 

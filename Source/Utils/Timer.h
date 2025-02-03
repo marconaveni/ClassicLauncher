@@ -8,15 +8,6 @@ namespace ClassicLauncher
 {
     class Entity;
 
-    struct TimerHandling
-    {
-        friend class EntityManager;
-
-    private:
-
-        int id = -1;
-    };
-
     class Timer
     {
     private:

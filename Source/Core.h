@@ -12,7 +12,7 @@
 #include "Utils/Print.h"
 #include "Utils/Resources.h"
 #include "Utils/StringFunctionLibrary.h"
-#include "Utils/Timer.h"
+#include "Utils/TimerManager.h"
 #include "Utils/UtilsFunctionLibrary.h"
 #include "raylib.h"
 

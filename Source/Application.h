@@ -14,6 +14,7 @@
 #include "Guis/GuiWindow.h"
 #include "Utils/ProcessManager.h"
 #include "Video/VideoPlayer.h"
+#include "Utils/TimerManager.h"
 
 namespace ClassicLauncher
 {
@@ -23,6 +24,7 @@ namespace ClassicLauncher
     class VideoPlayer;
     class InputManager;
     class Themes;
+    class TimerManager;
 
     struct ApplicationSpecification
     {
@@ -50,6 +52,7 @@ namespace ClassicLauncher
         Themes mThemes;
         GuiWindow* mGuiWindow;
         InputManager mInputManager;
+        TimerManager mTimerManager;
 
     public:
 
@@ -65,6 +68,7 @@ namespace ClassicLauncher
         GameListManager* GetGameListManager() { return &mGameListManager; }
         ProcessManager* GetProcessManager() { return &mProcessManager; }
         Themes* GetThemes() { return &mThemes; }
+        TimerManager* GetTimerManager() { return &mTimerManager; }
         GuiBlackScreen* GetGuiBlackScreen();
         void Init();
         void CreateProcess();
