@@ -8,6 +8,8 @@
         #include <iostream>
         #define CLASSIC_ASSERT(condition) if (!(condition)) __builtin_trap()
     #endif
+#else
+    #define CLASSIC_ASSERT(condition) (condition)
 #endif
 
 #endif
