@@ -8,7 +8,7 @@ namespace ClassicLauncher
         : Entity()
     {
         mApplication = &Application::Get();
-        ASSERT(mApplication);
+        CLASSIC_ASSERT(mApplication);
     }
 
     void GuiComponent::Update()

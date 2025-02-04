@@ -1,8 +1,11 @@
 #include "GuiWindow.h"
-#include "Utils/Resources.h"
 
 namespace ClassicLauncher
 {
+    GuiWindow::GuiWindow()
+        : mGuiHorizontalBox(nullptr), mGuiBlackScreen(nullptr), mGuiVideoPlayer(nullptr), mGuiBackground(nullptr)
+    {
+    }
 
     void GuiWindow::Init()
     {
@@ -57,7 +60,6 @@ namespace ClassicLauncher
             mTextureName = mTextureName != "ref3" ? "ref3" : "transparent";
             mGuiBackground->mTextureName = mTextureName != "transparent" ? "transparent" : "sprite";
         }
-
 
 #endif
 
@@ -160,5 +162,4 @@ namespace ClassicLauncher
         }
 #endif
     }
-
 }  // namespace ClassicLauncher

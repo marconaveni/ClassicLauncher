@@ -66,7 +66,10 @@ namespace ClassicLauncher
         const int gameListSize = pManager->GetGameListSize();
         const float scale = Themes::GetScaleTexture();
 
-        if (gameListSize == 0) return;
+        if (gameListSize == 0)
+        {
+            return;
+        }
 
         const int numCovers = gameListSize < mSize ? gameListSize + 1 : mSize;
 

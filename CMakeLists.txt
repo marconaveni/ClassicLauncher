@@ -209,7 +209,7 @@ set(video
 set(src
     "${CMAKE_SOURCE_DIR}/Source/Application.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Application.h"
-    "${CMAKE_SOURCE_DIR}/Source/Assert.h"
+    "${CMAKE_SOURCE_DIR}/Source/ClassicAssert.h"
     "${CMAKE_SOURCE_DIR}/Source/ClassicLauncher.h"
     "${CMAKE_SOURCE_DIR}/Source/Core.h"
     "${CMAKE_SOURCE_DIR}/Source/GuiComponent.cpp"

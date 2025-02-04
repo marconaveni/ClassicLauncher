@@ -1,19 +1,14 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include <memory>
-#include <vector>
 #include "Audio/AudioManager.h"
 #include "Core.h"
 #include "Data/GameListManager.h"
-#include "Entity/Entity.h"
 #include "Entity/EntityManager.h"
 #include "Graphics/Render.h"
-#include "Graphics/Sprite.h"
 #include "Graphics/SpriteManager.h"
 #include "Guis/GuiWindow.h"
 #include "Utils/ProcessManager.h"
-#include "Video/VideoPlayer.h"
 #include "Utils/TimerManager.h"
 
 namespace ClassicLauncher
