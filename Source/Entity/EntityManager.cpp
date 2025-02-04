@@ -28,6 +28,29 @@ namespace ClassicLauncher
         }
     }
 
+    void EntityManager::SetNameId(Entity* entity, const std::string& name)
+    {
+        int counter = 0; 
+        for (const auto& ent : mEntities)
+        {
+            if (ent->GetType() == entity->GetType())
+            {
+                counter++;
+            }
+        }
+        for (const auto& ent : mTempEntities)
+        {
+            if (ent->GetType() == entity->GetType())
+            {
+                counter++;
+            }
+        }
+
+        entity->mNameId = std::to_string(counter) + "_" + name;
+        entity->mId = GetEntitySize();
+        entity->mIdZOrder = GetEntitySize();
+    }
+
     void EntityManager::SetVisibleAll(Entity* entity, bool bVisible)
     {
         for (auto& entity : entity->GetChilds())

@@ -1,15 +1,12 @@
 #ifndef ENTITY_MANAGER_H
 #define ENTITY_MANAGER_H
 
-#include <functional>
 #include <memory>
 #include <string>
-#include <unordered_map>
 #include <vector>
 #include "Core.h"
 #include "Entity.h"
 #include "Graphics/SpriteManager.h"
-#include "Utils/Timer.h"
 
 namespace ClassicLauncher
 {
@@ -29,6 +26,7 @@ namespace ClassicLauncher
         bool mHasNewEntity = false;
         void SetZOrder();
         void SetNewEntities();
+        void SetNameId(Entity* entity, const std::string& name);
 
     public:
 
@@ -39,11 +37,7 @@ namespace ClassicLauncher
         T* CreateEntity(const std::string& name, Args&&... args)
         {
             auto entity = std::make_unique<T>(std::forward<Args>(args)...);
-            const int counter = 0;  //(int)std::count(mTypeCount.begin(), mTypeCount.end(), entity->GetType());
-            entity->mNameId = std::to_string(counter) + "_" + name;
-            entity->mId = GetEntitySize();
-            entity->mIdZOrder = GetEntitySize();
-            // mTypeCount.emplace_back(entity->GetType());
+            SetNameId(entity.get(), name);
             mTempEntities.push_back(std::move(entity));
             return static_cast<T*>(mTempEntities.back().get());
         }

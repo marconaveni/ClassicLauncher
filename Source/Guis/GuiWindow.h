@@ -1,18 +1,15 @@
 #ifndef GUI_WINDOW_H
 #define GUI_WINDOW_H
 
-#include <memory>
-#include "Application.h"
 #include "Core.h"
 #include "GuiComponent.h"
-#include "GuiHorizontalBox.h"
+#include "Guis/GuiHorizontalBox.h"
 #include "Guis/GuiBlackScreen.h"
 #include "Guis/GuiVideoPlayer.h"
 
 namespace ClassicLauncher
 {
 
-    class Application;
     class GuiHorizontalBox;
     class GuiBlackScreen;
     class GuiVideoPlayer;
