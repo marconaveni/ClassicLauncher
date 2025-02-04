@@ -26,12 +26,12 @@ namespace ClassicLauncher
         GuiComponent* mCover;
         bool mIsFocus = false;
         bool mIsFront = false;
-        void CreateCard(GuiComponent*& card, int sourceX, int sourceY, unsigned char alpha, const char* title);
+        void CreateCard(GuiComponent*& card, float sourceX, float sourceY, unsigned char alpha, const char* title);
 
 
     public:
 
-        GuiCard(int x, int y);
+        GuiCard(float x, float y);
         virtual ~GuiCard() override = default;
         virtual EntityType GetType() const override { return EntityType::GuiCardClass; }
         void Update() override;

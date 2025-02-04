@@ -27,7 +27,7 @@ namespace ClassicLauncher
         virtual void AnimationUpdate(std::string name) {}
         virtual void AnimationFinished(std::string name) {}
 
-        Application* GetApplication(){ return mApplication; }
+        Application* GetApplication() { return mApplication; }
         Animation& GetAnimation(const std::string& name) { return mAnimations[name]; }
 
         void StartAnimation(const std::string& name,

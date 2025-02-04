@@ -10,14 +10,16 @@ namespace ClassicLauncher
 {
 
     GuiHorizontalBox::GuiHorizontalBox()
-        : mPositionX(0), mIsLeft(false), mIsRight(false), mLastDirection(None), mIdFocus(0), mIdLastFocusSystem(3), mSpeed(22.0f) {};
+        : mGuiTitle(nullptr), mMiniCover(nullptr), mPositionX(0), mIsLeft(false), mIsRight(false), mLastDirection(None), mIdFocus(0), mIdLastFocusSystem(3), mSpeed(22.0f)
+    {
+    }
 
     void GuiHorizontalBox::Init()
     {
         mProperties.y = 0;
 
-        Application* pApplication = GetApplication();
-        mGuiTitle = pApplication->GetEntityManager()->CreateEntity<GuiTextBox>("GuiTitle", Resources::GetFont().c_str(), 48, 0);
+        EntityManager* pEntityManager = GetApplication()->GetEntityManager();
+        mGuiTitle = pEntityManager->CreateEntity<GuiTextBox>("GuiTitle", Resources::GetFont(), 48, 0);
         mGuiTitle->mProperties.x = 400;
         mGuiTitle->mProperties.y = 154;
         mGuiTitle->SetText("Title");
@@ -25,15 +27,16 @@ namespace ClassicLauncher
         mGuiTitle->SetTextOverflowPolicy(TextOverflowPolicy::clip);
         AddChild(mGuiTitle);
 
-        for (int cardPosition : mCardPositions)
+        for (float cardPosition : mCardPositions)
         {
-            const int x = cardPosition;
-            auto card = pApplication->GetEntityManager()->CreateEntity<GuiCard>("GuiCard", x , 222);
+            const float x = cardPosition;
+            const float y = 222.0f;
+            auto card = pEntityManager->CreateEntity<GuiCard>("GuiCard", x, y);
             AddChild(card);
             mGuiCards.emplace_back(card);
         }
 
-        mMiniCover = pApplication->GetEntityManager()->CreateEntity<GuiMiniCover>("MiniCover");
+        mMiniCover = pEntityManager->CreateEntity<GuiMiniCover>("MiniCover");
         mMiniCover->Init();
         AddChild(mMiniCover);
 
@@ -56,7 +59,7 @@ namespace ClassicLauncher
         mIdFocus = newId;
         mGuiCards[newId]->SetFocus(bForce);
         mIsLeft = true;
-        mGuiTitle->SetText(GetApplication()->GetGameListManager()->GetCurrentGameList()->name.c_str());
+        mGuiTitle->SetText(GetApplication()->GetGameListManager()->GetCurrentGameList()->name);
         const float scale = Themes::GetScaleTexture();
         mGuiTitle->mProperties.x = (1280.0f / 2.0f) - ((mGuiTitle->GetMeasureTextBox().GetIntX() / 2));
         mGuiTitle->mProperties.x = Math::Clamp(mGuiTitle->mProperties.x, 135, 1280);
@@ -120,19 +123,18 @@ namespace ClassicLauncher
         {
             card->SetFrontCard();
         }
-        
     }
 
     void GuiHorizontalBox::ClearCovers()
     {
         const int size = GetApplication()->GetGameListManager()->GetGameListSize();
-        SpriteManager* spriteManager = GetApplication()->GetSpriteManager();
+        SpriteManager* pSpriteManager = GetApplication()->GetSpriteManager();
         for (int i = 0; i < size; i++)
         {
             const std::string coverName = std::to_string(i) + "_CV";
             const std::string miniCoverName = std::to_string(i) + "_MCV";
-            const bool bResult1 = spriteManager->DeleteSprite(coverName);
-            const bool bResult2 = spriteManager->DeleteSprite(miniCoverName);
+            const bool bResult1 = pSpriteManager->DeleteSprite(coverName);
+            const bool bResult2 = pSpriteManager->DeleteSprite(miniCoverName);
 
             if (bResult1 && bResult2)
             {
@@ -140,17 +142,16 @@ namespace ClassicLauncher
             }
         }
 
-        LOG(LOG_CLASSIC_DEBUG, "Num Sprites Loaded after ClearCovers %d", spriteManager->NumSpritesLoaded());
+        LOG(LOG_CLASSIC_DEBUG, "Num Sprites Loaded after ClearCovers %d", pSpriteManager->NumSpritesLoaded());
     }
 
     void GuiHorizontalBox::Update()
     {
         GuiComponent::Update();
 
-
         if (IsKeyReleased(KEY_SEVEN))
         {
-            //mApplication->GetEntityManager()->CreateEntity<GuiCard>("GuiCard", 10 , 10);
+            // mApplication->GetEntityManager()->CreateEntity<GuiCard>("GuiCard", 10 , 10);
             const int fps = GetFPS() == 60 ? 30 : 60;
             SetTargetFPS(fps);
         }
@@ -169,7 +170,7 @@ namespace ClassicLauncher
         {
             mSpeed = minSpeed;
         }
-        //PRINT(TEXT("mSpeed %.8f", mSpeed), 5.0f, "mspeed");
+        // PRINT(TEXT("mSpeed %.8f", mSpeed), 5.0f, "mspeed");
 
         if (InputManager::IsDown(InputName::leftFaceLeft) && !mIsRight)
         {

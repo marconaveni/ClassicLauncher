@@ -32,7 +32,7 @@ namespace ClassicLauncher
         GuiTextBox* mGuiTitle;
         GuiMiniCover* mMiniCover;
         std::vector<GuiCard*> mGuiCards;
-        int mCardPositions[10]{ -632 - 6, -376 - 6, -120 - 6, 136 - 6, 392 - 6, 648 - 6, 904 - 6, 1160 - 6, 1416 - 6, 1672 - 6 };
+        float mCardPositions[10]{ -632 - 6, -376 - 6, -120 - 6, 136 - 6, 392 - 6, 648 - 6, 904 - 6, 1160 - 6, 1416 - 6, 1672 - 6 };
         float mPositionX;
         bool mIsLeft;
         bool mIsRight;

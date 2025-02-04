@@ -7,16 +7,19 @@
 
 namespace ClassicLauncher
 {
-
     class SpriteAnimator
     {
     public:
 
         SpriteAnimator()
-            : mTimeAnimation(0.0f), mCurrentTime(0.0f), mAlpha(0.0f), mSpriteIndices(), mCurrentSpriteIndex(0) {};
+            : mTimeAnimation(0.0f), mCurrentTime(0.0f), mAlpha(0.0f), mSpriteIndices(), mCurrentSpriteIndex(0)
+        {
+        }
 
         SpriteAnimator(float timeAnimation, const std::vector<Rectangle>& spriteIndices)
-            : mTimeAnimation(timeAnimation), mCurrentTime(0.0f), mAlpha(0.0f), mSpriteIndices(spriteIndices), mCurrentSpriteIndex(0) {};
+            : mTimeAnimation(timeAnimation), mCurrentTime(0.0f), mAlpha(0.0f), mSpriteIndices(spriteIndices), mCurrentSpriteIndex(0)
+        {
+        }
 
         void Update(float deltaTime)
         {
@@ -32,7 +35,7 @@ namespace ClassicLauncher
 
                 if (mCurrentSpriteIndex >= mSpriteIndices.size())
                 {
-                    mCurrentSpriteIndex = 0;  // Restart Animation (loop)
+                    mCurrentSpriteIndex = 0; // Restart Animation (loop)
                 }
             }
         }
@@ -42,13 +45,12 @@ namespace ClassicLauncher
 
     private:
 
-        float mTimeAnimation;                   // Total duration to advance to the next sprite
-        float mCurrentTime;                     // Total elapsed time
-        float mAlpha;                           // Interpolating factor between 0 and 1
-        std::vector<Rectangle> mSpriteIndices;  // Vector with the indices or IDs of the sprites
-        size_t mCurrentSpriteIndex;             // Current sprite index
+        float mTimeAnimation; // Total duration to advance to the next sprite
+        float mCurrentTime; // Total elapsed time
+        float mAlpha; // Interpolating factor between 0 and 1
+        std::vector<Rectangle> mSpriteIndices; // Vector with the indices or IDs of the sprites
+        size_t mCurrentSpriteIndex; // Current sprite index
     };
-
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

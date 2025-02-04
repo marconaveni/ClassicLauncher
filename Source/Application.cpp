@@ -11,7 +11,7 @@ namespace ClassicLauncher
     static Application* sInstanceApplication = nullptr;
 
     Application::Application()
-        : mEntityManager(&this->mSpriteManager, &this->mTimerManager)
+        : mEntityManager(&this->mSpriteManager, &this->mTimerManager), mGuiWindow(nullptr)
     {
         if (sInstanceApplication == nullptr)
         {

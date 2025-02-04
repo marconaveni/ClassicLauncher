@@ -5,8 +5,8 @@
 namespace ClassicLauncher
 {
 
-    GuiCard::GuiCard(int x, int y)
-        : mTimer(), GuiComponent()
+    GuiCard::GuiCard(const float x, const float y)
+        : GuiComponent(), mTimer()
     {
         mProperties.x = x;
         mProperties.y = y;
@@ -22,7 +22,7 @@ namespace ClassicLauncher
         SetCover();
     }
 
-    void GuiCard::CreateCard(GuiComponent*& card, int sourceX, int sourceY, unsigned char alpha, const char* title)
+    void GuiCard::CreateCard(GuiComponent*& card, const float sourceX, const float sourceY, unsigned char alpha, const char* title)
     {
         card = GetApplication()->GetEntityManager()->CreateEntity<GuiComponent>(title);
         card->mProperties.width = 252;
