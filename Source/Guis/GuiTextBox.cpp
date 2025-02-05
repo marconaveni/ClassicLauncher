@@ -122,6 +122,11 @@ namespace ClassicLauncher
         mSpacing = spacing;
     }
 
+    void GuiTextBox::SetColor(Color tint)
+    {
+        mColor = tint;
+    }
+
     Vector2 GuiTextBox::GetMeasureTextBox()
     {
         return mMensuredText;

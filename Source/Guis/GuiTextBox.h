@@ -51,6 +51,7 @@ namespace ClassicLauncher
         void SetText(const std::string& text);
         void SetSize(int size);
         void SetSpacing(int spacing);
+        void SetColor(Color tint);
         Vector2 GetMeasureTextBox();
         const std::string& GetText() { return mText; }
         void SetTextOverflowPolicy(TextOverflowPolicy textOverflowPolicy);
