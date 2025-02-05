@@ -188,7 +188,7 @@ namespace ClassicLauncher
 
 #endif
 
-        if (InputManager::IsRelease(InputName::rightThumb))
+        if (InputManager::IsRelease(InputName::rightThumb, main))
         {
             mAudioManager.ChangeMusic();
             mPrint.PrintOnScreen(TEXT("Changed music"), 5.0f);

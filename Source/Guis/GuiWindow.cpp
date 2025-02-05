@@ -31,6 +31,12 @@ namespace ClassicLauncher
         mGuiBlackScreen = pApplication->GetEntityManager()->CreateEntity<GuiBlackScreen>("GuiBlackScreen");
         pApplication->GetEntityManager()->SetZOrder(mGuiVideoPlayer, 5);
         pApplication->GetEntityManager()->SetZOrder(mGuiBlackScreen, 99);
+
+#ifdef _DEBUG
+        InputManager::SetCategory(main | debug); 
+#else
+        InputManager::SetCategory(main); 
+#endif
     }
 
     void GuiWindow::Update()
@@ -65,7 +71,7 @@ namespace ClassicLauncher
 
         Application* pApplication = GetApplication();
 
-        if (InputManager::IsRelease(InputName::leftFaceUp))
+        if (InputManager::IsRelease(InputName::leftFaceUp, videoFullscreen))
         {
             if (mGuiVideoPlayer->IsPlayingFullscreen())
             {
@@ -74,26 +80,32 @@ namespace ClassicLauncher
             }
             mGuiVideoPlayer->Stop();
             pApplication->GetAudioManager()->Play();
+            InputManager::SetCategory(main);
+            InputManager::RemoveCategory(videoFullscreen);
         }
 
-        if (InputManager::IsRelease(InputName::leftFaceDown))
+        if (InputManager::IsRelease(InputName::leftFaceDown, videoFullscreen))
         {
             if (mGuiVideoPlayer->IsPlaying())
             {
                 mGuiVideoPlayer->InitFullscreen();
-                return;
             }
+        }
+        else if (InputManager::IsRelease(InputName::leftFaceDown, main))
+        {
             const bool bIsplay = mGuiVideoPlayer->Init(pApplication->GetGameListManager()->GetCurrentGameList()->video, 640, 480);
             if (bIsplay)
             {
+                InputManager::RemoveCategory(main); 
+                InputManager::SetCategory(videoFullscreen); 
                 pApplication->GetAudioManager()->Pause();
             }
         }
-        if (InputManager::IsRelease(InputName::rightFaceLeft))
+        if (InputManager::IsRelease(InputName::rightFaceLeft, main | videoFullscreen))
         {
             mGuiHorizontalBox->Click();
         }
-        if (InputManager::IsRelease(InputName::rightFaceDown))
+        if (InputManager::IsRelease(InputName::rightFaceDown, main))
         {
             InputManager::DisableInput();
             pApplication->GetAudioManager()->PlayClick();
@@ -108,7 +120,7 @@ namespace ClassicLauncher
             }
             pApplication->GetTimerManager()->SetTimer(mClickTimer, CALLFUNCTION(OnClick, this), this, 0.5f, false);
         }
-        if (InputManager::IsRelease(InputName::rightFaceRight) && pApplication->GetGameListManager()->GetCurrentList() == GameListSelect)  // back
+        if (InputManager::IsRelease(InputName::rightFaceRight, main) && pApplication->GetGameListManager()->GetCurrentList() == GameListSelect)  // back
         {
             InputManager::DisableInput();
             mGuiBlackScreen->FadeInFadeOut();

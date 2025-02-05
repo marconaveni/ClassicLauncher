@@ -5,6 +5,14 @@
 
 namespace ClassicLauncher
 {
+    // clang-format off
+    enum InputCategory
+    {    
+        main =              0x00000001,       
+        videoFullscreen =   0x00000010,       
+        debug =             0x10000000       
+    };
+    // clang-format on
 
     enum InputName
     {
@@ -64,9 +72,10 @@ namespace ClassicLauncher
 
     protected:
 
-        int mGamePadIdSelected = 0;
-        int mAmoutDown = 0;
-        bool mDisableInput = false;
+        int mGamePadIdSelected;
+        int mAmoutDown;
+        bool mDisableInput;
+        unsigned int mCategory;
 
         // clang-format off
         InputMapper mInputs[18]{ 
@@ -93,12 +102,18 @@ namespace ClassicLauncher
 
     public:
 
-        static bool IsPress(InputName name);
-        static bool IsDown(InputName name);
-        static bool IsRelease(InputName name);
-        static bool IsUp(InputName name);
+        static bool IsPress(InputName name, unsigned int category);
+        static bool IsDown(InputName name, unsigned int category);
+        static bool IsRelease(InputName name, unsigned int category);
+        static bool IsUp(InputName name, unsigned int category);
         static void EnableInput();
         static void DisableInput();
+        static void SetCategory(unsigned int category);
+        static void RemoveCategory(unsigned int category);
+
+    private:
+
+        bool CheckCategory(unsigned int category);
     };
 
 }  // namespace ClassicLauncher
