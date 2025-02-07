@@ -149,6 +149,17 @@ namespace ClassicLauncher
     {
         GuiComponent::Update();
 
+        if (InputManager::IsDown(InputName::leftFaceDown, debug))
+        {
+            mProperties.scaleX += 0.1;
+            mProperties.scaleY += 0.1;
+        }
+        if (InputManager::IsDown(InputName::leftFaceUp, debug))
+        {
+            mProperties.scaleX -= 0.1;
+            mProperties.scaleY -= 0.1;
+        }
+
         if (IsKeyReleased(KEY_SEVEN))
         {
             // mApplication->GetEntityManager()->CreateEntity<GuiCard>("GuiCard", 10 , 10);

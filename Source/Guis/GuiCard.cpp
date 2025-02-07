@@ -10,44 +10,54 @@ namespace ClassicLauncher
     {
         mProperties.x = x;
         mProperties.y = y;
-
-        CreateCard(mCardMain, 528 - 6, 9, 255, "cardMain");
-        CreateCard(mCardFavorite, 783 - 6, 9, 0, "cardFavorite");
-        CreateCard(mCardSelected, 273 - 6, 9, 0, "cardSelected");
-        CreateCard(mCover, 0, 0, 255, "cover");
-
         mProperties.width = 252;
         mProperties.height = 276;
 
+        CreateCard(mCardMain, 528 - 6, 9, 255, "GuiCardMain");
+        CreateCard(mCardFavorite, 783 - 6, 9, 0, "GuiCardFavorite");
+        CreateCard(mCardSelected, 273 - 6, 9, 0, "GuiCardSelected");
+        CreateCard(mCover, 0, 0, 255, "GuiCover");
+        CreateSizeBox();
+        AddChild(mCardMain);
+        AddChild(mCardFavorite);
+        AddChild(mCardSelected);
         SetCover();
     }
 
     void GuiCard::CreateCard(GuiComponent*& card, const float sourceX, const float sourceY, unsigned char alpha, const char* title)
     {
         card = GetApplication()->GetEntityManager()->CreateEntity<GuiComponent>(title);
-        card->mProperties.width = 252;
-        card->mProperties.height = 276;
+        card->mProperties.width = mProperties.width;
+        card->mProperties.height = mProperties.height;
         card->mProperties.sourceX = sourceX;
         card->mProperties.sourceY = sourceY;
         card->mProperties.color.SetOpacity(alpha);
         card->mTextureName = "sprite";
+    }
 
-        AddChild(card);
+    void GuiCard::CreateSizeBox()
+    {
+        mSizeBox = GetApplication()->GetEntityManager()->CreateEntity<GuiSizeBox>("GuiSizeBox");
+        mSizeBox->mProperties.width = 228.0f;
+        mSizeBox->mProperties.height = 204.0f;
+        mSizeBox->mProperties.x = 12;
+        mSizeBox->mProperties.y = 12;
+        mSizeBox->AttachGui(mCover);
+        AddChild(mSizeBox);
     }
 
     void GuiCard::Update()
     {
         GuiComponent::Update();
 
-        Texture2D* textureReference = GetApplication()->GetSpriteManager()->GetTexture(mCover->mTextureName);
-        Animation pAnim = mCover->GetAnimation("card-zoom");
+        const Texture2D* textureReference = GetApplication()->GetSpriteManager()->GetTexture(mCover->mTextureName);
+        const Animation& pAnim = GetAnimation("card-zoom");
         if (textureReference != nullptr && mCover->mTextureName != "sprite" && !pAnim.mIsRunning && mCover->mProperties.width == 0 && mCover->mProperties.height == 0)
         {
             const float scale = Themes::GetScaleTexture();
-            mCover->mProperties.x = (mContainerSize.x - static_cast<float>(textureReference->width / scale)) / 2.0f;
-            mCover->mProperties.y = (mContainerSize.y - static_cast<float>(textureReference->height / scale)) / 2.0f;
             mCover->mProperties.width = textureReference->width / scale;
             mCover->mProperties.height = textureReference->height / scale;
+            mSizeBox->UpdateGuiAttachment();
         }
     }
 
@@ -83,12 +93,12 @@ namespace ClassicLauncher
     {
         if (name.empty())
         {
-            mCover->mProperties.width = mDefaultCoverWidth;
-            mCover->mProperties.height = mDefaultCoverHeight;
+            mCover->mProperties.width = 204.0f;
+            mCover->mProperties.height = 204.0f;
             mCover->mProperties.sourceX = 1086;
             mCover->mProperties.sourceY = 1086;
-            mCover->mProperties.x = (mContainerSize.x - mDefaultCoverWidth) / 2;
-            mCover->mProperties.y = (mContainerSize.y - mDefaultCoverHeight) / 2;
+            mCover->mProperties.x = 0;
+            mCover->mProperties.y = 0;
             mCover->mTextureName = "sprite";
         }
         else
@@ -114,6 +124,7 @@ namespace ClassicLauncher
         mCardMain->mProperties.color.SetOpacity(255);
         mCardSelected->mProperties.color.SetOpacity(255);
         mCover->mProperties.color.SetOpacity(255);
+        mSizeBox->mProperties.color.SetOpacity(255);
         mProperties.scaleX = 1.0f;
         mProperties.scaleY = 1.0f;
         if (mCover->mTextureName == "sprite")
@@ -128,10 +139,6 @@ namespace ClassicLauncher
 
     void GuiCard::Click()
     {
-        Application* pApplication = &Application::Get();
-
-        if (!pApplication) return;
-
         mIsFront = true;
 
         const float time = 0.3f;
@@ -147,31 +154,25 @@ namespace ClassicLauncher
 
         target.color.a = 0;
         StartAnimation("card-zoom", time, mProperties, target, Ease::EaseQuadInOut, true);
-
-        TransformProperties targetMain = mCardMain->mProperties;
-        TransformProperties targetSelected = mCardSelected->mProperties;
-        TransformProperties targetCover = mCover->mProperties;
-
-        pApplication->GetTimerManager()->SetTimer(mTimer, CALLFUNCTION(Reset, this), this, time * 2);
+        GetApplication()->GetTimerManager()->SetTimer(mTimer, CALLFUNCTION(Reset, this), this, time * 2);
     }
 
     void GuiCard::SetFrontCard()
     {
-        Application* p = &Application::Get();
+        Application* pApplication = GetApplication();
         if (mIsFront)
         {
-            p->GetEntityManager()->SetZOrder(mCardSelected, 1);
-            p->GetEntityManager()->SetZOrder(mCardMain, 1);
-            p->GetEntityManager()->SetZOrder(mCardFavorite, 1);
-            p->GetEntityManager()->SetZOrder(mCover, 1);
+            pApplication->GetEntityManager()->SetZOrder(mCardSelected, 1);
+            pApplication->GetEntityManager()->SetZOrder(mCardMain, 1);
+            pApplication->GetEntityManager()->SetZOrder(mCardFavorite, 1);
+            pApplication->GetEntityManager()->SetZOrder(mCover, 1);
         }
         else
         {
-            Application* p = &Application::Get();
-            p->GetEntityManager()->SetZOrder(mCardSelected, 0);
-            p->GetEntityManager()->SetZOrder(mCardMain, 0);
-            p->GetEntityManager()->SetZOrder(mCardFavorite, 0);
-            p->GetEntityManager()->SetZOrder(mCover, 0);
+            pApplication->GetEntityManager()->SetZOrder(mCardSelected, 0);
+            pApplication->GetEntityManager()->SetZOrder(mCardMain, 0);
+            pApplication->GetEntityManager()->SetZOrder(mCardFavorite, 0);
+            pApplication->GetEntityManager()->SetZOrder(mCover, 0);
         }
     }
 

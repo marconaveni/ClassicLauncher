@@ -3,31 +3,30 @@
 
 #include <memory>
 #include <string>
-#include "GuiComponent.h"
 #include "Core.h"
+#include "GuiComponent.h"
+#include "Guis/GuiSizeBox.h"
 
 namespace ClassicLauncher
 {
     class GuiComponent;
+    class GuiSizeBox;
 
     class GuiCard : public GuiComponent
     {
     private:
-
-        float mDefaultCoverWidth = 204.0f;
-        float mDefaultCoverHeight = 204.0f;
-        Vector2 mContainerSize = { 252.0f, 228.0f };
-
+        
         TimerHandling mTimer;
 
         GuiComponent* mCardMain;
         GuiComponent* mCardSelected;
         GuiComponent* mCardFavorite;
+        GuiSizeBox* mSizeBox;
         GuiComponent* mCover;
         bool mIsFocus = false;
         bool mIsFront = false;
         void CreateCard(GuiComponent*& card, float sourceX, float sourceY, unsigned char alpha, const char* title);
-
+        void CreateSizeBox();
 
     public:
 

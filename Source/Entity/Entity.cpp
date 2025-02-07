@@ -13,9 +13,10 @@ namespace ClassicLauncher
         {
             entity->mProperties.rootX = mProperties.x + mProperties.rootX;
             entity->mProperties.rootY = mProperties.y + mProperties.rootY;
-            entity->mProperties.rootScaleX = mProperties.scaleX;
-            entity->mProperties.rootScaleY = mProperties.scaleY;
-            entity->mProperties.color.a = mProperties.color.a <= entity->mProperties.color.a ?  mProperties.color.a : entity->mProperties.color.a ;
+            entity->mProperties.rootScaleX = mProperties.scaleX * mProperties.rootScaleX;
+            entity->mProperties.rootScaleY = mProperties.scaleY * mProperties.rootScaleY;
+            entity->mProperties.color.a = mProperties.color.a <= entity->mProperties.color.a ? mProperties.color.a : entity->mProperties.color.a;
+            entity->UpdatePosition();
         }
     }
 
@@ -58,6 +59,15 @@ namespace ClassicLauncher
         mChildEntities.clear();
     }
 
+    void Entity::RemoveRootChild()
+    {
+        Entity* entity = GetRootEntity();
+        if (entity != this)
+        {
+            entity->RemoveChild(this);
+        }
+    }
+
     std::vector<Entity*>& Entity::GetChilds()
     {
         return mChildEntities;
@@ -75,17 +85,8 @@ namespace ClassicLauncher
 
     void Entity::EnableScissorMode(float x, float y, float width, float height)
     {
-        if (mScissorMode)
-        {
-            mScissorArea.SetPosition(Math::Max(x, mScissorArea.x), Math::Max(y, mScissorArea.y));
-            mScissorArea.SetSize(Math::Min(width, mScissorArea.width), Math::Min(height, mScissorArea.height));
-        }
-        else
-        {
-            mScissorArea.Set(x, y, width, height);
-        }
-
         mScissorMode = true;
+        mScissorArea.Set(x, y, width, height);
         for (auto& childEntity : mChildEntities)
         {
             childEntity->EnableScissorMode(mScissorArea.x, mScissorArea.y, mScissorArea.width, mScissorArea.height);

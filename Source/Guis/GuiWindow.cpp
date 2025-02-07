@@ -43,7 +43,6 @@ namespace ClassicLauncher
     {
         GuiComponent::Update();
 
-        // mProperties.rootX += 1;
 
 #ifdef _DEBUG
         if (IsKeyReleased(KEY_ONE))

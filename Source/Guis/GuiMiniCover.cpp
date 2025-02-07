@@ -16,10 +16,19 @@ namespace ClassicLauncher
         {
             const int x = 29 * i;
             auto miniCover = GetApplication()->GetEntityManager()->CreateEntity<GuiComponent>("miniCover");
-            miniCover->mProperties.x = x;
+            auto sizeBox = GetApplication()->GetEntityManager()->CreateEntity<GuiSizeBox>("GuiSizeBox");
+            
             miniCover->mTextureName = "transparent";
-            AddChild(miniCover);
+            
+            sizeBox->mProperties.x = x;
+            sizeBox->mProperties.width = 29;
+            sizeBox->mProperties.height = 38;
+            sizeBox->AttachGui(miniCover);
+            AddChild(sizeBox);
+
             mGuiCovers.emplace_back(miniCover);
+            mGuiSizeBoxs.emplace_back(sizeBox);
+            
         }
 
         std::vector<Rectangle> recs = { { 798.0f, 1017.0f, 30.0f, 18.0f }, { 834.0f, 1017.0f, 30.0f, 18.0f }, { 870.0f, 1017.0f, 30.0f, 18.0f } };
@@ -85,7 +94,7 @@ namespace ClassicLauncher
             if (!fileName.empty())
             {
                 name = std::to_string(indexFinal) + "_MCV";
-                pSpriteManager->LoadSprite(name, fileName, 28 * scale, 45 * scale);
+                pSpriteManager->LoadSprite(name, fileName, 28 * scale, 38 * scale);
             }
 
             if (i - 1 >= 0 && i <= static_cast<int>(mGuiCovers.size()) - 2)

@@ -30,7 +30,7 @@ namespace ClassicLauncher
 
     void EntityManager::SetNameId(Entity* entity, const std::string& name)
     {
-        int counter = 0; 
+        int counter = 0;
         for (const auto& ent : mEntities)
         {
             if (ent->GetType() == entity->GetType())
@@ -119,8 +119,8 @@ namespace ClassicLauncher
         {
             TransformProperties properties = entity->mProperties;
             properties = properties.Multiply(Themes::GetScaleTexture());
-            const float x = properties.x * properties.rootScaleX + properties.rootX;
-            const float y = properties.y * properties.rootScaleY + properties.rootY;
+            const float x = properties.x + properties.rootX;
+            const float y = properties.y + properties.rootY;
             const float width = properties.width;
             const float height = properties.height;
             const float sourceX = properties.sourceX;
@@ -130,20 +130,22 @@ namespace ClassicLauncher
 
             const Rectangle source = { sourceX, sourceY, width, height };
             const Vector2 scale = { (scaleWidth * properties.scaleX * properties.rootScaleX), (scaleHeight * properties.scaleY * properties.rootScaleY) };
-            const Rectangle dest = { x, y, scale.x, scale.y };
+            entity->mDestination = { x, y, scale.x, scale.y };
 
             if (entity->mScissorMode)
             {
-                const Rectangle scissorArea = entity->mScissorArea;
-                BeginScissorMode(x + scissorArea.x, y + scissorArea.y, scissorArea.width, scissorArea.height);
+                Rectangle scissorArea = entity->mScissorArea;
+                scissorArea.width = scissorArea.width * entity->mProperties.rootScaleX * Themes::GetScaleTexture();
+                scissorArea.height = scissorArea.height * entity->mProperties.rootScaleY * Themes::GetScaleTexture();
+                BeginScissorMode(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height);
             }
 
             entity->Draw();
-            ::DrawTexturePro(*texture, source, dest, Vector2{ 0, 0 }, properties.rotation, properties.color);
+            ::DrawTexturePro(*texture, source, entity->mDestination, Vector2{ 0, 0 }, properties.rotation, properties.color);
 
 #ifdef _DEBUG
 
-            const Rectangle& RectangleDrawArea = dest;  //{ x, y, scale.x, scale.y };
+            const Rectangle& RectangleDrawArea = entity->mDestination;  //{ x, y, scale.x, scale.y };
             const Vector2 vec = Application::Get().GetRender()->GetMousePositionRender();
             if (CheckCollisionPointRec(vec, RectangleDrawArea) && bEnable)
             {
@@ -159,15 +161,18 @@ namespace ClassicLauncher
             }
             if (entity->mScissorMode && bEnable)
             {
-                const Rectangle scissorArea = entity->mScissorArea;
                 const Color tint = Color(255, 0, 0, 55);
-                DrawRectangle(x + scissorArea.x, y + scissorArea.y, scissorArea.width, scissorArea.height, tint);
+                Rectangle scissorArea = entity->mScissorArea;
+                scissorArea.width = scissorArea.width * entity->mProperties.rootScaleX * Themes::GetScaleTexture();
+                scissorArea.height = scissorArea.height * entity->mProperties.rootScaleY * Themes::GetScaleTexture();
+                DrawRectangle(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height, tint);
             }
 #endif  // _DEBUG
 
             if (entity->mScissorMode)
             {
                 EndScissorMode();
+                entity->DisableScissorMode();
             }
             entity->mToDraw = false;
         }

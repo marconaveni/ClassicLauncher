@@ -48,11 +48,11 @@ namespace ClassicLauncher
 
         InitAudioDevice();
 
-        SetConfigFlags(FLAG_VSYNC_HINT);  // vsync only enable in fullscreen set before InitWindow
+        //SetConfigFlags(FLAG_VSYNC_HINT);  // vsync only enable in fullscreen set before InitWindow
         InitWindow(mSpecification.width, mSpecification.height, mSpecification.title);
         SetWindowState(FLAG_WINDOW_RESIZABLE);
         SetWindowSize(mSpecification.width, mSpecification.height);
-        SetTargetFPS(60);
+        SetTargetFPS(8060);
         SetWindowMinSize(mSpecification.width, mSpecification.height);
 #ifndef _DEBUG
         SetExitKey(KEY_NULL);

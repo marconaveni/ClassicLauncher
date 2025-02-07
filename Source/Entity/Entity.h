@@ -55,6 +55,7 @@ namespace ClassicLauncher
         virtual void AddChild(Entity* childEntity);  // Add a child to the entity
         virtual void RemoveChild(Entity* childEntity);                 // Remove a child from the entity
         virtual void RemoveAllChilds(); 
+        virtual void RemoveRootChild(); 
         std::vector<Entity*>& GetChilds();
         Entity* GetRootEntity();
         void EnableScissorMode(float x, float y, float width, float height);
@@ -66,6 +67,7 @@ namespace ClassicLauncher
         TransformProperties mProperties;
         std::string mTextureName = "transparent";
         Rectangle mScissorArea;
+        Rectangle mDestination;
 
     private:
 

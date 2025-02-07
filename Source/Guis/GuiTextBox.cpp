@@ -51,6 +51,11 @@ namespace ClassicLauncher
     {
         GuiComponent::Update();
 
+        if (mTextOverflowPolicy == TextOverflowPolicy::clip)
+        {
+            EnableScissorMode(mDestination.x, mDestination.y, mDesiredWidth, mMensuredText.y);
+        }
+
         const int positionText = mDesiredWidth - mMensuredText.GetIntX();
         if (mTextOverflowPolicy == TextOverflowPolicy::clip && positionText < 0)
         {
@@ -80,10 +85,12 @@ namespace ClassicLauncher
     {
         Vector2 posi = Vector2{ mProperties.x + mProperties.rootX + mOffset, mProperties.y + mProperties.rootY };
         const float scale = Themes::GetScaleTexture();
+
+        const Vector2 scaleS = {scale * mProperties.scaleX * mProperties.rootScaleX, scale * mProperties.scaleY * mProperties.rootScaleY}; 
         posi.x = posi.x * scale;
         posi.y = posi.y * scale;
         mColor.a = mProperties.color.a;
-        DrawTextEx(mFont, mText.data(), posi, mSize * scale, mSpacing, mColor);
+        DrawTextEx(mFont, mText.data(), posi, mSize * Math::Max(scaleS.x, scaleS.y), mSpacing, mColor);
     }
 
     void GuiTextBox::End()
@@ -101,15 +108,8 @@ namespace ClassicLauncher
         mProperties.scaleWidth = mMensuredText.x;
         mProperties.scaleHeight = mMensuredText.y;
 
-        if (mTextOverflowPolicy == TextOverflowPolicy::clip)
-        {
-            const float scale = Themes::GetScaleTexture();
-            EnableScissorMode(0, 0, mDesiredWidth * scale, mMensuredText.y * scale);
-        }
-        else if (mTextOverflowPolicy == TextOverflowPolicy::none)
-        {
-            DisableScissorMode();
-        }
+
+
     }
 
     void GuiTextBox::SetSize(int size)
