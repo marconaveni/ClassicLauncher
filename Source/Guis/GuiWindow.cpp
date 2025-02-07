@@ -23,7 +23,7 @@ namespace ClassicLauncher
         mGuiBackground->mTextureName = "sprite";
         AddChild(mGuiBackground);
 
-        mGuiHorizontalBox = pApplication->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
+        mGuiHorizontalBox = pApplication->GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalCards");
         mGuiHorizontalBox->Init();
         AddChild(mGuiHorizontalBox);
 
@@ -162,7 +162,7 @@ namespace ClassicLauncher
         {
             if (mGuiHorizontalBox == nullptr)
             {
-                mGuiHorizontalBox = GetApplication()->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
+                mGuiHorizontalBox = GetApplication()->GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalBox");
                 mGuiHorizontalBox->Init();
                 AddChild(mGuiHorizontalBox);
                 InputManager::EnableInput();

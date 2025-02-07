@@ -1,5 +1,5 @@
-#ifndef GUI_TEXT_BOX_H
-#define GUI_TEXT_BOX_H
+#ifndef GUI_TEXT_BLOCK_H
+#define GUI_TEXT_BLOCK_H
 
 #include <string>
 #include "Core.h"
@@ -16,7 +16,7 @@ namespace ClassicLauncher
 
     class GuiComponent;
 
-    class GuiTextBox : public GuiComponent
+    class GuiTextBlock : public GuiComponent
     {
     private:
 
@@ -40,8 +40,8 @@ namespace ClassicLauncher
 
     public:
 
-        GuiTextBox(const std::string& path, int size = 16, int spacing = 0);
-        virtual ~GuiTextBox() override;
+        GuiTextBlock(const std::string& path, int size = 16, int spacing = 0);
+        virtual ~GuiTextBlock() override;
         void LoadNewFont(const std::string& path, int size = 16, int spacing = 0);
         void UpdateFont(const std::string& path);
         virtual EntityType GetType() const override { return EntityType::GuiTextBox; }

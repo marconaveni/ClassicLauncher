@@ -3,21 +3,21 @@
 
 #include "Core.h"
 #include "GuiComponent.h"
-#include "Guis/GuiHorizontalBox.h"
+#include "Guis/GuiHorizontalCards.h"
 #include "Guis/GuiBlackScreen.h"
 #include "Guis/GuiVideoPlayer.h"
 
 namespace ClassicLauncher
 {
 
-    class GuiHorizontalBox;
+    class GuiHorizontalCards;
     class GuiBlackScreen;
     class GuiVideoPlayer;
     class GuiComponent;
 
     class GuiWindow : public GuiComponent
     {
-        GuiHorizontalBox* mGuiHorizontalBox;
+        GuiHorizontalCards* mGuiHorizontalBox;
         GuiBlackScreen* mGuiBlackScreen;
         GuiVideoPlayer* mGuiVideoPlayer;
         GuiComponent* mGuiBackground;

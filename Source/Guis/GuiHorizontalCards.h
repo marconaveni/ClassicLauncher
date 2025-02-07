@@ -1,5 +1,5 @@
-#ifndef GUI_HORIZONTAL_BOX_H
-#define GUI_HORIZONTAL_BOX_H
+#ifndef GUI_HORIZONTAL_CARDS_H
+#define GUI_HORIZONTAL_CARDS_H
 
 #include <memory>
 #include <vector>
@@ -8,7 +8,7 @@
 #include "Application.h"
 #include "GuiCard.h"
 #include "GuiComponent.h"
-#include "Guis/GuiTextBox.h"
+#include "Guis/GuiTextBlock.h"
 
 namespace ClassicLauncher
 {
@@ -17,7 +17,7 @@ namespace ClassicLauncher
     class GuiMiniCover;
     class Application;
     class GuiCard;
-    class GuiTextBox;
+    class GuiTextBlock;
 
     enum Direction
     {
@@ -27,9 +27,9 @@ namespace ClassicLauncher
     };
 
 
-    class GuiHorizontalBox : public GuiComponent
+    class GuiHorizontalCards : public GuiComponent
     {
-        GuiTextBox* mGuiTitle;
+        GuiTextBlock* mGuiTitle;
         GuiMiniCover* mMiniCover;
         std::vector<GuiCard*> mGuiCards;
         float mCardPositions[10]{ -632 - 6, -376 - 6, -120 - 6, 136 - 6, 392 - 6, 648 - 6, 904 - 6, 1160 - 6, 1416 - 6, 1672 - 6 };
@@ -44,7 +44,7 @@ namespace ClassicLauncher
 
     public:
 
-        GuiHorizontalBox();
+        GuiHorizontalCards();
         void Init();
         void Update() override;
         void Draw() override;
@@ -62,4 +62,4 @@ namespace ClassicLauncher
 
 }  // namespace ClassicLauncher
 
-#endif  // GUI_HORIZONTAL_BOX_H
+#endif  // GUI_HORIZONTAL_CARDS_H

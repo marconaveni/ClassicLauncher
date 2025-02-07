@@ -1,4 +1,4 @@
-#include "GuiHorizontalBox.h"
+#include "GuiHorizontalCards.h"
 
 #include <algorithm>
 #include <memory>
@@ -9,17 +9,17 @@
 namespace ClassicLauncher
 {
 
-    GuiHorizontalBox::GuiHorizontalBox()
+    GuiHorizontalCards::GuiHorizontalCards()
         : mGuiTitle(nullptr), mMiniCover(nullptr), mPositionX(0), mIsLeft(false), mIsRight(false), mLastDirection(None), mIdFocus(0), mIdLastFocusSystem(3), mSpeed(22.0f)
     {
     }
 
-    void GuiHorizontalBox::Init()
+    void GuiHorizontalCards::Init()
     {
         mProperties.y = 0;
 
         EntityManager* pEntityManager = GetApplication()->GetEntityManager();
-        mGuiTitle = pEntityManager->CreateEntity<GuiTextBox>("GuiTitle", Resources::GetFont(), 48, 0);
+        mGuiTitle = pEntityManager->CreateEntity<GuiTextBlock>("GuiTitle", Resources::GetFont(), 48, 0);
         mGuiTitle->mProperties.x = 400;
         mGuiTitle->mProperties.y = 154;
         mGuiTitle->SetText("Title");
@@ -43,17 +43,17 @@ namespace ClassicLauncher
         SetFocus(3, true);
     }
 
-    void GuiHorizontalBox::Draw()
+    void GuiHorizontalCards::Draw()
     {
         GuiComponent::Draw();
     }
 
-    void GuiHorizontalBox::End()
+    void GuiHorizontalCards::End()
     {
         GuiComponent::End();
     }
 
-    void GuiHorizontalBox::SetFocus(const int newId, bool bForce)
+    void GuiHorizontalCards::SetFocus(const int newId, bool bForce)
     {
         mGuiCards[mIdFocus]->RemoveFocus(bForce);
         mIdFocus = newId;
@@ -65,7 +65,7 @@ namespace ClassicLauncher
         mGuiTitle->mProperties.x = Math::Clamp(mGuiTitle->mProperties.x, 135, 1280);
     }
 
-    void GuiHorizontalBox::SetCovers()
+    void GuiHorizontalCards::SetCovers()
     {
         GameListManager* manager = GetApplication()->GetGameListManager();
         SpriteManager* spriteManager = GetApplication()->GetSpriteManager();
@@ -98,7 +98,7 @@ namespace ClassicLauncher
         LOG(LOG_CLASSIC_DEBUG, "Num Sprites Loaded after SetCovers %d", spriteManager->NumSpritesLoaded());
     }
 
-    void GuiHorizontalBox::ChangeList(const CurrentList list)
+    void GuiHorizontalCards::ChangeList(const CurrentList list)
     {
         Application* pApplication = GetApplication();
         ClearCovers();
@@ -116,7 +116,7 @@ namespace ClassicLauncher
         }
     }
 
-    void GuiHorizontalBox::Click()
+    void GuiHorizontalCards::Click()
     {
         mGuiCards[mIdFocus]->Click();
         for (GuiCard*& card : mGuiCards)
@@ -125,7 +125,7 @@ namespace ClassicLauncher
         }
     }
 
-    void GuiHorizontalBox::ClearCovers()
+    void GuiHorizontalCards::ClearCovers()
     {
         const int size = GetApplication()->GetGameListManager()->GetGameListSize();
         SpriteManager* pSpriteManager = GetApplication()->GetSpriteManager();
@@ -146,7 +146,7 @@ namespace ClassicLauncher
     }
 
     int fps = 60;
-    void GuiHorizontalBox::Update()
+    void GuiHorizontalCards::Update()
     {
         GuiComponent::Update();
 

@@ -1,9 +1,9 @@
-#include "GuiTextBox.h"
+#include "GuiTextBlock.h"
 #include "Application.h"
 
 namespace ClassicLauncher
 {
-    void GuiTextBox::LoadNewFont(const std::string& path, int size, int spacing)
+    void GuiTextBlock::LoadNewFont(const std::string& path, int size, int spacing)
     {
         mPathFont = path;
         mSize = size;
@@ -11,7 +11,7 @@ namespace ClassicLauncher
         UpdateFont(path);
     }
 
-    void GuiTextBox::UpdateFont(const std::string& path)
+    void GuiTextBlock::UpdateFont(const std::string& path)
     {
         if (IsFontValid(mFont))
         {
@@ -22,7 +22,7 @@ namespace ClassicLauncher
         mFont = LoadFontEx(path.data(), mSize * scale, NULL, 250);
     }
 
-    GuiTextBox::GuiTextBox(const std::string& path, int size, int spacing)
+    GuiTextBlock::GuiTextBlock(const std::string& path, int size, int spacing)
         : mFont(Font{ 0 })
         , mText()
         , mPathFont()
@@ -42,12 +42,12 @@ namespace ClassicLauncher
         LoadNewFont(path, size, spacing);
     }
 
-    GuiTextBox::~GuiTextBox()
+    GuiTextBlock::~GuiTextBlock()
     {
         UnloadText();
     }
 
-    void GuiTextBox::Update()
+    void GuiTextBlock::Update()
     {
         GuiComponent::Update();
 
@@ -77,7 +77,7 @@ namespace ClassicLauncher
         }
     }
 
-    void GuiTextBox::Draw()
+    void GuiTextBlock::Draw()
     {
         Vector2 posi = Vector2{ mProperties.x + mProperties.rootX + mOffset, mProperties.y + mProperties.rootY };
         const float scale = Themes::GetScaleTexture();
@@ -89,12 +89,12 @@ namespace ClassicLauncher
         DrawTextEx(mFont, mText.data(), posi, mSize * Math::Max(scaleS.x, scaleS.y), mSpacing, mColor);
     }
 
-    void GuiTextBox::End()
+    void GuiTextBlock::End()
     {
         UnloadText();
     }
 
-    void GuiTextBox::SetText(const std::string& text)
+    void GuiTextBlock::SetText(const std::string& text)
     {
         mText = text;
         mOffset = 0;
@@ -108,48 +108,48 @@ namespace ClassicLauncher
 
     }
 
-    void GuiTextBox::SetSize(int size)
+    void GuiTextBlock::SetSize(int size)
     {
         LoadNewFont(mPathFont.c_str(), size, mSpacing);
     }
 
-    void GuiTextBox::SetSpacing(int spacing)
+    void GuiTextBlock::SetSpacing(int spacing)
     {
         mSpacing = spacing;
     }
 
-    void GuiTextBox::SetColor(Color tint)
+    void GuiTextBlock::SetColor(Color tint)
     {
         mColor = tint;
     }
 
-    Vector2 GuiTextBox::GetMeasureTextBox()
+    Vector2 GuiTextBlock::GetMeasureTextBox()
     {
         return mMensuredText;
     }
 
-    Vector2 GuiTextBox::MeasureTextBox()
+    Vector2 GuiTextBlock::MeasureTextBox()
     {
         return MeasureTextEx(mFont, mText.c_str(), mSize, mSpacing);
     }
 
-    void GuiTextBox::SetTextOverflowPolicy(TextOverflowPolicy textOverflowPolicy)
+    void GuiTextBlock::SetTextOverflowPolicy(TextOverflowPolicy textOverflowPolicy)
     {
         mTextOverflowPolicy = textOverflowPolicy;
     }
 
-    void GuiTextBox::SetDesiredWidth(int newWidth)
+    void GuiTextBlock::SetDesiredWidth(int newWidth)
     {
         mDesiredWidth = newWidth;
     }
 
-    void GuiTextBox::SetOffSetMoveText(float speed, float maxDelay)
+    void GuiTextBlock::SetOffSetMoveText(float speed, float maxDelay)
     {
         mSpeed = speed;
         mMaxDelay = maxDelay;
     }
 
-    void GuiTextBox::UnloadText()
+    void GuiTextBlock::UnloadText()
     {
         if (IsFontValid(mFont))
         {
