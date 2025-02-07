@@ -40,8 +40,8 @@ namespace ClassicLauncher
         mSizeBox = GetApplication()->GetEntityManager()->CreateEntity<GuiSizeBox>("GuiSizeBox");
         mSizeBox->mProperties.width = 228.0f;
         mSizeBox->mProperties.height = 204.0f;
-        mSizeBox->mProperties.x = 12;
-        mSizeBox->mProperties.y = 12;
+        mSizeBox->mProperties.offset.x = 12.0f;
+        mSizeBox->mProperties.offset.y = 12.0f;
         mSizeBox->AttachGui(mCover);
         AddChild(mSizeBox);
     }
@@ -49,7 +49,8 @@ namespace ClassicLauncher
     void GuiCard::Update()
     {
         GuiComponent::Update();
-
+        //mSizeBox->mProperties.offset.x += 0.03f;
+        //mSizeBox->mProperties.offset.y += 0.03f;
         const Texture2D* textureReference = GetApplication()->GetSpriteManager()->GetTexture(mCover->mTextureName);
         const Animation& pAnim = GetAnimation("card-zoom");
         if (textureReference != nullptr && mCover->mTextureName != "sprite" && !pAnim.mIsRunning && mCover->mProperties.width == 0 && mCover->mProperties.height == 0)
@@ -141,7 +142,7 @@ namespace ClassicLauncher
     {
         mIsFront = true;
 
-        const float time = 10.3f;
+        const float time = 0.3f;
         const float scale = 1.75f;
 
         TransformProperties target = mProperties;
@@ -152,7 +153,7 @@ namespace ClassicLauncher
         target.x += (-target.width / 2 * target.scaleX) + target.width / 2;
         target.y += (-target.height / 2 * target.scaleY) + target.height / 2;
 
-        //target.color.a = 0;
+        target.color.a = 0;
         StartAnimation("card-zoom", time, mProperties, target, Ease::EaseQuadInOut, true);
         GetApplication()->GetTimerManager()->SetTimer(mTimer, CALLFUNCTION(Reset, this), this, time * 2);
     }

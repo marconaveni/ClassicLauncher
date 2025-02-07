@@ -154,11 +154,13 @@ namespace ClassicLauncher
         {
             mProperties.scaleX += 0.1;
             mProperties.scaleY += 0.1;
+            PRINT(TEXT("Set Scale to %.2f", mProperties.scaleX));
         }
         if (InputManager::IsDown(InputName::leftFaceUp, debug))
         {
             mProperties.scaleX -= 0.1;
             mProperties.scaleY -= 0.1;
+            PRINT(TEXT("Set Scale to %.2f", mProperties.scaleX));
         }
 
         if (IsKeyReleased(KEY_SEVEN) || IsKeyReleased(KEY_SIX))

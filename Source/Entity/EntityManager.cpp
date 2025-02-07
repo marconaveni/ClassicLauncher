@@ -119,8 +119,8 @@ namespace ClassicLauncher
         {
             TransformProperties properties = entity->mProperties;
             properties = properties.Multiply(Themes::GetScaleTexture());
-            const float x = properties.x + properties.rootX;
-            const float y = properties.y + properties.rootY;
+            const float x = properties.rootX + properties.x;
+            const float y = properties.rootY + properties.y;
             const float width = properties.width;
             const float height = properties.height;
             const float sourceX = properties.sourceX;

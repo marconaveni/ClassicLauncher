@@ -39,7 +39,9 @@ namespace ClassicLauncher
             return;
         }
         mGuiAttachment->mProperties.x = (mProperties.width * mProperties.rootScaleX - mGuiAttachment->mProperties.width * mGuiAttachment->mProperties.rootScaleX) / 2;
+        mGuiAttachment->mProperties.offset.x = mProperties.offset.x; 
         mGuiAttachment->mProperties.y = (mProperties.height * mProperties.rootScaleY - mGuiAttachment->mProperties.height * mGuiAttachment->mProperties.rootScaleY) / 2;
+        mGuiAttachment->mProperties.offset.y = mProperties.offset.y;
     }
 
 }  // namespace ClassicLauncher

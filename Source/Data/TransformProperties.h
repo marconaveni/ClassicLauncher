@@ -9,22 +9,44 @@ namespace ClassicLauncher
     {
     public:
 
-        float rootX = 0;
-        float rootY = 0;
-        float rootScaleX = 1;
-        float rootScaleY = 1;
-        float x = 0;
-        float y = 0;
-        float width = 0;
-        float height = 0;
-        float sourceX = 0;
-        float sourceY = 0;
-        float scaleWidth = 0;
-        float scaleHeight = 0;
-        float scaleX = 1;
-        float scaleY = 1;
-        float rotation = 0;
-        Color color = { 255, 255, 255, 255 };
+        float rootX;
+        float rootY;
+        float rootScaleX;
+        float rootScaleY;
+        Vector2 offset;
+        float x;
+        float y;
+        float width;
+        float height;
+        float sourceX;
+        float sourceY;
+        float scaleWidth;
+        float scaleHeight;
+        float scaleX;
+        float scaleY;
+        float rotation;
+        Color color;
+
+        TransformProperties()
+            : rootX(0)
+            , rootY(0)
+            , rootScaleX(1)
+            , rootScaleY(1)
+            , offset()
+            , x(0)
+            , y(0)
+            , width(0)
+            , height(0)
+            , sourceX(0)
+            , sourceY(0)
+            , scaleWidth(0)
+            , scaleHeight(0)
+            , scaleX(1)
+            , scaleY(1)
+            , rotation(0)
+            , color({ 255, 255, 255, 255 })
+        {
+        }
 
         TransformProperties Multiply(const float m)
         {
@@ -32,8 +54,8 @@ namespace ClassicLauncher
 
             newTransf.rootX = rootX * m;
             newTransf.rootY = rootY * m;
-            newTransf.x = x * m;
-            newTransf.y = y * m;
+            newTransf.x = (x + rootScaleX * offset.x) * m;
+            newTransf.y = (y + rootScaleY * offset.y) * m;
             newTransf.width = width * m;
             newTransf.height = height * m;
             newTransf.sourceX = sourceX * m;
