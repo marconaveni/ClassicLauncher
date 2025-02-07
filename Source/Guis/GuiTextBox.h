@@ -30,7 +30,7 @@ namespace ClassicLauncher
         int mDesiredWidth;
         float mOffset;
         bool mToLeft;
-        int mDelay;
+        float mDelay;
         Vector2 mMensuredText;
         float mSpeed;
         float mMaxDelay;

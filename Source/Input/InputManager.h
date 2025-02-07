@@ -40,7 +40,7 @@ namespace ClassicLauncher
     {
         int gamePad;
         int keyPad;
-        int amoutDown;
+        float amoutDown;
         InputName name;
         bool bPress;
         bool bDown;

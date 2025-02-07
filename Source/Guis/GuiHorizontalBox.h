@@ -40,6 +40,7 @@ namespace ClassicLauncher
         int mIdFocus;
         int mIdLastFocusSystem;
         float mSpeed;
+        TimerHandling mTimerInputSpeed;
 
     public:
 

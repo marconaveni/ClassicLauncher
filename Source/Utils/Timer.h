@@ -24,7 +24,7 @@ namespace ClassicLauncher
     public:
 
         Timer()
-            : mDelay(0), mDuration(0), mCurrentTime(0), mIsFunctionCalled(false), mIsLoop(false), mIsActive(false), mCallback(nullptr) {};
+            : mDelay(0), mDuration(0.0), mCurrentTime(0.0), mIsFunctionCalled(false), mIsLoop(false), mIsActive(false), mCallback(nullptr) {};
 
         ~Timer() = default;
 
@@ -42,9 +42,9 @@ namespace ClassicLauncher
         {
             if (!mIsFunctionCalled && mIsActive)
             {
-                if (mCurrentTime <= mDuration)
+                if (mCurrentTime <= mDelay)
                 {
-                    mCurrentTime++;
+                    mCurrentTime += GetFrameTime();
                     return;
                 }
                 mCallback();
@@ -62,7 +62,7 @@ namespace ClassicLauncher
 
         void Reset()
         {
-            mCurrentTime = 0.0f;                  // Reset current time
+            mCurrentTime = 0.0;                  // Reset current time
             mDuration = mDelay / GetFrameTime();  // Set duration based on frame time
             mIsFunctionCalled = false;            // Reset the function called state
         }

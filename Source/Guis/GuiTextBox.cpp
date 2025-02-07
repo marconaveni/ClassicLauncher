@@ -36,7 +36,7 @@ namespace ClassicLauncher
         , mDelay(0)
         , mMensuredText(Vector2())
         , mSpeed(0.5f)
-        , mMaxDelay(240.0f)
+        , mMaxDelay(3.0f)
         , mTextOverflowPolicy(TextOverflowPolicy::none)
     {
         LoadNewFont(path, size, spacing);
@@ -59,22 +59,18 @@ namespace ClassicLauncher
         const int positionText = mDesiredWidth - mMensuredText.GetIntX();
         if (mTextOverflowPolicy == TextOverflowPolicy::clip && positionText < 0)
         {
-            mSpeed = 0.50f;
-
-            if (mDelay != 0 && mDelay < mMaxDelay)
+            if (mDelay < mMaxDelay)
             {
-                mDelay++;
+                mDelay += GetFrameTime();
                 return;
             }
+            
+            mSpeed = 0.50f * 60.0f * GetFrameTime();
 
-            if ((abs)(positionText - mOffset) <= 0 || (mOffset > 0))
+            if (positionText - mOffset > 0 ||  positionText - mOffset < positionText)
             {
-                mDelay = 1;
+                mDelay = 0.0f;
                 mToLeft = !mToLeft;
-            }
-            else
-            {
-                mDelay = 0;
             }
 
             mOffset += (mToLeft) ? -mSpeed : mSpeed;

@@ -141,7 +141,7 @@ namespace ClassicLauncher
     {
         mIsFront = true;
 
-        const float time = 0.3f;
+        const float time = 10.3f;
         const float scale = 1.75f;
 
         TransformProperties target = mProperties;
@@ -152,7 +152,7 @@ namespace ClassicLauncher
         target.x += (-target.width / 2 * target.scaleX) + target.width / 2;
         target.y += (-target.height / 2 * target.scaleY) + target.height / 2;
 
-        target.color.a = 0;
+        //target.color.a = 0;
         StartAnimation("card-zoom", time, mProperties, target, Ease::EaseQuadInOut, true);
         GetApplication()->GetTimerManager()->SetTimer(mTimer, CALLFUNCTION(Reset, this), this, time * 2);
     }

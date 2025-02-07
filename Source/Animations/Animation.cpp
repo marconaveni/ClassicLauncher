@@ -19,7 +19,7 @@ namespace ClassicLauncher
         mIsStart = true;
         mIsFinish = false;
         mCurrentTime = 0.0f;
-        mDuration = durationAnimation / GetFrameTime();
+        mDuration = durationAnimation;
         mStartTransform = startAnimation;
         mCurrentTransform = startAnimation;
         mFinalTransform = finalAnimation;
@@ -44,7 +44,7 @@ namespace ClassicLauncher
                 mCurrentTransform.color.b = GetAnimation(mCurrentTime, mStartTransform.color.b, mFinalTransform.color.b - mStartTransform.color.b, mDuration);
                 mCurrentTransform.color.a = GetAnimation(mCurrentTime, mStartTransform.color.a, mFinalTransform.color.a - mStartTransform.color.a, mDuration);
 
-                mCurrentTime++;
+                mCurrentTime += GetFrameTime();
                 return;
             }
 

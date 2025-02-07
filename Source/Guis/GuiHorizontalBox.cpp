@@ -145,6 +145,7 @@ namespace ClassicLauncher
         LOG(LOG_CLASSIC_DEBUG, "Num Sprites Loaded after ClearCovers %d", pSpriteManager->NumSpritesLoaded());
     }
 
+    int fps = 60;
     void GuiHorizontalBox::Update()
     {
         GuiComponent::Update();
@@ -160,28 +161,29 @@ namespace ClassicLauncher
             mProperties.scaleY -= 0.1;
         }
 
-        if (IsKeyReleased(KEY_SEVEN))
+        if (IsKeyReleased(KEY_SEVEN) || IsKeyReleased(KEY_SIX))
         {
-            // mApplication->GetEntityManager()->CreateEntity<GuiCard>("GuiCard", 10 , 10);
-            const int fps = GetFPS() == 60 ? 30 : 60;
+            if (IsKeyReleased(KEY_SIX))
+            {
+                fps = 15;
+            }
+            fps += 15;
             SetTargetFPS(fps);
+            PRINT(TEXT("Set FPS to %d", fps));
         }
-        const float minSpeed = 20.0f * 60.0f * GetFrameTime();
-        const float maxSpeed = Math::Clamp(88.0f * 60.0f * GetFrameTime(), 0, 255);
+
         if (InputManager::IsDown(InputName::rightTriggerFront, main))
         {
-            mSpeed = 255;
+            mSpeed = Math::Clamp(256.0f * 60.0f * GetFrameTime(), 0.0f, 256.0f);
         }
-        else if (InputManager::IsDown(InputName::leftFaceLeft, main) || InputManager::IsDown(InputName::leftFaceRight, main))
+        else if (InputManager::IsPress(InputName::leftFaceLeft, main) || InputManager::IsPress(InputName::leftFaceRight, main))
         {
-            mSpeed += 0.25f * 60.0f * GetFrameTime();
-            mSpeed = Math::Clamp(mSpeed, minSpeed, maxSpeed);
+            mSpeed = 20.0f * 60.0f * GetFrameTime();
+            GetApplication()->GetTimerManager()->SetTimer(
+                mTimerInputSpeed, [&]() { mSpeed = Math::Clamp(88.0f * 60.0f * GetFrameTime(), 0.0f, 256.0f); }, this, 2.5f, false);
         }
-        else
-        {
-            mSpeed = minSpeed;
-        }
-        // PRINT(TEXT("mSpeed %.8f", mSpeed), 5.0f, "mspeed");
+
+        PRINT(TEXT("mSpeed %.8f", mSpeed), 5.0f, "mspeed");
 
         if (InputManager::IsDown(InputName::leftFaceLeft, main) && !mIsRight)
         {
@@ -218,7 +220,7 @@ namespace ClassicLauncher
 
         for (const auto& cardContainer : mGuiCards)
         {
-            if (mPositionX > -256 && mPositionX < 0 && mIsRight)
+            if (mPositionX > -356 && mPositionX < 0 && mIsRight)
             {
                 if (mIdFocus < 3 || mIdFocus > 6)
                 {
@@ -226,7 +228,7 @@ namespace ClassicLauncher
                 }
                 mLastDirection = Left;
             }
-            else if (mPositionX > 0 && mPositionX < 256 && mIsLeft)
+            else if (mPositionX > 0 && mPositionX < 356 && mIsLeft)
             {
                 if (mIdFocus < 3 || mIdFocus > 6)
                 {
@@ -234,14 +236,15 @@ namespace ClassicLauncher
                 }
                 mLastDirection = Right;
             }
-            else if (mPositionX <= -256 || mPositionX >= 256)
-            {
-                mPositionX = 0;
-                mIsRight = false;
-                mIsLeft = false;
-                SetCovers();
-                // todo: add clean textures of vram outside of the screen
-            }
+        }
+
+        if (mPositionX <= -256 || mPositionX >= 256)
+        {
+            mPositionX = 0;
+            mIsRight = false;
+            mIsLeft = false;
+            SetCovers();
+            // todo: add clean textures of vram outside of the screen
         }
 
         if (mIdFocus < 3 || mIdFocus > 6)
@@ -260,11 +263,12 @@ namespace ClassicLauncher
             }
         }
 
+        mIdFocus = Math::Clamp(mIdFocus, 0, (int)(mGuiCards.size() - 1));
         if (!mIsLeft && !mIsRight)
         {
             for (size_t i = 0; i < mGuiCards.size(); i++)
             {
-                mGuiCards[i]->mProperties.x = (float)mCardPositions[i];
+                mGuiCards.at(i)->mProperties.x = (float)mCardPositions[i];
             }
         }
     }
