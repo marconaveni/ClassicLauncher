@@ -4,18 +4,15 @@
 #include <memory>
 #include <vector>
 #include <string>
-
-#include "Application.h"
 #include "GuiCard.h"
-#include "GuiComponent.h"
-#include "Guis/GuiTextBlock.h"
+#include "Data/GameListManager.h"
+#include "Entity/EntityGui.h"
 
 namespace ClassicLauncher
 {
 
-    class GuiComponent;
+    class EntityGui;
     class GuiMiniCover;
-    class Application;
     class GuiCard;
     class GuiTextBlock;
 
@@ -27,7 +24,7 @@ namespace ClassicLauncher
     };
 
 
-    class GuiHorizontalCards : public GuiComponent
+    class GuiHorizontalCards : public EntityGui
     {
         GuiTextBlock* mGuiTitle;
         GuiMiniCover* mMiniCover;
@@ -45,13 +42,13 @@ namespace ClassicLauncher
     public:
 
         GuiHorizontalCards();
+        EntityType GetType() const override { return EntityType::GuiHorizontalCardsClass; }
         void Init();
         void Update() override;
         void Draw() override;
         void End() override;
         void SetFocus(int newId, bool bForce = false);
         void SetCovers();
-        EntityType GetType() const override { return EntityType::GuiHorizontalCardsClass; }
         void ChangeList(const CurrentList list);
         void Click();
 

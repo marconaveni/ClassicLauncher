@@ -49,7 +49,7 @@ namespace ClassicLauncher
 
     void GuiTextBlock::Update()
     {
-        GuiComponent::Update();
+        EntityGui::Update();
 
         if (mTextOverflowPolicy == TextOverflowPolicy::clip)
         {

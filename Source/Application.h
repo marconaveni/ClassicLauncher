@@ -2,7 +2,6 @@
 #define APPLICATION_H
 
 #include "Audio/AudioManager.h"
-#include "Core.h"
 #include "Data/GameListManager.h"
 #include "Entity/EntityManager.h"
 #include "Graphics/Render.h"

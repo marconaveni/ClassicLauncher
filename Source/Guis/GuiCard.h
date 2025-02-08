@@ -3,16 +3,15 @@
 
 #include <memory>
 #include <string>
-#include "Core.h"
 #include "GuiComponent.h"
-#include "Guis/GuiSizeBox.h"
 
 namespace ClassicLauncher
 {
+    class EntityGui;
     class GuiComponent;
     class GuiSizeBox;
 
-    class GuiCard : public GuiComponent
+    class GuiCard : public EntityGui
     {
     private:
         

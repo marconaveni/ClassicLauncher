@@ -1,4 +1,5 @@
 #include "GuiWindow.h"
+#include "Application.h"
 
 namespace ClassicLauncher
 {
@@ -41,7 +42,7 @@ namespace ClassicLauncher
 
     void GuiWindow::Update()
     {
-        GuiComponent::Update();
+        EntityGui::Update();
 
 
 #ifdef _DEBUG

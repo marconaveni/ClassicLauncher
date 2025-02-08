@@ -13,11 +13,12 @@
 namespace ClassicLauncher
 {
 
+    class EntityGui;
     class GuiComponent;
     class GuiSizeBox;
     class GuiHorizontalBox;
 
-    class GuiMiniCover : public GuiComponent
+    class GuiMiniCover : public EntityGui
     {
     private:
 

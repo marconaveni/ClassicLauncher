@@ -19,7 +19,7 @@ namespace ClassicLauncher
 
     void GuiSizeBox::Update()
     {
-        GuiComponent::Update();
+        EntityGui::Update();
         UpdateGuiAttachment();
         if (mCropGuiAttachment)
         {
@@ -29,7 +29,7 @@ namespace ClassicLauncher
 
     void GuiSizeBox::UpdatePosition()
     {
-        GuiComponent::UpdatePosition();
+        EntityGui::UpdatePosition();
     }
 
     void GuiSizeBox::UpdateGuiAttachment()

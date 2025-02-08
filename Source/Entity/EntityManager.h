@@ -4,7 +4,6 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include "Core.h"
 #include "Entity.h"
 #include "Graphics/SpriteManager.h"
 

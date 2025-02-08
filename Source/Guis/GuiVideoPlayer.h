@@ -4,9 +4,7 @@
 #include <memory>
 #include <string>
 #include <vector>
-
-#include "Application.h"
-#include "GuiComponent.h"
+#include "Entity/EntityGui.h"
 #include "Video/VideoPlayer.h"
 
 namespace ClassicLauncher
@@ -14,8 +12,9 @@ namespace ClassicLauncher
     class VideoPlayer;
     class GuiComponent;
     class Application;
+    class EntityGui;
 
-    class GuiVideoPlayer : public GuiComponent
+    class GuiVideoPlayer : public EntityGui
     {
     private:
 

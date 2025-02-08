@@ -155,6 +155,8 @@ set(guis
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiBlackScreen.h"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiCard.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiCard.h"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiComponent.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiComponent.h"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiHorizontalBox.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiHorizontalBox.h"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiHorizontalCards.cpp"
@@ -179,6 +181,8 @@ set(themes
     "${CMAKE_SOURCE_DIR}/Source/Themes/Themes.h"
 )
 set(entity
+    "${CMAKE_SOURCE_DIR}/Source/Entity/EntityGui.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Entity/EntityGui.h"
     "${CMAKE_SOURCE_DIR}/Source/Entity/Entity.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Entity/Entity.h"
     "${CMAKE_SOURCE_DIR}/Source/Entity/EntityManager.cpp"
@@ -216,8 +220,6 @@ set(src
     "${CMAKE_SOURCE_DIR}/Source/ClassicAssert.h"
     "${CMAKE_SOURCE_DIR}/Source/ClassicLauncher.h"
     "${CMAKE_SOURCE_DIR}/Source/Core.h"
-    "${CMAKE_SOURCE_DIR}/Source/GuiComponent.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/GuiComponent.h"
     "${CMAKE_SOURCE_DIR}/Source/Main.cpp"
     )
     

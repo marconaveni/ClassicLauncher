@@ -2,19 +2,18 @@
 #define GUI_HORIZONTAL_BOX
 
 #include <vector>
-#include "Core.h"
-#include "GuiComponent.h"
+#include "Entity/EntityGui.h"
 
 namespace ClassicLauncher
 {
 
     class GuiComponent;
 
-    class GuiHorizontalBox : public GuiComponent
+    class GuiHorizontalBox : public EntityGui
     {
     private:
 
-        std::vector<GuiComponent*> mGuiElements;
+        std::vector<EntityGui*> mGuiElements;
         bool mIsAffectScale = false;
         float mSpacer = 0;
         bool mIsAutoSize = false;
@@ -27,7 +26,7 @@ namespace ClassicLauncher
         void SetAffectScale(bool bIsAffectScale) { mIsAffectScale = bIsAffectScale; }
         void SetSpace(float spacer) { mSpacer = spacer; }
         void SetAutoSize(bool bIsAutoSize) { mIsAutoSize = bIsAutoSize; }
-        void AttachGui(GuiComponent* guiComponent);
+        void AttachGui(EntityGui* guiComponent);
         virtual void Update() override;
     };
 

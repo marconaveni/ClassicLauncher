@@ -53,7 +53,7 @@ namespace ClassicLauncher
 
     void GuiVideoPlayer::Update()
     {
-        GuiComponent::Update();
+        EntityGui::Update();
 
         if (!mPlayer) return;
 
@@ -66,7 +66,7 @@ namespace ClassicLauncher
 
     void GuiVideoPlayer::Draw()
     {
-        GuiComponent::Draw();
+        EntityGui::Draw();
 
         if (!mPlayer) return;
 
@@ -89,7 +89,7 @@ namespace ClassicLauncher
 
     void GuiVideoPlayer::End()
     {
-        GuiComponent::End();
+        EntityGui::End();
         Stop();
     }
 

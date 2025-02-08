@@ -1,13 +1,15 @@
 #ifndef GUI_SIZE_BOX
 #define GUI_SIZE_BOX
 
-#include "Core.h"
+
 #include "GuiComponent.h"
 
 namespace ClassicLauncher
 {
 
-    class GuiSizeBox : public GuiComponent
+    class EntityGui;
+
+    class GuiSizeBox : public EntityGui
     {
     private:
 

@@ -1,17 +1,16 @@
-#include "GuiComponent.h"
+#include "EntityGui.h"
 #include "Graphics/SpriteAnimator.h"
 #include "Application.h"
 
 namespace ClassicLauncher
 {
-    GuiComponent::GuiComponent()
-        : Entity()
+    EntityGui::EntityGui()
     {
         mApplication = &Application::Get();
         CLASSIC_ASSERT(mApplication);
     }
 
-    void GuiComponent::Update()
+    void EntityGui::Update()
     {
         Entity::Update();
         for (auto& spriteAnimation : mSpriteAnimations)
@@ -59,18 +58,18 @@ namespace ClassicLauncher
         }
     }
 
-    void GuiComponent::StartAnimation(const std::string& name,
-                                      float durationAnimation,
-                                      const TransformProperties& startAnimationTransform,
-                                      const TransformProperties& finalAnimationTransform,
-                                      Ease typeAnimation,
-                                      bool bForceReset)
+    void EntityGui::StartAnimation(const std::string& name,
+                                   float durationAnimation,
+                                   const TransformProperties& startAnimationTransform,
+                                   const TransformProperties& finalAnimationTransform,
+                                   Ease typeAnimation,
+                                   bool bForceReset)
     {
         Animation& anim = mAnimations[name];
         anim.StartAnimation(durationAnimation, startAnimationTransform, finalAnimationTransform, typeAnimation, bForceReset);
     }
 
-    void GuiComponent::AddAnimationFrame(const std::string& name, const float timeAnimation, const std::vector<Rectangle>& spriteIndices)
+    void EntityGui::AddAnimationFrame(const std::string& name, const float timeAnimation, const std::vector<Rectangle>& spriteIndices)
     {
         if (mSpriteAnimations.find(name) != mSpriteAnimations.end())
         {
@@ -79,4 +78,4 @@ namespace ClassicLauncher
         mSpriteAnimations[name] = SpriteAnimator(timeAnimation, spriteIndices);
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

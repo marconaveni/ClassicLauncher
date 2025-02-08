@@ -13,7 +13,7 @@ namespace ClassicLauncher
     {
     }
 
-    void GuiHorizontalBox::AttachGui(GuiComponent* guiComponent)
+    void GuiHorizontalBox::AttachGui(EntityGui* guiComponent)
     {
         AddChild(guiComponent);
         mGuiElements.push_back(guiComponent);
@@ -21,7 +21,7 @@ namespace ClassicLauncher
 
     void GuiHorizontalBox::Update()
     {
-        GuiComponent::Update();
+        EntityGui::Update();
 
         float x = 0;
         float width = 0;

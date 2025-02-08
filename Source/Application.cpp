@@ -1,6 +1,6 @@
 #include "Application.h"
 #include "Graphics/Render.h"
-#include "GuiComponent.h"
+#include "Guis/GuiComponent.h"
 #include "Guis/GuiWindow.h"
 #include "Utils/Log.h"
 #include "Utils/Resources.h"

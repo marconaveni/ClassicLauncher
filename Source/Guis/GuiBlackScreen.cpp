@@ -50,8 +50,7 @@ namespace ClassicLauncher
 
     void GuiBlackScreen::Update()
     {
-        GuiComponent::Update();
-        // SetBringToFront();
+        EntityGui::Update();
     }
     
     void GuiBlackScreen::AnimationFinished(std::string name)

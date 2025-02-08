@@ -2,8 +2,7 @@
 #define GUI_TEXT_BLOCK_H
 
 #include <string>
-#include "Core.h"
-#include "GuiComponent.h"
+#include "Entity/EntityGui.h"
 
 namespace ClassicLauncher
 {
@@ -14,9 +13,9 @@ namespace ClassicLauncher
         clip = 0x1
     };
 
-    class GuiComponent;
+    class EntityGui;
 
-    class GuiTextBlock : public GuiComponent
+    class GuiTextBlock : public EntityGui
     {
     private:
 

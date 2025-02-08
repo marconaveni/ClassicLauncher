@@ -51,7 +51,7 @@ namespace ClassicLauncher
 
     void GuiMiniCover::Update()
     {
-        GuiComponent::Update();
+        EntityGui::Update();
 
         for (auto& miniCover : mGuiCovers)
         {
@@ -67,7 +67,7 @@ namespace ClassicLauncher
 
     void GuiMiniCover::End()
     {
-        GuiComponent::End();
+        EntityGui::End();
     }
 
     void GuiMiniCover::SetPositionCovers(int numCovers)

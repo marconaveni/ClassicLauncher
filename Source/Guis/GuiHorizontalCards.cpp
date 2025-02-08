@@ -4,7 +4,7 @@
 #include <memory>
 #include "Core.h"
 #include "Guis/GuiMiniCover.h"
-#include "Utils/Resources.h"
+#include "Guis/GuiTextBlock.h"
 
 namespace ClassicLauncher
 {
@@ -45,12 +45,12 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::Draw()
     {
-        GuiComponent::Draw();
+        EntityGui::Draw();
     }
 
     void GuiHorizontalCards::End()
     {
-        GuiComponent::End();
+        EntityGui::End();
     }
 
     void GuiHorizontalCards::SetFocus(const int newId, bool bForce)
@@ -148,7 +148,7 @@ namespace ClassicLauncher
     int fps = 60;
     void GuiHorizontalCards::Update()
     {
-        GuiComponent::Update();
+        EntityGui::Update();
 
         if (InputManager::IsDown(InputName::leftFaceDown, debug))
         {

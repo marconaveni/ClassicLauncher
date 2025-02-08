@@ -1,12 +1,13 @@
 #include "GuiCard.h"
 #include "Application.h"
 #include "Graphics/SpriteAnimator.h"
+#include "Guis/GuiSizeBox.h"
 
 namespace ClassicLauncher
 {
 
     GuiCard::GuiCard(const float x, const float y)
-        : GuiComponent(), mTimer()
+        : EntityGui(), mTimer()
     {
         mProperties.x = x;
         mProperties.y = y;
@@ -48,7 +49,7 @@ namespace ClassicLauncher
 
     void GuiCard::Update()
     {
-        GuiComponent::Update();
+        EntityGui::Update();
         //mSizeBox->mProperties.offset.x += 0.03f;
         //mSizeBox->mProperties.offset.y += 0.03f;
         const Texture2D* textureReference = GetApplication()->GetSpriteManager()->GetTexture(mCover->mTextureName);
