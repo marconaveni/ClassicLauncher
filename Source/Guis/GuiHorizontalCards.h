@@ -51,7 +51,7 @@ namespace ClassicLauncher
         void End() override;
         void SetFocus(int newId, bool bForce = false);
         void SetCovers();
-        EntityType GetType() const override { return EntityType::GuiHorizontalBoxClass; }
+        EntityType GetType() const override { return EntityType::GuiHorizontalCardsClass; }
         void ChangeList(const CurrentList list);
         void Click();
 

@@ -18,6 +18,7 @@ namespace ClassicLauncher
 
         GuiSizeBox();
         ~GuiSizeBox();
+        virtual EntityType GetType() const override { return EntityType::GuiSizeBoxClass; }
         void AttachGui(GuiComponent* guiAttachment);
         virtual void Update() override;
         virtual void UpdatePosition() override;

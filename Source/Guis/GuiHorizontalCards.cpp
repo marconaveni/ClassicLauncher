@@ -265,7 +265,6 @@ namespace ClassicLauncher
             }
         }
 
-        mIdFocus = Math::Clamp(mIdFocus, 0, (int)(mGuiCards.size() - 1));
         if (!mIsLeft && !mIsRight)
         {
             for (size_t i = 0; i < mGuiCards.size(); i++)

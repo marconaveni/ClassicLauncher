@@ -155,6 +155,8 @@ set(guis
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiBlackScreen.h"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiCard.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiCard.h"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiHorizontalBox.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiHorizontalBox.h"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiHorizontalCards.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiHorizontalCards.h"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiMiniCover.cpp"

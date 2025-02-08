@@ -10,14 +10,16 @@ namespace ClassicLauncher
 
     enum class EntityType
     {
-        None = 0,
         GuiComponentClass = 1,
-        GuiWindowClass = 2,
-        GuiCardClass = 3,
-        GuiHorizontalBoxClass = 4,
-        GuiMiniCoverClass = 5,
-        GuiVideoPlayer = 6,
-        GuiTextBox = 7,
+        GuiWindowClass,
+        GuiCardClass,
+        GuiHorizontalCardsClass,
+        GuiMiniCoverClass,
+        GuiVideoPlayerClass,
+        GuiTextBlockClass,
+        GuiSizeBoxClass,
+        GuiHorizontalBoxClass,
+        GuiBlackScreenClass,
     };
 
     class Entity

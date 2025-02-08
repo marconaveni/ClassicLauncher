@@ -13,6 +13,7 @@ namespace ClassicLauncher
     public:
 
         GuiBlackScreen();
+        virtual EntityType GetType() const override { return EntityType::GuiBlackScreenClass; }
         void FadeIn();
         void FadeOut();
         void FadeInFadeOut();
