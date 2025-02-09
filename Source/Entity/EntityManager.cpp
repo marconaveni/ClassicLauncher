@@ -130,7 +130,7 @@ namespace ClassicLauncher
 
             const Rectangle source = { sourceX, sourceY, width, height };
             const Vector2 scale = { (scaleWidth * properties.scaleX * properties.rootScaleX), (scaleHeight * properties.scaleY * properties.rootScaleY) };
-            entity->mDestination = { x, y, scale.x, scale.y };
+            entity->mDestination = Rectangle(x, y, scale.x, scale.y );
 
             if (entity->mScissorMode)
             {

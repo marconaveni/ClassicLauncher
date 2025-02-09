@@ -9,7 +9,7 @@ namespace ClassicLauncher
     {
     public:
 
-        GuiComponent() = default;
+        GuiComponent();
         virtual ~GuiComponent() override = default;
         virtual EntityType GetType() const override { return EntityType::GuiComponentClass; }
     };

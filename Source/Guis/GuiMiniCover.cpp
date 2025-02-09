@@ -5,8 +5,8 @@
 namespace ClassicLauncher
 {
     GuiMiniCover::GuiMiniCover()
-        : mGuiCovers(), mArrow(nullptr), mSize(32), mSizeCover(29.0f, 38.0f)
-        // : mGuiCovers(), mArrow(nullptr), mSize(16), mSizeCover(39.0f, 48.0f) // test 
+        : mGuiCovers(), mArrow(nullptr), mSize(32), mSizeCover(28.0f, 40.0f)
+        // : mGuiCovers(), mArrow(nullptr), mSize(23), mSizeCover(40.0f, 58.0f) // test
     {
     }
 
@@ -18,14 +18,14 @@ namespace ClassicLauncher
 
         mGuiHorizontalBox = GetApplication()->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
         mGuiHorizontalBox->mProperties.x = mProperties.width / 2.0f;
-        mGuiHorizontalBox->mProperties.y = 21.0f;
+        mGuiHorizontalBox->mProperties.y = 20.0f;
         mGuiHorizontalBox->SetAutoSize(true);
         mGuiHorizontalBox->SetAffectScale(true);
+        mGuiHorizontalBox->SetSpace(1.0f);
         AddChild(mGuiHorizontalBox);
 
         for (int i = 0; i < mSize; i++)
         {
-            const int x = 29 * i;
             auto miniCover = GetApplication()->GetEntityManager()->CreateEntity<GuiComponent>("miniCover");
             auto sizeBox = GetApplication()->GetEntityManager()->CreateEntity<GuiSizeBox>("GuiSizeBox");
 
@@ -72,9 +72,11 @@ namespace ClassicLauncher
 
     void GuiMiniCover::SetPositionCovers(int numCovers)
     {
-        mGuiHorizontalBox->mProperties.x = (mProperties.width - (mSizeCover.x * numCovers)) / 2.0f;
-        mArrow->mProperties.x = (numCovers % 2 == 0) ? (-mProperties.x + mProperties.width) / 2 : (-mProperties.x + mProperties.width - 15) / 2;
+        mGuiHorizontalBox->mProperties.x = (mProperties.width - ((mSizeCover.x + 1) * numCovers)) / 2.0f;
+        mArrow->mProperties.x = mGuiHorizontalBox->mProperties.x + ((mSizeCover.x + 1) * numCovers) / 2.0f;
+        mArrow->mProperties.x = (numCovers % 2 == 0) ? mArrow->mProperties.x : mArrow->mProperties.x - mArrow->mProperties.width / 2;
         mArrow->mProperties.x--;
+
         mGuiHorizontalBox->mProperties.x *= mProperties.rootScaleX;
         mArrow->mProperties.x *= mProperties.rootScaleX;
     }
@@ -106,7 +108,7 @@ namespace ClassicLauncher
             if (!fileName.empty())
             {
                 name = std::to_string(indexFinal) + "_MCV";
-                pSpriteManager->LoadSprite(name, fileName, (mSizeCover.x - 1) * scale, mSizeCover.y * scale);
+                pSpriteManager->LoadSprite(name, fileName, mSizeCover.x * scale, mSizeCover.y * scale);
             }
 
             if (i - 1 >= 0 && i <= static_cast<int>(mGuiCovers.size()) - 2)
