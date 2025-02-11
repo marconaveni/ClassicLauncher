@@ -10,13 +10,23 @@ namespace ClassicLauncher
 {
 
     GuiHorizontalCards::GuiHorizontalCards()
-        : mGuiTitle(nullptr), mMiniCover(nullptr), mPositionX(0), mIsLeft(false), mIsRight(false), mLastDirection(None), mIdFocus(0), mIdLastFocusSystem(3), mSpeed(22.0f)
+        : mGuiTitle(nullptr)
+        , mMiniCover(nullptr)
+        , mPositionX(0)
+        , mIsLeft(false)
+        , mIsRight(false)
+        , mIsNeedUpdate(false)
+        , mLastDirection(None)
+        , mIdFocus(0)
+        , mIdLastFocusSystem(3)
+        , mSpeed(22.0f)
     {
+        mProperties.width = 1280;
+        mProperties.height = 720;
     }
 
     void GuiHorizontalCards::Init()
     {
-        mProperties.y = 0;
 
         EntityManager* pEntityManager = GetApplication()->GetEntityManager();
         mGuiTitle = pEntityManager->CreateEntity<GuiTextBlock>("GuiTitle", Resources::GetFont(), 48, 0);
@@ -27,14 +37,22 @@ namespace ClassicLauncher
         mGuiTitle->SetTextOverflowPolicy(TextOverflowPolicy::clip);
         AddChild(mGuiTitle);
 
-        for (float cardPosition : mCardPositions)
+        mHorizontalBox = pEntityManager->CreateEntity<GuiHorizontalBox>("Cards_GuiHorizontalBox");
+        mHorizontalBox->SetAutoSize(true);
+        // mHorizontalBox->SetAffectScale(true);
+        // mHorizontalBox->SetSpace(6);
+        mHorizontalBox->mProperties.width = 2560.0f;  // hack temp while not themes configurations
+        mHorizontalBox->mProperties.y = 222.0f;
+        AddChild(mHorizontalBox);
+
+        for (int i = 0; i < 10; i++)
         {
-            const float x = cardPosition;
-            const float y = 222.0f;
-            auto card = pEntityManager->CreateEntity<GuiCard>("GuiCard", x, y);
-            AddChild(card);
+            auto card = pEntityManager->CreateEntity<GuiCard>("GuiCard", 0, 0);
+            mHorizontalBox->AttachGui(card);
             mGuiCards.emplace_back(card);
         }
+
+        SetPositionHorizontalBox();
 
         mMiniCover = pEntityManager->CreateEntity<GuiMiniCover>("MiniCover");
         mMiniCover->Init();
@@ -94,8 +112,14 @@ namespace ClassicLauncher
         }
 
         mMiniCover->SetCovers();
+        SetPositionHorizontalBox();
 
         LOG(LOG_CLASSIC_DEBUG, "Num Sprites Loaded after SetCovers %d", spriteManager->NumSpritesLoaded());
+    }
+
+    void GuiHorizontalCards::SetPositionHorizontalBox()
+    {
+        mHorizontalBox->mProperties.x = ((1280 - mHorizontalBox->mProperties.width) / 2) + 2;
     }
 
     void GuiHorizontalCards::ChangeList(const CurrentList list)
@@ -185,7 +209,9 @@ namespace ClassicLauncher
                 mTimerInputSpeed, [&]() { mSpeed = Math::Clamp(88.0f * 60.0f * GetFrameTime(), 0.0f, 256.0f); }, this, 2.5f, false);
         }
 
-        PRINT(TEXT("mSpeed %.8f", mSpeed), 5.0f, "mspeed");
+        // PRINT(TEXT("mSpeed %.8f", mSpeed), 5.0f, "mspeed");
+        // PRINT(TEXT("mPositionX %.8f", mPositionX), 5.0f, "mPositionX");
+        // PRINT(TEXT("mHorizontalBox->mProperties.x %.8f", mHorizontalBox->mProperties.x), 5.0f, "mHorizontalBox->mProperties.x");
 
         if (InputManager::IsDown(InputName::leftFaceLeft, main) && !mIsRight)
         {
@@ -197,6 +223,7 @@ namespace ClassicLauncher
                 SetFocus(mIdFocus - 1);
             }
             mIsLeft = true;
+            mIsNeedUpdate = true;
         }
 
         if (InputManager::IsDown(InputName::leftFaceRight, main) && !mIsLeft)
@@ -209,6 +236,7 @@ namespace ClassicLauncher
                 SetFocus(mIdFocus + 1);
             }
             mIsRight = true;
+            mIsNeedUpdate = true;
         }
 
         if (mIsRight)
@@ -220,24 +248,21 @@ namespace ClassicLauncher
             mPositionX = mPositionX + mSpeed;
         }
 
-        for (const auto& cardContainer : mGuiCards)
+        if (mPositionX > -356 && mPositionX < 0 && mIsRight)
         {
-            if (mPositionX > -356 && mPositionX < 0 && mIsRight)
+            if (mIdFocus < 3 || mIdFocus > 6)
             {
-                if (mIdFocus < 3 || mIdFocus > 6)
-                {
-                    cardContainer->mProperties.x -= mSpeed;
-                }
-                mLastDirection = Left;
+                mHorizontalBox->mProperties.x -= mSpeed;
             }
-            else if (mPositionX > 0 && mPositionX < 356 && mIsLeft)
+            mLastDirection = Left;
+        }
+        else if (mPositionX > 0 && mPositionX < 356 && mIsLeft)
+        {
+            if (mIdFocus < 3 || mIdFocus > 6)
             {
-                if (mIdFocus < 3 || mIdFocus > 6)
-                {
-                    cardContainer->mProperties.x += mSpeed;
-                }
-                mLastDirection = Right;
+                mHorizontalBox->mProperties.x += mSpeed;
             }
+            mLastDirection = Right;
         }
 
         if (mPositionX <= -256 || mPositionX >= 256)
@@ -246,6 +271,7 @@ namespace ClassicLauncher
             mIsRight = false;
             mIsLeft = false;
             SetCovers();
+            mIsNeedUpdate = true;
             // todo: add clean textures of vram outside of the screen
         }
 
@@ -265,12 +291,19 @@ namespace ClassicLauncher
             }
         }
 
-        if (!mIsLeft && !mIsRight)
+        UpdateCards();
+    }
+
+    void GuiHorizontalCards::UpdateCards()
+    {
+        if (!mIsLeft && !mIsRight && mIsNeedUpdate)
         {
-            for (size_t i = 0; i < mGuiCards.size(); i++)
+            mHorizontalBox->ClearAll();
+            for (auto& guiCard : mGuiCards)
             {
-                mGuiCards.at(i)->mProperties.x = (float)mCardPositions[i];
+                mHorizontalBox->AttachGui(guiCard);
             }
+            mIsNeedUpdate = false;
         }
     }
 

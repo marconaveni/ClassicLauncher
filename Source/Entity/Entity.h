@@ -61,6 +61,7 @@ namespace ClassicLauncher
         std::vector<Entity*>& GetChilds();
         Entity* GetRootEntity();
         Entity* GetParent() { return mParent; }
+        void RemoveParent() { mParent = nullptr; }
         void EnableScissorMode(float x, float y, float width, float height);
         void DisableScissorMode() { mScissorMode = false; }
         void SetVisible(bool bEnable) { mVisible = bEnable; }

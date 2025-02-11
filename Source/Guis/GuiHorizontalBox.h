@@ -27,6 +27,7 @@ namespace ClassicLauncher
         void SetSpace(float spacer) { mSpacer = spacer; }
         void SetAutoSize(bool bIsAutoSize) { mIsAutoSize = bIsAutoSize; }
         void AttachGui(EntityGui* guiComponent);
+        void ClearAll();
         virtual void Update() override;
     };
 

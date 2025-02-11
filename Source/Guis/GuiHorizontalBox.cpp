@@ -1,4 +1,5 @@
 #include "GuiHorizontalBox.h"
+#include "Application.h"
 
 namespace ClassicLauncher
 {
@@ -15,8 +16,22 @@ namespace ClassicLauncher
 
     void GuiHorizontalBox::AttachGui(EntityGui* guiComponent)
     {
+        guiComponent->mProperties.x = 0;
+        guiComponent->mProperties.y = 0;
         AddChild(guiComponent);
         mGuiElements.push_back(guiComponent);
+    }
+
+    void GuiHorizontalBox::ClearAll()
+    {
+        for (auto& guiComponent : mGuiElements)
+        {
+            guiComponent->RemoveParent();
+        }
+        RemoveAllChilds();
+        mGuiElements.clear();
+        mProperties.width = 10.0f;
+        mProperties.height = 10.0f;
     }
 
     void GuiHorizontalBox::Update()

@@ -4,9 +4,10 @@
 #include <memory>
 #include <vector>
 #include <string>
-#include "GuiCard.h"
+#include "Guis/GuiCard.h"
 #include "Data/GameListManager.h"
 #include "Entity/EntityGui.h"
+#include "Guis/GuiHorizontalBox.h"
 
 namespace ClassicLauncher
 {
@@ -15,6 +16,7 @@ namespace ClassicLauncher
     class GuiMiniCover;
     class GuiCard;
     class GuiTextBlock;
+    class GuiHorizontalBox;
 
     enum Direction
     {
@@ -28,16 +30,20 @@ namespace ClassicLauncher
     {
         GuiTextBlock* mGuiTitle;
         GuiMiniCover* mMiniCover;
+        GuiHorizontalBox* mHorizontalBox;
         std::vector<GuiCard*> mGuiCards;
-        float mCardPositions[10]{ -632 - 6, -376 - 6, -120 - 6, 136 - 6, 392 - 6, 648 - 6, 904 - 6, 1160 - 6, 1416 - 6, 1672 - 6 };
+        // float mCardPositions[10]{ -632 - 6, -376 - 6, -120 - 6, 136 - 6, 392 - 6, 648 - 6, 904 - 6, 1160 - 6, 1416 - 6, 1672 - 6 };
         float mPositionX;
         bool mIsLeft;
         bool mIsRight;
+        bool mIsNeedUpdate;
         Direction mLastDirection;
         int mIdFocus;
         int mIdLastFocusSystem;
         float mSpeed;
         TimerHandling mTimerInputSpeed;
+        void UpdateCards();
+        void SetPositionHorizontalBox();
 
     public:
 
