@@ -19,7 +19,7 @@ namespace ClassicLauncher
         const float scale = Themes::GetScaleTexture();
         const int widthScale = static_cast<int>(width * scale);
         const int heightScale = static_cast<int>(height * scale);
-        const bool bIsplay = mPlayer->Init(path, widthScale, heightScale, scale);
+        const bool bIsplay = mPlayer->Init(path, widthScale, heightScale, scale, true);
         mPlayer->Play();
         return bIsplay;
     }
@@ -55,9 +55,12 @@ namespace ClassicLauncher
     {
         EntityGui::Update();
 
+
         if (!mPlayer) return;
 
         mPlayer->Update();
+        mProperties.width = mPlayer->GetVideoSize().x;
+        mProperties.height = mPlayer->GetVideoSize().y;
 
         if (!mPlayerFullScreen) return;
 
@@ -73,7 +76,23 @@ namespace ClassicLauncher
         Texture2D* texture = mPlayer->GetVideoTexture();
         if (texture)
         {
-            DrawTexture(*texture, 0, 0, Color::White());
+            TransformProperties properties = mProperties;
+            properties = properties.Multiply(Themes::GetScaleTexture());
+            const float x = properties.rootX + properties.x;
+            const float y = properties.rootY + properties.y;
+            const float width = properties.width;
+            const float height = properties.height;
+            const float sourceX = properties.sourceX;
+            const float sourceY = properties.sourceY;
+            const float scaleWidth = properties.scaleWidth > 0.0f ? properties.scaleWidth : width;
+            const float scaleHeight = properties.scaleHeight > 0.0f ? properties.scaleHeight : height;
+
+            const Rectangle source = { sourceX, sourceY, width, height };
+            const Vector2 scale = { (scaleWidth * properties.scaleX * properties.rootScaleX), (scaleHeight * properties.scaleY * properties.rootScaleY) };
+            mDestination = Rectangle(x, y, scale.x, scale.y );
+
+            DrawTexturePro(*texture, source, mDestination, Vector2{ 0, 0 }, properties.rotation, properties.color);
+            //DrawTexture(*texture, mDestination.x , mDestination.y, Color::White());
         }
 
         if (!mPlayerFullScreen) return;

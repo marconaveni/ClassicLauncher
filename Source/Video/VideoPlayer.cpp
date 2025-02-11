@@ -78,7 +78,7 @@ namespace ClassicLauncher
         LOG(LOG_CLASSIC_TRACE, "VideoPlayer destroyed.");
     }
 
-    bool VideoPlayer::Init(std::string path, int width, int height, float scale)
+    bool VideoPlayer::Init(std::string path, int width, int height, float scale, bool bFill)
     {
         LOG(LOG_CLASSIC_INFO, "Initializing video with path: %s", path.c_str());
         if (path.empty())
@@ -138,7 +138,7 @@ namespace ClassicLauncher
         libvlc_media_tracks_release(tracks, track_count);
 
         Vector2 textureSize((float)mWidthVideo, (float)mHeightVideo);
-        UtilsFunctionLibrary::SetSizeWithProportion(textureSize, mWidth, mHeight);
+        UtilsFunctionLibrary::SetSizeWithProportion(textureSize, mWidth, mHeight, bFill);
         mWidthVideo = textureSize.GetIntX();
         mHeightVideo = textureSize.GetIntY();
 
@@ -256,7 +256,8 @@ namespace ClassicLauncher
 
     Vector2 VideoPlayer::GetVideoSize()
     {
-        return Vector2{ static_cast<float>(mWidth), static_cast<float>(mHeight) };
+        return (IsTextureValid(texture)) ? Vector2{ static_cast<float>(texture.width), static_cast<float>(texture.height) } : Vector2{ 0, 0 };
+        // return Vector2{ static_cast<float>(mWidth), static_cast<float>(mHeight) };
     }
 
     bool VideoPlayer::IsVideoFinished()

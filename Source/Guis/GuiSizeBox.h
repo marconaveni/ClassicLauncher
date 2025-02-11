@@ -1,7 +1,6 @@
 #ifndef GUI_SIZE_BOX
 #define GUI_SIZE_BOX
 
-
 #include "GuiComponent.h"
 
 namespace ClassicLauncher
@@ -13,7 +12,7 @@ namespace ClassicLauncher
     {
     private:
 
-        GuiComponent* mGuiAttachment;
+        EntityGui* mGuiAttachment;
         bool mCropGuiAttachment;
 
     public:
@@ -21,7 +20,7 @@ namespace ClassicLauncher
         GuiSizeBox();
         ~GuiSizeBox();
         virtual EntityType GetType() const override { return EntityType::GuiSizeBoxClass; }
-        void AttachGui(GuiComponent* guiAttachment);
+        void AttachGui(EntityGui* guiAttachment);
         virtual void Update() override;
         virtual void UpdatePosition() override;
         void UpdateGuiAttachment();

@@ -11,7 +11,7 @@ namespace ClassicLauncher
     {
     }
 
-    void GuiSizeBox::AttachGui(GuiComponent* guiAttachment)
+    void GuiSizeBox::AttachGui(EntityGui* guiAttachment)
     {
         mGuiAttachment = guiAttachment;
         AddChild(mGuiAttachment);

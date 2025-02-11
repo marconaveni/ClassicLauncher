@@ -10,12 +10,14 @@ namespace ClassicLauncher
     class EntityGui;
     class GuiComponent;
     class GuiSizeBox;
+    class GuiVideoPlayer;
 
     class GuiCard : public EntityGui
     {
     private:
 
         TimerHandling mTimer;
+        TimerHandling mTimerVideo;
 
         GuiComponent* mCardMain;
         GuiComponent* mCardSelected;
@@ -23,12 +25,15 @@ namespace ClassicLauncher
         GuiComponent* mCardBackgroundMain;
         GuiComponent* mCardBackgroundSelected;
         GuiComponent* mCardBackgroundFavorite;
-        GuiSizeBox* mSizeBox;
+        GuiSizeBox* mSizeBoxImage;
+        GuiSizeBox* mSizeBoxVideoPlayer;
+        GuiVideoPlayer* mGuiVideoPlayer;
         GuiComponent* mCover;
         bool mIsFocus = false;
         bool mIsFront = false;
         void CreateCard(GuiComponent*& card, float sourceX, float sourceY, unsigned char alpha, const char* title, bool bAddChild = true);
         void CreateSizeBox();
+        void StartVideo();
         void FocusAnimation(bool bForce, int a, const int b, const char* nameAnimation);
 
     public:

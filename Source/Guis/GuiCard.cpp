@@ -2,12 +2,13 @@
 #include "Application.h"
 #include "Graphics/SpriteAnimator.h"
 #include "Guis/GuiSizeBox.h"
+#include "Guis/GuiVideoPlayer.h"
 
 namespace ClassicLauncher
 {
 
     GuiCard::GuiCard(const float x, const float y)
-        : mTimer()
+        : mTimer(), mTimerVideo()
     {
         mProperties.x = x;
         mProperties.y = y;
@@ -17,8 +18,9 @@ namespace ClassicLauncher
         CreateCard(mCardBackgroundMain, 0, 281, 255, "GuiCardBackgroundMain");
         CreateCard(mCardBackgroundFavorite, 514, 281, 0, "GuiCardBackgroundFavorite");
         CreateCard(mCardBackgroundSelected, 257, 281, 0, "GuiCardBackgroundSelected");
-        
+
         CreateCard(mCover, 0, 0, 255, "GuiCover", false);
+        mGuiVideoPlayer = GetApplication()->GetEntityManager()->CreateEntity<GuiVideoPlayer>("GuiVideoPlayer");
 
         CreateCard(mCardMain, 0, 0, 255, "GuiCardMain");
         CreateCard(mCardFavorite, 514, 0, 0, "GuiCardFavorite");
@@ -27,7 +29,7 @@ namespace ClassicLauncher
         CreateSizeBox();
         SetCover();
 
-        //mCardSelected->mProperties.offset.x = -15;
+        // mCardSelected->mProperties.offset.x = -15;
     }
 
     void GuiCard::CreateCard(GuiComponent*& card, const float sourceX, const float sourceY, unsigned char alpha, const char* title, bool bAddChild)
@@ -47,13 +49,21 @@ namespace ClassicLauncher
 
     void GuiCard::CreateSizeBox()
     {
-        mSizeBox = GetApplication()->GetEntityManager()->CreateEntity<GuiSizeBox>("GuiSizeBox");
-        mSizeBox->mProperties.width = 228.0f;
-        mSizeBox->mProperties.height = 204.0f;
-        mSizeBox->mProperties.offset.x = 12.0f;
-        mSizeBox->mProperties.offset.y = 12.0f;
-        mSizeBox->AttachGui(mCover);
-        AddChild(mSizeBox);
+        mSizeBoxImage = GetApplication()->GetEntityManager()->CreateEntity<GuiSizeBox>("GuiSizeBoxImage");
+        mSizeBoxImage->mProperties.width = 228.0f;
+        mSizeBoxImage->mProperties.height = 204.0f;
+        mSizeBoxImage->mProperties.offset.x = 12.0f;
+        mSizeBoxImage->mProperties.offset.y = 12.0f;
+        mSizeBoxImage->AttachGui(mCover);
+        AddChild(mSizeBoxImage);
+
+        mSizeBoxVideoPlayer = GetApplication()->GetEntityManager()->CreateEntity<GuiSizeBox>("GuiSizeBoxVideo");
+        mSizeBoxVideoPlayer->mProperties.width = 228.0f;
+        mSizeBoxVideoPlayer->mProperties.height = 204.0f;
+        mSizeBoxVideoPlayer->mProperties.offset.x = 12.0f;
+        mSizeBoxVideoPlayer->mProperties.offset.y = 12.0f;
+        mSizeBoxVideoPlayer->AttachGui(mGuiVideoPlayer);
+        AddChild(mSizeBoxVideoPlayer);
     }
 
     void GuiCard::Update()
@@ -68,7 +78,7 @@ namespace ClassicLauncher
             const float scale = Themes::GetScaleTexture();
             mCover->mProperties.width = textureReference->width / scale;
             mCover->mProperties.height = textureReference->height / scale;
-            mSizeBox->UpdateGuiAttachment();
+            mSizeBoxImage->UpdateGuiAttachment();
         }
     }
 
@@ -88,16 +98,28 @@ namespace ClassicLauncher
         mCardBackgroundSelected->StartAnimation(nameAnimation, 0.2f, mCardSelected->mProperties, target, Ease::EaseLinearNone, false);
     }
 
+    void GuiCard::StartVideo()
+    {
+        if (mIsFocus)
+        {
+            mGuiVideoPlayer->Init(GetApplication()->GetGameListManager()->GetCurrentGameList()->video, 204, 205);
+            mSizeBoxVideoPlayer->SetCropGuiAttachment(true);
+        }
+    }
+
     void GuiCard::SetFocus(bool bForce)
     {
         mIsFocus = true;
         FocusAnimation(bForce, 255, 0, "card-focus");
+        GetApplication()->GetTimerManager()->SetTimer(mTimerVideo, CALLFUNCTION(StartVideo, this), this, 5.0f);
     }
 
     void GuiCard::RemoveFocus(bool bForce)
     {
         mIsFocus = false;
         FocusAnimation(bForce, 0, 255, "card-lost-focus");
+        mGuiVideoPlayer->Stop();
+        mSizeBoxVideoPlayer->SetCropGuiAttachment(false);
     }
 
     void GuiCard::SetCover(std::string name)
@@ -128,16 +150,20 @@ namespace ClassicLauncher
     void GuiCard::Reset()
     {
         mIsFront = false;
+        mProperties.scaleX = 1.0f;
+        mProperties.scaleY = 1.0f;
+        
         mCardBackgroundMain->mProperties.color.SetOpacity(255);
         mCardMain->mProperties.color.SetOpacity(255);
         mCardBackgroundSelected->mProperties.color.SetOpacity(255);
         mCardSelected->mProperties.color.SetOpacity(255);
+        mCover->mProperties.color.SetOpacity(255);
+        mSizeBoxImage->mProperties.color.SetOpacity(255);
+        mSizeBoxVideoPlayer->mProperties.color.SetOpacity(255);
+        mGuiVideoPlayer->mProperties.color.SetOpacity(255);
+        
         mCardBackgroundFavorite->mProperties.color.SetOpacity(0);  // todo create logic is favorite
         mCardFavorite->mProperties.color.SetOpacity(0);            // todo create logic is favorite
-        mCover->mProperties.color.SetOpacity(255);
-        mSizeBox->mProperties.color.SetOpacity(255);
-        mProperties.scaleX = 1.0f;
-        mProperties.scaleY = 1.0f;
         if (mCover->mTextureName == "sprite")
         {
             SetCover();
@@ -180,6 +206,7 @@ namespace ClassicLauncher
             pApplication->GetEntityManager()->SetZOrder(mCardFavorite, 1);
             pApplication->GetEntityManager()->SetZOrder(mCardBackgroundFavorite, 1);
             pApplication->GetEntityManager()->SetZOrder(mCover, 1);
+            pApplication->GetEntityManager()->SetZOrder(mGuiVideoPlayer, 1);
         }
         else
         {
@@ -190,6 +217,7 @@ namespace ClassicLauncher
             pApplication->GetEntityManager()->SetZOrder(mCardFavorite, 0);
             pApplication->GetEntityManager()->SetZOrder(mCardBackgroundFavorite, 0);
             pApplication->GetEntityManager()->SetZOrder(mCover, 0);
+            pApplication->GetEntityManager()->SetZOrder(mGuiVideoPlayer, 0);
         }
     }
 
