@@ -15,10 +15,10 @@ namespace ClassicLauncher
         mProperties.height = (float)pApplication->GetSpecification().height;
 
         mGuiBackground = pApplication->GetEntityManager()->CreateEntity<GuiComponent>("GuiBackground");
-        mGuiBackground->mProperties.sourceX = 1047;
-        mGuiBackground->mProperties.sourceY = 195;
-        mGuiBackground->mProperties.width = 96;
-        mGuiBackground->mProperties.height = 87;
+        mGuiBackground->mProperties.sourceX = 0;
+        mGuiBackground->mProperties.sourceY = 562;
+        mGuiBackground->mProperties.width = 21;
+        mGuiBackground->mProperties.height = 720;
         mGuiBackground->mProperties.scaleWidth = 1280;
         mGuiBackground->mProperties.scaleHeight = 720;
         mGuiBackground->mTextureName = "sprite";

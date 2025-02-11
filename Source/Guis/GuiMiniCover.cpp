@@ -40,7 +40,7 @@ namespace ClassicLauncher
             mGuiSizeBoxs.emplace_back(sizeBox);
         }
 
-        std::vector<Rectangle> recs = { { 798.0f, 1017.0f, 30.0f, 18.0f }, { 834.0f, 1017.0f, 30.0f, 18.0f }, { 870.0f, 1017.0f, 30.0f, 18.0f } };
+        std::vector<Rectangle> recs = { { 1236.0f, 0.0f, 30.0f, 18.0f }, { 1267.0f, 0.0f, 30.0f, 18.0f }, { 1298.0f, 0.0f, 30.0f, 18.0f } };
 
         mArrow = GetApplication()->GetEntityManager()->CreateEntity<GuiComponent>("arrow");
         mArrow->mProperties.x = mProperties.width / 2;
@@ -127,8 +127,8 @@ namespace ClassicLauncher
         {
             miniCover->mProperties.width = 28;
             miniCover->mProperties.height = 28;
-            miniCover->mProperties.sourceX = 1260;
-            miniCover->mProperties.sourceY = 1056;
+            miniCover->mProperties.sourceX = 976;
+            miniCover->mProperties.sourceY = 283;
         }
         else
         {

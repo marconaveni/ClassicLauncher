@@ -14,18 +14,22 @@ namespace ClassicLauncher
     class GuiCard : public EntityGui
     {
     private:
-        
+
         TimerHandling mTimer;
 
         GuiComponent* mCardMain;
         GuiComponent* mCardSelected;
         GuiComponent* mCardFavorite;
+        GuiComponent* mCardBackgroundMain;
+        GuiComponent* mCardBackgroundSelected;
+        GuiComponent* mCardBackgroundFavorite;
         GuiSizeBox* mSizeBox;
         GuiComponent* mCover;
         bool mIsFocus = false;
         bool mIsFront = false;
-        void CreateCard(GuiComponent*& card, float sourceX, float sourceY, unsigned char alpha, const char* title);
+        void CreateCard(GuiComponent*& card, float sourceX, float sourceY, unsigned char alpha, const char* title, bool bAddChild = true);
         void CreateSizeBox();
+        void FocusAnimation(bool bForce, int a, const int b, const char* nameAnimation);
 
     public:
 
