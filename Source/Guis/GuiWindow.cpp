@@ -11,16 +11,16 @@ namespace ClassicLauncher
     void GuiWindow::Init()
     {
         Application* pApplication = GetApplication();
-        mProperties.width = (float)pApplication->GetSpecification().width;
-        mProperties.height = (float)pApplication->GetSpecification().height;
+        mTransform.width = (float)pApplication->GetSpecification().width;
+        mTransform.height = (float)pApplication->GetSpecification().height;
 
         mGuiBackground = pApplication->GetEntityManager()->CreateEntity<GuiComponent>("GuiBackground");
-        mGuiBackground->mProperties.sourceX = 0;
-        mGuiBackground->mProperties.sourceY = 562;
-        mGuiBackground->mProperties.width = 21;
-        mGuiBackground->mProperties.height = 720;
-        mGuiBackground->mProperties.scaleWidth = 1280;
-        mGuiBackground->mProperties.scaleHeight = 720;
+        mGuiBackground->mTransform.width = 21;
+        mGuiBackground->mTransform.height = 720;
+        mGuiBackground->mTransform.sourceX = 0;
+        mGuiBackground->mTransform.sourceY = 562;
+        mGuiBackground->mTransform.scaleWidth = 1280;
+        mGuiBackground->mTransform.scaleHeight = 720;
         mGuiBackground->mTextureName = "sprite";
         AddChild(mGuiBackground);
 

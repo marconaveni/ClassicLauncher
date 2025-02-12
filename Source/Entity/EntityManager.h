@@ -61,13 +61,11 @@ namespace ClassicLauncher
         void SetZOrder(Entity* entity, int zOrder);
         void UpdateAll();
         void UpdatePositionAll();
-        void Draw();
         void End();
         void ClearAllEntitys();
 
     private:
 
-        void DrawEntity(Entity* entity);
         void DeleteEntitys(bool bIsDeleteEntities);
     };
 

@@ -32,8 +32,8 @@ namespace ClassicLauncher
 
         void StartAnimation(const std::string& name,
                             float durationAnimation,
-                            const TransformProperties& startAnimationTransform,
-                            const TransformProperties& finalAnimationTransform,
+                            const Transform& startAnimationTransform,
+                            const Transform& finalAnimationTransform,
                             Ease typeAnimation = Ease::EaseLinearNone,
                             bool bForceReset = true);
         void AddAnimationFrame(const std::string& name, const float timeAnimation, const std::vector<Rectangle>& spriteIndices);

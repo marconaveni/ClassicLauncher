@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include "Core.h"
+#include "Data/Transform.h"
+
 
 namespace ClassicLauncher
 {
@@ -28,6 +30,8 @@ namespace ClassicLauncher
 
         friend class EntityManager;
         friend class RenderSystem;
+
+        class TransformSource;
 
         bool mToDelete;
         bool mToDraw;
@@ -69,10 +73,10 @@ namespace ClassicLauncher
         int GetZOrder() const { return mZOrder; }
         int GetIdZOrder() const { return mIdZOrder; }
 
-        TransformProperties mProperties;
+        Transform mTransform;
         std::string mTextureName = "transparent";
         Rectangle mScissorArea;
-        Rectangle mDestination;
+        
 
     private:
 

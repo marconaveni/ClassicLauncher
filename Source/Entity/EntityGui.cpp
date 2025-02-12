@@ -17,10 +17,10 @@ namespace ClassicLauncher
         {
             spriteAnimation.second.Update(::GetFrameTime());
             Rectangle rec = spriteAnimation.second.GetCurrentSprite();
-            mProperties.sourceX = rec.x;
-            mProperties.sourceY = rec.y;
-            mProperties.width = rec.width;
-            mProperties.height = rec.height;
+            mTransform.sourceX = rec.x;
+            mTransform.sourceY = rec.y;
+            mTransform.width = rec.width;
+            mTransform.height = rec.height;
         }
 
         for (auto& animation : mAnimations)
@@ -37,31 +37,31 @@ namespace ClassicLauncher
             if (anim.mIsRunning)
             {
                 AnimationUpdate(name);
-                mProperties.x = anim.mCurrentTransform.x;
-                mProperties.y = anim.mCurrentTransform.y;
-                mProperties.scaleX = anim.mCurrentTransform.scaleX;
-                mProperties.scaleY = anim.mCurrentTransform.scaleY;
-                mProperties.rotation = anim.mCurrentTransform.rotation;
-                mProperties.color = anim.mCurrentTransform.color;
+                mTransform.x = anim.mCurrentTransform.x;
+                mTransform.y = anim.mCurrentTransform.y;
+                mTransform.scaleX = anim.mCurrentTransform.scaleX;
+                mTransform.scaleY = anim.mCurrentTransform.scaleY;
+                mTransform.rotation = anim.mCurrentTransform.rotation;
+                mTransform.color = anim.mCurrentTransform.color;
             }
             if (anim.mIsFinish)
             {
                 AnimationFinished(name);
                 anim.ResetAnimation();
-                mProperties.x = anim.mCurrentTransform.x;
-                mProperties.y = anim.mCurrentTransform.y;
-                mProperties.scaleX = anim.mCurrentTransform.scaleX;
-                mProperties.scaleY = anim.mCurrentTransform.scaleY;
-                mProperties.rotation = anim.mCurrentTransform.rotation;
-                mProperties.color = anim.mCurrentTransform.color;
+                mTransform.x = anim.mCurrentTransform.x;
+                mTransform.y = anim.mCurrentTransform.y;
+                mTransform.scaleX = anim.mCurrentTransform.scaleX;
+                mTransform.scaleY = anim.mCurrentTransform.scaleY;
+                mTransform.rotation = anim.mCurrentTransform.rotation;
+                mTransform.color = anim.mCurrentTransform.color;
             }
         }
     }
 
     void EntityGui::StartAnimation(const std::string& name,
                                    float durationAnimation,
-                                   const TransformProperties& startAnimationTransform,
-                                   const TransformProperties& finalAnimationTransform,
+                                   const Transform& startAnimationTransform,
+                                   const Transform& finalAnimationTransform,
                                    Ease typeAnimation,
                                    bool bForceReset)
     {

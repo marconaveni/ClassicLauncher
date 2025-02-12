@@ -135,4 +135,25 @@ namespace ClassicLauncher
         return count;
     }
 
+    // void UtilsFunctionLibrary::SetTransforms(Transform& transformRef, TransformSource& transformSourceRef)
+    // {
+    //     Transform transform = transformRef;
+    //     TransformSource transformSource = transformSourceRef;
+    //     transform = transform.Multiply(Themes::GetScaleTexture());
+    //     transformSource = transformSource.Multiply(Themes::GetScaleTexture());
+    //     const float x = transform.rootX + transform.x;
+    //     const float y = transform.rootY + transform.y;
+    //     const float width = transform.width;
+    //     const float height = transform.height;
+    //     const float sourceX = transformSource.sourceX;
+    //     const float sourceY = transformSource.sourceY;
+    //     const float scaleWidth = transformSource.scaleWidth > 0.0f ? transformSource.scaleWidth : width;
+    //     const float scaleHeight = transformSource.scaleHeight > 0.0f ? transformSource.scaleHeight : height;
+
+    //     const Vector2 scale = { (scaleWidth * transform.scaleX * transform.rootScaleX), (scaleHeight * transform.scaleY * transform.rootScaleY) };
+        
+    //     //transformSourceRef.mSource = Rectangle(sourceX, sourceY, width, height);
+    //     //transformRef.mTransform = Rectangle(x, y, scale.x, scale.y);
+    // }
+
 }  // namespace ClassicLauncher

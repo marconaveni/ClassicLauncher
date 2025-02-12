@@ -53,7 +53,7 @@ namespace ClassicLauncher
 
         if (mTextOverflowPolicy == TextOverflowPolicy::clip)
         {
-            EnableScissorMode(mDestination.x, mDestination.y, mDesiredWidth, mMensuredText.y);
+            EnableScissorMode(mTransform.GetTransform().x, mTransform.GetTransform().y, mDesiredWidth, mMensuredText.y);
         }
 
         const int positionText = mDesiredWidth - mMensuredText.GetIntX();
@@ -79,13 +79,13 @@ namespace ClassicLauncher
 
     void GuiTextBlock::Draw()
     {
-        Vector2 posi = Vector2{ mProperties.x + mProperties.rootX + mOffset, mProperties.y + mProperties.rootY };
+        Vector2 posi = Vector2{ mTransform.x + mTransform.rootX + mOffset, mTransform.y + mTransform.rootY };
         const float scale = Themes::GetScaleTexture();
 
-        const Vector2 scaleS = {scale * mProperties.scaleX * mProperties.rootScaleX, scale * mProperties.scaleY * mProperties.rootScaleY}; 
+        const Vector2 scaleS = {scale * mTransform.scaleX * mTransform.rootScaleX, scale * mTransform.scaleY * mTransform.rootScaleY}; 
         posi.x = posi.x * scale;
         posi.y = posi.y * scale;
-        mColor.a = mProperties.color.a;
+        mColor.a = mTransform.color.a;
         DrawTextEx(mFont, mText.data(), posi, mSize * Math::Max(scaleS.x, scaleS.y), mSpacing, mColor);
     }
 
@@ -101,11 +101,8 @@ namespace ClassicLauncher
         mDelay = 1;
 
         mMensuredText = MeasureTextBox();
-        mProperties.scaleWidth = mMensuredText.x;
-        mProperties.scaleHeight = mMensuredText.y;
-
-
-
+        mTransform.scaleWidth = mMensuredText.x;
+        mTransform.scaleHeight = mMensuredText.y;
     }
 
     void GuiTextBlock::SetSize(int size)

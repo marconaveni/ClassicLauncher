@@ -12,13 +12,13 @@ namespace ClassicLauncher
 
     void GuiMiniCover::Init()
     {
-        mProperties.y = 505.0f;
-        mProperties.width = 1280.0f;
-        mProperties.height = 72.0f;
+        mTransform.y = 505.0f;
+        mTransform.width = 1280.0f;
+        mTransform.height = 72.0f;
 
         mGuiHorizontalBox = GetApplication()->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
-        mGuiHorizontalBox->mProperties.x = mProperties.width / 2.0f;
-        mGuiHorizontalBox->mProperties.y = 20.0f;
+        mGuiHorizontalBox->mTransform.x = mTransform.width / 2.0f;
+        mGuiHorizontalBox->mTransform.y = 20.0f;
         mGuiHorizontalBox->SetAutoSize(true);
         mGuiHorizontalBox->SetAffectScale(true);
         mGuiHorizontalBox->SetSpace(1.0f);
@@ -31,8 +31,8 @@ namespace ClassicLauncher
 
             miniCover->mTextureName = "transparent";
 
-            sizeBox->mProperties.width = mSizeCover.x;
-            sizeBox->mProperties.height = mSizeCover.y;
+            sizeBox->mTransform.width = mSizeCover.x;
+            sizeBox->mTransform.height = mSizeCover.y;
             sizeBox->AttachGui(miniCover);
 
             mGuiHorizontalBox->AttachGui(sizeBox);
@@ -43,7 +43,7 @@ namespace ClassicLauncher
         std::vector<Rectangle> recs = { { 1236.0f, 0.0f, 30.0f, 18.0f }, { 1267.0f, 0.0f, 30.0f, 18.0f }, { 1298.0f, 0.0f, 30.0f, 18.0f } };
 
         mArrow = GetApplication()->GetEntityManager()->CreateEntity<GuiComponent>("arrow");
-        mArrow->mProperties.x = mProperties.width / 2;
+        mArrow->mTransform.x = mTransform.width / 2;
         mArrow->mTextureName = "sprite";
         mArrow->AddAnimationFrame("frame", 0.2f, recs);
         AddChild(mArrow);
@@ -57,10 +57,10 @@ namespace ClassicLauncher
         {
             Texture2D* textureReference = GetApplication()->GetSpriteManager()->GetTexture(miniCover->mTextureName);
             const float scale = Themes::GetScaleTexture();
-            if (textureReference != nullptr && miniCover->mTextureName != "sprite" && miniCover->mProperties.width == 0 && miniCover->mProperties.height == 0)
+            if (textureReference != nullptr && miniCover->mTextureName != "sprite" && miniCover->mTransform.width == 0 && miniCover->mTransform.height == 0)
             {
-                miniCover->mProperties.width = textureReference->width / scale;
-                miniCover->mProperties.height = textureReference->height / scale;
+                miniCover->mTransform.width = textureReference->width / scale;
+                miniCover->mTransform.height = textureReference->height / scale;
             }
         }
     }
@@ -72,13 +72,13 @@ namespace ClassicLauncher
 
     void GuiMiniCover::SetPositionCovers(int numCovers)
     {
-        mGuiHorizontalBox->mProperties.x = (mProperties.width - ((mSizeCover.x + 1) * numCovers)) / 2.0f;
-        mArrow->mProperties.x = mGuiHorizontalBox->mProperties.x + ((mSizeCover.x + 1) * numCovers) / 2.0f;
-        mArrow->mProperties.x = (numCovers % 2 == 0) ? mArrow->mProperties.x : mArrow->mProperties.x - mArrow->mProperties.width / 2;
-        mArrow->mProperties.x--;
+        mGuiHorizontalBox->mTransform.x = (mTransform.width - ((mSizeCover.x + 1) * numCovers)) / 2.0f;
+        mArrow->mTransform.x = mGuiHorizontalBox->mTransform.x + ((mSizeCover.x + 1) * numCovers) / 2.0f;
+        mArrow->mTransform.x = (numCovers % 2 == 0) ? mArrow->mTransform.x : mArrow->mTransform.x - mArrow->mTransform.width / 2;
+        mArrow->mTransform.x--;
 
-        mGuiHorizontalBox->mProperties.x *= mProperties.rootScaleX;
-        mArrow->mProperties.x *= mProperties.rootScaleX;
+        mGuiHorizontalBox->mTransform.x *= mTransform.rootScaleX;
+        mArrow->mTransform.x *= mTransform.rootScaleX;
     }
 
     void GuiMiniCover::SetCovers()
@@ -125,17 +125,17 @@ namespace ClassicLauncher
         miniCover->mTextureName = name;
         if (name == "sprite")
         {
-            miniCover->mProperties.width = 28;
-            miniCover->mProperties.height = 28;
-            miniCover->mProperties.sourceX = 976;
-            miniCover->mProperties.sourceY = 283;
+            miniCover->mTransform.width = 28;
+            miniCover->mTransform.height = 28;
+            miniCover->mTransform.sourceX = 976;
+            miniCover->mTransform.sourceY = 283;
         }
         else
         {
-            miniCover->mProperties.width = 0;
-            miniCover->mProperties.height = 0;
-            miniCover->mProperties.sourceX = 0;
-            miniCover->mProperties.sourceY = 0;
+            miniCover->mTransform.width = 0;
+            miniCover->mTransform.height = 0;
+            miniCover->mTransform.sourceX = 0;
+            miniCover->mTransform.sourceY = 0;
         }
     }
 

@@ -1,5 +1,6 @@
 #include "Animation.h"
 #include "reasings/reasings.h"
+#include "Data/Transform.h"
 
 namespace ClassicLauncher
 {
@@ -10,8 +11,8 @@ namespace ClassicLauncher
     }
 
     void Animation::StartAnimation(const float durationAnimation,
-                                   const TransformProperties& startAnimation,
-                                   const TransformProperties& finalAnimation,
+                                   const Transform& startAnimation,
+                                   const Transform& finalAnimation,
                                    const Ease typeAnimation,
                                    const bool bForceReset)
     {

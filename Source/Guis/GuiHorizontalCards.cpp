@@ -21,8 +21,8 @@ namespace ClassicLauncher
         , mIdLastFocusSystem(3)
         , mSpeed(22.0f)
     {
-        mProperties.width = 1280;
-        mProperties.height = 720;
+        mTransform.width = 1280;
+        mTransform.height = 720;
     }
 
     void GuiHorizontalCards::Init()
@@ -30,8 +30,8 @@ namespace ClassicLauncher
 
         EntityManager* pEntityManager = GetApplication()->GetEntityManager();
         mGuiTitle = pEntityManager->CreateEntity<GuiTextBlock>("GuiTitle", Resources::GetFont(), 48, 0);
-        mGuiTitle->mProperties.x = 400;
-        mGuiTitle->mProperties.y = 154;
+        mGuiTitle->mTransform.x = 400;
+        mGuiTitle->mTransform.y = 154;
         mGuiTitle->SetText("Title");
         mGuiTitle->SetDesiredWidth(1010);
         mGuiTitle->SetTextOverflowPolicy(TextOverflowPolicy::clip);
@@ -41,8 +41,8 @@ namespace ClassicLauncher
         mHorizontalBox->SetAutoSize(true);
         // mHorizontalBox->SetAffectScale(true);
         // mHorizontalBox->SetSpace(6);
-        mHorizontalBox->mProperties.width = 2560.0f;  // hack temp while not themes configurations
-        mHorizontalBox->mProperties.y = 222.0f;
+        mHorizontalBox->mTransform.width = 2560.0f;  // hack temp while not themes configurations
+        mHorizontalBox->mTransform.y = 222.0f;
         AddChild(mHorizontalBox);
 
         for (int i = 0; i < 10; i++)
@@ -79,8 +79,8 @@ namespace ClassicLauncher
         mIsLeft = true;
         mGuiTitle->SetText(GetApplication()->GetGameListManager()->GetCurrentGameList()->name);
         const float scale = Themes::GetScaleTexture();
-        mGuiTitle->mProperties.x = (1280.0f / 2.0f) - ((mGuiTitle->GetMeasureTextBox().GetIntX() / 2));
-        mGuiTitle->mProperties.x = Math::Clamp(mGuiTitle->mProperties.x, 135, 1280);
+        mGuiTitle->mTransform.x = (1280.0f / 2.0f) - ((mGuiTitle->GetMeasureTextBox().GetIntX() / 2));
+        mGuiTitle->mTransform.x = Math::Clamp(mGuiTitle->mTransform.x, 135, 1280);
     }
 
     void GuiHorizontalCards::SetCovers()
@@ -119,7 +119,7 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::SetPositionHorizontalBox()
     {
-        mHorizontalBox->mProperties.x = ((1280 - mHorizontalBox->mProperties.width) / 2) + 2;
+        mHorizontalBox->mTransform.x = ((1280 - mHorizontalBox->mTransform.width) / 2) + 2;
     }
 
     void GuiHorizontalCards::ChangeList(const CurrentList list)
@@ -252,7 +252,7 @@ namespace ClassicLauncher
         {
             if (mIdFocus < 3 || mIdFocus > 6)
             {
-                mHorizontalBox->mProperties.x -= mSpeed;
+                mHorizontalBox->mTransform.x -= mSpeed;
             }
             mLastDirection = Left;
         }
@@ -260,7 +260,7 @@ namespace ClassicLauncher
         {
             if (mIdFocus < 3 || mIdFocus > 6)
             {
-                mHorizontalBox->mProperties.x += mSpeed;
+                mHorizontalBox->mTransform.x += mSpeed;
             }
             mLastDirection = Right;
         }

@@ -23,7 +23,7 @@ namespace ClassicLauncher
         UpdateGuiAttachment();
         if (mCropGuiAttachment)
         {
-            EnableScissorMode(mDestination.x, mDestination.y, mProperties.width, mProperties.height);
+            EnableScissorMode(mTransform.GetTransform().x, mTransform.GetTransform().y, mTransform.width, mTransform.height);
         }
     }
 
@@ -38,10 +38,10 @@ namespace ClassicLauncher
         {
             return;
         }
-        mGuiAttachment->mProperties.x = (mProperties.width * mProperties.rootScaleX - mGuiAttachment->mProperties.width * mGuiAttachment->mProperties.rootScaleX) / 2;
-        mGuiAttachment->mProperties.offset.x = mProperties.offset.x; 
-        mGuiAttachment->mProperties.y = (mProperties.height * mProperties.rootScaleY - mGuiAttachment->mProperties.height * mGuiAttachment->mProperties.rootScaleY) / 2;
-        mGuiAttachment->mProperties.offset.y = mProperties.offset.y;
+        mGuiAttachment->mTransform.x = (mTransform.width * mTransform.rootScaleX - mGuiAttachment->mTransform.width * mGuiAttachment->mTransform.rootScaleX) / 2;
+        mGuiAttachment->mTransform.offset.x = mTransform.offset.x; 
+        mGuiAttachment->mTransform.y = (mTransform.height * mTransform.rootScaleY - mGuiAttachment->mTransform.height * mGuiAttachment->mTransform.rootScaleY) / 2;
+        mGuiAttachment->mTransform.offset.y = mTransform.offset.y;
     }
 
 }  // namespace ClassicLauncher
