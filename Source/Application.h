@@ -5,6 +5,7 @@
 #include "Data/GameListManager.h"
 #include "Entity/EntityManager.h"
 #include "Graphics/Render.h"
+#include "Graphics/RenderSystem.h"
 #include "Graphics/SpriteManager.h"
 #include "Guis/GuiWindow.h"
 #include "Utils/ProcessManager.h"
@@ -37,6 +38,7 @@ namespace ClassicLauncher
     {
         ApplicationSpecification mSpecification;
         Render mRender;
+        RenderSystem mRenderSystem;
         Print mPrint;
         AudioManager mAudioManager;
         SpriteManager mSpriteManager;
@@ -55,6 +57,7 @@ namespace ClassicLauncher
         static Application& Get();
         ApplicationSpecification GetSpecification() { return mSpecification; }
         Render* GetRender() { return &mRender; }
+        RenderSystem* GetRenderSystem() { return &mRenderSystem; }
         Print* GetPrint() { return &mPrint; }
         AudioManager* GetAudioManager() { return &mAudioManager; }
         SpriteManager* GetSpriteManager() { return &mSpriteManager; }

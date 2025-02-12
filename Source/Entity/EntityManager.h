@@ -42,7 +42,7 @@ namespace ClassicLauncher
         }
 
         template <typename T>
-        std::vector<T*> GetEntities(EntityType type)
+        std::vector<T*> GetEntitiesType(EntityType type)
         {
             std::vector<T*> entities;
             for (const auto& entity : mEntities)
@@ -55,6 +55,7 @@ namespace ClassicLauncher
             return entities;
         }
 
+        std::vector<std::unique_ptr<Entity>>& GetEntities() { return mEntities; }
         inline int GetEntitySize() { return static_cast<int>(mEntities.size() + mTempEntities.size()); }
         void SetVisibleAll(Entity* entity, bool bVisible);
         void SetZOrder(Entity* entity, int zOrder);

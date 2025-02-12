@@ -11,7 +11,7 @@ namespace ClassicLauncher
     static Application* sInstanceApplication = nullptr;
 
     Application::Application()
-        : mEntityManager(&this->mSpriteManager, &this->mTimerManager), mGuiWindow(nullptr)
+        : mRenderSystem(&this->mSpriteManager),  mEntityManager(&this->mSpriteManager, &this->mTimerManager), mGuiWindow(nullptr)
     {
         if (sInstanceApplication == nullptr)
         {
@@ -144,8 +144,8 @@ namespace ClassicLauncher
     void Application::Update()
     {
         mInputManager.UpdateInputState();
-        mEntityManager.UpdateAll();
-        mEntityManager.Draw();  // draw in texture render
+        mEntityManager.UpdateAll();     
+        mRenderSystem.DrawEntities(mEntityManager.GetEntities());  // draw in texture render  // mEntityManager.Draw();  // draw in texture render
         mTimerManager.Update();
         mGuiWindow->Teste();
 
