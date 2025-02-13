@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include "GuiComponent.h"
+#include "Components/FocusComponent.h"
 
 namespace ClassicLauncher
 {
@@ -11,8 +12,9 @@ namespace ClassicLauncher
     class GuiComponent;
     class GuiSizeBox;
     class GuiVideoPlayer;
+    class FocusComponent;
 
-    class GuiCard : public EntityGui
+    class GuiCard : public EntityGui, FocusComponent
     {
     private:
 
@@ -42,8 +44,10 @@ namespace ClassicLauncher
         virtual ~GuiCard() override = default;
         virtual EntityType GetType() const override { return EntityType::GuiCardClass; }
         void Update() override;
-        void SetFocus(bool bForce = false);
-        void RemoveFocus(bool bForce = false);
+        void SetCardFocus(bool bForce = false);
+        void RemoveCardFocus(bool bForce = false);
+        virtual void OnFocus() override;
+        virtual void OnLostFocus() override;
         void SetCover(std::string name = "");
         bool IsFocus();
         void Reset();

@@ -17,6 +17,7 @@ namespace ClassicLauncher
     class GuiCard;
     class GuiTextBlock;
     class GuiHorizontalBox;
+    class GuiFrame;
 
     enum Direction
     {
@@ -31,6 +32,7 @@ namespace ClassicLauncher
         GuiTextBlock* mGuiTitle;
         GuiMiniCover* mMiniCover;
         GuiHorizontalBox* mHorizontalBox;
+        GuiFrame* mFrame;
         std::vector<GuiCard*> mGuiCards;
         // float mCardPositions[10]{ -632 - 6, -376 - 6, -120 - 6, 136 - 6, 392 - 6, 648 - 6, 904 - 6, 1160 - 6, 1416 - 6, 1672 - 6 };
         float mPositionX;

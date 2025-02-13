@@ -10,6 +10,7 @@
 #include "Guis/GuiWindow.h"
 #include "Utils/ProcessManager.h"
 #include "Utils/TimerManager.h"
+#include "Components/FocusManager.h"
 
 namespace ClassicLauncher
 {
@@ -20,6 +21,7 @@ namespace ClassicLauncher
     class InputManager;
     class Themes;
     class TimerManager;
+    class FocusManager;
 
     struct ApplicationSpecification
     {
@@ -46,9 +48,11 @@ namespace ClassicLauncher
         GameListManager mGameListManager;
         ProcessManager mProcessManager;
         Themes mThemes;
-        GuiWindow* mGuiWindow;
+        FocusManager mFocusManager;
         InputManager mInputManager;
-        TimerManager mTimerManager;
+        TimerManager mTimerManager;        
+        
+        GuiWindow* mGuiWindow;
 
     public:
 
@@ -66,6 +70,7 @@ namespace ClassicLauncher
         ProcessManager* GetProcessManager() { return &mProcessManager; }
         Themes* GetThemes() { return &mThemes; }
         TimerManager* GetTimerManager() { return &mTimerManager; }
+        FocusManager* GetFocusManager() { return &mFocusManager; }
         GuiBlackScreen* GetGuiBlackScreen();
         void Init();
         void CreateProcess();

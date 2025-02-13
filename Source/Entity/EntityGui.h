@@ -16,6 +16,7 @@ namespace ClassicLauncher
         std::map<std::string, SpriteAnimator> mSpriteAnimations;
         std::map<std::string, Animation> mAnimations;
         Application* mApplication;
+        void UpdateTransform(const Animation& anim);
 
     public:
 

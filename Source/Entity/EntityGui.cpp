@@ -4,12 +4,13 @@
 
 namespace ClassicLauncher
 {
+    
     EntityGui::EntityGui()
     {
         mApplication = &Application::Get();
         CLASSIC_ASSERT(mApplication);
     }
-
+    
     void EntityGui::Update()
     {
         Entity::Update();
@@ -22,12 +23,12 @@ namespace ClassicLauncher
             mTransform.width = rec.width;
             mTransform.height = rec.height;
         }
-
+        
         for (auto& animation : mAnimations)
         {
             const std::string& name = animation.first;
             Animation& anim = animation.second;
-
+            
             if (anim.mIsStart)
             {
                 AnimationStarted(name);
@@ -37,25 +38,25 @@ namespace ClassicLauncher
             if (anim.mIsRunning)
             {
                 AnimationUpdate(name);
-                mTransform.x = anim.mCurrentTransform.x;
-                mTransform.y = anim.mCurrentTransform.y;
-                mTransform.scaleX = anim.mCurrentTransform.scaleX;
-                mTransform.scaleY = anim.mCurrentTransform.scaleY;
-                mTransform.rotation = anim.mCurrentTransform.rotation;
-                mTransform.color = anim.mCurrentTransform.color;
+                UpdateTransform(anim);
             }
             if (anim.mIsFinish)
             {
                 AnimationFinished(name);
                 anim.ResetAnimation();
-                mTransform.x = anim.mCurrentTransform.x;
-                mTransform.y = anim.mCurrentTransform.y;
-                mTransform.scaleX = anim.mCurrentTransform.scaleX;
-                mTransform.scaleY = anim.mCurrentTransform.scaleY;
-                mTransform.rotation = anim.mCurrentTransform.rotation;
-                mTransform.color = anim.mCurrentTransform.color;
+                UpdateTransform(anim);
             }
         }
+    }
+    
+    void EntityGui::UpdateTransform(const Animation& anim)
+    {
+        mTransform.x = anim.mCurrentTransform.x;
+        mTransform.y = anim.mCurrentTransform.y;
+        mTransform.scaleX = anim.mCurrentTransform.scaleX;
+        mTransform.scaleY = anim.mCurrentTransform.scaleY;
+        mTransform.rotation = anim.mCurrentTransform.rotation;
+        mTransform.color = anim.mCurrentTransform.color;
     }
 
     void EntityGui::StartAnimation(const std::string& name,

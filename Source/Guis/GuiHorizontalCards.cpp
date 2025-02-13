@@ -2,7 +2,9 @@
 
 #include <algorithm>
 #include <memory>
+#include "Components/FocusManager.h"
 #include "Core.h"
+#include "Guis/GuiFrame.h"
 #include "Guis/GuiMiniCover.h"
 #include "Guis/GuiTextBlock.h"
 
@@ -27,7 +29,6 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::Init()
     {
-
         EntityManager* pEntityManager = GetApplication()->GetEntityManager();
         mGuiTitle = pEntityManager->CreateEntity<GuiTextBlock>("GuiTitle", Resources::GetFont(), 48, 0);
         mGuiTitle->mTransform.x = 400;
@@ -45,18 +46,23 @@ namespace ClassicLauncher
         mHorizontalBox->mTransform.y = 222.0f;
         AddChild(mHorizontalBox);
 
+        
         for (int i = 0; i < 10; i++)
         {
             auto card = pEntityManager->CreateEntity<GuiCard>("GuiCard", 0, 0);
             mHorizontalBox->AttachGui(card);
             mGuiCards.emplace_back(card);
         }
-
+        
         SetPositionHorizontalBox();
-
+        
         mMiniCover = pEntityManager->CreateEntity<GuiMiniCover>("MiniCover");
         mMiniCover->Init();
         AddChild(mMiniCover);
+        
+        mFrame = pEntityManager->CreateEntity<GuiFrame>("Frame", GetApplication()->GetFocusManager());
+        pEntityManager->SetZOrder(mFrame, 80);
+        AddChild(mFrame);
 
         SetFocus(3, true);
     }
@@ -73,14 +79,15 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::SetFocus(const int newId, bool bForce)
     {
-        mGuiCards[mIdFocus]->RemoveFocus(bForce);
+        mGuiCards[mIdFocus]->RemoveCardFocus(bForce);
         mIdFocus = newId;
-        mGuiCards[newId]->SetFocus(bForce);
+        mGuiCards[newId]->SetCardFocus(bForce);
         mIsLeft = true;
         mGuiTitle->SetText(GetApplication()->GetGameListManager()->GetCurrentGameList()->name);
         const float scale = Themes::GetScaleTexture();
         mGuiTitle->mTransform.x = (1280.0f / 2.0f) - ((mGuiTitle->GetMeasureTextBox().GetIntX() / 2));
         mGuiTitle->mTransform.x = Math::Clamp(mGuiTitle->mTransform.x, 135, 1280);
+        mFrame->SetFrame(130.0f, 898.0f);
     }
 
     void GuiHorizontalCards::SetCovers()
@@ -174,18 +181,18 @@ namespace ClassicLauncher
     {
         EntityGui::Update();
 
-         if (InputManager::IsDown(InputName::leftFaceDown, debug))
-         {
-             mTransform.scaleX += 0.1;
-             mTransform.scaleY += 0.1;
-             PRINT(TEXT("Set Scale to %.2f", mTransform.scaleX));
-         }
-         if (InputManager::IsDown(InputName::leftFaceUp, debug))
-         {
-             mTransform.scaleX -= 0.1;
-             mTransform.scaleY -= 0.1;
-             PRINT(TEXT("Set Scale to %.2f", mTransform.scaleX));
-         }
+        //if (InputManager::IsDown(InputName::leftFaceDown, debug))
+        //{
+        //    mTransform.scaleX += 0.1;
+        //    mTransform.scaleY += 0.1;
+        //    PRINT(TEXT("Set Scale to %.2f", mTransform.scaleX));
+        //}
+        //if (InputManager::IsDown(InputName::leftFaceUp, debug))
+        //{
+        //    mTransform.scaleX -= 0.1;
+        //    mTransform.scaleY -= 0.1;
+        //    PRINT(TEXT("Set Scale to %.2f", mTransform.scaleX));
+        //}
 
         if (IsKeyReleased(KEY_SEVEN) || IsKeyReleased(KEY_SIX))
         {

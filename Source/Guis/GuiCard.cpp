@@ -8,7 +8,7 @@ namespace ClassicLauncher
 {
 
     GuiCard::GuiCard(const float x, const float y)
-        : mTimer(), mTimerVideo()
+        : FocusComponent(GetApplication(), this), mTimer(), mTimerVideo()
     {
         mTransform.x = x;
         mTransform.y = y;
@@ -107,19 +107,28 @@ namespace ClassicLauncher
         }
     }
 
-    void GuiCard::SetFocus(bool bForce)
+    void GuiCard::SetCardFocus(bool bForce)
     {
         mIsFocus = true;
         FocusAnimation(bForce, 255, 0, "card-focus");
         GetApplication()->GetTimerManager()->SetTimer(mTimerVideo, CALLFUNCTION(StartVideo, this), this, 5.0f);
+        SetFocus();
     }
 
-    void GuiCard::RemoveFocus(bool bForce)
+    void GuiCard::RemoveCardFocus(bool bForce)
     {
         mIsFocus = false;
         FocusAnimation(bForce, 0, 255, "card-lost-focus");
         mGuiVideoPlayer->Stop();
         mSizeBoxVideoPlayer->SetCropGuiAttachment(false);
+    }
+
+    void GuiCard::OnFocus()
+    {
+    }
+
+    void GuiCard::OnLostFocus()
+    {
     }
 
     void GuiCard::SetCover(std::string name)
@@ -152,7 +161,7 @@ namespace ClassicLauncher
         mIsFront = false;
         mTransform.scaleX = 1.0f;
         mTransform.scaleY = 1.0f;
-        
+
         mCardBackgroundMain->mTransform.color.SetOpacity(255);
         mCardMain->mTransform.color.SetOpacity(255);
         mCardBackgroundSelected->mTransform.color.SetOpacity(255);
@@ -161,7 +170,7 @@ namespace ClassicLauncher
         mSizeBoxImage->mTransform.color.SetOpacity(255);
         mSizeBoxVideoPlayer->mTransform.color.SetOpacity(255);
         mGuiVideoPlayer->mTransform.color.SetOpacity(255);
-        
+
         mCardBackgroundFavorite->mTransform.color.SetOpacity(0);  // todo create logic is favorite
         mCardFavorite->mTransform.color.SetOpacity(0);            // todo create logic is favorite
         if (mCover->mTextureName == "sprite")
@@ -170,7 +179,7 @@ namespace ClassicLauncher
         }
         if (!mIsFocus)
         {
-            RemoveFocus(true);
+            RemoveCardFocus(true);
         }
     }
 
@@ -197,28 +206,16 @@ namespace ClassicLauncher
     void GuiCard::SetFrontCard()
     {
         Application* pApplication = GetApplication();
-        if (mIsFront)
-        {
-            pApplication->GetEntityManager()->SetZOrder(mCardSelected, 1);
-            pApplication->GetEntityManager()->SetZOrder(mCardBackgroundSelected, 1);
-            pApplication->GetEntityManager()->SetZOrder(mCardMain, 1);
-            pApplication->GetEntityManager()->SetZOrder(mCardBackgroundMain, 1);
-            pApplication->GetEntityManager()->SetZOrder(mCardFavorite, 1);
-            pApplication->GetEntityManager()->SetZOrder(mCardBackgroundFavorite, 1);
-            pApplication->GetEntityManager()->SetZOrder(mCover, 1);
-            pApplication->GetEntityManager()->SetZOrder(mGuiVideoPlayer, 1);
-        }
-        else
-        {
-            pApplication->GetEntityManager()->SetZOrder(mCardSelected, 0);
-            pApplication->GetEntityManager()->SetZOrder(mCardBackgroundSelected, 0);
-            pApplication->GetEntityManager()->SetZOrder(mCardMain, 0);
-            pApplication->GetEntityManager()->SetZOrder(mCardBackgroundMain, 0);
-            pApplication->GetEntityManager()->SetZOrder(mCardFavorite, 0);
-            pApplication->GetEntityManager()->SetZOrder(mCardBackgroundFavorite, 0);
-            pApplication->GetEntityManager()->SetZOrder(mCover, 0);
-            pApplication->GetEntityManager()->SetZOrder(mGuiVideoPlayer, 0);
-        }
+        const int order = (mIsFront) ? 1 : 0;
+
+        pApplication->GetEntityManager()->SetZOrder(mCardSelected, order);
+        pApplication->GetEntityManager()->SetZOrder(mCardBackgroundSelected, order);
+        pApplication->GetEntityManager()->SetZOrder(mCardMain, order);
+        pApplication->GetEntityManager()->SetZOrder(mCardBackgroundMain, order);
+        pApplication->GetEntityManager()->SetZOrder(mCardFavorite, order);
+        pApplication->GetEntityManager()->SetZOrder(mCardBackgroundFavorite, order);
+        pApplication->GetEntityManager()->SetZOrder(mCover, order);
+        pApplication->GetEntityManager()->SetZOrder(mGuiVideoPlayer, order);
     }
 
 }  // namespace ClassicLauncher

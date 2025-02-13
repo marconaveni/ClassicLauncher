@@ -7,7 +7,6 @@
 namespace ClassicLauncher
 {
 
-    class GuiComponent;
 
     class GuiHorizontalBox : public EntityGui
     {

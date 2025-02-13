@@ -130,6 +130,12 @@ set(audio
     "${CMAKE_SOURCE_DIR}/Source/Audio/AudioManager.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Audio/AudioManager.h"
 )
+set(components
+    "${CMAKE_SOURCE_DIR}/Source/Components/FocusComponent.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Components/FocusComponent.h"
+    "${CMAKE_SOURCE_DIR}/Source/Components/FocusManager.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Components/FocusManager.h"
+)
 set(data
     "${CMAKE_SOURCE_DIR}/Source/Data/Color.h"
     "${CMAKE_SOURCE_DIR}/Source/Data/DateTime.cpp"
@@ -160,6 +166,8 @@ set(guis
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiCard.h"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiComponent.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiComponent.h"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiFrame.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiFrame.h"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiHorizontalBox.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiHorizontalBox.h"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiHorizontalCards.cpp"
@@ -240,6 +248,7 @@ endif()
 
 source_group("Source\\Animations" FILES ${animations})
 source_group("Source\\Audio"     FILES ${audio})
+source_group("Source\\Components"     FILES ${components})
 source_group("Source\\Data"     FILES ${data})
 source_group("Source\\Entity"     FILES ${entity})
 source_group("Source\\Graphics"  FILES ${graphics})
@@ -255,6 +264,7 @@ source_group("Extern"     FILES ${extern})
 set(srcs   
     ${animations}
     ${audio}
+    ${components}
     ${data}  
     ${entity}
     ${graphics}

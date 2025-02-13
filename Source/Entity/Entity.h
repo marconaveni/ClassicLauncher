@@ -21,6 +21,7 @@ namespace ClassicLauncher
         GuiSizeBoxClass,
         GuiHorizontalBoxClass,
         GuiBlackScreenClass,
+        GuiFrameClass,
     };
 
     class Entity
