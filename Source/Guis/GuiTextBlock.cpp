@@ -64,10 +64,10 @@ namespace ClassicLauncher
                 mDelay += GetFrameTime();
                 return;
             }
-            
+
             mSpeed = 0.50f * 60.0f * GetFrameTime();
 
-            if (positionText - mOffset > 0 ||  positionText - mOffset < positionText)
+            if (positionText - mOffset > 0 || positionText - mOffset < positionText)
             {
                 mDelay = 0.0f;
                 mToLeft = !mToLeft;
@@ -78,15 +78,11 @@ namespace ClassicLauncher
     }
 
     void GuiTextBlock::Draw()
-    {
-        Vector2 posi = Vector2{ mTransform.x + mTransform.rootX + mOffset, mTransform.y + mTransform.rootY };
-        const float scale = Themes::GetScaleTexture();
-
-        const Vector2 scaleS = {scale * mTransform.scaleX * mTransform.rootScaleX, scale * mTransform.scaleY * mTransform.rootScaleY}; 
-        posi.x = posi.x * scale;
-        posi.y = posi.y * scale;
+    {     
         mColor.a = mTransform.color.a;
-        DrawTextEx(mFont, mText.data(), posi, mSize * Math::Max(scaleS.x, scaleS.y), mSpacing, mColor);
+        Vector2 posi = mTransform.GetTransform().GetPosition();
+        Vector2 scale = mTransform.GetScale();
+        DrawTextEx(mFont, mText.data(), posi, mSize * Math::Max(scale.x * Themes::GetScaleTexture(), scale.y * Themes::GetScaleTexture()), mSpacing, mColor);
     }
 
     void GuiTextBlock::End()

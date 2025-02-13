@@ -7,18 +7,23 @@ namespace ClassicLauncher
 {
     class Transform
     {
+    private:
 
         friend class RenderSystem;
 
         Rectangle mTransform;
         Rectangle mSource;
-
-    public:
+        Vector2 mScale;
 
         float rootX;
         float rootY;
         float rootScaleX;
         float rootScaleY;
+        
+        void SetTransforms(const float m);
+        
+public:
+        
         Vector2 offset;
         float x;
         float y;
@@ -28,7 +33,6 @@ namespace ClassicLauncher
         float scaleY;
         float rotation;
         Color color;
-
 
         float sourceX;
         float sourceY;
@@ -49,18 +53,20 @@ namespace ClassicLauncher
             , scaleY(1)
             , rotation(0)
             , color({ 255, 255, 255, 255 })
-            ,  sourceX(0)
+            , sourceX(0)
             , sourceY(0)
             , scaleWidth(0)
             , scaleHeight(0)
+            , mScale(1, 1)
         {
         }
 
         Rectangle GetTransform() { return mTransform; }
         Rectangle GetSource() { return mSource; }
-
-        void SetTransforms(const float m);
-
+        Vector2 GetScale() { return mScale; }
+        Vector2 GetRootPosition() { return Vector2(rootX, rootY); }
+        Vector2 GetRootScale() { return Vector2(rootScaleX, rootScaleY); }
+        void UpdateTransform(Transform& otherTransform);
     };
 
 }  // namespace ClassicLauncher

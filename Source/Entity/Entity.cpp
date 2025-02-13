@@ -11,11 +11,12 @@ namespace ClassicLauncher
     {
         for (auto& entity : mChildEntities)
         {
-            entity->mTransform.rootX = mTransform.x + mTransform.rootX;
-            entity->mTransform.rootY = mTransform.y + mTransform.rootY;
-            entity->mTransform.rootScaleX = mTransform.scaleX * mTransform.rootScaleX;
-            entity->mTransform.rootScaleY = mTransform.scaleY * mTransform.rootScaleY;
-            entity->mTransform.color.a = mTransform.color.a <= entity->mTransform.color.a ? mTransform.color.a : entity->mTransform.color.a;
+            // entity->mTransform.rootX = mTransform.x + mTransform.rootX;
+            // entity->mTransform.rootY = mTransform.y + mTransform.rootY;
+            // entity->mTransform.rootScaleX = mTransform.scaleX * mTransform.rootScaleX;
+            // entity->mTransform.rootScaleY = mTransform.scaleY * mTransform.rootScaleY;
+            // entity->mTransform.color.a = mTransform.color.a <= entity->mTransform.color.a ? mTransform.color.a : entity->mTransform.color.a;
+            mTransform.UpdateTransform(entity->mTransform);
             entity->UpdatePosition();
         }
     }

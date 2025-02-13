@@ -6,7 +6,6 @@
 #include "Core.h"
 #include "Data/Transform.h"
 
-
 namespace ClassicLauncher
 {
 
@@ -30,8 +29,6 @@ namespace ClassicLauncher
 
         friend class EntityManager;
         friend class RenderSystem;
-
-        class TransformSource;
 
         bool mToDelete;
         bool mToDraw;
@@ -76,7 +73,6 @@ namespace ClassicLauncher
         Transform mTransform;
         std::string mTextureName = "transparent";
         Rectangle mScissorArea;
-        
 
     private:
 

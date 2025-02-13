@@ -38,9 +38,9 @@ namespace ClassicLauncher
         {
             return;
         }
-        mGuiAttachment->mTransform.x = (mTransform.width * mTransform.rootScaleX - mGuiAttachment->mTransform.width * mGuiAttachment->mTransform.rootScaleX) / 2;
+        mGuiAttachment->mTransform.x = (mTransform.width * mTransform.GetRootScale().x - mGuiAttachment->mTransform.width * mGuiAttachment->mTransform.GetRootScale().x) / 2;
         mGuiAttachment->mTransform.offset.x = mTransform.offset.x; 
-        mGuiAttachment->mTransform.y = (mTransform.height * mTransform.rootScaleY - mGuiAttachment->mTransform.height * mGuiAttachment->mTransform.rootScaleY) / 2;
+        mGuiAttachment->mTransform.y = (mTransform.height * mTransform.GetRootScale().y - mGuiAttachment->mTransform.height * mGuiAttachment->mTransform.GetRootScale().y) / 2;
         mGuiAttachment->mTransform.offset.y = mTransform.offset.y;
     }
 

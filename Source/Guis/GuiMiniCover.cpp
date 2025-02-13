@@ -77,8 +77,8 @@ namespace ClassicLauncher
         mArrow->mTransform.x = (numCovers % 2 == 0) ? mArrow->mTransform.x : mArrow->mTransform.x - mArrow->mTransform.width / 2;
         mArrow->mTransform.x--;
 
-        mGuiHorizontalBox->mTransform.x *= mTransform.rootScaleX;
-        mArrow->mTransform.x *= mTransform.rootScaleX;
+        mGuiHorizontalBox->mTransform.x *= mTransform.GetRootScale().x;
+        mArrow->mTransform.x *= mTransform.GetRootScale().x;
     }
 
     void GuiMiniCover::SetCovers()
