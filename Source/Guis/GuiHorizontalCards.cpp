@@ -46,25 +46,25 @@ namespace ClassicLauncher
         mHorizontalBox->mTransform.y = 222.0f;
         AddChild(mHorizontalBox);
 
-        
         for (int i = 0; i < 10; i++)
         {
             auto card = pEntityManager->CreateEntity<GuiCard>("GuiCard", 0, 0);
             mHorizontalBox->AttachGui(card);
             mGuiCards.emplace_back(card);
         }
-        
+
         SetPositionHorizontalBox();
-        
+
         mMiniCover = pEntityManager->CreateEntity<GuiMiniCover>("MiniCover");
         mMiniCover->Init();
         AddChild(mMiniCover);
-        
+
         mFrame = pEntityManager->CreateEntity<GuiFrame>("Frame", GetApplication()->GetFocusManager());
         pEntityManager->SetZOrder(mFrame, 80);
         AddChild(mFrame);
 
         SetFocus(3, true);
+
     }
 
     void GuiHorizontalCards::Draw()
@@ -87,7 +87,7 @@ namespace ClassicLauncher
         const float scale = Themes::GetScaleTexture();
         mGuiTitle->mTransform.x = (1280.0f / 2.0f) - ((mGuiTitle->GetMeasureTextBox().GetIntX() / 2));
         mGuiTitle->mTransform.x = Math::Clamp(mGuiTitle->mTransform.x, 135, 1280);
-        mFrame->SetFrame(130.0f, 898.0f);
+        mFrame->SetFrame(130.0f, 898.0f, mHorizontalBox->mTransform.y, 720.0f);
     }
 
     void GuiHorizontalCards::SetCovers()
@@ -150,6 +150,7 @@ namespace ClassicLauncher
     void GuiHorizontalCards::Click()
     {
         mGuiCards[mIdFocus]->Click();
+        mFrame->Click();
         for (GuiCard*& card : mGuiCards)
         {
             card->SetFrontCard();
@@ -181,18 +182,18 @@ namespace ClassicLauncher
     {
         EntityGui::Update();
 
-        //if (InputManager::IsDown(InputName::leftFaceDown, debug))
+        // if (InputManager::IsDown(InputName::leftFaceDown, debug))
         //{
-        //    mTransform.scaleX += 0.1;
-        //    mTransform.scaleY += 0.1;
-        //    PRINT(TEXT("Set Scale to %.2f", mTransform.scaleX));
-        //}
-        //if (InputManager::IsDown(InputName::leftFaceUp, debug))
+        //     mTransform.scaleX += 0.1;
+        //     mTransform.scaleY += 0.1;
+        //     PRINT(TEXT("Set Scale to %.2f", mTransform.scaleX));
+        // }
+        // if (InputManager::IsDown(InputName::leftFaceUp, debug))
         //{
-        //    mTransform.scaleX -= 0.1;
-        //    mTransform.scaleY -= 0.1;
-        //    PRINT(TEXT("Set Scale to %.2f", mTransform.scaleX));
-        //}
+        //     mTransform.scaleX -= 0.1;
+        //     mTransform.scaleY -= 0.1;
+        //     PRINT(TEXT("Set Scale to %.2f", mTransform.scaleX));
+        // }
 
         if (IsKeyReleased(KEY_SEVEN) || IsKeyReleased(KEY_SIX))
         {

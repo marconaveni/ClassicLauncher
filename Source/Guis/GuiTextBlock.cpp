@@ -81,6 +81,7 @@ namespace ClassicLauncher
     {     
         mColor.a = mTransform.color.a;
         Vector2 posi = mTransform.GetTransform().GetPosition();
+        posi.x += mOffset * Themes::GetScaleTexture();
         Vector2 scale = mTransform.GetScale();
         DrawTextEx(mFont, mText.data(), posi, mSize * Math::Max(scale.x * Themes::GetScaleTexture(), scale.y * Themes::GetScaleTexture()), mSpacing, mColor);
     }

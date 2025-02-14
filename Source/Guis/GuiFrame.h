@@ -15,12 +15,14 @@ namespace ClassicLauncher
 
         std::vector<Entity*> mFollowEntities;
         FocusManager* mFocusManager;
+        TimerHandling mTimer;
 
     public:
 
         GuiFrame(FocusManager* focusManager);
         ~GuiFrame();
-        void SetFrame(float clampMin = 0, float clampMax = 0);
+        void SetFrame(float clampXMin, float clampXMax, float clampYMin, float clampYMax);
+        void Click();
         virtual EntityType GetType() const override { return EntityType::GuiFrameClass; }
         virtual void Update() override;
     };
