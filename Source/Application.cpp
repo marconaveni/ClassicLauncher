@@ -37,10 +37,7 @@ namespace ClassicLauncher
 
     void Application::Init()
     {
-        if (!mConfigurationManager.LoadConfiguration(Resources::GetDefaultConfigurations()))
-        {
-            LOG(LOG_CLASSIC_WARNING, "config.cfg set default");
-        }
+        mConfigurationManager.LoadConfiguration();
 
         LogLevel(mConfigurationManager.GetClassicLogLevel(), mConfigurationManager.GetRaylibLogLevel());
         SetTraceLogCallback(TraceLogger);
@@ -59,6 +56,11 @@ namespace ClassicLauncher
         SetWindowSize(mSpecification.width, mSpecification.height);
         SetTargetFPS(mConfigurationManager.GetTargetFps());
         SetWindowMinSize(mSpecification.width, mSpecification.height);
+        if (mConfigurationManager.GetFullscreen())
+        {
+            ToggleFullscreen();
+        }
+
 #ifndef _DEBUG
         SetExitKey(KEY_NULL);
 #endif
@@ -131,7 +133,10 @@ namespace ClassicLauncher
     {
         while (!WindowShouldClose())
         {
-            ToggleFullscreen();
+            if (IsKeyReleased(KEY_F11) || (IsKeyDown(KEY_LEFT_ALT) && IsKeyReleased(KEY_ENTER)))
+            {
+                ToggleFullscreen();
+            }
 
             BeginDrawing();
             ClearBackground(BLACK);
@@ -237,44 +242,48 @@ namespace ClassicLauncher
 
     void Application::ToggleFullscreen()
     {
-        if (IsKeyReleased(KEY_F11) || (IsKeyDown(KEY_LEFT_ALT) && IsKeyReleased(KEY_ENTER)))
-        {
+        bool bIsFullScreen = false;
 #ifdef _WIN32
-            if (!IsWindowState(FLAG_WINDOW_UNDECORATED))
-            {
-                mSpecification.posWindowX = GetWindowPosition().x;
-                mSpecification.posWindowY = GetWindowPosition().y;
-                mSpecification.width = GetScreenWidth();
-                mSpecification.height = GetScreenHeight();
-                SetWindowState(FLAG_WINDOW_UNDECORATED);
-                SetWindowSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
-                const Vector2 positionMonitor(GetMonitorPosition(GetCurrentMonitor()));
-                SetWindowPosition(positionMonitor.GetIntX(), positionMonitor.GetIntY());
-            }
-            else
-            {
-                SetWindowSize(mSpecification.width, mSpecification.height);
-                SetWindowPosition(mSpecification.posWindowX, mSpecification.posWindowY);
-                ClearWindowState(FLAG_WINDOW_UNDECORATED);
-            }
-#else
-            if (!IsWindowFullscreen())
-            {
-                mSpecification.posWindowX = GetWindowPosition().x;
-                mSpecification.posWindowY = GetWindowPosition().y;
-                mSpecification.width = GetScreenWidth();
-                mSpecification.height = GetScreenHeight();
-                SetWindowSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
-                ::ToggleFullscreen();
-                SetConfigFlags(FLAG_VSYNC_HINT);
-            }
-            else
-            {
-                ::ToggleFullscreen();
-                SetWindowSize(mSpecification.width, mSpecification.height);
-                SetWindowPosition(mSpecification.posWindowX, mSpecification.posWindowY);
-            }
-#endif
+        if (!IsWindowState(FLAG_WINDOW_UNDECORATED))
+        {
+            mSpecification.posWindowX = GetWindowPosition().x;
+            mSpecification.posWindowY = GetWindowPosition().y;
+            mSpecification.width = GetScreenWidth();
+            mSpecification.height = GetScreenHeight();
+            SetWindowState(FLAG_WINDOW_UNDECORATED);
+            SetWindowSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
+            const Vector2 positionMonitor(GetMonitorPosition(GetCurrentMonitor()));
+            SetWindowPosition(positionMonitor.GetIntX(), positionMonitor.GetIntY());
+            bIsFullScreen = true;
         }
+        else
+        {
+            SetWindowSize(mSpecification.width, mSpecification.height);
+            SetWindowPosition(mSpecification.posWindowX, mSpecification.posWindowY);
+            ClearWindowState(FLAG_WINDOW_UNDECORATED);
+            bIsFullScreen = false;
+        }
+#else
+        if (!IsWindowFullscreen())
+        {
+            mSpecification.posWindowX = GetWindowPosition().x;
+            mSpecification.posWindowY = GetWindowPosition().y;
+            mSpecification.width = GetScreenWidth();
+            mSpecification.height = GetScreenHeight();
+            SetWindowSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
+            ::ToggleFullscreen();
+            SetConfigFlags(FLAG_VSYNC_HINT);
+            bIsFullScreen = true;
+        }
+        else
+        {
+            ::ToggleFullscreen();
+            SetWindowSize(mSpecification.width, mSpecification.height);
+            SetWindowPosition(mSpecification.posWindowX, mSpecification.posWindowY);
+            bIsFullScreen = false;
+        }
+#endif
+        mConfigurationManager.SetFullscreen(bIsFullScreen);
+        mConfigurationManager.SaveConfiguration();
     }
 }  // namespace ClassicLauncher

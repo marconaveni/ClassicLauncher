@@ -12,7 +12,7 @@ class SimpleIni
 private:
 
     std::map<std::string, std::map<std::string, std::string>> mData;
-    std::string mCurrentSection = "Default";
+    std::string mCurrentSection = "default";
     void RemoveComments(std::string& str);
     bool SetSection(std::string& str);
     bool SetKeyValue(const std::string& str, std::string& key, std::string& value);
