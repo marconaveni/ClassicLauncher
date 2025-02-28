@@ -2,9 +2,8 @@
 #define TIMER_H
 
 #include <functional>
-#include "Entity/Entity.h"
 #include "Data/Transform.h"
-
+#include "Entity/Entity.h"
 
 namespace ClassicLauncher
 {
@@ -64,12 +63,12 @@ namespace ClassicLauncher
 
         void Reset()
         {
-            mCurrentTime = 0.0;                  // Reset current time
+            mCurrentTime = 0.0;                   // Reset current time
             mDuration = mDelay / GetFrameTime();  // Set duration based on frame time
             mIsFunctionCalled = false;            // Reset the function called state
         }
 
-        void Stop() { mIsFunctionCalled = true; }
+        void Stop() { mIsActive = false; }
     };
 
 }  // namespace ClassicLauncher

@@ -33,12 +33,13 @@ namespace ClassicLauncher
         std::unordered_map<int, std::unique_ptr<Timer>> mTimers;
         void ValidTimerHandling(TimerHandling& timerHandling);
         void Update();
-
-    public:
-
+        
+        public:
+        
         TimerManager() = default;
         ~TimerManager() = default;
         void SetTimer(TimerHandling& timerHandling, std::function<void()> callbackFunction, Entity* targetEntity, float delay, bool bLooped = false);
+        void ClearTimer(const TimerHandling& timerHandling);
         void ClearAllTimers();
     };
 

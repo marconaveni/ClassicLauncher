@@ -100,7 +100,8 @@ namespace ClassicLauncher
 
     void GuiCard::StartVideo()
     {
-        if (mIsFocus)
+        // && !GetApplication()->GetProcessManager()->IsApplicationRunning()
+        if (mIsFocus )
         {
             mGuiVideoPlayer->Init(GetApplication()->GetGameListManager()->GetCurrentGameList()->video, 204, 205);
             mSizeBoxVideoPlayer->SetCropGuiAttachment(true);
@@ -186,6 +187,7 @@ namespace ClassicLauncher
     void GuiCard::Click()
     {
         mGuiVideoPlayer->Stop();
+        GetApplication()->GetTimerManager()->ClearTimer(mTimerVideo);
 
         mIsFront = true;
 

@@ -25,6 +25,15 @@ namespace ClassicLauncher
         mTimers[timerHandling.id]->SetTimer(callbackFunction, targetEntity, delay, bLooped);
     }
 
+    void TimerManager::ClearTimer(const TimerHandling& timerHandling)
+    {
+        if (timerHandling.id < 0)
+        {
+            return;
+        }
+        mTimers[timerHandling.id]->Stop();
+    }
+
     void TimerManager::Update()
     {
         for (auto& timer : mTimers)
