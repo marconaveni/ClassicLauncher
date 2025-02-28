@@ -7,6 +7,7 @@
 namespace ClassicLauncher::Resources
 {
     std::string GetResourcesPathFileAbs(const std::string& relativePath);
+    std::string GetDefaultConfigurations();
     std::string GetClickAudio();
     std::string GetCursorAudio();
     std::string GetFont();

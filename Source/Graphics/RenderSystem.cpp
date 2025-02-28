@@ -31,9 +31,10 @@ namespace ClassicLauncher
     void RenderSystem::DrawEntity(Entity* entity)
     {
         const Texture2D* texture = mSpriteManagerReference->GetTexture(entity->mTextureName);
+
+        //if (texture && entity->mToDraw && entity->mTextureName != "transparent")  // todo verify render
         if (texture && entity->mToDraw)
         {
-            //entity->mTransform.rotation++;
             entity->mTransform.SetTransforms(Themes::GetScaleTexture());
 
             if (entity->mScissorMode)
@@ -44,7 +45,8 @@ namespace ClassicLauncher
                 BeginScissorMode(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height);
             }
 
-            ::DrawTexturePro(*texture, entity->mTransform.GetSource(), entity->mTransform.GetTransform() , Vector2{ 0, 0 }, entity->mTransform.rotation, entity->mTransform.color);
+            ::DrawTexturePro(
+                *texture, entity->mTransform.GetSource(), entity->mTransform.GetTransform(), Vector2{ 0, 0 }, entity->mTransform.rotation, entity->mTransform.color);
             entity->Draw();
             DrawDebug(entity);
 
@@ -84,6 +86,11 @@ namespace ClassicLauncher
             DrawRectangle(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height, tint);
         }
 #endif  // _DEBUG
+    }
+
+    bool RenderSystem::CheckRender(const Rectangle& rec)
+    {
+        return ::CheckCollisionRecs(Rectangle(0, 0, 1280, 720), rec);
     }
 
 }  // namespace ClassicLauncher

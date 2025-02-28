@@ -20,7 +20,6 @@ namespace ClassicLauncher::UtilsFunctionLibrary
     std::string GetHomeDir();
     bool ChangeDirectory(const std::string& path);
     int CountChars(const std::string& text, const char compareChar);
-    //void SetTransforms(Transform& transformRef, TransformSource& transformSourceRef);
 
 }  // namespace ClassicLauncher::UtilsFunctionLibrary
 

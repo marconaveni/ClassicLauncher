@@ -15,6 +15,11 @@ namespace ClassicLauncher::Resources
         return path;
     }
 
+    std::string GetDefaultConfigurations()
+    {
+        return GetResourcesPathFileAbs("Resources/config.cfg");
+    }
+
     std::string GetClickAudio()
     {
         return GetResourcesPathFileAbs("Resources/audio/click.wav");

@@ -2,15 +2,16 @@
 #define APPLICATION_H
 
 #include "Audio/AudioManager.h"
+#include "Components/FocusManager.h"
 #include "Data/GameListManager.h"
 #include "Entity/EntityManager.h"
 #include "Graphics/Render.h"
 #include "Graphics/RenderSystem.h"
 #include "Graphics/SpriteManager.h"
 #include "Guis/GuiWindow.h"
+#include "Utils/ConfigurationManager.h"
 #include "Utils/ProcessManager.h"
 #include "Utils/TimerManager.h"
-#include "Components/FocusManager.h"
 
 namespace ClassicLauncher
 {
@@ -22,6 +23,7 @@ namespace ClassicLauncher
     class Themes;
     class TimerManager;
     class FocusManager;
+    class ConfigurationManager;
 
     struct ApplicationSpecification
     {
@@ -50,8 +52,9 @@ namespace ClassicLauncher
         Themes mThemes;
         FocusManager mFocusManager;
         InputManager mInputManager;
-        TimerManager mTimerManager;        
-        
+        TimerManager mTimerManager;
+        ConfigurationManager mConfigurationManager;
+
         GuiWindow* mGuiWindow;
 
     public:
@@ -71,6 +74,7 @@ namespace ClassicLauncher
         Themes* GetThemes() { return &mThemes; }
         TimerManager* GetTimerManager() { return &mTimerManager; }
         FocusManager* GetFocusManager() { return &mFocusManager; }
+        ConfigurationManager* GetConfigurationManager() { return &mConfigurationManager; }
         GuiBlackScreen* GetGuiBlackScreen();
         void Init();
         void CreateProcess();

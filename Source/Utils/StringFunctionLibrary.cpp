@@ -135,11 +135,19 @@ namespace ClassicLauncher
         return Ltrim(Rtrim(s));
     }
 
-    bool StringFunctionLibrary::IsAllDigits(const std::string& str)
+    bool StringFunctionLibrary::IsIntegerNumber(const std::string& str)
     {
-        for (const char c : str)
+        if (str.empty() || (str.size() == 1 && str[0] == '-'))
         {
-            if (!std::isdigit(c))
+            return false;
+        }
+
+        const std::string strTrimmed = Trim(str);
+        int start = (strTrimmed[0] == '-') ? 1 : 0;
+
+        for (size_t i = start; i < strTrimmed.size(); i++)
+        {
+            if (!std::isdigit(static_cast<unsigned char>(strTrimmed[i])))
             {
                 return false;
             }

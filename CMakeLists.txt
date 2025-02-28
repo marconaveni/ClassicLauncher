@@ -200,6 +200,8 @@ set(entity
     "${CMAKE_SOURCE_DIR}/Source/Entity/EntityManager.h"
 )
 set(utils
+    "${CMAKE_SOURCE_DIR}/Source/Utils/ConfigurationManager.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Utils/ConfigurationManager.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/Log.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Utils/Log.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/Math.h"
@@ -211,6 +213,8 @@ set(utils
     "${CMAKE_SOURCE_DIR}/Source/Utils/ProcessManager.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/Resources.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Utils/Resources.h"
+    "${CMAKE_SOURCE_DIR}/Source/Utils/SimpleIni.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Utils/SimpleIni.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/StringFunctionLibrary.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Utils/StringFunctionLibrary.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/ThreadManager.h"

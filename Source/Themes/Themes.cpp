@@ -46,10 +46,12 @@ namespace ClassicLauncher
 
     float Themes::GetSpriteByResolution(std::string& file)
     {
-#ifdef FORCE_THEME_1X
-        file = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/sprite-debug.png")  ;
-        return 1;
-#else
+        if (Application::Get().GetConfigurationManager()->GetForceInternalScale())
+        {
+            file = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/sprite.png");
+            return Math::Clamp(Application::Get().GetConfigurationManager()->GetInternalScale(), 1, 3);
+        }
+
         std::vector<std::string> paths;
         paths = GetThemeDirs();
         const int monitorWidth = GetMonitorWidth(GetCurrentMonitor());
@@ -70,7 +72,6 @@ namespace ClassicLauncher
         file = Resources::GetSprite();
         LOG(LOG_CLASSIC_DEBUG, "Default sprite path  [%s] ", Resources::GetSprite().c_str());
         return 1.0f;
-#endif
     }
 
     void Themes::Init(Application* pApplication)
@@ -123,6 +124,5 @@ namespace ClassicLauncher
 
         return sInstanceThemes->mScaleTexture;
     }
-
 
 }  // namespace ClassicLauncher

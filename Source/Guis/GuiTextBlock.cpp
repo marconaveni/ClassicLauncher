@@ -40,6 +40,7 @@ namespace ClassicLauncher
         , mTextOverflowPolicy(TextOverflowPolicy::none)
     {
         LoadNewFont(path, size, spacing);
+        mTextureName = "text";
     }
 
     GuiTextBlock::~GuiTextBlock()
