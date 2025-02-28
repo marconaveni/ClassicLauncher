@@ -7,7 +7,7 @@
 namespace ClassicLauncher
 {
 
-    void UtilsFunctionLibrary::SetSizeWithProportion(Vector2& texture, const int widthResize, const int heightResize)
+    void UtilsFunctionLibrary::SetSizeWithProportionFit(Vector2& texture, const int widthResize, const int heightResize)
     {
         // Define a nova largura e altura desejadas
         float newWidth = static_cast<float>(widthResize);    // Largura desejada
@@ -23,6 +23,35 @@ namespace ClassicLauncher
             newHeight = newWidth / aspectRatio;
         }
         texture = Vector2{ newWidth, newHeight };
+    }
+
+    void UtilsFunctionLibrary::SetSizeWithProportionFill(Vector2& texture, const int widthResize, const int heightResize)
+    {
+        float newWidth = static_cast<float>(widthResize);
+        float newHeight = static_cast<float>(heightResize);
+        const float aspectRatio = texture.x / texture.y;
+
+        if (newWidth / aspectRatio < newHeight)  // Ajusta para preencher completamente a área desejada (Fill)
+        {
+            newWidth = newHeight * aspectRatio;  // Se a altura está pequena demais, ajusta a largura primeiro
+        }
+        else
+        {
+            newHeight = newWidth / aspectRatio;  // Se a largura está pequena demais, ajusta a altura primeiro
+        }
+        texture = Vector2{ newWidth, newHeight };
+    }
+
+    void UtilsFunctionLibrary::SetSizeWithProportion(Vector2& texture, const int widthResize, const int heightResize, bool bFill)
+    {
+        if (!bFill)
+        {
+            SetSizeWithProportionFit(texture, widthResize, heightResize);
+        }
+        else
+        {
+            SetSizeWithProportionFill(texture, widthResize, heightResize);
+        }
     }
 
     void UtilsFunctionLibrary::ImageResize(Image& image, const int newWidth, const int newHeight)
@@ -105,5 +134,7 @@ namespace ClassicLauncher
         }
         return count;
     }
+
+
 
 }  // namespace ClassicLauncher

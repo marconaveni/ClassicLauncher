@@ -7,19 +7,27 @@
 
 #include "Application.h"
 #include "GuiComponent.h"
+#include "Guis/GuiSizeBox.h"
+#include "Guis/GuiHorizontalBox.h"
 
 namespace ClassicLauncher
 {
 
+    class EntityGui;
     class GuiComponent;
+    class GuiSizeBox;
+    class GuiHorizontalBox;
 
-    class GuiMiniCover : public GuiComponent
+    class GuiMiniCover : public EntityGui
     {
     private:
 
         std::vector<GuiComponent*> mGuiCovers;
+        std::vector<GuiSizeBox*> mGuiSizeBoxs;
+        GuiHorizontalBox* mGuiHorizontalBox;
         GuiComponent* mArrow;
         int mSize;
+        Vector2 mSizeCover;
 
     public:
 

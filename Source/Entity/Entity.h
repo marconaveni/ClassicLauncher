@@ -4,20 +4,24 @@
 #include <string>
 #include <vector>
 #include "Core.h"
+#include "Data/Transform.h"
 
 namespace ClassicLauncher
 {
 
     enum class EntityType
     {
-        None = 0,
         GuiComponentClass = 1,
-        GuiWindowClass = 2,
-        GuiCardClass = 3,
-        GuiHorizontalBoxClass = 4,
-        GuiMiniCoverClass = 5,
-        GuiVideoPlayer = 6,
-        GuiTextBox = 7,
+        GuiWindowClass,
+        GuiCardClass,
+        GuiHorizontalCardsClass,
+        GuiMiniCoverClass,
+        GuiVideoPlayerClass,
+        GuiTextBlockClass,
+        GuiSizeBoxClass,
+        GuiHorizontalBoxClass,
+        GuiBlackScreenClass,
+        GuiFrameClass,
     };
 
     class Entity
@@ -25,6 +29,7 @@ namespace ClassicLauncher
     private:
 
         friend class EntityManager;
+        friend class RenderSystem;
 
         bool mToDelete;
         bool mToDraw;
@@ -50,20 +55,23 @@ namespace ClassicLauncher
         virtual void Update() {}
         virtual void Draw() {}
         virtual void End() {}
-        virtual void UpdatePosition();               // Update the position of the entity
-        virtual void SelfDelete();                   // Delete the entity and all its children
-        virtual void AddChild(Entity* childEntity);  // Add a child to the entity
-        virtual void RemoveChild(Entity* childEntity);                 // Remove a child from the entity
-        virtual void RemoveAllChilds(); 
+        virtual void UpdatePosition();                  // Update the position of the entity
+        virtual void SelfDelete();                      // Delete the entity and all its children
+        virtual void AddChild(Entity* childEntity);     // Add a child to the entity
+        virtual void RemoveChild(Entity* childEntity);  // Remove a child from the entity
+        virtual void RemoveAllChilds();
+        virtual void RemoveRootChild();
         std::vector<Entity*>& GetChilds();
         Entity* GetRootEntity();
+        Entity* GetParent() { return mParent; }
+        void RemoveParent() { mParent = nullptr; }
         void EnableScissorMode(float x, float y, float width, float height);
         void DisableScissorMode() { mScissorMode = false; }
         void SetVisible(bool bEnable) { mVisible = bEnable; }
         int GetZOrder() const { return mZOrder; }
         int GetIdZOrder() const { return mIdZOrder; }
 
-        TransformProperties mProperties;
+        Transform mTransform;
         std::string mTextureName = "transparent";
         Rectangle mScissorArea;
 

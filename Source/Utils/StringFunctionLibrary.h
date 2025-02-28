@@ -15,7 +15,7 @@ namespace ClassicLauncher::StringFunctionLibrary
     std::string Ltrim(const std::string& s);
     std::string Rtrim(const std::string& s);
     std::string Trim(const std::string& s);
-    bool IsAllDigits(const std::string& str);
+    bool IsIntegerNumber(const std::string& str);
 
 }  // namespace ClassicLauncher::StringFunctionLibrary
 

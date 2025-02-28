@@ -130,6 +130,12 @@ set(audio
     "${CMAKE_SOURCE_DIR}/Source/Audio/AudioManager.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Audio/AudioManager.h"
 )
+set(components
+    "${CMAKE_SOURCE_DIR}/Source/Components/FocusComponent.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Components/FocusComponent.h"
+    "${CMAKE_SOURCE_DIR}/Source/Components/FocusManager.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Components/FocusManager.h"
+)
 set(data
     "${CMAKE_SOURCE_DIR}/Source/Data/Color.h"
     "${CMAKE_SOURCE_DIR}/Source/Data/DateTime.cpp"
@@ -139,11 +145,14 @@ set(data
     "${CMAKE_SOURCE_DIR}/Source/Data/Rectangle.h"
     "${CMAKE_SOURCE_DIR}/Source/Data/Size.h"
     "${CMAKE_SOURCE_DIR}/Source/Data/Vector2.h"
-    "${CMAKE_SOURCE_DIR}/Source/Data/TransformProperties.h"
+    "${CMAKE_SOURCE_DIR}/Source/Data/Transform.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Data/Transform.h"
 )
 set(graphics
     "${CMAKE_SOURCE_DIR}/Source/Graphics/Render.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Graphics/Render.h"
+    "${CMAKE_SOURCE_DIR}/Source/Graphics/RenderSystem.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Graphics/RenderSystem.h"
     "${CMAKE_SOURCE_DIR}/Source/Graphics/Sprite.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Graphics/Sprite.h"
     "${CMAKE_SOURCE_DIR}/Source/Graphics/SpriteAnimator.h"
@@ -155,12 +164,20 @@ set(guis
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiBlackScreen.h"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiCard.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiCard.h"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiComponent.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiComponent.h"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiFrame.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiFrame.h"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiHorizontalBox.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiHorizontalBox.h"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiHorizontalCards.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiHorizontalCards.h"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiMiniCover.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiMiniCover.h"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiTextBox.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiTextBox.h"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiSizeBox.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiSizeBox.h"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiTextBlock.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiTextBlock.h"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiVideoPlayer.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiVideoPlayer.h"
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiWindow.cpp"
@@ -175,12 +192,16 @@ set(themes
     "${CMAKE_SOURCE_DIR}/Source/Themes/Themes.h"
 )
 set(entity
+    "${CMAKE_SOURCE_DIR}/Source/Entity/EntityGui.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Entity/EntityGui.h"
     "${CMAKE_SOURCE_DIR}/Source/Entity/Entity.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Entity/Entity.h"
     "${CMAKE_SOURCE_DIR}/Source/Entity/EntityManager.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Entity/EntityManager.h"
 )
 set(utils
+    "${CMAKE_SOURCE_DIR}/Source/Utils/ConfigurationManager.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Utils/ConfigurationManager.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/Log.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Utils/Log.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/Math.h"
@@ -192,6 +213,8 @@ set(utils
     "${CMAKE_SOURCE_DIR}/Source/Utils/ProcessManager.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/Resources.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Utils/Resources.h"
+    "${CMAKE_SOURCE_DIR}/Source/Utils/SimpleIni.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Utils/SimpleIni.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/StringFunctionLibrary.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Utils/StringFunctionLibrary.h"
     "${CMAKE_SOURCE_DIR}/Source/Utils/ThreadManager.h"
@@ -212,8 +235,6 @@ set(src
     "${CMAKE_SOURCE_DIR}/Source/ClassicAssert.h"
     "${CMAKE_SOURCE_DIR}/Source/ClassicLauncher.h"
     "${CMAKE_SOURCE_DIR}/Source/Core.h"
-    "${CMAKE_SOURCE_DIR}/Source/GuiComponent.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/GuiComponent.h"
     "${CMAKE_SOURCE_DIR}/Source/Main.cpp"
     )
     
@@ -231,6 +252,7 @@ endif()
 
 source_group("Source\\Animations" FILES ${animations})
 source_group("Source\\Audio"     FILES ${audio})
+source_group("Source\\Components"     FILES ${components})
 source_group("Source\\Data"     FILES ${data})
 source_group("Source\\Entity"     FILES ${entity})
 source_group("Source\\Graphics"  FILES ${graphics})
@@ -246,6 +268,7 @@ source_group("Extern"     FILES ${extern})
 set(srcs   
     ${animations}
     ${audio}
+    ${components}
     ${data}  
     ${entity}
     ${graphics}

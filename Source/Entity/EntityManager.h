@@ -4,7 +4,6 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include "Core.h"
 #include "Entity.h"
 #include "Graphics/SpriteManager.h"
 
@@ -43,7 +42,7 @@ namespace ClassicLauncher
         }
 
         template <typename T>
-        std::vector<T*> GetEntities(EntityType type)
+        std::vector<T*> GetEntitiesType(EntityType type)
         {
             std::vector<T*> entities;
             for (const auto& entity : mEntities)
@@ -56,18 +55,17 @@ namespace ClassicLauncher
             return entities;
         }
 
+        std::vector<std::unique_ptr<Entity>>& GetEntities() { return mEntities; }
         inline int GetEntitySize() { return static_cast<int>(mEntities.size() + mTempEntities.size()); }
         void SetVisibleAll(Entity* entity, bool bVisible);
         void SetZOrder(Entity* entity, int zOrder);
         void UpdateAll();
         void UpdatePositionAll();
-        void Draw();
         void End();
         void ClearAllEntitys();
 
     private:
 
-        void DrawEntity(Entity* entity);
         void DeleteEntitys(bool bIsDeleteEntities);
     };
 

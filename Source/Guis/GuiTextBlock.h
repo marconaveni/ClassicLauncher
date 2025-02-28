@@ -1,9 +1,8 @@
-#ifndef GUI_TEXT_BOX_H
-#define GUI_TEXT_BOX_H
+#ifndef GUI_TEXT_BLOCK_H
+#define GUI_TEXT_BLOCK_H
 
 #include <string>
-#include "Core.h"
-#include "GuiComponent.h"
+#include "Entity/EntityGui.h"
 
 namespace ClassicLauncher
 {
@@ -14,9 +13,9 @@ namespace ClassicLauncher
         clip = 0x1
     };
 
-    class GuiComponent;
+    class EntityGui;
 
-    class GuiTextBox : public GuiComponent
+    class GuiTextBlock : public EntityGui
     {
     private:
 
@@ -30,7 +29,7 @@ namespace ClassicLauncher
         int mDesiredWidth;
         float mOffset;
         bool mToLeft;
-        int mDelay;
+        float mDelay;
         Vector2 mMensuredText;
         float mSpeed;
         float mMaxDelay;
@@ -40,17 +39,18 @@ namespace ClassicLauncher
 
     public:
 
-        GuiTextBox(const std::string& path, int size = 16, int spacing = 0);
-        virtual ~GuiTextBox() override;
+        GuiTextBlock(const std::string& path, int size = 16, int spacing = 0);
+        virtual ~GuiTextBlock() override;
+        virtual EntityType GetType() const override { return EntityType::GuiTextBlockClass; }
         void LoadNewFont(const std::string& path, int size = 16, int spacing = 0);
         void UpdateFont(const std::string& path);
-        virtual EntityType GetType() const override { return EntityType::GuiTextBox; }
         virtual void Update() override;
         virtual void Draw() override;
         virtual void End() override;
         void SetText(const std::string& text);
         void SetSize(int size);
         void SetSpacing(int spacing);
+        void SetColor(Color tint);
         Vector2 GetMeasureTextBox();
         const std::string& GetText() { return mText; }
         void SetTextOverflowPolicy(TextOverflowPolicy textOverflowPolicy);

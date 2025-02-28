@@ -30,7 +30,7 @@ namespace ClassicLauncher
 
     void EntityManager::SetNameId(Entity* entity, const std::string& name)
     {
-        int counter = 0; 
+        int counter = 0;
         for (const auto& ent : mEntities)
         {
             if (ent->GetType() == entity->GetType())
@@ -78,18 +78,8 @@ namespace ClassicLauncher
         mPrepareNewOrdination = true;
     }
 
-#ifdef _DEBUG
-    static bool bEnable = false;
-#endif
-
     void EntityManager::UpdateAll()
     {
-#ifdef _DEBUG
-        if (IsKeyReleased(KEY_FIVE))
-        {
-            bEnable = !bEnable;
-        }
-#endif
         SetNewEntities();
 
         for (auto& entity : mEntities)
@@ -110,75 +100,6 @@ namespace ClassicLauncher
         }
         DeleteEntitys(bIsDeleteEntities);
         SetZOrder();
-    }
-
-    void EntityManager::DrawEntity(Entity* entity)
-    {
-        const Texture2D* texture = mSpriteManagerReference->GetTexture(entity->mTextureName);
-        if (texture && entity->mToDraw)
-        {
-            TransformProperties properties = entity->mProperties;
-            properties = properties.Multiply(Themes::GetScaleTexture());
-            const float x = properties.x * properties.rootScaleX + properties.rootX;
-            const float y = properties.y * properties.rootScaleY + properties.rootY;
-            const float width = properties.width;
-            const float height = properties.height;
-            const float sourceX = properties.sourceX;
-            const float sourceY = properties.sourceY;
-            const float scaleWidth = properties.scaleWidth > 0.0f ? properties.scaleWidth : width;
-            const float scaleHeight = properties.scaleHeight > 0.0f ? properties.scaleHeight : height;
-
-            const Rectangle source = { sourceX, sourceY, width, height };
-            const Vector2 scale = { (scaleWidth * properties.scaleX * properties.rootScaleX), (scaleHeight * properties.scaleY * properties.rootScaleY) };
-            const Rectangle dest = { x, y, scale.x, scale.y };
-
-            if (entity->mScissorMode)
-            {
-                const Rectangle scissorArea = entity->mScissorArea;
-                BeginScissorMode(x + scissorArea.x, y + scissorArea.y, scissorArea.width, scissorArea.height);
-            }
-
-            entity->Draw();
-            ::DrawTexturePro(*texture, source, dest, Vector2{ 0, 0 }, properties.rotation, properties.color);
-
-#ifdef _DEBUG
-
-            const Rectangle& RectangleDrawArea = dest;  //{ x, y, scale.x, scale.y };
-            const Vector2 vec = Application::Get().GetRender()->GetMousePositionRender();
-            if (CheckCollisionPointRec(vec, RectangleDrawArea) && bEnable)
-            {
-                ::DrawRectangleLinesEx(RectangleDrawArea, 2, Color::Red());
-                if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-                {
-                    PRINT(TEXT("nameID: %s", entity->mNameId.c_str()), 5.0f);
-                }
-            }
-            else if (bEnable)
-            {
-                ::DrawRectangleLinesEx(RectangleDrawArea, 1, Color::Cyan());
-            }
-            if (entity->mScissorMode && bEnable)
-            {
-                const Rectangle scissorArea = entity->mScissorArea;
-                const Color tint = Color(255, 0, 0, 55);
-                DrawRectangle(x + scissorArea.x, y + scissorArea.y, scissorArea.width, scissorArea.height, tint);
-            }
-#endif  // _DEBUG
-
-            if (entity->mScissorMode)
-            {
-                EndScissorMode();
-            }
-            entity->mToDraw = false;
-        }
-    }
-
-    void EntityManager::Draw()
-    {
-        for (auto& entity : mEntities)
-        {
-            DrawEntity(entity.get());
-        }
     }
 
     void EntityManager::End()

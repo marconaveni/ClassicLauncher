@@ -11,11 +11,13 @@ namespace ClassicLauncher
     {
         for (auto& entity : mChildEntities)
         {
-            entity->mProperties.rootX = mProperties.x + mProperties.rootX;
-            entity->mProperties.rootY = mProperties.y + mProperties.rootY;
-            entity->mProperties.rootScaleX = mProperties.scaleX;
-            entity->mProperties.rootScaleY = mProperties.scaleY;
-            entity->mProperties.color.a = mProperties.color.a <= entity->mProperties.color.a ?  mProperties.color.a : entity->mProperties.color.a ;
+            // entity->mTransform.rootX = mTransform.x + mTransform.rootX;
+            // entity->mTransform.rootY = mTransform.y + mTransform.rootY;
+            // entity->mTransform.rootScaleX = mTransform.scaleX * mTransform.rootScaleX;
+            // entity->mTransform.rootScaleY = mTransform.scaleY * mTransform.rootScaleY;
+            // entity->mTransform.color.a = mTransform.color.a <= entity->mTransform.color.a ? mTransform.color.a : entity->mTransform.color.a;
+            mTransform.UpdateTransform(entity->mTransform);
+            entity->UpdatePosition();
         }
     }
 
@@ -58,6 +60,15 @@ namespace ClassicLauncher
         mChildEntities.clear();
     }
 
+    void Entity::RemoveRootChild()
+    {
+        Entity* entity = GetRootEntity();
+        if (entity != this)
+        {
+            entity->RemoveChild(this);
+        }
+    }
+
     std::vector<Entity*>& Entity::GetChilds()
     {
         return mChildEntities;
@@ -75,17 +86,8 @@ namespace ClassicLauncher
 
     void Entity::EnableScissorMode(float x, float y, float width, float height)
     {
-        if (mScissorMode)
-        {
-            mScissorArea.SetPosition(Math::Max(x, mScissorArea.x), Math::Max(y, mScissorArea.y));
-            mScissorArea.SetSize(Math::Min(width, mScissorArea.width), Math::Min(height, mScissorArea.height));
-        }
-        else
-        {
-            mScissorArea.Set(x, y, width, height);
-        }
-
         mScissorMode = true;
+        mScissorArea.Set(x, y, width, height);
         for (auto& childEntity : mChildEntities)
         {
             childEntity->EnableScissorMode(mScissorArea.x, mScissorArea.y, mScissorArea.width, mScissorArea.height);

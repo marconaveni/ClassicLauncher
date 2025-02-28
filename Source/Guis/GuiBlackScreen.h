@@ -1,18 +1,19 @@
 #ifndef GUI_BLACK_SCREEN_H
 #define GUI_BLACK_SCREEN_H
 
-#include "Core.h"
-#include "GuiComponent.h"
+
+#include "Entity/EntityGui.h"
 
 namespace ClassicLauncher
 {
-    class GuiComponent;
+    class EntityGui;
 
-    class GuiBlackScreen : public GuiComponent
+    class GuiBlackScreen : public EntityGui
     {
     public:
 
         GuiBlackScreen();
+        virtual EntityType GetType() const override { return EntityType::GuiBlackScreenClass; }
         void FadeIn();
         void FadeOut();
         void FadeInFadeOut();

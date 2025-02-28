@@ -1,9 +1,9 @@
-#include "GuiTextBox.h"
+#include "GuiTextBlock.h"
 #include "Application.h"
 
 namespace ClassicLauncher
 {
-    void GuiTextBox::LoadNewFont(const std::string& path, int size, int spacing)
+    void GuiTextBlock::LoadNewFont(const std::string& path, int size, int spacing)
     {
         mPathFont = path;
         mSize = size;
@@ -11,7 +11,7 @@ namespace ClassicLauncher
         UpdateFont(path);
     }
 
-    void GuiTextBox::UpdateFont(const std::string& path)
+    void GuiTextBlock::UpdateFont(const std::string& path)
     {
         if (IsFontValid(mFont))
         {
@@ -22,7 +22,7 @@ namespace ClassicLauncher
         mFont = LoadFontEx(path.data(), mSize * scale, NULL, 250);
     }
 
-    GuiTextBox::GuiTextBox(const std::string& path, int size, int spacing)
+    GuiTextBlock::GuiTextBlock(const std::string& path, int size, int spacing)
         : mFont(Font{ 0 })
         , mText()
         , mPathFont()
@@ -36,119 +36,115 @@ namespace ClassicLauncher
         , mDelay(0)
         , mMensuredText(Vector2())
         , mSpeed(0.5f)
-        , mMaxDelay(240.0f)
+        , mMaxDelay(3.0f)
         , mTextOverflowPolicy(TextOverflowPolicy::none)
     {
         LoadNewFont(path, size, spacing);
+        mTextureName = "text";
     }
 
-    GuiTextBox::~GuiTextBox()
+    GuiTextBlock::~GuiTextBlock()
     {
         UnloadText();
     }
 
-    void GuiTextBox::Update()
+    void GuiTextBlock::Update()
     {
-        GuiComponent::Update();
+        EntityGui::Update();
+
+        if (mTextOverflowPolicy == TextOverflowPolicy::clip)
+        {
+            EnableScissorMode(mTransform.GetTransform().x, mTransform.GetTransform().y, mDesiredWidth, mMensuredText.y);
+        }
 
         const int positionText = mDesiredWidth - mMensuredText.GetIntX();
         if (mTextOverflowPolicy == TextOverflowPolicy::clip && positionText < 0)
         {
-            mSpeed = 0.50f;
-
-            if (mDelay != 0 && mDelay < mMaxDelay)
+            if (mDelay < mMaxDelay)
             {
-                mDelay++;
+                mDelay += GetFrameTime();
                 return;
             }
 
-            if ((abs)(positionText - mOffset) <= 0 || (mOffset > 0))
+            mSpeed = 0.50f * 60.0f * GetFrameTime();
+
+            if (positionText - mOffset > 0 || positionText - mOffset < positionText)
             {
-                mDelay = 1;
+                mDelay = 0.0f;
                 mToLeft = !mToLeft;
-            }
-            else
-            {
-                mDelay = 0;
             }
 
             mOffset += (mToLeft) ? -mSpeed : mSpeed;
         }
     }
 
-    void GuiTextBox::Draw()
-    {
-        Vector2 posi = Vector2{ mProperties.x + mProperties.rootX + mOffset, mProperties.y + mProperties.rootY };
-        const float scale = Themes::GetScaleTexture();
-        posi.x = posi.x * scale;
-        posi.y = posi.y * scale;
-        mColor.a = mProperties.color.a;
-        DrawTextEx(mFont, mText.data(), posi, mSize * scale, mSpacing, mColor);
+    void GuiTextBlock::Draw()
+    {     
+        mColor.a = mTransform.color.a;
+        Vector2 posi = mTransform.GetTransform().GetPosition();
+        posi.x += mOffset * Themes::GetScaleTexture();
+        Vector2 scale = mTransform.GetScale();
+        DrawTextEx(mFont, mText.data(), posi, mSize * Math::Max(scale.x * Themes::GetScaleTexture(), scale.y * Themes::GetScaleTexture()), mSpacing, mColor);
     }
 
-    void GuiTextBox::End()
+    void GuiTextBlock::End()
     {
         UnloadText();
     }
 
-    void GuiTextBox::SetText(const std::string& text)
+    void GuiTextBlock::SetText(const std::string& text)
     {
         mText = text;
         mOffset = 0;
         mDelay = 1;
 
         mMensuredText = MeasureTextBox();
-        mProperties.scaleWidth = mMensuredText.x;
-        mProperties.scaleHeight = mMensuredText.y;
-
-        if (mTextOverflowPolicy == TextOverflowPolicy::clip)
-        {
-            const float scale = Themes::GetScaleTexture();
-            EnableScissorMode(0, 0, mDesiredWidth * scale, mMensuredText.y * scale);
-        }
-        else if (mTextOverflowPolicy == TextOverflowPolicy::none)
-        {
-            DisableScissorMode();
-        }
+        mTransform.scaleWidth = mMensuredText.x;
+        mTransform.scaleHeight = mMensuredText.y;
     }
 
-    void GuiTextBox::SetSize(int size)
+    void GuiTextBlock::SetSize(int size)
     {
         LoadNewFont(mPathFont.c_str(), size, mSpacing);
     }
 
-    void GuiTextBox::SetSpacing(int spacing)
+    void GuiTextBlock::SetSpacing(int spacing)
     {
         mSpacing = spacing;
     }
 
-    Vector2 GuiTextBox::GetMeasureTextBox()
+    void GuiTextBlock::SetColor(Color tint)
+    {
+        mColor = tint;
+    }
+
+    Vector2 GuiTextBlock::GetMeasureTextBox()
     {
         return mMensuredText;
     }
 
-    Vector2 GuiTextBox::MeasureTextBox()
+    Vector2 GuiTextBlock::MeasureTextBox()
     {
         return MeasureTextEx(mFont, mText.c_str(), mSize, mSpacing);
     }
 
-    void GuiTextBox::SetTextOverflowPolicy(TextOverflowPolicy textOverflowPolicy)
+    void GuiTextBlock::SetTextOverflowPolicy(TextOverflowPolicy textOverflowPolicy)
     {
         mTextOverflowPolicy = textOverflowPolicy;
     }
 
-    void GuiTextBox::SetDesiredWidth(int newWidth)
+    void GuiTextBlock::SetDesiredWidth(int newWidth)
     {
         mDesiredWidth = newWidth;
     }
 
-    void GuiTextBox::SetOffSetMoveText(float speed, float maxDelay)
+    void GuiTextBlock::SetOffSetMoveText(float speed, float maxDelay)
     {
         mSpeed = speed;
         mMaxDelay = maxDelay;
     }
 
-    void GuiTextBox::UnloadText()
+    void GuiTextBlock::UnloadText()
     {
         if (IsFontValid(mFont))
         {

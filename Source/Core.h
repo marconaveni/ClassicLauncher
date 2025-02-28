@@ -4,7 +4,7 @@
 #include "ClassicAssert.h"
 #include "Data/Color.h"
 #include "Data/Rectangle.h"
-#include "Data/TransformProperties.h"
+#include "Data/Transform.h"
 #include "Data/Vector2.h"
 #include "Input/InputManager.h"
 #include "Themes/Themes.h"

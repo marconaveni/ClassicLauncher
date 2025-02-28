@@ -2,12 +2,14 @@
 #define APPLICATION_H
 
 #include "Audio/AudioManager.h"
-#include "Core.h"
+#include "Components/FocusManager.h"
 #include "Data/GameListManager.h"
 #include "Entity/EntityManager.h"
 #include "Graphics/Render.h"
+#include "Graphics/RenderSystem.h"
 #include "Graphics/SpriteManager.h"
 #include "Guis/GuiWindow.h"
+#include "Utils/ConfigurationManager.h"
 #include "Utils/ProcessManager.h"
 #include "Utils/TimerManager.h"
 
@@ -20,6 +22,8 @@ namespace ClassicLauncher
     class InputManager;
     class Themes;
     class TimerManager;
+    class FocusManager;
+    class ConfigurationManager;
 
     struct ApplicationSpecification
     {
@@ -38,6 +42,7 @@ namespace ClassicLauncher
     {
         ApplicationSpecification mSpecification;
         Render mRender;
+        RenderSystem mRenderSystem;
         Print mPrint;
         AudioManager mAudioManager;
         SpriteManager mSpriteManager;
@@ -45,9 +50,12 @@ namespace ClassicLauncher
         GameListManager mGameListManager;
         ProcessManager mProcessManager;
         Themes mThemes;
-        GuiWindow* mGuiWindow;
+        FocusManager mFocusManager;
         InputManager mInputManager;
         TimerManager mTimerManager;
+        ConfigurationManager mConfigurationManager;
+
+        GuiWindow* mGuiWindow;
 
     public:
 
@@ -56,6 +64,7 @@ namespace ClassicLauncher
         static Application& Get();
         ApplicationSpecification GetSpecification() { return mSpecification; }
         Render* GetRender() { return &mRender; }
+        RenderSystem* GetRenderSystem() { return &mRenderSystem; }
         Print* GetPrint() { return &mPrint; }
         AudioManager* GetAudioManager() { return &mAudioManager; }
         SpriteManager* GetSpriteManager() { return &mSpriteManager; }
@@ -64,6 +73,8 @@ namespace ClassicLauncher
         ProcessManager* GetProcessManager() { return &mProcessManager; }
         Themes* GetThemes() { return &mThemes; }
         TimerManager* GetTimerManager() { return &mTimerManager; }
+        FocusManager* GetFocusManager() { return &mFocusManager; }
+        ConfigurationManager* GetConfigurationManager() { return &mConfigurationManager; }
         GuiBlackScreen* GetGuiBlackScreen();
         void Init();
         void CreateProcess();

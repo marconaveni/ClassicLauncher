@@ -5,27 +5,45 @@
 namespace ClassicLauncher
 {
     GuiMiniCover::GuiMiniCover()
-        : mGuiCovers(), mArrow(nullptr), mSize(32) {};
+        : mGuiCovers(), mArrow(nullptr), mSize(32), mSizeCover(28.0f, 40.0f)
+        // : mGuiCovers(), mArrow(nullptr), mSize(23), mSizeCover(40.0f, 58.0f) // test
+    {
+    }
 
     void GuiMiniCover::Init()
     {
-        mProperties.x = 1280.0f / 2.0f;
-        mProperties.y = 526.0f;
+        mTransform.y = 505.0f;
+        mTransform.width = 1280.0f;
+        mTransform.height = 72.0f;
+
+        mGuiHorizontalBox = GetApplication()->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
+        mGuiHorizontalBox->mTransform.x = mTransform.width / 2.0f;
+        mGuiHorizontalBox->mTransform.y = 20.0f;
+        mGuiHorizontalBox->SetAutoSize(true);
+        mGuiHorizontalBox->SetAffectScale(true);
+        mGuiHorizontalBox->SetSpace(1.0f);
+        AddChild(mGuiHorizontalBox);
 
         for (int i = 0; i < mSize; i++)
         {
-            const int x = 29 * i;
             auto miniCover = GetApplication()->GetEntityManager()->CreateEntity<GuiComponent>("miniCover");
-            miniCover->mProperties.x = x;
+            auto sizeBox = GetApplication()->GetEntityManager()->CreateEntity<GuiSizeBox>("GuiSizeBox");
+
             miniCover->mTextureName = "transparent";
-            AddChild(miniCover);
+
+            sizeBox->mTransform.width = mSizeCover.x;
+            sizeBox->mTransform.height = mSizeCover.y;
+            sizeBox->AttachGui(miniCover);
+
+            mGuiHorizontalBox->AttachGui(sizeBox);
             mGuiCovers.emplace_back(miniCover);
+            mGuiSizeBoxs.emplace_back(sizeBox);
         }
 
-        std::vector<Rectangle> recs = { { 798.0f, 1017.0f, 30.0f, 18.0f }, { 834.0f, 1017.0f, 30.0f, 18.0f }, { 870.0f, 1017.0f, 30.0f, 18.0f } };
+        std::vector<Rectangle> recs = { { 1236.0f, 0.0f, 30.0f, 18.0f }, { 1267.0f, 0.0f, 30.0f, 18.0f }, { 1298.0f, 0.0f, 30.0f, 18.0f } };
 
         mArrow = GetApplication()->GetEntityManager()->CreateEntity<GuiComponent>("arrow");
-        mArrow->mProperties.y = -21.0f;
+        mArrow->mTransform.x = mTransform.width / 2;
         mArrow->mTextureName = "sprite";
         mArrow->AddAnimationFrame("frame", 0.2f, recs);
         AddChild(mArrow);
@@ -33,29 +51,34 @@ namespace ClassicLauncher
 
     void GuiMiniCover::Update()
     {
-        GuiComponent::Update();
+        EntityGui::Update();
 
         for (auto& miniCover : mGuiCovers)
         {
             Texture2D* textureReference = GetApplication()->GetSpriteManager()->GetTexture(miniCover->mTextureName);
             const float scale = Themes::GetScaleTexture();
-            if (textureReference != nullptr && miniCover->mTextureName != "sprite" && miniCover->mProperties.width == 0 && miniCover->mProperties.height == 0)
+            if (textureReference != nullptr && miniCover->mTextureName != "sprite" && miniCover->mTransform.width == 0 && miniCover->mTransform.height == 0)
             {
-                miniCover->mProperties.width = textureReference->width / scale;
-                miniCover->mProperties.height = textureReference->height / scale;
+                miniCover->mTransform.width = textureReference->width / scale;
+                miniCover->mTransform.height = textureReference->height / scale;
             }
         }
     }
 
     void GuiMiniCover::End()
     {
-        GuiComponent::End();
+        EntityGui::End();
     }
 
     void GuiMiniCover::SetPositionCovers(int numCovers)
     {
-        mProperties.x = (1280 - (29 * numCovers)) / 2.0f;
-        mArrow->mProperties.x = (numCovers % 2 == 0) ? -mProperties.x + 640.0f : -mProperties.x + 625.0f;
+        mGuiHorizontalBox->mTransform.x = (mTransform.width - ((mSizeCover.x + 1) * numCovers)) / 2.0f;
+        mArrow->mTransform.x = mGuiHorizontalBox->mTransform.x + ((mSizeCover.x + 1) * numCovers) / 2.0f;
+        mArrow->mTransform.x = (numCovers % 2 == 0) ? mArrow->mTransform.x : mArrow->mTransform.x - mArrow->mTransform.width / 2;
+        mArrow->mTransform.x--;
+
+        mGuiHorizontalBox->mTransform.x *= mTransform.GetRootScale().x;
+        mArrow->mTransform.x *= mTransform.GetRootScale().x;
     }
 
     void GuiMiniCover::SetCovers()
@@ -85,7 +108,7 @@ namespace ClassicLauncher
             if (!fileName.empty())
             {
                 name = std::to_string(indexFinal) + "_MCV";
-                pSpriteManager->LoadSprite(name, fileName, 28 * scale, 45 * scale);
+                pSpriteManager->LoadSprite(name, fileName, mSizeCover.x * scale, mSizeCover.y * scale);
             }
 
             if (i - 1 >= 0 && i <= static_cast<int>(mGuiCovers.size()) - 2)
@@ -102,17 +125,17 @@ namespace ClassicLauncher
         miniCover->mTextureName = name;
         if (name == "sprite")
         {
-            miniCover->mProperties.width = 28;
-            miniCover->mProperties.height = 28;
-            miniCover->mProperties.sourceX = 1260;
-            miniCover->mProperties.sourceY = 1056;
+            miniCover->mTransform.width = 28;
+            miniCover->mTransform.height = 28;
+            miniCover->mTransform.sourceX = 976;
+            miniCover->mTransform.sourceY = 283;
         }
         else
         {
-            miniCover->mProperties.width = 0;
-            miniCover->mProperties.height = 0;
-            miniCover->mProperties.sourceX = 0;
-            miniCover->mProperties.sourceY = 0;
+            miniCover->mTransform.width = 0;
+            miniCover->mTransform.height = 0;
+            miniCover->mTransform.sourceX = 0;
+            miniCover->mTransform.sourceY = 0;
         }
     }
 

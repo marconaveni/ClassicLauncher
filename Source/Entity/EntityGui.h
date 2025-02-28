@@ -1,5 +1,5 @@
-#ifndef GUI_COMPONENT_H
-#define GUI_COMPONENT_H
+#ifndef ENTITY_GUI_H
+#define ENTITY_GUI_H
 
 #include <map>
 #include <memory>
@@ -10,19 +10,20 @@
 
 namespace ClassicLauncher
 {
-    class GuiComponent : public Entity
+
+    class EntityGui : public Entity
     {
         std::map<std::string, SpriteAnimator> mSpriteAnimations;
         std::map<std::string, Animation> mAnimations;
         Application* mApplication;
+        void UpdateTransform(const Animation& anim);
 
     public:
 
-        GuiComponent();
-        virtual ~GuiComponent() override = default;
-        virtual EntityType GetType() const override { return EntityType::GuiComponentClass; }
+        EntityGui();
+        virtual ~EntityGui() override = default;
         virtual void Update() override;
-
+        virtual EntityType GetType() const override = 0;
         virtual void AnimationStarted(std::string name) {}
         virtual void AnimationUpdate(std::string name) {}
         virtual void AnimationFinished(std::string name) {}
@@ -32,8 +33,8 @@ namespace ClassicLauncher
 
         void StartAnimation(const std::string& name,
                             float durationAnimation,
-                            const TransformProperties& startAnimationTransform,
-                            const TransformProperties& finalAnimationTransform,
+                            const Transform& startAnimationTransform,
+                            const Transform& finalAnimationTransform,
                             Ease typeAnimation = Ease::EaseLinearNone,
                             bool bForceReset = true);
         void AddAnimationFrame(const std::string& name, const float timeAnimation, const std::vector<Rectangle>& spriteIndices);
@@ -41,4 +42,4 @@ namespace ClassicLauncher
 
 }  // namespace ClassicLauncher
 
-#endif  // GUI_COMPONENT_H
+#endif

@@ -1,4 +1,5 @@
 #include "GuiVideoPlayer.h"
+#include "Application.h"
 
 namespace ClassicLauncher
 {
@@ -19,7 +20,7 @@ namespace ClassicLauncher
         const float scale = Themes::GetScaleTexture();
         const int widthScale = static_cast<int>(width * scale);
         const int heightScale = static_cast<int>(height * scale);
-        const bool bIsplay = mPlayer->Init(path, widthScale, heightScale, scale);
+        const bool bIsplay = mPlayer->Init(path, widthScale, heightScale, scale, true);
         mPlayer->Play();
         return bIsplay;
     }
@@ -53,11 +54,15 @@ namespace ClassicLauncher
 
     void GuiVideoPlayer::Update()
     {
-        GuiComponent::Update();
+        EntityGui::Update();
 
         if (!mPlayer) return;
 
         mPlayer->Update();
+
+        float scale = Themes::GetScaleTexture();
+        mTransform.width = mPlayer->GetVideoSize().x / scale;
+        mTransform.height = mPlayer->GetVideoSize().y / scale;
 
         if (!mPlayerFullScreen) return;
 
@@ -66,14 +71,15 @@ namespace ClassicLauncher
 
     void GuiVideoPlayer::Draw()
     {
-        GuiComponent::Draw();
+        EntityGui::Draw();
 
         if (!mPlayer) return;
 
         Texture2D* texture = mPlayer->GetVideoTexture();
         if (texture)
         {
-            DrawTexture(*texture, 0, 0, Color::White());
+            const Transform& transform = mTransform;
+            DrawTexturePro(*texture, mTransform.GetSource(), mTransform.GetTransform(), Vector2{ 0, 0 }, transform.rotation, transform.color);
         }
 
         if (!mPlayerFullScreen) return;
@@ -89,7 +95,7 @@ namespace ClassicLauncher
 
     void GuiVideoPlayer::End()
     {
-        GuiComponent::End();
+        EntityGui::End();
         Stop();
     }
 

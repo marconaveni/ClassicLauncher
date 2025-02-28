@@ -1,7 +1,8 @@
 #include "Application.h"
 #include "Graphics/Render.h"
-#include "GuiComponent.h"
+#include "Guis/GuiComponent.h"
 #include "Guis/GuiWindow.h"
+#include "Utils/ConfigurationManager.h"
 #include "Utils/Log.h"
 #include "Utils/Resources.h"
 
@@ -11,7 +12,7 @@ namespace ClassicLauncher
     static Application* sInstanceApplication = nullptr;
 
     Application::Application()
-        : mEntityManager(&this->mSpriteManager, &this->mTimerManager), mGuiWindow(nullptr)
+        : mRenderSystem(&this->mSpriteManager), mEntityManager(&this->mSpriteManager, &this->mTimerManager), mGuiWindow(nullptr)
     {
         if (sInstanceApplication == nullptr)
         {
@@ -36,11 +37,9 @@ namespace ClassicLauncher
 
     void Application::Init()
     {
-#ifdef _DEBUG
-        LogLevel(LOG_CLASSIC_DEBUG, LOG_WARNING);
-#else
-        LogLevel(LOG_CLASSIC_ALL, LOG_NONE);
-#endif
+        mConfigurationManager.LoadConfiguration();
+
+        LogLevel(mConfigurationManager.GetClassicLogLevel(), mConfigurationManager.GetRaylibLogLevel());
         SetTraceLogCallback(TraceLogger);
 
         Resources::SetClassicLauncherDir();
@@ -48,12 +47,20 @@ namespace ClassicLauncher
 
         InitAudioDevice();
 
-        SetConfigFlags(FLAG_VSYNC_HINT);  // vsync only enable in fullscreen set before InitWindow
+        if (mConfigurationManager.GetVSync())
+        {
+            SetConfigFlags(FLAG_VSYNC_HINT);  // vsync only enable in fullscreen set before InitWindow
+        }
         InitWindow(mSpecification.width, mSpecification.height, mSpecification.title);
         SetWindowState(FLAG_WINDOW_RESIZABLE);
         SetWindowSize(mSpecification.width, mSpecification.height);
-        SetTargetFPS(60);
+        SetTargetFPS(mConfigurationManager.GetTargetFps());
         SetWindowMinSize(mSpecification.width, mSpecification.height);
+        if (mConfigurationManager.GetFullscreen())
+        {
+            ToggleFullscreen();
+        }
+
 #ifndef _DEBUG
         SetExitKey(KEY_NULL);
 #endif
@@ -76,10 +83,10 @@ namespace ClassicLauncher
 #ifdef _DEBUG
 
         // For visual reference you can upload up to four images to guide you
-        const std::string refPath0 = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref0.png");  
-        const std::string refPath1 = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref1.png");  
-        const std::string refPath2 = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref2.png");  
-        const std::string refPath3 = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref3.png");  
+        const std::string refPath0 = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref0.png");
+        const std::string refPath1 = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref1.png");
+        const std::string refPath2 = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref2.png");
+        const std::string refPath3 = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref3.png");
         mSpriteManager.LoadSprite("ref0", refPath0);
         mSpriteManager.LoadSprite("ref1", refPath1);
         mSpriteManager.LoadSprite("ref2", refPath2);
@@ -126,7 +133,10 @@ namespace ClassicLauncher
     {
         while (!WindowShouldClose())
         {
-            ToggleFullscreen();
+            if (IsKeyReleased(KEY_F11) || (IsKeyDown(KEY_LEFT_ALT) && IsKeyReleased(KEY_ENTER)))
+            {
+                ToggleFullscreen();
+            }
 
             BeginDrawing();
             ClearBackground(BLACK);
@@ -145,7 +155,7 @@ namespace ClassicLauncher
     {
         mInputManager.UpdateInputState();
         mEntityManager.UpdateAll();
-        mEntityManager.Draw();  // draw in texture render
+        mRenderSystem.DrawEntities(mEntityManager.GetEntities());  // draw in texture render  // mEntityManager.Draw();  // draw in texture render
         mTimerManager.Update();
         mGuiWindow->Teste();
 
@@ -188,7 +198,7 @@ namespace ClassicLauncher
 
 #endif
 
-        if (InputManager::IsRelease(InputName::rightThumb))
+        if (InputManager::IsRelease(InputName::rightThumb, main))
         {
             mAudioManager.ChangeMusic();
             mPrint.PrintOnScreen(TEXT("Changed music"), 5.0f);
@@ -206,7 +216,7 @@ namespace ClassicLauncher
         }
         if (IsKeyReleased(KEY_UP))
         {
-            //mEntityManager.SetZOrder(mGuiWindow.get(), 1);
+            // mEntityManager.SetZOrder(mGuiWindow.get(), 1);
             std::string homeDir = UtilsFunctionLibrary::GetHomeDir();
 
             LOG(LOG_CLASSIC_DEBUG, TEXT("GetHomeDir %s", homeDir.c_str()));
@@ -232,44 +242,48 @@ namespace ClassicLauncher
 
     void Application::ToggleFullscreen()
     {
-        if (IsKeyReleased(KEY_F11) || (IsKeyDown(KEY_LEFT_ALT) && IsKeyReleased(KEY_ENTER)))
-        {
+        bool bIsFullScreen = false;
 #ifdef _WIN32
-            if (!IsWindowState(FLAG_WINDOW_UNDECORATED))
-            {
-                mSpecification.posWindowX = GetWindowPosition().x;
-                mSpecification.posWindowY = GetWindowPosition().y;
-                mSpecification.width = GetScreenWidth();
-                mSpecification.height = GetScreenHeight();
-                SetWindowState(FLAG_WINDOW_UNDECORATED);
-                SetWindowSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
-                const Vector2 positionMonitor(GetMonitorPosition(GetCurrentMonitor()));
-                SetWindowPosition(positionMonitor.GetIntX(), positionMonitor.GetIntY());
-            }
-            else
-            {
-                SetWindowSize(mSpecification.width, mSpecification.height);
-                SetWindowPosition(mSpecification.posWindowX, mSpecification.posWindowY);
-                ClearWindowState(FLAG_WINDOW_UNDECORATED);
-            }
-#else
-            if (!IsWindowFullscreen())
-            {
-                mSpecification.posWindowX = GetWindowPosition().x;
-                mSpecification.posWindowY = GetWindowPosition().y;
-                mSpecification.width = GetScreenWidth();
-                mSpecification.height = GetScreenHeight();
-                SetWindowSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
-                ::ToggleFullscreen();
-                SetConfigFlags(FLAG_VSYNC_HINT);
-            }
-            else
-            {
-                ::ToggleFullscreen();
-                SetWindowSize(mSpecification.width, mSpecification.height);
-                SetWindowPosition(mSpecification.posWindowX, mSpecification.posWindowY);
-            }
-#endif
+        if (!IsWindowState(FLAG_WINDOW_UNDECORATED))
+        {
+            mSpecification.posWindowX = GetWindowPosition().x;
+            mSpecification.posWindowY = GetWindowPosition().y;
+            mSpecification.width = GetScreenWidth();
+            mSpecification.height = GetScreenHeight();
+            SetWindowState(FLAG_WINDOW_UNDECORATED);
+            SetWindowSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
+            const Vector2 positionMonitor(GetMonitorPosition(GetCurrentMonitor()));
+            SetWindowPosition(positionMonitor.GetIntX(), positionMonitor.GetIntY());
+            bIsFullScreen = true;
         }
+        else
+        {
+            SetWindowSize(mSpecification.width, mSpecification.height);
+            SetWindowPosition(mSpecification.posWindowX, mSpecification.posWindowY);
+            ClearWindowState(FLAG_WINDOW_UNDECORATED);
+            bIsFullScreen = false;
+        }
+#else
+        if (!IsWindowFullscreen())
+        {
+            mSpecification.posWindowX = GetWindowPosition().x;
+            mSpecification.posWindowY = GetWindowPosition().y;
+            mSpecification.width = GetScreenWidth();
+            mSpecification.height = GetScreenHeight();
+            SetWindowSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
+            ::ToggleFullscreen();
+            SetConfigFlags(FLAG_VSYNC_HINT);
+            bIsFullScreen = true;
+        }
+        else
+        {
+            ::ToggleFullscreen();
+            SetWindowSize(mSpecification.width, mSpecification.height);
+            SetWindowPosition(mSpecification.posWindowX, mSpecification.posWindowY);
+            bIsFullScreen = false;
+        }
+#endif
+        mConfigurationManager.SetFullscreen(bIsFullScreen);
+        mConfigurationManager.SaveConfiguration();
     }
 }  // namespace ClassicLauncher
