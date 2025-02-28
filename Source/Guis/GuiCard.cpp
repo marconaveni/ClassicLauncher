@@ -185,6 +185,8 @@ namespace ClassicLauncher
 
     void GuiCard::Click()
     {
+        mGuiVideoPlayer->Stop();
+
         mIsFront = true;
 
         const float time = 0.3f;

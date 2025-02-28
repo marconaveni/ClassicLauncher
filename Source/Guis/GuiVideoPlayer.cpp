@@ -1,4 +1,5 @@
 #include "GuiVideoPlayer.h"
+#include "Application.h"
 
 namespace ClassicLauncher
 {
@@ -55,7 +56,6 @@ namespace ClassicLauncher
     {
         EntityGui::Update();
 
-
         if (!mPlayer) return;
 
         mPlayer->Update();
@@ -77,7 +77,7 @@ namespace ClassicLauncher
 
         Texture2D* texture = mPlayer->GetVideoTexture();
         if (texture)
-        {         
+        {
             const Transform& transform = mTransform;
             DrawTexturePro(*texture, mTransform.GetSource(), mTransform.GetTransform(), Vector2{ 0, 0 }, transform.rotation, transform.color);
         }
