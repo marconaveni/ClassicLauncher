@@ -64,7 +64,6 @@ namespace ClassicLauncher
         AddChild(mFrame);
 
         SetFocus(3, true);
-
     }
 
     void GuiHorizontalCards::Draw()
@@ -83,7 +82,9 @@ namespace ClassicLauncher
         mIdFocus = newId;
         mGuiCards[newId]->SetCardFocus(bForce);
         mIsLeft = true;
-        mGuiTitle->SetText(GetApplication()->GetGameListManager()->GetCurrentGameList()->name);
+
+        const GameList* pGameList = GetApplication()->GetGameListManager()->GetCurrentGameList();
+        mGuiTitle->SetText((pGameList) ? pGameList->name : "");
         const float scale = Themes::GetScaleTexture();
         mGuiTitle->mTransform.x = (1280.0f / 2.0f) - ((mGuiTitle->GetMeasureTextBox().GetIntX() / 2));
         mGuiTitle->mTransform.x = Math::Clamp(mGuiTitle->mTransform.x, 135, 1280);
@@ -131,19 +132,25 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::ChangeList(const CurrentList list)
     {
-        Application* pApplication = GetApplication();
+        GameListManager* pGameListManager = GetApplication()->GetGameListManager();
         ClearCovers();
         if (list == SystemListSelect)
         {
-            pApplication->GetGameListManager()->GetCurrentSystemList()->history.indexCardFocus = mIdFocus;
-            pApplication->GetGameListManager()->ChangeGameToSystemList();
+            pGameListManager->GetCurrentSystemList()->history.indexCardFocus = mIdFocus;
+            pGameListManager->ChangeGameToSystemList();
             SetFocus(mIdLastFocusSystem, true);
         }
         else
         {
             mIdLastFocusSystem = mIdFocus;
-            pApplication->GetGameListManager()->ChangeSystemToGameList();
-            SetFocus(pApplication->GetGameListManager()->GetCurrentSystemList()->history.indexCardFocus, true);
+            pGameListManager->ChangeSystemToGameList();
+
+            if (pGameListManager->GetGameListSize() == 0) // If GameList fails it returns to the system selection menu.
+            {
+                ChangeList(CurrentList::SystemListSelect);
+            }
+            
+            SetFocus(pGameListManager->GetCurrentSystemList()->history.indexCardFocus, true);
         }
     }
 
