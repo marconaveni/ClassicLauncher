@@ -188,6 +188,7 @@ set(input
     "${CMAKE_SOURCE_DIR}/Source/Input/InputManager.h"
 )
 set(themes
+    "${CMAKE_SOURCE_DIR}/Source/Themes/ConfigurationThemes.h"
     "${CMAKE_SOURCE_DIR}/Source/Themes/Themes.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Themes/Themes.h"
 )

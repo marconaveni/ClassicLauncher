@@ -21,7 +21,7 @@ namespace ClassicLauncher
 
         GuiFrame(FocusManager* focusManager);
         ~GuiFrame();
-        void SetFrame(float clampXMin, float clampXMax, float clampYMin, float clampYMax);
+        void SetFrame(bool bForce = false);
         void Click();
         virtual EntityType GetType() const override { return EntityType::GuiFrameClass; }
         virtual void Update() override;

@@ -47,4 +47,16 @@ namespace ClassicLauncher
                                mFocusComponents.end());
     }
 
+    FocusComponent* FocusManager::GetFocusComponent()
+    {
+        for (auto& focus : mFocusComponents)
+        {
+            if (focus->GetFocus())
+            {
+                return focus;
+            }
+        }
+        return nullptr;
+    }
+
 }  // namespace ClassicLauncher

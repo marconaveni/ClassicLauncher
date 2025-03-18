@@ -42,27 +42,30 @@ namespace ClassicLauncher
         mHorizontalBox->SetAutoSize(true);
         // mHorizontalBox->SetAffectScale(true);
         // mHorizontalBox->SetSpace(6);
-        mHorizontalBox->mTransform.width = 2560.0f;  // hack temp while not themes configurations
-        mHorizontalBox->mTransform.y = 222.0f;
-        AddChild(mHorizontalBox);
+        mHorizontalBox->SetSpace(GetApplication()->GetThemes()->mConfigurationThemes.horizontalCardsSpace);
+        // mHorizontalBox->mTransform.width = 2560.0f;  // hack temp while not themes configurations
+        mHorizontalBox->mTransform.y = GetApplication()->GetThemes()->mConfigurationThemes.horizontalCardsPositionY;
 
+        const float space = GetApplication()->GetThemes()->mConfigurationThemes.horizontalCardsPositionY;
+        AddChild(mHorizontalBox);
+        
         for (int i = 0; i < 10; i++)
         {
             auto card = pEntityManager->CreateEntity<GuiCard>("GuiCard", 0, 0);
             mHorizontalBox->AttachGui(card);
             mGuiCards.emplace_back(card);
         }
-
+        
         SetPositionHorizontalBox();
-
+        
         mMiniCover = pEntityManager->CreateEntity<GuiMiniCover>("MiniCover");
         mMiniCover->Init();
         AddChild(mMiniCover);
-
+        
         mFrame = pEntityManager->CreateEntity<GuiFrame>("Frame", GetApplication()->GetFocusManager());
         pEntityManager->SetZOrder(mFrame, 80);
         AddChild(mFrame);
-
+        
         SetFocus(3, true);
     }
 
@@ -88,7 +91,7 @@ namespace ClassicLauncher
         const float scale = Themes::GetScaleTexture();
         mGuiTitle->mTransform.x = (1280.0f / 2.0f) - ((mGuiTitle->GetMeasureTextBox().GetIntX() / 2));
         mGuiTitle->mTransform.x = Math::Clamp(mGuiTitle->mTransform.x, 135, 1280);
-        mFrame->SetFrame(130.0f, 898.0f, mHorizontalBox->mTransform.y, 720.0f);
+        mFrame->SetFrame(bForce);
     }
 
     void GuiHorizontalCards::SetCovers()
@@ -127,7 +130,7 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::SetPositionHorizontalBox()
     {
-        mHorizontalBox->mTransform.x = ((1280 - mHorizontalBox->mTransform.width) / 2) + 2;
+        mHorizontalBox->mTransform.x = ((1280 - mHorizontalBox->mTransform.width) / 2) + GetApplication()->GetThemes()->mConfigurationThemes.horizontalCardsPositionX;
     }
 
     void GuiHorizontalCards::ChangeList(const CurrentList list)
@@ -145,11 +148,11 @@ namespace ClassicLauncher
             mIdLastFocusSystem = mIdFocus;
             pGameListManager->ChangeSystemToGameList();
 
-            if (pGameListManager->GetGameListSize() == 0) // If GameList fails it returns to the system selection menu.
+            if (pGameListManager->GetGameListSize() == 0)  // If GameList fails it returns to the system selection menu.
             {
                 ChangeList(CurrentList::SystemListSelect);
             }
-            
+
             SetFocus(pGameListManager->GetCurrentSystemList()->history.indexCardFocus, true);
         }
     }

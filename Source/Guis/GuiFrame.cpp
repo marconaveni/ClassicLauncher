@@ -1,7 +1,7 @@
 #include "GuiFrame.h"
+#include "Application.h"
 #include "Components/FocusComponent.h"
 #include "Components/FocusManager.h"
-#include "Application.h"
 
 namespace ClassicLauncher
 {
@@ -19,7 +19,7 @@ namespace ClassicLauncher
     {
     }
 
-    void GuiFrame::SetFrame(float clampXMin, float clampXMax, float clampYMin, float clampYMax)
+    void GuiFrame::SetFrame(bool bForce)
     {
         std::vector<FocusComponent*> focusComponents = mFocusManager->GetAllFocusComponents();
 
@@ -28,11 +28,20 @@ namespace ClassicLauncher
             if (focus->GetFocus())
             {
                 Transform target = mTransform;
-                target.x = focus->GetEntity()->mTransform.x + focus->GetEntity()->mTransform.GetRootPosition().x;
-                target.y = focus->GetEntity()->mTransform.y + focus->GetEntity()->mTransform.GetRootPosition().y;
-                target.x = Math::Clamp(target.x, clampXMin, clampXMax);
-                target.y = Math::Clamp(target.y, clampYMin, clampYMax);
-                StartAnimation("frame-move", 0.2f, mTransform, target, Ease::EaseQuadInOut, false);
+                const float x = focus->GetEntity()->mTransform.x + focus->GetEntity()->mTransform.GetRootPosition().x;
+                const float y = focus->GetEntity()->mTransform.y + focus->GetEntity()->mTransform.GetRootPosition().y;
+                
+                if (bForce)
+                {
+                    mTransform.x = x;
+                    mTransform.y = y;
+                }
+                else if (x > 100.0f && x < 1000.0f)
+                {
+                    target.x = x;
+                    target.y = y;
+                    StartAnimation("frame-move", 0.2f, mTransform, target, Ease::EaseQuadInOut, false);
+                }
                 return;
             }
         }
@@ -56,14 +65,7 @@ namespace ClassicLauncher
 
         target.color.a = 0;
         StartAnimation("card-zoom", time, mTransform, target, Ease::EaseQuadInOut, true);
-        GetApplication()->GetTimerManager()->SetTimer(
-            mTimer,
-            [this]()
-            {
-                mTransform.color.a = 255;
-            },
-            this,
-            time * 2);
+        GetApplication()->GetTimerManager()->SetTimer(mTimer, [this]() { mTransform.color.a = 255; }, this, time * 2);
     }
 
     void GuiFrame::Update()

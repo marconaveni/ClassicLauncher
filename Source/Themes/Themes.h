@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "Core.h"
+#include "Themes/ConfigurationThemes.h"
 
 namespace ClassicLauncher
 {
@@ -31,6 +32,7 @@ namespace ClassicLauncher
         void LoadTheme(Application* pApplication);
         static Themes& Get();
         static float GetScaleTexture();
+        ConfigurationThemes mConfigurationThemes;
     };
 
 }  // namespace ClassicLauncher

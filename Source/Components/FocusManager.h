@@ -23,6 +23,7 @@ namespace ClassicLauncher
         void UpdateFocus(FocusComponent* focusComponent);
         void RemoveFocus(FocusComponent* focusComponent);
         std::vector<FocusComponent*>& GetAllFocusComponents() { return mFocusComponents; }
+        FocusComponent* GetFocusComponent();
     };
 
 }  // namespace ClassicLauncher
