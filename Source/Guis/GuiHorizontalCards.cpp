@@ -7,6 +7,7 @@
 #include "Guis/GuiFrame.h"
 #include "Guis/GuiMiniCover.h"
 #include "Guis/GuiTextBlock.h"
+#include "Themes/ConfigurationThemes.h"
 
 namespace ClassicLauncher
 {
@@ -39,14 +40,7 @@ namespace ClassicLauncher
         AddChild(mGuiTitle);
 
         mHorizontalBox = pEntityManager->CreateEntity<GuiHorizontalBox>("Cards_GuiHorizontalBox");
-        mHorizontalBox->SetAutoSize(true);
-        // mHorizontalBox->SetAffectScale(true);
-        // mHorizontalBox->SetSpace(6);
-        mHorizontalBox->SetSpace(GetApplication()->GetThemes()->mConfigurationThemes.horizontalCardsSpace);
-        // mHorizontalBox->mTransform.width = 2560.0f;  // hack temp while not themes configurations
-        mHorizontalBox->mTransform.y = GetApplication()->GetThemes()->mConfigurationThemes.horizontalCardsPositionY;
-
-        const float space = GetApplication()->GetThemes()->mConfigurationThemes.horizontalCardsPositionY;
+        SetHorizontalBoxValues(); 
         AddChild(mHorizontalBox);
         
         for (int i = 0; i < 10; i++)
@@ -67,6 +61,13 @@ namespace ClassicLauncher
         AddChild(mFrame);
         
         SetFocus(3, true);
+    }
+
+    void GuiHorizontalCards::SetHorizontalBoxValues()
+    {
+        mHorizontalBox->SetAutoSize(true);
+        mHorizontalBox->SetSpace(GetApplication()->GetThemes()->mConfigurationThemes.horizontalCardsSpace);
+        mHorizontalBox->mTransform.y = GetApplication()->GetThemes()->mConfigurationThemes.horizontalCardsPositionY;
     }
 
     void GuiHorizontalCards::Draw()

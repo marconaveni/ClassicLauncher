@@ -78,6 +78,7 @@ namespace ClassicLauncher
         GuiBlackScreen* GetGuiBlackScreen();
         void Init();
         void CreateProcess();
+        void LoadConfigurationThemes();
 
     private:
 

@@ -59,6 +59,7 @@ namespace ClassicLauncher
         void SetCovers();
         void ChangeList(const CurrentList list);
         void Click();
+        void SetHorizontalBoxValues();
 
     private:
 

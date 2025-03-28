@@ -30,6 +30,7 @@ namespace ClassicLauncher
         ~Themes();
         void Init(Application* pApplication);
         void LoadTheme(Application* pApplication);
+        void LoadConfigurationThemes(Application* pApplication);
         static Themes& Get();
         static float GetScaleTexture();
         ConfigurationThemes mConfigurationThemes;

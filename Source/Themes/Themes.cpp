@@ -2,6 +2,7 @@
 #include <math.h> /* modf */
 #include "Application.h"
 
+
 namespace ClassicLauncher
 {
 
@@ -23,6 +24,7 @@ namespace ClassicLauncher
 
     std::vector<std::string> Themes::GetThemeDirs()
     {
+        // repeat code todo remove this after refactor
         std::string path = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/" + mCurrentSystemName + "/");
         std::vector<std::string> paths;
         if (DirectoryExists(path.c_str()))
@@ -82,7 +84,7 @@ namespace ClassicLauncher
             mCurrentSystemName = system->systemName;
             std::string file;
             system->scale = GetSpriteByResolution(file);
-            system->pathTheme = file;
+            system->pathImageTheme = file;
         }
         mCurrentSystemName = "default";
         mScaleSystem = GetSpriteByResolution(mPathThemeSystem);
@@ -95,7 +97,7 @@ namespace ClassicLauncher
         {
             GameSystemList* pList = pApplication->GetGameListManager()->GetCurrentSystemList();
             mCurrentSystemName = pList->systemName;
-            file = pList->pathTheme;
+            file = pList->pathImageTheme;
             mScaleTexture = pList->scale;
         }
         else
@@ -105,12 +107,21 @@ namespace ClassicLauncher
             mScaleTexture = mScaleSystem;
         }
 
+        LoadConfigurationThemes(pApplication);
+
         if (mLastPathLoaded != file)
         {
             pApplication->GetSpriteManager()->DeleteSprite("sprite");
             pApplication->GetSpriteManager()->LoadSprite("sprite", file);
             mLastPathLoaded = file;
         }
+    }
+
+    void Themes::LoadConfigurationThemes(Application* pApplication)
+    {
+        const std::string path = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/" + mCurrentSystemName + "/config.cfg");
+        mConfigurationThemes.LoadConfigurations(path);
+        pApplication->LoadConfigurationThemes();
     }
 
     Themes& Themes::Get()

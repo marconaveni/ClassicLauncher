@@ -53,9 +53,10 @@ namespace ClassicLauncher
         }
         InitWindow(mSpecification.width, mSpecification.height, mSpecification.title);
         SetWindowState(FLAG_WINDOW_RESIZABLE);
-        SetWindowSize(mSpecification.width, mSpecification.height);
+        //SetWindowSize(mSpecification.width, mSpecification.height);
+        SetWindowSize(1100, 550);
         SetTargetFPS(mConfigurationManager.GetTargetFps());
-        SetWindowMinSize(mSpecification.width, mSpecification.height);
+        // SetWindowMinSize(mSpecification.width, mSpecification.height);
         if (mConfigurationManager.GetFullscreen())
         {
             ToggleFullscreen();
@@ -127,6 +128,11 @@ namespace ClassicLauncher
     {
         GetAudioManager()->Pause();
         GetProcessManager()->CreateProc(this);
+    }
+
+    void Application::LoadConfigurationThemes()
+    {
+        LOG(LOG_CLASSIC_WARNING, "here");
     }
 
     void Application::Loop()

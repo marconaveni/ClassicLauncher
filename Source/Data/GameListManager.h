@@ -81,6 +81,7 @@ namespace ClassicLauncher
         std::string video;
         std::string desc;
         HistoryPosition history;
+        std::string pathImageTheme;
         std::string pathTheme;
         float scale = 1;
 
