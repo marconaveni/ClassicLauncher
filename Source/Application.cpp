@@ -54,7 +54,7 @@ namespace ClassicLauncher
         InitWindow(mSpecification.width, mSpecification.height, mSpecification.title);
         SetWindowState(FLAG_WINDOW_RESIZABLE);
         //SetWindowSize(mSpecification.width, mSpecification.height);
-        SetWindowSize(1100, 550);
+        SetWindowSize(1280, 720);
         SetTargetFPS(mConfigurationManager.GetTargetFps());
         // SetWindowMinSize(mSpecification.width, mSpecification.height);
         if (mConfigurationManager.GetFullscreen())
@@ -88,10 +88,10 @@ namespace ClassicLauncher
         const std::string refPath1 = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref1.png");
         const std::string refPath2 = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref2.png");
         const std::string refPath3 = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref3.png");
-        mSpriteManager.LoadSprite("ref0", refPath0);
-        mSpriteManager.LoadSprite("ref1", refPath1);
-        mSpriteManager.LoadSprite("ref2", refPath2);
-        mSpriteManager.LoadSprite("ref3", refPath3);
+        mSpriteManager.LoadSprite("ref0", refPath0, 1280 * 2, 720 * 2 );
+        mSpriteManager.LoadSprite("ref1", refPath1, 1280 * 2, 720 * 2 );
+        mSpriteManager.LoadSprite("ref2", refPath2, 1280 * 2, 720 * 2 );
+        mSpriteManager.LoadSprite("ref3", refPath3, 1280 * 2, 720 * 2 );
 #endif
 
         Image imgs[5] = { LoadImage(Resources::GetIcon(16).c_str()),
@@ -133,6 +133,7 @@ namespace ClassicLauncher
     void Application::LoadConfigurationThemes()
     {
         LOG(LOG_CLASSIC_WARNING, "here");
+        mEntityManager.SetThemeValue();
     }
 
     void Application::Loop()

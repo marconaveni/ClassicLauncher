@@ -33,6 +33,8 @@ namespace ClassicLauncher
         pApplication->GetEntityManager()->SetZOrder(mGuiVideoPlayer, 5);
         pApplication->GetEntityManager()->SetZOrder(mGuiBlackScreen, 99);
 
+        pApplication->LoadConfigurationThemes();
+
 #ifdef _DEBUG
         InputManager::SetCategory(main | debug); 
 #else
@@ -166,6 +168,7 @@ namespace ClassicLauncher
                 mGuiHorizontalBox = GetApplication()->GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalBox");
                 mGuiHorizontalBox->Init();
                 AddChild(mGuiHorizontalBox);
+                GetApplication()->LoadConfigurationThemes();
                 InputManager::EnableInput();
                 return;
             }

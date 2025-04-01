@@ -222,4 +222,12 @@ namespace ClassicLauncher
         pApplication->GetEntityManager()->SetZOrder(mGuiVideoPlayer, order);
     }
 
+    void GuiCard::SetThemeValue()
+    {
+        mSizeBoxImage->mTransform.offset.x = GetApplication()->GetThemes()->mConfigurationThemes.offsetImageX;
+        mSizeBoxImage->mTransform.offset.y = GetApplication()->GetThemes()->mConfigurationThemes.offsetImageY;
+        mSizeBoxVideoPlayer->mTransform.offset.x = GetApplication()->GetThemes()->mConfigurationThemes.offsetVideoX;
+        mSizeBoxVideoPlayer->mTransform.offset.y = GetApplication()->GetThemes()->mConfigurationThemes.offsetVideoY;
+    }
+
 }  // namespace ClassicLauncher

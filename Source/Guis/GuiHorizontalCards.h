@@ -60,6 +60,7 @@ namespace ClassicLauncher
         void ChangeList(const CurrentList list);
         void Click();
         void SetHorizontalBoxValues();
+        virtual void SetThemeValue() override;
 
     private:
 

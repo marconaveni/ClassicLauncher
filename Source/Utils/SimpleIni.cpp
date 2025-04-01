@@ -66,11 +66,20 @@ std::string SimpleIni::Trim(const std::string& str)
 
 std::string SimpleIni::RemoveBrackets(const std::string& str)
 {
-    if (str.size() >= 2 && str.front() == '[' && str.back() == ']')
+    std::string newstr = "";
+    for (char c : str)
     {
-        return str.substr(1, str.size() - 2);
+        if (c == '[')
+        {
+            continue;
+        }
+        if (c == ']')
+        {
+            return newstr;
+        }
+        newstr += c;
     }
-    return str;
+    return newstr;
 }
 
 bool SimpleIni::Open(const char* file)
@@ -103,6 +112,9 @@ bool SimpleIni::Open(const char* file)
         }
     }
     fInput.close();
+
+
+
     return true;
 }
 
@@ -186,6 +198,11 @@ float SimpleIni::GetFloat(const std::string& section, const std::string& key, fl
     if (value.empty() || (value.size() == 1 && value[0] == '-'))
     {
         return defaultValue;
+    }
+
+    while (!value.empty() && std::isspace(value.back())) 
+    {
+        value.pop_back();
     }
 
     char* end;

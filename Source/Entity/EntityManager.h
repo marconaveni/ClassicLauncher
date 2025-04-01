@@ -63,6 +63,7 @@ namespace ClassicLauncher
         void UpdatePositionAll();
         void End();
         void ClearAllEntitys();
+        void SetThemeValue();
 
     private:
 

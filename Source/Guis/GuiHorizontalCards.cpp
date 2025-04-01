@@ -40,34 +40,43 @@ namespace ClassicLauncher
         AddChild(mGuiTitle);
 
         mHorizontalBox = pEntityManager->CreateEntity<GuiHorizontalBox>("Cards_GuiHorizontalBox");
-        SetHorizontalBoxValues(); 
+        SetHorizontalBoxValues();
         AddChild(mHorizontalBox);
-        
+
         for (int i = 0; i < 10; i++)
         {
             auto card = pEntityManager->CreateEntity<GuiCard>("GuiCard", 0, 0);
             mHorizontalBox->AttachGui(card);
             mGuiCards.emplace_back(card);
         }
-        
+
         SetPositionHorizontalBox();
-        
+
         mMiniCover = pEntityManager->CreateEntity<GuiMiniCover>("MiniCover");
         mMiniCover->Init();
         AddChild(mMiniCover);
-        
+
         mFrame = pEntityManager->CreateEntity<GuiFrame>("Frame", GetApplication()->GetFocusManager());
         pEntityManager->SetZOrder(mFrame, 80);
         AddChild(mFrame);
-        
+
         SetFocus(3, true);
     }
 
     void GuiHorizontalCards::SetHorizontalBoxValues()
     {
         mHorizontalBox->SetAutoSize(true);
-        mHorizontalBox->SetSpace(GetApplication()->GetThemes()->mConfigurationThemes.horizontalCardsSpace);
-        mHorizontalBox->mTransform.y = GetApplication()->GetThemes()->mConfigurationThemes.horizontalCardsPositionY;
+        const float space = GetApplication()->GetThemes()->mConfigurationThemes.horizontalCardsSpace;
+        const float y = GetApplication()->GetThemes()->mConfigurationThemes.horizontalCardsPositionY;
+
+        mHorizontalBox->SetSpace(space);
+        mHorizontalBox->mTransform.y = y;
+    }
+
+    void GuiHorizontalCards::SetThemeValue()
+    {
+        SetHorizontalBoxValues();
+        SetPositionHorizontalBox();
     }
 
     void GuiHorizontalCards::Draw()
@@ -92,7 +101,6 @@ namespace ClassicLauncher
         const float scale = Themes::GetScaleTexture();
         mGuiTitle->mTransform.x = (1280.0f / 2.0f) - ((mGuiTitle->GetMeasureTextBox().GetIntX() / 2));
         mGuiTitle->mTransform.x = Math::Clamp(mGuiTitle->mTransform.x, 135, 1280);
-        mFrame->SetFrame(bForce);
     }
 
     void GuiHorizontalCards::SetCovers()
@@ -308,6 +316,10 @@ namespace ClassicLauncher
                 mLastDirection = None;
                 mIdFocus = Math::Clamp(mIdFocus, 3, 6);
             }
+        }
+        else
+        {
+            mFrame->SetFrame();
         }
 
         UpdateCards();

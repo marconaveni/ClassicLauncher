@@ -61,6 +61,7 @@ namespace ClassicLauncher
         virtual void RemoveChild(Entity* childEntity);  // Remove a child from the entity
         virtual void RemoveAllChilds();
         virtual void RemoveRootChild();
+        virtual void SetThemeValue() {};
         std::vector<Entity*>& GetChilds();
         Entity* GetRootEntity();
         Entity* GetParent() { return mParent; }

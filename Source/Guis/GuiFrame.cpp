@@ -5,6 +5,7 @@
 
 namespace ClassicLauncher
 {
+
     GuiFrame::GuiFrame(FocusManager* focusManager)
         : mFocusManager(focusManager)
     {
@@ -22,7 +23,6 @@ namespace ClassicLauncher
     void GuiFrame::SetFrame(bool bForce)
     {
         std::vector<FocusComponent*> focusComponents = mFocusManager->GetAllFocusComponents();
-
         for (auto& focus : focusComponents)
         {
             if (focus->GetFocus())
@@ -30,19 +30,19 @@ namespace ClassicLauncher
                 Transform target = mTransform;
                 const float x = focus->GetEntity()->mTransform.x + focus->GetEntity()->mTransform.GetRootPosition().x;
                 const float y = focus->GetEntity()->mTransform.y + focus->GetEntity()->mTransform.GetRootPosition().y;
-                
-                if (bForce)
+
+                if (x == mTransform.x  && y == mTransform.y)
                 {
-                    mTransform.x = x;
-                    mTransform.y = y;
+                    return;
                 }
-                else if (x > 100.0f && x < 1000.0f)
+                
+                if (!GetAnimation("frame-move").GetAnimationIsRun() && !GetAnimation("card-zoom").GetAnimationIsRun())
                 {
                     target.x = x;
                     target.y = y;
-                    StartAnimation("frame-move", 0.2f, mTransform, target, Ease::EaseQuadInOut, false);
+                    StartAnimation("frame-move", 0.15f, mTransform, target, Ease::EaseQuadInOut, false);
                 }
-                return;
+
             }
         }
     }

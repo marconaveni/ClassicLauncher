@@ -128,6 +128,18 @@ namespace ClassicLauncher
         mEntities.shrink_to_fit();
     }
 
+    void EntityManager::SetThemeValue()
+    {
+        for (auto& entity : mTempEntities)
+        {
+            entity->SetThemeValue();
+        }
+        for (auto& entity : mEntities)
+        {
+            entity->SetThemeValue();
+        }  
+    }
+
     void EntityManager::DeleteEntitys(bool bIsDeleteEntities)
     {
         if (!bIsDeleteEntities)

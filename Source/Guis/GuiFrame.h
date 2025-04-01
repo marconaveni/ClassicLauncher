@@ -13,7 +13,6 @@ namespace ClassicLauncher
     {
     private:
 
-        std::vector<Entity*> mFollowEntities;
         FocusManager* mFocusManager;
         TimerHandling mTimer;
 

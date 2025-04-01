@@ -53,6 +53,7 @@ namespace ClassicLauncher
         void Reset();
         void Click();
         void SetFrontCard();
+        virtual void SetThemeValue() override;
     };
 
 }  // namespace ClassicLauncher
