@@ -24,7 +24,7 @@ namespace ClassicLauncher
     {
         sInstanceApplication = nullptr;
     }
-
+    
     Application& Application::Get()
     {
         return *sInstanceApplication;
@@ -149,6 +149,8 @@ namespace ClassicLauncher
             ClearBackground(BLACK);
 
             mRender.ClearRender();
+            mInputManager.UpdateInputState();
+            mEntityManager.UpdateAll();
             mRender.BeginRender();
             Update();  // update logic
             mRender.EndRender();
@@ -160,14 +162,13 @@ namespace ClassicLauncher
 
     void Application::Update()
     {
-        mInputManager.UpdateInputState();
-        mEntityManager.UpdateAll();
+
         mRenderSystem.DrawEntities(mEntityManager.GetEntities());  // draw in texture render  // mEntityManager.Draw();  // draw in texture render
-        mTimerManager.Update();
         mGuiWindow->Teste();
-
+        
         // Log(LOG_CLASSIC_DEBUG, TEXTBOOL(InputManager::GetInputLeftFaceLeft()));
-
+        
+        mTimerManager.Update();
         mProcessManager.StatusProcessRun(this);
 
         GameList* pSystemList = mGameListManager.GetCurrentGameList();
