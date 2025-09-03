@@ -146,7 +146,7 @@ namespace ClassicLauncher
             }
 
             BeginDrawing();
-            ClearBackground(BLACK);
+            ClearBackground(C_BLACK);
 
             mRender.ClearRender();
             mInputManager.UpdateInputState();
@@ -172,11 +172,11 @@ namespace ClassicLauncher
         mProcessManager.StatusProcessRun(this);
 
         GameList* pSystemList = mGameListManager.GetCurrentGameList();
-        PRINT(TEXT("========================================"), 2.0f, "line0", Color::Lime());
-        PRINT(TEXT("Music Playing %s", mAudioManager.GetMusicName().c_str()), 2.0f, "music", Color::Lime());
-        PRINT(TEXT("========================================"), 2.0f, "line", Color::Green());
-        PRINT(TEXT("%d fps", GetFPS()), 2.0f, "fps", Color::Green());
-        PRINT(TEXT("%.6f ms", GetFrameTime()), 2.0f, "ms", Color::Green());
+        PRINT(TEXT("========================================"), 2.0f, "line0", ColorClassic::Lime());
+        PRINT(TEXT("Music Playing %s", mAudioManager.GetMusicName().c_str()), 2.0f, "music", ColorClassic::Lime());
+        PRINT(TEXT("========================================"), 2.0f, "line", ColorClassic::Green());
+        PRINT(TEXT("%d fps", GetFPS()), 2.0f, "fps", ColorClassic::Green());
+        PRINT(TEXT("%.6f ms", GetFrameTime()), 2.0f, "ms", ColorClassic::Green());
         PRINT(TEXT("========================================"), 2.0f, "line2");
         if (pSystemList)
         {
@@ -260,7 +260,7 @@ namespace ClassicLauncher
             mSpecification.height = GetScreenHeight();
             SetWindowState(FLAG_WINDOW_UNDECORATED);
             SetWindowSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
-            const Vector2 positionMonitor(GetMonitorPosition(GetCurrentMonitor()));
+            const Vector2Classic positionMonitor(GetMonitorPosition(GetCurrentMonitor()));
             SetWindowPosition(positionMonitor.GetIntX(), positionMonitor.GetIntY());
             bIsFullScreen = true;
         }

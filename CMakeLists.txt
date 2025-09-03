@@ -145,8 +145,8 @@ set(data
     "${CMAKE_SOURCE_DIR}/Source/Data/Rectangle.h"
     "${CMAKE_SOURCE_DIR}/Source/Data/Size.h"
     "${CMAKE_SOURCE_DIR}/Source/Data/Vector2.h"
-    "${CMAKE_SOURCE_DIR}/Source/Data/Transform.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Data/Transform.h"
+    "${CMAKE_SOURCE_DIR}/Source/Data/Transformation.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Data/Transformation.h"
 )
 set(graphics
     "${CMAKE_SOURCE_DIR}/Source/Graphics/Render.cpp"
@@ -238,6 +238,8 @@ set(src
     "${CMAKE_SOURCE_DIR}/Source/ClassicLauncher.h"
     "${CMAKE_SOURCE_DIR}/Source/Core.h"
     "${CMAKE_SOURCE_DIR}/Source/Main.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/rl_wrap.h"
+    "${CMAKE_SOURCE_DIR}/Source/rl_wrap.cpp"
     )
     
 set(extern 

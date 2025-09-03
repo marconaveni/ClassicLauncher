@@ -78,8 +78,8 @@ namespace ClassicLauncher
         Texture2D* texture = mPlayer->GetVideoTexture();
         if (texture)
         {
-            const Transform& transform = mTransform;
-            DrawTexturePro(*texture, mTransform.GetSource(), mTransform.GetTransform(), Vector2{ 0, 0 }, transform.rotation, transform.color);
+            const Transformation& transform = mTransform;
+            DrawTexturePro(*texture, mTransform.GetSource(), mTransform.GetTransform(), Vector2Classic{ 0, 0 }, transform.rotation, transform.color);
         }
 
         if (!mPlayerFullScreen) return;
@@ -89,7 +89,7 @@ namespace ClassicLauncher
         {
             const float scale = Themes::GetScaleTexture();
             const float x = (1280 * scale / 2) - (textureFullScreen->width / 2);
-            DrawTexture(*textureFullScreen, (int)x, 0, Color::White());
+            DrawTexture(*textureFullScreen, (int)x, 0, ColorClassic::White());
         }
     }
 

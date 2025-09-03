@@ -137,16 +137,19 @@ namespace ClassicLauncher
         }
         libvlc_media_tracks_release(tracks, track_count);
 
-        Vector2 textureSize((float)mWidthVideo, (float)mHeightVideo);
+        Vector2Classic textureSize((float)mWidthVideo, (float)mHeightVideo);
         UtilsFunctionLibrary::SetSizeWithProportion(textureSize, mWidth, mHeight, bFill);
         mWidthVideo = textureSize.GetIntX();
         mHeightVideo = textureSize.GetIntY();
 
-        mContext.image[0] = { MemAlloc(mWidthVideo * mHeightVideo * 4),  // 4 bytes pixel (RGBA)
-                              mWidthVideo,
-                              mHeightVideo,
-                              1,
-                              PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 };
+        // mContext.image[0] = { MemAlloc(mWidthVideo * mHeightVideo * 4),  // 4 bytes pixel (RGBA)
+        //                       mWidthVideo,
+        //                       mHeightVideo,
+        //                       1,
+        //                       PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 };
+
+        mContext.image[0] = MakeImage(MemAlloc(mWidthVideo * mHeightVideo * 4), mWidthVideo, mHeightVideo, 1, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
+        
         mContext.image[1] = ImageCopy(mContext.image[0]);
 
         texture = LoadTextureFromImage(mContext.image[0]);
@@ -254,9 +257,9 @@ namespace ClassicLauncher
         return (IsTextureValid(texture)) ? &texture : nullptr;
     }
 
-    Vector2 VideoPlayer::GetVideoSize()
+    Vector2Classic VideoPlayer::GetVideoSize()
     {
-        return (IsTextureValid(texture)) ? Vector2{ static_cast<float>(texture.width), static_cast<float>(texture.height) } : Vector2{ 0, 0 };
+        return (IsTextureValid(texture)) ? Vector2Classic{ static_cast<float>(texture.width), static_cast<float>(texture.height) } : Vector2Classic{ 0, 0 };
         // return Vector2{ static_cast<float>(mWidth), static_cast<float>(mHeight) };
     }
 

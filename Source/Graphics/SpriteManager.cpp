@@ -9,8 +9,8 @@ namespace ClassicLauncher
 
     void SpriteManager::Init()
     {
-        Image transparentImage = GenImageColor(1, 1, Color::Blank());
-        Image blackImage = GenImageColor(1, 1, Color::Black());
+        Image transparentImage = GenImageColor(1, 1, ColorClassic::Blank());
+        Image blackImage = GenImageColor(1, 1, ColorClassic::Black());
         LoadSprite("transparent", transparentImage);
         LoadSprite("black", blackImage);
         UnloadImage(transparentImage);

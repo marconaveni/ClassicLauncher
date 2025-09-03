@@ -1,7 +1,8 @@
 #include "Log.h"
 #include <iostream>
 #include <string>
-#include "raylib.h"
+#include "rl_wrap.h"
+using namespace rlw;
 
 namespace ClassicLauncher
 {

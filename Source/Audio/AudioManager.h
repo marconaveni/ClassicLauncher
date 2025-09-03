@@ -6,7 +6,8 @@
 #include <string>
 #include <thread>
 #include <vector>
-#include "raylib.h"
+#include "rl_wrap.h"
+using namespace rlw;
 
 namespace ClassicLauncher
 {

@@ -11,7 +11,7 @@ namespace ClassicLauncher
     {
     }
 
-    void Print::InternalPrintOnScreen(const std::string& text, float duration, const std::string& label, const Color& textColor, bool bLog, int sizeY)
+    void Print::InternalPrintOnScreen(const std::string& text, float duration, const std::string& label, const ColorClassic& textColor, bool bLog, int sizeY)
     {
 #ifdef _DEBUG
 
@@ -51,7 +51,7 @@ namespace ClassicLauncher
 #endif
     }
 
-    void Print::PrintOnScreen(const char* text, const float duration, const char* label, const Color& textColor, const bool bLog)
+    void Print::PrintOnScreen(const char* text, const float duration, const char* label, const ColorClassic& textColor, const bool bLog)
     {
 
 #ifdef _DEBUG
@@ -100,10 +100,10 @@ namespace ClassicLauncher
 
         for (const auto& message : mMessages)
         {
-            const Vector2 positionRender = { 30, y };
-            const Vector2 positionRenderShadow = { 31, y + 1 };
+            const Vector2Classic positionRender = { 30, y };
+            const Vector2Classic positionRenderShadow = { 31, y + 1 };
 
-            DrawTextEx(mFont, message.textMessage.data(), positionRenderShadow, mSize, mSpacing, BLACK);
+            DrawTextEx(mFont, message.textMessage.data(), positionRenderShadow, mSize, mSpacing, C_BLACK);
             DrawTextEx(mFont, message.textMessage.data(), positionRender, mSize, mSpacing, message.textColor);
 
             y += message.size;

@@ -3,21 +3,24 @@
 
 #include "Core.h"
 
+#include "rl_wrap.h"
+using namespace rlw;
+
 namespace ClassicLauncher
 {
 
     class Render
     {
         RenderTexture mRenderTexture;
-        Rectangle mSource;
-        Rectangle mDest;
+        RectangleClassic mSource;
+        RectangleClassic mDest;
         float mWidth;
         float mHeight;
         float mNewWidth;
         float mNewHeight;
         float mScale;
         bool mIsMaintainAspectRatio;
-        Vector2 mVirtualMouse;
+        Vector2Classic mVirtualMouse;
         void RenderValues();
 
     public:
@@ -29,8 +32,8 @@ namespace ClassicLauncher
         void EndRender();
         void DrawRender();
         void Unload();
-        Vector2 GetRenderScale() const;
-        Vector2 GetMousePositionRender() const;
+        Vector2Classic GetRenderScale() const;
+        Vector2Classic GetMousePositionRender() const;
 
     private:
 

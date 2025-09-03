@@ -62,7 +62,7 @@ namespace ClassicLauncher
         void Update();
         void Unload();
         Texture2D* GetVideoTexture();
-        Vector2 GetVideoSize();
+        Vector2Classic GetVideoSize();
         bool IsVideoFinished();
         bool IsVideoPlaying();
         bool IsVideoStopped();

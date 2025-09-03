@@ -17,7 +17,7 @@ namespace ClassicLauncher
         std::string label;
         std::chrono::time_point<std::chrono::steady_clock> start;
         std::chrono::time_point<std::chrono::steady_clock> end;
-        Color textColor;
+        ColorClassic textColor;
         int size;
 
         Message()
@@ -43,14 +43,14 @@ namespace ClassicLauncher
     public:
 
         Print();
-        void PrintOnScreen(const char* text, float duration = 2.0f, const char* label = "", const Color& textColor = Color::Cyan(), bool bLog = false);
+        void PrintOnScreen(const char* text, float duration = 2.0f, const char* label = "", const ColorClassic& textColor = ColorClassic::Cyan(), bool bLog = false);
         void DrawMessage();
         void LoadFont(const std::string& path, int size = 20, float spacing = 1);
         void Unload();
 
     private:
 
-        void InternalPrintOnScreen(const std::string& text, float duration, const std::string& label, const Color& textColor, bool bLog, int sizeY);
+        void InternalPrintOnScreen(const std::string& text, float duration, const std::string& label, const ColorClassic& textColor, bool bLog, int sizeY);
         int mSize;
         float mSpacing;
         Font mFont;

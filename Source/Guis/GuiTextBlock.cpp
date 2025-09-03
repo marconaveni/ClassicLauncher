@@ -28,13 +28,13 @@ namespace ClassicLauncher
         , mPathFont()
         , mSize()
         , mSpacing()
-        , mColor(Color::White())
+        , mColor(ColorClassic::White())
         , mTextMovement(false)
         , mDesiredWidth(10)
         , mOffset(0)
         , mToLeft(true)
         , mDelay(0)
-        , mMensuredText(Vector2())
+        , mMensuredText(Vector2Classic())
         , mSpeed(0.5f)
         , mMaxDelay(3.0f)
         , mTextOverflowPolicy(TextOverflowPolicy::none)
@@ -81,9 +81,9 @@ namespace ClassicLauncher
     void GuiTextBlock::Draw()
     {     
         mColor.a = mTransform.color.a;
-        Vector2 posi = mTransform.GetTransform().GetPosition();
+        Vector2Classic posi = mTransform.GetTransform().GetPosition();
         posi.x += mOffset * Themes::GetScaleTexture();
-        Vector2 scale = mTransform.GetScale();
+        Vector2Classic scale = mTransform.GetScale();
         DrawTextEx(mFont, mText.data(), posi, mSize * Math::Max(scale.x * Themes::GetScaleTexture(), scale.y * Themes::GetScaleTexture()), mSpacing, mColor);
     }
 
@@ -113,17 +113,17 @@ namespace ClassicLauncher
         mSpacing = spacing;
     }
 
-    void GuiTextBlock::SetColor(Color tint)
+    void GuiTextBlock::SetColor(ColorClassic tint)
     {
         mColor = tint;
     }
 
-    Vector2 GuiTextBlock::GetMeasureTextBox()
+    Vector2Classic GuiTextBlock::GetMeasureTextBox()
     {
         return mMensuredText;
     }
 
-    Vector2 GuiTextBlock::MeasureTextBox()
+    Vector2Classic GuiTextBlock::MeasureTextBox()
     {
         return MeasureTextEx(mFont, mText.c_str(), mSize, mSpacing);
     }

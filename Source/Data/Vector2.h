@@ -2,27 +2,28 @@
 #define VECTOR_2_H
 
 #include <string>
-#include "raylib.h"
+#include "rl_wrap.h"
+using namespace rlw;
 
 namespace ClassicLauncher
 {
-    class Vector2 : public ::Vector2
+    class Vector2Classic : public ::Vector2
     {
     public:
 
-        Vector2(const ::Vector2& vec)
+        Vector2Classic(const ::Vector2& vec)
             : ::Vector2{ vec.x, vec.y } {};
 
-        Vector2(float x, float y)
+        Vector2Classic(float x, float y)
             : ::Vector2{ x, y } {};
 
-        Vector2(float x)
-            : Vector2{ x, 0 } {};
+        Vector2Classic(float x)
+            : Vector2Classic{ x, 0 } {};
 
-        Vector2()
-            : Vector2{ 0, 0 } {};
+        Vector2Classic()
+            : Vector2Classic{ 0, 0 } {};
 
-        Vector2& operator=(const ::Vector2& vector)
+        Vector2Classic& operator=(const ::Vector2& vector)
         {
             Set(vector);
             return *this;

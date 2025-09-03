@@ -14,7 +14,7 @@ namespace ClassicLauncher
     void GuiBlackScreen::FadeIn()
     {
         mTransform.color.SetOpacity(0);
-        Transform target = mTransform;
+        Transformation target = mTransform;
         target.color.a = 255;
         StartAnimation("fade-in", 0.3f, mTransform, target, Ease::EaseLinearNone, false);
     }
@@ -22,7 +22,7 @@ namespace ClassicLauncher
     void GuiBlackScreen::FadeOut()
     {
         mTransform.color.SetOpacity(255);
-        Transform target = mTransform;
+        Transformation target = mTransform;
         target.color.a = 0;
         StartAnimation("fade-out", 0.3f, mTransform, target, Ease::EaseQuadOut, false);
     }
@@ -30,7 +30,7 @@ namespace ClassicLauncher
     void GuiBlackScreen::FadeInFadeOut()
     {
         mTransform.color.SetOpacity(0);
-        Transform target = mTransform;
+        Transformation target = mTransform;
         target.color.a = 255;
         StartAnimation("fade-in-out", 0.3f, mTransform, target, Ease::EaseLinearNone, false);
     }
@@ -38,7 +38,7 @@ namespace ClassicLauncher
     void GuiBlackScreen::KeepBlack()
     {        
         mTransform.color.SetOpacity(255);
-        Transform target = mTransform;   
+        Transformation target = mTransform;   
         StartAnimation("keep", 1.0f, mTransform, target, Ease::EaseLinearNone, false);
 
     }

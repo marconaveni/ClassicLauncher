@@ -53,3 +53,10 @@ extern/libvlc
 ClassicLauncherWinDependencies
 __pycache__
 
+
+
+# Internal use
+Source/*.txt
+Source/*.ini
+Source/*.py
+

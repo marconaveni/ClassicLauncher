@@ -27,7 +27,7 @@ namespace ClassicLauncher
         {
             if (focus->GetFocus())
             {
-                Transform target = mTransform;
+                Transformation target = mTransform;
                 const float x = focus->GetEntity()->mTransform.x + focus->GetEntity()->mTransform.GetRootPosition().x;
                 const float y = focus->GetEntity()->mTransform.y + focus->GetEntity()->mTransform.GetRootPosition().y;
 
@@ -55,7 +55,7 @@ namespace ClassicLauncher
         const float time = 0.3f;
         const float scale = 1.75f;
 
-        Transform target = mTransform;
+        Transformation target = mTransform;
 
         target.scaleX = scale;
         target.scaleY = scale;

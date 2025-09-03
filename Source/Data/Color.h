@@ -2,19 +2,20 @@
 #define COLOR_H
 
 #include <string>
-#include "raylib.h"
+#include "rl_wrap.h"
+using namespace rlw;
 
 namespace ClassicLauncher
 {
-    class Color : public ::Color
+    class ColorClassic : public ::Color
     {
     public:
 
         // Default white
-        Color()
+        ColorClassic()
             : ::Color{ 255, 255, 255, 255 } {};
 
-        Color(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha = 255)
+        ColorClassic(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha = 255)
             : ::Color{ red, green, blue, alpha } {};
 
         void Set(const ::Color& color)
@@ -77,38 +78,35 @@ namespace ClassicLauncher
         int GetColorBlue() const { return b; }
         int GetColorAlpha() const { return a; }
 
-        Color GetColor() const { return *this; }
+        ColorClassic GetColor() const { return *this; }
 
         std::string ToString() const { return TextFormat("Color(red: %d, green: %d, blue: %d, alpha: %d)", r, g, b, a); }
 
-        static Color LightGray() { return LIGHTGRAY; }
-        static Color Gray() { return GRAY; }
-        static Color DarkGray() { return DARKGRAY; }
-        static Color Yellow() { return YELLOW; }
-        static Color Gold() { return GOLD; }
-        static Color Orange() { return ORANGE; }
-        static Color Pink() { return PINK; }
-        static Color Red() { return RED; }
-        static Color Maroon() { return MAROON; }
-        static Color Green() { return GREEN; }
-        static Color Lime() { return LIME; }
-        static Color DarkGreen() { return DARKGREEN; }
-        static Color SkyBlue() { return SKYBLUE; }
-        static Color Blue() { return BLUE; }
-        static Color DarkBlue() { return DARKBLUE; }
-        static Color Purple() { return PURPLE; }
-        static Color Violet() { return VIOLET; }
-        static Color DarkPurple() { return DARKPURPLE; }
-        static Color Beige() { return BEIGE; }
-        static Color Brown() { return BROWN; }
-        static Color DarkBrown() { return DARKBROWN; }
-        static Color White() { return WHITE; }
-        static Color Black() { return BLACK; }
-        static Color Blank() { return BLANK; }
-        static Color Magenta() { return MAGENTA; }
-        static Color RayWhite() { return RAYWHITE; }
-        static Color Cyan() { return Color{ 0, 255, 255, 255 }; }
-        static Color Transparent() { return BLANK; } // Blank use same value. 
+        static ColorClassic Yellow() { return ColorClassic{ 253, 249, 0, 255 }; }
+        static ColorClassic Gold() { return ColorClassic{ 255, 203, 0, 255 }; }
+        static ColorClassic Orange() { return ColorClassic{ 255, 161, 0, 255 }; }
+        static ColorClassic Pink() { return ColorClassic{ 255, 109, 194, 255 }; }
+        static ColorClassic Red() { return ColorClassic{ 230, 41, 55, 255 }; }
+        static ColorClassic Maroon() { return ColorClassic{ 190, 33, 55, 255 }; }
+        static ColorClassic Green() { return ColorClassic{ 0, 228, 48, 255 }; }
+        static ColorClassic Lime() { return ColorClassic{ 0, 158, 47, 255 }; }
+        static ColorClassic DarkGreen() { return ColorClassic{ 0, 117, 44, 255 }; }
+        static ColorClassic SkyBlue() { return ColorClassic{ 102, 191, 255, 255 }; }
+        static ColorClassic Blue() { return ColorClassic{ 0, 121, 241, 255 }; }
+        static ColorClassic DarkBlue() { return ColorClassic{ 0, 82, 172, 255 }; }
+        static ColorClassic Purple() { return ColorClassic{ 200, 122, 255, 255 }; }
+        static ColorClassic Violet() { return ColorClassic{ 135, 60, 190, 255 }; }
+        static ColorClassic DarkPurple() { return ColorClassic{ 112, 31, 126, 255 }; }
+        static ColorClassic Beige() { return ColorClassic{ 211, 176, 131, 255 }; }
+        static ColorClassic Brown() { return ColorClassic{ 127, 106, 79, 255 }; }
+        static ColorClassic DarkBrown() { return ColorClassic{ 76, 63, 47, 255 }; }
+        static ColorClassic White() { return ColorClassic{ 255, 255, 255, 255 }; }
+        static ColorClassic Black() { return ColorClassic{ 0, 0, 0, 255 }; }
+        static ColorClassic Blank() { return ColorClassic{ 0, 0, 0, 0 }; }
+        static ColorClassic Magenta() { return ColorClassic{ 255, 0, 255, 255 }; }
+        static ColorClassic RayWhite() { return ColorClassic{ 245, 245, 245, 255 }; }
+        static ColorClassic Cyan() { return ColorClassic{ 0, 255, 255, 255 }; }
+        static ColorClassic Transparent() { return ColorClassic{ 0, 0, 0, 0 }; }
     };
 
 }  // namespace ClassicLauncher

@@ -92,7 +92,7 @@ namespace ClassicLauncher
         }
         mCardSelected->mTransform.color.SetOpacity(b);
         mCardBackgroundSelected->mTransform.color.SetOpacity(b);
-        Transform target = mCardSelected->mTransform;
+        Transformation target = mCardSelected->mTransform;
         target.color.a = a;
         mCardSelected->StartAnimation(nameAnimation, 0.2f, mCardSelected->mTransform, target, Ease::EaseLinearNone, false);
         mCardBackgroundSelected->StartAnimation(nameAnimation, 0.2f, mCardSelected->mTransform, target, Ease::EaseLinearNone, false);
@@ -194,7 +194,7 @@ namespace ClassicLauncher
         const float time = 0.3f;
         const float scale = 1.75f;
 
-        Transform target = mTransform;
+        Transformation target = mTransform;
 
         target.scaleX = scale;
         target.scaleY = scale;

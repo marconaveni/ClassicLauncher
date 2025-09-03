@@ -42,7 +42,7 @@ namespace ClassicLauncher::Resources
 
     std::string GetIcon(int size)
     {
-        return GetResourcesPathFileAbs(TEXT("Resources/textures/logo%dx%d.png", size, size));
+        return GetResourcesPathFileAbs(TEXT("Resources/textures/logo16x16.png", size, size));
     }
 
     std::string GetLogo()

@@ -4,10 +4,79 @@
 #include <string>
 #include <vector>
 #include "Core.h"
-#include "Data/Transform.h"
+
 
 namespace ClassicLauncher
 {
+
+
+    class Transformation
+    {
+    private:
+
+        friend class RenderSystem;
+
+        RectangleClassic mTransform;
+        RectangleClassic mSource;
+        Vector2Classic mScale;
+
+        float rootX;
+        float rootY;
+        float rootScaleX;
+        float rootScaleY;
+
+        void SetTransforms(const float m);
+
+    public:
+
+        Vector2Classic offset;
+        float x;
+        float y;
+        float width;
+        float height;
+        float scaleX;
+        float scaleY;
+        float rotation;
+        ColorClassic color;
+
+        float sourceX;
+        float sourceY;
+        float scaleWidth;
+        float scaleHeight;
+
+        Transformation()
+            : rootX(0)
+            , rootY(0)
+            , rootScaleX(1)
+            , rootScaleY(1)
+            , offset()
+            , x(0)
+            , y(0)
+            , width(0)
+            , height(0)
+            , scaleX(1)
+            , scaleY(1)
+            , rotation(0)
+            , color({ 255, 255, 255, 255 })
+            , sourceX(0)
+            , sourceY(0)
+            , scaleWidth(0)
+            , scaleHeight(0)
+            , mScale(1, 1)
+        {
+        }
+
+        RectangleClassic GetTransform() { return mTransform; }
+        RectangleClassic GetSource() { return mSource; }
+        Vector2Classic GetScale() { return mScale; }
+        Vector2Classic GetRootPosition() { return Vector2Classic(rootX, rootY); }
+        Vector2Classic GetRootScale() { return Vector2Classic(rootScaleX, rootScaleY); }
+        void UpdateTransform(Transformation& otherTransform);
+    };
+
+
+
+    //class Transformation;
 
     enum class EntityType
     {
@@ -72,9 +141,9 @@ namespace ClassicLauncher
         int GetZOrder() const { return mZOrder; }
         int GetIdZOrder() const { return mIdZOrder; }
 
-        Transform mTransform;
+        Transformation mTransform;
         std::string mTextureName = "transparent";
-        Rectangle mScissorArea;
+        RectangleClassic mScissorArea;
 
     private:
 

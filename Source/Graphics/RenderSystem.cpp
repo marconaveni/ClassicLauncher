@@ -1,6 +1,9 @@
 #include "RenderSystem.h"
 #include "Application.h"
 
+#include "rl_wrap.h"
+using namespace rlw;
+
 namespace ClassicLauncher
 {
 
@@ -39,14 +42,14 @@ namespace ClassicLauncher
 
             if (entity->mScissorMode)
             {
-                Rectangle scissorArea = entity->mScissorArea;
+                RectangleClassic scissorArea = entity->mScissorArea;
                 scissorArea.width = scissorArea.width * entity->mTransform.GetRootScale().x * Themes::GetScaleTexture();
                 scissorArea.height = scissorArea.height * entity->mTransform.GetRootScale().y * Themes::GetScaleTexture();
                 BeginScissorMode(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height);
             }
 
             ::DrawTexturePro(
-                *texture, entity->mTransform.GetSource(), entity->mTransform.GetTransform(), Vector2{ 0, 0 }, entity->mTransform.rotation, entity->mTransform.color);
+                *texture, entity->mTransform.GetSource(), entity->mTransform.GetTransform(), Vector2Classic{ 0, 0 }, entity->mTransform.rotation, entity->mTransform.color);
             entity->Draw();
             DrawDebug(entity);
 
@@ -63,11 +66,11 @@ namespace ClassicLauncher
     {
 #ifdef _DEBUG
 
-        const Rectangle& RectangleDrawArea = entity->mTransform.GetTransform();  //{ x, y, scale.x, scale.y };
-        const Vector2 vec = Application::Get().GetRender()->GetMousePositionRender();
+        const RectangleClassic& RectangleDrawArea = entity->mTransform.GetTransform();  //{ x, y, scale.x, scale.y };
+        const Vector2Classic vec = Application::Get().GetRender()->GetMousePositionRender();
         if (CheckCollisionPointRec(vec, RectangleDrawArea) && bEnable)
         {
-            ::DrawRectangleLinesEx(RectangleDrawArea, 2, Color::Red());
+            ::DrawRectangleLinesEx(RectangleDrawArea, 2, ColorClassic::Red());
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
             {
                 PRINT(TEXT("nameID: %s", entity->mNameId.c_str()), 5.0f);
@@ -75,12 +78,12 @@ namespace ClassicLauncher
         }
         else if (bEnable)
         {
-            ::DrawRectangleLinesEx(RectangleDrawArea, 1, Color::Cyan());
+            ::DrawRectangleLinesEx(RectangleDrawArea, 1, ColorClassic::Cyan());
         }
         if (entity->mScissorMode && bEnable)
         {
-            const Color tint = Color(255, 0, 0, 55);
-            Rectangle scissorArea = entity->mScissorArea;
+            const ColorClassic tint = ColorClassic(255, 0, 0, 55);
+            RectangleClassic scissorArea = entity->mScissorArea;
             scissorArea.width = scissorArea.width * entity->mTransform.GetRootScale().x * Themes::GetScaleTexture();
             scissorArea.height = scissorArea.height * entity->mTransform.GetRootScale().y * Themes::GetScaleTexture();
             DrawRectangle(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height, tint);
@@ -88,9 +91,9 @@ namespace ClassicLauncher
 #endif  // _DEBUG
     }
 
-    bool RenderSystem::CheckRender(const Rectangle& rec)
+    bool RenderSystem::CheckRender(const RectangleClassic& rec)
     {
-        return ::CheckCollisionRecs(Rectangle(0, 0, 1280, 720), rec);
+        return ::CheckCollisionRecs(RectangleClassic(0, 0, 1280, 720), rec);
     }
 
 }  // namespace ClassicLauncher

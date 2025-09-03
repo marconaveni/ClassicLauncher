@@ -55,15 +55,15 @@ namespace ClassicLauncher
 
         Ease mType;
 
-        Transform mStartTransform;
-        Transform mCurrentTransform;
-        Transform mFinalTransform;
+        Transformation mStartTransform;
+        Transformation mCurrentTransform;
+        Transformation mFinalTransform;
 
         Animation();
 
         void StartAnimation(float durationAnimation,
-                            const Transform& startAnimationTransform,
-                            const Transform& finalAnimationTransform,
+                            const Transformation& startAnimationTransform,
+                            const Transformation& finalAnimationTransform,
                             Ease typeAnimation = Ease::EaseLinearNone,
                             bool bForceReset = true);
         void UpdateAnimation();

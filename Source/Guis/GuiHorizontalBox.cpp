@@ -47,7 +47,7 @@ namespace ClassicLauncher
 
         for (auto& guiElement : mGuiElements)
         {
-            Transform& transform = guiElement->mTransform;
+            Transformation& transform = guiElement->mTransform;
             if (mIsAffectScale)
             {
                 scale = transform.GetScale().x;    //transform.rootScaleX * transform.scaleX;

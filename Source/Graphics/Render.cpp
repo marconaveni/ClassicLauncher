@@ -1,8 +1,9 @@
 ﻿#include "Render.h"
 
 #include "Utils/Math.h"
-#include "raylib.h"
-#include "raymath.h"  // Required for: Vector2Clamp()
+#include "rl_wrap.h"
+using namespace rlw;
+
 
 namespace ClassicLauncher
 {
@@ -14,7 +15,7 @@ namespace ClassicLauncher
 
     void Render::RenderValues()
     {
-        const Vector2 mouse = GetMousePosition();
+        const Vector2Classic mouse = GetMousePosition();
         const float screenWidth = static_cast<float>(GetScreenWidth());
         const float screenHeight = static_cast<float>(GetScreenHeight());
         mNewWidth = static_cast<float>(GetWidthRender());
@@ -25,7 +26,7 @@ namespace ClassicLauncher
             mScale = Math::Min<float>(screenWidth / mNewWidth, screenHeight / mNewHeight);
             mVirtualMouse.x = (mouse.x - (screenWidth - (mNewWidth * mScale)) * 0.5f) / mScale;
             mVirtualMouse.y = (mouse.y - (screenHeight - (mNewHeight * mScale)) * 0.5f) / mScale;
-            mVirtualMouse = Vector2Clamp(mVirtualMouse, Vector2{ 0 }, Vector2{ mNewWidth, mNewHeight });
+            mVirtualMouse = Vector2Clamp(mVirtualMouse, Vector2Classic{ 0 }, Vector2Classic{ mNewWidth, mNewHeight });
         }
         else
         {
@@ -49,7 +50,7 @@ namespace ClassicLauncher
     void Render::ClearRender()
     {
         BeginTextureMode(mRenderTexture);
-        ClearBackground(LIGHTGRAY);
+        ClearBackground(C_LIGHTGRAY);
         EndTextureMode();
     }
 
@@ -73,8 +74,8 @@ namespace ClassicLauncher
         const float textureWidth = static_cast<float>(mRenderTexture.texture.width);
         const float textureHeight = static_cast<float>(mRenderTexture.texture.height);
 
-        mSource = Rectangle{ 0.0f, 0.0f, textureWidth, -textureHeight };
-        mDest = Rectangle{ (screenWidth - (mNewWidth * mScale)) * 0.5f, (screenHeight - (mNewHeight * mScale)) * 0.5f, mNewWidth * mScale, mNewHeight * mScale };
+        mSource = RectangleClassic{ 0.0f, 0.0f, textureWidth, -textureHeight };
+        mDest = RectangleClassic{ (screenWidth - (mNewWidth * mScale)) * 0.5f, (screenHeight - (mNewHeight * mScale)) * 0.5f, mNewWidth * mScale, mNewHeight * mScale };
 
         if (IsKeyReleased(KEY_K))
         {
@@ -89,7 +90,7 @@ namespace ClassicLauncher
         }
 
         // Draw render texture to screen, properly scaled
-        DrawTexturePro(*texture, mSource, mDest, Vector2{}, 0.0f, WHITE);
+        DrawTexturePro(*texture, mSource, mDest, Vector2Classic{}, 0.0f, C_WHITE);
     }
 
     void Render::Unload()
@@ -101,14 +102,14 @@ namespace ClassicLauncher
         }
     }
 
-    Vector2 Render::GetRenderScale() const
+    Vector2Classic Render::GetRenderScale() const
     {
         const float scaleWidth = static_cast<float>(GetScreenWidth()) / mWidth;
         const float scaleHeight = static_cast<float>(GetScreenHeight()) / mHeight;
-        return Vector2{ scaleWidth, scaleHeight };
+        return Vector2Classic{ scaleWidth, scaleHeight };
     }
 
-    Vector2 Render::GetMousePositionRender() const
+    Vector2Classic Render::GetMousePositionRender() const
     {
         return mVirtualMouse;
     }

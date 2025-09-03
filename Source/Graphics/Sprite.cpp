@@ -5,6 +5,9 @@
 #include <string>
 #include <thread>
 
+#include "rl_wrap.h"
+using namespace rlw;
+
 namespace ClassicLauncher
 {
 
@@ -85,7 +88,7 @@ namespace ClassicLauncher
     {
         if (!mIsTextureLoaded && mIsImageLoaded)
         {
-            mTexture = ::LoadTextureFromImage(mImage);
+            mTexture = LoadTextureFromImage(mImage);
             mIsTextureLoaded = IsTextureValid(mTexture);
             LOG(LOG_CLASSIC_TRACE, "Texture loaded [ID %d] from Image - \"%s\"", mTexture.id, mFilePath.c_str());
             UnloadImage();

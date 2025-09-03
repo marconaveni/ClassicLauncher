@@ -2,39 +2,41 @@
 #define RECTANGLE_H
 
 #include <string>
-#include "raylib.h"
+#include "rl_wrap.h"
+using namespace rlw;
+#include "Data/Vector2.h"
 
 namespace ClassicLauncher
 {
-    class Rectangle : public ::Rectangle
+    class RectangleClassic : public ::Rectangle
     {
     public:
 
-        Rectangle(const ::Rectangle& rect)
+        RectangleClassic(const ::Rectangle& rect)
             : ::Rectangle{ rect.x, rect.y, rect.width, rect.height } {};
 
-        Rectangle(float x, float y, float width, float height)
+        RectangleClassic(float x, float y, float width, float height)
             : ::Rectangle{ x, y, width, height } {};
 
-        Rectangle(float x, float y, float width)
+        RectangleClassic(float x, float y, float width)
             : ::Rectangle{ x, y, width, 0 } {};
 
-        Rectangle(float x, float y)
+        RectangleClassic(float x, float y)
             : ::Rectangle{ x, y, 0, 0 } {};
 
-        Rectangle(float x)
+        RectangleClassic(float x)
             : ::Rectangle{ x, 0, 0, 0 } {};
 
-        Rectangle()
+        RectangleClassic()
             : ::Rectangle{ 0, 0, 0, 0 } {};
 
-        Rectangle(::Vector2 position, ::Vector2 size)
+        RectangleClassic(::Vector2 position, ::Vector2 size)
             : ::Rectangle{ position.x, position.y, size.x, size.y } {};
 
-        Rectangle(::Vector2 size)
+        RectangleClassic(::Vector2 size)
             : ::Rectangle{ 0, 0, size.x, size.y } {};
 
-        Rectangle(::Vector4 rect)
+        RectangleClassic(::Vector4 rect)
             : ::Rectangle{ rect.x, rect.y, rect.z, rect.w } {};
             
         void SetX(float x) { this->x = x; }
@@ -42,7 +44,7 @@ namespace ClassicLauncher
         void SetWidth(float width) { this->width = width; }
         void SetHeight(float height) { this->height = height; }
 
-        Rectangle& operator=(const ::Rectangle& rect)
+        RectangleClassic& operator=(const ::Rectangle& rect)
         {
             Set(rect);
             return *this;
@@ -92,7 +94,7 @@ namespace ClassicLauncher
         int GetIntY() const { return static_cast<int>(y); }
         int GetIntWidth() const { return static_cast<int>(width); }
         int GetIntHeight() const { return static_cast<int>(height); }
-        Vector2 GetPosition() const { return { x, y }; }
+        Vector2Classic GetPosition() const { return { x, y }; }
     };
 
 }  // namespace ClassicLauncher

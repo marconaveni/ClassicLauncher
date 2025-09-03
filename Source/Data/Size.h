@@ -3,7 +3,8 @@
 
 #include <string>
 #include "Vector2.h"
-#include "raylib.h"
+#include "rl_wrap.h"
+using namespace rlw;
 
 namespace ClassicLauncher
 {
@@ -48,7 +49,7 @@ namespace ClassicLauncher
         int GetIntWidth() const { return static_cast<int>(width); }
         int GetIntHeight() const { return static_cast<int>(height); }
 
-        Vector2 ToVector() { return Vector2(width, height); }
+        Vector2Classic ToVector() { return Vector2Classic(width, height); }
     };
 
 }  // namespace ClassicLauncher

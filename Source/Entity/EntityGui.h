@@ -33,11 +33,11 @@ namespace ClassicLauncher
 
         void StartAnimation(const std::string& name,
                             float durationAnimation,
-                            const Transform& startAnimationTransform,
-                            const Transform& finalAnimationTransform,
+                            const Transformation& startAnimationTransform,
+                            const Transformation& finalAnimationTransform,
                             Ease typeAnimation = Ease::EaseLinearNone,
                             bool bForceReset = true);
-        void AddAnimationFrame(const std::string& name, const float timeAnimation, const std::vector<Rectangle>& spriteIndices);
+        void AddAnimationFrame(const std::string& name, const float timeAnimation, const std::vector<RectangleClassic>& spriteIndices);
     };
 
 }  // namespace ClassicLauncher
