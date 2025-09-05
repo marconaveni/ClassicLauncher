@@ -21,7 +21,7 @@ namespace ClassicLauncher
 
     bool IsModifierKey()
     {
-        return IsKeyDown(KEY_LEFT_ALT) || IsKeyDown(KEY_RIGHT_ALT) || IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL);
+        return rlw::IsKeyDown(rlw::KEY_LEFT_ALT) || rlw::IsKeyDown(rlw::KEY_RIGHT_ALT) || rlw::IsKeyDown(rlw::KEY_LEFT_CONTROL) || rlw::IsKeyDown(rlw::KEY_RIGHT_CONTROL);
     }
 
     void InputManager::UpdateInputState()
@@ -37,16 +37,16 @@ namespace ClassicLauncher
             const float maxAmount = 0.4f;
             const int key = input.keyPad;
             const int gamePad = input.gamePad;
-            input.bPress = (IsKeyPressed(key) || IsGamepadButtonPressed(mGamePadIdSelected, gamePad)) && !bKeyModifier && !mDisableInput;
-            input.bDown = (IsKeyDown(key) || IsGamepadButtonDown(mGamePadIdSelected, gamePad)) && !bKeyModifier && !mDisableInput;
-            input.bRelease = (IsKeyReleased(key) || IsGamepadButtonReleased(mGamePadIdSelected, gamePad)) && !bKeyModifier && !mDisableInput;
-            input.bUp = (IsKeyUp(key) || IsGamepadButtonUp(mGamePadIdSelected, gamePad)) && !bKeyModifier && !mDisableInput;
+            input.bPress = (rlw::IsKeyPressed(key) || rlw::IsGamepadButtonPressed(mGamePadIdSelected, gamePad)) && !bKeyModifier && !mDisableInput;
+            input.bDown = (rlw::IsKeyDown(key) || rlw::IsGamepadButtonDown(mGamePadIdSelected, gamePad)) && !bKeyModifier && !mDisableInput;
+            input.bRelease = (rlw::IsKeyReleased(key) || rlw::IsGamepadButtonReleased(mGamePadIdSelected, gamePad)) && !bKeyModifier && !mDisableInput;
+            input.bUp = (rlw::IsKeyUp(key) || rlw::IsGamepadButtonUp(mGamePadIdSelected, gamePad)) && !bKeyModifier && !mDisableInput;
             const bool bDown = input.bDown;
 
             if (input.bDown)
             {
                 input.bDown = (input.amoutDown == 0 || input.amoutDown >= maxAmount);
-                input.amoutDown += GetFrameTime();
+                input.amoutDown += rlw::GetFrameTime();
             }
             else
             {

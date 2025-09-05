@@ -7,7 +7,7 @@
 #include "Data/Color.h"
 
 #include "rl_wrap.h"
-using namespace rlw;
+
 
 namespace ClassicLauncher
 {
@@ -55,7 +55,7 @@ namespace ClassicLauncher
         void InternalPrintOnScreen(const std::string& text, float duration, const std::string& label, const ColorClassic& textColor, bool bLog, int sizeY);
         int mSize;
         float mSpacing;
-        Font mFont;
+        rlw::Font mFont;
         std::vector<Message> mMessages;
     };
 

@@ -7,7 +7,6 @@
 #include <thread>
 #include <vector>
 #include "rl_wrap.h"
-using namespace rlw;
 
 namespace ClassicLauncher
 {
@@ -21,7 +20,7 @@ namespace ClassicLauncher
 
     struct AudioMusic
     {
-        Music music;
+        rlw::Music music;
         std::string name;
     };
 
@@ -35,8 +34,8 @@ namespace ClassicLauncher
         std::atomic<bool> mIsPlayClick;              // Sinalize thread to play mClickSound
         std::atomic<bool> mIsPlayCursor;             // Sinalize thread to play mCursorSound
         std::atomic<StatusAudioMusic> mStatusAudio;  // Status Current Audio Music
-        Sound mClickSound;                           // Struct Sound
-        Sound mCursorSound;                          // Struct Sound
+        rlw::Sound mClickSound;                           // Struct Sound
+        rlw::Sound mCursorSound;                          // Struct Sound
         std::vector<AudioMusic> mAudioMusics;        // Array Struct Audio musics
         int mIdAudioMusic;                           // id music
 
@@ -61,7 +60,7 @@ namespace ClassicLauncher
     private:
 
         void LoadMusic(const std::string& path);
-        void Stream(const Music& music);
+        void Stream(const rlw::Music& music);
         void Update();
         int GenerateId();
 

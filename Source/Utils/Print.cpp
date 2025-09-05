@@ -16,9 +16,9 @@ namespace ClassicLauncher
     {
 #ifdef _DEBUG
 
-        if (!IsFontValid(mFont))
+        if (!rlw::IsFontValid(mFont))
         {
-            mFont = GetFontDefault();
+            mFont = rlw::GetFontDefault();
         }
 
         bool bFound = false;

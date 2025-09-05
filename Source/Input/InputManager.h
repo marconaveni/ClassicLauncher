@@ -2,7 +2,7 @@
 #define INPUT_MANAGER_H
 
 #include "rl_wrap.h"
-using namespace rlw;
+
 
 namespace ClassicLauncher
 {
@@ -80,24 +80,24 @@ namespace ClassicLauncher
 
         // clang-format off
         InputMapper mInputs[18]{ 
-            InputMapper(unknown, 0, KEY_NULL), 
-            InputMapper(leftFaceUp, 1, KEY_UP), 
-            InputMapper(leftFaceRight, 2, KEY_RIGHT), 
-            InputMapper(leftFaceDown, 3, KEY_DOWN), 
-            InputMapper(leftFaceLeft, 4, KEY_LEFT), 
-            InputMapper(rightFaceUp, 5, KEY_F), 
-            InputMapper(rightFaceRight, 6, KEY_BACKSPACE), 
-            InputMapper(rightFaceDown, 7, KEY_ENTER), 
-            InputMapper(rightFaceLeft, 8, KEY_A), 
-            InputMapper(leftTriggerFront, 9, KEY_Q), 
-            InputMapper(leftTriggerBack, 10, KEY_Z), 
-            InputMapper(rightTriggerFront, 11, KEY_E), 
-            InputMapper(rightTriggerBack, 12, KEY_C), 
-            InputMapper(middleFaceLeft, 13, KEY_ESCAPE), 
-            InputMapper(middleFaceCenter, 14, KEY_F1), 
-            InputMapper(middleFaceRight, 15, KEY_S), 
-            InputMapper(leftThumb, 16, KEY_N), 
-            InputMapper(rightThumb, 17, KEY_M) 
+            InputMapper(unknown, 0, rlw::KEY_NULL), 
+            InputMapper(leftFaceUp, 1, rlw::KEY_UP), 
+            InputMapper(leftFaceRight, 2, rlw::KEY_RIGHT), 
+            InputMapper(leftFaceDown, 3, rlw::KEY_DOWN), 
+            InputMapper(leftFaceLeft, 4, rlw::KEY_LEFT), 
+            InputMapper(rightFaceUp, 5, rlw::KEY_F), 
+            InputMapper(rightFaceRight, 6, rlw::KEY_BACKSPACE), 
+            InputMapper(rightFaceDown, 7, rlw::KEY_ENTER), 
+            InputMapper(rightFaceLeft, 8, rlw::KEY_A), 
+            InputMapper(leftTriggerFront, 9, rlw::KEY_Q), 
+            InputMapper(leftTriggerBack, 10, rlw::KEY_Z), 
+            InputMapper(rightTriggerFront, 11, rlw::KEY_E), 
+            InputMapper(rightTriggerBack, 12, rlw::KEY_C), 
+            InputMapper(middleFaceLeft, 13, rlw::KEY_ESCAPE), 
+            InputMapper(middleFaceCenter, 14, rlw::KEY_F1), 
+            InputMapper(middleFaceRight, 15, rlw::KEY_S), 
+            InputMapper(leftThumb, 16, rlw::KEY_N), 
+            InputMapper(rightThumb, 17, rlw::KEY_M) 
             };
         // clang-format on
 

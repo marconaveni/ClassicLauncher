@@ -54,28 +54,28 @@ namespace ClassicLauncher
         }
     }
 
-    void UtilsFunctionLibrary::ImageResize(Image& image, const int newWidth, const int newHeight)
+    void UtilsFunctionLibrary::ImageResize(rlw::Image& image, const int newWidth, const int newHeight)
     {
         Vector2Classic newSize{ static_cast<float>(image.width), static_cast<float>(image.height) };
         SetSizeWithProportion(newSize, newWidth, newHeight);
-        ::ImageResize(&image, static_cast<int>(newSize.x), static_cast<int>(newSize.y));
+        rlw::ImageResize(&image, static_cast<int>(newSize.x), static_cast<int>(newSize.y));
     }
 
-    void UtilsFunctionLibrary::ImageResizeNN(Image& image, const int newWidth, const int newHeight)
+    void UtilsFunctionLibrary::ImageResizeNN(rlw::Image& image, const int newWidth, const int newHeight)
     {
         Vector2Classic newSize{ static_cast<float>(image.width), static_cast<float>(image.height) };
         SetSizeWithProportion(newSize, newWidth, newHeight);
-        ::ImageResizeNN(&image, static_cast<int>(newSize.x), static_cast<int>(newSize.y));
+        rlw::ImageResizeNN(&image, static_cast<int>(newSize.x), static_cast<int>(newSize.y));
     }
 
-    Texture2D UtilsFunctionLibrary::LoadTexture(const std::string& path, int width, int height)
+    rlw::Texture2D UtilsFunctionLibrary::LoadTexture(const std::string& path, int width, int height)
     {
-        Image img = LoadImage(path.c_str());
+        rlw::Image img = rlw::LoadImage(path.c_str());
         width = (width > 0) ? width : img.width;
         height = (height > 0) ? height : img.height;
-        ::ImageResize(&img, width, height);
-        const Texture2D texture = LoadTextureFromImage(img);
-        UnloadImage(img);
+        rlw::ImageResize(&img, width, height);
+        const rlw::Texture2D texture = rlw::LoadTextureFromImage(img);
+        rlw::UnloadImage(img);
         return texture;
     }
 
@@ -92,15 +92,15 @@ namespace ClassicLauncher
         return index;
     }
 
-    void UtilsFunctionLibrary::UnloadClearTexture(Texture2D& texture)
+    void UtilsFunctionLibrary::UnloadClearTexture(rlw::Texture2D& texture)
     {
-        UnloadTexture(texture);
-        texture = Texture2D();
+        rlw::UnloadTexture(texture);
+        texture = rlw::Texture2D();
     }
 
     std::string UtilsFunctionLibrary::GetWorkingDirectory()
     {
-        std::string newDir = ::GetWorkingDirectory();
+        std::string newDir = rlw::GetWorkingDirectory();
         newDir += "/";
         return StringFunctionLibrary::NormalizePath(newDir);
     }
@@ -119,7 +119,7 @@ namespace ClassicLauncher
 
     bool UtilsFunctionLibrary::ChangeDirectory(const std::string& path)
     {
-        return ::ChangeDirectory(path.c_str());
+        return rlw::ChangeDirectory(path.c_str());
     }
 
     int UtilsFunctionLibrary::CountChars(const std::string& text, const char compareChar)

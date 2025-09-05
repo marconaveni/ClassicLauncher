@@ -6,14 +6,13 @@
 #include "Data/Vector2.h"
 
 #include "rl_wrap.h"
-using namespace rlw;
 
 namespace ClassicLauncher
 {
 
     class Render
     {
-        RenderTexture mRenderTexture;
+        rlw::RenderTexture mRenderTexture;
         RectangleClassic mSource;
         RectangleClassic mDest;
         float mWidth;

@@ -5,7 +5,7 @@
 
 #include "Data/Vector2.h"
 #include "rl_wrap.h"
-using namespace rlw;
+
 
 
 namespace ClassicLauncher::UtilsFunctionLibrary
@@ -14,11 +14,11 @@ namespace ClassicLauncher::UtilsFunctionLibrary
     void SetSizeWithProportionFit(Vector2Classic& texture, const int widthResize, const int heightResize);
     void SetSizeWithProportionFill(Vector2Classic& texture, const int widthResize, const int heightResize);
     void SetSizeWithProportion(Vector2Classic& texture, const int widthResize, const int heightResize, bool bFill = false);
-    void ImageResize(Image& image, const int newWidth, const int newHeight);
-    void ImageResizeNN(Image& image, const int newWidth, const int newHeight);
-    Texture2D LoadTexture(const std::string& path, int width = 0, int height = 0);
+    void ImageResize(rlw::Image& image, const int newWidth, const int newHeight);
+    void ImageResizeNN(rlw::Image& image, const int newWidth, const int newHeight);
+    rlw::Texture2D LoadTexture(const std::string& path, int width = 0, int height = 0);
     int SetIndexArray(const int index, const int maxArrayLength);
-    void UnloadClearTexture(Texture2D& texture);
+    void UnloadClearTexture(rlw::Texture2D& texture);
     std::string GetWorkingDirectory();
     std::string GetHomeDir();
     bool ChangeDirectory(const std::string& path);

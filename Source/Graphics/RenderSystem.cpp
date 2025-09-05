@@ -2,7 +2,6 @@
 #include "Application.h"
 #include "Core.h" 
 #include "rl_wrap.h"
-using namespace rlw;
 
 namespace ClassicLauncher
 {
@@ -20,7 +19,7 @@ namespace ClassicLauncher
     {
 #ifdef _DEBUG
 
-        if (IsKeyReleased(KEY_FIVE))
+        if (rlw::IsKeyReleased(rlw::KEY_FIVE))
         {
             bEnable = !bEnable;
         }
@@ -70,7 +69,7 @@ namespace ClassicLauncher
         const Vector2Classic vec = Application::Get().GetRender()->GetMousePositionRender();
         if (CheckCollisionPointRec(vec, RectangleDrawArea) && bEnable)
         {
-            ::DrawRectangleLinesEx(RectangleDrawArea, 2, ColorClassic::Red());
+            rlw::DrawRectangleLinesEx(RectangleDrawArea, 2, ColorClassic::Red());
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
             {
                 PRINT(TEXT("nameID: %s", entity->mNameId.c_str()), 5.0f);
@@ -78,7 +77,7 @@ namespace ClassicLauncher
         }
         else if (bEnable)
         {
-            ::DrawRectangleLinesEx(RectangleDrawArea, 1, ColorClassic::Cyan());
+            rlw::DrawRectangleLinesEx(RectangleDrawArea, 1, ColorClassic::Cyan());
         }
         if (entity->mScissorMode && bEnable)
         {
@@ -93,7 +92,7 @@ namespace ClassicLauncher
 
     bool RenderSystem::CheckRender(const RectangleClassic& rec)
     {
-        return ::CheckCollisionRecs(RectangleClassic(0, 0, 1280, 720), rec);
+        return rlw::CheckCollisionRecs(RectangleClassic(0, 0, 1280, 720), rec);
     }
 
 }  // namespace ClassicLauncher

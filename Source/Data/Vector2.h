@@ -3,19 +3,19 @@
 
 #include <string>
 #include "rl_wrap.h"
-using namespace rlw;
+
 
 namespace ClassicLauncher
 {
-    class Vector2Classic : public ::Vector2
+    class Vector2Classic : public rlw::Vector2
     {
     public:
 
-        Vector2Classic(const ::Vector2& vec)
-            : ::Vector2{ vec.x, vec.y } {};
+        Vector2Classic(const rlw::Vector2& vec)
+            : rlw::Vector2{ vec.x, vec.y } {};
 
         Vector2Classic(float x, float y)
-            : ::Vector2{ x, y } {};
+            : rlw::Vector2{ x, y } {};
 
         Vector2Classic(float x)
             : Vector2Classic{ x, 0 } {};
@@ -23,14 +23,14 @@ namespace ClassicLauncher
         Vector2Classic()
             : Vector2Classic{ 0, 0 } {};
 
-        Vector2Classic& operator=(const ::Vector2& vector)
+        Vector2Classic& operator=(const rlw::Vector2& vector)
         {
             Set(vector);
             return *this;
         }
 
-        bool operator==(const ::Vector2& other) const { return x == other.x && y == other.y; }
-        bool operator!=(const ::Vector2& other) const { return !(*this == other); }
+        bool operator==(const rlw::Vector2& other) const { return x == other.x && y == other.y; }
+        bool operator!=(const rlw::Vector2& other) const { return !(*this == other); }
 
         void SetX(float x) { this->x = x; }
         void SetY(float y) { this->y = y; }
@@ -41,7 +41,7 @@ namespace ClassicLauncher
             this->y = y;
         }
 
-        void Set(const ::Vector2& vec)
+        void Set(const rlw::Vector2& vec)
         {
             x = vec.x;
             y = vec.y;

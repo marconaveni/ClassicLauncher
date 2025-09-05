@@ -2,8 +2,8 @@
 #define CORE_H
 
 
-#define TEXT(...) TextFormat(__VA_ARGS__)
-#define TEXTBOOL(a) TextFormat("%s", (a) == true ? "true" : "false")
+#define TEXT(...) rlw::TextFormat(__VA_ARGS__)
+#define TEXTBOOL(a) rlw::TextFormat("%s", (a) == true ? "true" : "false")
 
 #ifdef _DEBUG
 /* const char* text,

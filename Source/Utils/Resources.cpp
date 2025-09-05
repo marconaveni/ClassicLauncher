@@ -3,7 +3,7 @@
 #include "Utils/UtilsFunctionLibrary.h"
 #include "Core.h"   //aqui fica
 #include "rl_wrap.h"
-using namespace rlw;
+
 
 namespace ClassicLauncher::Resources
 {
@@ -13,7 +13,7 @@ namespace ClassicLauncher::Resources
     std::string GetResourcesPathFileAbs(const std::string& relativePath)
     {
         std::string path;
-        path.append(::GetApplicationDirectory());
+        path.append(rlw::GetApplicationDirectory());
         path.append(relativePath);
         path = StringFunctionLibrary::NormalizePath(path);
         return path;
@@ -67,7 +67,7 @@ namespace ClassicLauncher::Resources
     {
 #if WIN32
         std::string path = GetResourcesPathFileAbs("portable.txt");  // portable mode is avaliable only windows system
-        if (FileExists(path.c_str()))
+        if (rlw::FileExists(path.c_str()))
         {
             sClassicLauncherPath = GetResourcesPathFileAbs(".ClassicLauncher/");
         }
@@ -76,9 +76,9 @@ namespace ClassicLauncher::Resources
         {
             sClassicLauncherPath = UtilsFunctionLibrary::GetHomeDir() + ".ClassicLauncher/";
             sClassicLauncherPath = StringFunctionLibrary::NormalizePath(sClassicLauncherPath);
-            if (!DirectoryExists(sClassicLauncherPath.c_str()))
+            if (!rlw::DirectoryExists(sClassicLauncherPath.c_str()))
             {
-                MakeDirectory(sClassicLauncherPath.c_str());
+                rlw::MakeDirectory(sClassicLauncherPath.c_str());
             }
         }
     }

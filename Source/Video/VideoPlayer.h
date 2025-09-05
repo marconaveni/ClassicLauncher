@@ -7,7 +7,7 @@
 #include "Data/Vector2.h"
 
 #include "rl_wrap.h"
-using namespace rlw;
+
 
 namespace ClassicLauncher
 {
@@ -15,7 +15,7 @@ namespace ClassicLauncher
 
     struct VideoContext
     {
-        Image image[2];        // Imagem que será atualizada
+        rlw::Image image[2];        // Imagem que será atualizada
         std::mutex frameMutex[2];
         bool frameLock[2];
 	    int	frameId;
@@ -23,8 +23,8 @@ namespace ClassicLauncher
 
         VideoContext()
         {
-            image[0] = Image();
-            image[1] = Image();
+            image[0] = rlw::Image();
+            image[1] = rlw::Image();
             frameLock[0] = false;
             frameLock[1] = false;
             frameId = 0;
@@ -43,7 +43,7 @@ namespace ClassicLauncher
         int mHeightVideo = 1;
 
         VideoContext mContext;
-        Texture2D texture;  // Textura da imagem para renderizar na tela
+        rlw::Texture2D texture;  // Textura da imagem para renderizar na tela
         bool bIsEnabledVlC;
         unsigned int mWidth;
         unsigned int mHeight;
@@ -64,7 +64,7 @@ namespace ClassicLauncher
         void Stop();
         void Update();
         void Unload();
-        Texture2D* GetVideoTexture();
+        rlw::Texture2D* GetVideoTexture();
         Vector2Classic GetVideoSize();
         bool IsVideoFinished();
         bool IsVideoPlaying();

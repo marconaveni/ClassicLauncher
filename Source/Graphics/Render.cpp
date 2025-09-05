@@ -3,7 +3,7 @@
 #include "Utils/Math.h"
 #include "Themes/Themes.h"
 #include "rl_wrap.h"
-using namespace rlw;
+
 
 
 namespace ClassicLauncher
@@ -16,9 +16,9 @@ namespace ClassicLauncher
 
     void Render::RenderValues()
     {
-        const Vector2Classic mouse = GetMousePosition();
-        const float screenWidth = static_cast<float>(GetScreenWidth());
-        const float screenHeight = static_cast<float>(GetScreenHeight());
+        const Vector2Classic mouse = rlw::GetMousePosition();
+        const float screenWidth = static_cast<float>(rlw::GetScreenWidth());
+        const float screenHeight = static_cast<float>(rlw::GetScreenHeight());
         mNewWidth = static_cast<float>(GetWidthRender());
         mNewHeight = static_cast<float>(GetHeightRender());
 
@@ -27,7 +27,7 @@ namespace ClassicLauncher
             mScale = Math::Min<float>(screenWidth / mNewWidth, screenHeight / mNewHeight);
             mVirtualMouse.x = (mouse.x - (screenWidth - (mNewWidth * mScale)) * 0.5f) / mScale;
             mVirtualMouse.y = (mouse.y - (screenHeight - (mNewHeight * mScale)) * 0.5f) / mScale;
-            mVirtualMouse = Vector2Clamp(mVirtualMouse, Vector2Classic{ 0 }, Vector2Classic{ mNewWidth, mNewHeight });
+            mVirtualMouse = rlw::Vector2Clamp(mVirtualMouse, Vector2Classic{ 0 }, Vector2Classic{ mNewWidth, mNewHeight });
         }
         else
         {
@@ -43,70 +43,70 @@ namespace ClassicLauncher
         mWidth = screenWidth * scale;
         mHeight = screenHeight * scale;
 
-        mRenderTexture = LoadRenderTexture(mWidth, mHeight);
-        SetTextureFilter(mRenderTexture.texture, TEXTURE_FILTER_BILINEAR);
-        SetTextureFilter(mRenderTexture.depth, TEXTURE_FILTER_BILINEAR);
+        mRenderTexture = rlw::LoadRenderTexture(mWidth, mHeight);
+        rlw::SetTextureFilter(mRenderTexture.texture, rlw::TEXTURE_FILTER_BILINEAR);
+        rlw::SetTextureFilter(mRenderTexture.depth, rlw::TEXTURE_FILTER_BILINEAR);
     }
 
     void Render::ClearRender()
     {
-        BeginTextureMode(mRenderTexture);
-        ClearBackground(C_LIGHTGRAY);
-        EndTextureMode();
+        rlw::BeginTextureMode(mRenderTexture);
+        rlw::ClearBackground(rlw::C_LIGHTGRAY);
+        rlw::EndTextureMode();
     }
 
     void Render::BeginRender()
     {
         RenderValues();
-        BeginTextureMode(mRenderTexture);
+        rlw::BeginTextureMode(mRenderTexture);
     }
 
     void Render::EndRender()
     {
-        EndTextureMode();
+        rlw::EndTextureMode();
     }
 
     void Render::DrawRender()
     {
-        Texture* texture = &mRenderTexture.texture;
+        rlw::Texture* texture = &mRenderTexture.texture;
 
-        const float screenWidth = static_cast<float>(GetScreenWidth());
-        const float screenHeight = static_cast<float>(GetScreenHeight());
+        const float screenWidth = static_cast<float>(rlw::GetScreenWidth());
+        const float screenHeight = static_cast<float>(rlw::GetScreenHeight());
         const float textureWidth = static_cast<float>(mRenderTexture.texture.width);
         const float textureHeight = static_cast<float>(mRenderTexture.texture.height);
 
         mSource = RectangleClassic{ 0.0f, 0.0f, textureWidth, -textureHeight };
         mDest = RectangleClassic{ (screenWidth - (mNewWidth * mScale)) * 0.5f, (screenHeight - (mNewHeight * mScale)) * 0.5f, mNewWidth * mScale, mNewHeight * mScale };
 
-        if (IsKeyReleased(KEY_K))
+        if (rlw::IsKeyReleased(rlw::KEY_K))
         {
-            SetTextureFilter(*texture, TEXTURE_FILTER_POINT);
-            SetTextureFilter(mRenderTexture.depth, TEXTURE_FILTER_POINT);
+            rlw::SetTextureFilter(*texture, rlw::TEXTURE_FILTER_POINT);
+            rlw::SetTextureFilter(mRenderTexture.depth, rlw::TEXTURE_FILTER_POINT);
 
         }
-        if (IsKeyReleased(KEY_J))
+        if (rlw::IsKeyReleased(rlw::KEY_J))
         {
-            SetTextureFilter(*texture, TEXTURE_FILTER_BILINEAR);
-            SetTextureFilter(mRenderTexture.depth, TEXTURE_FILTER_BILINEAR);
+            rlw::SetTextureFilter(*texture, rlw::TEXTURE_FILTER_BILINEAR);
+            rlw::SetTextureFilter(mRenderTexture.depth, rlw::TEXTURE_FILTER_BILINEAR);
         }
 
         // Draw render texture to screen, properly scaled
-        DrawTexturePro(*texture, mSource, mDest, Vector2Classic{}, 0.0f, C_WHITE);
+        rlw::DrawTexturePro(*texture, mSource, mDest, Vector2Classic{}, 0.0f, rlw::C_WHITE);
     }
 
     void Render::Unload()
     {
-        if (IsRenderTextureValid(mRenderTexture))
+        if (rlw::IsRenderTextureValid(mRenderTexture))
         {
-            UnloadRenderTexture(mRenderTexture);
-            mRenderTexture = RenderTexture{};
+            rlw::UnloadRenderTexture(mRenderTexture);
+            mRenderTexture = rlw::RenderTexture{};
         }
     }
 
     Vector2Classic Render::GetRenderScale() const
     {
-        const float scaleWidth = static_cast<float>(GetScreenWidth()) / mWidth;
-        const float scaleHeight = static_cast<float>(GetScreenHeight()) / mHeight;
+        const float scaleWidth = static_cast<float>(rlw::GetScreenWidth()) / mWidth;
+        const float scaleHeight = static_cast<float>(rlw::GetScreenHeight()) / mHeight;
         return Vector2Classic{ scaleWidth, scaleHeight };
     }
 
@@ -117,12 +117,12 @@ namespace ClassicLauncher
 
     int Render::GetWidthRender() const
     {
-        return (mIsMaintainAspectRatio) ? static_cast<int>(mWidth) : GetScreenWidth();
+        return (mIsMaintainAspectRatio) ? static_cast<int>(mWidth) : rlw::GetScreenWidth();
     }
 
     int Render::GetHeightRender() const
     {
-        return (mIsMaintainAspectRatio) ? static_cast<int>(mHeight) : GetScreenHeight();
+        return (mIsMaintainAspectRatio) ? static_cast<int>(mHeight) : rlw::GetScreenHeight();
     }
 
 }  // namespace ClassicLauncher

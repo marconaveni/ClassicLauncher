@@ -3,54 +3,53 @@
 
 #include <string>
 #include "rl_wrap.h"
-using namespace rlw;
 #include "Data/Vector2.h"
 
 namespace ClassicLauncher
 {
-    class RectangleClassic : public ::Rectangle
+    class RectangleClassic : public rlw::Rectangle
     {
     public:
 
-        RectangleClassic(const ::Rectangle& rect)
-            : ::Rectangle{ rect.x, rect.y, rect.width, rect.height } {};
+        RectangleClassic(const rlw::Rectangle& rect)
+            : rlw::Rectangle{ rect.x, rect.y, rect.width, rect.height } {};
 
         RectangleClassic(float x, float y, float width, float height)
-            : ::Rectangle{ x, y, width, height } {};
+            : rlw::Rectangle{ x, y, width, height } {};
 
         RectangleClassic(float x, float y, float width)
-            : ::Rectangle{ x, y, width, 0 } {};
+            : rlw::Rectangle{ x, y, width, 0 } {};
 
         RectangleClassic(float x, float y)
-            : ::Rectangle{ x, y, 0, 0 } {};
+            : rlw::Rectangle{ x, y, 0, 0 } {};
 
         RectangleClassic(float x)
-            : ::Rectangle{ x, 0, 0, 0 } {};
+            : rlw::Rectangle{ x, 0, 0, 0 } {};
 
         RectangleClassic()
-            : ::Rectangle{ 0, 0, 0, 0 } {};
+            : rlw::Rectangle{ 0, 0, 0, 0 } {};
 
-        RectangleClassic(::Vector2 position, ::Vector2 size)
-            : ::Rectangle{ position.x, position.y, size.x, size.y } {};
+        RectangleClassic(rlw::Vector2 position, rlw::Vector2 size)
+            : rlw::Rectangle{ position.x, position.y, size.x, size.y } {};
 
-        RectangleClassic(::Vector2 size)
-            : ::Rectangle{ 0, 0, size.x, size.y } {};
+        RectangleClassic(rlw::Vector2 size)
+            : rlw::Rectangle{ 0, 0, size.x, size.y } {};
 
-        RectangleClassic(::Vector4 rect)
-            : ::Rectangle{ rect.x, rect.y, rect.z, rect.w } {};
+        RectangleClassic(rlw::Vector4 rect)
+            : rlw::Rectangle{ rect.x, rect.y, rect.z, rect.w } {};
             
         void SetX(float x) { this->x = x; }
         void SetY(float y) { this->y = y; }
         void SetWidth(float width) { this->width = width; }
         void SetHeight(float height) { this->height = height; }
 
-        RectangleClassic& operator=(const ::Rectangle& rect)
+        RectangleClassic& operator=(const rlw::Rectangle& rect)
         {
             Set(rect);
             return *this;
         }
 
-        void Set(::Rectangle rect)
+        void Set(rlw::Rectangle rect)
         {
             this->x = rect.x;
             this->y = rect.y;
@@ -70,7 +69,7 @@ namespace ClassicLauncher
             this->x = x;
             this->y = y;
         }
-        void SetPosition(const ::Vector2& vec)
+        void SetPosition(const rlw::Vector2& vec)
         {
             this->x = vec.x;
             this->y = vec.y;
@@ -80,7 +79,7 @@ namespace ClassicLauncher
             this->width = width;
             this->height = height;
         }
-        void SetSize(const ::Vector2& vec)
+        void SetSize(const rlw::Vector2& vec)
         {
             this->width = vec.x;
             this->height = vec.y;

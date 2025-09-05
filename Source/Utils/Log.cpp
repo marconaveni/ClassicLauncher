@@ -2,7 +2,6 @@
 #include <iostream>
 #include <string>
 #include "rl_wrap.h"
-using namespace rlw;
 
 namespace ClassicLauncher
 {
@@ -13,7 +12,7 @@ namespace ClassicLauncher
     {
 #ifdef _DEBUG
         sLogClassicLevel = classicLogType;
-        SetTraceLogLevel(raylibLogType);
+        rlw::SetTraceLogLevel(raylibLogType);
 #else
         sLogClassicLevel = 12;
         SetTraceLogLevel(5);
@@ -28,22 +27,22 @@ namespace ClassicLauncher
 
         switch (messageType)
         {
-            case LOG_TRACE:
+            case rlw::LOG_TRACE:
                 textFinal.append("\x1b[36m[RAYLIB TRACE] ");
                 break;
-            case LOG_DEBUG:
+            case rlw::LOG_DEBUG:
                 textFinal.append("\x1b[34m[RAYLIB DEBUG] ");
                 break;
-            case LOG_INFO:
+            case rlw::LOG_INFO:
                 textFinal.append("\x1b[37m[RAYLIB INFO] ");
                 break;
-            case LOG_WARNING:
+            case rlw::LOG_WARNING:
                 textFinal.append("\x1B[33m[RAYLIB WARNING] ");
                 break;
-            case LOG_ERROR:
+            case rlw::LOG_ERROR:
                 textFinal.append("\x1B[31m[RAYLIB ERROR] ");
                 break;
-            case LOG_FATAL:
+            case rlw::LOG_FATAL:
                 textFinal.append("\x1B[41m[RAYLIB FATAL] ");
                 break;
             case LOG_CLASSIC_TRACE:

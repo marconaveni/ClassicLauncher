@@ -23,7 +23,7 @@ namespace ClassicLauncher
     void AudioManager::LoadMusic(const std::string& path)
     {
         AudioMusic audioMusic{};
-        audioMusic.music = LoadMusicStream(path.c_str());
+        audioMusic.music = rlw::LoadMusicStream(path.c_str());
 
         if (!IsMusicValid(audioMusic.music))
         {
@@ -31,13 +31,13 @@ namespace ClassicLauncher
         }
 
         audioMusic.music.looping = false;
-        audioMusic.name = GetFileNameWithoutExt(path.c_str());
+        audioMusic.name = rlw::GetFileNameWithoutExt(path.c_str());
         mAudioMusics.emplace_back(audioMusic);
     }
 
     void AudioManager::LoadMusics(const std::string& path, bool bAutoPlay)
     {
-        FilePathList files = LoadDirectoryFiles(path.c_str());
+        rlw::FilePathList files = rlw::LoadDirectoryFiles(path.c_str());
         for (unsigned int i = 0; i < files.count; i++)
         {
             LoadMusic(files.paths[i]);
@@ -48,22 +48,22 @@ namespace ClassicLauncher
 
     void AudioManager::LoadCursor(const std::string& path)
     {
-        mCursorSound = LoadSound(path.c_str());
+        mCursorSound = rlw::LoadSound(path.c_str());
     }
 
     void AudioManager::LoadCLick(const std::string& path)
     {
-        mClickSound = LoadSound(path.c_str());
+        mClickSound = rlw::LoadSound(path.c_str());
     }
 
     void AudioManager::Play()
     {
         if (!mAudioMusics.empty())
         {
-            Music& currentMusic = mAudioMusics[mIdAudioMusic].music;
+            rlw::Music& currentMusic = mAudioMusics[mIdAudioMusic].music;
             if (mStatusAudio != StatusAudioMusic::Playing)
             {
-                PlayMusicStream(currentMusic);
+                rlw::PlayMusicStream(currentMusic);
                 mStatusAudio = StatusAudioMusic::Playing;
             }
         }
@@ -83,10 +83,10 @@ namespace ClassicLauncher
     {
         if (!mAudioMusics.empty())
         {
-            Music& currentMusic = mAudioMusics[mIdAudioMusic].music;
+            rlw::Music& currentMusic = mAudioMusics[mIdAudioMusic].music;
             if (mStatusAudio == StatusAudioMusic::Playing)
             {
-                PauseMusicStream(currentMusic);
+                rlw::PauseMusicStream(currentMusic);
                 mStatusAudio = StatusAudioMusic::Paused;
             }
         }
@@ -96,9 +96,9 @@ namespace ClassicLauncher
     {
         if (!mAudioMusics.empty())
         {
-            Music& currentMusic = mAudioMusics[mIdAudioMusic].music;
+            rlw::Music& currentMusic = mAudioMusics[mIdAudioMusic].music;
             mStatusAudio = StatusAudioMusic::Stop;
-            StopMusicStream(currentMusic);
+            rlw::StopMusicStream(currentMusic);
         }
     }
 
@@ -117,8 +117,8 @@ namespace ClassicLauncher
         {
             Stop();
             mIdAudioMusic = (mAudioMusics.size() > 1) ? GenerateId() : 0;
-            const Music& currentMusic = mAudioMusics[mIdAudioMusic].music;
-            SeekMusicStream(currentMusic, 0);
+            const rlw::Music& currentMusic = mAudioMusics[mIdAudioMusic].music;
+            rlw::SeekMusicStream(currentMusic, 0);
             if (bAutoPlay)
             {
                 Play();
@@ -137,11 +137,11 @@ namespace ClassicLauncher
         return newId;
     }
 
-    void AudioManager::Stream(const Music& music)
+    void AudioManager::Stream(const rlw::Music& music)
     {
-        if (IsMusicValid(music))
+        if (rlw::IsMusicValid(music))
         {
-            UpdateMusicStream(music);
+            rlw::UpdateMusicStream(music);
         }
     }
 
@@ -153,9 +153,9 @@ namespace ClassicLauncher
 
             if (!mAudioMusics.empty() && mStatusAudio == StatusAudioMusic::Playing)
             {
-                Music& currentMusic = mAudioMusics[mIdAudioMusic].music;
+                rlw::Music& currentMusic = mAudioMusics[mIdAudioMusic].music;
                 Stream(currentMusic);
-                if (GetMusicTimeLength(currentMusic) - 1 < GetMusicTimePlayed(currentMusic))
+                if (rlw::GetMusicTimeLength(currentMusic) - 1 < rlw::GetMusicTimePlayed(currentMusic))
                 {
                     ChangeMusic();
                 }

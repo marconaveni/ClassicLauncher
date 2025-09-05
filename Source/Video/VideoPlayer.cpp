@@ -150,11 +150,11 @@ namespace ClassicLauncher
         //                       1,
         //                       PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 };
 
-        mContext.image[0] = MakeImage(MemAlloc(mWidthVideo * mHeightVideo * 4), mWidthVideo, mHeightVideo, 1, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
+        mContext.image[0] = rlw::MakeImage(rlw::MemAlloc(mWidthVideo * mHeightVideo * 4), mWidthVideo, mHeightVideo, 1, rlw::PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
         
         mContext.image[1] = ImageCopy(mContext.image[0]);
 
-        texture = LoadTextureFromImage(mContext.image[0]);
+        texture = rlw::LoadTextureFromImage(mContext.image[0]);
 
         libvlc_video_set_format(mMediaPlayer, "RGBA", mWidthVideo, mHeightVideo, mWidthVideo * 4);
         libvlc_video_set_callbacks(mMediaPlayer, lock, unlock, display, &mContext);
@@ -201,7 +201,7 @@ namespace ClassicLauncher
         if (mContext.frameLock[frame])
         {
             mContext.frameMutex[frame].lock();
-            UpdateTexture(texture, mContext.image[frame].data);
+            rlw::UpdateTexture(texture, mContext.image[frame].data);
             mContext.frameLock[frame] = false;
             LOG(LOG_CLASSIC_TRACE, "video texture updated %d", mContext.countFrame);
             mContext.frameMutex[frame].unlock();
@@ -237,24 +237,24 @@ namespace ClassicLauncher
         }
 
         // Release raylib resources
-        if (IsTextureValid(texture))
+        if (rlw::IsTextureValid(texture))
         {
-            UnloadTexture(texture);
-            texture = Texture2D();
+            rlw::UnloadTexture(texture);
+            texture = rlw::Texture2D();
         }
         if (IsImageValid(mContext.image[0]))
         {
             UnloadImage(mContext.image[0]);
-            mContext.image[0] = Image();
+            mContext.image[0] = rlw::Image();
         }
         if (IsImageValid(mContext.image[1]))
         {
             UnloadImage(mContext.image[1]);
-            mContext.image[1] = Image();
+            mContext.image[1] = rlw::Image();
         }
     }
 
-    Texture2D* VideoPlayer::GetVideoTexture()
+    rlw::Texture2D* VideoPlayer::GetVideoTexture()
     {
         return (IsTextureValid(texture)) ? &texture : nullptr;
     }

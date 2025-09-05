@@ -36,9 +36,9 @@ namespace ClassicLauncher
         }
     }
 
-    void Sprite::Load(const Image& newImage, const int width, const int height, const bool bAspectRatio)
+    void Sprite::Load(const rlw::Image& newImage, const int width, const int height, const bool bAspectRatio)
     {
-        if (IsImageValid(newImage))
+        if (rlw::IsImageValid(newImage))
         {
             Unload();
             mImage = ImageCopy(newImage);
@@ -68,11 +68,11 @@ namespace ClassicLauncher
         if (mIsKeepRunning)
         {
             // std::this_thread::sleep_for(std::chrono::seconds(1)); //for test
-            mImage = ::LoadImage(mFilePath.c_str());
-            if (IsImageValid(mImage))
+            mImage = rlw::LoadImage(mFilePath.c_str());
+            if (rlw::IsImageValid(mImage))
             {
                 ResizeImage(width, height, bAspectRatio);
-                mIsImageLoaded = IsImageValid(mImage);
+                mIsImageLoaded = rlw::IsImageValid(mImage);
                 LOG(LOG_CLASSIC_TRACE, "Image loaded successfully from - \"%s\"", mFilePath.c_str());
             }
             else
@@ -84,7 +84,7 @@ namespace ClassicLauncher
         Stop();
     }
 
-    Texture2D* Sprite::GetTexture()
+    rlw::Texture2D* Sprite::GetTexture()
     {
         if (!mIsTextureLoaded && mIsImageLoaded)
         {
@@ -100,7 +100,7 @@ namespace ClassicLauncher
         return nullptr;
     }
 
-    Image* Sprite::GetImage()
+    rlw::Image* Sprite::GetImage()
     {
         if (mIsImageLoaded)
         {
@@ -137,9 +137,9 @@ namespace ClassicLauncher
 
     void Sprite::UnloadTexture()
     {
-        if (mIsTextureLoaded && IsTextureValid(mTexture))
+        if (mIsTextureLoaded && rlw::IsTextureValid(mTexture))
         {
-            ::UnloadTexture(mTexture);
+            rlw::UnloadTexture(mTexture);
             LOG(LOG_CLASSIC_TRACE, "Unloaded Texture [ID %d] from - \"%s\"", mTexture.id, mFilePath.c_str());
             mTexture = {};
             mIsTextureLoaded = false;
@@ -148,9 +148,9 @@ namespace ClassicLauncher
 
     void Sprite::UnloadImage()
     {
-        if (mIsImageLoaded && IsImageValid(mImage))
+        if (mIsImageLoaded && rlw::IsImageValid(mImage))
         {
-            ::UnloadImage(mImage);
+            rlw::UnloadImage(mImage);
             LOG(LOG_CLASSIC_TRACE, "Unloaded Image from - %s", mFilePath.c_str());
             mImage = {};
             mIsImageLoaded = false;
