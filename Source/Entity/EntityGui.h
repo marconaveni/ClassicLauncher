@@ -38,7 +38,7 @@ namespace ClassicLauncher
                             const Transformation& finalAnimationTransform,
                             Ease typeAnimation = Ease::EaseLinearNone,
                             bool bForceReset = true);
-        void AddAnimationFrame(const std::string& name, const float timeAnimation, const std::vector<RectangleClassic>& spriteIndices);
+        void AddAnimationFrame(const std::string& name, const float timeAnimation, const std::vector<RectFloat>& spriteIndices);
     };
 
 }  // namespace ClassicLauncher

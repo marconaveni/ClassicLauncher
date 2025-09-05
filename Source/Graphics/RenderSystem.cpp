@@ -41,7 +41,7 @@ namespace ClassicLauncher
 
             if (entity->mScissorMode)
             {
-                RectangleClassic scissorArea = entity->mScissorArea;
+                RectFloat scissorArea = entity->mScissorArea;
                 scissorArea.width = scissorArea.width * entity->mTransform.GetRootScale().x * Themes::GetScaleTexture();
                 scissorArea.height = scissorArea.height * entity->mTransform.GetRootScale().y * Themes::GetScaleTexture();
                 BeginScissorMode(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height);
@@ -65,10 +65,10 @@ namespace ClassicLauncher
     {
 #ifdef _DEBUG
 
-        const RectangleClassic& RectangleDrawArea = entity->mTransform.GetTransform();  //{ x, y, scale.x, scale.y };
+        const RectFloat& RectangleDrawArea = entity->mTransform.GetTransform();  //{ x, y, scale.x, scale.y };
         const Vector2f vec = Application::Get().GetRender()->GetMousePositionRender();
-        rlw::Rectangle point = {RectangleDrawArea.x, RectangleDrawArea.y, RectangleDrawArea.width, RectangleDrawArea.height};
-        if (CheckCollisionPointRec(vec, point) && bEnable)
+        Rectangle point = {RectangleDrawArea.x, RectangleDrawArea.y, RectangleDrawArea.width, RectangleDrawArea.height};
+        if (rlw::CheckCollisionPointRec(vec, point) && bEnable)
         {
             rlw::DrawRectangleLinesEx(RectangleDrawArea, 2, ColorClassic::Red());
             if (IsMouseButtonPressed( rlw::MOUSE_BUTTON_LEFT))
@@ -83,7 +83,7 @@ namespace ClassicLauncher
         if (entity->mScissorMode && bEnable)
         {
             const ColorClassic tint = ColorClassic(255, 0, 0, 55);
-            RectangleClassic scissorArea = entity->mScissorArea;
+            RectFloat scissorArea = entity->mScissorArea;
             scissorArea.width = scissorArea.width * entity->mTransform.GetRootScale().x * Themes::GetScaleTexture();
             scissorArea.height = scissorArea.height * entity->mTransform.GetRootScale().y * Themes::GetScaleTexture();
             DrawRectangle(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height, tint);
@@ -91,9 +91,9 @@ namespace ClassicLauncher
 #endif  // _DEBUG
     }
 
-    bool RenderSystem::CheckRender(const RectangleClassic& rec)
+    bool RenderSystem::CheckRender(const RectFloat& rec)
     {
-        return rlw::CheckCollisionRecs(RectangleClassic(0, 0, 1280, 720), rec);
+        return rlw::CheckCollisionRecs(RectFloat(0, 0, 1280, 720), rec);
     }
 
 }  // namespace ClassicLauncher

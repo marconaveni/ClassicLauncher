@@ -11,6 +11,7 @@
 #include <cstdarg>
 #include <cstdint>
 #include "Data/Vector2.h"
+#include "Data/Rectangle.h"
 
 namespace rlw
 {
@@ -317,10 +318,6 @@ namespace rlw
         char** paths;
     };
 
-    struct Rectangle
-    {
-        float x, y, width, height;
-    };
 
     struct Font
     {
@@ -412,15 +409,15 @@ namespace rlw
 
     // Retângulos
     void DrawRectangle(int x, int y, int width, int height, Color color);
-    void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color);
+    void DrawRectangleLinesEx(ClassicLauncher::RectFloat rec, float lineThick, Color color);
 
     // Colisão
-    bool CheckCollisionPointRec(ClassicLauncher::Vector2f point, Rectangle rec);
-    bool CheckCollisionRecs(Rectangle rec1, Rectangle rec2);
+    bool CheckCollisionPointRec(ClassicLauncher::Vector2f point, ClassicLauncher::RectFloat rec);
+    bool CheckCollisionRecs(ClassicLauncher::RectFloat rec1, ClassicLauncher::RectFloat rec2);
 
     // Texturas simples e "pro"
     void DrawTexture(Texture2D texture, int posX, int posY, Color tint);
-    void DrawTexturePro(Texture2D texture, Rectangle src, Rectangle dst, ClassicLauncher::Vector2f origin, float rotation, Color tint);
+    void DrawTexturePro(Texture2D texture, ClassicLauncher::RectFloat src, ClassicLauncher::RectFloat dst, ClassicLauncher::Vector2f origin, float rotation, Color tint);
 
     bool IsImageValid(Image image);      // mapeia para IsImageReady
     bool IsTextureValid(Texture2D tex);  // mapeia para IsTextureReady

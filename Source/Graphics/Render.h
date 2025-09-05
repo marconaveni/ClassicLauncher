@@ -13,8 +13,8 @@ namespace ClassicLauncher
     class Render
     {
         rlw::RenderTexture mRenderTexture;
-        RectangleClassic mSource;
-        RectangleClassic mDest;
+        RectFloat mSource;
+        RectFloat mDest;
         float mWidth;
         float mHeight;
         float mNewWidth;

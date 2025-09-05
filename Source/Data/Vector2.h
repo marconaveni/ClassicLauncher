@@ -18,38 +18,24 @@ namespace ClassicLauncher
         }
 
         Vector2(T x)
-            : Vector2{ x, 0 } {};
+             : x(x), y(y) {};
 
         Vector2()
-            : Vector2{ 0, 0 } {};
+            : x(0), y(0) {};
 
-        Vector2& operator=(const Vector2& vector)
+
+        template <typename U>
+        constexpr explicit operator Vector2<U>() const
         {
-            Set(vector);
-            return *this;
+            return Vector2<U>(static_cast<U>(x), static_cast<U>(y));
         }
 
-        bool operator==(const Vector2& other) const { return x == other.x && y == other.y; }
-        bool operator!=(const Vector2& other) const { return !(*this == other); }
-        Vector2 operator+(const Vector2& other) const { return { x + other.x, y + other.y }; }
-        Vector2 operator-(const Vector2& other) const { return { x - other.x, y - other.y }; }
-        Vector2 operator*(T scalar) const { return { x * scalar, y * scalar }; }
-        Vector2 operator/(T scalar) const { return { x / scalar, y / scalar }; }
-
-        void SetX(T x) { this->x = x; }
-        void SetY(T y) { this->y = y; }
-
-        void Set(T x, T y)
-        {
-            this->x = x;
-            this->y = y;
-        }
-
-        void Set(const Vector2& vec)
-        {
-            x = vec.x;
-            y = vec.y;
-        }
+        constexpr bool operator==(const Vector2& other) const { return x == other.x && y == other.y; }
+        constexpr bool operator!=(const Vector2& other) const { return !(*this == other); }
+        constexpr Vector2 operator+(const Vector2& other) const { return { x + other.x, y + other.y }; }
+        constexpr Vector2 operator-(const Vector2& other) const { return { x - other.x, y - other.y }; }
+        constexpr Vector2 operator*(T scalar) const { return { x * scalar, y * scalar }; }
+        constexpr Vector2 operator/(T scalar) const { return { x / scalar, y / scalar }; }
 
     };
 

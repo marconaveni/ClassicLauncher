@@ -18,7 +18,7 @@ namespace ClassicLauncher
         for (auto& spriteAnimation : mSpriteAnimations)
         {
             spriteAnimation.second.Update(::GetFrameTime());
-            RectangleClassic rec = spriteAnimation.second.GetCurrentSprite();
+            Rectangle rec = spriteAnimation.second.GetCurrentSprite();
             mTransform.sourceX = rec.x;
             mTransform.sourceY = rec.y;
             mTransform.width = rec.width;
@@ -71,7 +71,7 @@ namespace ClassicLauncher
         anim.StartAnimation(durationAnimation, startAnimationTransform, finalAnimationTransform, typeAnimation, bForceReset);
     }
 
-    void EntityGui::AddAnimationFrame(const std::string& name, const float timeAnimation, const std::vector<RectangleClassic>& spriteIndices)
+    void EntityGui::AddAnimationFrame(const std::string& name, const float timeAnimation, const std::vector<RectFloat>& spriteIndices)
     {
         if (mSpriteAnimations.find(name) != mSpriteAnimations.end())
         {

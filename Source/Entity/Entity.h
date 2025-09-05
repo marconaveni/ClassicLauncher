@@ -3,13 +3,11 @@
 
 #include <string>
 #include <vector>
-#include "Data/Rectangle.h"
 #include "Data/Color.h"
-
+#include "Data/Rectangle.h"
 
 namespace ClassicLauncher
 {
-
 
     class Transformation
     {
@@ -17,8 +15,8 @@ namespace ClassicLauncher
 
         friend class RenderSystem;
 
-        RectangleClassic mTransform;
-        RectangleClassic mSource;
+        RectFloat mTransform;
+        RectFloat mSource;
         Vector2f mScale;
 
         float rootX;
@@ -63,21 +61,19 @@ namespace ClassicLauncher
             , sourceY(0)
             , scaleWidth(0)
             , scaleHeight(0)
-            , mScale(1, 1)
+            , mScale{1.0f, 1.0f}
         {
         }
 
-        RectangleClassic GetTransform() { return mTransform; }
-        RectangleClassic GetSource() { return mSource; }
+        RectFloat GetTransform() { return mTransform; }
+        RectFloat GetSource() { return mSource; }
         Vector2f GetScale() { return mScale; }
         Vector2f GetRootPosition() { return Vector2f(rootX, rootY); }
         Vector2f GetRootScale() { return Vector2f(rootScaleX, rootScaleY); }
         void UpdateTransform(Transformation& otherTransform);
     };
 
-
-
-    //class Transformation;
+    // class Transformation;
 
     enum class EntityType
     {
@@ -143,7 +139,7 @@ namespace ClassicLauncher
 
         Transformation mTransform;
         std::string mTextureName = "transparent";
-        RectangleClassic mScissorArea;
+        RectFloat mScissorArea;
 
     private:
 

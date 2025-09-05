@@ -27,9 +27,9 @@ namespace ClassicLauncher
         _scaleWidth = _scaleWidth > 0.0f ? _scaleWidth : _width;
         _scaleHeight = _scaleHeight > 0.0f ? _scaleHeight : _height;
 
-        mScale.Set(scaleX * rootScaleX, scaleY * rootScaleY);
-        mSource.Set(_sourceX, _sourceY, _width, _height);
-        mTransform.Set(_x, _y, mScale.x * _scaleWidth, mScale.y * _scaleHeight);
+        mScale = {scaleX * rootScaleX, scaleY * rootScaleY};
+        mSource = {{_sourceX, _sourceY}, {_width, _height}};
+        mTransform = {_x, _y, mScale.x * _scaleWidth, mScale.y * _scaleHeight};
     }
 
     void Transformation::UpdateTransform(Transformation& otherTransform)
@@ -134,7 +134,7 @@ namespace ClassicLauncher
     void Entity::EnableScissorMode(float x, float y, float width, float height)
     {
         mScissorMode = true;
-        mScissorArea.Set(x, y, width, height);
+        mScissorArea = {x, y, width, height};
         for (auto& childEntity : mChildEntities)
         {
             childEntity->EnableScissorMode(mScissorArea.x, mScissorArea.y, mScissorArea.width, mScissorArea.height);

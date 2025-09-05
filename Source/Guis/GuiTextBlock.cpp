@@ -80,9 +80,9 @@ namespace ClassicLauncher
     }
 
     void GuiTextBlock::Draw()
-    {     
+    {
         mColor.a = mTransform.color.a;
-        Vector2f posi = mTransform.GetTransform().GetPosition();
+        Vector2f posi = { mTransform.GetTransform().x, mTransform.GetTransform().y };
         posi.x += mOffset * Themes::GetScaleTexture();
         Vector2f scale = mTransform.GetScale();
         DrawTextEx(mFont, mText.data(), posi, mSize * Math::Max(scale.x * Themes::GetScaleTexture(), scale.y * Themes::GetScaleTexture()), mSpacing, mColor);

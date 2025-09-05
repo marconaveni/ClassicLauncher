@@ -43,7 +43,7 @@ namespace ClassicLauncher
             mGuiSizeBoxs.emplace_back(sizeBox);
         }
 
-        std::vector<RectangleClassic> recs = { { 1236.0f, 0.0f, 30.0f, 18.0f }, { 1267.0f, 0.0f, 30.0f, 18.0f }, { 1298.0f, 0.0f, 30.0f, 18.0f } };
+        std::vector<RectFloat> recs = { { 1236.0f, 0.0f, 30.0f, 18.0f }, { 1267.0f, 0.0f, 30.0f, 18.0f }, { 1298.0f, 0.0f, 30.0f, 18.0f } };
 
         mArrow = GetApplication()->GetEntityManager()->CreateEntity<GuiComponent>("arrow");
         mArrow->mTransform.x = mTransform.width / 2;

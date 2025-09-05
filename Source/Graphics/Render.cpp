@@ -75,8 +75,8 @@ namespace ClassicLauncher
         const float textureWidth = static_cast<float>(mRenderTexture.texture.width);
         const float textureHeight = static_cast<float>(mRenderTexture.texture.height);
 
-        mSource = RectangleClassic{ 0.0f, 0.0f, textureWidth, -textureHeight };
-        mDest = RectangleClassic{ (screenWidth - (mNewWidth * mScale)) * 0.5f, (screenHeight - (mNewHeight * mScale)) * 0.5f, mNewWidth * mScale, mNewHeight * mScale };
+        mSource = Rectangle{ 0.0f, 0.0f, textureWidth, -textureHeight };
+        mDest = Rectangle{ (screenWidth - (mNewWidth * mScale)) * 0.5f, (screenHeight - (mNewHeight * mScale)) * 0.5f, mNewWidth * mScale, mNewHeight * mScale };
 
         if (rlw::IsKeyReleased(rlw::KEY_K))
         {

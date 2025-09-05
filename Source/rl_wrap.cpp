@@ -1,11 +1,11 @@
 // rl_wrap.cpp: implementação do wrapper chamando raylib nativa.
 // Este arquivo é o ÚNICO que inclui <raylib.h>.
 #include "rl_wrap.h"
+#include <cstdarg>
+#include <cstdio>
 #include <cstring>
 #include "raylib.h"
 #include "raymath.h"
-#include <cstdio>
-#include <cstdarg>
 
 namespace rlw
 {
@@ -30,11 +30,11 @@ namespace rlw
         return { c.r, c.g, c.b, c.a };
     }
 
-    static ::Rectangle to_native_rec(Rectangle r)
+    static ::Rectangle to_native_rec(ClassicLauncher::RectFloat r)
     {
         return { r.x, r.y, r.width, r.height };
     }
-    static Rectangle to_wrap_rec(::Rectangle r)
+    static ClassicLauncher::RectFloat to_wrap_rec(::Rectangle r)
     {
         return { r.x, r.y, r.width, r.height };
     }
@@ -504,25 +504,40 @@ namespace rlw
     {
         ::DrawRectangle(x, y, width, height, to_native_color(color));
     }
-    void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color)
+    void DrawRectangleLinesEx(ClassicLauncher::RectFloat rec, float lineThick, Color color)
     {
         ::DrawRectangleLinesEx(to_native_rec(rec), lineThick, to_native_color(color));
     }
 
-    bool CheckCollisionPointRec(ClassicLauncher::Vector2f point, Rectangle rec)
+    bool CheckCollisionPointRec(ClassicLauncher::Vector2f point, ClassicLauncher::RectFloat rec)
     {
-        return ::CheckCollisionPointRec(to_native_vec(point), to_native_rec(rec));
+        bool collision = false;
+
+        if ((point.x >= rec.x) && (point.x < (rec.x + rec.width)) && (point.y >= rec.y) && (point.y < (rec.y + rec.height)))
+        {
+            collision = true;
+        }
+
+        return collision;
     }
-    bool CheckCollisionRecs(Rectangle rec1, Rectangle rec2)
+    bool CheckCollisionRecs(ClassicLauncher::RectFloat rec1, ClassicLauncher::RectFloat rec2)
     {
-        return ::CheckCollisionRecs(to_native_rec(rec1), to_native_rec(rec2));
+        bool collision = false;
+
+        if ((rec1.x < (rec2.x + rec2.width) && (rec1.x + rec1.width) > rec2.x) && (rec1.y < (rec2.y + rec2.height) && (rec1.y + rec1.height) > rec2.y))
+        {
+            collision = true;
+        }
+
+        return collision;
     }
 
     void DrawTexture(Texture2D texture, int posX, int posY, Color tint)
     {
         ::DrawTexture(to_native_texture(texture), posX, posY, to_native_color(tint));
     }
-    void DrawTexturePro(Texture2D texture, Rectangle src, Rectangle dst, ClassicLauncher::Vector2f origin, float rotation, Color tint)
+
+    void DrawTexturePro(Texture2D texture, ClassicLauncher::RectFloat src, ClassicLauncher::RectFloat dst, ClassicLauncher::Vector2f origin, float rotation, Color tint)
     {
         ::DrawTexturePro(to_native_texture(texture), to_native_rec(src), to_native_rec(dst), to_native_vec(origin), rotation, to_native_color(tint));
     }
@@ -654,7 +669,6 @@ namespace rlw
         return ::IsMouseButtonPressed(button);
     }
 
-
     const char* TextFormat(const char* text, ...)
     {
         const int maxTextFormatBuffers = 4;  // Maximum number of static buffers for text formatting
@@ -665,16 +679,15 @@ namespace rlw
         static int index = 0;
 
         char* currentBuffer = buffers[index];
-        memset(currentBuffer, 0, maxTextBufferLen);  
+        memset(currentBuffer, 0, maxTextBufferLen);
 
         std::va_list args;
         va_start(args, text);
         int requiredByteCount = std::vsnprintf(currentBuffer, maxTextBufferLen, text, args);
         va_end(args);
 
-       
         if (requiredByteCount >= maxTextBufferLen)
-        {        
+        {
             char* truncBuffer = buffers[index] + maxTextBufferLen - 4;  // Adding 4 bytes = "...\0"
             std::sprintf(truncBuffer, "...");
         }
@@ -684,8 +697,6 @@ namespace rlw
 
         return currentBuffer;
     }
-
-
 
     bool IsAudioDeviceReady()
     {
