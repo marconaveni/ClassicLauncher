@@ -67,7 +67,8 @@ namespace ClassicLauncher
 
         const RectangleClassic& RectangleDrawArea = entity->mTransform.GetTransform();  //{ x, y, scale.x, scale.y };
         const Vector2Classic vec = Application::Get().GetRender()->GetMousePositionRender();
-        if (CheckCollisionPointRec(vec, RectangleDrawArea) && bEnable)
+        rlw::Rectangle point = {RectangleDrawArea.x, RectangleDrawArea.y, RectangleDrawArea.width, RectangleDrawArea.height};
+        if (CheckCollisionPointRec(vec, point) && bEnable)
         {
             rlw::DrawRectangleLinesEx(RectangleDrawArea, 2, ColorClassic::Red());
             if (IsMouseButtonPressed( rlw::MOUSE_BUTTON_LEFT))

@@ -12,11 +12,11 @@ namespace rlw
 
     // --- Converters entre tipos rlw e raylib ---
 
-    static ::Vector2 to_native_vec(Vector2 v)
+    static ::Vector2 to_native_vec(ClassicLauncher::Vector2Classic v)
     {
         return { v.x, v.y };
     }
-    static Vector2 to_wrap_vec(::Vector2 v)
+    static ClassicLauncher::Vector2Classic to_wrap_vec(::Vector2 v)
     {
         return { v.x, v.y };
     }
@@ -225,12 +225,12 @@ namespace rlw
     {
         return ::GetMonitorHeight(m);
     }
-    Vector2 GetMonitorPosition(int m)
+    ClassicLauncher::Vector2Classic GetMonitorPosition(int m)
     {
         return to_wrap_vec(::GetMonitorPosition(m));
     }
 
-    Vector2 GetWindowPosition()
+    ClassicLauncher::Vector2Classic GetWindowPosition()
     {
         return to_wrap_vec(::GetWindowPosition());
     }
@@ -369,13 +369,13 @@ namespace rlw
         return ::IsGamepadButtonUp(gamepad, button);
     }
 
-    Vector2 GetMousePosition()
+    ClassicLauncher::Vector2Classic GetMousePosition()
     {
         return to_wrap_vec(::GetMousePosition());
     }
 
     // --- Math (raymath) ---
-    Vector2 Vector2Clamp(Vector2 value, Vector2 min, Vector2 max)
+    ClassicLauncher::Vector2Classic Vector2Clamp(ClassicLauncher::Vector2Classic value, ClassicLauncher::Vector2Classic min, ClassicLauncher::Vector2Classic max)
     {
         return to_wrap_vec(::Vector2Clamp(to_native_vec(value), to_native_vec(min), to_native_vec(max)));
     }
@@ -509,7 +509,7 @@ namespace rlw
         ::DrawRectangleLinesEx(to_native_rec(rec), lineThick, to_native_color(color));
     }
 
-    bool CheckCollisionPointRec(Vector2 point, Rectangle rec)
+    bool CheckCollisionPointRec(ClassicLauncher::Vector2Classic point, Rectangle rec)
     {
         return ::CheckCollisionPointRec(to_native_vec(point), to_native_rec(rec));
     }
@@ -522,7 +522,7 @@ namespace rlw
     {
         ::DrawTexture(to_native_texture(texture), posX, posY, to_native_color(tint));
     }
-    void DrawTexturePro(Texture2D texture, Rectangle src, Rectangle dst, Vector2 origin, float rotation, Color tint)
+    void DrawTexturePro(Texture2D texture, Rectangle src, Rectangle dst, ClassicLauncher::Vector2Classic origin, float rotation, Color tint)
     {
         ::DrawTexturePro(to_native_texture(texture), to_native_rec(src), to_native_rec(dst), to_native_vec(origin), rotation, to_native_color(tint));
     }
@@ -636,15 +636,15 @@ namespace rlw
         return w;
     }
 
-    void DrawTextEx(Font font, const char* text, Vector2 position, float fontSize, float spacing, Color tint)
+    void DrawTextEx(Font font, const char* text, ClassicLauncher::Vector2Classic position, float fontSize, float spacing, Color tint)
     {
         if (!font._native || !text) return;
         ::DrawTextEx(*static_cast<::Font*>(font._native), text, to_native_vec(position), fontSize, spacing, to_native_color(tint));
     }
 
-    Vector2 MeasureTextEx(Font font, const char* text, float fontSize, float spacing)
+    ClassicLauncher::Vector2Classic MeasureTextEx(Font font, const char* text, float fontSize, float spacing)
     {
-        if (!font._native || !text) return rlw::Vector2{ 0, 0 };
+        if (!font._native || !text) return ClassicLauncher::Vector2Classic{ 0, 0 };
         return to_wrap_vec(::MeasureTextEx(*static_cast<::Font*>(font._native), text, fontSize, spacing));
     }
 

@@ -10,6 +10,7 @@
 
 #include <cstdarg>
 #include <cstdint>
+#include "Data/Vector2.h"
 
 namespace rlw
 {
@@ -251,29 +252,6 @@ namespace rlw
     } KeyboardKey;
 
 
-    // Vector2, 2 components
-    struct Vector2
-    {
-        float x;  // Vector x component
-        float y;  // Vector y component
-    };
-
-    // Vector3, 3 components
-    struct Vector3
-    {
-        float x;  // Vector x component
-        float y;  // Vector y component
-        float z;  // Vector z component
-    };
-
-    // Vector4, 4 components
-    struct Vector4
-    {
-        float x;  // Vector x component
-        float y;  // Vector y component
-        float z;  // Vector z component
-        float w;  // Vector w component
-    };
 
     struct Color
     {
@@ -386,9 +364,9 @@ namespace rlw
     int GetCurrentMonitor();
     int GetMonitorWidth(int monitor);
     int GetMonitorHeight(int monitor);
-    Vector2 GetMonitorPosition(int monitor);
+    ClassicLauncher::Vector2Classic GetMonitorPosition(int monitor);
 
-    Vector2 GetWindowPosition();
+    ClassicLauncher::Vector2Classic GetWindowPosition();
     bool IsWindowFullscreen();
     void ToggleFullscreen();
 
@@ -437,12 +415,12 @@ namespace rlw
     void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color);
 
     // Colisão
-    bool CheckCollisionPointRec(Vector2 point, Rectangle rec);
+    bool CheckCollisionPointRec(ClassicLauncher::Vector2Classic point, Rectangle rec);
     bool CheckCollisionRecs(Rectangle rec1, Rectangle rec2);
 
     // Texturas simples e "pro"
     void DrawTexture(Texture2D texture, int posX, int posY, Color tint);
-    void DrawTexturePro(Texture2D texture, Rectangle src, Rectangle dst, Vector2 origin, float rotation, Color tint);
+    void DrawTexturePro(Texture2D texture, Rectangle src, Rectangle dst, ClassicLauncher::Vector2Classic origin, float rotation, Color tint);
 
     bool IsImageValid(Image image);      // mapeia para IsImageReady
     bool IsTextureValid(Texture2D tex);  // mapeia para IsTextureReady
@@ -453,8 +431,8 @@ namespace rlw
     bool IsFontValid(Font font);  // mapeia para IsFontReady
     void UnloadFont(Font font);
     Font LoadFontEx(const char* fileName, int fontSize, int* codepoints, int codepointCount);
-    void DrawTextEx(Font font, const char* text, Vector2 position, float fontSize, float spacing, Color tint);
-    Vector2 MeasureTextEx(Font font, const char* text, float fontSize, float spacing);
+    void DrawTextEx(Font font, const char* text, ClassicLauncher::Vector2Classic position, float fontSize, float spacing, Color tint);
+    ClassicLauncher::Vector2Classic MeasureTextEx(Font font, const char* text, float fontSize, float spacing);
 
     bool IsMouseButtonPressed(int button);
 
@@ -469,10 +447,10 @@ namespace rlw
     bool IsGamepadButtonReleased(int gamepad, int button);
     bool IsGamepadButtonUp(int gamepad, int button);
 
-    Vector2 GetMousePosition();
+    ClassicLauncher::Vector2Classic GetMousePosition();
 
     // --- Math (raymath) ---
-    Vector2 Vector2Clamp(Vector2 value, Vector2 min, Vector2 max);
+    ClassicLauncher::Vector2Classic Vector2Clamp(ClassicLauncher::Vector2Classic value, ClassicLauncher::Vector2Classic min, ClassicLauncher::Vector2Classic max);
 
     // --- Áudio ---
     void InitAudioDevice();
