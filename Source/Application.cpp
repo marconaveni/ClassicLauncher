@@ -262,8 +262,8 @@ namespace ClassicLauncher
             mSpecification.height = GetScreenHeight();
             SetWindowState(FLAG_WINDOW_UNDECORATED);
             SetWindowSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
-            const Vector2Classic positionMonitor(GetMonitorPosition(GetCurrentMonitor()));
-            SetWindowPosition(positionMonitor.GetIntX(), positionMonitor.GetIntY());
+            const Vector2f positionMonitor(GetMonitorPosition(GetCurrentMonitor()));
+            SetWindowPosition((int)positionMonitor.x, (int)positionMonitor.y);
             bIsFullScreen = true;
         }
         else

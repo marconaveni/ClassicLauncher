@@ -48,7 +48,7 @@ namespace ClassicLauncher
             }
 
             rlw::DrawTexturePro(
-                *texture, entity->mTransform.GetSource(), entity->mTransform.GetTransform(), Vector2Classic{ 0, 0 }, entity->mTransform.rotation, entity->mTransform.color);
+                *texture, entity->mTransform.GetSource(), entity->mTransform.GetTransform(), Vector2f{ 0, 0 }, entity->mTransform.rotation, entity->mTransform.color);
             entity->Draw();
             DrawDebug(entity);
 
@@ -66,7 +66,7 @@ namespace ClassicLauncher
 #ifdef _DEBUG
 
         const RectangleClassic& RectangleDrawArea = entity->mTransform.GetTransform();  //{ x, y, scale.x, scale.y };
-        const Vector2Classic vec = Application::Get().GetRender()->GetMousePositionRender();
+        const Vector2f vec = Application::Get().GetRender()->GetMousePositionRender();
         rlw::Rectangle point = {RectangleDrawArea.x, RectangleDrawArea.y, RectangleDrawArea.width, RectangleDrawArea.height};
         if (CheckCollisionPointRec(vec, point) && bEnable)
         {

@@ -364,9 +364,9 @@ namespace rlw
     int GetCurrentMonitor();
     int GetMonitorWidth(int monitor);
     int GetMonitorHeight(int monitor);
-    ClassicLauncher::Vector2Classic GetMonitorPosition(int monitor);
+    ClassicLauncher::Vector2f GetMonitorPosition(int monitor);
 
-    ClassicLauncher::Vector2Classic GetWindowPosition();
+    ClassicLauncher::Vector2f GetWindowPosition();
     bool IsWindowFullscreen();
     void ToggleFullscreen();
 
@@ -415,12 +415,12 @@ namespace rlw
     void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color);
 
     // Colisão
-    bool CheckCollisionPointRec(ClassicLauncher::Vector2Classic point, Rectangle rec);
+    bool CheckCollisionPointRec(ClassicLauncher::Vector2f point, Rectangle rec);
     bool CheckCollisionRecs(Rectangle rec1, Rectangle rec2);
 
     // Texturas simples e "pro"
     void DrawTexture(Texture2D texture, int posX, int posY, Color tint);
-    void DrawTexturePro(Texture2D texture, Rectangle src, Rectangle dst, ClassicLauncher::Vector2Classic origin, float rotation, Color tint);
+    void DrawTexturePro(Texture2D texture, Rectangle src, Rectangle dst, ClassicLauncher::Vector2f origin, float rotation, Color tint);
 
     bool IsImageValid(Image image);      // mapeia para IsImageReady
     bool IsTextureValid(Texture2D tex);  // mapeia para IsTextureReady
@@ -431,8 +431,8 @@ namespace rlw
     bool IsFontValid(Font font);  // mapeia para IsFontReady
     void UnloadFont(Font font);
     Font LoadFontEx(const char* fileName, int fontSize, int* codepoints, int codepointCount);
-    void DrawTextEx(Font font, const char* text, ClassicLauncher::Vector2Classic position, float fontSize, float spacing, Color tint);
-    ClassicLauncher::Vector2Classic MeasureTextEx(Font font, const char* text, float fontSize, float spacing);
+    void DrawTextEx(Font font, const char* text, ClassicLauncher::Vector2f position, float fontSize, float spacing, Color tint);
+    ClassicLauncher::Vector2f MeasureTextEx(Font font, const char* text, float fontSize, float spacing);
 
     bool IsMouseButtonPressed(int button);
 
@@ -447,10 +447,10 @@ namespace rlw
     bool IsGamepadButtonReleased(int gamepad, int button);
     bool IsGamepadButtonUp(int gamepad, int button);
 
-    ClassicLauncher::Vector2Classic GetMousePosition();
+    ClassicLauncher::Vector2f GetMousePosition();
 
     // --- Math (raymath) ---
-    ClassicLauncher::Vector2Classic Vector2Clamp(ClassicLauncher::Vector2Classic value, ClassicLauncher::Vector2Classic min, ClassicLauncher::Vector2Classic max);
+    ClassicLauncher::Vector2f Vector2Clamp(ClassicLauncher::Vector2f value, ClassicLauncher::Vector2f min, ClassicLauncher::Vector2f max);
 
     // --- Áudio ---
     void InitAudioDevice();

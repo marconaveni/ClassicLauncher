@@ -65,7 +65,7 @@ namespace ClassicLauncher
         void Update();
         void Unload();
         rlw::Texture2D* GetVideoTexture();
-        Vector2Classic GetVideoSize();
+        Vector2f GetVideoSize();
         bool IsVideoFinished();
         bool IsVideoPlaying();
         bool IsVideoStopped();

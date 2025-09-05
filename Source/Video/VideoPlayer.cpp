@@ -139,10 +139,10 @@ namespace ClassicLauncher
         }
         libvlc_media_tracks_release(tracks, track_count);
 
-        Vector2Classic textureSize((float)mWidthVideo, (float)mHeightVideo);
+        Vector2f textureSize((float)mWidthVideo, (float)mHeightVideo);
         UtilsFunctionLibrary::SetSizeWithProportion(textureSize, mWidth, mHeight, bFill);
-        mWidthVideo = textureSize.GetIntX();
-        mHeightVideo = textureSize.GetIntY();
+        mWidthVideo = (int)textureSize.x;
+        mHeightVideo = (int)textureSize.y;
 
         // mContext.image[0] = { MemAlloc(mWidthVideo * mHeightVideo * 4),  // 4 bytes pixel (RGBA)
         //                       mWidthVideo,
@@ -259,9 +259,9 @@ namespace ClassicLauncher
         return (IsTextureValid(texture)) ? &texture : nullptr;
     }
 
-    Vector2Classic VideoPlayer::GetVideoSize()
+    Vector2f VideoPlayer::GetVideoSize()
     {
-        return (IsTextureValid(texture)) ? Vector2Classic{ static_cast<float>(texture.width), static_cast<float>(texture.height) } : Vector2Classic{ 0, 0 };
+        return (IsTextureValid(texture)) ? Vector2f{ static_cast<float>(texture.width), static_cast<float>(texture.height) } : Vector2f{ 0, 0 };
         // return Vector2{ static_cast<float>(mWidth), static_cast<float>(mHeight) };
     }
 

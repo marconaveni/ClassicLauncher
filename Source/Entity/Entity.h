@@ -19,7 +19,7 @@ namespace ClassicLauncher
 
         RectangleClassic mTransform;
         RectangleClassic mSource;
-        Vector2Classic mScale;
+        Vector2f mScale;
 
         float rootX;
         float rootY;
@@ -30,7 +30,7 @@ namespace ClassicLauncher
 
     public:
 
-        Vector2Classic offset;
+        Vector2f offset;
         float x;
         float y;
         float width;
@@ -69,9 +69,9 @@ namespace ClassicLauncher
 
         RectangleClassic GetTransform() { return mTransform; }
         RectangleClassic GetSource() { return mSource; }
-        Vector2Classic GetScale() { return mScale; }
-        Vector2Classic GetRootPosition() { return Vector2Classic(rootX, rootY); }
-        Vector2Classic GetRootScale() { return Vector2Classic(rootScaleX, rootScaleY); }
+        Vector2f GetScale() { return mScale; }
+        Vector2f GetRootPosition() { return Vector2f(rootX, rootY); }
+        Vector2f GetRootScale() { return Vector2f(rootScaleX, rootScaleY); }
         void UpdateTransform(Transformation& otherTransform);
     };
 

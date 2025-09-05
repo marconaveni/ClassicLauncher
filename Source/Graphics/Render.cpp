@@ -16,7 +16,7 @@ namespace ClassicLauncher
 
     void Render::RenderValues()
     {
-        const Vector2Classic mouse = rlw::GetMousePosition();
+        const Vector2f mouse = rlw::GetMousePosition();
         const float screenWidth = static_cast<float>(rlw::GetScreenWidth());
         const float screenHeight = static_cast<float>(rlw::GetScreenHeight());
         mNewWidth = static_cast<float>(GetWidthRender());
@@ -27,7 +27,7 @@ namespace ClassicLauncher
             mScale = Math::Min<float>(screenWidth / mNewWidth, screenHeight / mNewHeight);
             mVirtualMouse.x = (mouse.x - (screenWidth - (mNewWidth * mScale)) * 0.5f) / mScale;
             mVirtualMouse.y = (mouse.y - (screenHeight - (mNewHeight * mScale)) * 0.5f) / mScale;
-            mVirtualMouse = rlw::Vector2Clamp(mVirtualMouse, Vector2Classic{ 0 }, Vector2Classic{ mNewWidth, mNewHeight });
+            mVirtualMouse = rlw::Vector2Clamp(mVirtualMouse, Vector2f{ 0 }, Vector2f{ mNewWidth, mNewHeight });
         }
         else
         {
@@ -91,7 +91,7 @@ namespace ClassicLauncher
         }
 
         // Draw render texture to screen, properly scaled
-        rlw::DrawTexturePro(*texture, mSource, mDest, Vector2Classic{}, 0.0f, rlw::C_WHITE);
+        rlw::DrawTexturePro(*texture, mSource, mDest, Vector2f{}, 0.0f, rlw::C_WHITE);
     }
 
     void Render::Unload()
@@ -103,14 +103,14 @@ namespace ClassicLauncher
         }
     }
 
-    Vector2Classic Render::GetRenderScale() const
+    Vector2f Render::GetRenderScale() const
     {
         const float scaleWidth = static_cast<float>(rlw::GetScreenWidth()) / mWidth;
         const float scaleHeight = static_cast<float>(rlw::GetScreenHeight()) / mHeight;
-        return Vector2Classic{ scaleWidth, scaleHeight };
+        return Vector2f{ scaleWidth, scaleHeight };
     }
 
-    Vector2Classic Render::GetMousePositionRender() const
+    Vector2f Render::GetMousePositionRender() const
     {
         return mVirtualMouse;
     }

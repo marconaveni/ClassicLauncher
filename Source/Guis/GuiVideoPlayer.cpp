@@ -79,7 +79,7 @@ namespace ClassicLauncher
         if (texture)
         {
             const Transformation& transform = mTransform;
-            DrawTexturePro(*texture, mTransform.GetSource(), mTransform.GetTransform(), Vector2Classic{ 0, 0 }, transform.rotation, transform.color);
+            DrawTexturePro(*texture, mTransform.GetSource(), mTransform.GetTransform(), Vector2f{ 0, 0 }, transform.rotation, transform.color);
         }
 
         if (!mPlayerFullScreen) return;

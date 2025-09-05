@@ -29,10 +29,10 @@ namespace ClassicLauncher
         RectangleClassic()
             : rlw::Rectangle{ 0, 0, 0, 0 } {};
 
-        RectangleClassic(Vector2Classic position, Vector2Classic size)
+        RectangleClassic(Vector2f position, Vector2f size)
             : rlw::Rectangle{ position.x, position.y, size.x, size.y } {};
 
-        RectangleClassic(Vector2Classic size)
+        RectangleClassic(Vector2f size)
             : rlw::Rectangle{ 0, 0, size.x, size.y } {};
             
         void SetX(float x) { this->x = x; }
@@ -66,7 +66,7 @@ namespace ClassicLauncher
             this->x = x;
             this->y = y;
         }
-        void SetPosition(const Vector2Classic& vec)
+        void SetPosition(const Vector2f& vec)
         {
             this->x = vec.x;
             this->y = vec.y;
@@ -86,7 +86,7 @@ namespace ClassicLauncher
         int GetIntY() const { return static_cast<int>(y); }
         int GetIntWidth() const { return static_cast<int>(width); }
         int GetIntHeight() const { return static_cast<int>(height); }
-        Vector2Classic GetPosition() const { return { x, y }; }
+        Vector2f GetPosition() const { return { x, y }; }
     };
 
 }  // namespace ClassicLauncher

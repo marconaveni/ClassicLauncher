@@ -30,12 +30,12 @@ namespace ClassicLauncher
         float mOffset;
         bool mToLeft;
         float mDelay;
-        Vector2Classic mMensuredText;
+        Vector2f mMensuredText;
         float mSpeed;
         float mMaxDelay;
         TextOverflowPolicy mTextOverflowPolicy;
 
-        Vector2Classic MeasureTextBox();
+        Vector2f MeasureTextBox();
 
     public:
 
@@ -51,7 +51,7 @@ namespace ClassicLauncher
         void SetSize(int size);
         void SetSpacing(int spacing);
         void SetColor(ColorClassic tint);
-        Vector2Classic GetMeasureTextBox();
+        Vector2f GetMeasureTextBox();
         const std::string& GetText() { return mText; }
         void SetTextOverflowPolicy(TextOverflowPolicy textOverflowPolicy);
         void SetDesiredWidth(int newWidth);

@@ -25,7 +25,7 @@ namespace ClassicLauncher
         GuiHorizontalBox* mGuiHorizontalBox;
         GuiComponent* mArrow;
         int mSize;
-        Vector2Classic mSizeCover;
+        Vector2f mSizeCover;
 
     public:
 

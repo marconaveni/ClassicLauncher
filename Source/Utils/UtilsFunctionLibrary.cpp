@@ -7,7 +7,7 @@
 namespace ClassicLauncher
 {
 
-    void UtilsFunctionLibrary::SetSizeWithProportionFit(Vector2Classic& texture, const int widthResize, const int heightResize)
+    void UtilsFunctionLibrary::SetSizeWithProportionFit(Vector2f& texture, const int widthResize, const int heightResize)
     {
         // Define a nova largura e altura desejadas
         float newWidth = static_cast<float>(widthResize);    // Largura desejada
@@ -22,10 +22,10 @@ namespace ClassicLauncher
         {
             newHeight = newWidth / aspectRatio;
         }
-        texture = Vector2Classic{ newWidth, newHeight };
+        texture = Vector2f{ newWidth, newHeight };
     }
 
-    void UtilsFunctionLibrary::SetSizeWithProportionFill(Vector2Classic& texture, const int widthResize, const int heightResize)
+    void UtilsFunctionLibrary::SetSizeWithProportionFill(Vector2f& texture, const int widthResize, const int heightResize)
     {
         float newWidth = static_cast<float>(widthResize);
         float newHeight = static_cast<float>(heightResize);
@@ -39,10 +39,10 @@ namespace ClassicLauncher
         {
             newHeight = newWidth / aspectRatio;  // Se a largura está pequena demais, ajusta a altura primeiro
         }
-        texture = Vector2Classic{ newWidth, newHeight };
+        texture = Vector2f{ newWidth, newHeight };
     }
 
-    void UtilsFunctionLibrary::SetSizeWithProportion(Vector2Classic& texture, const int widthResize, const int heightResize, bool bFill)
+    void UtilsFunctionLibrary::SetSizeWithProportion(Vector2f& texture, const int widthResize, const int heightResize, bool bFill)
     {
         if (!bFill)
         {
@@ -56,14 +56,14 @@ namespace ClassicLauncher
 
     void UtilsFunctionLibrary::ImageResize(rlw::Image& image, const int newWidth, const int newHeight)
     {
-        Vector2Classic newSize{ static_cast<float>(image.width), static_cast<float>(image.height) };
+        Vector2f newSize{ static_cast<float>(image.width), static_cast<float>(image.height) };
         SetSizeWithProportion(newSize, newWidth, newHeight);
         rlw::ImageResize(&image, static_cast<int>(newSize.x), static_cast<int>(newSize.y));
     }
 
     void UtilsFunctionLibrary::ImageResizeNN(rlw::Image& image, const int newWidth, const int newHeight)
     {
-        Vector2Classic newSize{ static_cast<float>(image.width), static_cast<float>(image.height) };
+        Vector2f newSize{ static_cast<float>(image.width), static_cast<float>(image.height) };
         SetSizeWithProportion(newSize, newWidth, newHeight);
         rlw::ImageResizeNN(&image, static_cast<int>(newSize.x), static_cast<int>(newSize.y));
     }

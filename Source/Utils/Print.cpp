@@ -101,8 +101,8 @@ namespace ClassicLauncher
 
         for (const auto& message : mMessages)
         {
-            const Vector2Classic positionRender = { 30, y };
-            const Vector2Classic positionRenderShadow = { 31, y + 1 };
+            const Vector2f positionRender = { 30, y };
+            const Vector2f positionRenderShadow = { 31, y + 1 };
 
             DrawTextEx(mFont, message.textMessage.data(), positionRenderShadow, mSize, mSpacing, C_BLACK);
             DrawTextEx(mFont, message.textMessage.data(), positionRender, mSize, mSpacing, message.textColor);

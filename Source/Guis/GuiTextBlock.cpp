@@ -35,7 +35,7 @@ namespace ClassicLauncher
         , mOffset(0)
         , mToLeft(true)
         , mDelay(0)
-        , mMensuredText(Vector2Classic())
+        , mMensuredText(Vector2f())
         , mSpeed(0.5f)
         , mMaxDelay(3.0f)
         , mTextOverflowPolicy(TextOverflowPolicy::none)
@@ -58,7 +58,7 @@ namespace ClassicLauncher
             EnableScissorMode(mTransform.GetTransform().x, mTransform.GetTransform().y, mDesiredWidth, mMensuredText.y);
         }
 
-        const int positionText = mDesiredWidth - mMensuredText.GetIntX();
+        const int positionText = mDesiredWidth - (int)mMensuredText.x;
         if (mTextOverflowPolicy == TextOverflowPolicy::clip && positionText < 0)
         {
             if (mDelay < mMaxDelay)
@@ -82,9 +82,9 @@ namespace ClassicLauncher
     void GuiTextBlock::Draw()
     {     
         mColor.a = mTransform.color.a;
-        Vector2Classic posi = mTransform.GetTransform().GetPosition();
+        Vector2f posi = mTransform.GetTransform().GetPosition();
         posi.x += mOffset * Themes::GetScaleTexture();
-        Vector2Classic scale = mTransform.GetScale();
+        Vector2f scale = mTransform.GetScale();
         DrawTextEx(mFont, mText.data(), posi, mSize * Math::Max(scale.x * Themes::GetScaleTexture(), scale.y * Themes::GetScaleTexture()), mSpacing, mColor);
     }
 
@@ -119,12 +119,12 @@ namespace ClassicLauncher
         mColor = tint;
     }
 
-    Vector2Classic GuiTextBlock::GetMeasureTextBox()
+    Vector2f GuiTextBlock::GetMeasureTextBox()
     {
         return mMensuredText;
     }
 
-    Vector2Classic GuiTextBlock::MeasureTextBox()
+    Vector2f GuiTextBlock::MeasureTextBox()
     {
         return MeasureTextEx(mFont, mText.c_str(), mSize, mSpacing);
     }

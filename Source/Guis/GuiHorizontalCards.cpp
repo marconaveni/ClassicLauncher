@@ -104,7 +104,7 @@ namespace ClassicLauncher
         const GameList* pGameList = GetApplication()->GetGameListManager()->GetCurrentGameList();
         mGuiTitle->SetText((pGameList) ? pGameList->name : "");
         const float scale = Themes::GetScaleTexture();
-        mGuiTitle->mTransform.x = (1280.0f / 2.0f) - ((mGuiTitle->GetMeasureTextBox().GetIntX() / 2));
+        mGuiTitle->mTransform.x = (1280.0f / 2.0f) - (((int)mGuiTitle->GetMeasureTextBox().x / 2));
         mGuiTitle->mTransform.x = Math::Clamp(mGuiTitle->mTransform.x, 135, 1280);
     }
 

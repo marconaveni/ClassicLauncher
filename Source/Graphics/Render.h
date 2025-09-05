@@ -21,7 +21,7 @@ namespace ClassicLauncher
         float mNewHeight;
         float mScale;
         bool mIsMaintainAspectRatio;
-        Vector2Classic mVirtualMouse;
+        Vector2f mVirtualMouse;
         void RenderValues();
 
     public:
@@ -33,8 +33,8 @@ namespace ClassicLauncher
         void EndRender();
         void DrawRender();
         void Unload();
-        Vector2Classic GetRenderScale() const;
-        Vector2Classic GetMousePositionRender() const;
+        Vector2f GetRenderScale() const;
+        Vector2f GetMousePositionRender() const;
 
     private:
 

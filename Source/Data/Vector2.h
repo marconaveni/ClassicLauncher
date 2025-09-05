@@ -1,57 +1,63 @@
 #ifndef VECTOR_2_H
 #define VECTOR_2_H
 
-#include <string>
 
 namespace ClassicLauncher
 {
-    //template <typename T>
-    class Vector2Classic
+    template <typename T>
+    class Vector2
     {
     public:
 
-        float x;  // Vector x component
-        float y;  // Vector y component
+        T x;  // Vector x component
+        T y;  // Vector y component
 
-        Vector2Classic(float x, float y)
+        Vector2(T x, T y)
             : x(x), y(y)
         {
         }
 
-        Vector2Classic(float x)
-            : Vector2Classic{ x, 0 } {};
+        Vector2(T x)
+            : Vector2{ x, 0 } {};
 
-        Vector2Classic()
-            : Vector2Classic{ 0, 0 } {};
+        Vector2()
+            : Vector2{ 0, 0 } {};
 
-        Vector2Classic& operator=(const Vector2Classic& vector)
+        Vector2& operator=(const Vector2& vector)
         {
             Set(vector);
             return *this;
         }
 
-        bool operator==(const Vector2Classic& other) const { return x == other.x && y == other.y; }
-        bool operator!=(const Vector2Classic& other) const { return !(*this == other); }
+        bool operator==(const Vector2& other) const { return x == other.x && y == other.y; }
+        bool operator!=(const Vector2& other) const { return !(*this == other); }
+        Vector2 operator+(const Vector2& other) const { return { x + other.x, y + other.y }; }
+        Vector2 operator-(const Vector2& other) const { return { x - other.x, y - other.y }; }
+        Vector2 operator*(T scalar) const { return { x * scalar, y * scalar }; }
+        Vector2 operator/(T scalar) const { return { x / scalar, y / scalar }; }
 
-        void SetX(float x) { this->x = x; }
-        void SetY(float y) { this->y = y; }
+        void SetX(T x) { this->x = x; }
+        void SetY(T y) { this->y = y; }
 
-        void Set(float x, float y)
+        void Set(T x, T y)
         {
             this->x = x;
             this->y = y;
         }
 
-        void Set(const Vector2Classic& vec)
+        void Set(const Vector2& vec)
         {
             x = vec.x;
             y = vec.y;
         }
 
-        std::string ToString() const { return "Vector2(x: " + std::to_string(x) + ", y: " + std::to_string(y) + ")"; }
-        int GetIntX() const { return static_cast<int>(x); }
-        int GetIntY() const { return static_cast<int>(y); }
     };
+
+    using Vector2f = Vector2<float>;
+    using Vector2d = Vector2<double>;
+    using Vector2i = Vector2<int>;
+    using Vector2u = Vector2<unsigned int>;
+    using Size = Vector2<unsigned int>;
 
 }  // namespace ClassicLauncher
 
