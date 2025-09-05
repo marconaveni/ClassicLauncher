@@ -27,22 +27,22 @@ namespace ClassicLauncher
 
         switch (messageType)
         {
-            case rlw::LOG_TRACE:
+            case LOG_TRACE:
                 textFinal.append("\x1b[36m[RAYLIB TRACE] ");
                 break;
-            case rlw::LOG_DEBUG:
+            case LOG_DEBUG:
                 textFinal.append("\x1b[34m[RAYLIB DEBUG] ");
                 break;
-            case rlw::LOG_INFO:
+            case LOG_INFO:
                 textFinal.append("\x1b[37m[RAYLIB INFO] ");
                 break;
-            case rlw::LOG_WARNING:
+            case LOG_WARNING:
                 textFinal.append("\x1B[33m[RAYLIB WARNING] ");
                 break;
-            case rlw::LOG_ERROR:
+            case LOG_ERROR:
                 textFinal.append("\x1B[31m[RAYLIB ERROR] ");
                 break;
-            case rlw::LOG_FATAL:
+            case LOG_FATAL:
                 textFinal.append("\x1B[41m[RAYLIB FATAL] ");
                 break;
             case LOG_CLASSIC_TRACE:
