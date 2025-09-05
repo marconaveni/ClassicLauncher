@@ -36,7 +36,7 @@ namespace ClassicLauncher
         float scaleX;
         float scaleY;
         float rotation;
-        ColorClassic color;
+        Color color;
 
         float sourceX;
         float sourceY;

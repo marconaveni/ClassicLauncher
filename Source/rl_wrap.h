@@ -361,7 +361,7 @@ namespace rlw
     // --- Desenho 2D ---
     void BeginDrawing();
     void EndDrawing();
-    void ClearBackground(ClassicLauncher::ColorClassic color);
+    void ClearBackground(ClassicLauncher::Color color);
 
     void DrawTexturePro(Texture2D texture,
                         /*source*/ float srcX,
@@ -381,27 +381,27 @@ namespace rlw
     void EndScissorMode();
 
     // Retângulos
-    void DrawRectangle(int x, int y, int width, int height, ClassicLauncher::ColorClassic color);
-    void DrawRectangleLinesEx(ClassicLauncher::RectFloat rec, float lineThick, ClassicLauncher::ColorClassic color);
+    void DrawRectangle(int x, int y, int width, int height, ClassicLauncher::Color color);
+    void DrawRectangleLinesEx(ClassicLauncher::RectFloat rec, float lineThick, ClassicLauncher::Color color);
 
     // Colisão
     bool CheckCollisionPointRec(ClassicLauncher::Vector2f point, ClassicLauncher::RectFloat rec);
     bool CheckCollisionRecs(ClassicLauncher::RectFloat rec1, ClassicLauncher::RectFloat rec2);
 
     // Texturas simples e "pro"
-    void DrawTexture(Texture2D texture, int posX, int posY, ClassicLauncher::ColorClassic tint);
-    void DrawTexturePro(Texture2D texture, ClassicLauncher::RectFloat src, ClassicLauncher::RectFloat dst, ClassicLauncher::Vector2f origin, float rotation, ClassicLauncher::ColorClassic tint);
+    void DrawTexture(Texture2D texture, int posX, int posY, ClassicLauncher::Color tint);
+    void DrawTexturePro(Texture2D texture, ClassicLauncher::RectFloat src, ClassicLauncher::RectFloat dst, ClassicLauncher::Vector2f origin, float rotation, ClassicLauncher::Color tint);
 
     bool IsImageValid(Image image);      // mapeia para IsImageReady
     bool IsTextureValid(Texture2D tex);  // mapeia para IsTextureReady
-    Image GenImageColor(int width, int height, ClassicLauncher::ColorClassic color);
+    Image GenImageColor(int width, int height, ClassicLauncher::Color color);
     Image ImageCopy(Image src);
     void UpdateTexture(Texture2D texture, const void* pixels);
 
     bool IsFontValid(Font font);  // mapeia para IsFontReady
     void UnloadFont(Font font);
     Font LoadFontEx(const char* fileName, int fontSize, int* codepoints, int codepointCount);
-    void DrawTextEx(Font font, const char* text, ClassicLauncher::Vector2f position, float fontSize, float spacing, ClassicLauncher::ColorClassic tint);
+    void DrawTextEx(Font font, const char* text, ClassicLauncher::Vector2f position, float fontSize, float spacing, ClassicLauncher::Color tint);
     ClassicLauncher::Vector2f MeasureTextEx(Font font, const char* text, float fontSize, float spacing);
 
     bool IsMouseButtonPressed(int button);

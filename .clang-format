@@ -4,7 +4,7 @@ IndentWidth: 4
 BreakBeforeBraces: Allman
 PointerAlignment: Left
 SpacesBeforeTrailingComments: 2
-ColumnLimit: 170
+ColumnLimit: 140
 AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortIfStatementsOnASingleLine: WithoutElse
 AllowShortFunctionsOnASingleLine: InlineOnly

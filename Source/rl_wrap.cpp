@@ -21,11 +21,11 @@ namespace rlw
         return { v.x, v.y };
     }
 
-    static ::Color to_native_color(ClassicLauncher::ColorClassic c)
+    static ::Color to_native_color(ClassicLauncher::Color c)
     {
         return { c.r, c.g, c.b, c.a };
     }
-    static ClassicLauncher::ColorClassic to_wrap_color(::Color c)
+    static ClassicLauncher::Color to_wrap_color(::Color c)
     {
         return { c.r, c.g, c.b, c.a };
     }
@@ -310,7 +310,7 @@ namespace rlw
     {
         ::EndDrawing();
     }
-    void ClearBackground(ClassicLauncher::ColorClassic color)
+    void ClearBackground(ClassicLauncher::Color color)
     {
         ::ClearBackground(to_native_color(color));
     }
@@ -500,11 +500,11 @@ namespace rlw
         ::EndScissorMode();
     }
 
-    void DrawRectangle(int x, int y, int width, int height, ClassicLauncher::ColorClassic color)
+    void DrawRectangle(int x, int y, int width, int height, ClassicLauncher::Color color)
     {
         ::DrawRectangle(x, y, width, height, to_native_color(color));
     }
-    void DrawRectangleLinesEx(ClassicLauncher::RectFloat rec, float lineThick, ClassicLauncher::ColorClassic color)
+    void DrawRectangleLinesEx(ClassicLauncher::RectFloat rec, float lineThick, ClassicLauncher::Color color)
     {
         ::DrawRectangleLinesEx(to_native_rec(rec), lineThick, to_native_color(color));
     }
@@ -532,12 +532,12 @@ namespace rlw
         return collision;
     }
 
-    void DrawTexture(Texture2D texture, int posX, int posY, ClassicLauncher::ColorClassic tint)
+    void DrawTexture(Texture2D texture, int posX, int posY, ClassicLauncher::Color tint)
     {
         ::DrawTexture(to_native_texture(texture), posX, posY, to_native_color(tint));
     }
 
-    void DrawTexturePro(Texture2D texture, ClassicLauncher::RectFloat src, ClassicLauncher::RectFloat dst, ClassicLauncher::Vector2f origin, float rotation, ClassicLauncher::ColorClassic tint)
+    void DrawTexturePro(Texture2D texture, ClassicLauncher::RectFloat src, ClassicLauncher::RectFloat dst, ClassicLauncher::Vector2f origin, float rotation, ClassicLauncher::Color tint)
     {
         ::DrawTexturePro(to_native_texture(texture), to_native_rec(src), to_native_rec(dst), to_native_vec(origin), rotation, to_native_color(tint));
     }
@@ -607,7 +607,7 @@ namespace rlw
         return ::IsTextureValid(to_native_texture(tex));
     }
 
-    Image GenImageColor(int width, int height, ClassicLauncher::ColorClassic color)
+    Image GenImageColor(int width, int height, ClassicLauncher::Color color)
     {
         return to_wrap_img(::GenImageColor(width, height, to_native_color(color)));
     }
@@ -651,7 +651,7 @@ namespace rlw
         return w;
     }
 
-    void DrawTextEx(Font font, const char* text, ClassicLauncher::Vector2f position, float fontSize, float spacing, ClassicLauncher::ColorClassic tint)
+    void DrawTextEx(Font font, const char* text, ClassicLauncher::Vector2f position, float fontSize, float spacing, ClassicLauncher::Color tint)
     {
         if (!font._native || !text) return;
         ::DrawTextEx(*static_cast<::Font*>(font._native), text, to_native_vec(position), fontSize, spacing, to_native_color(tint));

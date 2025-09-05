@@ -29,7 +29,7 @@ namespace ClassicLauncher
         , mPathFont()
         , mSize()
         , mSpacing()
-        , mColor(ColorClassic::White())
+        , mColor(Color::White)
         , mTextMovement(false)
         , mDesiredWidth(10)
         , mOffset(0)
@@ -114,7 +114,7 @@ namespace ClassicLauncher
         mSpacing = spacing;
     }
 
-    void GuiTextBlock::SetColor(ColorClassic tint)
+    void GuiTextBlock::SetColor(Color tint)
     {
         mColor = tint;
     }

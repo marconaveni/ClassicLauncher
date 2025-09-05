@@ -25,7 +25,7 @@ namespace ClassicLauncher
         std::string mPathFont;
         int mSize;
         int mSpacing;
-        ColorClassic mColor;
+        Color mColor;
         bool mTextMovement;
         int mDesiredWidth;
         float mOffset;
@@ -51,7 +51,7 @@ namespace ClassicLauncher
         void SetText(const std::string& text);
         void SetSize(int size);
         void SetSpacing(int spacing);
-        void SetColor(ColorClassic tint);
+        void SetColor(Color tint);
         Vector2f GetMeasureTextBox();
         const std::string& GetText() { return mText; }
         void SetTextOverflowPolicy(TextOverflowPolicy textOverflowPolicy);

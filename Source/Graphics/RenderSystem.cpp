@@ -70,7 +70,7 @@ namespace ClassicLauncher
         Rectangle point = {RectangleDrawArea.x, RectangleDrawArea.y, RectangleDrawArea.width, RectangleDrawArea.height};
         if (rlw::CheckCollisionPointRec(vec, point) && bEnable)
         {
-            rlw::DrawRectangleLinesEx(RectangleDrawArea, 2, ColorClassic::Red());
+            rlw::DrawRectangleLinesEx(RectangleDrawArea, 2, Color::Red);
             if (IsMouseButtonPressed( rlw::MOUSE_BUTTON_LEFT))
             {
                 PRINT(TEXT("nameID: %s", entity->mNameId.c_str()), 5.0f);
@@ -78,11 +78,11 @@ namespace ClassicLauncher
         }
         else if (bEnable)
         {
-            rlw::DrawRectangleLinesEx(RectangleDrawArea, 1, ColorClassic::Cyan());
+            rlw::DrawRectangleLinesEx(RectangleDrawArea, 1, Color::Cyan);
         }
         if (entity->mScissorMode && bEnable)
         {
-            const ColorClassic tint = ColorClassic(255, 0, 0, 55);
+            const Color tint = Color(255, 0, 0, 55);
             RectFloat scissorArea = entity->mScissorArea;
             scissorArea.width = scissorArea.width * entity->mTransform.GetRootScale().x * Themes::GetScaleTexture();
             scissorArea.height = scissorArea.height * entity->mTransform.GetRootScale().y * Themes::GetScaleTexture();

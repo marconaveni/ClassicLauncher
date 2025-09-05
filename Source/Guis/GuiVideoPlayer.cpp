@@ -89,7 +89,7 @@ namespace ClassicLauncher
         {
             const float scale = Themes::GetScaleTexture();
             const float x = (1280 * scale / 2) - (textureFullScreen->width / 2);
-            rlw::DrawTexture(*textureFullScreen, (int)x, 0, ColorClassic::White());
+            rlw::DrawTexture(*textureFullScreen, (int)x, 0, Color::White);
         }
     }
 

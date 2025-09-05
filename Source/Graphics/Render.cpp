@@ -51,7 +51,7 @@ namespace ClassicLauncher
     void Render::ClearRender()
     {
         rlw::BeginTextureMode(mRenderTexture);
-        rlw::ClearBackground(ColorClassic::WhiteGray());
+        rlw::ClearBackground(Color::WhiteGray);
         rlw::EndTextureMode();
     }
 
@@ -91,7 +91,7 @@ namespace ClassicLauncher
         }
 
         // Draw render texture to screen, properly scaled
-        rlw::DrawTexturePro(*texture, mSource, mDest, Vector2f{}, 0.0f, ColorClassic::White());
+        rlw::DrawTexturePro(*texture, mSource, mDest, Vector2f{}, 0.0f, Color::White);
     }
 
     void Render::Unload()

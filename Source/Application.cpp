@@ -148,7 +148,7 @@ namespace ClassicLauncher
             }
 
             rlw::BeginDrawing();
-            rlw::ClearBackground(ColorClassic::Black());
+            rlw::ClearBackground(Color::Black);
 
             mRender.ClearRender();
             mInputManager.UpdateInputState();
@@ -174,11 +174,11 @@ namespace ClassicLauncher
         mProcessManager.StatusProcessRun(this);
 
         GameList* pSystemList = mGameListManager.GetCurrentGameList();
-        PRINT(TEXT("========================================"), 2.0f, "line0", ColorClassic::Lime());
-        PRINT(TEXT("Music Playing %s", mAudioManager.GetMusicName().c_str()), 2.0f, "music", ColorClassic::Lime());
-        PRINT(TEXT("========================================"), 2.0f, "line", ColorClassic::Green());
-        PRINT(TEXT("%d fps", rlw::GetFPS()), 2.0f, "fps", ColorClassic::Green());
-        PRINT(TEXT("%.6f ms", rlw::GetFrameTime()), 2.0f, "ms", ColorClassic::Green());
+        PRINT(TEXT("========================================"), 2.0f, "line0", Color::Lime);
+        PRINT(TEXT("Music Playing %s", mAudioManager.GetMusicName().c_str()), 2.0f, "music", Color::Lime);
+        PRINT(TEXT("========================================"), 2.0f, "line", Color::Green);
+        PRINT(TEXT("%d fps", rlw::GetFPS()), 2.0f, "fps", Color::Green);
+        PRINT(TEXT("%.6f ms", rlw::GetFrameTime()), 2.0f, "ms", Color::Green);
         PRINT(TEXT("========================================"), 2.0f, "line2");
         if (pSystemList)
         {

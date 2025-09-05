@@ -9,8 +9,8 @@ namespace ClassicLauncher
 
     void SpriteManager::Init()
     {
-        rlw::Image transparentImage = rlw::GenImageColor(1, 1, ColorClassic::Transparent());
-        rlw::Image blackImage = rlw::GenImageColor(1, 1, ColorClassic::Black());
+        rlw::Image transparentImage = rlw::GenImageColor(1, 1, Color::Transparent);
+        rlw::Image blackImage = rlw::GenImageColor(1, 1, Color::Black);
         LoadSprite("transparent", transparentImage);
         LoadSprite("black", blackImage);
         rlw::UnloadImage(transparentImage);
