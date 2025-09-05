@@ -47,7 +47,7 @@ namespace ClassicLauncher
                 BeginScissorMode(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height);
             }
 
-            ::DrawTexturePro(
+            rlw::DrawTexturePro(
                 *texture, entity->mTransform.GetSource(), entity->mTransform.GetTransform(), Vector2Classic{ 0, 0 }, entity->mTransform.rotation, entity->mTransform.color);
             entity->Draw();
             DrawDebug(entity);
@@ -70,7 +70,7 @@ namespace ClassicLauncher
         if (CheckCollisionPointRec(vec, RectangleDrawArea) && bEnable)
         {
             rlw::DrawRectangleLinesEx(RectangleDrawArea, 2, ColorClassic::Red());
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+            if (IsMouseButtonPressed( rlw::MOUSE_BUTTON_LEFT))
             {
                 PRINT(TEXT("nameID: %s", entity->mNameId.c_str()), 5.0f);
             }

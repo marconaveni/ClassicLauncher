@@ -58,21 +58,6 @@ namespace rlw
         MOUSE_BUTTON_BACK = 6,     // Mouse button back (advanced mouse device)
     } MouseButton;
 
-    // Mouse cursor
-    typedef enum
-    {
-        MOUSE_CURSOR_DEFAULT = 0,        // Default pointer shape
-        MOUSE_CURSOR_ARROW = 1,          // Arrow shape
-        MOUSE_CURSOR_IBEAM = 2,          // Text writing cursor shape
-        MOUSE_CURSOR_CROSSHAIR = 3,      // Cross shape
-        MOUSE_CURSOR_POINTING_HAND = 4,  // Pointing hand cursor
-        MOUSE_CURSOR_RESIZE_EW = 5,      // Horizontal resize/move arrow shape
-        MOUSE_CURSOR_RESIZE_NS = 6,      // Vertical resize/move arrow shape
-        MOUSE_CURSOR_RESIZE_NWSE = 7,    // Top-left to bottom-right diagonal resize/move arrow shape
-        MOUSE_CURSOR_RESIZE_NESW = 8,    // The top-right to bottom-left diagonal resize/move arrow shape
-        MOUSE_CURSOR_RESIZE_ALL = 9,     // The omnidirectional resize/move cursor shape
-        MOUSE_CURSOR_NOT_ALLOWED = 10    // The operation-not-allowed shape
-    } MouseCursor;
 
     // Gamepad buttons
     typedef enum
@@ -107,85 +92,6 @@ namespace rlw
         GAMEPAD_AXIS_LEFT_TRIGGER = 4,  // Gamepad back trigger left, pressure level: [1..-1]
         GAMEPAD_AXIS_RIGHT_TRIGGER = 5  // Gamepad back trigger right, pressure level: [1..-1]
     } GamepadAxis;
-
-    // Material map index
-    typedef enum
-    {
-        MATERIAL_MAP_ALBEDO = 0,  // Albedo material (same as: MATERIAL_MAP_DIFFUSE)
-        MATERIAL_MAP_METALNESS,   // Metalness material (same as: MATERIAL_MAP_SPECULAR)
-        MATERIAL_MAP_NORMAL,      // Normal material
-        MATERIAL_MAP_ROUGHNESS,   // Roughness material
-        MATERIAL_MAP_OCCLUSION,   // Ambient occlusion material
-        MATERIAL_MAP_EMISSION,    // Emission material
-        MATERIAL_MAP_HEIGHT,      // Heightmap material
-        MATERIAL_MAP_CUBEMAP,     // Cubemap material (NOTE: Uses GL_TEXTURE_CUBE_MAP)
-        MATERIAL_MAP_IRRADIANCE,  // Irradiance material (NOTE: Uses GL_TEXTURE_CUBE_MAP)
-        MATERIAL_MAP_PREFILTER,   // Prefilter material (NOTE: Uses GL_TEXTURE_CUBE_MAP)
-        MATERIAL_MAP_BRDF         // Brdf material
-    } MaterialMapIndex;
-
-#define MATERIAL_MAP_DIFFUSE MATERIAL_MAP_ALBEDO
-#define MATERIAL_MAP_SPECULAR MATERIAL_MAP_METALNESS
-
-    // Shader location index
-    typedef enum
-    {
-        SHADER_LOC_VERTEX_POSITION = 0,  // Shader location: vertex attribute: position
-        SHADER_LOC_VERTEX_TEXCOORD01,    // Shader location: vertex attribute: texcoord01
-        SHADER_LOC_VERTEX_TEXCOORD02,    // Shader location: vertex attribute: texcoord02
-        SHADER_LOC_VERTEX_NORMAL,        // Shader location: vertex attribute: normal
-        SHADER_LOC_VERTEX_TANGENT,       // Shader location: vertex attribute: tangent
-        SHADER_LOC_VERTEX_COLOR,         // Shader location: vertex attribute: color
-        SHADER_LOC_MATRIX_MVP,           // Shader location: matrix uniform: model-view-projection
-        SHADER_LOC_MATRIX_VIEW,          // Shader location: matrix uniform: view (camera transform)
-        SHADER_LOC_MATRIX_PROJECTION,    // Shader location: matrix uniform: projection
-        SHADER_LOC_MATRIX_MODEL,         // Shader location: matrix uniform: model (transform)
-        SHADER_LOC_MATRIX_NORMAL,        // Shader location: matrix uniform: normal
-        SHADER_LOC_VECTOR_VIEW,          // Shader location: vector uniform: view
-        SHADER_LOC_COLOR_DIFFUSE,        // Shader location: vector uniform: diffuse color
-        SHADER_LOC_COLOR_SPECULAR,       // Shader location: vector uniform: specular color
-        SHADER_LOC_COLOR_AMBIENT,        // Shader location: vector uniform: ambient color
-        SHADER_LOC_MAP_ALBEDO,           // Shader location: sampler2d texture: albedo (same as: SHADER_LOC_MAP_DIFFUSE)
-        SHADER_LOC_MAP_METALNESS,        // Shader location: sampler2d texture: metalness (same as: SHADER_LOC_MAP_SPECULAR)
-        SHADER_LOC_MAP_NORMAL,           // Shader location: sampler2d texture: normal
-        SHADER_LOC_MAP_ROUGHNESS,        // Shader location: sampler2d texture: roughness
-        SHADER_LOC_MAP_OCCLUSION,        // Shader location: sampler2d texture: occlusion
-        SHADER_LOC_MAP_EMISSION,         // Shader location: sampler2d texture: emission
-        SHADER_LOC_MAP_HEIGHT,           // Shader location: sampler2d texture: height
-        SHADER_LOC_MAP_CUBEMAP,          // Shader location: samplerCube texture: cubemap
-        SHADER_LOC_MAP_IRRADIANCE,       // Shader location: samplerCube texture: irradiance
-        SHADER_LOC_MAP_PREFILTER,        // Shader location: samplerCube texture: prefilter
-        SHADER_LOC_MAP_BRDF,             // Shader location: sampler2d texture: brdf
-        SHADER_LOC_VERTEX_BONEIDS,       // Shader location: vertex attribute: boneIds
-        SHADER_LOC_VERTEX_BONEWEIGHTS,   // Shader location: vertex attribute: boneWeights
-        SHADER_LOC_BONE_MATRICES         // Shader location: array of matrices uniform: boneMatrices
-    } ShaderLocationIndex;
-
-#define SHADER_LOC_MAP_DIFFUSE SHADER_LOC_MAP_ALBEDO
-#define SHADER_LOC_MAP_SPECULAR SHADER_LOC_MAP_METALNESS
-
-    // Shader uniform data type
-    typedef enum
-    {
-        SHADER_UNIFORM_FLOAT = 0,  // Shader uniform type: float
-        SHADER_UNIFORM_VEC2,       // Shader uniform type: vec2 (2 float)
-        SHADER_UNIFORM_VEC3,       // Shader uniform type: vec3 (3 float)
-        SHADER_UNIFORM_VEC4,       // Shader uniform type: vec4 (4 float)
-        SHADER_UNIFORM_INT,        // Shader uniform type: int
-        SHADER_UNIFORM_IVEC2,      // Shader uniform type: ivec2 (2 int)
-        SHADER_UNIFORM_IVEC3,      // Shader uniform type: ivec3 (3 int)
-        SHADER_UNIFORM_IVEC4,      // Shader uniform type: ivec4 (4 int)
-        SHADER_UNIFORM_SAMPLER2D   // Shader uniform type: sampler2d
-    } ShaderUniformDataType;
-
-    // Shader attribute data types
-    typedef enum
-    {
-        SHADER_ATTRIB_FLOAT = 0,  // Shader attribute type: float
-        SHADER_ATTRIB_VEC2,       // Shader attribute type: vec2 (2 float)
-        SHADER_ATTRIB_VEC3,       // Shader attribute type: vec3 (3 float)
-        SHADER_ATTRIB_VEC4        // Shader attribute type: vec4 (4 float)
-    } ShaderAttributeDataType;
 
     // Pixel formats
     // NOTE: Support depends on OpenGL version and platform
@@ -225,77 +131,8 @@ namespace rlw
         TEXTURE_FILTER_POINT = 0,        // No filter, just pixel approximation
         TEXTURE_FILTER_BILINEAR,         // Linear filtering
         TEXTURE_FILTER_TRILINEAR,        // Trilinear filtering (linear with mipmaps)
-        TEXTURE_FILTER_ANISOTROPIC_4X,   // Anisotropic filtering 4x
-        TEXTURE_FILTER_ANISOTROPIC_8X,   // Anisotropic filtering 8x
-        TEXTURE_FILTER_ANISOTROPIC_16X,  // Anisotropic filtering 16x
     } TextureFilter;
 
-    // Texture parameters: wrap mode
-    typedef enum
-    {
-        TEXTURE_WRAP_REPEAT = 0,     // Repeats texture in tiled mode
-        TEXTURE_WRAP_CLAMP,          // Clamps texture to edge pixel in tiled mode
-        TEXTURE_WRAP_MIRROR_REPEAT,  // Mirrors and repeats the texture in tiled mode
-        TEXTURE_WRAP_MIRROR_CLAMP    // Mirrors and clamps to border the texture in tiled mode
-    } TextureWrap;
-
-    // Cubemap layouts
-    typedef enum
-    {
-        CUBEMAP_LAYOUT_AUTO_DETECT = 0,      // Automatically detect layout type
-        CUBEMAP_LAYOUT_LINE_VERTICAL,        // Layout is defined by a vertical line with faces
-        CUBEMAP_LAYOUT_LINE_HORIZONTAL,      // Layout is defined by a horizontal line with faces
-        CUBEMAP_LAYOUT_CROSS_THREE_BY_FOUR,  // Layout is defined by a 3x4 cross with cubemap faces
-        CUBEMAP_LAYOUT_CROSS_FOUR_BY_THREE   // Layout is defined by a 4x3 cross with cubemap faces
-    } CubemapLayout;
-
-    // Font type, defines generation method
-    typedef enum
-    {
-        FONT_DEFAULT = 0,  // Default font generation, anti-aliased
-        FONT_BITMAP,       // Bitmap font generation, no anti-aliasing
-        FONT_SDF           // SDF font generation, requires external shader
-    } FontType;
-
-    // Color blending modes (pre-defined)
-    typedef enum
-    {
-        BLEND_ALPHA = 0,          // Blend textures considering alpha (default)
-        BLEND_ADDITIVE,           // Blend textures adding colors
-        BLEND_MULTIPLIED,         // Blend textures multiplying colors
-        BLEND_ADD_COLORS,         // Blend textures adding colors (alternative)
-        BLEND_SUBTRACT_COLORS,    // Blend textures subtracting colors (alternative)
-        BLEND_ALPHA_PREMULTIPLY,  // Blend premultiplied textures considering alpha
-        BLEND_CUSTOM,             // Blend textures using custom src/dst factors (use rlSetBlendFactors())
-        BLEND_CUSTOM_SEPARATE     // Blend textures using custom rgb/alpha separate src/dst factors (use rlSetBlendFactorsSeparate())
-    } BlendMode;
-
-    // Gesture
-    // NOTE: Provided as bit-wise flags to enable only desired gestures
-    typedef enum
-    {
-        GESTURE_NONE = 0,          // No gesture
-        GESTURE_TAP = 1,           // Tap gesture
-        GESTURE_DOUBLETAP = 2,     // Double tap gesture
-        GESTURE_HOLD = 4,          // Hold gesture
-        GESTURE_DRAG = 8,          // Drag gesture
-        GESTURE_SWIPE_RIGHT = 16,  // Swipe right gesture
-        GESTURE_SWIPE_LEFT = 32,   // Swipe left gesture
-        GESTURE_SWIPE_UP = 64,     // Swipe up gesture
-        GESTURE_SWIPE_DOWN = 128,  // Swipe down gesture
-        GESTURE_PINCH_IN = 256,    // Pinch in gesture
-        GESTURE_PINCH_OUT = 512    // Pinch out gesture
-    } Gesture;
-
-    // Camera system modes
-    typedef enum
-    {
-        CAMERA_CUSTOM = 0,    // Camera custom, controlled by user (UpdateCamera() does nothing)
-        CAMERA_FREE,          // Camera free mode
-        CAMERA_ORBITAL,       // Camera orbital, around target, zoom supported
-        CAMERA_FIRST_PERSON,  // Camera first person
-        CAMERA_THIRD_PERSON   // Camera third person
-    } CameraMode;
 
     // Keyboard keys (US keyboard layout)
     // NOTE: Use GetKeyPressed() to allow redefining
@@ -411,11 +248,6 @@ namespace rlw
         KEY_KP_ADD = 334,       // Key: Keypad +
         KEY_KP_ENTER = 335,     // Key: Keypad Enter
         KEY_KP_EQUAL = 336,     // Key: Keypad =
-        // Android key buttons
-        KEY_BACK = 4,         // Key: Android back button
-        KEY_MENU = 5,         // Key: Android menu button
-        KEY_VOLUME_UP = 24,   // Key: Android volume up button
-        KEY_VOLUME_DOWN = 25  // Key: Android volume down button
     } KeyboardKey;
 
     typedef enum
