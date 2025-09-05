@@ -71,7 +71,7 @@ namespace ClassicLauncher
         EntityGui::Update();
         // mSizeBox->mProperties.offset.x += 0.03f;
         // mSizeBox->mProperties.offset.y += 0.03f;
-        const Texture2D* textureReference = GetApplication()->GetSpriteManager()->GetTexture(mCover->mTextureName);
+        const rlw::Texture2D* textureReference = GetApplication()->GetSpriteManager()->GetTexture(mCover->mTextureName);
         const Animation& pAnim = GetAnimation("card-zoom");
         if (textureReference != nullptr && mCover->mTextureName != "sprite" && !pAnim.mIsRunning && mCover->mTransform.width == 0 && mCover->mTransform.height == 0)
         {

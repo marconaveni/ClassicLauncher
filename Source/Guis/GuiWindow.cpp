@@ -52,22 +52,22 @@ namespace ClassicLauncher
 
 
 #ifdef _DEBUG
-        if (IsKeyReleased(KEY_ONE))
+        if (rlw::IsKeyReleased(rlw::KEY_ONE))
         {
             mTextureName = mTextureName != "ref0" ? "ref0" : "transparent";
             mGuiBackground->mTextureName = mTextureName != "transparent" ? "transparent" : "sprite";
         }
-        if (IsKeyReleased(KEY_TWO))
+        if (rlw::IsKeyReleased(rlw::KEY_TWO))
         {
             mTextureName = mTextureName != "ref1" ? "ref1" : "transparent";
             mGuiBackground->mTextureName = mTextureName != "transparent" ? "transparent" : "sprite";
         }
-        if (IsKeyReleased(KEY_THREE))
+        if (rlw::IsKeyReleased(rlw::KEY_THREE))
         {
             mTextureName = mTextureName != "ref2" ? "ref2" : "transparent";
             mGuiBackground->mTextureName = mTextureName != "transparent" ? "transparent" : "sprite";
         }
-        if (IsKeyReleased(KEY_FOUR))
+        if (rlw::IsKeyReleased(rlw::KEY_FOUR))
         {
             mTextureName = mTextureName != "ref3" ? "ref3" : "transparent";
             mGuiBackground->mTextureName = mTextureName != "transparent" ? "transparent" : "sprite";
@@ -165,7 +165,7 @@ namespace ClassicLauncher
     void GuiWindow::Teste()
     {
 #ifdef _DEBUG
-        if (IsKeyReleased(KEY_EIGHT))
+        if (rlw::IsKeyReleased(rlw::KEY_EIGHT))
         {
             if (mGuiHorizontalBox == nullptr)
             {

@@ -30,7 +30,7 @@ namespace ClassicLauncher
         // repeat code todo remove this after refactor
         std::string path = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/" + mCurrentSystemName + "/");
         std::vector<std::string> paths;
-        if (DirectoryExists(path.c_str()))
+        if (rlw::DirectoryExists(path.c_str()))
         {
             paths.emplace_back(path);
         }
@@ -40,7 +40,7 @@ namespace ClassicLauncher
 
     bool Themes::GetPathTheme(std::string& file, int monitorWidth, int monitorCompare, const std::string& path, float numScale)
     {
-        if (monitorWidth <= monitorCompare && FileExists(path.c_str()))
+        if (monitorWidth <= monitorCompare && rlw::FileExists(path.c_str()))
         {
             file = path;
             LOG(LOG_CLASSIC_DEBUG, "%.1f x sprite path [%s]", numScale, path.c_str());
@@ -59,7 +59,7 @@ namespace ClassicLauncher
 
         std::vector<std::string> paths;
         paths = GetThemeDirs();
-        const int monitorWidth = GetMonitorWidth(GetCurrentMonitor());
+        const int monitorWidth = rlw::GetMonitorWidth(rlw::GetCurrentMonitor());
         int scales[3] = { 1, 2, 3 };
         int widths[3] = { 1280, 2580, 3840 };
 

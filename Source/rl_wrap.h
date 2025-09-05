@@ -12,6 +12,7 @@
 #include <cstdint>
 #include "Data/Vector2.h"
 #include "Data/Rectangle.h"
+#include "Data/Color.h"
 
 namespace rlw
 {
@@ -21,32 +22,7 @@ namespace rlw
     inline constexpr unsigned int FLAG_WINDOW_RESIZABLE = 0x00000004;
     inline constexpr unsigned int FLAG_WINDOW_UNDECORATED = 0x00000008;
 
-#define C_LIGHTGRAY Color{ 200, 200, 200, 255 }  // Light Gray
-#define C_GRAY Color{ 130, 130, 130, 255 }       // Gray
-#define C_DARKGRAY Color{ 80, 80, 80, 255 }      // Dark Gray
-#define C_YELLOW Color{ 253, 249, 0, 255 }       // Yellow
-#define C_GOLD Color{ 255, 203, 0, 255 }         // Gold
-#define C_ORANGE Color{ 255, 161, 0, 255 }       // Orange
-#define C_PINK Color{ 255, 109, 194, 255 }       // Pink
-#define C_RED Color{ 230, 41, 55, 255 }          // Red
-#define C_MAROON Color{ 190, 33, 55, 255 }       // Maroon
-#define C_GREEN Color{ 0, 228, 48, 255 }         // Green
-#define C_LIME Color{ 0, 158, 47, 255 }          // Lime
-#define C_DARKGREEN Color{ 0, 117, 44, 255 }     // Dark Green
-#define C_SKYBLUE Color{ 102, 191, 255, 255 }    // Sky Blue
-#define C_BLUE Color{ 0, 121, 241, 255 }         // Blue
-#define C_DARKBLUE Color{ 0, 82, 172, 255 }      // Dark Blue
-#define C_PURPLE Color{ 200, 122, 255, 255 }     // Purple
-#define C_VIOLET Color{ 135, 60, 190, 255 }      // Violet
-#define C_DARKPURPLE Color{ 112, 31, 126, 255 }  // Dark Purple
-#define C_BEIGE Color{ 211, 176, 131, 255 }      // Beige
-#define C_BROWN Color{ 127, 106, 79, 255 }       // Brown
-#define C_DARKBROWN Color{ 76, 63, 47, 255 }     // DarkBrown
-#define C_WHITE Color{ 255, 255, 255, 255 }      // White
-#define C_BLACK Color{ 0, 0, 0, 255 }            // Black
-#define C_BLANK Color{ 0, 0, 0, 0 }              // Blank (Transparent)
-#define C_MAGENTA Color{ 255, 0, 255, 255 }      // Magenta
-#define C_RAYWHITE Color{ 245, 245, 245, 255 }   // My own White (raylib logo)
+
 
     // Mouse buttons
     typedef enum
@@ -254,10 +230,7 @@ namespace rlw
 
 
 
-    struct Color
-    {
-        unsigned char r, g, b, a;
-    };
+    
 
     struct Image
     {
@@ -329,11 +302,11 @@ namespace rlw
         bool _owned{ false };  // true: veio de LoadFontEx (descarrega); false: default font (não descarrega)
     };
 
-    // --- Utilitários de cor comuns ---
-    inline Color ColorRGBA(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
-    {
-        return Color{ r, g, b, a };
-    }
+    // // --- Utilitários de cor comuns ---
+    // inline Color ColorRGBA(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
+    // {
+    //     return Color{ r, g, b, a };
+    // }
 
     // --- Logging / Config / Janela ---
     void SetTraceLogCallback(void (*callback)(int logLevel, const char* text, va_list args));
@@ -388,7 +361,7 @@ namespace rlw
     // --- Desenho 2D ---
     void BeginDrawing();
     void EndDrawing();
-    void ClearBackground(Color color);
+    void ClearBackground(ClassicLauncher::ColorClassic color);
 
     void DrawTexturePro(Texture2D texture,
                         /*source*/ float srcX,
@@ -408,27 +381,27 @@ namespace rlw
     void EndScissorMode();
 
     // Retângulos
-    void DrawRectangle(int x, int y, int width, int height, Color color);
-    void DrawRectangleLinesEx(ClassicLauncher::RectFloat rec, float lineThick, Color color);
+    void DrawRectangle(int x, int y, int width, int height, ClassicLauncher::ColorClassic color);
+    void DrawRectangleLinesEx(ClassicLauncher::RectFloat rec, float lineThick, ClassicLauncher::ColorClassic color);
 
     // Colisão
     bool CheckCollisionPointRec(ClassicLauncher::Vector2f point, ClassicLauncher::RectFloat rec);
     bool CheckCollisionRecs(ClassicLauncher::RectFloat rec1, ClassicLauncher::RectFloat rec2);
 
     // Texturas simples e "pro"
-    void DrawTexture(Texture2D texture, int posX, int posY, Color tint);
-    void DrawTexturePro(Texture2D texture, ClassicLauncher::RectFloat src, ClassicLauncher::RectFloat dst, ClassicLauncher::Vector2f origin, float rotation, Color tint);
+    void DrawTexture(Texture2D texture, int posX, int posY, ClassicLauncher::ColorClassic tint);
+    void DrawTexturePro(Texture2D texture, ClassicLauncher::RectFloat src, ClassicLauncher::RectFloat dst, ClassicLauncher::Vector2f origin, float rotation, ClassicLauncher::ColorClassic tint);
 
     bool IsImageValid(Image image);      // mapeia para IsImageReady
     bool IsTextureValid(Texture2D tex);  // mapeia para IsTextureReady
-    Image GenImageColor(int width, int height, Color color);
+    Image GenImageColor(int width, int height, ClassicLauncher::ColorClassic color);
     Image ImageCopy(Image src);
     void UpdateTexture(Texture2D texture, const void* pixels);
 
     bool IsFontValid(Font font);  // mapeia para IsFontReady
     void UnloadFont(Font font);
     Font LoadFontEx(const char* fileName, int fontSize, int* codepoints, int codepointCount);
-    void DrawTextEx(Font font, const char* text, ClassicLauncher::Vector2f position, float fontSize, float spacing, Color tint);
+    void DrawTextEx(Font font, const char* text, ClassicLauncher::Vector2f position, float fontSize, float spacing, ClassicLauncher::ColorClassic tint);
     ClassicLauncher::Vector2f MeasureTextEx(Font font, const char* text, float fontSize, float spacing);
 
     bool IsMouseButtonPressed(int button);

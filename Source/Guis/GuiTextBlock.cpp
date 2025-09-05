@@ -14,17 +14,17 @@ namespace ClassicLauncher
 
     void GuiTextBlock::UpdateFont(const std::string& path)
     {
-        if (IsFontValid(mFont))
+        if (rlw::IsFontValid(mFont))
         {
-            UnloadFont(mFont);
-            mFont = Font();
+            rlw::UnloadFont(mFont);
+            mFont = rlw::Font();
         }
         const float scale = Themes::GetScaleTexture();
-        mFont = LoadFontEx(path.data(), mSize * scale, NULL, 250);
+        mFont = rlw::LoadFontEx(path.data(), mSize * scale, NULL, 250);
     }
 
     GuiTextBlock::GuiTextBlock(const std::string& path, int size, int spacing)
-        : mFont(Font{ 0 })
+        : mFont()
         , mText()
         , mPathFont()
         , mSize()
@@ -63,11 +63,11 @@ namespace ClassicLauncher
         {
             if (mDelay < mMaxDelay)
             {
-                mDelay += GetFrameTime();
+                mDelay += rlw::GetFrameTime();
                 return;
             }
 
-            mSpeed = 0.50f * 60.0f * GetFrameTime();
+            mSpeed = 0.50f * 60.0f * rlw::GetFrameTime();
 
             if (positionText - mOffset > 0 || positionText - mOffset < positionText)
             {
@@ -85,7 +85,7 @@ namespace ClassicLauncher
         Vector2f posi = { mTransform.GetTransform().x, mTransform.GetTransform().y };
         posi.x += mOffset * Themes::GetScaleTexture();
         Vector2f scale = mTransform.GetScale();
-        DrawTextEx(mFont, mText.data(), posi, mSize * Math::Max(scale.x * Themes::GetScaleTexture(), scale.y * Themes::GetScaleTexture()), mSpacing, mColor);
+        rlw::DrawTextEx(mFont, mText.data(), posi, mSize * Math::Max(scale.x * Themes::GetScaleTexture(), scale.y * Themes::GetScaleTexture()), mSpacing, mColor);
     }
 
     void GuiTextBlock::End()
@@ -126,7 +126,7 @@ namespace ClassicLauncher
 
     Vector2f GuiTextBlock::MeasureTextBox()
     {
-        return MeasureTextEx(mFont, mText.c_str(), mSize, mSpacing);
+        return rlw::MeasureTextEx(mFont, mText.c_str(), mSize, mSpacing);
     }
 
     void GuiTextBlock::SetTextOverflowPolicy(TextOverflowPolicy textOverflowPolicy)
@@ -147,10 +147,10 @@ namespace ClassicLauncher
 
     void GuiTextBlock::UnloadText()
     {
-        if (IsFontValid(mFont))
+        if (rlw::IsFontValid(mFont))
         {
-            UnloadFont(mFont);
-            mFont = Font();
+            rlw::UnloadFont(mFont);
+            mFont = rlw::Font();
         }
     }
 

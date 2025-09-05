@@ -32,7 +32,7 @@ namespace ClassicLauncher
 
     void RenderSystem::DrawEntity(Entity* entity)
     {
-        const Texture2D* texture = mSpriteManagerReference->GetTexture(entity->mTextureName);
+        const rlw::Texture2D* texture = mSpriteManagerReference->GetTexture(entity->mTextureName);
 
         //if (texture && entity->mToDraw && entity->mTextureName != "transparent")  // todo verify render
         if (texture && entity->mToDraw)
@@ -44,7 +44,7 @@ namespace ClassicLauncher
                 RectFloat scissorArea = entity->mScissorArea;
                 scissorArea.width = scissorArea.width * entity->mTransform.GetRootScale().x * Themes::GetScaleTexture();
                 scissorArea.height = scissorArea.height * entity->mTransform.GetRootScale().y * Themes::GetScaleTexture();
-                BeginScissorMode(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height);
+                rlw::BeginScissorMode(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height);
             }
 
             rlw::DrawTexturePro(
@@ -54,7 +54,7 @@ namespace ClassicLauncher
 
             if (entity->mScissorMode)
             {
-                EndScissorMode();
+                rlw::EndScissorMode();
                 entity->DisableScissorMode();
             }
             entity->mToDraw = false;
@@ -86,7 +86,7 @@ namespace ClassicLauncher
             RectFloat scissorArea = entity->mScissorArea;
             scissorArea.width = scissorArea.width * entity->mTransform.GetRootScale().x * Themes::GetScaleTexture();
             scissorArea.height = scissorArea.height * entity->mTransform.GetRootScale().y * Themes::GetScaleTexture();
-            DrawRectangle(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height, tint);
+            rlw::DrawRectangle(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height, tint);
         }
 #endif  // _DEBUG
     }

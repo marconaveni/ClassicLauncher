@@ -1,5 +1,6 @@
 #include "Animation.h"
 #include "reasings/reasings.h"
+#include "rl_wrap.h"
 
 namespace ClassicLauncher
 {
@@ -44,7 +45,7 @@ namespace ClassicLauncher
                 mCurrentTransform.color.b = GetAnimation(mCurrentTime, mStartTransform.color.b, mFinalTransform.color.b - mStartTransform.color.b, mDuration);
                 mCurrentTransform.color.a = GetAnimation(mCurrentTime, mStartTransform.color.a, mFinalTransform.color.a - mStartTransform.color.a, mDuration);
 
-                mCurrentTime += GetFrameTime();
+                mCurrentTime += rlw::GetFrameTime();
                 return;
             }
 

@@ -219,26 +219,26 @@ namespace ClassicLauncher
         //     PRINT(TEXT("Set Scale to %.2f", mTransform.scaleX));
         // }
 
-        if (IsKeyReleased(KEY_SEVEN) || IsKeyReleased(KEY_SIX))
+        if (rlw::IsKeyReleased(rlw::KEY_SEVEN) || rlw::IsKeyReleased(rlw::KEY_SIX))
         {
-            if (IsKeyReleased(KEY_SIX))
+            if (rlw::IsKeyReleased(rlw::KEY_SIX))
             {
                 fps = 15;
             }
             fps += 15;
-            SetTargetFPS(fps);
+            rlw::SetTargetFPS(fps);
             PRINT(TEXT("Set FPS to %d", fps));
         }
 
         if (InputManager::IsDown(InputName::rightTriggerFront, main))
         {
-            mSpeed = Math::Clamp(256.0f * 60.0f * GetFrameTime(), 0.0f, 256.0f);
+            mSpeed = Math::Clamp(256.0f * 60.0f * rlw::GetFrameTime(), 0.0f, 256.0f);
         }
         else if (InputManager::IsPress(InputName::leftFaceLeft, main) || InputManager::IsPress(InputName::leftFaceRight, main))
         {
-            mSpeed = 20.0f * 60.0f * GetFrameTime();
+            mSpeed = 20.0f * 60.0f * rlw::GetFrameTime();
             GetApplication()->GetTimerManager()->SetTimer(
-                mTimerInputSpeed, [&]() { mSpeed = Math::Clamp(88.0f * 60.0f * GetFrameTime(), 0.0f, 256.0f); }, this, 2.5f, false);
+                mTimerInputSpeed, [&]() { mSpeed = Math::Clamp(88.0f * 60.0f * rlw::GetFrameTime(), 0.0f, 256.0f); }, this, 2.5f, false);
         }
 
         // PRINT(TEXT("mSpeed %.8f", mSpeed), 5.0f, "mspeed");

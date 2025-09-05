@@ -9,12 +9,12 @@ namespace ClassicLauncher
 
     void SpriteManager::Init()
     {
-        Image transparentImage = GenImageColor(1, 1, ColorClassic::Blank());
-        Image blackImage = GenImageColor(1, 1, ColorClassic::Black());
+        rlw::Image transparentImage = rlw::GenImageColor(1, 1, ColorClassic::Transparent());
+        rlw::Image blackImage = rlw::GenImageColor(1, 1, ColorClassic::Black());
         LoadSprite("transparent", transparentImage);
         LoadSprite("black", blackImage);
-        UnloadImage(transparentImage);
-        UnloadImage(blackImage);
+        rlw::UnloadImage(transparentImage);
+        rlw::UnloadImage(blackImage);
     }
 
     void SpriteManager::LoadSprite(const std::string& name, const std::string& fileName, const int width, const int height, bool bAspectRatio)
@@ -22,7 +22,7 @@ namespace ClassicLauncher
         mSpriteMap[name].Load(fileName, width, height, bAspectRatio);
     }
 
-    void SpriteManager::LoadSprite(const std::string& name, const Image& image, const int width, const int height, bool bAspectRatio)
+    void SpriteManager::LoadSprite(const std::string& name, const rlw::Image& image, const int width, const int height, bool bAspectRatio)
     {
         mSpriteMap[name].Load(image, width, height, bAspectRatio);
     }
@@ -33,7 +33,7 @@ namespace ClassicLauncher
         mSpriteMap[name].Load(fileName, width, height, bAspectRatio);
     }
 
-    Texture2D* SpriteManager::GetTexture(const std::string& name)
+    rlw::Texture2D* SpriteManager::GetTexture(const std::string& name)
     {
         auto it = mSpriteMap.find(name);
         if (it == mSpriteMap.end())
@@ -43,7 +43,7 @@ namespace ClassicLauncher
         return mSpriteMap[name].GetTexture();
     }
 
-    Image* SpriteManager::GetImage(std::string name)
+    rlw::Image* SpriteManager::GetImage(std::string name)
     {
         return mSpriteMap[name].GetImage();
     }

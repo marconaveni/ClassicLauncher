@@ -17,7 +17,7 @@ namespace ClassicLauncher
         Entity::Update();
         for (auto& spriteAnimation : mSpriteAnimations)
         {
-            spriteAnimation.second.Update(::GetFrameTime());
+            spriteAnimation.second.Update(rlw::GetFrameTime());
             Rectangle rec = spriteAnimation.second.GetCurrentSprite();
             mTransform.sourceX = rec.x;
             mTransform.sourceY = rec.y;

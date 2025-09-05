@@ -104,12 +104,12 @@ namespace ClassicLauncher
             const Vector2f positionRender = { 30, y };
             const Vector2f positionRenderShadow = { 31, y + 1 };
 
-            DrawTextEx(mFont, message.textMessage.data(), positionRenderShadow, mSize, mSpacing, C_BLACK);
+            DrawTextEx(mFont, message.textMessage.data(), positionRenderShadow, mSize, mSpacing, ColorClassic::Black());
             DrawTextEx(mFont, message.textMessage.data(), positionRender, mSize, mSpacing, message.textColor);
 
             y += message.size;
 
-            if (y > GetScreenHeight())
+            if (y > rlw::GetScreenHeight())
             {
                 break;
             }
@@ -122,10 +122,10 @@ namespace ClassicLauncher
 #ifdef _DEBUG
         this->mSize = size;
         this->mSpacing = spacing;
-        mFont = LoadFontEx(path.c_str(), size, nullptr, 250);
-        if (!IsFontValid(mFont))
+        mFont = rlw::LoadFontEx(path.c_str(), size, nullptr, 250);
+        if (!rlw::IsFontValid(mFont))
         {
-            mFont = GetFontDefault();
+            mFont = rlw::GetFontDefault();
         }
 #endif
     }

@@ -75,21 +75,21 @@ namespace ClassicLauncher
 
         if (!mPlayer) return;
 
-        Texture2D* texture = mPlayer->GetVideoTexture();
+        rlw::Texture2D* texture = mPlayer->GetVideoTexture();
         if (texture)
         {
             const Transformation& transform = mTransform;
-            DrawTexturePro(*texture, mTransform.GetSource(), mTransform.GetTransform(), Vector2f{ 0, 0 }, transform.rotation, transform.color);
+            rlw::DrawTexturePro(*texture, mTransform.GetSource(), mTransform.GetTransform(), Vector2f{ 0, 0 }, transform.rotation, transform.color);
         }
 
         if (!mPlayerFullScreen) return;
 
-        Texture2D* textureFullScreen = mPlayerFullScreen->GetVideoTexture();
+        rlw::Texture2D* textureFullScreen = mPlayerFullScreen->GetVideoTexture();
         if (texture)
         {
             const float scale = Themes::GetScaleTexture();
             const float x = (1280 * scale / 2) - (textureFullScreen->width / 2);
-            DrawTexture(*textureFullScreen, (int)x, 0, ColorClassic::White());
+            rlw::DrawTexture(*textureFullScreen, (int)x, 0, ColorClassic::White());
         }
     }
 

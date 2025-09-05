@@ -58,7 +58,7 @@ namespace ClassicLauncher
 
         for (auto& miniCover : mGuiCovers)
         {
-            Texture2D* textureReference = GetApplication()->GetSpriteManager()->GetTexture(miniCover->mTextureName);
+            rlw::Texture2D* textureReference = GetApplication()->GetSpriteManager()->GetTexture(miniCover->mTextureName);
             const float scale = Themes::GetScaleTexture();
             if (textureReference != nullptr && miniCover->mTextureName != "sprite" && miniCover->mTransform.width == 0 && miniCover->mTransform.height == 0)
             {

@@ -3,6 +3,7 @@
 
 #include <functional>
 #include "Entity/Entity.h"
+#include "rl_wrap.h"
 
 namespace ClassicLauncher
 {
@@ -44,7 +45,7 @@ namespace ClassicLauncher
             {
                 if (mCurrentTime <= mDelay)
                 {
-                    mCurrentTime += GetFrameTime();
+                    mCurrentTime += rlw::GetFrameTime();
                     return;
                 }
                 mCallback();
@@ -63,7 +64,7 @@ namespace ClassicLauncher
         void Reset()
         {
             mCurrentTime = 0.0;                   // Reset current time
-            mDuration = mDelay / (double)GetFrameTime();  // Set duration based on frame time
+            mDuration = mDelay / (double)rlw::GetFrameTime();  // Set duration based on frame time
             mIsFunctionCalled = false;            // Reset the function called state
         }
 

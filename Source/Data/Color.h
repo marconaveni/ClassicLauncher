@@ -1,35 +1,28 @@
 #ifndef COLOR_H
 #define COLOR_H
 
-#include <string>
-#include "rl_wrap.h"
-using namespace rlw;
-
 namespace ClassicLauncher
 {
-    class ColorClassic : public ::Color
+    class ColorClassic
     {
     public:
 
+        unsigned char r;
+        unsigned char g;
+        unsigned char b;
+        unsigned char a;
+
         // Default white
         ColorClassic()
-            : ::Color{ 255, 255, 255, 255 } {};
+            : r(255), g(255), b(255), a(255) {};
 
         ColorClassic(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha = 255)
-            : ::Color{ red, green, blue, alpha } {};
+            : r(red), g(green), b(blue), a(alpha) {};
 
-        void Set(const ::Color& color)
-        {
-            r = color.r;
-            g = color.g;
-            b = color.b;
-            a = color.a;
-        }
+        bool operator==(const ColorClassic& other) const { return r == other.r && g == other.g && b == other.b && a == other.a; }
+        bool operator!=(const ColorClassic& other) const { return !(*this == other); }
 
-        bool operator==(const ::Color& other) const { return r == other.r && g == other.g && b == other.b && a == other.a; }
-        bool operator!=(const ::Color& other) const { return !(*this == other); }
-
-        void SetColor(int red, int green, int blue)
+        void SetColor(unsigned char red, unsigned char green, unsigned char blue)
         {
             if (red < 0)
             {
@@ -78,35 +71,35 @@ namespace ClassicLauncher
         int GetColorBlue() const { return b; }
         int GetColorAlpha() const { return a; }
 
-        ColorClassic GetColor() const { return *this; }
 
-        std::string ToString() const { return TextFormat("Color(red: %d, green: %d, blue: %d, alpha: %d)", r, g, b, a); }
 
-        static ColorClassic Yellow() { return ColorClassic{ 253, 249, 0, 255 }; }
-        static ColorClassic Gold() { return ColorClassic{ 255, 203, 0, 255 }; }
-        static ColorClassic Orange() { return ColorClassic{ 255, 161, 0, 255 }; }
-        static ColorClassic Pink() { return ColorClassic{ 255, 109, 194, 255 }; }
-        static ColorClassic Red() { return ColorClassic{ 230, 41, 55, 255 }; }
-        static ColorClassic Maroon() { return ColorClassic{ 190, 33, 55, 255 }; }
-        static ColorClassic Green() { return ColorClassic{ 0, 228, 48, 255 }; }
-        static ColorClassic Lime() { return ColorClassic{ 0, 158, 47, 255 }; }
-        static ColorClassic DarkGreen() { return ColorClassic{ 0, 117, 44, 255 }; }
-        static ColorClassic SkyBlue() { return ColorClassic{ 102, 191, 255, 255 }; }
-        static ColorClassic Blue() { return ColorClassic{ 0, 121, 241, 255 }; }
-        static ColorClassic DarkBlue() { return ColorClassic{ 0, 82, 172, 255 }; }
-        static ColorClassic Purple() { return ColorClassic{ 200, 122, 255, 255 }; }
-        static ColorClassic Violet() { return ColorClassic{ 135, 60, 190, 255 }; }
-        static ColorClassic DarkPurple() { return ColorClassic{ 112, 31, 126, 255 }; }
-        static ColorClassic Beige() { return ColorClassic{ 211, 176, 131, 255 }; }
-        static ColorClassic Brown() { return ColorClassic{ 127, 106, 79, 255 }; }
-        static ColorClassic DarkBrown() { return ColorClassic{ 76, 63, 47, 255 }; }
-        static ColorClassic White() { return ColorClassic{ 255, 255, 255, 255 }; }
-        static ColorClassic Black() { return ColorClassic{ 0, 0, 0, 255 }; }
-        static ColorClassic Blank() { return ColorClassic{ 0, 0, 0, 0 }; }
-        static ColorClassic Magenta() { return ColorClassic{ 255, 0, 255, 255 }; }
-        static ColorClassic RayWhite() { return ColorClassic{ 245, 245, 245, 255 }; }
-        static ColorClassic Cyan() { return ColorClassic{ 0, 255, 255, 255 }; }
-        static ColorClassic Transparent() { return ColorClassic{ 0, 0, 0, 0 }; }
+        static ColorClassic WhiteGray() { return ColorClassic{ 245, 245, 245, 255 }; }  // Gray (Almost White)
+        static ColorClassic LightGray() { return ColorClassic{ 200, 200, 200, 255 }; }  // Light Gray
+        static ColorClassic Gray() { return ColorClassic{ 130, 130, 130, 255 }; }       // Gray
+        static ColorClassic DarkGray() { return ColorClassic{ 80, 80, 80, 255 }; }      // Dark Gray
+        static ColorClassic Yellow() { return ColorClassic{ 253, 249, 0, 255 }; }       // Yellow
+        static ColorClassic Gold() { return ColorClassic{ 255, 203, 0, 255 }; }         // Gold
+        static ColorClassic Orange() { return ColorClassic{ 255, 161, 0, 255 }; }       // Orange
+        static ColorClassic Pink() { return ColorClassic{ 255, 109, 194, 255 }; }       // Pink
+        static ColorClassic Red() { return ColorClassic{ 230, 41, 55, 255 }; }          // Red
+        static ColorClassic Maroon() { return ColorClassic{ 190, 33, 55, 255 }; }       // Maroon
+        static ColorClassic Green() { return ColorClassic{ 0, 228, 48, 255 }; }         // Green
+        static ColorClassic Lime() { return ColorClassic{ 0, 158, 47, 255 }; }          // Lime
+        static ColorClassic DarkGreen() { return ColorClassic{ 0, 117, 44, 255 }; }     // Dark Green
+        static ColorClassic SkyBlue() { return ColorClassic{ 102, 191, 255, 255 }; }    // Sky Blue
+        static ColorClassic Blue() { return ColorClassic{ 0, 121, 241, 255 }; }         // Blue
+        static ColorClassic DarkBlue() { return ColorClassic{ 0, 82, 172, 255 }; }      // Dark Blue
+        static ColorClassic Purple() { return ColorClassic{ 200, 122, 255, 255 }; }     // Purple
+        static ColorClassic Violet() { return ColorClassic{ 135, 60, 190, 255 }; }      // Violet
+        static ColorClassic DarkPurple() { return ColorClassic{ 112, 31, 126, 255 }; }  // Dark Purple
+        static ColorClassic Beige() { return ColorClassic{ 211, 176, 131, 255 }; }      // Beige
+        static ColorClassic Brown() { return ColorClassic{ 127, 106, 79, 255 }; }       // Brown
+        static ColorClassic DarkBrown() { return ColorClassic{ 76, 63, 47, 255 }; }     // DarkBrown
+        static ColorClassic White() { return ColorClassic{ 255, 255, 255, 255 }; }      // White
+        static ColorClassic Black() { return ColorClassic{ 0, 0, 0, 255 }; }            // Black
+        static ColorClassic Magenta() { return ColorClassic{ 255, 0, 255, 255 }; }      // Magenta
+        static ColorClassic Cyan() { return ColorClassic{ 0, 255, 255, 255 }; }         // Cyan
+        static ColorClassic Transparent() { return ColorClassic{ 0, 0, 0, 0 }; }        // Transparent (no color)
     };
 
 }  // namespace ClassicLauncher

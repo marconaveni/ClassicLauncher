@@ -42,22 +42,22 @@ namespace ClassicLauncher
         mConfigurationManager.LoadConfiguration();
 
         LogLevel(mConfigurationManager.GetClassicLogLevel(), mConfigurationManager.GetRaylibLogLevel());
-        SetTraceLogCallback(TraceLogger);
+        rlw::SetTraceLogCallback(TraceLogger);
 
         Resources::SetClassicLauncherDir();
         mGameListManager.Initialize();
 
-        InitAudioDevice();
+        rlw::InitAudioDevice();
 
         if (mConfigurationManager.GetVSync())
         {
-            SetConfigFlags(FLAG_VSYNC_HINT);  // vsync only enable in fullscreen set before InitWindow
+            rlw::SetConfigFlags(rlw::FLAG_VSYNC_HINT);  // vsync only enable in fullscreen set before InitWindow
         }
-        InitWindow(mSpecification.width, mSpecification.height, mSpecification.title);
-        SetWindowState(FLAG_WINDOW_RESIZABLE);
+        rlw::InitWindow(mSpecification.width, mSpecification.height, mSpecification.title);
+        rlw::SetWindowState(rlw::FLAG_WINDOW_RESIZABLE);
         //SetWindowSize(mSpecification.width, mSpecification.height);
-        SetWindowSize(1280, 720);
-        SetTargetFPS(mConfigurationManager.GetTargetFps());
+        rlw::SetWindowSize(1280, 720);
+        rlw::SetTargetFPS(mConfigurationManager.GetTargetFps());
         // SetWindowMinSize(mSpecification.width, mSpecification.height);
         if (mConfigurationManager.GetFullscreen())
         {
@@ -96,13 +96,13 @@ namespace ClassicLauncher
         mSpriteManager.LoadSprite("ref3", refPath3, 1280 * 2, 720 * 2 );
 #endif
 
-        Image imgs[5] = { LoadImage(Resources::GetIcon(16).c_str()),
-                          LoadImage(Resources::GetIcon(32).c_str()),
-                          LoadImage(Resources::GetIcon(48).c_str()),
-                          LoadImage(Resources::GetIcon(64).c_str()),
-                          LoadImage(Resources::GetIcon(128).c_str()) };
+        rlw::Image imgs[5] = { rlw::LoadImage(Resources::GetIcon(16).c_str()),
+                               rlw::LoadImage(Resources::GetIcon(32).c_str()),
+                               rlw::LoadImage(Resources::GetIcon(48).c_str()),
+                               rlw::LoadImage(Resources::GetIcon(64).c_str()),
+                               rlw::LoadImage(Resources::GetIcon(128).c_str()) };
 
-        SetWindowIcons(imgs, 5);
+        rlw::SetWindowIcons(imgs, 5);
 
         if (mGameListManager.GetGameListSize() > 0)
         {
@@ -117,12 +117,12 @@ namespace ClassicLauncher
         Loop();
 
         End();
-        CloseAudioDevice();
-        CloseWindow();
+        rlw::CloseAudioDevice();
+        rlw::CloseWindow();
 
-        for (Image& img : imgs)
+        for (rlw::Image& img : imgs)
         {
-            UnloadImage(img);
+            rlw::UnloadImage(img);
         }
     }
 
@@ -140,15 +140,15 @@ namespace ClassicLauncher
 
     void Application::Loop()
     {
-        while (!WindowShouldClose())
+        while (!rlw::WindowShouldClose())
         {
-            if (IsKeyReleased(KEY_F11) || (IsKeyDown(KEY_LEFT_ALT) && IsKeyReleased(KEY_ENTER)))
+            if (rlw::IsKeyReleased(rlw::KEY_F11) || (rlw::IsKeyDown(rlw::KEY_LEFT_ALT) && rlw::IsKeyReleased(rlw::KEY_ENTER)))
             {
                 ToggleFullscreen();
             }
 
-            BeginDrawing();
-            ClearBackground(C_BLACK);
+            rlw::BeginDrawing();
+            rlw::ClearBackground(ColorClassic::Black());
 
             mRender.ClearRender();
             mInputManager.UpdateInputState();
@@ -158,7 +158,7 @@ namespace ClassicLauncher
             mRender.EndRender();
 
             Draw();  // draw on screen
-            EndDrawing();
+            rlw::EndDrawing();
         }
     }
 
@@ -177,8 +177,8 @@ namespace ClassicLauncher
         PRINT(TEXT("========================================"), 2.0f, "line0", ColorClassic::Lime());
         PRINT(TEXT("Music Playing %s", mAudioManager.GetMusicName().c_str()), 2.0f, "music", ColorClassic::Lime());
         PRINT(TEXT("========================================"), 2.0f, "line", ColorClassic::Green());
-        PRINT(TEXT("%d fps", GetFPS()), 2.0f, "fps", ColorClassic::Green());
-        PRINT(TEXT("%.6f ms", GetFrameTime()), 2.0f, "ms", ColorClassic::Green());
+        PRINT(TEXT("%d fps", rlw::GetFPS()), 2.0f, "fps", ColorClassic::Green());
+        PRINT(TEXT("%.6f ms", rlw::GetFrameTime()), 2.0f, "ms", ColorClassic::Green());
         PRINT(TEXT("========================================"), 2.0f, "line2");
         if (pSystemList)
         {
@@ -187,19 +187,19 @@ namespace ClassicLauncher
 
 #ifdef _DEBUG
 
-        if (IsKeyReleased(KEY_F1))
+        if (rlw::IsKeyReleased(rlw::KEY_F1))
         {
             LogLevel(LOG_CLASSIC_DEBUG, LOG_WARNING);
             LOG(LOG_CLASSIC_DEBUG, "Enabled LOG_CLASSIC_DEBUG, LOG_WARNING");
             PRINT("Enabled LOG_CLASSIC_DEBUG, LOG_WARNING", 5.0f);
         }
-        if (IsKeyReleased(KEY_F2))
+        if (rlw::IsKeyReleased(rlw::KEY_F2))
         {
             LogLevel(LOG_CLASSIC_DEBUG, LOG_ALL);
             LOG(LOG_CLASSIC_DEBUG, "Enabled LOG_CLASSIC_DEBUG, LOG_ALL");
             PRINT("Enabled LOG_CLASSIC_DEBUG, LOG_ALL", 5.0f);
         }
-        if (IsKeyReleased(KEY_F3))
+        if (rlw::IsKeyReleased(rlw::KEY_F3))
         {
             LogLevel(LOG_CLASSIC_ALL, LOG_ALL);
             LOG(LOG_CLASSIC_DEBUG, "Enabled LOG_CLASSIC_ALL, LOG_ALL");
@@ -214,24 +214,24 @@ namespace ClassicLauncher
             mPrint.PrintOnScreen(TEXT("Changed music"), 5.0f);
         }
 
-        if (IsKeyReleased(KEY_S))
+        if (rlw::IsKeyReleased(rlw::KEY_S))
         {
             mAudioManager.Pause();
             mPrint.PrintOnScreen(TEXT("Pause music"), 5.0f);
         }
-        if (IsKeyReleased(KEY_D))
+        if (rlw::IsKeyReleased(rlw::KEY_D))
         {
             mAudioManager.Play();
             mPrint.PrintOnScreen(TEXT("Play music"), 5.0f);
         }
-        if (IsKeyReleased(KEY_UP))
+        if (rlw::IsKeyReleased(rlw::KEY_UP))
         {
             // mEntityManager.SetZOrder(mGuiWindow.get(), 1);
             std::string homeDir = UtilsFunctionLibrary::GetHomeDir();
 
             LOG(LOG_CLASSIC_DEBUG, TEXT("GetHomeDir %s", homeDir.c_str()));
             LOG(LOG_CLASSIC_DEBUG, TEXT("GetWorkingDirectory %s", UtilsFunctionLibrary::GetWorkingDirectory().c_str()));
-            LOG(LOG_CLASSIC_DEBUG, TEXT("GetApplicationDirectory %s", ::GetApplicationDirectory()));
+            LOG(LOG_CLASSIC_DEBUG, TEXT("GetApplicationDirectory %s", rlw::GetApplicationDirectory()));
         }
     }
 
@@ -254,42 +254,42 @@ namespace ClassicLauncher
     {
         bool bIsFullScreen = false;
 #ifdef _WIN32
-        if (!IsWindowState(FLAG_WINDOW_UNDECORATED))
+        if (!rlw::IsWindowState(rlw::FLAG_WINDOW_UNDECORATED))
         {
-            mSpecification.posWindowX = GetWindowPosition().x;
-            mSpecification.posWindowY = GetWindowPosition().y;
-            mSpecification.width = GetScreenWidth();
-            mSpecification.height = GetScreenHeight();
-            SetWindowState(FLAG_WINDOW_UNDECORATED);
-            SetWindowSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
-            const Vector2f positionMonitor(GetMonitorPosition(GetCurrentMonitor()));
-            SetWindowPosition((int)positionMonitor.x, (int)positionMonitor.y);
+            mSpecification.posWindowX = rlw::GetWindowPosition().x;
+            mSpecification.posWindowY = rlw::GetWindowPosition().y;
+            mSpecification.width = rlw::GetScreenWidth();
+            mSpecification.height = rlw::GetScreenHeight();
+            rlw::SetWindowState(rlw::FLAG_WINDOW_UNDECORATED);
+            rlw::SetWindowSize(rlw::GetMonitorWidth(rlw::GetCurrentMonitor()), rlw::GetMonitorHeight(rlw::GetCurrentMonitor()));
+            const Vector2f positionMonitor(rlw::GetMonitorPosition(rlw::GetCurrentMonitor()));
+            rlw::SetWindowPosition((int)positionMonitor.x, (int)positionMonitor.y);
             bIsFullScreen = true;
         }
         else
         {
-            SetWindowSize(mSpecification.width, mSpecification.height);
-            SetWindowPosition(mSpecification.posWindowX, mSpecification.posWindowY);
-            ClearWindowState(FLAG_WINDOW_UNDECORATED);
+            rlw::SetWindowSize(mSpecification.width, mSpecification.height);
+            rlw::SetWindowPosition(mSpecification.posWindowX, mSpecification.posWindowY);
+            rlw::ClearWindowState(rlw::FLAG_WINDOW_UNDECORATED);
             bIsFullScreen = false;
         }
 #else
         if (!IsWindowFullscreen())
         {
-            mSpecification.posWindowX = GetWindowPosition().x;
-            mSpecification.posWindowY = GetWindowPosition().y;
-            mSpecification.width = GetScreenWidth();
-            mSpecification.height = GetScreenHeight();
-            SetWindowSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
-            ::ToggleFullscreen();
-            SetConfigFlags(FLAG_VSYNC_HINT);
+            mSpecification.posWindowX = rlw::GetWindowPosition().x;
+            mSpecification.posWindowY = rlw::GetWindowPosition().y;
+            mSpecification.width = rlw::GetScreenWidth();
+            mSpecification.height = rlw::GetScreenHeight();
+            rlw::SetWindowSize(rlw::GetMonitorWidth(rlw::GetCurrentMonitor()), rlw::GetMonitorHeight(rlw::GetCurrentMonitor()));
+            rlw::ToggleFullscreen();
+            rlw::SetConfigFlags(rlw::FLAG_VSYNC_HINT);
             bIsFullScreen = true;
         }
         else
         {
-            ::ToggleFullscreen();
-            SetWindowSize(mSpecification.width, mSpecification.height);
-            SetWindowPosition(mSpecification.posWindowX, mSpecification.posWindowY);
+            rlw::ToggleFullscreen();
+            rlw::SetWindowSize(mSpecification.width, mSpecification.height);
+            rlw::SetWindowPosition(mSpecification.posWindowX, mSpecification.posWindowY);
             bIsFullScreen = false;
         }
 #endif

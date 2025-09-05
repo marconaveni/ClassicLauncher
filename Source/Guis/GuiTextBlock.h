@@ -3,6 +3,7 @@
 
 #include <string>
 #include "Entity/EntityGui.h"
+#include "rl_wrap.h"
 
 namespace ClassicLauncher
 {
@@ -19,7 +20,7 @@ namespace ClassicLauncher
     {
     private:
 
-        Font mFont;
+        rlw::Font mFont;
         std::string mText;
         std::string mPathFont;
         int mSize;
