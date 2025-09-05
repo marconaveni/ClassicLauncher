@@ -1,10 +1,12 @@
 #include "Application.h"
 #include "Graphics/Render.h"
-#include "Guis/GuiComponent.h"
 #include "Guis/GuiWindow.h"
 #include "Utils/ConfigurationManager.h"
 #include "Utils/Log.h"
 #include "Utils/Resources.h"
+#include "Utils/StringFunctionLibrary.h"
+#include "Utils/UtilsFunctionLibrary.h"
+#include "Core.h"
 
 namespace ClassicLauncher
 {

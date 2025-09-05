@@ -1,6 +1,6 @@
 #include "RenderSystem.h"
 #include "Application.h"
-
+#include "Core.h" 
 #include "rl_wrap.h"
 using namespace rlw;
 

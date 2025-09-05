@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <iostream>
 #include "Math.h"
+#include "Data/Vector2.h"
 
 
 namespace ClassicLauncher

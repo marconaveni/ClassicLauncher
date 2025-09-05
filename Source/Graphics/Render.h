@@ -1,7 +1,9 @@
 ﻿#ifndef RENDER_H
 #define RENDER_H
 
-#include "Core.h"
+
+#include "Data/Rectangle.h"
+#include "Data/Vector2.h"
 
 #include "rl_wrap.h"
 using namespace rlw;

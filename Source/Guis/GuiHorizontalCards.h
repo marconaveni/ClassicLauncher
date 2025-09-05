@@ -7,11 +7,10 @@
 #include "Guis/GuiCard.h"
 #include "Data/GameListManager.h"
 #include "Entity/EntityGui.h"
-#include "Guis/GuiHorizontalBox.h"
 
 namespace ClassicLauncher
 {
-
+    
     class EntityGui;
     class GuiMiniCover;
     class GuiCard;

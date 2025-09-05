@@ -3,14 +3,12 @@
 
 #include <string>
 #include <vector>
-#include "Core.h"
 #include "Themes/ConfigurationThemes.h"
 
 namespace ClassicLauncher
 {
 
     class Application;
-    //struct SystemList;
 
     class Themes
     {

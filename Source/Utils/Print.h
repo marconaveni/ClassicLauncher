@@ -4,8 +4,10 @@
 #include <chrono>
 #include <string>
 #include <vector>
-#include "Core.h"
-#include "Log.h"
+#include "Data/Color.h"
+
+#include "rl_wrap.h"
+using namespace rlw;
 
 namespace ClassicLauncher
 {

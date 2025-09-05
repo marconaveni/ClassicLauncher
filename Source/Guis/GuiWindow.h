@@ -3,9 +3,10 @@
 
 
 #include "Entity/EntityGui.h"
-#include "Guis/GuiHorizontalCards.h"
-#include "Guis/GuiBlackScreen.h"
-#include "Guis/GuiVideoPlayer.h"
+#include "Utils/TimerManager.h"
+
+
+
 
 namespace ClassicLauncher
 {
@@ -28,7 +29,6 @@ namespace ClassicLauncher
     public:
 
         GuiWindow();
-        virtual ~GuiWindow() override = default;
         virtual EntityType GetType() const override { return EntityType::GuiWindowClass; }
         virtual void Update() override;
         void Init();

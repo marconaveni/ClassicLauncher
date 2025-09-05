@@ -3,7 +3,8 @@
 
 #include <string>
 #include <vector>
-#include "Core.h"
+#include "Data/Rectangle.h"
+#include "Data/Color.h"
 
 
 namespace ClassicLauncher
@@ -117,7 +118,6 @@ namespace ClassicLauncher
     public:
 
         Entity();
-        virtual ~Entity() = default;
         bool operator<(const Entity& entity) const { return entity.mId < mId; }
         bool operator>(const Entity& entity) const { return mZOrder > entity.mZOrder; }
         virtual EntityType GetType() const = 0;

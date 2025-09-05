@@ -55,8 +55,8 @@ bool SimpleIni::SetKeyValue(const std::string& str, std::string& key, std::strin
 
 std::string SimpleIni::Trim(const std::string& str)
 {
-    size_t first = str.find_first_not_of(" \t");
-    size_t last = str.find_last_not_of(" \t");
+    const size_t first = str.find_first_not_of(" \t");
+    const size_t last = str.find_last_not_of(" \t");
     if (first == std::string::npos || last == std::string::npos)
     {
         return "";
@@ -66,8 +66,8 @@ std::string SimpleIni::Trim(const std::string& str)
 
 std::string SimpleIni::RemoveBrackets(const std::string& str)
 {
-    std::string newstr = "";
-    for (char c : str)
+    std::string newstr;
+    for (const char c : str)
     {
         if (c == '[')
         {

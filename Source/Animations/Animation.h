@@ -2,7 +2,9 @@
 #define ANIMATION_H
 
 
-#include "Core.h"
+
+#include "Entity/Entity.h"
+
 
 namespace ClassicLauncher
 {

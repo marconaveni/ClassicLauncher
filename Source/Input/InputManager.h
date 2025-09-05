@@ -1,7 +1,8 @@
 #ifndef INPUT_MANAGER_H
 #define INPUT_MANAGER_H
 
-#include "Core.h"
+#include "rl_wrap.h"
+using namespace rlw;
 
 namespace ClassicLauncher
 {

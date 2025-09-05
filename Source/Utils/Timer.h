@@ -2,7 +2,6 @@
 #define TIMER_H
 
 #include <functional>
-#include "Data/Transformation.h"
 #include "Entity/Entity.h"
 
 namespace ClassicLauncher
@@ -13,9 +12,9 @@ namespace ClassicLauncher
     {
     private:
 
-        float mDelay;                     // Delay time before the timer triggers
-        float mDuration;                  // Duration of the timer
-        float mCurrentTime;               // Current elapsed time
+        double mDelay;                     // Delay time before the timer triggers
+        double mDuration;                  // Duration of the timer
+        double mCurrentTime;               // Current elapsed time
         bool mIsFunctionCalled;           // Flag to check if the function has been called
         bool mIsLoop;                     // Flag to determine if the timer is looping
         bool mIsActive;                   // Flag to check if the timer is active
@@ -64,7 +63,7 @@ namespace ClassicLauncher
         void Reset()
         {
             mCurrentTime = 0.0;                   // Reset current time
-            mDuration = mDelay / GetFrameTime();  // Set duration based on frame time
+            mDuration = mDelay / (double)GetFrameTime();  // Set duration based on frame time
             mIsFunctionCalled = false;            // Reset the function called state
         }
 

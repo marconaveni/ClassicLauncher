@@ -1,4 +1,5 @@
 #include "Entity.h"
+#include <algorithm>
 
 namespace ClassicLauncher
 {

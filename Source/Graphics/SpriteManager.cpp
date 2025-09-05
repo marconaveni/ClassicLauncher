@@ -1,5 +1,5 @@
 #include "SpriteManager.h"
-
+#include "Data/Color.h"
 
 namespace ClassicLauncher
 {

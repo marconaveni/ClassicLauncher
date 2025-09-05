@@ -6,9 +6,7 @@
 #include <vector>
 
 #include "Application.h"
-#include "GuiComponent.h"
-#include "Guis/GuiSizeBox.h"
-#include "Guis/GuiHorizontalBox.h"
+
 
 namespace ClassicLauncher
 {
@@ -32,7 +30,6 @@ namespace ClassicLauncher
     public:
 
         GuiMiniCover();
-        virtual ~GuiMiniCover() override = default;
         EntityType GetType() const override { return EntityType::GuiMiniCoverClass; }
         void Init();
         void Update() override;

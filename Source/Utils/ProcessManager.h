@@ -1,7 +1,6 @@
 #ifndef PROCESS_MANAGER_H
 #define PROCESS_MANAGER_H
 
-#include "Core.h"
 
 namespace ClassicLauncher
 {

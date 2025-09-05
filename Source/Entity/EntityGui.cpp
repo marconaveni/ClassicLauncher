@@ -1,6 +1,7 @@
 #include "EntityGui.h"
 #include "Graphics/SpriteAnimator.h"
 #include "Application.h"
+#include "ClassicAssert.h"
 
 namespace ClassicLauncher
 {

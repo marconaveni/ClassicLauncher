@@ -6,6 +6,9 @@
 #include <vector>
 #include "Entity.h"
 #include "Graphics/SpriteManager.h"
+#include <memory>
+#include <algorithm>
+
 
 namespace ClassicLauncher
 {

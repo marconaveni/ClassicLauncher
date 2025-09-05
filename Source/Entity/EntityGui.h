@@ -5,11 +5,13 @@
 #include <memory>
 #include <vector>
 #include "Animations/Animation.h"
-#include "Entity/Entity.h"
 #include "Graphics/SpriteAnimator.h"
+#include "Entity/Entity.h"
 
 namespace ClassicLauncher
 {
+
+    class Application;
 
     class EntityGui : public Entity
     {
@@ -21,7 +23,6 @@ namespace ClassicLauncher
     public:
 
         EntityGui();
-        virtual ~EntityGui() override = default;
         virtual void Update() override;
         virtual EntityType GetType() const override = 0;
         virtual void AnimationStarted(std::string name) {}

@@ -1,8 +1,8 @@
 #include "ProcessManager.h"
 #include "Application.h"
-#include "Core.h"
 #include "Data/GameListManager.h"
 #include "Process.h"
+#include "Guis/GuiBlackScreen.h"
 
 namespace ClassicLauncher
 {

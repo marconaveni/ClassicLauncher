@@ -40,7 +40,7 @@ namespace ClassicLauncher
     public:
 
         GuiTextBlock(const std::string& path, int size = 16, int spacing = 0);
-        virtual ~GuiTextBlock() override;
+        ~GuiTextBlock();
         virtual EntityType GetType() const override { return EntityType::GuiTextBlockClass; }
         void LoadNewFont(const std::string& path, int size = 16, int spacing = 0);
         void UpdateFont(const std::string& path);

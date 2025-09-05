@@ -504,53 +504,12 @@ namespace rlw
         bool looping;
         int ctxType;
         void* ctxData;
-
-        Music() = default;
-        Music(Music&& o) noexcept
-            : _native(o._native), frameCount(o.frameCount), looping(o.looping), ctxType(o.ctxType), ctxData(o.ctxData)
-        {
-            o._native = nullptr;
-        }
-        Music& operator=(Music&& o) noexcept
-        {
-            if (this != &o)
-            {
-                _native = o._native;
-                frameCount = o.frameCount;
-                looping = o.looping;
-                ctxType = o.ctxType;
-                ctxData = o.ctxData;
-                o._native = nullptr;
-            }
-            return *this;
-        }
-        Music(const Music&) = delete;
-        Music& operator=(const Music&) = delete;
     };
 
     struct Sound
     {
         void* _native{};  // -> ::Sound*
         unsigned int frameCount;
-
-        Sound() = default;
-        Sound(Sound&& o) noexcept
-            : _native(o._native), frameCount(o.frameCount)
-        {
-            o._native = nullptr;
-        }
-        Sound& operator=(Sound&& o) noexcept
-        {
-            if (this != &o)
-            {
-                _native = o._native;
-                frameCount = o.frameCount;
-                o._native = nullptr;
-            }
-            return *this;
-        }
-        Sound(const Sound&) = delete;
-        Sound& operator=(const Sound&) = delete;
     };
 
     struct FilePathList

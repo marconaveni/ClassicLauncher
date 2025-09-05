@@ -2,15 +2,18 @@
 #define GUI_COMPONENT_H
 
 #include "Entity/EntityGui.h"
+#include "Entity/Entity.h"
 
 namespace ClassicLauncher
 {
+
+
     class GuiComponent : public EntityGui
     {
     public:
 
         GuiComponent();
-        virtual ~GuiComponent() override = default;
+        ~GuiComponent() = default;
         virtual EntityType GetType() const override { return EntityType::GuiComponentClass; }
     };
 

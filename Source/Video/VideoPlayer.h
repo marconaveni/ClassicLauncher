@@ -3,8 +3,11 @@
 
 #include <string>
 #include <mutex>
-#include "Core.h"
 #include "vlc/vlc.h"
+#include "Data/Vector2.h"
+
+#include "rl_wrap.h"
+using namespace rlw;
 
 namespace ClassicLauncher
 {

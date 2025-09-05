@@ -1,6 +1,9 @@
 #include "GuiMiniCover.h"
-#include "Core.h"
+#include "Utils/Math.h"
 #include "Graphics/SpriteManager.h"
+#include "Utils/UtilsFunctionLibrary.h"
+#include "Guis/GuiSizeBox.h"
+#include "Guis/GuiHorizontalBox.h"
 
 namespace ClassicLauncher
 {

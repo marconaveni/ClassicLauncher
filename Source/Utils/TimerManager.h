@@ -3,10 +3,7 @@
 
 #include <functional>
 #include <memory>
-#include <string>
 #include <unordered_map>
-#include <vector>
-#include "Core.h"
 #include "Utils/Timer.h"
 
 namespace ClassicLauncher

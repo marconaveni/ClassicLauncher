@@ -4,7 +4,10 @@
 #include <memory>
 #include <string>
 #include "GuiComponent.h"
+#include "Utils/TimerManager.h"
 #include "Components/FocusComponent.h"
+#include "Entity/Entity.h"
+#include "Entity/EntityGui.h"
 
 namespace ClassicLauncher
 {
@@ -41,7 +44,6 @@ namespace ClassicLauncher
     public:
 
         GuiCard(float x, float y);
-        virtual ~GuiCard() override = default;
         virtual EntityType GetType() const override { return EntityType::GuiCardClass; }
         void Update() override;
         void SetCardFocus(bool bForce = false);

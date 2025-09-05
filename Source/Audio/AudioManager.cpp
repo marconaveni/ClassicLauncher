@@ -1,6 +1,6 @@
 #include "AudioManager.h"
 #include <chrono>
-#include "Core.h"
+#include "Utils/Math.h"
 
 namespace ClassicLauncher
 {

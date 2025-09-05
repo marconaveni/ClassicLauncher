@@ -4,8 +4,8 @@
 #include <cstring>
 #include "raylib.h"
 #include "raymath.h"
-#include <stdio.h>
-#include <stdarg.h>
+#include <cstdio>
+#include <cstdarg>
 
 namespace rlw
 {
@@ -611,15 +611,15 @@ namespace rlw
     bool IsFontValid(Font font)
     {
         if (!font._native) return false;
-        return ::IsFontValid(*reinterpret_cast<::Font*>(font._native));
+        return ::IsFontValid(*static_cast<::Font*>(font._native));
     }
     void UnloadFont(Font font)
     {
         if (!font._native) return;
         if (font._owned)
         {
-            ::UnloadFont(*reinterpret_cast<::Font*>(font._native));
-            delete reinterpret_cast<::Font*>(font._native);
+            ::UnloadFont(*static_cast<::Font*>(font._native));
+            delete static_cast<::Font*>(font._native);
         }
         // se não é dono (default), não faz nada
     }
@@ -639,13 +639,13 @@ namespace rlw
     void DrawTextEx(Font font, const char* text, Vector2 position, float fontSize, float spacing, Color tint)
     {
         if (!font._native || !text) return;
-        ::DrawTextEx(*reinterpret_cast<::Font*>(font._native), text, to_native_vec(position), fontSize, spacing, to_native_color(tint));
+        ::DrawTextEx(*static_cast<::Font*>(font._native), text, to_native_vec(position), fontSize, spacing, to_native_color(tint));
     }
 
     Vector2 MeasureTextEx(Font font, const char* text, float fontSize, float spacing)
     {
         if (!font._native || !text) return rlw::Vector2{ 0, 0 };
-        return to_wrap_vec(::MeasureTextEx(*reinterpret_cast<::Font*>(font._native), text, fontSize, spacing));
+        return to_wrap_vec(::MeasureTextEx(*static_cast<::Font*>(font._native), text, fontSize, spacing));
     }
 
     // --- Mouse ---
@@ -667,16 +667,16 @@ namespace rlw
         char* currentBuffer = buffers[index];
         memset(currentBuffer, 0, maxTextBufferLen);  
 
-        va_list args;
+        std::va_list args;
         va_start(args, text);
-        int requiredByteCount = vsnprintf(currentBuffer, maxTextBufferLen, text, args);
+        int requiredByteCount = std::vsnprintf(currentBuffer, maxTextBufferLen, text, args);
         va_end(args);
 
        
         if (requiredByteCount >= maxTextBufferLen)
         {        
             char* truncBuffer = buffers[index] + maxTextBufferLen - 4;  // Adding 4 bytes = "...\0"
-            sprintf(truncBuffer, "...");
+            std::sprintf(truncBuffer, "...");
         }
 
         index += 1;  // Move to next buffer for next function call
@@ -696,12 +696,12 @@ namespace rlw
     {
         if (!m._native)
         {
-            printf("[Music] null\n");
+            std::printf("[Music] null\n");
             return;
         }
         auto& nm = *reinterpret_cast<::Music*>(m._native);
-        printf("[Music] frameCount=%u looping=%d ctxType=%d ctxData=%p | stream=%p\n", nm.frameCount, nm.looping ? 1 : 0, nm.ctxType, nm.ctxData, nm.stream.buffer);
-        printf("        time len=%.3f played=%.3f\n", ::GetMusicTimeLength(nm), ::GetMusicTimePlayed(nm));
+        std::printf("[Music] frameCount=%u looping=%d ctxType=%d ctxData=%p | stream=%p\n", nm.frameCount, nm.looping ? 1 : 0, nm.ctxType, nm.ctxData, nm.stream.buffer);
+        std::printf("        time len=%.3f played=%.3f\n", ::GetMusicTimeLength(nm), ::GetMusicTimePlayed(nm));
     }
 
 }  // namespace rlw

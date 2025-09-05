@@ -4,9 +4,9 @@
 #include <iostream>
 #include <string>
 #include <thread>
+#include "Utils/Log.h"
 
-#include "rl_wrap.h"
-using namespace rlw;
+#include "Utils/UtilsFunctionLibrary.h"
 
 namespace ClassicLauncher
 {

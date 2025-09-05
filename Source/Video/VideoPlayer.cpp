@@ -1,5 +1,7 @@
 #include "VideoPlayer.h"
 #include "Utils/Log.h"
+#include "Utils/Math.h"
+#include "Utils/UtilsFunctionLibrary.h"
 
 namespace ClassicLauncher
 {

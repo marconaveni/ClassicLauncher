@@ -1,5 +1,9 @@
 #include "GuiWindow.h"
 #include "Application.h"
+#include "Utils/Log.h"
+#include "Guis/GuiHorizontalCards.h"
+#include "Guis/GuiBlackScreen.h"
+#include "Guis/GuiVideoPlayer.h"
 
 namespace ClassicLauncher
 {

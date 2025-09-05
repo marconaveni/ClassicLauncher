@@ -2,8 +2,11 @@
 #define UTILS_FUNCTION_LIBRARY_H
 
 #include <string>
-#include "Core.h" 
-// #include "Data/Transform.h" 
+
+#include "Data/Vector2.h"
+#include "rl_wrap.h"
+using namespace rlw;
+
 
 namespace ClassicLauncher::UtilsFunctionLibrary
 {

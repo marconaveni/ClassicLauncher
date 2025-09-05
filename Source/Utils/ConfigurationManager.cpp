@@ -1,6 +1,5 @@
 #include "ConfigurationManager.h"
-#include "Core.h"
-
+#include "Utils/Resources.h"
 
 namespace ClassicLauncher
 {
@@ -61,7 +60,7 @@ namespace ClassicLauncher
 
     void ConfigurationManager::LoadConfiguration()
     {
-        const std::string path = Resources::GetDefaultConfigurations().c_str();
+        const std::string path = Resources::GetDefaultConfigurations();
         SimpleIni config;
 
         if (!config.Open(path.c_str()))

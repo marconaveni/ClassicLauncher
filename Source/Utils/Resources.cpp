@@ -1,5 +1,9 @@
 #include "Resources.h"
-#include "Core.h"
+#include "Utils/StringFunctionLibrary.h"
+#include "Utils/UtilsFunctionLibrary.h"
+#include "Core.h"   //aqui fica
+#include "rl_wrap.h"
+using namespace rlw;
 
 namespace ClassicLauncher::Resources
 {
@@ -42,7 +46,7 @@ namespace ClassicLauncher::Resources
 
     std::string GetIcon(int size)
     {
-        return GetResourcesPathFileAbs(TEXT("Resources/textures/logo16x16.png", size, size));
+        return GetResourcesPathFileAbs(TEXT("Resources/textures/logo%dx%d.png", size, size));
     }
 
     std::string GetLogo()

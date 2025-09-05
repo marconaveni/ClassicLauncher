@@ -1,7 +1,10 @@
 #include "Themes.h"
-#include <math.h> /* modf */
 #include "Application.h"
-
+#include "Utils/StringFunctionLibrary.h"
+#include "Utils/Resources.h"
+#include "Utils/Math.h"
+#include "Utils/Log.h"
+#include "Core.h"
 
 namespace ClassicLauncher
 {

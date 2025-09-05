@@ -8,6 +8,11 @@
 #include "Guis/GuiMiniCover.h"
 #include "Guis/GuiTextBlock.h"
 #include "Themes/ConfigurationThemes.h"
+#include "Utils/Math.h"
+#include "Utils/Resources.h"
+#include "Utils/UtilsFunctionLibrary.h"
+#include "Utils/Log.h"
+#include "Guis/GuiHorizontalBox.h"
 
 namespace ClassicLauncher
 {

@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "Entity/EntityGui.h"
-
+#include "Utils/TimerManager.h"
 
 namespace ClassicLauncher
 {
