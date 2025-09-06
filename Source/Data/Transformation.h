@@ -11,9 +11,10 @@ namespace ClassicLauncher
     {
     public:
 
-        Vector2f offset;
-        float x;
-        float y;
+        Vector2f offset{};
+        Vector2f position{};
+        // float x;
+        // float y;
         float width;
         float height;
         float scaleX;
@@ -32,8 +33,8 @@ namespace ClassicLauncher
             , rootScaleX(1)
             , rootScaleY(1)
             , offset()
-            , x(0)
-            , y(0)
+            // , x(0)
+            // , y(0)
             , width(0)
             , height(0)
             , scaleX(1)

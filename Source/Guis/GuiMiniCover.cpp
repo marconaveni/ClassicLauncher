@@ -16,13 +16,13 @@ namespace ClassicLauncher
 
     void GuiMiniCover::Init()
     {
-        mTransform.y = 505.0f;
+        mTransform.position.y = 505.0f;
         mTransform.width = 1280.0f;
         mTransform.height = 72.0f;
 
         mGuiHorizontalBox = GetApplication()->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
-        mGuiHorizontalBox->mTransform.x = mTransform.width / 2.0f;
-        mGuiHorizontalBox->mTransform.y = 20.0f;
+        mGuiHorizontalBox->mTransform.position.x = mTransform.width / 2.0f;
+        mGuiHorizontalBox->mTransform.position.y = 20.0f;
         mGuiHorizontalBox->SetAutoSize(true);
         mGuiHorizontalBox->SetAffectScale(true);
         mGuiHorizontalBox->SetSpace(1.0f);
@@ -47,7 +47,7 @@ namespace ClassicLauncher
         std::vector<RectFloat> recs = { { 1236.0f, 0.0f, 30.0f, 18.0f }, { 1267.0f, 0.0f, 30.0f, 18.0f }, { 1298.0f, 0.0f, 30.0f, 18.0f } };
 
         mArrow = GetApplication()->GetEntityManager()->CreateEntity<GuiComponent>("arrow");
-        mArrow->mTransform.x = mTransform.width / 2;
+        mArrow->mTransform.position.x = mTransform.width / 2;
         mArrow->mTextureName = "sprite";
         mArrow->AddAnimationFrame("frame", 0.2f, recs);
         AddChild(mArrow);
@@ -76,13 +76,13 @@ namespace ClassicLauncher
 
     void GuiMiniCover::SetPositionCovers(int numCovers)
     {
-        mGuiHorizontalBox->mTransform.x = (mTransform.width - ((mSizeCover.x + 1) * numCovers)) / 2.0f;
-        mArrow->mTransform.x = mGuiHorizontalBox->mTransform.x + ((mSizeCover.x + 1) * numCovers) / 2.0f;
-        mArrow->mTransform.x = (numCovers % 2 == 0) ? mArrow->mTransform.x : mArrow->mTransform.x - mArrow->mTransform.width / 2;
-        mArrow->mTransform.x--;
+        mGuiHorizontalBox->mTransform.position.x = (mTransform.width - ((mSizeCover.x + 1) * numCovers)) / 2.0f;
+        mArrow->mTransform.position.x = mGuiHorizontalBox->mTransform.position.x + ((mSizeCover.x + 1) * numCovers) / 2.0f;
+        mArrow->mTransform.position.x = (numCovers % 2 == 0) ? mArrow->mTransform.position.x : mArrow->mTransform.position.x - mArrow->mTransform.width / 2;
+        mArrow->mTransform.position.x--;
 
-        mGuiHorizontalBox->mTransform.x *= mTransform.GetRootScale().x;
-        mArrow->mTransform.x *= mTransform.GetRootScale().x;
+        mGuiHorizontalBox->mTransform.position.x *= mTransform.GetRootScale().x;
+        mArrow->mTransform.position.x *= mTransform.GetRootScale().x;
     }
 
     void GuiMiniCover::SetCovers()

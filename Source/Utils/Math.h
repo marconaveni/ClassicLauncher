@@ -2,36 +2,30 @@
 #define MATH_H
 
 #include <random>
+#include "ClassicAssert.h"
 
 namespace ClassicLauncher::Math
 {
 
     template <typename T>
-    static constexpr T Max(T a, T b)
+    inline constexpr T Max(T a, T b)
     {
         return (b < a) ? a : b;
     }
 
     template <typename T>
-    static constexpr T Min(T a, T b)
+    inline constexpr T Min(T a, T b)
     {
         return (a < b) ? a : b;
     }
 
-    template <typename T>
-    static constexpr T Clamp(T value, T min, T max)
+    template <typename T, typename U, typename V>
+    inline constexpr T Clamp(T value, U min, V max)
     {
-        return Max(Min<T>(value, max), min);
-    }
+        CLASSIC_ASSERT(std::is_signed_v<T> == std::is_signed_v<U> && std::is_signed_v<T> == std::is_signed_v<V>,
+                       "Clamp arguments must all be of the same signedness to avoid errors.");
 
-    static constexpr float Clamp(const float value, const float min, const float max)
-    {
-        return Clamp<float>(value, min, max);
-    }
-
-    static constexpr double Clamp(const double value, const double min, const double max)
-    {
-        return Clamp<double>(value, min, max);
+        return (value < min) ? min : (value > max) ? max : value;
     }
 
     class RandomGenerator

@@ -7,8 +7,8 @@ namespace ClassicLauncher
     {
         // float _rootX = rootX * m;
         // float _rootY = rootY * m;
-        float _x = ((x + rootScaleX * offset.x) * m) + (rootX * m);
-        float _y = ((y + rootScaleY * offset.y) * m) + (rootY * m);
+        float _x = ((position.x + rootScaleX * offset.x) * m) + (rootX * m);
+        float _y = ((position.y + rootScaleY * offset.y) * m) + (rootY * m);
         float _width = width * m;
         float _height = height * m;
 
@@ -33,8 +33,8 @@ namespace ClassicLauncher
 
     void Transformation::UpdateTransform(Transformation& otherTransform)
     {
-        otherTransform.rootX = x + rootX;
-        otherTransform.rootY = y + rootY;
+        otherTransform.rootX = position.x + rootX;
+        otherTransform.rootY = position.y + rootY;
         otherTransform.rootScaleX = scaleX * rootScaleX;
         otherTransform.rootScaleY = scaleY * rootScaleY;
         otherTransform.color.a = color.a <= otherTransform.color.a ? color.a : otherTransform.color.a;

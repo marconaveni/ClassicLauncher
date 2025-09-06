@@ -9,7 +9,7 @@ namespace ClassicLauncher
     EntityGui::EntityGui()
     {
         mApplication = &Application::Get();
-        CLASSIC_ASSERT(mApplication);
+        CLASSIC_ASSERT(mApplication ,"This m_application pointer never is null");
     }
     
     void EntityGui::Update()
@@ -52,8 +52,8 @@ namespace ClassicLauncher
     
     void EntityGui::UpdateTransform(const Animation& anim)
     {
-        mTransform.x = anim.mCurrentTransform.x;
-        mTransform.y = anim.mCurrentTransform.y;
+        mTransform.position.x = anim.mCurrentTransform.position.x;
+        mTransform.position.y = anim.mCurrentTransform.position.y;
         mTransform.scaleX = anim.mCurrentTransform.scaleX;
         mTransform.scaleY = anim.mCurrentTransform.scaleY;
         mTransform.rotation = anim.mCurrentTransform.rotation;

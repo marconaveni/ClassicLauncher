@@ -28,18 +28,18 @@ namespace ClassicLauncher
             if (focus->GetFocus())
             {
                 Transformation target = mTransform;
-                const float x = focus->GetEntity()->mTransform.x + focus->GetEntity()->mTransform.GetRootPosition().x;
-                const float y = focus->GetEntity()->mTransform.y + focus->GetEntity()->mTransform.GetRootPosition().y;
+                const float x = focus->GetEntity()->mTransform.position.x + focus->GetEntity()->mTransform.GetRootPosition().x;
+                const float y = focus->GetEntity()->mTransform.position.y + focus->GetEntity()->mTransform.GetRootPosition().y;
 
-                if (x == mTransform.x  && y == mTransform.y)
+                if (x == mTransform.position.x  && y == mTransform.position.y)
                 {
                     return;
                 }
                 
                 if (!GetAnimation("frame-move").GetAnimationIsRun() && !GetAnimation("card-zoom").GetAnimationIsRun())
                 {
-                    target.x = x;
-                    target.y = y;
+                    target.position.x = x;
+                    target.position.y = y;
                     StartAnimation("frame-move", 0.15f, mTransform, target, Ease::EaseQuadInOut, false);
                 }
 
@@ -60,8 +60,8 @@ namespace ClassicLauncher
         target.scaleX = scale;
         target.scaleY = scale;
 
-        target.x += (-width / 2 * target.scaleX) + width / 2;
-        target.y += (-height / 2 * target.scaleY) + height / 2;
+        target.position.x += (-width / 2 * target.scaleX) + width / 2;
+        target.position.y += (-height / 2 * target.scaleY) + height / 2;
 
         target.color.a = 0;
         StartAnimation("card-zoom", time, mTransform, target, Ease::EaseQuadInOut, true);

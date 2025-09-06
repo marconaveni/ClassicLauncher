@@ -2,14 +2,14 @@
 #define CLASSIC_ASSERT_H
 
 #ifdef _DEBUG
+    #include <iostream>
     #ifdef _MSC_VER  // MSVC
-        #define CLASSIC_ASSERT(condition) if (!(condition)) __debugbreak()
+        #define CLASSIC_ASSERT(condition, msg) if (!(condition)) __debugbreak() 
     #else  // GCC/Clang
-        #include <iostream>
-        #define CLASSIC_ASSERT(condition) if (!(condition)) __builtin_trap()
+        #define CLASSIC_ASSERT(condition, msg) if (!(condition)) __builtin_trap() 
     #endif
 #else
-    #define CLASSIC_ASSERT(condition) (condition)
+    #define CLASSIC_ASSERT(condition, msg) (condition)
 #endif
 
 #endif

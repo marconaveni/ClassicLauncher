@@ -10,8 +10,8 @@ namespace ClassicLauncher
     GuiCard::GuiCard(const float x, const float y)
         : FocusComponent(GetApplication(), this), mTimer(), mTimerVideo()
     {
-        mTransform.x = x;
-        mTransform.y = y;
+        mTransform.position.x = x;
+        mTransform.position.y = y;
         mTransform.width = 256;
         mTransform.height = 280;
 
@@ -199,8 +199,8 @@ namespace ClassicLauncher
         target.scaleX = scale;
         target.scaleY = scale;
 
-        target.x += (-target.width / 2 * target.scaleX) + target.width / 2;
-        target.y += (-target.height / 2 * target.scaleY) + target.height / 2;
+        target.position.x += (-target.width / 2 * target.scaleX) + target.width / 2;
+        target.position.y += (-target.height / 2 * target.scaleY) + target.height / 2;
 
         target.color.a = 0;
         StartAnimation("card-zoom", time, mTransform, target, Ease::EaseQuadInOut, true);

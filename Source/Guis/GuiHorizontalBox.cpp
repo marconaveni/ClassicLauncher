@@ -17,8 +17,8 @@ namespace ClassicLauncher
 
     void GuiHorizontalBox::AttachGui(EntityGui* guiComponent)
     {
-        guiComponent->mTransform.x = 0;
-        guiComponent->mTransform.y = 0;
+        guiComponent->mTransform.position.x = 0;
+        guiComponent->mTransform.position.y = 0;
         AddChild(guiComponent);
         mGuiElements.push_back(guiComponent);
     }
@@ -53,8 +53,8 @@ namespace ClassicLauncher
             {
                 scale = transform.GetScale().x;    //transform.rootScaleX * transform.scaleX;
             }
-            transform.x = x + width + mTransform.offset.x;
-            transform.y = mTransform.offset.y;
+            transform.position.x = x + width + mTransform.offset.x;
+            transform.position.y = mTransform.offset.y;
             width += (transform.width + mSpacer) * scale;
 
             if (mIsAutoSize)
