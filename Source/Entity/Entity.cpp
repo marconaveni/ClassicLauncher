@@ -58,7 +58,7 @@ namespace ClassicLauncher
                              mChildEntities.end());
     }
 
-    void Entity::RemoveAllChilds()
+    void Entity::RemoveAllChildren()
     {
         mChildEntities.clear();
     }
@@ -72,7 +72,7 @@ namespace ClassicLauncher
         }
     }
 
-    std::vector<Entity*>& Entity::GetChilds()
+    std::vector<Entity*>& Entity::GetChildren()
     {
         return mChildEntities;
     }

@@ -53,7 +53,7 @@ namespace ClassicLauncher
     void Timer::Reset()
     {
         mCurrentTime = 0.0;                                // Reset current time
-        mDuration = mDelay / (double)rlw::GetFrameTime();  // Set duration based on frame time
+        mDuration = mDelay / static_cast<double>(rlw::GetFrameTime());  // Set duration based on frame time
         mIsFunctionCalled = false;                         // Reset the function called state
     }
 

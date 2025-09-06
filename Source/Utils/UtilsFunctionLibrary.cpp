@@ -125,7 +125,7 @@ namespace ClassicLauncher
     int UtilsFunctionLibrary::CountChars(const std::string& text, const char compareChar)
     {
         int count = 0;
-        for (char c : text)
+        for (const char c : text)
         {
             if (c == compareChar)
             {

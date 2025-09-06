@@ -20,9 +20,9 @@ namespace ClassicLauncher
         EntityGui();
         virtual void Update() override;
         virtual EntityType GetType() const override = 0;
-        virtual void AnimationStarted(std::string name) {}
-        virtual void AnimationUpdate(std::string name) {}
-        virtual void AnimationFinished(std::string name) {}
+        virtual void AnimationStarted(const std::string& name) {}
+        virtual void AnimationUpdate(const std::string& name) {}
+        virtual void AnimationFinished(const std::string& name) {}
 
         Application* GetApplication() { return mApplication; }
         Animation& GetAnimation(const std::string& name) { return mAnimations[name]; }

@@ -13,7 +13,6 @@ namespace ClassicLauncher
     public:
 
         GuiComponent();
-        ~GuiComponent() = default;
         virtual EntityType GetType() const override { return EntityType::GuiComponentClass; }
     };
 

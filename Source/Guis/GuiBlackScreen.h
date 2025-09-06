@@ -20,7 +20,7 @@ namespace ClassicLauncher
         void KeepBlack();
         void SetOpacity(int opacity);
         virtual void Update() override;
-        virtual void AnimationFinished(std::string name) override;
+        virtual void AnimationFinished(const std::string& name) override;
     };
 
 }  // namespace ClassicLauncher

@@ -17,7 +17,7 @@ void SimpleIni::RemoveComments(std::string& str)
 {
     const std::string strWithComments = str;
     str = "";
-    for (char c : strWithComments)
+    for (const char c : strWithComments)
     {
         if (c == '#' || c == ';')
         {
@@ -41,7 +41,7 @@ bool SimpleIni::SetSection(std::string& str)
 
 bool SimpleIni::SetKeyValue(const std::string& str, std::string& key, std::string& value)
 {
-    size_t equal = str.find('=');
+    const size_t equal = str.find('=');
     if (equal == std::string::npos)
     {
         return false;
@@ -181,18 +181,18 @@ std::string SimpleIni::GetString(const std::string& section, const std::string& 
     return GetValue(section, key, defaultValue);
 }
 
-bool SimpleIni::GetBoolean(const std::string& section, const std::string& key, bool defaultValue)
+bool SimpleIni::GetBoolean(const std::string& section, const std::string& key, const bool defaultValue)
 {
     const std::string value = GetValue(section, key, defaultValue ? "true" : "false");
     return (value == "true");
 }
 
-int SimpleIni::GetInt(const std::string& section, const std::string& key, int defaultValue)
+int SimpleIni::GetInt(const std::string& section, const std::string& key, const int defaultValue)
 {
-    return static_cast<int>(GetFloat(section, key, defaultValue));
+    return static_cast<int>(GetFloat(section, key, static_cast<float>(defaultValue)));
 }
 
-float SimpleIni::GetFloat(const std::string& section, const std::string& key, float defaultValue)
+float SimpleIni::GetFloat(const std::string& section, const std::string& key, const float defaultValue)
 {
     std::string value = GetValue(section, key, "");
     if (value.empty() || (value.size() == 1 && value[0] == '-'))
@@ -206,7 +206,7 @@ float SimpleIni::GetFloat(const std::string& section, const std::string& key, fl
     }
 
     char* end;
-    float num = std::strtof(value.c_str(), &end);
+    const float num = std::strtof(value.c_str(), &end);
 
     return (*end != '\0') ? defaultValue : num;
 }

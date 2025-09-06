@@ -16,9 +16,9 @@ namespace ClassicLauncher
 
         SpriteManager();
         void Init();
-        void LoadSprite(const std::string& name, const std::string& fileName, const int width = 0, const int height = 0, bool bAspectRatio = true);
-        void LoadSprite(const std::string& name, const rlw::Image& image, const int width = 0, const int height = 0, bool bAspectRatio = true);
-        void UpdateSprite(std::string name, std::string fileName, const int width = 0, const int height = 0, bool bAspectRatio = true);
+        void LoadSprite(const std::string& name, const std::string& fileName, int width = 0, int height = 0, bool bAspectRatio = true);
+        void LoadSprite(const std::string& name, const rlw::Image& image, int width = 0, int height = 0, bool bAspectRatio = true);
+        void UpdateSprite(std::string name, std::string fileName, int width = 0, int height = 0, bool bAspectRatio = true);
         rlw::Texture2D* GetTexture(const std::string& name);
         rlw::Image* GetImage(std::string name);
         bool DeleteSprite(std::string name);

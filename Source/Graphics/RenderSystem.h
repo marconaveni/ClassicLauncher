@@ -12,7 +12,7 @@ namespace ClassicLauncher
     {
     public:
 
-        RenderSystem(SpriteManager* spriteManagerReference);
+        explicit RenderSystem(SpriteManager* spriteManagerReference);
         void DrawEntities(const std::vector<std::unique_ptr<Entity>>& entities);
         void DrawEntity(Entity* entity);
         void DrawDebug(Entity* entity);

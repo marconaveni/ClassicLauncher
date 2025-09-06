@@ -29,7 +29,7 @@ namespace ClassicLauncher
         {
             guiComponent->RemoveParent();
         }
-        RemoveAllChilds();
+        RemoveAllChildren();
         mGuiElements.clear();
         mTransform.width = 10.0f;
         mTransform.height = 10.0f;

@@ -20,16 +20,16 @@ namespace ClassicLauncher
         void EndRender();
         void DrawRender();
         void Unload();
-        Vector2f GetRenderScale() const;
-        Vector2f GetMousePositionRender() const;
-        int GetScreenWidthGame() const { return static_cast<int>(mWidth); }
-        int GetScreenHeightGame() const { return static_cast<int>(mHeight); }
+        [[nodiscard]] Vector2f GetRenderScale() const;
+        [[nodiscard]] Vector2f GetMousePositionRender() const;
+        [[nodiscard]] int GetScreenWidthGame() const { return static_cast<int>(mWidth); }
+        [[nodiscard]] int GetScreenHeightGame() const { return static_cast<int>(mHeight); }
 
     private:
 
         void RenderValues();
-        int GetWidthRender() const;
-        int GetHeightRender() const;
+        [[nodiscard]] int GetWidthRender() const;
+        [[nodiscard]] int GetHeightRender() const;
 
         rlw::RenderTexture mRenderTexture;
         RectFloat mSource;

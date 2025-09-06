@@ -24,7 +24,7 @@ namespace ClassicLauncher
         void OnClick();
         void OnBack();
         void Teste();
-        GuiBlackScreen* GetGuiBlackScreen() { return mGuiBlackScreen; }
+        GuiBlackScreen* GetGuiBlackScreen() const { return mGuiBlackScreen; }
 
     private:
 

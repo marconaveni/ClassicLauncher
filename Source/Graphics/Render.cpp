@@ -17,8 +17,8 @@ namespace ClassicLauncher
     void Render::RenderValues()
     {
         const Vector2f mouse = rlw::GetMousePosition();
-        const float screenWidth = static_cast<float>(rlw::GetScreenWidth());
-        const float screenHeight = static_cast<float>(rlw::GetScreenHeight());
+        const auto screenWidth = static_cast<float>(rlw::GetScreenWidth());
+        const auto screenHeight = static_cast<float>(rlw::GetScreenHeight());
         mNewWidth = static_cast<float>(GetWidthRender());
         mNewHeight = static_cast<float>(GetHeightRender());
 

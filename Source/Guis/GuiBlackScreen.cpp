@@ -53,7 +53,7 @@ namespace ClassicLauncher
         EntityGui::Update();
     }
     
-    void GuiBlackScreen::AnimationFinished(std::string name)
+    void GuiBlackScreen::AnimationFinished(const std::string& name)
     {
         if (name == "fade-in-out")
         {

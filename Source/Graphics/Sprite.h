@@ -19,13 +19,13 @@ namespace ClassicLauncher
         Sprite(const Sprite&) = delete;
         Sprite& operator=(const Sprite&) = delete;
         ~Sprite();
-        void Load(const std::string& file, const int width = 0, const int height = 0, bool bAspectRatio = true);
-        void Load(const rlw::Image& newImage, const int width = 0, const int height = 0, bool bAspectRatio = true);
+        void Load(const std::string& file, int width = 0, int height = 0, bool bAspectRatio = true);
+        void Load(const rlw::Image& newImage, int width = 0, int height = 0, bool bAspectRatio = true);
         void Stop();
         void Join();
         rlw::Texture2D* GetTexture();
         rlw::Image* GetImage();
-        void ResizeImage(const int width, const int height, bool bAspectRatio);
+        void ResizeImage(int width, int height, bool bAspectRatio);
         void Unload();
         void UnloadTexture();
         void UnloadImage();
@@ -40,7 +40,7 @@ namespace ClassicLauncher
         rlw::Image mImage;
         rlw::Texture2D mTexture;
         std::string mFilePath;
-        void LoadImage(const int width, const int height, bool bAspectRatio);
+        void LoadImage(int width, int height, bool bAspectRatio);
 
     };
 

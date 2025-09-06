@@ -54,7 +54,7 @@ namespace ClassicLauncher
 
     void EntityManager::SetVisibleAll(Entity* entity, bool bVisible)
     {
-        for (auto& entity : entity->GetChilds())
+        for (auto& entity : entity->GetChildren())
         {
             entity->mVisible = bVisible;
         }
@@ -109,7 +109,7 @@ namespace ClassicLauncher
         for (auto& entity : mEntities)
         {
             entity->End();
-            entity->RemoveAllChilds();
+            entity->RemoveAllChildren();
         }
         ClearAllEntitys();
     }

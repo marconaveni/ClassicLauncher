@@ -1,14 +1,15 @@
 #include "TimerManager.h"
 
+#include <utility>
+
 namespace ClassicLauncher
 {
-    void TimerManager::ValidTimerHandling(TimerHandling& timerHandling)
+    void TimerManager::ValidTimerHandling(TimerHandling& timerHandling) const
     {
         const int size = static_cast<int>(mTimers.size() - 1);
         if (timerHandling.id < 0 || timerHandling.id > size)
         {
             timerHandling.id = -1;
-            return;
         }
     }
 
@@ -19,10 +20,10 @@ namespace ClassicLauncher
         if (timerHandling.id < 0)
         {
             std::unique_ptr<Timer> newTimer = std::make_unique<Timer>();
-            timerHandling.id = mTimers.size();
+            timerHandling.id = static_cast<int>(mTimers.size());
             mTimers.insert(std::make_pair(timerHandling.id, std::move(newTimer)));
         }
-        mTimers[timerHandling.id]->SetTimer(callbackFunction, targetEntity, delay, bLooped);
+        mTimers[timerHandling.id]->SetTimer(std::move(callbackFunction), targetEntity, delay, bLooped);
     }
 
     void TimerManager::ClearTimer(const TimerHandling& timerHandling)
@@ -34,7 +35,7 @@ namespace ClassicLauncher
         mTimers[timerHandling.id]->Stop();
     }
 
-    void TimerManager::Update()
+    void TimerManager::Update() const
     {
         for (auto& timer : mTimers)
         {

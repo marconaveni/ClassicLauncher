@@ -40,8 +40,8 @@ namespace ClassicLauncher
         friend class Application;
 
         std::unordered_map<int, std::unique_ptr<Timer>> mTimers;
-        void ValidTimerHandling(TimerHandling& timerHandling);
-        void Update();
+        void ValidTimerHandling(TimerHandling& timerHandling) const;
+        void Update() const;
     };
 
 }  // namespace ClassicLauncher
