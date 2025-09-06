@@ -4,6 +4,7 @@
 #include "Guis/GuiHorizontalCards.h"
 #include "Guis/GuiBlackScreen.h"
 #include "Guis/GuiVideoPlayer.h"
+#include "Guis/GuiComponent.h"
 
 namespace ClassicLauncher
 {

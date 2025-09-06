@@ -11,11 +11,6 @@ namespace ClassicLauncher
 
     class GuiFrame : public EntityGui
     {
-    private:
-
-        FocusManager* mFocusManager;
-        TimerHandling mTimer;
-
     public:
 
         GuiFrame(FocusManager* focusManager);
@@ -24,6 +19,11 @@ namespace ClassicLauncher
         void Click();
         virtual EntityType GetType() const override { return EntityType::GuiFrameClass; }
         virtual void Update() override;
+
+    private:
+
+        FocusManager* mFocusManager;
+        TimerHandling mTimer;
     };
 
 }  // namespace ClassicLauncher

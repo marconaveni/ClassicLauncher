@@ -19,6 +19,24 @@ namespace ClassicLauncher
 
     class GuiCard : public EntityGui, FocusComponent
     {
+
+    public:
+
+        GuiCard(float x, float y);
+        virtual EntityType GetType() const override { return EntityType::GuiCardClass; }
+        void Update() override;
+        void SetCardFocus(bool bForce = false);
+        void RemoveCardFocus(bool bForce = false);
+        virtual void OnFocus() override;
+        virtual void OnLostFocus() override;
+        void SetCover(std::string name = "");
+        bool IsFocus();
+        void Reset();
+        void Click();
+        void SetFrontCard();
+        virtual void SetThemeValue() override;
+
+
     private:
 
         TimerHandling mTimer;
@@ -40,22 +58,6 @@ namespace ClassicLauncher
         void CreateSizeBox();
         void StartVideo();
         void FocusAnimation(bool bForce, int a, const int b, const char* nameAnimation);
-
-    public:
-
-        GuiCard(float x, float y);
-        virtual EntityType GetType() const override { return EntityType::GuiCardClass; }
-        void Update() override;
-        void SetCardFocus(bool bForce = false);
-        void RemoveCardFocus(bool bForce = false);
-        virtual void OnFocus() override;
-        virtual void OnLostFocus() override;
-        void SetCover(std::string name = "");
-        bool IsFocus();
-        void Reset();
-        void Click();
-        void SetFrontCard();
-        virtual void SetThemeValue() override;
     };
 
 }  // namespace ClassicLauncher

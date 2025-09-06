@@ -1,7 +1,6 @@
 #ifndef GUI_BLACK_SCREEN_H
 #define GUI_BLACK_SCREEN_H
 
-
 #include "Entity/EntityGui.h"
 
 namespace ClassicLauncher
@@ -10,6 +9,7 @@ namespace ClassicLauncher
 
     class GuiBlackScreen : public EntityGui
     {
+        
     public:
 
         GuiBlackScreen();

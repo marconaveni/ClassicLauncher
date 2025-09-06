@@ -1,5 +1,6 @@
 #include "EntityManager.h"
 #include <algorithm>  // std::sort
+#include <format>
 #include "Application.h"
 
 namespace ClassicLauncher
@@ -46,7 +47,7 @@ namespace ClassicLauncher
             }
         }
 
-        entity->mNameId = std::to_string(counter) + "_" + name;
+        entity->mNameId = std::format("{}_{}", counter, name);
         entity->mId = GetEntitySize();
         entity->mIdZOrder = GetEntitySize();
     }
@@ -65,8 +66,9 @@ namespace ClassicLauncher
         {
             return;
         }
-        std::sort(
-            mEntities.begin(), mEntities.end(), [](const std::unique_ptr<Entity>& a, const std::unique_ptr<Entity>& b) { return a->GetIdZOrder() < b->GetIdZOrder(); });
+        std::sort(mEntities.begin(),
+                  mEntities.end(),
+                  [](const std::unique_ptr<Entity>& a, const std::unique_ptr<Entity>& b) { return a->GetIdZOrder() < b->GetIdZOrder(); });
         mPrepareNewOrdination = false;
     }
 
@@ -137,7 +139,7 @@ namespace ClassicLauncher
         for (auto& entity : mEntities)
         {
             entity->SetThemeValue();
-        }  
+        }
     }
 
     void EntityManager::DeleteEntitys(bool bIsDeleteEntities)

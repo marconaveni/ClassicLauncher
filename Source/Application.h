@@ -8,12 +8,11 @@
 #include "Graphics/Render.h"
 #include "Graphics/RenderSystem.h"
 #include "Graphics/SpriteManager.h"
-#include "Guis/GuiWindow.h"
+#include "Input/InputManager.h"
+#include "Themes/Themes.h"
 #include "Utils/ConfigurationManager.h"
 #include "Utils/ProcessManager.h"
 #include "Utils/TimerManager.h"
-#include "Themes/Themes.h"
-#include "Input/InputManager.h"
 
 namespace ClassicLauncher
 {
@@ -42,23 +41,6 @@ namespace ClassicLauncher
 
     class Application
     {
-        ApplicationSpecification mSpecification;
-        Render mRender;
-        RenderSystem mRenderSystem;
-        Print mPrint;
-        AudioManager mAudioManager;
-        SpriteManager mSpriteManager;
-        EntityManager mEntityManager;
-        GameListManager mGameListManager;
-        ProcessManager mProcessManager;
-        Themes mThemes;
-        FocusManager mFocusManager;
-        InputManager mInputManager;
-        TimerManager mTimerManager;
-        ConfigurationManager mConfigurationManager;
-
-        GuiWindow* mGuiWindow;
-
     public:
 
         Application();
@@ -89,6 +71,23 @@ namespace ClassicLauncher
         void Draw();
         void End();
         void ToggleFullscreen();
+
+        ApplicationSpecification mSpecification;
+        Render mRender;
+        RenderSystem mRenderSystem;
+        Print mPrint;
+        AudioManager mAudioManager;
+        SpriteManager mSpriteManager;
+        EntityManager mEntityManager;
+        GameListManager mGameListManager;
+        ProcessManager mProcessManager;
+        Themes mThemes;
+        FocusManager mFocusManager;
+        InputManager mInputManager;
+        TimerManager mTimerManager;
+        ConfigurationManager mConfigurationManager;
+
+        GuiWindow* mGuiWindow;
     };
 
 }  // namespace ClassicLauncher

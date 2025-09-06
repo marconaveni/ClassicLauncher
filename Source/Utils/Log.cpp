@@ -8,7 +8,7 @@ namespace ClassicLauncher
 
     static int sLogClassicLevel = 10;
 
-    void LogLevel(int classicLogType, int raylibLogType)
+    void LogLevel(const int classicLogType, const int raylibLogType)
     {
 #ifdef _DEBUG
         sLogClassicLevel = classicLogType;
@@ -70,7 +70,7 @@ namespace ClassicLauncher
         vprintf(textFinal.c_str(), args);
     }
 
-    void LogClassic(int logType, const char* text, ...)
+    void LogClassic(const int logType, const char* text, ...)
     {
         if (logType > 7 && logType < sLogClassicLevel) return;
 

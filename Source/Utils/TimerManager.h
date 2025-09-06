@@ -23,21 +23,25 @@ namespace ClassicLauncher
 
     class TimerManager
     {
-        friend class Application;
+    public:
+
+        TimerManager() = default;
+        ~TimerManager() = default;
+        void SetTimer(TimerHandling& timerHandling,
+                      std::function<void()> callbackFunction,
+                      Entity* targetEntity,
+                      float delay,
+                      bool bLooped = false);
+        void ClearTimer(const TimerHandling& timerHandling);
+        void ClearAllTimers();
 
     private:
+
+        friend class Application;
 
         std::unordered_map<int, std::unique_ptr<Timer>> mTimers;
         void ValidTimerHandling(TimerHandling& timerHandling);
         void Update();
-        
-        public:
-        
-        TimerManager() = default;
-        ~TimerManager() = default;
-        void SetTimer(TimerHandling& timerHandling, std::function<void()> callbackFunction, Entity* targetEntity, float delay, bool bLooped = false);
-        void ClearTimer(const TimerHandling& timerHandling);
-        void ClearAllTimers();
     };
 
 }  // namespace ClassicLauncher

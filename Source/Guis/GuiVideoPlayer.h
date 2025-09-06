@@ -16,12 +16,6 @@ namespace ClassicLauncher
 
     class GuiVideoPlayer : public EntityGui
     {
-    private:
-
-        std::unique_ptr<VideoPlayer> mPlayer;
-        std::unique_ptr<VideoPlayer> mPlayerFullScreen;
-        std::string mFilePath;
-
     public:
 
         GuiVideoPlayer();
@@ -36,7 +30,11 @@ namespace ClassicLauncher
         bool IsPlaying();
         bool IsPlayingFullscreen();
 
+    private:
 
+        std::unique_ptr<VideoPlayer> mPlayer;
+        std::unique_ptr<VideoPlayer> mPlayerFullScreen;
+        std::string mFilePath;
     };
 
 }  // namespace ClassicLauncher

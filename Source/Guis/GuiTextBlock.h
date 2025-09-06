@@ -18,26 +18,6 @@ namespace ClassicLauncher
 
     class GuiTextBlock : public EntityGui
     {
-    private:
-
-        rlw::Font mFont;
-        std::string mText;
-        std::string mPathFont;
-        int mSize;
-        int mSpacing;
-        Color mColor;
-        bool mTextMovement;
-        int mDesiredWidth;
-        float mOffset;
-        bool mToLeft;
-        float mDelay;
-        Vector2f mMensuredText;
-        float mSpeed;
-        float mMaxDelay;
-        TextOverflowPolicy mTextOverflowPolicy;
-
-        Vector2f MeasureTextBox();
-
     public:
 
         GuiTextBlock(const std::string& path, int size = 16, int spacing = 0);
@@ -58,6 +38,26 @@ namespace ClassicLauncher
         void SetDesiredWidth(int newWidth);
         void SetOffSetMoveText(float speed, float maxDelay);
         void UnloadText();
+
+    private:
+
+        rlw::Font mFont;
+        std::string mText;
+        std::string mPathFont;
+        int mSize;
+        int mSpacing;
+        Color mColor;
+        bool mTextMovement;
+        int mDesiredWidth;
+        float mOffset;
+        bool mToLeft;
+        float mDelay;
+        Vector2f mMensuredText;
+        float mSpeed;
+        float mMaxDelay;
+        TextOverflowPolicy mTextOverflowPolicy;
+
+        Vector2f MeasureTextBox();
     };
 
 }  // namespace ClassicLauncher

@@ -5,8 +5,8 @@
 #include <memory>
 #include <vector>
 #include "Animations/Animation.h"
-#include "Graphics/SpriteAnimator.h"
 #include "Entity/Entity.h"
+#include "Graphics/SpriteAnimator.h"
 
 namespace ClassicLauncher
 {
@@ -15,11 +15,6 @@ namespace ClassicLauncher
 
     class EntityGui : public Entity
     {
-        std::map<std::string, SpriteAnimator> mSpriteAnimations;
-        std::map<std::string, Animation> mAnimations;
-        Application* mApplication;
-        void UpdateTransform(const Animation& anim);
-
     public:
 
         EntityGui();
@@ -39,6 +34,13 @@ namespace ClassicLauncher
                             Ease typeAnimation = Ease::EaseLinearNone,
                             bool bForceReset = true);
         void AddAnimationFrame(const std::string& name, const float timeAnimation, const std::vector<RectFloat>& spriteIndices);
+
+    private:
+
+        std::map<std::string, SpriteAnimator> mSpriteAnimations;
+        std::map<std::string, Animation> mAnimations;
+        Application* mApplication;
+        void UpdateTransform(const Animation& anim);
     };
 
 }  // namespace ClassicLauncher

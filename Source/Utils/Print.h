@@ -23,7 +23,7 @@ namespace ClassicLauncher
         int size;
 
         Message()
-            : textMessage(""), duration(0), label(""), start(), end(), textColor(), size(0)
+            : duration(0), size(0)
         {
         }
 

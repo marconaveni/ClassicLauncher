@@ -1,5 +1,5 @@
-#ifndef VECTOR_2EX_H
-#define VECTOR_2EX_H
+#ifndef SPRITE_ANIMATOR_H
+#define SPRITE_ANIMATOR_H
 
 #include <string>
 #include <vector>

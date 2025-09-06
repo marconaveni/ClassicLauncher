@@ -8,20 +8,6 @@ namespace ClassicLauncher
 
     class ConfigurationManager
     {
-    private:
-
-        int mInternalScale;
-        bool mForceInternalScale;
-        int mVolume;
-        int mTargetFps;
-        int mClassicLogLevel;
-        int mRaylibLogLevel;
-        bool mVSync;
-        bool mFullscreen;
-
-        void SetValues(SimpleIni& config);
-        void GetValues(SimpleIni& config);
-
     public:
 
         ConfigurationManager();
@@ -49,6 +35,20 @@ namespace ClassicLauncher
         void SetRaylibLogLevel(int raylibLogLevel) { mRaylibLogLevel = raylibLogLevel; }
         void SetVSync(bool vSync) { mVSync = vSync; }
         void SetFullscreen(bool bFullscreen) { mFullscreen = bFullscreen; }
+
+    private:
+
+        void SetValues(SimpleIni& config);
+        void GetValues(SimpleIni& config);
+
+        int mInternalScale;
+        bool mForceInternalScale;
+        int mVolume;
+        int mTargetFps;
+        int mClassicLogLevel;
+        int mRaylibLogLevel;
+        bool mVSync;
+        bool mFullscreen;
     };
 
 }  // namespace ClassicLauncher

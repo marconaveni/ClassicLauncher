@@ -1,6 +1,7 @@
 #include "RenderSystem.h"
+#include <format>
 #include "Application.h"
-#include "Core.h" 
+#include "Core.h"
 #include "rl_wrap.h"
 
 namespace ClassicLauncher
@@ -34,7 +35,7 @@ namespace ClassicLauncher
     {
         const rlw::Texture2D* texture = mSpriteManagerReference->GetTexture(entity->mTextureName);
 
-        //if (texture && entity->mToDraw && entity->mTextureName != "transparent")  // todo verify render
+        // if (texture && entity->mToDraw && entity->mTextureName != "transparent")  // todo verify render
         if (texture && entity->mToDraw)
         {
             entity->mTransform.SetTransforms(Themes::GetScaleTexture());
@@ -47,8 +48,12 @@ namespace ClassicLauncher
                 rlw::BeginScissorMode(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height);
             }
 
-            rlw::DrawTexturePro(
-                *texture, entity->mTransform.GetSource(), entity->mTransform.GetTransform(), Vector2f{ 0, 0 }, entity->mTransform.rotation, entity->mTransform.color);
+            rlw::DrawTexturePro(*texture,
+                                entity->mTransform.GetSource(),
+                                entity->mTransform.GetTransform(),
+                                Vector2f{ 0, 0 },
+                                entity->mTransform.rotation,
+                                entity->mTransform.color);
             entity->Draw();
             DrawDebug(entity);
 
@@ -67,13 +72,13 @@ namespace ClassicLauncher
 
         const RectFloat& RectangleDrawArea = entity->mTransform.GetTransform();  //{ x, y, scale.x, scale.y };
         const Vector2f vec = Application::Get().GetRender()->GetMousePositionRender();
-        Rectangle point = {RectangleDrawArea.x, RectangleDrawArea.y, RectangleDrawArea.width, RectangleDrawArea.height};
+        Rectangle point = { RectangleDrawArea.x, RectangleDrawArea.y, RectangleDrawArea.width, RectangleDrawArea.height };
         if (rlw::CheckCollisionPointRec(vec, point) && bEnable)
         {
             rlw::DrawRectangleLinesEx(RectangleDrawArea, 2, Color::Red);
-            if (IsMouseButtonPressed( rlw::MOUSE_BUTTON_LEFT))
+            if (IsMouseButtonPressed(rlw::MOUSE_BUTTON_LEFT))
             {
-                PRINT(TEXT("nameID: %s", entity->mNameId.c_str()), 5.0f);
+                PRINT(std::format("nameID: {}", entity->mNameId).c_str(), 5.0f);
             }
         }
         else if (bEnable)

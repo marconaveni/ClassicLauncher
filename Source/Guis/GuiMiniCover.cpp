@@ -4,6 +4,7 @@
 #include "Utils/UtilsFunctionLibrary.h"
 #include "Guis/GuiSizeBox.h"
 #include "Guis/GuiHorizontalBox.h"
+#include "Guis/GuiComponent.h"
 
 namespace ClassicLauncher
 {

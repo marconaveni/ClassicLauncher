@@ -27,7 +27,7 @@ namespace ClassicLauncher
             mScale = Math::Min<float>(screenWidth / mNewWidth, screenHeight / mNewHeight);
             mVirtualMouse.x = (mouse.x - (screenWidth - (mNewWidth * mScale)) * 0.5f) / mScale;
             mVirtualMouse.y = (mouse.y - (screenHeight - (mNewHeight * mScale)) * 0.5f) / mScale;
-            mVirtualMouse = rlw::Vector2Clamp(mVirtualMouse, Vector2f{ 0 }, Vector2f{ mNewWidth, mNewHeight });
+            mVirtualMouse = rlw::Vector2Clamp(mVirtualMouse, { 0.0f ,0.0f }, { mNewWidth, mNewHeight });
         }
         else
         {
@@ -78,6 +78,7 @@ namespace ClassicLauncher
         mSource = Rectangle{ 0.0f, 0.0f, textureWidth, -textureHeight };
         mDest = Rectangle{ (screenWidth - (mNewWidth * mScale)) * 0.5f, (screenHeight - (mNewHeight * mScale)) * 0.5f, mNewWidth * mScale, mNewHeight * mScale };
 
+#ifdef _DEBUG
         if (rlw::IsKeyReleased(rlw::KEY_K))
         {
             rlw::SetTextureFilter(*texture, rlw::TEXTURE_FILTER_POINT);
@@ -89,9 +90,9 @@ namespace ClassicLauncher
             rlw::SetTextureFilter(*texture, rlw::TEXTURE_FILTER_BILINEAR);
             rlw::SetTextureFilter(mRenderTexture.depth, rlw::TEXTURE_FILTER_BILINEAR);
         }
-
+#endif
         // Draw render texture to screen, properly scaled
-        rlw::DrawTexturePro(*texture, mSource, mDest, Vector2f{}, 0.0f, Color::White);
+        rlw::DrawTexturePro(*texture, mSource, mDest, { 0.0f, 0.0f }, 0.0f, Color::White);
     }
 
     void Render::Unload()

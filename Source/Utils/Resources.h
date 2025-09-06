@@ -16,7 +16,6 @@ namespace ClassicLauncher::Resources
     std::string GetLogo();
     std::string GetClassicLauncherDir();
     void SetClassicLauncherDir();
-
     bool CheckResources();
 
 }  // namespace ClassicLauncher::Resources

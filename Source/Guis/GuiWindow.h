@@ -1,12 +1,8 @@
 #ifndef GUI_WINDOW_H
 #define GUI_WINDOW_H
 
-
 #include "Entity/EntityGui.h"
 #include "Utils/TimerManager.h"
-
-
-
 
 namespace ClassicLauncher
 {
@@ -19,13 +15,6 @@ namespace ClassicLauncher
 
     class GuiWindow : public EntityGui
     {
-        GuiHorizontalCards* mGuiHorizontalBox;
-        GuiBlackScreen* mGuiBlackScreen;
-        GuiVideoPlayer* mGuiVideoPlayer;
-        GuiComponent* mGuiBackground;
-        TimerHandling mClickTimer;
-        TimerHandling mInputTimer;
-
     public:
 
         GuiWindow();
@@ -36,6 +25,15 @@ namespace ClassicLauncher
         void OnBack();
         void Teste();
         GuiBlackScreen* GetGuiBlackScreen() { return mGuiBlackScreen; }
+
+    private:
+
+        GuiHorizontalCards* mGuiHorizontalBox;
+        GuiBlackScreen* mGuiBlackScreen;
+        GuiVideoPlayer* mGuiVideoPlayer;
+        GuiComponent* mGuiBackground;
+        TimerHandling mClickTimer;
+        TimerHandling mInputTimer;
     };
 
 }  // namespace ClassicLauncher

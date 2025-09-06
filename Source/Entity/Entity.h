@@ -2,78 +2,14 @@
 #define ENTITY_H
 
 #include <string>
+#include <string_view>
 #include <vector>
 #include "Data/Color.h"
 #include "Data/Rectangle.h"
+#include "Data/Transformation.h"
 
 namespace ClassicLauncher
 {
-
-    class Transformation
-    {
-    private:
-
-        friend class RenderSystem;
-
-        RectFloat mTransform;
-        RectFloat mSource;
-        Vector2f mScale;
-
-        float rootX;
-        float rootY;
-        float rootScaleX;
-        float rootScaleY;
-
-        void SetTransforms(const float m);
-
-    public:
-
-        Vector2f offset;
-        float x;
-        float y;
-        float width;
-        float height;
-        float scaleX;
-        float scaleY;
-        float rotation;
-        Color color;
-
-        float sourceX;
-        float sourceY;
-        float scaleWidth;
-        float scaleHeight;
-
-        Transformation()
-            : rootX(0)
-            , rootY(0)
-            , rootScaleX(1)
-            , rootScaleY(1)
-            , offset()
-            , x(0)
-            , y(0)
-            , width(0)
-            , height(0)
-            , scaleX(1)
-            , scaleY(1)
-            , rotation(0)
-            , color({ 255, 255, 255, 255 })
-            , sourceX(0)
-            , sourceY(0)
-            , scaleWidth(0)
-            , scaleHeight(0)
-            , mScale{1.0f, 1.0f}
-        {
-        }
-
-        RectFloat GetTransform() { return mTransform; }
-        RectFloat GetSource() { return mSource; }
-        Vector2f GetScale() { return mScale; }
-        Vector2f GetRootPosition() { return Vector2f(rootX, rootY); }
-        Vector2f GetRootScale() { return Vector2f(rootScaleX, rootScaleY); }
-        void UpdateTransform(Transformation& otherTransform);
-    };
-
-    // class Transformation;
 
     enum class EntityType
     {
@@ -92,25 +28,6 @@ namespace ClassicLauncher
 
     class Entity
     {
-    private:
-
-        friend class EntityManager;
-        friend class RenderSystem;
-
-        bool mToDelete;
-        bool mToDraw;
-        bool mScissorMode;
-        bool mVisible;
-        int mZOrder;
-        int mIdZOrder;
-        int mId;
-        std::vector<Entity*> mChildEntities;
-        std::string mNameId;
-
-    protected:
-
-        Entity* mParent = nullptr;
-
     public:
 
         Entity();
@@ -141,7 +58,24 @@ namespace ClassicLauncher
         std::string mTextureName = "transparent";
         RectFloat mScissorArea;
 
+    protected:
+
+        Entity* mParent = nullptr;
+
     private:
+
+        friend class EntityManager;
+        friend class RenderSystem;
+
+        bool mToDelete;
+        bool mToDraw;
+        bool mScissorMode;
+        bool mVisible;
+        int mZOrder;
+        int mIdZOrder;
+        int mId;
+        std::vector<Entity*> mChildEntities;
+        std::string mNameId;
 
         void SetZOrder(int zOrder);
     };

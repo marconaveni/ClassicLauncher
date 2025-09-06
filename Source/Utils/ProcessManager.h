@@ -1,7 +1,6 @@
 #ifndef PROCESS_MANAGER_H
 #define PROCESS_MANAGER_H
 
-
 namespace ClassicLauncher
 {
     class GameListManager;
@@ -18,8 +17,6 @@ namespace ClassicLauncher
 
     class ProcessManager
     {
-        ProcessStatus mStatus;
-
     public:
 
 #if _WIN32
@@ -35,6 +32,10 @@ namespace ClassicLauncher
         ProcessStatus UpdateRun();
         bool IsApplicationRunning();
         void StatusProcessRun(Application* pApplication);
+
+    private:
+
+        ProcessStatus mStatus;
     };
 
 }  // namespace ClassicLauncher

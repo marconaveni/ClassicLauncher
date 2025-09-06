@@ -4,9 +4,8 @@
 #include <memory>
 #include <string>
 #include <vector>
-
 #include "Application.h"
-
+#include "Entity/EntityGui.h"
 
 namespace ClassicLauncher
 {
@@ -18,15 +17,6 @@ namespace ClassicLauncher
 
     class GuiMiniCover : public EntityGui
     {
-    private:
-
-        std::vector<GuiComponent*> mGuiCovers;
-        std::vector<GuiSizeBox*> mGuiSizeBoxs;
-        GuiHorizontalBox* mGuiHorizontalBox;
-        GuiComponent* mArrow;
-        int mSize;
-        Vector2f mSizeCover;
-
     public:
 
         GuiMiniCover();
@@ -39,6 +29,13 @@ namespace ClassicLauncher
         void ClearCovers();
 
     private:
+
+        std::vector<GuiComponent*> mGuiCovers;
+        std::vector<GuiSizeBox*> mGuiSizeBoxs;
+        GuiHorizontalBox* mGuiHorizontalBox;
+        GuiComponent* mArrow;
+        int mSize;
+        Vector2f mSizeCover;
 
         void SetPositionCovers(int numCovers);
     };

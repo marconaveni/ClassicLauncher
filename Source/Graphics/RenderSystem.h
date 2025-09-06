@@ -10,18 +10,17 @@ namespace ClassicLauncher
 
     class RenderSystem
     {
-    private:
-
-        SpriteManager* mSpriteManagerReference;
-
     public:
 
         RenderSystem(SpriteManager* spriteManagerReference);
-
         void DrawEntities(const std::vector<std::unique_ptr<Entity>>& entities);
         void DrawEntity(Entity* entity);
         void DrawDebug(Entity* entity);
         bool CheckRender(const RectFloat& rec);
+
+    private:
+
+        SpriteManager* mSpriteManagerReference;
     };
 
 }  // namespace ClassicLauncher

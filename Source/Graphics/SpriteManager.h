@@ -11,9 +11,6 @@ namespace ClassicLauncher
 {
     class SpriteManager
     {
-    private:
-
-        std::unordered_map<std::string, Sprite> mSpriteMap;
 
     public:
 
@@ -27,6 +24,10 @@ namespace ClassicLauncher
         bool DeleteSprite(std::string name);
         int NumSpritesLoaded();
         void UnloadSprites();
+
+    private:
+
+        std::unordered_map<std::string, Sprite> mSpriteMap;
     };
 
 }  // namespace ClassicLauncher

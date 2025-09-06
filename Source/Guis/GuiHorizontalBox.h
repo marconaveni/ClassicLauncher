@@ -7,16 +7,8 @@
 namespace ClassicLauncher
 {
 
-
     class GuiHorizontalBox : public EntityGui
     {
-    private:
-
-        std::vector<EntityGui*> mGuiElements;
-        bool mIsAffectScale = false;
-        float mSpacer = 0;
-        bool mIsAutoSize = false;
-
     public:
 
         GuiHorizontalBox();
@@ -28,6 +20,13 @@ namespace ClassicLauncher
         void AttachGui(EntityGui* guiComponent);
         void ClearAll();
         virtual void Update() override;
+
+    private:
+
+        std::vector<EntityGui*> mGuiElements;
+        bool mIsAffectScale = false;
+        float mSpacer = 0;
+        bool mIsAutoSize = false;
     };
 
 }  // namespace ClassicLauncher

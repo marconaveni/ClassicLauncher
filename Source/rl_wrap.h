@@ -302,11 +302,6 @@ namespace rlw
         bool _owned{ false };  // true: veio de LoadFontEx (descarrega); false: default font (não descarrega)
     };
 
-    // // --- Utilitários de cor comuns ---
-    // inline Color ColorRGBA(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
-    // {
-    //     return Color{ r, g, b, a };
-    // }
 
     // --- Logging / Config / Janela ---
     void SetTraceLogCallback(void (*callback)(int logLevel, const char* text, va_list args));
@@ -398,7 +393,7 @@ namespace rlw
     Image ImageCopy(Image src);
     void UpdateTexture(Texture2D texture, const void* pixels);
 
-    bool IsFontValid(Font font);  // mapeia para IsFontReady
+    bool IsFontValid(Font font);  
     void UnloadFont(Font font);
     Font LoadFontEx(const char* fileName, int fontSize, int* codepoints, int codepointCount);
     void DrawTextEx(Font font, const char* text, ClassicLauncher::Vector2f position, float fontSize, float spacing, ClassicLauncher::Color tint);

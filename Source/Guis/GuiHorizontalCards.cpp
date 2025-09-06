@@ -13,6 +13,7 @@
 #include "Utils/UtilsFunctionLibrary.h"
 #include "Utils/Log.h"
 #include "Guis/GuiHorizontalBox.h"
+#include "Guis/GuiCard.h"
 
 namespace ClassicLauncher
 {

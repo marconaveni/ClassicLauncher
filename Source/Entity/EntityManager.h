@@ -1,14 +1,12 @@
 #ifndef ENTITY_MANAGER_H
 #define ENTITY_MANAGER_H
 
+#include <algorithm>
 #include <memory>
 #include <string>
 #include <vector>
 #include "Entity.h"
 #include "Graphics/SpriteManager.h"
-#include <memory>
-#include <algorithm>
-
 
 namespace ClassicLauncher
 {
@@ -17,19 +15,6 @@ namespace ClassicLauncher
 
     class EntityManager
     {
-    private:
-
-        std::vector<std::unique_ptr<Entity>> mEntities;
-        std::vector<std::unique_ptr<Entity>> mTempEntities;
-        std::vector<EntityType> mTypeCount;
-        SpriteManager* mSpriteManagerReference;
-        TimerManager* mTimerManagerReference;
-        bool mPrepareNewOrdination = false;
-        bool mHasNewEntity = false;
-        void SetZOrder();
-        void SetNewEntities();
-        void SetNameId(Entity* entity, const std::string& name);
-
     public:
 
         EntityManager(SpriteManager* spriteManagerReference, TimerManager* timerManagerReference);
@@ -70,7 +55,18 @@ namespace ClassicLauncher
 
     private:
 
+        void SetZOrder();
+        void SetNewEntities();
+        void SetNameId(Entity* entity, const std::string& name);
         void DeleteEntitys(bool bIsDeleteEntities);
+
+        std::vector<std::unique_ptr<Entity>> mEntities;
+        std::vector<std::unique_ptr<Entity>> mTempEntities;
+        std::vector<EntityType> mTypeCount;
+        SpriteManager* mSpriteManagerReference;
+        TimerManager* mTimerManagerReference;
+        bool mPrepareNewOrdination = false;
+        bool mHasNewEntity = false;
     };
 
 }  // namespace ClassicLauncher

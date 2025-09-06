@@ -6,9 +6,7 @@
 #include <string>
 #include <thread>
 
-
 #include "rl_wrap.h"
-
 
 namespace ClassicLauncher
 {
@@ -25,6 +23,12 @@ namespace ClassicLauncher
         void Load(const rlw::Image& newImage, const int width = 0, const int height = 0, bool bAspectRatio = true);
         void Stop();
         void Join();
+        rlw::Texture2D* GetTexture();
+        rlw::Image* GetImage();
+        void ResizeImage(const int width, const int height, bool bAspectRatio);
+        void Unload();
+        void UnloadTexture();
+        void UnloadImage();
 
     private:
 
@@ -38,14 +42,6 @@ namespace ClassicLauncher
         std::string mFilePath;
         void LoadImage(const int width, const int height, bool bAspectRatio);
 
-    public:
-
-        rlw::Texture2D* GetTexture();
-        rlw::Image* GetImage();
-        void ResizeImage(const int width, const int height, bool bAspectRatio);
-        void Unload();
-        void UnloadTexture();
-        void UnloadImage();
     };
 
 }  // namespace ClassicLauncher
