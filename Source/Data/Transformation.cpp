@@ -9,8 +9,8 @@ namespace ClassicLauncher
         // float _rootY = rootY * m;
         float _x = ((position.x + rootScaleX * offset.x) * m) + (rootX * m);
         float _y = ((position.y + rootScaleY * offset.y) * m) + (rootY * m);
-        float _width = width * m;
-        float _height = height * m;
+        float _width = position.width * m;
+        float _height = position.height * m;
 
         float _sourceX = sourceX * m;
         float _sourceY = sourceY * m;
@@ -26,7 +26,7 @@ namespace ClassicLauncher
         _scaleWidth = _scaleWidth > 0.0f ? _scaleWidth : _width;
         _scaleHeight = _scaleHeight > 0.0f ? _scaleHeight : _height;
 
-        mScale = {scaleX * rootScaleX, scaleY * rootScaleY};
+        mScale = {scale.x * rootScaleX, scale.y * rootScaleY};
         mSource = {{_sourceX, _sourceY}, {_width, _height}};
         mTransform = {_x, _y, mScale.x * _scaleWidth, mScale.y * _scaleHeight};
     }
@@ -35,8 +35,8 @@ namespace ClassicLauncher
     {
         otherTransform.rootX = position.x + rootX;
         otherTransform.rootY = position.y + rootY;
-        otherTransform.rootScaleX = scaleX * rootScaleX;
-        otherTransform.rootScaleY = scaleY * rootScaleY;
+        otherTransform.rootScaleX = scale.x * rootScaleX;
+        otherTransform.rootScaleY = scale.y * rootScaleY;
         otherTransform.color.a = color.a <= otherTransform.color.a ? color.a : otherTransform.color.a;
     }
 

@@ -12,8 +12,8 @@ namespace ClassicLauncher
     {
         mTransform.position.x = x;
         mTransform.position.y = y;
-        mTransform.width = 256;
-        mTransform.height = 280;
+        mTransform.position.width = 256;
+        mTransform.position.height = 280;
 
         CreateCard(mCardBackgroundMain, 0, 281, 255, "GuiCardBackgroundMain");
         CreateCard(mCardBackgroundFavorite, 514, 281, 0, "GuiCardBackgroundFavorite");
@@ -35,8 +35,8 @@ namespace ClassicLauncher
     void GuiCard::CreateCard(GuiComponent*& card, const float sourceX, const float sourceY, unsigned char alpha, const char* title, bool bAddChild)
     {
         card = GetApplication()->GetEntityManager()->CreateEntity<GuiComponent>(title);
-        card->mTransform.width = mTransform.width;
-        card->mTransform.height = mTransform.height;
+        card->mTransform.position.width = mTransform.position.width;
+        card->mTransform.position.height = mTransform.position.height;
         card->mTransform.sourceX = sourceX;
         card->mTransform.sourceY = sourceY;
         card->mTransform.color.SetOpacity(alpha);
@@ -50,16 +50,16 @@ namespace ClassicLauncher
     void GuiCard::CreateSizeBox()
     {
         mSizeBoxImage = GetApplication()->GetEntityManager()->CreateEntity<GuiSizeBox>("GuiSizeBoxImage");
-        mSizeBoxImage->mTransform.width = 228.0f;
-        mSizeBoxImage->mTransform.height = 204.0f;
+        mSizeBoxImage->mTransform.position.width = 228.0f;
+        mSizeBoxImage->mTransform.position.height = 204.0f;
         mSizeBoxImage->mTransform.offset.x = 12.0f;
         mSizeBoxImage->mTransform.offset.y = 12.0f;
         mSizeBoxImage->AttachGui(mCover);
         AddChild(mSizeBoxImage);
 
         mSizeBoxVideoPlayer = GetApplication()->GetEntityManager()->CreateEntity<GuiSizeBox>("GuiSizeBoxVideo");
-        mSizeBoxVideoPlayer->mTransform.width = 228.0f;
-        mSizeBoxVideoPlayer->mTransform.height = 204.0f;
+        mSizeBoxVideoPlayer->mTransform.position.width = 228.0f;
+        mSizeBoxVideoPlayer->mTransform.position.height = 204.0f;
         mSizeBoxVideoPlayer->mTransform.offset.x = 12.0f;
         mSizeBoxVideoPlayer->mTransform.offset.y = 12.0f;
         mSizeBoxVideoPlayer->AttachGui(mGuiVideoPlayer);
@@ -73,11 +73,11 @@ namespace ClassicLauncher
         // mSizeBox->mProperties.offset.y += 0.03f;
         const rlw::Texture2D* textureReference = GetApplication()->GetSpriteManager()->GetTexture(mCover->mTextureName);
         const Animation& pAnim = GetAnimation("card-zoom");
-        if (textureReference != nullptr && mCover->mTextureName != "sprite" && !pAnim.mIsRunning && mCover->mTransform.width == 0 && mCover->mTransform.height == 0)
+        if (textureReference != nullptr && mCover->mTextureName != "sprite" && !pAnim.mIsRunning && mCover->mTransform.position.width == 0 && mCover->mTransform.position.height == 0)
         {
             const float scale = Themes::GetScaleTexture();
-            mCover->mTransform.width = textureReference->width / scale;
-            mCover->mTransform.height = textureReference->height / scale;
+            mCover->mTransform.position.width = textureReference->width / scale;
+            mCover->mTransform.position.height = textureReference->height / scale;
             mSizeBoxImage->UpdateGuiAttachment();
         }
     }
@@ -136,16 +136,16 @@ namespace ClassicLauncher
     {
         if (name.empty())
         {
-            mCover->mTransform.width = 204.0f;
-            mCover->mTransform.height = 202.0f;
+            mCover->mTransform.position.width = 204.0f;
+            mCover->mTransform.position.height = 202.0f;
             mCover->mTransform.sourceX = 771;
             mCover->mTransform.sourceY = 283;
             mCover->mTextureName = "sprite";
         }
         else
         {
-            mCover->mTransform.width = 0;
-            mCover->mTransform.height = 0;
+            mCover->mTransform.position.width = 0;
+            mCover->mTransform.position.height = 0;
             mCover->mTransform.sourceX = 0;
             mCover->mTransform.sourceY = 0;
             mCover->mTextureName = name;
@@ -160,8 +160,8 @@ namespace ClassicLauncher
     void GuiCard::Reset()
     {
         mIsFront = false;
-        mTransform.scaleX = 1.0f;
-        mTransform.scaleY = 1.0f;
+        mTransform.scale.x = 1.0f;
+        mTransform.scale.y = 1.0f;
 
         mCardBackgroundMain->mTransform.color.SetOpacity(255);
         mCardMain->mTransform.color.SetOpacity(255);
@@ -196,11 +196,11 @@ namespace ClassicLauncher
 
         Transformation target = mTransform;
 
-        target.scaleX = scale;
-        target.scaleY = scale;
+        target.scale.x = scale;
+        target.scale.y = scale;
 
-        target.position.x += (-target.width / 2 * target.scaleX) + target.width / 2;
-        target.position.y += (-target.height / 2 * target.scaleY) + target.height / 2;
+        target.position.x += (-target.position.width / 2 * target.scale.x) + target.position.width / 2;
+        target.position.y += (-target.position.height / 2 * target.scale.y) + target.position.height / 2;
 
         target.color.a = 0;
         StartAnimation("card-zoom", time, mTransform, target, Ease::EaseQuadInOut, true);

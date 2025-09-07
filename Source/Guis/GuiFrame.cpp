@@ -10,8 +10,8 @@ namespace ClassicLauncher
         : mFocusManager(focusManager)
     {
         mTextureName = "sprite";
-        mTransform.width = 258.0f;
-        mTransform.height = 282.0f;
+        mTransform.position.width = 258.0f;
+        mTransform.position.height = 282.0f;
         mTransform.sourceX = 771.0f;
         mTransform.sourceY = 0.0f;
     }
@@ -57,11 +57,11 @@ namespace ClassicLauncher
 
         Transformation target = mTransform;
 
-        target.scaleX = scale;
-        target.scaleY = scale;
+        target.scale.x = scale;
+        target.scale.y = scale;
 
-        target.position.x += (-width / 2 * target.scaleX) + width / 2;
-        target.position.y += (-height / 2 * target.scaleY) + height / 2;
+        target.position.x += (-width / 2 * target.scale.x) + width / 2;
+        target.position.y += (-height / 2 * target.scale.y) + height / 2;
 
         target.color.a = 0;
         StartAnimation("card-zoom", time, mTransform, target, Ease::EaseQuadInOut, true);

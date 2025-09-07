@@ -37,8 +37,8 @@ namespace ClassicLauncher
             {
                 mCurrentTransform.position.x = GetAnimation(mCurrentTime, mStartTransform.position.x, mFinalTransform.position.x - mStartTransform.position.x, mDuration);
                 mCurrentTransform.position.y = GetAnimation(mCurrentTime, mStartTransform.position.y, mFinalTransform.position.y - mStartTransform.position.y, mDuration);
-                mCurrentTransform.scaleX = GetAnimation(mCurrentTime, mStartTransform.scaleX, mFinalTransform.scaleX - mStartTransform.scaleX, mDuration);
-                mCurrentTransform.scaleY = GetAnimation(mCurrentTime, mStartTransform.scaleY, mFinalTransform.scaleY - mStartTransform.scaleY, mDuration);
+                mCurrentTransform.scale.x = GetAnimation(mCurrentTime, mStartTransform.scale.x, mFinalTransform.scale.x - mStartTransform.scale.x, mDuration);
+                mCurrentTransform.scale.y = GetAnimation(mCurrentTime, mStartTransform.scale.y, mFinalTransform.scale.y - mStartTransform.scale.y, mDuration);
                 mCurrentTransform.rotation = GetAnimation(mCurrentTime, mStartTransform.rotation, mFinalTransform.rotation - mStartTransform.rotation, mDuration);
                 mCurrentTransform.color.r = GetAnimation(mCurrentTime, mStartTransform.color.r, mFinalTransform.color.r - mStartTransform.color.r, mDuration);
                 mCurrentTransform.color.g = GetAnimation(mCurrentTime, mStartTransform.color.g, mFinalTransform.color.g - mStartTransform.color.g, mDuration);

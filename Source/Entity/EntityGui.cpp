@@ -21,8 +21,8 @@ namespace ClassicLauncher
             Rectangle rec = spriteAnimation.second.GetCurrentSprite();
             mTransform.sourceX = rec.x;
             mTransform.sourceY = rec.y;
-            mTransform.width = rec.width;
-            mTransform.height = rec.height;
+            mTransform.position.width = rec.width;
+            mTransform.position.height = rec.height;
         }
         
         for (auto& animation : mAnimations)
@@ -54,8 +54,8 @@ namespace ClassicLauncher
     {
         mTransform.position.x = anim.mCurrentTransform.position.x;
         mTransform.position.y = anim.mCurrentTransform.position.y;
-        mTransform.scaleX = anim.mCurrentTransform.scaleX;
-        mTransform.scaleY = anim.mCurrentTransform.scaleY;
+        mTransform.scale.x = anim.mCurrentTransform.scale.x;
+        mTransform.scale.y = anim.mCurrentTransform.scale.y;
         mTransform.rotation = anim.mCurrentTransform.rotation;
         mTransform.color = anim.mCurrentTransform.color;
     }

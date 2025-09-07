@@ -16,12 +16,12 @@ namespace ClassicLauncher
     void GuiWindow::Init()
     {
         Application* pApplication = GetApplication();
-        mTransform.width = (float)pApplication->GetSpecification().width;
-        mTransform.height = (float)pApplication->GetSpecification().height;
+        mTransform.position.width = (float)pApplication->GetSpecification().width;
+        mTransform.position.height = (float)pApplication->GetSpecification().height;
 
         mGuiBackground = pApplication->GetEntityManager()->CreateEntity<GuiComponent>("GuiBackground");
-        mGuiBackground->mTransform.width = 21;
-        mGuiBackground->mTransform.height = 720;
+        mGuiBackground->mTransform.position.width = 21;
+        mGuiBackground->mTransform.position.height = 720;
         mGuiBackground->mTransform.sourceX = 0;
         mGuiBackground->mTransform.sourceY = 562;
         mGuiBackground->mTransform.scaleWidth = 1280;

@@ -12,13 +12,15 @@ namespace ClassicLauncher
     public:
 
         Vector2f offset{};
-        Vector2f position{};
+        RectFloat position{};
+        Vector2f scale{ 1.0f, 1.0f };
+
         // float x;
         // float y;
-        float width;
-        float height;
-        float scaleX;
-        float scaleY;
+        // float width;
+        //float height;
+        //float scaleX;
+        //float scaleY;
         float rotation;
         Color color;
 
@@ -35,10 +37,10 @@ namespace ClassicLauncher
             , offset()
             // , x(0)
             // , y(0)
-            , width(0)
-            , height(0)
-            , scaleX(1)
-            , scaleY(1)
+            //, width(0)
+            //, height(0)
+            //, scaleX(1)
+            //, scaleY(1)
             , rotation(0)
             , color({ 255, 255, 255, 255 })
             , sourceX(0)

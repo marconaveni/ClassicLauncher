@@ -7,8 +7,8 @@ namespace ClassicLauncher
 
     GuiHorizontalBox::GuiHorizontalBox()
     {
-        mTransform.width = 10.0f;
-        mTransform.height = 10.0f;
+        mTransform.position.width = 10.0f;
+        mTransform.position.height = 10.0f;
     }
 
     GuiHorizontalBox::~GuiHorizontalBox()
@@ -31,8 +31,8 @@ namespace ClassicLauncher
         }
         RemoveAllChildren();
         mGuiElements.clear();
-        mTransform.width = 10.0f;
-        mTransform.height = 10.0f;
+        mTransform.position.width = 10.0f;
+        mTransform.position.height = 10.0f;
     }
 
     void GuiHorizontalBox::Update()
@@ -55,23 +55,23 @@ namespace ClassicLauncher
             }
             transform.position.x = x + width + mTransform.offset.x;
             transform.position.y = mTransform.offset.y;
-            width += (transform.width + mSpacer) * scale;
+            width += (transform.position.width + mSpacer) * scale;
 
             if (mIsAutoSize)
             {
                 spacer += mSpacer;
                 const float canvasScaleWidth = transform.GetScale().x; // (transform.rootScaleX * transform.scaleX);
                 const float canvasScaleHeight = transform.GetScale().y; // (transform.rootScaleY * transform.scaleY);
-                canvasWidth += (transform.width) / (canvasScaleWidth);
-                canvasHeight = Math::Max(transform.height / canvasScaleHeight, canvasHeight);
+                canvasWidth += (transform.position.width) / (canvasScaleWidth);
+                canvasHeight = Math::Max(transform.position.height / canvasScaleHeight, canvasHeight);
             }
         }
 
         if (mIsAutoSize)
         {
             spacer -= mSpacer;
-            mTransform.width = (canvasWidth + spacer / mTransform.GetScale().x) * scale;   //(canvasWidth + spacer / (mTransform.rootScaleX * mTransform.scaleX)) * scale;
-            mTransform.height = canvasHeight * scale;
+            mTransform.position.width = (canvasWidth + spacer / mTransform.GetScale().x) * scale;   //(canvasWidth + spacer / (mTransform.rootScaleX * mTransform.scaleX)) * scale;
+            mTransform.position.height = canvasHeight * scale;
         }
     }
 

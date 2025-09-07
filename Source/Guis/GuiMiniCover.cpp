@@ -17,11 +17,11 @@ namespace ClassicLauncher
     void GuiMiniCover::Init()
     {
         mTransform.position.y = 505.0f;
-        mTransform.width = 1280.0f;
-        mTransform.height = 72.0f;
+        mTransform.position.width = 1280.0f;
+        mTransform.position.height = 72.0f;
 
         mGuiHorizontalBox = GetApplication()->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
-        mGuiHorizontalBox->mTransform.position.x = mTransform.width / 2.0f;
+        mGuiHorizontalBox->mTransform.position.x = mTransform.position.width / 2.0f;
         mGuiHorizontalBox->mTransform.position.y = 20.0f;
         mGuiHorizontalBox->SetAutoSize(true);
         mGuiHorizontalBox->SetAffectScale(true);
@@ -35,8 +35,8 @@ namespace ClassicLauncher
 
             miniCover->mTextureName = "transparent";
 
-            sizeBox->mTransform.width = mSizeCover.x;
-            sizeBox->mTransform.height = mSizeCover.y;
+            sizeBox->mTransform.position.width = mSizeCover.x;
+            sizeBox->mTransform.position.height = mSizeCover.y;
             sizeBox->AttachGui(miniCover);
 
             mGuiHorizontalBox->AttachGui(sizeBox);
@@ -47,7 +47,7 @@ namespace ClassicLauncher
         std::vector<RectFloat> recs = { { 1236.0f, 0.0f, 30.0f, 18.0f }, { 1267.0f, 0.0f, 30.0f, 18.0f }, { 1298.0f, 0.0f, 30.0f, 18.0f } };
 
         mArrow = GetApplication()->GetEntityManager()->CreateEntity<GuiComponent>("arrow");
-        mArrow->mTransform.position.x = mTransform.width / 2;
+        mArrow->mTransform.position.x = mTransform.position.width / 2;
         mArrow->mTextureName = "sprite";
         mArrow->AddAnimationFrame("frame", 0.2f, recs);
         AddChild(mArrow);
@@ -61,10 +61,10 @@ namespace ClassicLauncher
         {
             rlw::Texture2D* textureReference = GetApplication()->GetSpriteManager()->GetTexture(miniCover->mTextureName);
             const float scale = Themes::GetScaleTexture();
-            if (textureReference != nullptr && miniCover->mTextureName != "sprite" && miniCover->mTransform.width == 0 && miniCover->mTransform.height == 0)
+            if (textureReference != nullptr && miniCover->mTextureName != "sprite" && miniCover->mTransform.position.width == 0 && miniCover->mTransform.position.height == 0)
             {
-                miniCover->mTransform.width = textureReference->width / scale;
-                miniCover->mTransform.height = textureReference->height / scale;
+                miniCover->mTransform.position.width = textureReference->width / scale;
+                miniCover->mTransform.position.height = textureReference->height / scale;
             }
         }
     }
@@ -76,9 +76,9 @@ namespace ClassicLauncher
 
     void GuiMiniCover::SetPositionCovers(int numCovers)
     {
-        mGuiHorizontalBox->mTransform.position.x = (mTransform.width - ((mSizeCover.x + 1) * numCovers)) / 2.0f;
+        mGuiHorizontalBox->mTransform.position.x = (mTransform.position.width - ((mSizeCover.x + 1) * numCovers)) / 2.0f;
         mArrow->mTransform.position.x = mGuiHorizontalBox->mTransform.position.x + ((mSizeCover.x + 1) * numCovers) / 2.0f;
-        mArrow->mTransform.position.x = (numCovers % 2 == 0) ? mArrow->mTransform.position.x : mArrow->mTransform.position.x - mArrow->mTransform.width / 2;
+        mArrow->mTransform.position.x = (numCovers % 2 == 0) ? mArrow->mTransform.position.x : mArrow->mTransform.position.x - mArrow->mTransform.position.width / 2;
         mArrow->mTransform.position.x--;
 
         mGuiHorizontalBox->mTransform.position.x *= mTransform.GetRootScale().x;
@@ -129,15 +129,15 @@ namespace ClassicLauncher
         miniCover->mTextureName = name;
         if (name == "sprite")
         {
-            miniCover->mTransform.width = 28;
-            miniCover->mTransform.height = 28;
+            miniCover->mTransform.position.width = 28;
+            miniCover->mTransform.position.height = 28;
             miniCover->mTransform.sourceX = 976;
             miniCover->mTransform.sourceY = 283;
         }
         else
         {
-            miniCover->mTransform.width = 0;
-            miniCover->mTransform.height = 0;
+            miniCover->mTransform.position.width = 0;
+            miniCover->mTransform.position.height = 0;
             miniCover->mTransform.sourceX = 0;
             miniCover->mTransform.sourceY = 0;
         }

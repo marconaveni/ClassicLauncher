@@ -30,8 +30,8 @@ namespace ClassicLauncher
         , mIdLastFocusSystem(3)
         , mSpeed(22.0f)
     {
-        mTransform.width = 1280;
-        mTransform.height = 720;
+        mTransform.position.width = 1280;
+        mTransform.position.height = 720;
     }
 
     void GuiHorizontalCards::Init()
@@ -145,7 +145,7 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::SetPositionHorizontalBox()
     {
-        mHorizontalBox->mTransform.position.x = ((1280 - mHorizontalBox->mTransform.width) / 2) + GetApplication()->GetThemes()->mConfigurationThemes.horizontalCardsPositionX;
+        mHorizontalBox->mTransform.position.x = ((1280 - mHorizontalBox->mTransform.position.width) / 2) + GetApplication()->GetThemes()->mConfigurationThemes.horizontalCardsPositionX;
     }
 
     void GuiHorizontalCards::ChangeList(const CurrentList list)

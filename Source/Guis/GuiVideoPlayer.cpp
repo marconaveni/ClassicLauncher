@@ -61,8 +61,8 @@ namespace ClassicLauncher
         mPlayer->Update();
 
         float scale = Themes::GetScaleTexture();
-        mTransform.width = mPlayer->GetVideoSize().x / scale;
-        mTransform.height = mPlayer->GetVideoSize().y / scale;
+        mTransform.position.width = mPlayer->GetVideoSize().x / scale;
+        mTransform.position.height = mPlayer->GetVideoSize().y / scale;
 
         if (!mPlayerFullScreen) return;
 
