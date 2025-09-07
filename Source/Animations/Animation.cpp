@@ -11,8 +11,8 @@ namespace ClassicLauncher
     }
 
     void Animation::StartAnimation(const float durationAnimation,
-                                   const Transformation& startAnimation,
-                                   const Transformation& finalAnimation,
+                                   const Transform& startAnimation,
+                                   const Transform& finalAnimation,
                                    const Ease typeAnimation,
                                    const bool bForceReset)
     {

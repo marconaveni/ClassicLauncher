@@ -78,7 +78,7 @@ namespace ClassicLauncher
         rlw::Texture2D* texture = mPlayer->GetVideoTexture();
         if (texture)
         {
-            const Transformation& transform = mTransform;
+            const Transform& transform = mTransform;
             rlw::DrawTexturePro(*texture, mTransform.GetSource(), mTransform.GetTransform(), Vector2f{ 0, 0 }, transform.rotation, transform.color);
         }
 

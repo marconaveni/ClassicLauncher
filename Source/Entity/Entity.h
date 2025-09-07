@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include "Data/Transformation.h"
+#include "Data/Transform.h"
 
 namespace ClassicLauncher
 {
@@ -52,7 +52,7 @@ namespace ClassicLauncher
         [[nodiscard]] int GetZOrder() const { return mZOrder; }
         [[nodiscard]] int GetIdZOrder() const { return mIdZOrder; }
 
-        Transformation mTransform;
+        Transform mTransform;
         std::string mTextureName = "transparent";
         RectFloat mScissorArea;
 

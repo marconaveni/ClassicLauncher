@@ -62,8 +62,8 @@ namespace ClassicLauncher
 
     void EntityGui::StartAnimation(const std::string& name,
                                    float durationAnimation,
-                                   const Transformation& startAnimationTransform,
-                                   const Transformation& finalAnimationTransform,
+                                   const Transform& startAnimationTransform,
+                                   const Transform& finalAnimationTransform,
                                    Ease typeAnimation,
                                    bool bForceReset)
     {
