@@ -43,8 +43,8 @@ namespace ClassicLauncher
             if (entity->mScissorMode)
             {
                 RectFloat scissorArea = entity->mScissorArea;
-                scissorArea.width = scissorArea.width * entity->mTransform.GetRootScale().x * Themes::GetScaleTexture();
-                scissorArea.height = scissorArea.height * entity->mTransform.GetRootScale().y * Themes::GetScaleTexture();
+                scissorArea.width = scissorArea.width * entity->mTransform.root.scale.x * Themes::GetScaleTexture();
+                scissorArea.height = scissorArea.height * entity->mTransform.root.scale.y * Themes::GetScaleTexture();
                 rlw::BeginScissorMode(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height);
             }
 
@@ -89,8 +89,8 @@ namespace ClassicLauncher
         {
             const Color tint = Color(255, 0, 0, 55);
             RectFloat scissorArea = entity->mScissorArea;
-            scissorArea.width = scissorArea.width * entity->mTransform.GetRootScale().x * Themes::GetScaleTexture();
-            scissorArea.height = scissorArea.height * entity->mTransform.GetRootScale().y * Themes::GetScaleTexture();
+            scissorArea.width = scissorArea.width * entity->mTransform.root.scale.x * Themes::GetScaleTexture();
+            scissorArea.height = scissorArea.height * entity->mTransform.root.scale.y * Themes::GetScaleTexture();
             rlw::DrawRectangle(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height, tint);
         }
 #endif  // _DEBUG

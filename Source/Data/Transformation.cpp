@@ -5,38 +5,31 @@ namespace ClassicLauncher
 
     void Transformation::SetTransforms(const float m)
     {
-        // float _rootX = rootX * m;
-        // float _rootY = rootY * m;
-        float _x = ((position.x + rootScaleX * offset.x) * m) + (rootX * m);
-        float _y = ((position.y + rootScaleY * offset.y) * m) + (rootY * m);
-        float _width = position.width * m;
-        float _height = position.height * m;
 
-        float _sourceX = source.x * m;
-        float _sourceY = source.y * m;
-        float _scaleWidth = source.width * m;
-        float _scaleHeight = source.height * m;
+        float x = ((position.x + root.scale.x * offset.x) * m) + (root.position.x * m);
+        float y = ((position.y + root.scale.y * offset.y) * m) + (root.position.y * m);
+        float width = position.width * m;
+        float height = position.height * m;
 
-        // _x = _rootX + _x;
-        // _y = _rootY + _y;
-        // _width = _width;
-        // _height = _height;
-        // _sourceX = _sourceX;
-        // _sourceY = _sourceY;
-        _scaleWidth = _scaleWidth > 0.0f ? _scaleWidth : _width;
-        _scaleHeight = _scaleHeight > 0.0f ? _scaleHeight : _height;
+        float sourceX = source.x * m;
+        float sourceY = source.y * m;
+        float sourceWidth = source.width * m;
+        float sourceHeight = source.height * m;
 
-        mScale = {scale.x * rootScaleX, scale.y * rootScaleY};
-        mSource = {{_sourceX, _sourceY}, {_width, _height}};
-        mTransform = {_x, _y, mScale.x * _scaleWidth, mScale.y * _scaleHeight};
+        sourceWidth = sourceWidth > 0.0f ? sourceWidth : width;
+        sourceHeight = sourceHeight > 0.0f ? sourceHeight : height;
+
+        mScale = {scale.x * root.scale.x, scale.y * root.scale.y};
+        mSource = {{sourceX, sourceY}, {width, height}};
+        mTransform = {x, y, mScale.x * sourceWidth, mScale.y * sourceHeight};
     }
 
     void Transformation::UpdateTransform(Transformation& otherTransform)
     {
-        otherTransform.rootX = position.x + rootX;
-        otherTransform.rootY = position.y + rootY;
-        otherTransform.rootScaleX = scale.x * rootScaleX;
-        otherTransform.rootScaleY = scale.y * rootScaleY;
+        otherTransform.root.position.x = position.x + root.position.x;
+        otherTransform.root.position.y = position.y + root.position.y;
+        otherTransform.root.scale.x = scale.x * root.scale.x;
+        otherTransform.root.scale.y = scale.y * root.scale.y;
         otherTransform.color.a = color.a <= otherTransform.color.a ? color.a : otherTransform.color.a;
     }
 

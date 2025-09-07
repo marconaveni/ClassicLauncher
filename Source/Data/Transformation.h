@@ -18,19 +18,18 @@ namespace ClassicLauncher
         Color color{ 255, 255, 255, 255 };
         RectFloat source{};
 
-        Transformation()
-            : rootX(0)
-            , rootY(0)
-            , rootScaleX(1)
-            , rootScaleY(1)
+        struct Root
         {
-        }
+            Vector2f position{};
+            Vector2f scale{ 1.0f, 1.0f };
+        };
+        
+        Root root;
 
         RectFloat GetTransform() { return mTransform; }
         RectFloat GetSource() { return mSource; }
         Vector2f GetScale() { return mScale; }
-        Vector2f GetRootPosition() { return Vector2f(rootX, rootY); }
-        Vector2f GetRootScale() { return Vector2f(rootScaleX, rootScaleY); }
+
         void UpdateTransform(Transformation& otherTransform);
 
     private:
@@ -42,11 +41,6 @@ namespace ClassicLauncher
         RectFloat mTransform{};
         RectFloat mSource{};
         Vector2f mScale{ 1.0f, 1.0f };
-
-        float rootX;
-        float rootY;
-        float rootScaleX;
-        float rootScaleY;
     };
 
     // class Transformation;

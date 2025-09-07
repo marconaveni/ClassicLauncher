@@ -28,8 +28,8 @@ namespace ClassicLauncher
             if (focus->GetFocus())
             {
                 Transformation target = mTransform;
-                const float x = focus->GetEntity()->mTransform.position.x + focus->GetEntity()->mTransform.GetRootPosition().x;
-                const float y = focus->GetEntity()->mTransform.position.y + focus->GetEntity()->mTransform.GetRootPosition().y;
+                const float x = focus->GetEntity()->mTransform.position.x + focus->GetEntity()->mTransform.root.position.x;
+                const float y = focus->GetEntity()->mTransform.position.y + focus->GetEntity()->mTransform.root.position.y;
 
                 if (x == mTransform.position.x  && y == mTransform.position.y)
                 {
