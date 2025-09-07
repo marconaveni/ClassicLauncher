@@ -1,9 +1,12 @@
 cmake_minimum_required(VERSION 3.25)
 project(ClassicLauncher LANGUAGES CXX)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 # Compile configurations
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # cache options default values
 option(CLASSIC_LAUNCHER_FSANITIZE "Enable address sanitizer" OFF)
@@ -53,7 +56,8 @@ include_directories(
 message(STATUS "[Classic Launcher] Source dir is: " ${CMAKE_SOURCE_DIR})
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    message(STATUS "[Classic Launcher] DevMode is enabled")
+    set(debug "_DEBUG")
+    message(STATUS "[Classic Launcher] DevMode is enabled ${debug}")
 else()    
     message(STATUS "[Classic Launcher] DevMode is disable")
 endif()
@@ -64,7 +68,6 @@ if(MSVC)
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         add_compile_options(/MTd)
         message(STATUS "[Classic Launcher] set /MTd")
-        set(debug "_DEBUG")
     else()    
         add_compile_options(/MT)
         message(STATUS "[Classic Launcher] set /MT")
@@ -72,8 +75,7 @@ if(MSVC)
 endif()
 
 if(MINGW)
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        set(debug "_DEBUG")
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")     
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
     else()    
         set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -mwindows -e mainCRTStartup")
@@ -300,15 +302,18 @@ if(WIN32)
 
     # Preprocessors definitions
     target_compile_definitions(ClassicLauncher PRIVATE
-    _CRT_SECURE_NO_WARNINGS
-    _CONSOLE
-    ssize_t=intptr_t
-    ${debug}
-    ${forcetheme}
+        _CRT_SECURE_NO_WARNINGS
+        _CONSOLE
+        ssize_t=intptr_t   #necessary for vlc
+        ${debug}
+        ${forcetheme}
     )
 
     # Windows
-    target_link_libraries(${PROJECT_NAME} PRIVATE raylib ${VLC_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME} PRIVATE 
+        raylib 
+        ${VLC_LIBRARIES}
+    )
 
 
     # Regra para copiar as DLLs da libvlc para o diretório de build
@@ -337,9 +342,12 @@ elseif (CLASSIC_RASPBERRY_PI)
     # Submodule Raylib
     add_subdirectory(extern/raylib)
 
-    # Definições específicas para Debug
+    # Preprocessors definitions
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        target_compile_definitions(ClassicLauncher PRIVATE _DEBUG ${FORCE_THEME_1X})
+        target_compile_definitions(ClassicLauncher PRIVATE 
+            ${debug}
+            ${forcetheme}
+        )
     endif()
 
     # -lraylib -lm -lpthread -lGLESv2 -lEGL -lvcos -lvchiq_arm -lgbm -ldrm
@@ -355,17 +363,25 @@ elseif (CLASSIC_RASPBERRY_PI)
         gbm
         drm
         vlc
-)
+    )
+
 else()
 
     set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_WAYLAND ON  CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_X11    OFF CACHE BOOL "" FORCE)
 
     # Submodule Raylib
     add_subdirectory(extern/raylib)
 
     # Add `_DEBUG` only Debug build
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        target_compile_definitions(ClassicLauncher PRIVATE _DEBUG ${FORCE_THEME_1X})
+        message(STATUS "[Classic Launcher] passou aqui ${debug}")                              # todo remover
+        target_compile_definitions(ClassicLauncher PRIVATE     
+            ${debug}
+            "TESTE"
+            ${forcetheme}
+        )
     endif()
 
     # Linux
@@ -387,3 +403,8 @@ add_custom_command(TARGET ClassicLauncher POST_BUILD
 # cd build
 # cmake -DCMAKE_BUILD_TYPE=Release ..
 # cmake --build .
+
+######################################################
+
+# cmake --preset=linux-debug-theme1x
+# cmake --build --preset=linux-debug-theme1x

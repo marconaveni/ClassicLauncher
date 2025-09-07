@@ -64,7 +64,7 @@ namespace ClassicLauncher
         }
 
 #ifndef _DEBUG
-        SetExitKey(KEY_NULL);
+        rlw::SetExitKey(rlw::KEY_NULL);
 #endif
 
         const std::string musicDir = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "musics");  // theme dir
@@ -275,22 +275,23 @@ namespace ClassicLauncher
             bIsFullScreen = false;
         }
 #else
-        if (!IsWindowFullscreen())
+        if (!rlw::IsWindowFullscreen())
         {
             mSpecification.posWindowX = rlw::GetWindowPosition().x;
             mSpecification.posWindowY = rlw::GetWindowPosition().y;
             mSpecification.width = rlw::GetScreenWidth();
             mSpecification.height = rlw::GetScreenHeight();
-            rlw::SetWindowSize(rlw::GetMonitorWidth(rlw::GetCurrentMonitor()), rlw::GetMonitorHeight(rlw::GetCurrentMonitor()));
             rlw::ToggleFullscreen();
+            rlw::SetWindowSize(rlw::GetMonitorWidth(rlw::GetCurrentMonitor()), rlw::GetMonitorHeight(rlw::GetCurrentMonitor()));
             // rlw::SetConfigFlags(rlw::FLAG_VSYNC_HINT);
             bIsFullScreen = true;
         }
         else
         {
             rlw::ToggleFullscreen();
-            rlw::SetWindowSize(mSpecification.width, mSpecification.height);
-            rlw::SetWindowPosition(mSpecification.posWindowX, mSpecification.posWindowY);
+            //rlw::SetWindowSize(mSpecification.width, mSpecification.height);
+            //rlw::SetWindowPosition(mSpecification.posWindowX, mSpecification.posWindowY);
+            //rlw::SetWindowSize(mSpecification.width, mSpecification.height);
             bIsFullScreen = false;
         }
 #endif
