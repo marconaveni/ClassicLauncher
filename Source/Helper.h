@@ -1,6 +1,5 @@
-#ifndef CORE_H
-#define CORE_H
-
+#ifndef HELPER_H
+#define HELPER_H
 
 #define TEXT(...) rlw::TextFormat(__VA_ARGS__)
 #define TEXTBOOL(a) rlw::TextFormat("%s", (a) == true ? "true" : "false")
@@ -19,4 +18,4 @@
 
 // #define FORCE_THEME_1X  // force texture load debug 1x
 
-#endif  // CORE_H
+#endif  // HELPER_H

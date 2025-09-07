@@ -1,7 +1,7 @@
 #include "Resources.h"
 #include "Utils/StringFunctionLibrary.h"
 #include "Utils/UtilsFunctionLibrary.h"
-#include "Core.h"   //aqui fica
+#include "Helper.h"   
 #include "rl_wrap.h"
 
 

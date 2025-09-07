@@ -6,7 +6,7 @@
 #include "Utils/Resources.h"
 #include "Utils/StringFunctionLibrary.h"
 #include "Utils/UtilsFunctionLibrary.h"
-#include "Core.h"
+#include "Helper.h"
 
 namespace ClassicLauncher
 {

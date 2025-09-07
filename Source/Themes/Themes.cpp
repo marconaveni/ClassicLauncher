@@ -4,7 +4,7 @@
 #include "Utils/Resources.h"
 #include "Utils/Math.h"
 #include "Utils/Log.h"
-#include "Core.h"
+#include "Helper.h"
 
 namespace ClassicLauncher
 {

@@ -1,7 +1,7 @@
 #include "RenderSystem.h"
 #include <format>
 #include "Application.h"
-#include "Core.h"
+#include "Helper.h"
 #include "rl_wrap.h"
 
 namespace ClassicLauncher

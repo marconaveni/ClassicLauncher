@@ -1,6 +1,6 @@
 #include "FocusManager.h"
 #include "Application.h"
-#include "Core.h" 
+#include "Helper.h" 
 
 namespace ClassicLauncher
 {

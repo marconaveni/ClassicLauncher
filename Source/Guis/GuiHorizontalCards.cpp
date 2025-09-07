@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <memory>
 #include "Components/FocusManager.h"
-#include "Core.h"
+#include "Helper.h"
 #include "Guis/GuiFrame.h"
 #include "Guis/GuiMiniCover.h"
 #include "Guis/GuiTextBlock.h"
