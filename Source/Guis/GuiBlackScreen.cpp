@@ -6,8 +6,8 @@ namespace ClassicLauncher
     GuiBlackScreen::GuiBlackScreen()
     {
         mTransform.color.SetOpacity(0);
-        mTransform.scaleWidth = 1280;
-        mTransform.scaleHeight = 720;
+        mTransform.source.width = 1280;
+        mTransform.source.height = 720;
         mTextureName = "black";
     }
 

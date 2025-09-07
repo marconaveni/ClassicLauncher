@@ -24,8 +24,8 @@ namespace ClassicLauncher
         mGuiBackground->mTransform.position.height = 720;
         mGuiBackground->mTransform.source.x = 0;
         mGuiBackground->mTransform.source.y = 562;
-        mGuiBackground->mTransform.scaleWidth = 1280;
-        mGuiBackground->mTransform.scaleHeight = 720;
+        mGuiBackground->mTransform.source.width = 1280;
+        mGuiBackground->mTransform.source.height = 720;
         mGuiBackground->mTextureName = "sprite";
         AddChild(mGuiBackground);
 

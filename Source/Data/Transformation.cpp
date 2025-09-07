@@ -14,8 +14,8 @@ namespace ClassicLauncher
 
         float _sourceX = source.x * m;
         float _sourceY = source.y * m;
-        float _scaleWidth = scaleWidth * m;
-        float _scaleHeight = scaleHeight * m;
+        float _scaleWidth = source.width * m;
+        float _scaleHeight = source.height * m;
 
         // _x = _rootX + _x;
         // _y = _rootY + _y;

@@ -18,36 +18,11 @@ namespace ClassicLauncher
         Color color{ 255, 255, 255, 255 };
         RectFloat source{};
 
-        // float x;
-        // float y;
-        // float width;
-        //float height;
-        //float scaleX;
-        //float scaleY;
-        //float sourceX;
-        //float sourceY;
-        float scaleWidth;
-        float scaleHeight;
-
         Transformation()
             : rootX(0)
             , rootY(0)
             , rootScaleX(1)
             , rootScaleY(1)
-            //, offset()
-            // , x(0)
-            // , y(0)
-            //, width(0)
-            //, height(0)
-            //, scaleX(1)
-            //, scaleY(1)
-            //, rotation(0)
-            //, color({ 255, 255, 255, 255 })
-            //, sourceX(0)
-            //, sourceY(0)
-            , scaleWidth(0)
-            , scaleHeight(0)
-            , mScale{ 1.0f, 1.0f }
         {
         }
 
@@ -64,9 +39,9 @@ namespace ClassicLauncher
         
         void SetTransforms(const float m);
 
-        RectFloat mTransform;
-        RectFloat mSource;
-        Vector2f mScale;
+        RectFloat mTransform{};
+        RectFloat mSource{};
+        Vector2f mScale{ 1.0f, 1.0f };
 
         float rootX;
         float rootY;

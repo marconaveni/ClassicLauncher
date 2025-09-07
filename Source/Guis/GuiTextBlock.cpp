@@ -100,8 +100,8 @@ namespace ClassicLauncher
         mDelay = 1;
 
         mMensuredText = MeasureTextBox();
-        mTransform.scaleWidth = mMensuredText.x;
-        mTransform.scaleHeight = mMensuredText.y;
+        mTransform.source.width = mMensuredText.x;
+        mTransform.source.height = mMensuredText.y;
     }
 
     void GuiTextBlock::SetSize(int size)
