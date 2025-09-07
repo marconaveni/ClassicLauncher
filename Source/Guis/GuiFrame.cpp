@@ -12,8 +12,8 @@ namespace ClassicLauncher
         mTextureName = "sprite";
         mTransform.position.width = 258.0f;
         mTransform.position.height = 282.0f;
-        mTransform.sourceX = 771.0f;
-        mTransform.sourceY = 0.0f;
+        mTransform.source.x = 771.0f;
+        mTransform.source.y = 0.0f;
     }
 
     GuiFrame::~GuiFrame()

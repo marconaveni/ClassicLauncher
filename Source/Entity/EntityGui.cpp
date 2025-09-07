@@ -19,8 +19,8 @@ namespace ClassicLauncher
         {
             spriteAnimation.second.Update(rlw::GetFrameTime());
             Rectangle rec = spriteAnimation.second.GetCurrentSprite();
-            mTransform.sourceX = rec.x;
-            mTransform.sourceY = rec.y;
+            mTransform.source.x = rec.x;
+            mTransform.source.y = rec.y;
             mTransform.position.width = rec.width;
             mTransform.position.height = rec.height;
         }

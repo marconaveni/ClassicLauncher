@@ -14,6 +14,9 @@ namespace ClassicLauncher
         Vector2f offset{};
         RectFloat position{};
         Vector2f scale{ 1.0f, 1.0f };
+        float rotation{};
+        Color color{ 255, 255, 255, 255 };
+        RectFloat source{};
 
         // float x;
         // float y;
@@ -21,11 +24,8 @@ namespace ClassicLauncher
         //float height;
         //float scaleX;
         //float scaleY;
-        float rotation;
-        Color color;
-
-        float sourceX;
-        float sourceY;
+        //float sourceX;
+        //float sourceY;
         float scaleWidth;
         float scaleHeight;
 
@@ -34,17 +34,17 @@ namespace ClassicLauncher
             , rootY(0)
             , rootScaleX(1)
             , rootScaleY(1)
-            , offset()
+            //, offset()
             // , x(0)
             // , y(0)
             //, width(0)
             //, height(0)
             //, scaleX(1)
             //, scaleY(1)
-            , rotation(0)
-            , color({ 255, 255, 255, 255 })
-            , sourceX(0)
-            , sourceY(0)
+            //, rotation(0)
+            //, color({ 255, 255, 255, 255 })
+            //, sourceX(0)
+            //, sourceY(0)
             , scaleWidth(0)
             , scaleHeight(0)
             , mScale{ 1.0f, 1.0f }

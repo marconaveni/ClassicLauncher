@@ -131,15 +131,15 @@ namespace ClassicLauncher
         {
             miniCover->mTransform.position.width = 28;
             miniCover->mTransform.position.height = 28;
-            miniCover->mTransform.sourceX = 976;
-            miniCover->mTransform.sourceY = 283;
+            miniCover->mTransform.source.x = 976;
+            miniCover->mTransform.source.y = 283;
         }
         else
         {
             miniCover->mTransform.position.width = 0;
             miniCover->mTransform.position.height = 0;
-            miniCover->mTransform.sourceX = 0;
-            miniCover->mTransform.sourceY = 0;
+            miniCover->mTransform.source.x = 0;
+            miniCover->mTransform.source.y = 0;
         }
     }
 

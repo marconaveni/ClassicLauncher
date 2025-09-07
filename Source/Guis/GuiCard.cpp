@@ -37,8 +37,8 @@ namespace ClassicLauncher
         card = GetApplication()->GetEntityManager()->CreateEntity<GuiComponent>(title);
         card->mTransform.position.width = mTransform.position.width;
         card->mTransform.position.height = mTransform.position.height;
-        card->mTransform.sourceX = sourceX;
-        card->mTransform.sourceY = sourceY;
+        card->mTransform.source.x = sourceX;
+        card->mTransform.source.y = sourceY;
         card->mTransform.color.SetOpacity(alpha);
         card->mTextureName = "sprite";
         if (bAddChild)
@@ -138,16 +138,16 @@ namespace ClassicLauncher
         {
             mCover->mTransform.position.width = 204.0f;
             mCover->mTransform.position.height = 202.0f;
-            mCover->mTransform.sourceX = 771;
-            mCover->mTransform.sourceY = 283;
+            mCover->mTransform.source.x = 771;
+            mCover->mTransform.source.y = 283;
             mCover->mTextureName = "sprite";
         }
         else
         {
             mCover->mTransform.position.width = 0;
             mCover->mTransform.position.height = 0;
-            mCover->mTransform.sourceX = 0;
-            mCover->mTransform.sourceY = 0;
+            mCover->mTransform.source.x = 0;
+            mCover->mTransform.source.y = 0;
             mCover->mTextureName = name;
         }
     }

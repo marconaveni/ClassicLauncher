@@ -22,8 +22,8 @@ namespace ClassicLauncher
         mGuiBackground = pApplication->GetEntityManager()->CreateEntity<GuiComponent>("GuiBackground");
         mGuiBackground->mTransform.position.width = 21;
         mGuiBackground->mTransform.position.height = 720;
-        mGuiBackground->mTransform.sourceX = 0;
-        mGuiBackground->mTransform.sourceY = 562;
+        mGuiBackground->mTransform.source.x = 0;
+        mGuiBackground->mTransform.source.y = 562;
         mGuiBackground->mTransform.scaleWidth = 1280;
         mGuiBackground->mTransform.scaleHeight = 720;
         mGuiBackground->mTextureName = "sprite";
