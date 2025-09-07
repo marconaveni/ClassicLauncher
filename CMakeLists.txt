@@ -148,10 +148,10 @@ set(data
     "${CMAKE_SOURCE_DIR}/Source/Data/Transform.h"
 )
 set(graphics
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/Render.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/Render.h"
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/RenderSystem.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/RenderSystem.h"
+    "${CMAKE_SOURCE_DIR}/Source/Graphics/RenderScreen.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Graphics/RenderScreen.h"
+    "${CMAKE_SOURCE_DIR}/Source/Graphics/RenderEntities.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Graphics/RenderEntities.h"
     "${CMAKE_SOURCE_DIR}/Source/Graphics/Sprite.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Graphics/Sprite.h"
     "${CMAKE_SOURCE_DIR}/Source/Graphics/SpriteAnimator.h"

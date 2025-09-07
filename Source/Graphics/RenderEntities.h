@@ -1,5 +1,5 @@
-#ifndef RENDER_SYSTEM_H
-#define RENDER_SYSTEM_H
+#ifndef RENDER_ENTITIES_H
+#define RENDER_ENTITIES_H
 
 #include <memory>
 #include "Entity/Entity.h"
@@ -8,11 +8,11 @@
 namespace ClassicLauncher
 {
 
-    class RenderSystem
+    class RenderEntities
     {
     public:
 
-        explicit RenderSystem(SpriteManager* spriteManagerReference);
+        explicit RenderEntities(SpriteManager* spriteManagerReference);
         void DrawEntities(const std::vector<std::unique_ptr<Entity>>& entities);
         void DrawEntity(Entity* entity);
         void DrawDebug(Entity* entity);

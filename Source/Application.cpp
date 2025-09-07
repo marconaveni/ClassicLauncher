@@ -1,12 +1,11 @@
 #include "Application.h"
-#include "Graphics/Render.h"
 #include "Guis/GuiWindow.h"
+#include "Helper.h"
 #include "Utils/ConfigurationManager.h"
 #include "Utils/Log.h"
 #include "Utils/Resources.h"
 #include "Utils/StringFunctionLibrary.h"
 #include "Utils/UtilsFunctionLibrary.h"
-#include "Helper.h"
 
 namespace ClassicLauncher
 {
@@ -14,7 +13,7 @@ namespace ClassicLauncher
     static Application* sInstanceApplication = nullptr;
 
     Application::Application()
-        : mRenderSystem(&this->mSpriteManager), mEntityManager(&this->mSpriteManager, &this->mTimerManager), mGuiWindow(nullptr)
+        : mRenderEntities(&this->mSpriteManager), mEntityManager(&this->mSpriteManager, &this->mTimerManager), mGuiWindow(nullptr)
     {
         if (sInstanceApplication == nullptr)
         {
@@ -26,7 +25,7 @@ namespace ClassicLauncher
     {
         sInstanceApplication = nullptr;
     }
-    
+
     Application& Application::Get()
     {
         return *sInstanceApplication;
@@ -55,7 +54,7 @@ namespace ClassicLauncher
         }
         rlw::InitWindow(mSpecification.width, mSpecification.height, mSpecification.title);
         rlw::SetWindowState(rlw::FLAG_WINDOW_RESIZABLE);
-        //SetWindowSize(mSpecification.width, mSpecification.height);
+        // SetWindowSize(mSpecification.width, mSpecification.height);
         rlw::SetWindowSize(1280, 720);
         rlw::SetTargetFPS(mConfigurationManager.GetTargetFps());
         // SetWindowMinSize(mSpecification.width, mSpecification.height);
@@ -74,7 +73,7 @@ namespace ClassicLauncher
         mThemes.LoadTheme(this);
 
         mPrint.LoadFont(Resources::GetFont(), 16, 0);
-        mRender.LoadRender(mSpecification.width, mSpecification.height);
+        mRenderScreen.Init(mSpecification.width, mSpecification.height);
 
         mAudioManager.Init();
         mAudioManager.LoadMusics(musicDir);
@@ -90,10 +89,10 @@ namespace ClassicLauncher
         const std::string refPath1 = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref1.png");
         const std::string refPath2 = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref2.png");
         const std::string refPath3 = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref3.png");
-        mSpriteManager.LoadSprite("ref0", refPath0, 1280 * 2, 720 * 2 );
-        mSpriteManager.LoadSprite("ref1", refPath1, 1280 * 2, 720 * 2 );
-        mSpriteManager.LoadSprite("ref2", refPath2, 1280 * 2, 720 * 2 );
-        mSpriteManager.LoadSprite("ref3", refPath3, 1280 * 2, 720 * 2 );
+        mSpriteManager.LoadSprite("ref0", refPath0, 1280 * 2, 720 * 2);
+        mSpriteManager.LoadSprite("ref1", refPath1, 1280 * 2, 720 * 2);
+        mSpriteManager.LoadSprite("ref2", refPath2, 1280 * 2, 720 * 2);
+        mSpriteManager.LoadSprite("ref3", refPath3, 1280 * 2, 720 * 2);
 #endif
 
         rlw::Image imgs[5] = { rlw::LoadImage(Resources::GetIcon(16).c_str()),
@@ -147,31 +146,40 @@ namespace ClassicLauncher
                 ToggleFullscreen();
             }
 
-            rlw::BeginDrawing();
-            rlw::ClearBackground(Color::Black);
+            // update logic
+            Update();  
 
-            mRender.ClearRender();
-            mInputManager.UpdateInputState();
-            mEntityManager.UpdateAll();
-            mRender.BeginRender();
-            Update();  // update logic
-            mRender.EndRender();
+            // draw in texture render screen
+            mRenderScreen.BeginRender();
+            mRenderEntities.DrawEntities(mEntityManager.GetEntities()); 
+            mRenderScreen.EndRender(); 
 
-            Draw();  // draw on screen
-            rlw::EndDrawing();
+            // draw on window
+            Draw();        
         }
+    }
+
+    void Application::Draw()
+    {
+        rlw::BeginDrawing();
+        rlw::ClearBackground(Color::Black);
+        mRenderScreen.Draw();
+        mPrint.DrawMessage();
+        rlw::EndDrawing();
     }
 
     void Application::Update()
     {
-
-        mRenderSystem.DrawEntities(mEntityManager.GetEntities());  // draw in texture render  // mEntityManager.Draw();  // draw in texture render
-        mGuiWindow->Teste();
-        
         // Log(LOG_CLASSIC_DEBUG, TEXTBOOL(InputManager::GetInputLeftFaceLeft()));
+
+        mGuiWindow->Teste();
+        mEntityManager.UpdateAll();
         
         mTimerManager.Update();
         mProcessManager.StatusProcessRun(this);
+        mInputManager.UpdateInputState();
+
+#ifdef _DEBUG
 
         GameList* pSystemList = mGameListManager.GetCurrentGameList();
         PRINT(TEXT("========================================"), 2.0f, "line0", Color::Lime);
@@ -184,8 +192,6 @@ namespace ClassicLauncher
         {
             PRINT(TEXT("Current game list %s", pSystemList->name.c_str()), 2.0f, "gameList");
         }
-
-#ifdef _DEBUG
 
         if (rlw::IsKeyReleased(rlw::KEY_F1))
         {
@@ -205,8 +211,6 @@ namespace ClassicLauncher
             LOG(LOG_CLASSIC_DEBUG, "Enabled LOG_CLASSIC_ALL, LOG_ALL");
             PRINT("Enabled LOG_CLASSIC_ALL, LOG_ALL", 5.0f);
         }
-
-#endif
 
         if (InputManager::IsRelease(InputName::rightThumb, main))
         {
@@ -233,17 +237,14 @@ namespace ClassicLauncher
             LOG(LOG_CLASSIC_DEBUG, TEXT("GetWorkingDirectory %s", UtilsFunctionLibrary::GetWorkingDirectory().c_str()));
             LOG(LOG_CLASSIC_DEBUG, TEXT("GetApplicationDirectory %s", rlw::GetApplicationDirectory()));
         }
+#endif
+
     }
 
-    void Application::Draw()
-    {
-        mRender.DrawRender();
-        mPrint.DrawMessage();
-    }
 
     void Application::End()
     {
-        mRender.Unload();
+        mRenderScreen.Unload();
         mPrint.Unload();
         mAudioManager.Unload();
         mSpriteManager.UnloadSprites();
@@ -282,7 +283,7 @@ namespace ClassicLauncher
             mSpecification.height = rlw::GetScreenHeight();
             rlw::SetWindowSize(rlw::GetMonitorWidth(rlw::GetCurrentMonitor()), rlw::GetMonitorHeight(rlw::GetCurrentMonitor()));
             rlw::ToggleFullscreen();
-            rlw::SetConfigFlags(rlw::FLAG_VSYNC_HINT);
+            // rlw::SetConfigFlags(rlw::FLAG_VSYNC_HINT);
             bIsFullScreen = true;
         }
         else

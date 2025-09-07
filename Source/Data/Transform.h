@@ -34,7 +34,7 @@ namespace ClassicLauncher
 
     private:
 
-        friend class RenderSystem;
+        friend class RenderEntities;
 
         void SetTransforms(const float m);
 

@@ -1,4 +1,4 @@
-#include "RenderSystem.h"
+#include "RenderEntities.h"
 #include <format>
 #include "Application.h"
 #include "Helper.h"
@@ -11,12 +11,12 @@ namespace ClassicLauncher
     static bool bEnable = false;
 #endif
 
-    RenderSystem::RenderSystem(SpriteManager* spriteManagerReference)
+    RenderEntities::RenderEntities(SpriteManager* spriteManagerReference)
         : mSpriteManagerReference(spriteManagerReference)
     {
     }
 
-    void RenderSystem::DrawEntities(const std::vector<std::unique_ptr<Entity>>& entities)
+    void RenderEntities::DrawEntities(const std::vector<std::unique_ptr<Entity>>& entities)
     {
 #ifdef _DEBUG
 
@@ -31,7 +31,7 @@ namespace ClassicLauncher
         }
     }
 
-    void RenderSystem::DrawEntity(Entity* entity)
+    void RenderEntities::DrawEntity(Entity* entity)
     {
         const rlw::Texture2D* texture = mSpriteManagerReference->GetTexture(entity->mTextureName);
 
@@ -66,12 +66,12 @@ namespace ClassicLauncher
         }
     }
 
-    void RenderSystem::DrawDebug(Entity* entity)
+    void RenderEntities::DrawDebug(Entity* entity)
     {
 #ifdef _DEBUG
 
         const RectFloat& RectangleDrawArea = entity->mTransform.GetTransform();  //{ x, y, scale.x, scale.y };
-        const Vector2f vec = Application::Get().GetRender()->GetMousePositionRender();
+        const Vector2f vec = Application::Get().GetRenderScreen()->GetMousePositionRender();
         Rectangle point = { RectangleDrawArea.x, RectangleDrawArea.y, RectangleDrawArea.width, RectangleDrawArea.height };
         if (rlw::CheckCollisionPointRec(vec, point) && bEnable)
         {
@@ -96,7 +96,7 @@ namespace ClassicLauncher
 #endif  // _DEBUG
     }
 
-    bool RenderSystem::CheckRender(const RectFloat& rec)
+    bool RenderEntities::CheckRender(const RectFloat& rec)
     {
         return rlw::CheckCollisionRecs(RectFloat(0, 0, 1280, 720), rec);
     }

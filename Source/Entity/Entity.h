@@ -63,7 +63,7 @@ namespace ClassicLauncher
     private:
 
         friend class EntityManager;
-        friend class RenderSystem;
+        friend class RenderEntities;
 
         bool mToDelete;
         bool mToDraw;

@@ -257,10 +257,6 @@ namespace rlw
         Texture2D depth;  // compat com raylib >=4.x
     };
 
-    typedef RenderTexture2D RenderTexture;
-    typedef Texture2D Texture;
-
-    typedef struct rAudioBuffer rAudioBuffer;
 
     struct AudioStream
     {

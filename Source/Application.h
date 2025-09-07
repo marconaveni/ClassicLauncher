@@ -5,8 +5,8 @@
 #include "Components/FocusManager.h"
 #include "Data/GameListManager.h"
 #include "Entity/EntityManager.h"
-#include "Graphics/Render.h"
-#include "Graphics/RenderSystem.h"
+#include "Graphics/RenderScreen.h"
+#include "Graphics/RenderEntities.h"
 #include "Graphics/SpriteManager.h"
 #include "Input/InputManager.h"
 #include "Themes/Themes.h"
@@ -47,8 +47,8 @@ namespace ClassicLauncher
         ~Application();
         static Application& Get();
         ApplicationSpecification GetSpecification() { return mSpecification; }
-        Render* GetRender() { return &mRender; }
-        RenderSystem* GetRenderSystem() { return &mRenderSystem; }
+        RenderScreen* GetRenderScreen() { return &mRenderScreen; }
+        RenderEntities* GetRenderEntities() { return &mRenderEntities; }
         Print* GetPrint() { return &mPrint; }
         AudioManager* GetAudioManager() { return &mAudioManager; }
         SpriteManager* GetSpriteManager() { return &mSpriteManager; }
@@ -73,8 +73,8 @@ namespace ClassicLauncher
         void ToggleFullscreen();
 
         ApplicationSpecification mSpecification;
-        Render mRender;
-        RenderSystem mRenderSystem;
+        RenderScreen mRenderScreen;
+        RenderEntities mRenderEntities;
         Print mPrint;
         AudioManager mAudioManager;
         SpriteManager mSpriteManager;

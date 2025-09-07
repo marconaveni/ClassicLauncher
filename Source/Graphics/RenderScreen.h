@@ -1,5 +1,5 @@
-﻿#ifndef RENDER_H
-#define RENDER_H
+﻿#ifndef RENDER_SCREEN_H
+#define RENDER_SCREEN_H
 
 #include "Data/Rectangle.h"
 #include "Data/Vector2.h"
@@ -9,16 +9,16 @@
 namespace ClassicLauncher
 {
 
-    class Render
+    class RenderScreen
     {
     public:
 
-        Render();
-        void LoadRender(int screenWidth, int screenHeight);
-        void ClearRender();
+        RenderScreen();
+        void Init(int screenWidth, int screenHeight);
+        void Clear();
         void BeginRender();
         void EndRender();
-        void DrawRender();
+        void Draw();
         void Unload();
         [[nodiscard]] Vector2f GetRenderScale() const;
         [[nodiscard]] Vector2f GetMousePositionRender() const;
@@ -28,10 +28,10 @@ namespace ClassicLauncher
     private:
 
         void RenderValues();
-        [[nodiscard]] int GetWidthRender() const;
-        [[nodiscard]] int GetHeightRender() const;
+        [[nodiscard]] int GetWidth() const;
+        [[nodiscard]] int GetHeight() const;
 
-        rlw::RenderTexture mRenderTexture;
+        rlw::RenderTexture2D mRenderTexture;
         RectFloat mSource;
         RectFloat mDest;
         float mWidth;

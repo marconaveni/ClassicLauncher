@@ -1,4 +1,4 @@
-﻿#include "Render.h"
+﻿#include "RenderScreen.h"
 
 #include "Utils/Math.h"
 #include "Themes/Themes.h"
@@ -9,18 +9,18 @@
 namespace ClassicLauncher
 {
 
-    Render::Render()
+    RenderScreen::RenderScreen()
         : mRenderTexture(), mWidth(0), mHeight(0), mNewWidth(0), mNewHeight(0), mScale(1), mIsMaintainAspectRatio(true), mVirtualMouse{}
     {
     }
 
-    void Render::RenderValues()
+    void RenderScreen::RenderValues()
     {
         const Vector2f mouse = rlw::GetMousePosition();
         const auto screenWidth = static_cast<float>(rlw::GetScreenWidth());
         const auto screenHeight = static_cast<float>(rlw::GetScreenHeight());
-        mNewWidth = static_cast<float>(GetWidthRender());
-        mNewHeight = static_cast<float>(GetHeightRender());
+        mNewWidth = static_cast<float>(GetWidth());
+        mNewHeight = static_cast<float>(GetHeight());
 
         if (mIsMaintainAspectRatio)
         {
@@ -37,7 +37,7 @@ namespace ClassicLauncher
         }
     }
 
-    void Render::LoadRender(const int screenWidth, const int screenHeight)
+    void RenderScreen::Init(const int screenWidth, const int screenHeight)
     {
         const float scale = Themes::GetScaleTexture();
         mWidth = screenWidth * scale;
@@ -48,27 +48,28 @@ namespace ClassicLauncher
         rlw::SetTextureFilter(mRenderTexture.depth, rlw::TEXTURE_FILTER_BILINEAR);
     }
 
-    void Render::ClearRender()
+    void RenderScreen::Clear()
     {
-        rlw::BeginTextureMode(mRenderTexture);
-        rlw::ClearBackground(Color::WhiteGray);
-        rlw::EndTextureMode();
+        //rlw::BeginTextureMode(mRenderTexture);
+        //
+        //rlw::EndTextureMode();
     }
 
-    void Render::BeginRender()
+    void RenderScreen::BeginRender()
     {
         RenderValues();
         rlw::BeginTextureMode(mRenderTexture);
+        rlw::ClearBackground(Color::WhiteGray);
     }
 
-    void Render::EndRender()
+    void RenderScreen::EndRender()
     {
         rlw::EndTextureMode();
     }
 
-    void Render::DrawRender()
+    void RenderScreen::Draw()
     {
-        rlw::Texture* texture = &mRenderTexture.texture;
+        rlw::Texture2D* texture = &mRenderTexture.texture;
 
         const float screenWidth = static_cast<float>(rlw::GetScreenWidth());
         const float screenHeight = static_cast<float>(rlw::GetScreenHeight());
@@ -95,33 +96,33 @@ namespace ClassicLauncher
         rlw::DrawTexturePro(*texture, mSource, mDest, { 0.0f, 0.0f }, 0.0f, Color::White);
     }
 
-    void Render::Unload()
+    void RenderScreen::Unload()
     {
         if (rlw::IsRenderTextureValid(mRenderTexture))
         {
             rlw::UnloadRenderTexture(mRenderTexture);
-            mRenderTexture = rlw::RenderTexture{};
+            mRenderTexture = rlw::RenderTexture2D{};
         }
     }
 
-    Vector2f Render::GetRenderScale() const
+    Vector2f RenderScreen::GetRenderScale() const
     {
         const float scaleWidth = static_cast<float>(rlw::GetScreenWidth()) / mWidth;
         const float scaleHeight = static_cast<float>(rlw::GetScreenHeight()) / mHeight;
         return Vector2f{ scaleWidth, scaleHeight };
     }
 
-    Vector2f Render::GetMousePositionRender() const
+    Vector2f RenderScreen::GetMousePositionRender() const
     {
         return mVirtualMouse;
     }
 
-    int Render::GetWidthRender() const
+    int RenderScreen::GetWidth() const
     {
         return (mIsMaintainAspectRatio) ? static_cast<int>(mWidth) : rlw::GetScreenWidth();
     }
 
-    int Render::GetHeightRender() const
+    int RenderScreen::GetHeight() const
     {
         return (mIsMaintainAspectRatio) ? static_cast<int>(mHeight) : rlw::GetScreenHeight();
     }
