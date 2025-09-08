@@ -248,6 +248,8 @@ set(extern
     "${CMAKE_SOURCE_DIR}/extern/tinyxml2/tinyxml2.h"
     "${CMAKE_SOURCE_DIR}/extern/reasings/reasings.h"
 )
+
+
     
 if(MSVC)
     LIST(APPEND src
@@ -286,9 +288,27 @@ set(srcs
     ${extern}
 )
 
+
+
+
 # Add the executable
 add_executable(ClassicLauncher ${srcs})
 
+
+#target_include_directories(ClassicLauncher PRIVATE 
+#    "${CMAKE_SOURCE_DIR}/Source"
+#    "${CMAKE_SOURCE_DIR}/Source/Animations"
+#    "${CMAKE_SOURCE_DIR}/Source/Audio"
+#    "${CMAKE_SOURCE_DIR}/Source/Components"
+#    "${CMAKE_SOURCE_DIR}/Source/Data"
+#    "${CMAKE_SOURCE_DIR}/Source/Entity"
+#    "${CMAKE_SOURCE_DIR}/Source/Graphics"
+#    "${CMAKE_SOURCE_DIR}/Source/Guis"
+#    "${CMAKE_SOURCE_DIR}/Source/Input"
+#    "${CMAKE_SOURCE_DIR}/Source/Themes"
+#    "${CMAKE_SOURCE_DIR}/Source/Utils"
+#    "${CMAKE_SOURCE_DIR}/Source/Video"
+#)
 
 if(WIN32)
 
@@ -392,6 +412,15 @@ add_custom_command(TARGET ClassicLauncher POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_SOURCE_DIR}/Resources
     $<TARGET_FILE_DIR:ClassicLauncher>/Resources
+)
+
+
+add_custom_target(copy_compile_commands POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different
+          ${CMAKE_BINARY_DIR}/compile_commands.json
+          ${CMAKE_SOURCE_DIR}/compile_commands.json
+  BYPRODUCTS ${CMAKE_SOURCE_DIR}/compile_commands.json
+  COMMENT "Update compile_commands.json in  \"${CMAKE_SOURCE_DIR}\" "
 )
 
 # mkdir build

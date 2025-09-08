@@ -1,12 +1,10 @@
 #ifndef GAME_LIST_MANAGER_H
 #define GAME_LIST_MANAGER_H
 
-#include <memory>
+
 #include <string>
-#include <utility>
 #include <vector>
 #include "Data/DateTime.h"
-#include "Utils/Print.h"
 #include "tinyxml2/tinyxml2.h"
 
 namespace ClassicLauncher

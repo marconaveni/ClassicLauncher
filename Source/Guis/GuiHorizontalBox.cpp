@@ -1,5 +1,4 @@
 #include "GuiHorizontalBox.h"
-#include "Application.h"
 #include "Utils/Math.h"
 
 namespace ClassicLauncher

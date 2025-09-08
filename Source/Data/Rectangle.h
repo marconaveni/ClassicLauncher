@@ -1,7 +1,6 @@
 #ifndef RECTANGLE_H
 #define RECTANGLE_H
 
-#include <string>
 #include "Data/Vector2.h"
 
 namespace ClassicLauncher

@@ -1,8 +1,5 @@
 #include "StringFunctionLibrary.h"
 
-#include <codecvt>
-#include <iostream>
-#include <locale>
 #include <string>
 
 namespace ClassicLauncher

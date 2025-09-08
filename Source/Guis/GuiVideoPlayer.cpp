@@ -87,9 +87,9 @@ namespace ClassicLauncher
         rlw::Texture2D* textureFullScreen = mPlayerFullScreen->GetVideoTexture();
         if (texture)
         {
-            const float scale = Themes::GetScaleTexture();
-            const float x = (1280 * scale / 2) - (textureFullScreen->width / 2);
-            rlw::DrawTexture(*textureFullScreen, (int)x, 0, Color::White);
+            const int scale = static_cast<int>(Themes::GetScaleTexture());
+            const int x =  (1280 * scale / 2) - textureFullScreen->width / 2;
+            rlw::DrawTexture(*textureFullScreen, x, 0, Color::White);
         }
     }
 

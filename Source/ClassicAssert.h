@@ -2,7 +2,6 @@
 #define CLASSIC_ASSERT_H
 
 #ifdef _DEBUG
-    #include <iostream>
     #ifdef _MSC_VER  // MSVC
         #define CLASSIC_ASSERT(condition, msg) if (!(condition)) __debugbreak() 
     #else  // GCC/Clang

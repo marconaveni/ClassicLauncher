@@ -2,7 +2,6 @@
 #define FOCUS_MANAGER_H
 
 #include <vector>
-#include "Components/FocusComponent.h"
 
 namespace ClassicLauncher
 {

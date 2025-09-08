@@ -3,7 +3,6 @@
 
 #include <memory>
 #include <string>
-#include <vector>
 #include "Entity/EntityGui.h"
 #include "Video/VideoPlayer.h"
 

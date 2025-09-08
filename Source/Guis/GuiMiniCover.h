@@ -1,10 +1,9 @@
 #ifndef GUI_MINI_COVER_H
 #define GUI_MINI_COVER_H
 
-#include <memory>
+
 #include <string>
 #include <vector>
-#include "Application.h"
 #include "Entity/EntityGui.h"
 
 namespace ClassicLauncher

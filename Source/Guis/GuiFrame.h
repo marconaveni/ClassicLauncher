@@ -1,7 +1,6 @@
 #ifndef GUI_FRAME_H
 #define GUI_FRAME_H
 
-#include <vector>
 #include "Entity/EntityGui.h"
 #include "Utils/TimerManager.h"
 

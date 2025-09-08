@@ -3,15 +3,19 @@
 
 #include <string>
 #include <mutex>
-#include "vlc/vlc.h"
+//#include "vlc/vlc.h"
 #include "Data/Vector2.h"
 
 #include "rl_wrap.h"
 
+struct libvlc_instance_t;
+struct libvlc_media_t;
+struct libvlc_media_player_t;
 
 namespace ClassicLauncher
 {
     class VideoPlayer;
+
 
     struct VideoContext
     {

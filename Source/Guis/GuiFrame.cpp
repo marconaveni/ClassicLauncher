@@ -49,8 +49,8 @@ namespace ClassicLauncher
 
     void GuiFrame::Click()
     {
-        const int width = 256;
-        const int height = 280;
+        const float width = 256;
+        const float height = 280;
 
         const float time = 0.3f;
         const float scale = 1.75f;

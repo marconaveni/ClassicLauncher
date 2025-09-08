@@ -1,77 +1,118 @@
 {
-  "version": 3,
-  "cmakeMinimumRequired": {
-    "major": 3,
-    "minor": 25,
-    "patch": 0
-  },
-  "configurePresets": [
-    {
-      "name": "linux-debug",
-      "displayName": "Linux Debug",
-      "description": "Default build using Unix Makefiles generator",
-      "generator": "Unix Makefiles",
-      "binaryDir": "${sourceDir}/build/linux-debug",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-        "CMAKE_C_COMPILER": "/usr/bin/gcc",
-        "CMAKE_CXX_COMPILER": "/usr/bin/g++"
-      }
+    "version": 3,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 25,
+        "patch": 0
     },
-    {
-      "name": "linux-debug-ninja",
-      "displayName": "Linux Debug Ninja",
-      "description": "Default build using Ninja generator",
-      "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build/linux-debug-ninja",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-        "CMAKE_C_COMPILER": "/usr/bin/gcc",
-        "CMAKE_CXX_COMPILER": "/usr/bin/g++"
-      }
-    },
-    {
-      "name": "linux-debug-asan",
-      "displayName": "Linux Debug [Asan]",
-      "description": "build with address sanitizer",
-      "generator": "Unix Makefiles",
-      "binaryDir": "${sourceDir}/build/linux-debug",
-      "cacheVariables": {
-        "CLASSIC_LAUNCHER_FSANITIZE": "ON",
-        "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-        "CMAKE_C_COMPILER": "/usr/bin/gcc",
-        "CMAKE_CXX_COMPILER": "/usr/bin/g++"
-      }
-    },
-    {
-      "name": "linux-debug-theme",
-      "displayName": "Linux Debug [theme]",
-      "description": "build work with Theme1x 1280X720",
-      "generator": "Unix Makefiles",
-      "binaryDir": "${sourceDir}/build/linux-debug-theme",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "CLASSIC_FORCE_THEME_1X": "ON",
-        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-        "CMAKE_C_COMPILER": "/usr/bin/gcc",
-        "CMAKE_CXX_COMPILER": "/usr/bin/g++"
-      }
-    },
-    {
-      "name": "linux-release",
-      "displayName": "Linux Release",
-      "description": "optimized build for distribution",
-      "generator": "Unix Makefiles",
-      "binaryDir": "${sourceDir}/build/linux-release",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release",
-        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-        "CMAKE_C_COMPILER": "/usr/bin/gcc",
-        "CMAKE_CXX_COMPILER": "/usr/bin/g++"
-      }
-    }
-  ]
+    "configurePresets": [
+        {
+            "name": "linux-debug",
+            "displayName": "Linux Debug",
+            "description": "Default build",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++"
+            }
+        },
+        {
+            "name": "linux-release",
+            "displayName": "Linux Release",
+            "description": "optimized build for distribution",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/release",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++"
+            }
+        },
+        {
+            "name": "windows-vs-debug",
+            "displayName": "Windows Debug Visual Studio 2022",
+            "description": "Build with Visual Studio (MSVC) in Debug Mode",
+            "generator": "Visual Studio 17 2022",
+            "architecture": "x64",
+            "binaryDir": "${sourceDir}/build/windows-vs",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
+        },
+        {
+            "name": "windows-vs-release",
+            "displayName": "Windows Release Visual Studio 2022",
+            "description": "Build with Visual Studio (MSVC)",
+            "generator": "Visual Studio 17 2022",
+            "architecture": "x64",
+            "binaryDir": "${sourceDir}/build/windows-vs",
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
+        },
+        {
+            "name": "windows-mingw-debug",
+            "displayName": "Windows MinGW Debug",
+            "description": "Build with MinGW (GCC) in Debug Mode",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/windows-mingw-debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_C_COMPILER": "gcc.exe",
+                "CMAKE_CXX_COMPILER": "g++.exe"
+            }
+        },
+        {
+            "name": "windows-mingw-release",
+            "displayName": "Windows MinGW Release",
+            "description": "Build with MinGW (GCC) in Release Mode",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/windows-mingw-release",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_C_COMPILER": "gcc.exe",
+                "CMAKE_CXX_COMPILER": "g++.exe"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "linux-debug-build",
+            "displayName": "Debug",
+            "configurePreset": "linux-debug"
+        },
+        {
+            "name": "linux-release-build",
+            "displayName": "Release",
+            "configurePreset": "linux-release"
+        },
+        {
+            "name": "windows-vs-debug-build",
+            "displayName": "Debug",
+            "configurePreset": "windows-vs-debug"
+        },
+        {
+            "name": "windows-vs-release-build",
+            "displayName": "Release",
+            "configurePreset": "windows-vs-release"
+            
+        },
+        {
+            "name": "windows-mingw-debug-build",
+            "displayName": "Debug",
+            "configurePreset": "windows-mingw-debug"
+        },
+        {
+            "name": "windows-mingw-release-build",
+            "displayName": "Release",
+            "configurePreset": "windows-mingw-release"
+        }
+    ]
 }

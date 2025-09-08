@@ -13,6 +13,7 @@
 #include "Utils/ConfigurationManager.h"
 #include "Utils/ProcessManager.h"
 #include "Utils/TimerManager.h"
+#include "Utils/Print.h"
 
 namespace ClassicLauncher
 {

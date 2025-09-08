@@ -1,5 +1,4 @@
 #include "Log.h"
-#include <iostream>
 #include <string>
 #include "rl_wrap.h"
 

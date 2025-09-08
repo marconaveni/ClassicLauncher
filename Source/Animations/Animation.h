@@ -1,10 +1,7 @@
 #ifndef ANIMATION_H
 #define ANIMATION_H
 
-
-
-#include "Entity/Entity.h"
-
+#include "Data/Transform.h"
 
 namespace ClassicLauncher
 {

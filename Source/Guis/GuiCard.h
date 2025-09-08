@@ -1,7 +1,7 @@
 #ifndef GUI_CARD_H
 #define GUI_CARD_H
 
-#include <memory>
+
 #include <string>
 #include "GuiComponent.h"
 #include "Utils/TimerManager.h"
@@ -22,7 +22,7 @@ namespace ClassicLauncher
 
     public:
 
-        GuiCard(float x, float y);
+        GuiCard(int x, int y);
         virtual EntityType GetType() const override { return EntityType::GuiCardClass; }
         void Update() override;
         void SetCardFocus(bool bForce = false);

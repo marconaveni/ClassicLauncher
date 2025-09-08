@@ -1,7 +1,5 @@
 #include "Sprite.h"
 #include <atomic>
-#include <chrono>
-#include <iostream>
 #include <string>
 #include <thread>
 #include "Utils/Log.h"

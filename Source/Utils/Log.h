@@ -1,7 +1,7 @@
 #ifndef LOG_H
 #define LOG_H
 
-#include <string>
+#include <cstdarg>
 
 namespace ClassicLauncher
 {

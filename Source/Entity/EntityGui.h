@@ -2,7 +2,6 @@
 #define ENTITY_GUI_H
 
 #include <map>
-#include <memory>
 #include <vector>
 #include "Animations/Animation.h"
 #include "Entity/Entity.h"

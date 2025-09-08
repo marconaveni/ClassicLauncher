@@ -1,8 +1,6 @@
 #ifndef GUI_HORIZONTAL_CARDS_H
 #define GUI_HORIZONTAL_CARDS_H
 
-#include <memory>
-#include <string>
 #include <vector>
 #include "Data/GameListManager.h"
 #include "Entity/EntityGui.h"

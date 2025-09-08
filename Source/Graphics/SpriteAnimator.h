@@ -1,8 +1,8 @@
 #ifndef SPRITE_ANIMATOR_H
 #define SPRITE_ANIMATOR_H
 
-#include <string>
 #include <vector>
+#include "Data/Rectangle.h"
 
 namespace ClassicLauncher
 {

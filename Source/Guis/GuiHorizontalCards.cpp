@@ -1,8 +1,6 @@
 #include "GuiHorizontalCards.h"
 
 #include <algorithm>
-#include <memory>
-#include "Components/FocusManager.h"
 #include "Helper.h"
 #include "Guis/GuiFrame.h"
 #include "Guis/GuiMiniCover.h"
@@ -14,6 +12,7 @@
 #include "Utils/Log.h"
 #include "Guis/GuiHorizontalBox.h"
 #include "Guis/GuiCard.h"
+#include "Application.h"
 
 namespace ClassicLauncher
 {
@@ -105,7 +104,7 @@ namespace ClassicLauncher
         const GameList* pGameList = GetApplication()->GetGameListManager()->GetCurrentGameList();
         mGuiTitle->SetText((pGameList) ? pGameList->name : "");
         const float scale = Themes::GetScaleTexture();
-        mGuiTitle->mTransform.position.x = (1280.0f / 2.0f) - (((int)mGuiTitle->GetMeasureTextBox().x / 2));
+        mGuiTitle->mTransform.position.x = (1280.0f / 2.0f) - ((mGuiTitle->GetMeasureTextBox().x / 2));
         mGuiTitle->mTransform.position.x = Math::Clamp(mGuiTitle->mTransform.position.x, 135, 1280);
     }
 

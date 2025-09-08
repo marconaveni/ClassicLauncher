@@ -1,17 +1,16 @@
 #include "GuiCard.h"
 #include "Application.h"
-#include "Graphics/SpriteAnimator.h"
 #include "Guis/GuiSizeBox.h"
 #include "Guis/GuiVideoPlayer.h"
 
 namespace ClassicLauncher
 {
 
-    GuiCard::GuiCard(const float x, const float y)
+    GuiCard::GuiCard(const int x, const int y)
         : FocusComponent(GetApplication(), this), mTimer(), mTimerVideo()
     {
-        mTransform.position.x = x;
-        mTransform.position.y = y;
+        mTransform.position.x = static_cast<float>(x);
+        mTransform.position.y = static_cast<float>(y);
         mTransform.position.width = 256;
         mTransform.position.height = 280;
 

@@ -9,7 +9,6 @@
 // Namespace: rlw
 
 #include <cstdarg>
-#include <cstdint>
 #include "Data/Vector2.h"
 #include "Data/Rectangle.h"
 #include "Data/Color.h"
