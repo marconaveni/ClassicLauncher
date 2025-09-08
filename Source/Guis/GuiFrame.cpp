@@ -16,10 +16,6 @@ namespace ClassicLauncher
         mTransform.source.y = 0.0f;
     }
 
-    GuiFrame::~GuiFrame()
-    {
-    }
-
     void GuiFrame::SetFrame(bool bForce)
     {
         std::vector<FocusComponent*> focusComponents = mFocusManager->GetAllFocusComponents();

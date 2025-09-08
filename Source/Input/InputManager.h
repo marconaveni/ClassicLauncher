@@ -15,7 +15,7 @@ namespace ClassicLauncher
     };
     // clang-format on
 
-    enum InputName
+    enum InputName : std::uint8_t
     {
         unknown = 0,
         leftFaceUp,         // dpad (up)                                   key(up)
@@ -114,7 +114,7 @@ namespace ClassicLauncher
 
     private:
 
-        bool CheckCategory(unsigned int category);
+        [[nodiscard]]bool CheckCategory(unsigned int category) const;
     };
 
 }  // namespace ClassicLauncher

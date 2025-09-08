@@ -20,13 +20,11 @@ namespace ClassicLauncher
             mFont = rlw::Font();
         }
         const float scale = Themes::GetScaleTexture();
-        mFont = rlw::LoadFontEx(path.data(), mSize * scale, NULL, 250);
+        mFont = rlw::LoadFontEx(path.data(), mSize * scale, nullptr, 250);
     }
 
     GuiTextBlock::GuiTextBlock(const std::string& path, int size, int spacing)
         : mFont()
-        , mText()
-        , mPathFont()
         , mSize()
         , mSpacing()
         , mColor(Color::White)
@@ -35,7 +33,6 @@ namespace ClassicLauncher
         , mOffset(0)
         , mToLeft(true)
         , mDelay(0)
-        , mMensuredText(Vector2f())
         , mSpeed(0.5f)
         , mMaxDelay(3.0f)
         , mTextOverflowPolicy(TextOverflowPolicy::none)
@@ -106,7 +103,7 @@ namespace ClassicLauncher
 
     void GuiTextBlock::SetSize(int size)
     {
-        LoadNewFont(mPathFont.c_str(), size, mSpacing);
+        LoadNewFont(mPathFont, size, mSpacing);
     }
 
     void GuiTextBlock::SetSpacing(int spacing)

@@ -239,9 +239,13 @@ set(src
     "${CMAKE_SOURCE_DIR}/Source/ClassicLauncher.h"
     "${CMAKE_SOURCE_DIR}/Source/Helper.h"
     "${CMAKE_SOURCE_DIR}/Source/Main.cpp"
+
+)
+
+set(wrap
     "${CMAKE_SOURCE_DIR}/Source/rl_wrap.h"
     "${CMAKE_SOURCE_DIR}/Source/rl_wrap.cpp"
-    )
+)
     
 set(extern 
     "${CMAKE_SOURCE_DIR}/extern/tinyxml2/tinyxml2.cpp"
@@ -285,17 +289,9 @@ set(srcs
     ${utils}
     ${video}
     ${src}  
+    ${wrap}  
     ${extern}
 )
-
-
-
-set_source_files_properties(
-  ${CMAKE_SOURCE_DIR}/extern/tinyxml2/tinyxml2.cpp
-  ${CMAKE_SOURCE_DIR}/Source/rl_wrap.cpp
-  PROPERTIES SKIP_CLANG_TIDY ON
-)
-
 
 
 # Add the executable
@@ -406,7 +402,6 @@ else()
         message(STATUS "[Classic Launcher] passou aqui ${debug}")                              # todo remover
         target_compile_definitions(ClassicLauncher PRIVATE     
             ${debug}
-            "TESTE"
             ${forcetheme}
         )
     endif()

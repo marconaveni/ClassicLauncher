@@ -25,7 +25,7 @@ namespace ClassicLauncher
             bEnable = !bEnable;
         }
 #endif
-        for (auto& entity : entities)
+        for (const auto& entity : entities)
         {
             DrawEntity(entity.get());
         }
@@ -70,12 +70,12 @@ namespace ClassicLauncher
     {
 #ifdef _DEBUG
 
-        const RectFloat& RectangleDrawArea = entity->mTransform.GetTransform();  //{ x, y, scale.x, scale.y };
+        const RectFloat& rectDrawArea = entity->mTransform.GetTransform();  //{ x, y, scale.x, scale.y };
         const Vector2f vec = Application::Get().GetRenderScreen()->GetMousePositionRender();
-        Rectangle point = { RectangleDrawArea.x, RectangleDrawArea.y, RectangleDrawArea.width, RectangleDrawArea.height };
+        Rectangle point = { rectDrawArea.x, rectDrawArea.y, rectDrawArea.width, rectDrawArea.height };
         if (rlw::CheckCollisionPointRec(vec, point) && bEnable)
         {
-            rlw::DrawRectangleLinesEx(RectangleDrawArea, 2, Color::Red);
+            rlw::DrawRectangleLinesEx(rectDrawArea, 2, Color::Red);
             if (IsMouseButtonPressed(rlw::MOUSE_BUTTON_LEFT))
             {
                 PRINT(std::format("nameID: {}", entity->mNameId).c_str(), 5.0f);
@@ -83,7 +83,7 @@ namespace ClassicLauncher
         }
         else if (bEnable)
         {
-            rlw::DrawRectangleLinesEx(RectangleDrawArea, 1, Color::Cyan);
+            rlw::DrawRectangleLinesEx(rectDrawArea, 1, Color::Cyan);
         }
         if (entity->mScissorMode && bEnable)
         {

@@ -8,7 +8,7 @@
 namespace ClassicLauncher
 {
 
-    enum TextOverflowPolicy
+    enum TextOverflowPolicy : std::uint8_t
     {
         none = 0x0,
         clip = 0x1

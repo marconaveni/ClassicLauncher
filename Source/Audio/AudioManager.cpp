@@ -6,7 +6,13 @@ namespace ClassicLauncher
 {
 
     AudioManager::AudioManager()
-        : mIsRunning(false), mIsPlayClick(false), mIsPlayCursor(false), mStatusAudio(StatusAudioMusic::Stop), mClickSound{}, mCursorSound{}, mAudioMusics(), mIdAudioMusic(0)
+        : mIsRunning(false)
+        , mIsPlayClick(false)
+        , mIsPlayCursor(false)
+        , mStatusAudio(StatusAudioMusic::Stop)
+        , mClickSound{}
+        , mCursorSound{}
+        , mIdAudioMusic(0)
     {
     }
 
@@ -108,7 +114,7 @@ namespace ClassicLauncher
         {
             return mAudioMusics[mIdAudioMusic].name;
         }
-        return std::string();
+        return {};
     }
 
     void AudioManager::ChangeMusic(bool bAutoPlay)

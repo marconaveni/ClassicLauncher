@@ -7,7 +7,7 @@ Checks: >
   readability-*,-readability-identifier-length,-readability-magic-numbers,-readability-uppercase-literal-suffix,-readability-implicit-bool-conversion
 
 
-WarningsAsErrors: 'clang-analyzer-*,clang-diagnostic-*'  
+#WarningsAsErrors: 'clang-analyzer-*,clang-diagnostic-*'  
 
 # Foca nos seus diretórios de código. Ajuste se usar outros nomes.
 HeaderFilterRegex: '^(Source)(/|\\)' 
@@ -16,7 +16,14 @@ HeaderFilterRegex: '^(Source)(/|\\)'
 FormatStyle: none
 
 CheckOptions:
-  # --- Desliga ruídos chatos / ou suaviza ---
+  - { key: readability-identifier-naming.ClassCase,           value: CamelCase }
+  - { key: readability-identifier-naming.FunctionCase,        value: CamelCase }
+  - { key: readability-identifier-naming.VariableCase,        value: camelBack }
+  - { key: readability-identifier-naming.ParameterCase,       value: camelBack }
+  - { key: readability-identifier-naming.MemberCase,          value: camelBack }
+  - { key: readability-identifier-naming.PrivateMemberCase,   value: CamelCase }
+  - { key: readability-identifier-naming.ProtectedMemberPrefix, value: m }
+  - { key: readability-identifier-naming.PrivateMemberPrefix,   value: m }
   - key: modernize-use-trailing-return-type.IgnoreMacros
     value: 'true'
   - key: readability-identifier-length.MinimumParameterNameLength

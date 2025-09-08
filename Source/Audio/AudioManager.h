@@ -11,7 +11,7 @@
 namespace ClassicLauncher
 {
 
-    enum StatusAudioMusic
+    enum StatusAudioMusic : std::uint8_t
     {
         Stop,
         Playing,
@@ -60,7 +60,7 @@ namespace ClassicLauncher
     private:
 
         void LoadMusic(const std::string& path);
-        void Stream(const rlw::Music& music);
+        static void Stream(const rlw::Music& music);
         void Update();
         int GenerateId();
 

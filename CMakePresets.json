@@ -62,6 +62,19 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build/windows-mingw-debug",
             "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_C_COMPILER": "gcc.exe",
+                "CMAKE_CXX_COMPILER": "g++.exe"
+            }
+        },
+        {
+            "name": "windows-mingw-debug-tidy",
+            "displayName": "Windows MinGW Debug ClangTidyChecks",
+            "description": "Build with MinGW (GCC) in Debug Mode",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/windows-mingw-debug-tidy",
+            "cacheVariables": {
                 "CMAKE_CXX_CLANG_TIDY": "clang-tidy",
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",

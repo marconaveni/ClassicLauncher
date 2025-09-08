@@ -4,11 +4,11 @@
 namespace ClassicLauncher
 {
     GuiVideoPlayer::GuiVideoPlayer()
-        : mPlayer(nullptr), mPlayerFullScreen(nullptr), mFilePath()
+        : mPlayer(nullptr), mPlayerFullScreen(nullptr)
     {
     }
 
-    bool GuiVideoPlayer::Init(std::string path, int width, int height)
+    bool GuiVideoPlayer::Init(const std::string& path, int width, int height)
     {
         if (path.empty())
         {
@@ -27,7 +27,10 @@ namespace ClassicLauncher
 
     void GuiVideoPlayer::InitFullscreen()
     {
-        if (!mPlayer) return;
+        if (!mPlayer)
+        {
+            return;
+        }
 
         mPlayer->Pause();
         mPlayerFullScreen = nullptr;
@@ -47,7 +50,10 @@ namespace ClassicLauncher
     {
         mPlayerFullScreen = nullptr;
 
-        if (!mPlayer) return;
+        if (!mPlayer) 
+        {
+            return;
+        }
 
         mPlayer->Resume();
     }
@@ -56,7 +62,10 @@ namespace ClassicLauncher
     {
         EntityGui::Update();
 
-        if (!mPlayer) return;
+        if (!mPlayer) 
+        {
+            return;
+        }
 
         mPlayer->Update();
 
@@ -64,7 +73,10 @@ namespace ClassicLauncher
         mTransform.position.width = mPlayer->GetVideoSize().x / scale;
         mTransform.position.height = mPlayer->GetVideoSize().y / scale;
 
-        if (!mPlayerFullScreen) return;
+        if (!mPlayerFullScreen)
+        { 
+            return;
+        }
 
         mPlayerFullScreen->Update();
     }
@@ -73,22 +85,29 @@ namespace ClassicLauncher
     {
         EntityGui::Draw();
 
-        if (!mPlayer) return;
+        if (!mPlayer) 
+        {
+            return;
+        }
 
         rlw::Texture2D* texture = mPlayer->GetVideoTexture();
         if (texture)
         {
             const Transform& transform = mTransform;
-            rlw::DrawTexturePro(*texture, mTransform.GetSource(), mTransform.GetTransform(), Vector2f{ 0, 0 }, transform.rotation, transform.color);
+            rlw::DrawTexturePro(
+                *texture, mTransform.GetSource(), mTransform.GetTransform(), Vector2f{ 0, 0 }, transform.rotation, transform.color);
         }
 
-        if (!mPlayerFullScreen) return;
+        if (!mPlayerFullScreen) 
+        {
+            return;
+        }
 
         rlw::Texture2D* textureFullScreen = mPlayerFullScreen->GetVideoTexture();
         if (texture)
         {
             const int scale = static_cast<int>(Themes::GetScaleTexture());
-            const int x =  (1280 * scale / 2) - textureFullScreen->width / 2;
+            const int x = (1280 * scale / 2) - (textureFullScreen->width / 2);
             rlw::DrawTexture(*textureFullScreen, x, 0, Color::White);
         }
     }

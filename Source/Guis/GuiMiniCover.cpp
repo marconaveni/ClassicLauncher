@@ -10,7 +10,7 @@
 namespace ClassicLauncher
 {
     GuiMiniCover::GuiMiniCover()
-        : mGuiCovers(), mArrow(nullptr), mSize(32), mSizeCover(28.0f, 40.0f)
+        : mArrow(nullptr), mSize(32), mSizeCover(28.0f, 40.0f)
         // : mGuiCovers(), mArrow(nullptr), mSize(23), mSizeCover(40.0f, 58.0f) // test
     {
     }
@@ -31,8 +31,8 @@ namespace ClassicLauncher
 
         for (int i = 0; i < mSize; i++)
         {
-            auto miniCover = GetApplication()->GetEntityManager()->CreateEntity<GuiComponent>("miniCover");
-            auto sizeBox = GetApplication()->GetEntityManager()->CreateEntity<GuiSizeBox>("GuiSizeBox");
+            auto* miniCover = GetApplication()->GetEntityManager()->CreateEntity<GuiComponent>("miniCover");
+            auto* sizeBox = GetApplication()->GetEntityManager()->CreateEntity<GuiSizeBox>("GuiSizeBox");
 
             miniCover->mTextureName = "transparent";
 
@@ -79,7 +79,7 @@ namespace ClassicLauncher
     {
         mGuiHorizontalBox->mTransform.position.x = (mTransform.position.width - ((mSizeCover.x + 1) * numCovers)) / 2.0f;
         mArrow->mTransform.position.x = mGuiHorizontalBox->mTransform.position.x + ((mSizeCover.x + 1) * numCovers) / 2.0f;
-        mArrow->mTransform.position.x = (numCovers % 2 == 0) ? mArrow->mTransform.position.x : mArrow->mTransform.position.x - mArrow->mTransform.position.width / 2;
+        mArrow->mTransform.position.x = (numCovers % 2 == 0) ? mArrow->mTransform.position.x : mArrow->mTransform.position.x - (mArrow->mTransform.position.width / 2);
         mArrow->mTransform.position.x--;
 
         mGuiHorizontalBox->mTransform.position.x *= mTransform.root.scale.x;
@@ -125,7 +125,7 @@ namespace ClassicLauncher
         SetPositionCovers(numCovers);
     }
 
-    void GuiMiniCover::SetCover(std::string name, GuiComponent* miniCover)
+    void GuiMiniCover::SetCover(const std::string& name, GuiComponent* miniCover)
     {
         miniCover->mTextureName = name;
         if (name == "sprite")

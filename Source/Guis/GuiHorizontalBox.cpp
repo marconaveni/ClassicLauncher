@@ -10,10 +10,6 @@ namespace ClassicLauncher
         mTransform.position.height = 10.0f;
     }
 
-    GuiHorizontalBox::~GuiHorizontalBox()
-    {
-    }
-
     void GuiHorizontalBox::AttachGui(EntityGui* guiComponent)
     {
         guiComponent->mTransform.position.x = 0;

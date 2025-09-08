@@ -13,7 +13,7 @@ namespace ClassicLauncher
     public:
 
         GuiFrame(FocusManager* focusManager);
-        ~GuiFrame();
+        ~GuiFrame() = default;
         void SetFrame(bool bForce = false);
         void Click();
         virtual EntityType GetType() const override { return EntityType::GuiFrameClass; }

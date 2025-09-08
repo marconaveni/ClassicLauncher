@@ -15,8 +15,8 @@ namespace ClassicLauncher
         explicit RenderEntities(SpriteManager* spriteManagerReference);
         void DrawEntities(const std::vector<std::unique_ptr<Entity>>& entities);
         void DrawEntity(Entity* entity);
-        void DrawDebug(Entity* entity);
-        bool CheckRender(const RectFloat& rec);
+        static void DrawDebug(Entity* entity);
+        static bool CheckRender(const RectFloat& rec);
 
     private:
 

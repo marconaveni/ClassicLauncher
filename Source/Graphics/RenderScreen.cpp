@@ -10,7 +10,7 @@ namespace ClassicLauncher
 {
 
     RenderScreen::RenderScreen()
-        : mRenderTexture(), mWidth(0), mHeight(0), mNewWidth(0), mNewHeight(0), mScale(1), mIsMaintainAspectRatio(true), mVirtualMouse{}
+        : mRenderTexture(), mWidth(0), mHeight(0), mNewWidth(0), mNewHeight(0), mScale(1), mIsMaintainAspectRatio(true)
     {
     }
 
@@ -71,10 +71,10 @@ namespace ClassicLauncher
     {
         rlw::Texture2D* texture = &mRenderTexture.texture;
 
-        const float screenWidth = static_cast<float>(rlw::GetScreenWidth());
-        const float screenHeight = static_cast<float>(rlw::GetScreenHeight());
-        const float textureWidth = static_cast<float>(mRenderTexture.texture.width);
-        const float textureHeight = static_cast<float>(mRenderTexture.texture.height);
+        const auto screenWidth = static_cast<float>(rlw::GetScreenWidth());
+        const auto screenHeight = static_cast<float>(rlw::GetScreenHeight());
+        const auto textureWidth = static_cast<float>(mRenderTexture.texture.width);
+        const auto textureHeight = static_cast<float>(mRenderTexture.texture.height);
 
         mSource = Rectangle{ 0.0f, 0.0f, textureWidth, -textureHeight };
         mDest = Rectangle{ (screenWidth - (mNewWidth * mScale)) * 0.5f, (screenHeight - (mNewHeight * mScale)) * 0.5f, mNewWidth * mScale, mNewHeight * mScale };

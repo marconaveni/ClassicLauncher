@@ -20,7 +20,10 @@ namespace ClassicLauncher
 
     void TraceLogger(int messageType, const char* text, va_list args)
     {
-        if (messageType > 7 && messageType < sLogClassicLevel) return;
+        if (messageType > 7 && messageType < sLogClassicLevel)
+        {
+            return;
+        }
 
         std::string textFinal;
 
@@ -71,7 +74,10 @@ namespace ClassicLauncher
 
     void LogClassic(const int logType, const char* text, ...)
     {
-        if (logType > 7 && logType < sLogClassicLevel) return;
+        if (logType > 7 && logType < sLogClassicLevel)
+        {
+            return;
+        }
 
         va_list args;
         va_start(args, text);

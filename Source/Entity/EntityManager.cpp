@@ -18,15 +18,17 @@ namespace ClassicLauncher
 
     void EntityManager::SetNewEntities()
     {
-        if (mTempEntities.size() > 0)
+        if (mTempEntities.empty())
         {
-            for (auto& entity : mTempEntities)
-            {
-                mEntities.push_back(std::move(entity));
-            }
-            mTempEntities.clear();
-            mPrepareNewOrdination = true;
+            return;
         }
+        
+        for (auto& entity : mTempEntities)
+        {
+            mEntities.push_back(std::move(entity));
+        }
+        mTempEntities.clear();
+        mPrepareNewOrdination = true;
     }
 
     void EntityManager::SetNameId(Entity* entity, const std::string& name)
@@ -116,7 +118,7 @@ namespace ClassicLauncher
 
     void EntityManager::ClearAllEntitys()
     {
-        if (mEntities.size() == 0)
+        if (mEntities.empty())
         {
             return;
         }

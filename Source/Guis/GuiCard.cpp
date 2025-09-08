@@ -81,7 +81,7 @@ namespace ClassicLauncher
         }
     }
 
-    void GuiCard::FocusAnimation(bool bForce, int a, const int b, const char* nameAnimation)
+    void GuiCard::FocusAnimation(bool bForce, const int a, const int b, const char* nameAnimation)
     {
         if (bForce)
         {
@@ -131,7 +131,7 @@ namespace ClassicLauncher
     {
     }
 
-    void GuiCard::SetCover(std::string name)
+    void GuiCard::SetCover(const std::string& name)
     {
         if (name.empty())
         {
@@ -151,7 +151,7 @@ namespace ClassicLauncher
         }
     }
 
-    bool GuiCard::IsFocus()
+    bool GuiCard::IsFocus() const
     {
         return mIsFocus;
     }

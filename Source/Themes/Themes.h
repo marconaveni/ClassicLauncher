@@ -18,7 +18,7 @@ namespace ClassicLauncher
         float mScaleTexture;
         float mScaleSystem;
         std::string mPathThemeSystem;
-        bool GetPathTheme(std::string& file, int monitorWidth, int monitorCompare, const std::string& path, float numScale);
+        static bool GetPathTheme(std::string& file, int monitorWidth, int monitorCompare, const std::string& path, float numScale);
         float GetSpriteByResolution(std::string& file);
 
 

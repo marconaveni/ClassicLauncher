@@ -3,7 +3,7 @@
 
 namespace ClassicLauncher
 {
-    void ConfigurationThemes::LoadConfigurations(std::string path)
+    void ConfigurationThemes::LoadConfigurations(const std::string& path)
     {
         SimpleIni ini;
         ini.Open(path.c_str());

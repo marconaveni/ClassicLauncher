@@ -1,12 +1,14 @@
 #ifndef PROCESS_MANAGER_H
 #define PROCESS_MANAGER_H
 
+#include <cstdint>
+
 namespace ClassicLauncher
 {
     class GameListManager;
     class Application;
 
-    enum class ProcessStatus
+    enum class ProcessStatus : std::int8_t
     {
         Failed = -1,
         None = 0,
@@ -30,7 +32,7 @@ namespace ClassicLauncher
         ProcessManager();
         void CreateProc(Application* pApplication);
         ProcessStatus UpdateRun();
-        bool IsApplicationRunning();
+        [[nodiscard]]bool IsApplicationRunning() const;
         void StatusProcessRun(Application* pApplication);
 
     private:

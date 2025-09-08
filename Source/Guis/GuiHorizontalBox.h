@@ -12,7 +12,7 @@ namespace ClassicLauncher
     public:
 
         GuiHorizontalBox();
-        ~GuiHorizontalBox();
+        ~GuiHorizontalBox() = default;
         virtual EntityType GetType() const override { return EntityType::GuiHorizontalBoxClass; }
         void SetAffectScale(bool bIsAffectScale) { mIsAffectScale = bIsAffectScale; }
         void SetSpace(float spacer) { mSpacer = spacer; }

@@ -61,7 +61,7 @@ namespace ClassicLauncher
         paths = GetThemeDirs();
         const int monitorWidth = rlw::GetMonitorWidth(rlw::GetCurrentMonitor());
         int scales[3] = { 1, 2, 3 };
-        int widths[3] = { 1280, 2580, 3840 };  //2560
+        int widths[3] = { 1280, 2560, 3840 };  //2560
 
         for (const auto& path : paths)
         {
@@ -135,7 +135,10 @@ namespace ClassicLauncher
 
     float Themes::GetScaleTexture()
     {
-        if (sInstanceThemes == nullptr) return 0;
+        if (sInstanceThemes == nullptr) 
+        {
+            return 0;
+        }
 
         return sInstanceThemes->mScaleTexture;
     }

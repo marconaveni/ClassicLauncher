@@ -22,7 +22,7 @@ namespace ClassicLauncher
         float offsetVideoY = 12;
 
 
-        void LoadConfigurations(std::string path);
+        void LoadConfigurations(const std::string& path);
     };
     
     

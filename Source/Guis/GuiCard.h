@@ -29,8 +29,8 @@ namespace ClassicLauncher
         void RemoveCardFocus(bool bForce = false);
         virtual void OnFocus() override;
         virtual void OnLostFocus() override;
-        void SetCover(std::string name = "");
-        bool IsFocus();
+        void SetCover(const std::string& name = "");
+        [[nodiscard]] bool IsFocus() const;
         void Reset();
         void Click();
         void SetFrontCard();
@@ -57,7 +57,7 @@ namespace ClassicLauncher
         void CreateCard(GuiComponent*& card, float sourceX, float sourceY, unsigned char alpha, const char* title, bool bAddChild = true);
         void CreateSizeBox();
         void StartVideo();
-        void FocusAnimation(bool bForce, int a, const int b, const char* nameAnimation);
+        void FocusAnimation(bool bForce, int a,  int b, const char* nameAnimation);
     };
 
 }  // namespace ClassicLauncher

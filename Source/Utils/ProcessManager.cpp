@@ -59,7 +59,7 @@ namespace ClassicLauncher
         return bIsRun ? ProcessStatus::Running : ProcessStatus::None;
     }
 
-    bool ProcessManager::IsApplicationRunning()
+    bool ProcessManager::IsApplicationRunning() const
     {
         return Process::IsApplicationRunning(mProcessId);
     }

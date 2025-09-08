@@ -1,6 +1,6 @@
 #include "UtilsFunctionLibrary.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 #include "StringFunctionLibrary.h"
 
 namespace ClassicLauncher

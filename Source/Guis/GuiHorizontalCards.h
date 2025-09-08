@@ -17,7 +17,7 @@ namespace ClassicLauncher
     class GuiHorizontalBox;
     class GuiFrame;
 
-    enum Direction
+    enum Direction : std::uint8_t
     {
         None,
         Left,
@@ -36,7 +36,7 @@ namespace ClassicLauncher
         void End() override;
         void SetFocus(int newId, bool bForce = false);
         void SetCovers();
-        void ChangeList(const CurrentList list);
+        void ChangeList(CurrentList list);
         void Click();
         void SetHorizontalBoxValues();
         virtual void SetThemeValue() override;

@@ -16,8 +16,8 @@ namespace ClassicLauncher
 
     public:
 
-        FocusManager();
-        ~FocusManager();
+        FocusManager() = default;
+        ~FocusManager() = default;
         void AddFocus(FocusComponent* focusComponent);
         void UpdateFocus(FocusComponent* focusComponent);
         void RemoveFocus(FocusComponent* focusComponent);

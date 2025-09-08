@@ -13,7 +13,7 @@ namespace ClassicLauncher
     public:
 
         GuiSizeBox();
-        ~GuiSizeBox();
+        ~GuiSizeBox() = default;
         virtual EntityType GetType() const override { return EntityType::GuiSizeBoxClass; }
         void AttachGui(EntityGui* guiAttachment);
         virtual void Update() override;

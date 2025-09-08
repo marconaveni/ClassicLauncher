@@ -24,7 +24,7 @@ namespace ClassicLauncher
         void Update() override;
         void End() override;
         void SetCovers();
-        void SetCover(std::string name, GuiComponent* miniCover);
+        static void SetCover(const std::string& name, GuiComponent* miniCover);
         void ClearCovers();
 
     private:

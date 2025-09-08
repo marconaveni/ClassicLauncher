@@ -6,14 +6,6 @@
 namespace ClassicLauncher
 {
 
-    FocusManager::FocusManager()
-    {
-    }
-
-    FocusManager::~FocusManager()
-    {
-    }
-
     void FocusManager::AddFocus(FocusComponent* focusComponent)
     {
         mFocusComponents.push_back(focusComponent);

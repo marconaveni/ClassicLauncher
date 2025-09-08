@@ -50,7 +50,7 @@ namespace ClassicLauncher
 
         for (int i = 0; i < 10; i++)
         {
-            auto card = pEntityManager->CreateEntity<GuiCard>("GuiCard", 0, 0);
+            auto* card = pEntityManager->CreateEntity<GuiCard>("GuiCard", 0, 0);
             mHorizontalBox->AttachGui(card);
             mGuiCards.emplace_back(card);
         }
@@ -113,7 +113,10 @@ namespace ClassicLauncher
         GameListManager* manager = GetApplication()->GetGameListManager();
         SpriteManager* spriteManager = GetApplication()->GetSpriteManager();
 
-        if (manager->GetGameListSize() == 0) return;
+        if (manager->GetGameListSize() == 0) 
+        { 
+            return;
+        }
 
         for (int i = 0; i < 10; i++)
         {

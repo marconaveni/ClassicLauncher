@@ -6,7 +6,7 @@
 namespace ClassicLauncher
 {
 
-    enum class Ease 
+    enum class Ease : std::uint8_t
     {
         EaseLinearNone,
         EaseLinearIn,

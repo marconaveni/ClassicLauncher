@@ -19,7 +19,7 @@ namespace ClassicLauncher
 
         GuiVideoPlayer();
         EntityType GetType() const override { return EntityType::GuiVideoPlayerClass; }
-        bool Init(std::string path, int width, int height);
+        bool Init(const std::string& path, int width, int height);
         void InitFullscreen();
         void Stop();
         void StopFullscreen();
