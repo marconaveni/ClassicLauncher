@@ -61,13 +61,14 @@ namespace ClassicLauncher
         paths = GetThemeDirs();
         const int monitorWidth = rlw::GetMonitorWidth(rlw::GetCurrentMonitor());
         int scales[3] = { 1, 2, 3 };
-        int widths[3] = { 1280, 2580, 3840 };
+        int widths[3] = { 1280, 2580, 3840 };  //2560
 
         for (const auto& path : paths)
         {
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 3; i++)
             {
-                if (GetPathTheme(file, monitorWidth, widths[i], TEXT("%ssprite%dx.png", path.c_str(), scales[i]), scales[i]))
+                const bool result = GetPathTheme(file, monitorWidth, widths[i], TEXT("%ssprite%dx.png", path.c_str(), scales[i]), scales[i]);
+                if (result)
                 {
                     return static_cast<float>(scales[i]);
                 }

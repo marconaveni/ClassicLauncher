@@ -128,7 +128,7 @@ namespace ClassicLauncher
 
         for (unsigned track = 0; track < track_count; ++track)
         {
-            libvlc_media_track_t* tr = tracks[track];
+            //libvlc_media_track_t* tr = tracks[track];
             if (tracks[track]->i_type == libvlc_track_video)
             {
                 mWidthVideo = tracks[track]->video->i_width;

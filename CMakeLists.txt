@@ -290,6 +290,13 @@ set(srcs
 
 
 
+set_source_files_properties(
+  ${CMAKE_SOURCE_DIR}/extern/tinyxml2/tinyxml2.cpp
+  ${CMAKE_SOURCE_DIR}/Source/rl_wrap.cpp
+  PROPERTIES SKIP_CLANG_TIDY ON
+)
+
+
 
 # Add the executable
 add_executable(ClassicLauncher ${srcs})
@@ -422,6 +429,14 @@ add_custom_target(copy_compile_commands POST_BUILD
   BYPRODUCTS ${CMAKE_SOURCE_DIR}/compile_commands.json
   COMMENT "Update compile_commands.json in  \"${CMAKE_SOURCE_DIR}\" "
 )
+
+
+
+
+
+
+
+
 
 # mkdir build
 # cd build

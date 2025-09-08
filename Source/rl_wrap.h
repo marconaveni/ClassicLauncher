@@ -268,10 +268,10 @@ namespace rlw
     struct Music
     {
         void* _native{};
-        unsigned int frameCount;
-        bool looping;
-        int ctxType;
-        void* ctxData;
+        unsigned int frameCount{};
+        bool looping{};
+        int ctxType{};
+        void* ctxData{};
     };
 
     struct Sound

@@ -41,7 +41,6 @@ namespace ClassicLauncher
             input.bDown = (rlw::IsKeyDown(key) || rlw::IsGamepadButtonDown(mGamePadIdSelected, gamePad)) && !bKeyModifier && !mDisableInput;
             input.bRelease = (rlw::IsKeyReleased(key) || rlw::IsGamepadButtonReleased(mGamePadIdSelected, gamePad)) && !bKeyModifier && !mDisableInput;
             input.bUp = (rlw::IsKeyUp(key) || rlw::IsGamepadButtonUp(mGamePadIdSelected, gamePad)) && !bKeyModifier && !mDisableInput;
-            const bool bDown = input.bDown;
 
             if (input.bDown)
             {
