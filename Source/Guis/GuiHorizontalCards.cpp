@@ -229,8 +229,8 @@ namespace ClassicLauncher
                 fps = 15;
             }
             fps += 15;
-            rlw::SetTargetFPS(fps);
-            PRINT(TEXT("Set FPS to %d", fps));
+            // rlw::SetTargetFPS(fps);
+            // PRINT(TEXT("Set FPS to %d", fps));
         }
 
         if (InputManager::IsDown(InputName::rightTriggerFront, main))

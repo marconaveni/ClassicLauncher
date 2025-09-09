@@ -30,10 +30,10 @@ namespace ClassicLauncher
 
     void LogLevel(int classicLogType, int raylibLogType);
     void TraceLogger(int messageType, const char* text, va_list args);
-    void LogClassic(int logType, const char* text, ...);
+    void LogClassic(int logType, int line, const char* file, const char* text, ...);
 
 }  // namespace ClassicLauncher
 
-#define LOG(logLevel, ...) LogClassic((logLevel), __VA_ARGS__)
+#define LOG(logLevel, ...) LogClassic((logLevel), __LINE__ , __FILE__, __VA_ARGS__)
 
 #endif  // LOG_H

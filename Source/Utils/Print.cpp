@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Math.h"
 #include "Data/Vector2.h"
+#include "Window/RayWindow.h"
 
 
 namespace ClassicLauncher
@@ -109,7 +110,7 @@ namespace ClassicLauncher
 
             y += message.size;
 
-            if (y > rlw::GetScreenHeight())
+            if (y > RayWindow::GetScreenHeight())
             {
                 break;
             }

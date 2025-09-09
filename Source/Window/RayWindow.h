@@ -1,7 +1,6 @@
 #ifndef RAY_WINDOW_H
 #define RAY_WINDOW_H
 
-
 #include "Window/Window.h"
 
 namespace ClassicLauncher
@@ -10,6 +9,7 @@ namespace ClassicLauncher
     class RayWindow : public Window
     {
     public:
+
         RayWindow() = default;
         ~RayWindow();
         virtual void Init(int width, int height, const std::string& title) override;
@@ -24,19 +24,27 @@ namespace ClassicLauncher
         virtual void SetIcons(const std::vector<std::string>& pathIcons) override;
         virtual void SetExitKey(int key) override;
         virtual void SetTargetFPS(int fps) override;
-        virtual int GetFPS() override;
-        virtual float GetFrameTime() override;
+        
+        static int GetFPS();
+        static float GetFrameTime();
+        static int GetScreenWidth();
+        static int GetScreenHeight();
+        static int GetCurrentMonitor();
+        static int GetMonitorWidth(int monitor);
+        static int GetMonitorHeight(int monitor);
+        static Vector2i GetMonitorPosition(int monitor);
 
-        virtual int GetScreenWidth() override;
-        virtual int GetScreenHeight() override;
-
-        virtual int GetCurrentMonitor() override;
-        virtual int GetMonitorWidth(int monitor) override;
-        virtual int GetMonitorHeight(int monitor) override;
-        virtual Vector2i GetMonitorPosition(int monitor) override;
         bool ToggleFullscreen();
+        void SetConfigFlags(unsigned int flags);
 
         [[nodiscard]] bool IsResize() const { return m_isResized; }
+
+        struct Flags
+        {
+            inline static constexpr unsigned int Vsync = 0x00000040;
+            inline static constexpr unsigned int Resizable = 0x00000004;
+            inline static constexpr unsigned int Undecorated = 0x00000008;
+        }; 
 
     private:
 
@@ -45,6 +53,9 @@ namespace ClassicLauncher
         Vector2i m_position{};
         bool m_isResized{};
         bool m_isFullScreen{};
+        bool m_isReady{};
+
+        void Unload();
     };
 
 };  // namespace ClassicLauncher

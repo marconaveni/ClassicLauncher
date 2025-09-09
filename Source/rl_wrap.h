@@ -16,10 +16,6 @@
 namespace rlw
 {
 
-    // ---- Flags de janela (espelham raylib) ----
-    inline constexpr unsigned int FLAG_VSYNC_HINT = 0x00000040;
-    inline constexpr unsigned int FLAG_WINDOW_RESIZABLE = 0x00000004;
-    inline constexpr unsigned int FLAG_WINDOW_UNDECORATED = 0x00000008;
 
 
 
@@ -301,34 +297,16 @@ namespace rlw
     // --- Logging / Config / Janela ---
     void SetTraceLogCallback(void (*callback)(int logLevel, const char* text, va_list args));
     void SetTraceLogLevel(int logLevel);
-    void SetConfigFlags(unsigned int flags);
 
-    void InitWindow(int width, int height, const char* title);
-    bool WindowShouldClose();
-    void CloseWindow();
 
-    void SetWindowState(unsigned int flags);
-    void ClearWindowState(unsigned int flags);
-    bool IsWindowState(unsigned int flag);
-    void SetWindowSize(int width, int height);
-    void SetWindowPosition(int x, int y);
-    void SetWindowIcons(Image* images, int count);
-    void SetExitKey(int key);
-    void SetTargetFPS(int fps);
+
+
+
+
+
     int GetFPS();
     float GetFrameTime();
 
-    int GetScreenWidth();
-    int GetScreenHeight();
-
-    int GetCurrentMonitor();
-    int GetMonitorWidth(int monitor);
-    int GetMonitorHeight(int monitor);
-    ClassicLauncher::Vector2f GetMonitorPosition(int monitor);
-
-    ClassicLauncher::Vector2f GetWindowPosition();
-    bool IsWindowFullscreen();
-    void ToggleFullscreen();
 
     // --- Imagem / Textura ---
     Image LoadImage(const char* fileName);

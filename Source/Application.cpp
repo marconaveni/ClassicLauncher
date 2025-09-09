@@ -52,18 +52,12 @@ namespace ClassicLauncher
 
         if (mConfigurationManager.GetVSync())
         {
-            // rlw::SetConfigFlags(rlw::FLAG_VSYNC_HINT);  // vsync only enable in fullscreen set before InitWindow
+            m_window->SetConfigFlags(RayWindow::Flags::Vsync);  // vsync only enable in fullscreen set before InitWindow
         }
 
         m_window->Init(1280, 720, "title");
         m_window->SetTargetFPS(mConfigurationManager.GetTargetFps());
 
-        // rlw::InitWindow(mSpecification.width, mSpecification.height, mSpecification.title);
-        // rlw::SetWindowState(rlw::FLAG_WINDOW_RESIZABLE);
-        //  SetWindowSize(mSpecification.width, mSpecification.height);
-        // rlw::SetWindowSize(1280, 720);
-        // rlw::SetTargetFPS(mConfigurationManager.GetTargetFps());
-        //  SetWindowMinSize(mSpecification.width, mSpecification.height);
         if (mConfigurationManager.GetFullscreen())
         {
             const bool isFullscreen = m_window->ToggleFullscreen();
@@ -72,7 +66,7 @@ namespace ClassicLauncher
         }
 
 #ifndef _DEBUG
-        // rlw::SetExitKey(rlw::KEY_NULL);
+        m_window->SetExitKey(0);
 #endif
 
         const std::string musicDir = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "musics");  // theme dir
@@ -81,7 +75,7 @@ namespace ClassicLauncher
         mThemes.LoadTheme(this);
 
         mPrint.LoadFont(Resources::GetFont(), 16, 0);
-        mRenderScreen.Init(mSpecification.width, mSpecification.height);
+        mRenderScreen.Init(1280, 720);
 
         mAudioManager.Init();
         mAudioManager.LoadMusics(musicDir);
@@ -125,12 +119,6 @@ namespace ClassicLauncher
 
         End();
         rlw::CloseAudioDevice();
-    //rlw::CloseWindow();
-
-       // for (rlw::Image& img : imgs)
-       // {
-       //     rlw::UnloadImage(img);
-       // }
     }
 
     void Application::CreateProcess()
@@ -151,7 +139,7 @@ namespace ClassicLauncher
         {
             if (rlw::IsKeyReleased(rlw::KEY_F11) || (rlw::IsKeyDown(rlw::KEY_LEFT_ALT) && rlw::IsKeyReleased(rlw::KEY_ENTER)))
             {
-                m_window->ToggleFullscreen();
+                ToggleFullscreen();
             }
 
             // update logic
@@ -259,51 +247,9 @@ namespace ClassicLauncher
 
     void Application::ToggleFullscreen()
     {
-        bool bIsFullScreen = false;
-#ifdef _WIN32
-        if (!rlw::IsWindowState(rlw::FLAG_WINDOW_UNDECORATED))
-        {
-            mSpecification.posWindowX = rlw::GetWindowPosition().x;
-            mSpecification.posWindowY = rlw::GetWindowPosition().y;
-            mSpecification.width = rlw::GetScreenWidth();
-            mSpecification.height = rlw::GetScreenHeight();
-            rlw::SetWindowState(rlw::FLAG_WINDOW_UNDECORATED);
-            rlw::SetWindowSize(rlw::GetMonitorWidth(rlw::GetCurrentMonitor()), rlw::GetMonitorHeight(rlw::GetCurrentMonitor()));
-            const Vector2f positionMonitor(rlw::GetMonitorPosition(rlw::GetCurrentMonitor()));
-            rlw::SetWindowPosition((int)positionMonitor.x, (int)positionMonitor.y);
-            bIsFullScreen = true;
-        }
-        else
-        {
-            rlw::SetWindowSize(mSpecification.width, mSpecification.height);
-            rlw::SetWindowPosition(mSpecification.posWindowX, mSpecification.posWindowY);
-            rlw::ClearWindowState(rlw::FLAG_WINDOW_UNDECORATED);
-            bIsFullScreen = false;
-        }
-#else
-        // if (!rlw::IsWindowFullscreen())
-        // {
-        //     mSpecification.posWindowX = rlw::GetWindowPosition().x;
-        //     mSpecification.posWindowY = rlw::GetWindowPosition().y;
-        //     mSpecification.width = rlw::GetScreenWidth();
-        //     mSpecification.height = rlw::GetScreenHeight();
-        //     rlw::ToggleFullscreen();
-        //     rlw::SetWindowSize(rlw::GetMonitorWidth(rlw::GetCurrentMonitor()), rlw::GetMonitorHeight(rlw::GetCurrentMonitor()));
-        //     // rlw::SetConfigFlags(rlw::FLAG_VSYNC_HINT);
-        //     bIsFullScreen = true;
-        // }
-        // else
-        // {
-        //     rlw::ToggleFullscreen();
-        //     // rlw::SetWindowSize(mSpecification.width, mSpecification.height);
-        //     // rlw::SetWindowPosition(mSpecification.posWindowX, mSpecification.posWindowY);
-        //     // rlw::SetWindowSize(mSpecification.width, mSpecification.height);
-        //     bIsFullScreen = false;
-        // }
-
-#endif
         const bool isFullscreen = m_window->ToggleFullscreen();
         mConfigurationManager.SetFullscreen(isFullscreen);
+        LOG(LOG_CLASSIC_DEBUG, TEXT("GetHomeDir %s", TEXTBOOL(isFullscreen)));
         mConfigurationManager.SaveConfiguration();  
     }
 }  // namespace ClassicLauncher

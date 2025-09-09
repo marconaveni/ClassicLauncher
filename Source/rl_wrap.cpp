@@ -146,18 +146,8 @@ namespace rlw
         ::SetConfigFlags(flags);
     }
 
-    void InitWindow(int width, int height, const char* title)
-    {
-        ::InitWindow(width, height, title);
-    }
-    bool WindowShouldClose()
-    {
-        return ::WindowShouldClose();
-    }
-    void CloseWindow()
-    {
-        ::CloseWindow();
-    }
+
+
 
     void SetWindowState(unsigned int flags)
     {

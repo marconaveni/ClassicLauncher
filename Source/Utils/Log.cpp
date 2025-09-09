@@ -1,4 +1,6 @@
 #include "Log.h"
+#include <filesystem>
+#include <format>
 #include <string>
 #include "rl_wrap.h"
 
@@ -18,7 +20,7 @@ namespace ClassicLauncher
 #endif
     }
 
-    void TraceLogger(int messageType, const char* text, va_list args)
+    void TraceLogger(int messageType, const char *text, va_list args)
     {
         if (messageType > 7 && messageType < sLogClassicLevel)
         {
@@ -72,16 +74,25 @@ namespace ClassicLauncher
         vprintf(textFinal.c_str(), args);
     }
 
-    void LogClassic(const int logType, const char* text, ...)
+    void LogClassic(const int logType, int line, const char* file, const char* text, ...)
     {
         if (logType > 7 && logType < sLogClassicLevel)
         {
             return;
         }
 
+        std::filesystem::path fileName = file;
+    
+        std::string textFmt = std::format(
+            "[line:{} file:{}] {}", 
+            line, 
+            fileName.filename().string(),
+            text
+        );
+
         va_list args;
         va_start(args, text);
-        TraceLogger(logType, text, args);
+        TraceLogger(logType, textFmt.c_str(), args);
         va_end(args);
     }
 

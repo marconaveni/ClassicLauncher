@@ -6,15 +6,15 @@
 #include "Components/FocusManager.h"
 #include "Data/GameListManager.h"
 #include "Entity/EntityManager.h"
-#include "Graphics/RenderScreen.h"
 #include "Graphics/RenderEntities.h"
+#include "Graphics/RenderScreen.h"
 #include "Graphics/SpriteManager.h"
 #include "Input/InputManager.h"
 #include "Themes/Themes.h"
 #include "Utils/ConfigurationManager.h"
+#include "Utils/Print.h"
 #include "Utils/ProcessManager.h"
 #include "Utils/TimerManager.h"
-#include "Utils/Print.h"
 
 namespace ClassicLauncher
 {
@@ -29,19 +29,6 @@ namespace ClassicLauncher
     class ConfigurationManager;
     class RayWindow;
 
-    struct ApplicationSpecification
-    {
-        int width = 1280;
-        int height = 720;
-#if _DEBUG
-        const char* title = "Classic Launcher [DEVMODE]";
-#else
-        const char* title = "Classic Launcher";
-#endif
-        int posWindowX = 0;
-        int posWindowY = 0;
-    };
-
     class Application
     {
     public:
@@ -49,7 +36,6 @@ namespace ClassicLauncher
         Application();
         ~Application();
         static Application& Get();
-        ApplicationSpecification GetSpecification() { return mSpecification; }
         RenderScreen* GetRenderScreen() { return &mRenderScreen; }
         RenderEntities* GetRenderEntities() { return &mRenderEntities; }
         Print* GetPrint() { return &mPrint; }
@@ -66,6 +52,7 @@ namespace ClassicLauncher
         void Init();
         void CreateProcess();
         void LoadConfigurationThemes();
+        
 
     private:
 
@@ -75,7 +62,6 @@ namespace ClassicLauncher
         void End();
         void ToggleFullscreen();
 
-        ApplicationSpecification mSpecification;
         RenderScreen mRenderScreen;
         RenderEntities mRenderEntities;
         Print mPrint;

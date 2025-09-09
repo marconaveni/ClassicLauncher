@@ -3,6 +3,7 @@
 #include "Utils/Math.h"
 #include "Themes/Themes.h"
 #include "rl_wrap.h"
+#include "Window/RayWindow.h"
 
 
 
@@ -17,8 +18,8 @@ namespace ClassicLauncher
     void RenderScreen::RenderValues()
     {
         const Vector2f mouse = rlw::GetMousePosition();
-        const auto screenWidth = static_cast<float>(rlw::GetScreenWidth());
-        const auto screenHeight = static_cast<float>(rlw::GetScreenHeight());
+        const auto screenWidth = static_cast<float>(RayWindow::GetScreenWidth());
+        const auto screenHeight = static_cast<float>(RayWindow::GetScreenHeight());
         mNewWidth = static_cast<float>(GetWidth());
         mNewHeight = static_cast<float>(GetHeight());
 
@@ -71,8 +72,8 @@ namespace ClassicLauncher
     {
         rlw::Texture2D* texture = &mRenderTexture.texture;
 
-        const auto screenWidth = static_cast<float>(rlw::GetScreenWidth());
-        const auto screenHeight = static_cast<float>(rlw::GetScreenHeight());
+        const auto screenWidth = static_cast<float>(RayWindow::GetScreenWidth());
+        const auto screenHeight = static_cast<float>(RayWindow::GetScreenHeight());
         const auto textureWidth = static_cast<float>(mRenderTexture.texture.width);
         const auto textureHeight = static_cast<float>(mRenderTexture.texture.height);
 
@@ -107,8 +108,8 @@ namespace ClassicLauncher
 
     Vector2f RenderScreen::GetRenderScale() const
     {
-        const float scaleWidth = static_cast<float>(rlw::GetScreenWidth()) / mWidth;
-        const float scaleHeight = static_cast<float>(rlw::GetScreenHeight()) / mHeight;
+        const float scaleWidth = static_cast<float>(RayWindow::GetScreenWidth()) / mWidth;
+        const float scaleHeight = static_cast<float>(RayWindow::GetScreenHeight()) / mHeight;
         return Vector2f{ scaleWidth, scaleHeight };
     }
 
@@ -119,12 +120,12 @@ namespace ClassicLauncher
 
     int RenderScreen::GetWidth() const
     {
-        return (mIsMaintainAspectRatio) ? static_cast<int>(mWidth) : rlw::GetScreenWidth();
+        return (mIsMaintainAspectRatio) ? static_cast<int>(mWidth) : RayWindow::GetScreenWidth();
     }
 
     int RenderScreen::GetHeight() const
     {
-        return (mIsMaintainAspectRatio) ? static_cast<int>(mHeight) : rlw::GetScreenHeight();
+        return (mIsMaintainAspectRatio) ? static_cast<int>(mHeight) : RayWindow::GetScreenHeight();
     }
 
 }  // namespace ClassicLauncher

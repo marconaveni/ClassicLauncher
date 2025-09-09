@@ -16,8 +16,8 @@ namespace ClassicLauncher
     void GuiWindow::Init()
     {
         Application* pApplication = GetApplication();
-        mTransform.position.width = (float)pApplication->GetSpecification().width;
-        mTransform.position.height = (float)pApplication->GetSpecification().height;
+        mTransform.position.width = 1280.0f; //  todo: refactor    (float)pApplication->GetSpecification().width;
+        mTransform.position.height = 720.0f; //  todo: refactor    (float)pApplication->GetSpecification().height;
 
         mGuiBackground = pApplication->GetEntityManager()->CreateEntity<GuiComponent>("GuiBackground");
         mGuiBackground->mTransform.position.width = 21;
