@@ -1,6 +1,7 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
+#include <memory>
 #include "Audio/AudioManager.h"
 #include "Components/FocusManager.h"
 #include "Data/GameListManager.h"
@@ -26,6 +27,7 @@ namespace ClassicLauncher
     class TimerManager;
     class FocusManager;
     class ConfigurationManager;
+    class RayWindow;
 
     struct ApplicationSpecification
     {
@@ -89,6 +91,7 @@ namespace ClassicLauncher
         ConfigurationManager mConfigurationManager;
 
         GuiWindow* mGuiWindow;
+        std::unique_ptr<RayWindow> m_window;
     };
 
 }  // namespace ClassicLauncher

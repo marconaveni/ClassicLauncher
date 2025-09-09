@@ -6,6 +6,7 @@
 #include "Utils/Resources.h"
 #include "Utils/StringFunctionLibrary.h"
 #include "Utils/UtilsFunctionLibrary.h"
+#include "Window/RayWindow.h"
 
 namespace ClassicLauncher
 {
@@ -38,6 +39,7 @@ namespace ClassicLauncher
 
     void Application::Init()
     {
+        m_window = std::make_unique<RayWindow>();
         mConfigurationManager.LoadConfiguration();
 
         LogLevel(mConfigurationManager.GetClassicLogLevel(), mConfigurationManager.GetRaylibLogLevel());
@@ -50,21 +52,27 @@ namespace ClassicLauncher
 
         if (mConfigurationManager.GetVSync())
         {
-            rlw::SetConfigFlags(rlw::FLAG_VSYNC_HINT);  // vsync only enable in fullscreen set before InitWindow
+            // rlw::SetConfigFlags(rlw::FLAG_VSYNC_HINT);  // vsync only enable in fullscreen set before InitWindow
         }
-        rlw::InitWindow(mSpecification.width, mSpecification.height, mSpecification.title);
-        rlw::SetWindowState(rlw::FLAG_WINDOW_RESIZABLE);
-        // SetWindowSize(mSpecification.width, mSpecification.height);
-        rlw::SetWindowSize(1280, 720);
-        rlw::SetTargetFPS(mConfigurationManager.GetTargetFps());
-        // SetWindowMinSize(mSpecification.width, mSpecification.height);
+
+        m_window->Init(1280, 720, "title");
+        m_window->SetTargetFPS(mConfigurationManager.GetTargetFps());
+
+        // rlw::InitWindow(mSpecification.width, mSpecification.height, mSpecification.title);
+        // rlw::SetWindowState(rlw::FLAG_WINDOW_RESIZABLE);
+        //  SetWindowSize(mSpecification.width, mSpecification.height);
+        // rlw::SetWindowSize(1280, 720);
+        // rlw::SetTargetFPS(mConfigurationManager.GetTargetFps());
+        //  SetWindowMinSize(mSpecification.width, mSpecification.height);
         if (mConfigurationManager.GetFullscreen())
         {
-            ToggleFullscreen();
+            const bool isFullscreen = m_window->ToggleFullscreen();
+            mConfigurationManager.SetFullscreen(isFullscreen);
+            mConfigurationManager.SaveConfiguration();         
         }
 
 #ifndef _DEBUG
-        rlw::SetExitKey(rlw::KEY_NULL);
+        // rlw::SetExitKey(rlw::KEY_NULL);
 #endif
 
         const std::string musicDir = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "musics");  // theme dir
@@ -95,13 +103,13 @@ namespace ClassicLauncher
         mSpriteManager.LoadSprite("ref3", refPath3, 1280 * 2, 720 * 2);
 #endif
 
-        rlw::Image imgs[5] = { rlw::LoadImage(Resources::GetIcon(16).c_str()),
-                               rlw::LoadImage(Resources::GetIcon(32).c_str()),
-                               rlw::LoadImage(Resources::GetIcon(48).c_str()),
-                               rlw::LoadImage(Resources::GetIcon(64).c_str()),
-                               rlw::LoadImage(Resources::GetIcon(128).c_str()) };
+        //rlw::Image imgs[5] = { rlw::LoadImage(Resources::GetIcon(16).c_str()),
+        //                       rlw::LoadImage(Resources::GetIcon(32).c_str()),
+        //                       rlw::LoadImage(Resources::GetIcon(48).c_str()),
+        //                       rlw::LoadImage(Resources::GetIcon(64).c_str()),
+        //                       rlw::LoadImage(Resources::GetIcon(128).c_str()) };
 
-        rlw::SetWindowIcons(imgs, 5);
+        // rlw::SetWindowIcons(imgs, 5);
 
         if (mGameListManager.GetGameListSize() > 0)
         {
@@ -117,12 +125,12 @@ namespace ClassicLauncher
 
         End();
         rlw::CloseAudioDevice();
-        rlw::CloseWindow();
+    //rlw::CloseWindow();
 
-        for (rlw::Image& img : imgs)
-        {
-            rlw::UnloadImage(img);
-        }
+       // for (rlw::Image& img : imgs)
+       // {
+       //     rlw::UnloadImage(img);
+       // }
     }
 
     void Application::CreateProcess()
@@ -139,23 +147,23 @@ namespace ClassicLauncher
 
     void Application::Loop()
     {
-        while (!rlw::WindowShouldClose())
+        while (!m_window->ShouldClose())
         {
             if (rlw::IsKeyReleased(rlw::KEY_F11) || (rlw::IsKeyDown(rlw::KEY_LEFT_ALT) && rlw::IsKeyReleased(rlw::KEY_ENTER)))
             {
-                ToggleFullscreen();
+                m_window->ToggleFullscreen();
             }
 
             // update logic
-            Update();  
+            Update();
 
             // draw in texture render screen
             mRenderScreen.BeginRender();
-            mRenderEntities.DrawEntities(mEntityManager.GetEntities()); 
-            mRenderScreen.EndRender(); 
+            mRenderEntities.DrawEntities(mEntityManager.GetEntities());
+            mRenderScreen.EndRender();
 
             // draw on window
-            Draw();        
+            Draw();
         }
     }
 
@@ -174,7 +182,7 @@ namespace ClassicLauncher
 
         mGuiWindow->Teste();
         mEntityManager.UpdateAll();
-        
+
         mTimerManager.Update();
         mProcessManager.StatusProcessRun(this);
         mInputManager.UpdateInputState();
@@ -238,9 +246,7 @@ namespace ClassicLauncher
             LOG(LOG_CLASSIC_DEBUG, TEXT("GetApplicationDirectory %s", rlw::GetApplicationDirectory()));
         }
 #endif
-
     }
-
 
     void Application::End()
     {
@@ -275,27 +281,29 @@ namespace ClassicLauncher
             bIsFullScreen = false;
         }
 #else
-        if (!rlw::IsWindowFullscreen())
-        {
-            mSpecification.posWindowX = rlw::GetWindowPosition().x;
-            mSpecification.posWindowY = rlw::GetWindowPosition().y;
-            mSpecification.width = rlw::GetScreenWidth();
-            mSpecification.height = rlw::GetScreenHeight();
-            rlw::ToggleFullscreen();
-            rlw::SetWindowSize(rlw::GetMonitorWidth(rlw::GetCurrentMonitor()), rlw::GetMonitorHeight(rlw::GetCurrentMonitor()));
-            // rlw::SetConfigFlags(rlw::FLAG_VSYNC_HINT);
-            bIsFullScreen = true;
-        }
-        else
-        {
-            rlw::ToggleFullscreen();
-            //rlw::SetWindowSize(mSpecification.width, mSpecification.height);
-            //rlw::SetWindowPosition(mSpecification.posWindowX, mSpecification.posWindowY);
-            //rlw::SetWindowSize(mSpecification.width, mSpecification.height);
-            bIsFullScreen = false;
-        }
+        // if (!rlw::IsWindowFullscreen())
+        // {
+        //     mSpecification.posWindowX = rlw::GetWindowPosition().x;
+        //     mSpecification.posWindowY = rlw::GetWindowPosition().y;
+        //     mSpecification.width = rlw::GetScreenWidth();
+        //     mSpecification.height = rlw::GetScreenHeight();
+        //     rlw::ToggleFullscreen();
+        //     rlw::SetWindowSize(rlw::GetMonitorWidth(rlw::GetCurrentMonitor()), rlw::GetMonitorHeight(rlw::GetCurrentMonitor()));
+        //     // rlw::SetConfigFlags(rlw::FLAG_VSYNC_HINT);
+        //     bIsFullScreen = true;
+        // }
+        // else
+        // {
+        //     rlw::ToggleFullscreen();
+        //     // rlw::SetWindowSize(mSpecification.width, mSpecification.height);
+        //     // rlw::SetWindowPosition(mSpecification.posWindowX, mSpecification.posWindowY);
+        //     // rlw::SetWindowSize(mSpecification.width, mSpecification.height);
+        //     bIsFullScreen = false;
+        // }
+
 #endif
-        mConfigurationManager.SetFullscreen(bIsFullScreen);
-        mConfigurationManager.SaveConfiguration();
+        const bool isFullscreen = m_window->ToggleFullscreen();
+        mConfigurationManager.SetFullscreen(isFullscreen);
+        mConfigurationManager.SaveConfiguration();  
     }
 }  // namespace ClassicLauncher

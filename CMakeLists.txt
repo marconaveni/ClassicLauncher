@@ -253,6 +253,14 @@ set(extern
     "${CMAKE_SOURCE_DIR}/extern/reasings/reasings.h"
 )
 
+set(window_src_files  
+   "${CMAKE_SOURCE_DIR}/Source/Window/RayWindow.h"
+   "${CMAKE_SOURCE_DIR}/Source/Window/RayWindow.cpp"
+   "${CMAKE_SOURCE_DIR}/Source/Window/Window.h"
+ )
+set(window_header_files 
+)
+
 
     
 if(MSVC)
@@ -262,18 +270,19 @@ if(MSVC)
 endif()
 
 source_group("Source\\Animations" FILES ${animations})
-source_group("Source\\Audio"     FILES ${audio})
-source_group("Source\\Components"     FILES ${components})
-source_group("Source\\Data"     FILES ${data})
+source_group("Source\\Audio"      FILES ${audio})
+source_group("Source\\Components" FILES ${components})
+source_group("Source\\Data"       FILES ${data})
 source_group("Source\\Entity"     FILES ${entity})
-source_group("Source\\Graphics"  FILES ${graphics})
-source_group("Source\\Guis"  FILES ${guis})
-source_group("Source\\Input"  FILES ${input})
-source_group("Source\\Themes"  FILES ${themes})
-source_group("Source\\Utils"     FILES ${utils})
-source_group("Source\\Video"     FILES ${video})
-source_group("Source"            FILES ${src})
-source_group("Extern"     FILES ${extern})
+source_group("Source\\Graphics"   FILES ${graphics})
+source_group("Source\\Guis"       FILES ${guis})
+source_group("Source\\Input"      FILES ${input})
+source_group("Source\\Themes"     FILES ${themes})
+source_group("Source\\Utils"      FILES ${utils})
+source_group("Source\\Video"      FILES ${video})
+#source_group("Source\\Window"     FILES ${window_header_files} ${window_src_files})
+source_group("Source"             FILES ${src})
+source_group("Extern"             FILES ${extern})
 
 # List of source files
 set(srcs   
@@ -291,6 +300,8 @@ set(srcs
     ${src}  
     ${wrap}  
     ${extern}
+   # ${window_header_files} 
+    ${window_src_files}
 )
 
 
@@ -417,7 +428,7 @@ add_custom_command(TARGET ClassicLauncher POST_BUILD
 )
 
 
-add_custom_target(copy_compile_commands POST_BUILD
+add_custom_target(copy_compile_commands ALL
   COMMAND ${CMAKE_COMMAND} -E copy_if_different
           ${CMAKE_BINARY_DIR}/compile_commands.json
           ${CMAKE_SOURCE_DIR}/compile_commands.json
