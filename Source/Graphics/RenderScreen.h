@@ -1,19 +1,20 @@
 ﻿#ifndef RENDER_SCREEN_H
 #define RENDER_SCREEN_H
 
+#include <memory>
 #include "Data/Rectangle.h"
 #include "Data/Vector2.h"
 
-#include "rl_wrap.h"
-
 namespace ClassicLauncher
 {
+    class RenderTexture;
 
     class RenderScreen
     {
     public:
 
         RenderScreen();
+        ~RenderScreen();
         void Init(int screenWidth, int screenHeight);
         void Clear();
         void BeginRender();
@@ -31,7 +32,7 @@ namespace ClassicLauncher
         [[nodiscard]] int GetWidth() const;
         [[nodiscard]] int GetHeight() const;
 
-        rlw::RenderTexture2D mRenderTexture;
+        std::unique_ptr<RenderTexture> mRenderTexture;
         RectFloat mSource;
         RectFloat mDest;
         float mWidth;
