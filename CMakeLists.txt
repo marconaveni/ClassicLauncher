@@ -159,6 +159,12 @@ set(data
     "${CMAKE_SOURCE_DIR}/Source/Data/Transform.h"
 )
 set(graphics
+    "${CMAKE_SOURCE_DIR}/Source/Graphics/Image.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Graphics/Image.h"
+    "${CMAKE_SOURCE_DIR}/Source/Graphics/RenderTexture.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Graphics/RenderTexture.h"
+    "${CMAKE_SOURCE_DIR}/Source/Graphics/Texture.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Graphics/Texture.h"
     "${CMAKE_SOURCE_DIR}/Source/Graphics/RenderScreen.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Graphics/RenderScreen.h"
     "${CMAKE_SOURCE_DIR}/Source/Graphics/RenderEntities.cpp"
