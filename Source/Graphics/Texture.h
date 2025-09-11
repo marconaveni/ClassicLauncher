@@ -1,7 +1,7 @@
 #ifndef TEXTURE
 #define TEXTURE
 
-
+#include <string>
 #include <filesystem>
 #include "Data/Rectangle.h"
 
@@ -23,6 +23,7 @@ namespace ClassicLauncher
 
         bool LoadFromFile(const std::filesystem::path& fileName);
         bool LoadFromImage(Image* image);
+        bool LoadFromData(void* data, int width, int height, int mipmaps, int format);
         void SetSmooth(bool status);
         void SetWrap(int wrap);
         [[nodiscard]] bool IsValid() const;
@@ -30,6 +31,8 @@ namespace ClassicLauncher
         void Update(const void* pixels, RectInt rec);
         void Unload();
         [[nodiscard]] unsigned int GetId() const { return m_id; }
+        [[nodiscard]] int GetMipmaps() const { return m_mipmaps; }
+        [[nodiscard]] int GetFormat() const { return m_format; }
         [[nodiscard]] Vector2i GetSize() const { return {m_width, m_height}; }
 
     private:

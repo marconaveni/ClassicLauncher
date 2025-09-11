@@ -6,6 +6,7 @@ namespace ray
 #include "rlgl.h"
 }  // namespace ray
 
+
 namespace ClassicLauncher
 {
     Texture::Texture(const std::filesystem::path& fileName)
@@ -25,20 +26,38 @@ namespace ClassicLauncher
 
     bool Texture::LoadFromFile(const std::filesystem::path& fileName)
     {
-        Unload();
-        Image image;
-        image.LoadFromFile(fileName.string());
+        Image image(fileName.string());
         return LoadFromImage(&image);
     }
 
     bool Texture::LoadFromImage(Image* image)
     {
+        Unload();
+
+        if ((image->m_width == 0) && (image->m_height == 0))
+        {
+            return false;
+        }
+
+        m_id = ray::rlLoadTexture(image->m_data, image->m_width, image->m_height, image->m_format, image->m_mipmaps);
+
         m_width = image->m_width;
         m_height = image->m_height;
         m_mipmaps = image->m_mipmaps;
         m_format = image->m_format;
-        m_id = ray::rlLoadTexture(image->m_data, m_width, m_height, m_mipmaps, m_format);
+
         return IsValid();
+    }
+
+    bool Texture::LoadFromData(void* data, int width, int height, int mipmaps, int format)
+    {
+        Unload();
+        m_width = width;
+        m_height = height;
+        m_mipmaps = mipmaps;
+        m_format = format;
+        m_id = ray::rlLoadTexture(data, width, height, format,mipmaps);
+        return true;
     }
 
     void Texture::SetSmooth(bool status)
