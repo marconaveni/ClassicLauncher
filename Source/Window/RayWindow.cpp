@@ -1,18 +1,16 @@
 #include "Window/RayWindow.h"
-#include "Utils/Log.h"
 #include "ClassicAssert.h"
 
 namespace ray
 {
-    #include "raylib.h"
-} // namespace ray
-
+#include "raylib.h"
+}  // namespace ray
 
 namespace ClassicLauncher
 {
 
     static std::vector<ray::Image> icons;
-    
+
     RayWindow::~RayWindow()
     {
         Close();
@@ -20,9 +18,7 @@ namespace ClassicLauncher
 
     void RayWindow::Init(int width, int height, const std::string& title)
     {
-
-        CLASSIC_ASSERT(!ray::IsWindowReady(),
-                       "You not can create another window");
+        CLASSIC_ASSERT(!ray::IsWindowReady(), "You not can create another window");
 
         m_title = title;
         ray::InitWindow(width, height, title.c_str());
@@ -30,14 +26,13 @@ namespace ClassicLauncher
         ray::SetWindowState(Flags::Resizable);
 
         m_isReady = ray::IsWindowReady();
-
     }
 
     bool RayWindow::ShouldClose()
     {
         return ray::WindowShouldClose();
     }
-    
+
     void RayWindow::Close()
     {
         ray::CloseWindow();
@@ -72,7 +67,7 @@ namespace ClassicLauncher
     void RayWindow::SetIcons(const std::vector<std::string>& pathIcons)
     {
         icons.reserve(pathIcons.size());
-        for (const auto& path : pathIcons) 
+        for (const auto& path : pathIcons)
         {
             icons.push_back(ray::LoadImage(path.c_str()));
         }
@@ -127,15 +122,18 @@ namespace ClassicLauncher
     Vector2i RayWindow::GetMonitorPosition(int monitor)
     {
         ray::Vector2 pos = ray::GetMonitorPosition(monitor);
-        return {static_cast<int>(pos.x),static_cast<int>(pos.y) };
+        return { static_cast<int>(pos.x), static_cast<int>(pos.y) };
     }
 
     bool RayWindow::ToggleFullscreen()
     {
-        const bool isNotDecorated = !ray::IsWindowState(Flags::Undecorated); 
+#ifdef _WIN32
+        const bool isNotFullscreen = !ray::IsWindowState(Flags::Undecorated);
+#else
         const bool isNotFullscreen = !ray::IsWindowFullscreen();
+#endif
 
-        if (isNotDecorated || isNotFullscreen)
+        if (isNotFullscreen)
         {
             m_position.x = static_cast<int>(ray::GetWindowPosition().x);
             m_position.y = static_cast<int>(ray::GetWindowPosition().y);
@@ -143,12 +141,12 @@ namespace ClassicLauncher
             m_size.y = GetScreenHeight();
         }
 #ifdef _WIN32
-        if (!ray::IsWindowState(Flags::Undecorated))
+        if (isNotFullscreen)
         {
             SetState(Flags::Undecorated);
             SetSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
             const Vector2f positionMonitor(GetMonitorPosition(GetCurrentMonitor()));
-            SetWindowPosition((int)positionMonitor.x, (int)positionMonitor.y);
+            SetPosition((int)positionMonitor.x, (int)positionMonitor.y);
             m_isFullScreen = true;
         }
         else
@@ -162,10 +160,7 @@ namespace ClassicLauncher
         if (isNotFullscreen)
         {
             ray::ToggleFullscreen();
-            SetSize(
-                GetMonitorWidth(GetCurrentMonitor()), 
-                GetMonitorHeight(GetCurrentMonitor())
-            );
+            SetSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
             m_isFullScreen = true;
         }
         else
@@ -187,7 +182,7 @@ namespace ClassicLauncher
 
     void RayWindow::Unload()
     {
-        for (auto icon: icons) 
+        for (auto icon : icons)
         {
             ray::UnloadImage(icon);
         }
@@ -195,4 +190,3 @@ namespace ClassicLauncher
     }
 
 }  // namespace ClassicLauncher
-

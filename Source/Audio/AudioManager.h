@@ -2,43 +2,20 @@
 #define AUDIO_MANAGER_H
 
 #include <atomic>
+#include <memory>
 #include <mutex>
 #include <string>
 #include <thread>
 #include <vector>
-#include "rl_wrap.h"
 
 namespace ClassicLauncher
 {
 
-    enum StatusAudioMusic : std::uint8_t
-    {
-        Stop,
-        Playing,
-        Paused
-    };
-
-    struct AudioMusic
-    {
-        rlw::Music music;
-        std::string name;
-    };
+    class Music;
+    class Sound;
 
     class AudioManager
     {
-    private:
-
-        std::mutex mMusicMutex;
-        std::thread mWorkerThread;                   // Thread work
-        std::atomic<bool> mIsRunning;                // Thread is Running
-        std::atomic<bool> mIsPlayClick;              // Sinalize thread to play mClickSound
-        std::atomic<bool> mIsPlayCursor;             // Sinalize thread to play mCursorSound
-        std::atomic<StatusAudioMusic> mStatusAudio;  // Status Current Audio Music
-        rlw::Sound mClickSound;                           // Struct Sound
-        rlw::Sound mCursorSound;                          // Struct Sound
-        std::vector<AudioMusic> mAudioMusics;        // Array Struct Audio musics
-        int mIdAudioMusic;                           // id music
-
     public:
 
         AudioManager();
@@ -55,18 +32,33 @@ namespace ClassicLauncher
         void Stop();
         std::string GetMusicName();
         void ChangeMusic(bool bAutoPlay = true);
-        StatusAudioMusic GetStatusAudioMusic() { return mStatusAudio; }
+        void Unload();
 
     private:
 
+        struct Status
+        {
+            inline static constexpr unsigned int Stop = 0;
+            inline static constexpr unsigned int Playing = 1;
+            inline static constexpr unsigned int Paused = 2;
+        };
+
+        std::mutex m_musicMutex;
+        std::thread m_workerThread;        // Thread work
+        std::atomic<bool> m_isRunning;     // Thread is Running
+        std::atomic<bool> m_isPlayClick;   // Sinalize thread to play m_clickSound
+        std::atomic<bool> m_isPlayCursor;  // Sinalize thread to play m_cursorSound
+        std::atomic<int> m_statusAudio;    // Status Current Audio Music
+
+        std::unique_ptr<Sound> m_clickSound;   //
+        std::unique_ptr<Sound> m_cursorSound;  //
+
+        std::vector<std::unique_ptr<Music>> m_audioMusics;  // Array Struct Audio musics
+        int m_idAudioMusic{};                                 // id music
+
         void LoadMusic(const std::string& path);
-        static void Stream(const rlw::Music& music);
         void Update();
         int GenerateId();
-
-    public:
-
-        void Unload();
     };
 
 }  // namespace ClassicLauncher

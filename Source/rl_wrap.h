@@ -261,20 +261,20 @@ namespace rlw
         unsigned int channels;
     };
 
-    struct Music
-    {
-        void* _native{};
-        unsigned int frameCount{};
-        bool looping{};
-        int ctxType{};
-        void* ctxData{};
-    };
+    // struct Music
+    // {
+    //     void* _native{};
+    //     unsigned int frameCount{};
+    //     bool looping{};
+    //     int ctxType{};
+    //     void* ctxData{};
+    // };
 
-    struct Sound
-    {
-        void* _native{};  // -> ::Sound*
-        unsigned int frameCount;
-    };
+    // struct Sound
+    // {
+    //     void* _native{};  // -> ::Sound*
+    //     unsigned int frameCount;
+    // };
 
     struct FilePathList
     {
@@ -391,27 +391,27 @@ namespace rlw
     ClassicLauncher::Vector2f Vector2Clamp(ClassicLauncher::Vector2f value, ClassicLauncher::Vector2f min, ClassicLauncher::Vector2f max);
 
     // --- Áudio ---
-    void InitAudioDevice();
-    void CloseAudioDevice();
+    //void InitAudioDevice();
+    //void CloseAudioDevice();
 
     // Music (stream)
-    Music LoadMusicStream(const char* fileName);
-    bool IsMusicValid(Music music);
-    void UnloadMusicStream(Music music);
+    // Music LoadMusicStream(const char* fileName);
+    // bool IsMusicValid(Music music);
+    // void UnloadMusicStream(Music music);
 
-    void PlayMusicStream(Music music);
-    void PauseMusicStream(Music music);
-    void StopMusicStream(Music music);
-    void SeekMusicStream(Music music, float position);
-    void UpdateMusicStream(Music music);
+    // void PlayMusicStream(Music music);
+    // void PauseMusicStream(Music music);
+    // void StopMusicStream(Music music);
+    // void SeekMusicStream(Music music, float position);
+    // void UpdateMusicStream(Music music);
 
-    float GetMusicTimeLength(Music music);
-    float GetMusicTimePlayed(Music music);
+    // float GetMusicTimeLength(Music music);
+    // float GetMusicTimePlayed(Music music);
 
-    // Sound (efeitos)
-    Sound LoadSound(const char* fileName);
-    bool IsSoundValid(Sound sound);
-    void PlaySound(Sound sound);
+    // // Sound (efeitos)
+    // Sound LoadSound(const char* fileName);
+    // bool IsSoundValid(Sound sound);
+    // void PlaySound(Sound sound);
 
     // --- FS Utils ---
     const char* GetApplicationDirectory();
@@ -442,8 +442,8 @@ namespace rlw
     //// isso vai sair daqui
 
     // Áudio – sanity checks e debug
-    bool IsAudioDeviceReady();           // proxy de raylib
-    void LogMusicState(const Music& m);  // imprime campos úteis do Music
+    //bool IsAudioDeviceReady();           // proxy de raylib
+   // void LogMusicState(const Music& m);  // imprime campos úteis do Music
 
 }  // namespace rlw
 

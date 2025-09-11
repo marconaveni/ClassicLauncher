@@ -25,7 +25,10 @@ namespace ClassicLauncher
 
     void StringFunctionLibrary::ReplaceString(std::string& value, const std::string& from, const std::string& to)
     {
-        if (from.empty()) return;
+        if (from.empty()) 
+        {
+            return;
+        }
 
         size_t startPos = 0;
         while ((startPos = value.find(from, startPos)) != std::string::npos)

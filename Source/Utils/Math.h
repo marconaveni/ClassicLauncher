@@ -28,6 +28,16 @@ namespace ClassicLauncher::Math
         return (value < min) ? min : (value > max) ? max : value;
     }
 
+    inline constexpr int ToInt(float value)
+    {
+        return static_cast<int>(value);
+    }
+
+    inline constexpr int ToIntRound(float value)
+    {
+        return static_cast<int>(value >= 0.0f ? value + 0.5f : value - 0.5f);
+    }
+
     class RandomGenerator
     {
     public:

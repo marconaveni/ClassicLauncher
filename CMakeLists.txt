@@ -131,6 +131,15 @@ set(animations
 set(audio
     "${CMAKE_SOURCE_DIR}/Source/Audio/AudioManager.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Audio/AudioManager.h"
+    "${CMAKE_SOURCE_DIR}/Source/Audio/AudioDevice.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Audio/AudioDevice.h"
+    "${CMAKE_SOURCE_DIR}/Source/Audio/AudioManager.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Audio/AudioManager.h"
+    "${CMAKE_SOURCE_DIR}/Source/Audio/Music.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Audio/Music.h"
+    "${CMAKE_SOURCE_DIR}/Source/Audio/Sound.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Audio/Sound.h"
+
 )
 set(components
     "${CMAKE_SOURCE_DIR}/Source/Components/FocusComponent.cpp"

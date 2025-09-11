@@ -98,24 +98,24 @@ namespace rlw
         return w;
     }
 
-    static ::AudioStream to_native_audio_stream(AudioStream s)
-    {
-        ::AudioStream n{};
-        n.buffer = reinterpret_cast<::rAudioBuffer*>(s.buffer);
-        n.sampleRate = s.sampleRate;
-        n.sampleSize = s.sampleSize;
-        n.channels = s.channels;
-        return n;
-    }
-    static AudioStream to_wrap_audio_stream(::AudioStream s)
-    {
-        AudioStream w{};
-        w.buffer = reinterpret_cast<void*>(s.buffer);
-        w.sampleRate = s.sampleRate;
-        w.sampleSize = s.sampleSize;
-        w.channels = s.channels;
-        return w;
-    }
+    // static ::AudioStream to_native_audio_stream(AudioStream s)
+    // {
+    //     ::AudioStream n{};
+    //     n.buffer = reinterpret_cast<::rAudioBuffer*>(s.buffer);
+    //     n.sampleRate = s.sampleRate;
+    //     n.sampleSize = s.sampleSize;
+    //     n.channels = s.channels;
+    //     return n;
+    // }
+    // static AudioStream to_wrap_audio_stream(::AudioStream s)
+    // {
+    //     AudioStream w{};
+    //     w.buffer = reinterpret_cast<void*>(s.buffer);
+    //     w.sampleRate = s.sampleRate;
+    //     w.sampleSize = s.sampleSize;
+    //     w.channels = s.channels;
+    //     return w;
+    // }
 
     static ::FilePathList to_native_path(FilePathList f)
     {
@@ -370,88 +370,16 @@ namespace rlw
         return to_wrap_vec(::Vector2Clamp(to_native_vec(value), to_native_vec(min), to_native_vec(max)));
     }
 
-    // --- Áudio ---
-    void InitAudioDevice()
-    {
-        ::InitAudioDevice();
-    }
-    void CloseAudioDevice()
-    {
-        ::CloseAudioDevice();
-    }
-
-    Music LoadMusicStream(const char* fileName)
-    {
-        ::Music* nm = new ::Music(::LoadMusicStream(fileName));  // copia o retornado
-        rlw::Music w{};
-        w.frameCount = nm->frameCount;
-        w.looping = nm->looping;
-        w.ctxType = nm->ctxType;
-        w.ctxData = nm->ctxData;
-        w._native = nm;
-        return w;
-    }
-    bool IsMusicValid(Music music)
-    {
-        if (!music._native) return false;
-        return ::IsMusicValid(*reinterpret_cast<::Music*>(music._native));
-    }
-    void UnloadMusicStream(Music music)
-    {
-        if (!music._native) return;
-        ::UnloadMusicStream(*reinterpret_cast<::Music*>(music._native));
-        delete reinterpret_cast<::Music*>(music._native);
-    }
-
-    void PlayMusicStream(Music music)
-    {
-        if (music._native) ::PlayMusicStream(*reinterpret_cast<::Music*>(music._native));
-    }
-    void PauseMusicStream(Music music)
-    {
-        if (music._native) ::PauseMusicStream(*reinterpret_cast<::Music*>(music._native));
-    }
-    void StopMusicStream(Music music)
-    {
-        if (music._native) ::StopMusicStream(*reinterpret_cast<::Music*>(music._native));
-    }
-    void SeekMusicStream(Music music, float position)
-    {
-        if (music._native) ::SeekMusicStream(*reinterpret_cast<::Music*>(music._native), position);
-    }
-    void UpdateMusicStream(Music music)
-    {
-        if (music._native) ::UpdateMusicStream(*reinterpret_cast<::Music*>(music._native));
-    }
-
-    float GetMusicTimeLength(Music music)
-    {
-        if (!music._native) return 0.0f;
-        return ::GetMusicTimeLength(*reinterpret_cast<::Music*>(music._native));
-    }
-    float GetMusicTimePlayed(Music music)
-    {
-        if (!music._native) return 0.0f;
-        return ::GetMusicTimePlayed(*reinterpret_cast<::Music*>(music._native));
-    }
-
-    Sound LoadSound(const char* fileName)
-    {
-        ::Sound* ns = new ::Sound(::LoadSound(fileName));
-        Sound w{};
-        w.frameCount = ns->frameCount;
-        w._native = ns;
-        return w;
-    }
-    bool IsSoundValid(Sound sound)
-    {
-        if (!sound._native) return false;
-        return ::IsSoundValid(*reinterpret_cast<::Sound*>(sound._native));
-    }
-    void PlaySound(Sound sound)
-    {
-        if (sound._native) ::PlaySound(*reinterpret_cast<::Sound*>(sound._native));
-    }
+    // // --- Áudio ---
+    // void InitAudioDevice()
+    // {
+    //     ::InitAudioDevice();
+    // }
+    // void CloseAudioDevice()
+    // {
+    //     ::CloseAudioDevice();
+    // }
+ 
 
     // --- FS Utils ---
     const char* GetApplicationDirectory()
@@ -688,21 +616,11 @@ namespace rlw
         return currentBuffer;
     }
 
-    bool IsAudioDeviceReady()
-    {
-        return ::IsAudioDeviceReady();
-    }
+    // bool IsAudioDeviceReady()
+    // {
+    //     return ::IsAudioDeviceReady();
+    // }
 
-    void LogMusicState(const rlw::Music& m)
-    {
-        if (!m._native)
-        {
-            std::printf("[Music] null\n");
-            return;
-        }
-        auto& nm = *reinterpret_cast<::Music*>(m._native);
-        std::printf("[Music] frameCount=%u looping=%d ctxType=%d ctxData=%p | stream=%p\n", nm.frameCount, nm.looping ? 1 : 0, nm.ctxType, nm.ctxData, nm.stream.buffer);
-        std::printf("        time len=%.3f played=%.3f\n", ::GetMusicTimeLength(nm), ::GetMusicTimePlayed(nm));
-    }
+
 
 }  // namespace rlw

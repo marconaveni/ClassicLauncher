@@ -1,4 +1,5 @@
 #include "Application.h"
+#include <string_view>
 #include "Guis/GuiWindow.h"
 #include "Helper.h"
 #include "Utils/ConfigurationManager.h"
@@ -48,21 +49,27 @@ namespace ClassicLauncher
         Resources::SetClassicLauncherDir();
         mGameListManager.Initialize();
 
-        rlw::InitAudioDevice();
+        // rlw::InitAudioDevice();
 
         if (mConfigurationManager.GetVSync())
         {
             m_window->SetConfigFlags(RayWindow::Flags::Vsync);  // vsync only enable in fullscreen set before InitWindow
         }
 
-        m_window->Init(1280, 720, "title");
+#if _DEBUG
+        std::string_view title = "Classic Launcher [DEVMODE]";
+#else
+        std::string_view title = "Classic Launcher";
+#endif
+
+        m_window->Init(1280, 720, title.data());
         m_window->SetTargetFPS(mConfigurationManager.GetTargetFps());
 
         if (mConfigurationManager.GetFullscreen())
         {
             const bool isFullscreen = m_window->ToggleFullscreen();
             mConfigurationManager.SetFullscreen(isFullscreen);
-            mConfigurationManager.SaveConfiguration();         
+            mConfigurationManager.SaveConfiguration();
         }
 
 #ifndef _DEBUG
@@ -97,11 +104,11 @@ namespace ClassicLauncher
         mSpriteManager.LoadSprite("ref3", refPath3, 1280 * 2, 720 * 2);
 #endif
 
-        //rlw::Image imgs[5] = { rlw::LoadImage(Resources::GetIcon(16).c_str()),
-        //                       rlw::LoadImage(Resources::GetIcon(32).c_str()),
-        //                       rlw::LoadImage(Resources::GetIcon(48).c_str()),
-        //                       rlw::LoadImage(Resources::GetIcon(64).c_str()),
-        //                       rlw::LoadImage(Resources::GetIcon(128).c_str()) };
+        // rlw::Image imgs[5] = { rlw::LoadImage(Resources::GetIcon(16).c_str()),
+        //                        rlw::LoadImage(Resources::GetIcon(32).c_str()),
+        //                        rlw::LoadImage(Resources::GetIcon(48).c_str()),
+        //                        rlw::LoadImage(Resources::GetIcon(64).c_str()),
+        //                        rlw::LoadImage(Resources::GetIcon(128).c_str()) };
 
         // rlw::SetWindowIcons(imgs, 5);
 
@@ -118,7 +125,6 @@ namespace ClassicLauncher
         Loop();
 
         End();
-        rlw::CloseAudioDevice();
     }
 
     void Application::CreateProcess()
@@ -137,10 +143,7 @@ namespace ClassicLauncher
     {
         while (!m_window->ShouldClose())
         {
-            if (rlw::IsKeyReleased(rlw::KEY_F11) || (rlw::IsKeyDown(rlw::KEY_LEFT_ALT) && rlw::IsKeyReleased(rlw::KEY_ENTER)))
-            {
-                ToggleFullscreen();
-            }
+            ToggleFullscreen();
 
             // update logic
             Update();
@@ -181,8 +184,8 @@ namespace ClassicLauncher
         PRINT(TEXT("========================================"), 2.0f, "line0", Color::Lime);
         PRINT(TEXT("Music Playing %s", mAudioManager.GetMusicName().c_str()), 2.0f, "music", Color::Lime);
         PRINT(TEXT("========================================"), 2.0f, "line", Color::Green);
-        PRINT(TEXT("%d fps", rlw::GetFPS()), 2.0f, "fps", Color::Green);
-        PRINT(TEXT("%.6f ms", rlw::GetFrameTime()), 2.0f, "ms", Color::Green);
+        PRINT(TEXT("%d fps", RayWindow::GetFPS()), 2.0f, "fps", Color::Green);
+        PRINT(TEXT("%.6f ms", RayWindow::GetFrameTime()), 2.0f, "ms", Color::Green);
         PRINT(TEXT("========================================"), 2.0f, "line2");
         if (pSystemList)
         {
@@ -247,9 +250,13 @@ namespace ClassicLauncher
 
     void Application::ToggleFullscreen()
     {
-        const bool isFullscreen = m_window->ToggleFullscreen();
-        mConfigurationManager.SetFullscreen(isFullscreen);
-        LOG(LOG_CLASSIC_DEBUG, TEXT("GetHomeDir %s", TEXTBOOL(isFullscreen)));
-        mConfigurationManager.SaveConfiguration();  
+        if (rlw::IsKeyReleased(rlw::KEY_F11) || (rlw::IsKeyDown(rlw::KEY_LEFT_ALT) && rlw::IsKeyReleased(rlw::KEY_ENTER)))
+        {
+            const bool isFullscreen = m_window->ToggleFullscreen();
+            mConfigurationManager.SetFullscreen(isFullscreen);
+            mConfigurationManager.SaveConfiguration();
+            LOG(LOG_CLASSIC_DEBUG, TEXT("Saved is fullscreen config.ini with value %s", TEXTBOOL(isFullscreen)));
+        }
     }
+
 }  // namespace ClassicLauncher
