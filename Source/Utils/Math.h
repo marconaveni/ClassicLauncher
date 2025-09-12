@@ -2,6 +2,7 @@
 #define MATH_H
 
 #include <random>
+
 #include "ClassicAssert.h"
 
 namespace ClassicLauncher::Math
@@ -80,6 +81,6 @@ namespace ClassicLauncher::Math
         return (angleInDegrees < 0) ? (angleInDegrees + 360) : angleInDegrees;
     }
 
-}  // namespace ClassicLauncher::Math
+} // namespace ClassicLauncher::Math
 
-#endif  // MATH
+#endif // MATH

@@ -7,8 +7,6 @@
 #include "Data/Color.h"
 #include "Graphics/Font.h"
 
-#include "rl_wrap.h"
-
 
 namespace ClassicLauncher
 {

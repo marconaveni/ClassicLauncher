@@ -2,7 +2,7 @@
 #define MUSIC_H
 
 #include <memory>
-#include <string_view>
+#include <filesystem>
 #include <string>
 
 namespace ClassicLauncher
@@ -16,7 +16,7 @@ namespace ClassicLauncher
         Music(const Music&) = delete;
         Music& operator=(const Music&) = delete;
 
-        bool LoadFromFile(std::string_view path);
+        bool LoadFromFile(const std::filesystem::path& path);
 
         void Play();
         void Stop();

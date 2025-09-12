@@ -2,7 +2,7 @@
 #define SOUND_H
 
 #include <memory>
-#include <string_view>
+#include <filesystem>
 
 namespace ClassicLauncher
 {
@@ -17,7 +17,7 @@ namespace ClassicLauncher
         Sound(const Sound&) = delete;
         Sound& operator=(const Sound&) = delete;
 
-        bool LoadFromFile(std::string_view path);
+        bool LoadFromFile(const std::filesystem::path& path);
 
         void Play();
         void Stop();

@@ -4,7 +4,6 @@
 #include <string>
 
 #include "Data/Vector2.h"
-#include "rl_wrap.h"
 #include "Graphics/Image.h"
 
 

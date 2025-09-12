@@ -2,6 +2,7 @@
 #include "Graphics/SpriteAnimator.h"
 #include "Application.h"
 #include "ClassicAssert.h"
+#include "Window/RayWindow.h"
 
 namespace ClassicLauncher
 {
@@ -17,7 +18,7 @@ namespace ClassicLauncher
         Entity::Update();
         for (auto& spriteAnimation : mSpriteAnimations)
         {
-            spriteAnimation.second.Update(rlw::GetFrameTime());
+            spriteAnimation.second.Update(RayWindow::GetFrameTime());
             Rectangle rec = spriteAnimation.second.GetCurrentSprite();
             mTransform.source.x = rec.x;
             mTransform.source.y = rec.y;

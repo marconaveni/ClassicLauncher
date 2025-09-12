@@ -1,5 +1,7 @@
 #include "InputManager.h"
 
+#include "Window/RayWindow.h"
+
 namespace ClassicLauncher
 {
 
@@ -21,7 +23,9 @@ namespace ClassicLauncher
 
     bool IsModifierKey()
     {
-        return rlw::IsKeyDown(rlw::KEY_LEFT_ALT) || rlw::IsKeyDown(rlw::KEY_RIGHT_ALT) || rlw::IsKeyDown(rlw::KEY_LEFT_CONTROL) || rlw::IsKeyDown(rlw::KEY_RIGHT_CONTROL);
+        return rlw::IsKeyDown(rlw::KEY_LEFT_ALT) || // check if keys modifiers is pressed
+               rlw::IsKeyDown(rlw::KEY_RIGHT_ALT) || rlw::IsKeyDown(rlw::KEY_LEFT_CONTROL) ||
+               rlw::IsKeyDown(rlw::KEY_RIGHT_CONTROL);
     }
 
     void InputManager::UpdateInputState()
@@ -37,15 +41,19 @@ namespace ClassicLauncher
             const float maxAmount = 0.4f;
             const int key = input.keyPad;
             const int gamePad = input.gamePad;
-            input.bPress = (rlw::IsKeyPressed(key) || rlw::IsGamepadButtonPressed(mGamePadIdSelected, gamePad)) && !bKeyModifier && !mDisableInput;
-            input.bDown = (rlw::IsKeyDown(key) || rlw::IsGamepadButtonDown(mGamePadIdSelected, gamePad)) && !bKeyModifier && !mDisableInput;
-            input.bRelease = (rlw::IsKeyReleased(key) || rlw::IsGamepadButtonReleased(mGamePadIdSelected, gamePad)) && !bKeyModifier && !mDisableInput;
-            input.bUp = (rlw::IsKeyUp(key) || rlw::IsGamepadButtonUp(mGamePadIdSelected, gamePad)) && !bKeyModifier && !mDisableInput;
+            input.bPress = (rlw::IsKeyPressed(key) || rlw::IsGamepadButtonPressed(mGamePadIdSelected, gamePad)) &&
+                           !bKeyModifier && !mDisableInput;
+            input.bDown = (rlw::IsKeyDown(key) || rlw::IsGamepadButtonDown(mGamePadIdSelected, gamePad)) &&
+                          !bKeyModifier && !mDisableInput;
+            input.bRelease = (rlw::IsKeyReleased(key) || rlw::IsGamepadButtonReleased(mGamePadIdSelected, gamePad)) &&
+                             !bKeyModifier && !mDisableInput;
+            input.bUp = (rlw::IsKeyUp(key) || rlw::IsGamepadButtonUp(mGamePadIdSelected, gamePad)) && !bKeyModifier &&
+                        !mDisableInput;
 
             if (input.bDown)
             {
                 input.bDown = (input.amoutDown == 0 || input.amoutDown >= maxAmount);
-                input.amoutDown += rlw::GetFrameTime();
+                input.amoutDown += RayWindow::GetFrameTime();
             }
             else
             {
@@ -56,7 +64,7 @@ namespace ClassicLauncher
 
     bool InputManager::IsPress(InputName name, unsigned int category)
     {
-        if (!sInstanceInputManager) 
+        if (!sInstanceInputManager)
         {
             return false;
         }
@@ -102,7 +110,7 @@ namespace ClassicLauncher
 
     void InputManager::DisableInput()
     {
-        if (!sInstanceInputManager) 
+        if (!sInstanceInputManager)
         {
             return;
         }
@@ -117,7 +125,7 @@ namespace ClassicLauncher
     bool InputManager::CheckCategory(unsigned int category) const
     {
         if (!sInstanceInputManager)
-        { 
+        {
             return false;
         }
 
@@ -141,8 +149,8 @@ namespace ClassicLauncher
 
     void InputManager::SetCategory(unsigned int category)
     {
-        if (!sInstanceInputManager) 
-        { 
+        if (!sInstanceInputManager)
+        {
             return;
         }
 
@@ -164,7 +172,7 @@ namespace ClassicLauncher
 
     void InputManager::RemoveCategory(unsigned int category)
     {
-        if (!sInstanceInputManager) 
+        if (!sInstanceInputManager)
         {
             return;
         }
@@ -185,4 +193,4 @@ namespace ClassicLauncher
         }
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

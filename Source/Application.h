@@ -2,6 +2,7 @@
 #define APPLICATION_H
 
 #include <memory>
+
 #include "Audio/AudioManager.h"
 #include "Components/FocusManager.h"
 #include "Data/GameListManager.h"
@@ -52,7 +53,7 @@ namespace ClassicLauncher
         void Init();
         void CreateProcess();
         void LoadConfigurationThemes();
-        
+
 
     private:
 
@@ -80,6 +81,6 @@ namespace ClassicLauncher
         std::unique_ptr<RayWindow> m_window;
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

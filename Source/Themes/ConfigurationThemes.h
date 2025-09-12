@@ -1,7 +1,7 @@
 #ifndef CONFIGURATION_THEMES_H
 #define CONFIGURATION_THEMES_H
 
- 
+
 #include <string>
 
 namespace ClassicLauncher
@@ -14,7 +14,7 @@ namespace ClassicLauncher
         float horizontalCardsSpace = 0.0f;
         float horizontalCardsPositionX = 2.0f;
         float horizontalCardsPositionY = 222.0f;
-        
+
         // gui card values
         float offsetImageX = 12;
         float offsetImageY = 12;
@@ -24,8 +24,8 @@ namespace ClassicLauncher
 
         void LoadConfigurations(const std::string& path);
     };
-    
-    
+
+
 } // namespace ClassicLauncher
 
 

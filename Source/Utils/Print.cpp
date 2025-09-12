@@ -1,10 +1,12 @@
 ﻿#include "Print.h"
+
 #include <algorithm>
 #include <iostream>
-#include "Math.h"
-#include "Data/Vector2.h"
-#include "Window/RayWindow.h"
 
+#include "Data/Vector2.h"
+#include "Math.h"
+#include "Window/RayWindow.h"
+#include "rl_wrap.h"
 
 namespace ClassicLauncher
 {
@@ -13,7 +15,8 @@ namespace ClassicLauncher
     {
     }
 
-    void Print::InternalPrintOnScreen(const std::string& text, float duration, const std::string& label, const Color& textColor, bool bLog, int sizeY)
+    void Print::InternalPrintOnScreen(const std::string& text, float duration, const std::string& label,
+                                      const Color& textColor, bool bLog, int sizeY)
     {
 #ifdef _DEBUG
 
@@ -53,7 +56,8 @@ namespace ClassicLauncher
 #endif
     }
 
-    void Print::PrintOnScreen(const char* text, const float duration, const char* label, const Color& textColor, const bool bLog)
+    void Print::PrintOnScreen(const char* text, const float duration, const char* label, const Color& textColor,
+                              const bool bLog)
     {
 
 #ifdef _DEBUG
@@ -90,20 +94,16 @@ namespace ClassicLauncher
             return;
         }
 
-        mMessages.erase(std::remove_if(mMessages.begin(),
-                                      mMessages.end(),
-                                      [](Message& message)
-                                      {
-                                          return !message.IsTimeElapsed();
-                                      }),
-                       mMessages.end());
+        mMessages.erase(std::remove_if(mMessages.begin(), mMessages.end(),
+                                       [](Message& message) { return !message.IsTimeElapsed(); }),
+                        mMessages.end());
 
         float y = 16;
 
         for (const auto& message : mMessages)
         {
-            const Vector2f positionRender = { 30, y };
-            const Vector2f positionRenderShadow = { 31, y + 1 };
+            const Vector2f positionRender = {30, y};
+            const Vector2f positionRenderShadow = {31, y + 1};
 
             rlw::DrawTextEx(mFont, message.textMessage.data(), positionRenderShadow, mSize, mSpacing, Color::Black);
             rlw::DrawTextEx(mFont, message.textMessage.data(), positionRender, mSize, mSpacing, message.textColor);
@@ -138,4 +138,4 @@ namespace ClassicLauncher
 #endif
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

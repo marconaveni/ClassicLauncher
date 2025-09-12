@@ -1,7 +1,5 @@
 #include "Audio/Sound.h"
 
-#include <memory> // Para std::make_unique
-
 
 #include "raylib.h"
 #include "Sound.h"
@@ -28,10 +26,10 @@ namespace ClassicLauncher
         Unload();
     }
 
-    bool Sound::LoadFromFile(std::string_view path)
+    bool Sound::LoadFromFile(const std::filesystem::path& path)
     {
         Unload();
-        m_data->sound = ::LoadSound(path.data());
+        m_data->sound = ::LoadSound(path.string().c_str());
         m_data->isReady = ::IsSoundValid(m_data->sound);
         return m_data->isReady;
     }

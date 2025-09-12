@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+
 #include "Themes/ConfigurationThemes.h"
 
 namespace ClassicLauncher
@@ -18,7 +19,8 @@ namespace ClassicLauncher
         float mScaleTexture;
         float mScaleSystem;
         std::string mPathThemeSystem;
-        static bool GetPathTheme(std::string& file, int monitorWidth, int monitorCompare, const std::string& path, float numScale);
+        static bool GetPathTheme(std::string& file, int monitorWidth, int monitorCompare, const std::string& path,
+                                 float numScale);
         float GetSpriteByResolution(std::string& file);
 
 
@@ -34,6 +36,6 @@ namespace ClassicLauncher
         ConfigurationThemes mConfigurationThemes;
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // THEME_H
+#endif // THEME_H

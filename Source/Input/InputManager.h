@@ -18,23 +18,23 @@ namespace ClassicLauncher
     enum InputName : std::uint8_t
     {
         unknown = 0,
-        leftFaceUp,         // dpad (up)                                   key(up)
-        leftFaceRight,      // dpad (right)                                key(right)
-        leftFaceDown,       // dpad (down)                                 key(down)
-        leftFaceLeft,       // dpad (left)                                 key(left)
-        rightFaceUp,        // right right button PS (triangle) XB (Y)     key(f)
-        rightFaceRight,     // right right button PS (circle) XB (B)       key(backspace)
-        rightFaceDown,      // right right button PS (cross) XB (A)        key(enter)
-        rightFaceLeft,      // right left button PS (square) XB (X)        key(a)
-        leftTriggerFront,   // left trigger button PS (L1) XB (LB)         key(q)
-        leftTriggerBack,    // left trigger button PS (L2) XB (LT)         key(z)
-        rightTriggerFront,  // right trigger button PS (R1) XB (RB)        key(e)
-        rightTriggerBack,   // right trigger button PS (R2) XB (RT)        key(c)
-        middleFaceLeft,     // center left button PS (select) XB (back)    key(esc)
-        middleFaceCenter,   // center center button PS (pslogo) XB (guide) key(f1)
-        middleFaceRight,    // center right button PS (start) XB (start)   key(s)
-        leftThumb,          // left thumb button PS (L3) XB (LS)           key(n)
-        rightThumb          // right thumb button PS (R3) XB (RS)          key(m)
+        leftFaceUp,        // dpad (up)                                   key(up)
+        leftFaceRight,     // dpad (right)                                key(right)
+        leftFaceDown,      // dpad (down)                                 key(down)
+        leftFaceLeft,      // dpad (left)                                 key(left)
+        rightFaceUp,       // right right button PS (triangle) XB (Y)     key(f)
+        rightFaceRight,    // right right button PS (circle) XB (B)       key(backspace)
+        rightFaceDown,     // right right button PS (cross) XB (A)        key(enter)
+        rightFaceLeft,     // right left button PS (square) XB (X)        key(a)
+        leftTriggerFront,  // left trigger button PS (L1) XB (LB)         key(q)
+        leftTriggerBack,   // left trigger button PS (L2) XB (LT)         key(z)
+        rightTriggerFront, // right trigger button PS (R1) XB (RB)        key(e)
+        rightTriggerBack,  // right trigger button PS (R2) XB (RT)        key(c)
+        middleFaceLeft,    // center left button PS (select) XB (back)    key(esc)
+        middleFaceCenter,  // center center button PS (pslogo) XB (guide) key(f1)
+        middleFaceRight,   // center right button PS (start) XB (start)   key(s)
+        leftThumb,         // left thumb button PS (L3) XB (LS)           key(n)
+        rightThumb         // right thumb button PS (R3) XB (RS)          key(m)
     };
 
     struct InputMapper
@@ -49,7 +49,14 @@ namespace ClassicLauncher
         bool bUp;
 
         InputMapper(InputName name, int gamePad, int keyPad)
-            : gamePad(gamePad), keyPad(keyPad), amoutDown(0), name(name), bPress(false), bDown(false), bRelease(false), bUp(false)
+            : gamePad(gamePad)
+            , keyPad(keyPad)
+            , amoutDown(0)
+            , name(name)
+            , bPress(false)
+            , bDown(false)
+            , bRelease(false)
+            , bUp(false)
         {
         }
 
@@ -114,9 +121,9 @@ namespace ClassicLauncher
 
     private:
 
-        [[nodiscard]]bool CheckCategory(unsigned int category) const;
+        [[nodiscard]] bool CheckCategory(unsigned int category) const;
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // INPUT_MANAGER_H
+#endif // INPUT_MANAGER_H

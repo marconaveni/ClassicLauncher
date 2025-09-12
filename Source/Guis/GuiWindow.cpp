@@ -1,10 +1,11 @@
 #include "GuiWindow.h"
+
 #include "Application.h"
-#include "Utils/Log.h"
-#include "Guis/GuiHorizontalCards.h"
 #include "Guis/GuiBlackScreen.h"
-#include "Guis/GuiVideoPlayer.h"
 #include "Guis/GuiComponent.h"
+#include "Guis/GuiHorizontalCards.h"
+#include "Guis/GuiVideoPlayer.h"
+#include "Utils/Log.h"
 
 namespace ClassicLauncher
 {
@@ -41,9 +42,9 @@ namespace ClassicLauncher
         pApplication->LoadConfigurationThemes();
 
 #ifdef _DEBUG
-        InputManager::SetCategory(main | debug); 
+        InputManager::SetCategory(main | debug);
 #else
-        InputManager::SetCategory(main); 
+        InputManager::SetCategory(main);
 #endif
     }
 
@@ -100,11 +101,12 @@ namespace ClassicLauncher
         }
         else if (InputManager::IsRelease(InputName::leftFaceDown, main))
         {
-            const bool bIsplay = mGuiVideoPlayer->Init(pApplication->GetGameListManager()->GetCurrentGameList()->video, 640, 480);
+            const bool bIsplay =
+                mGuiVideoPlayer->Init(pApplication->GetGameListManager()->GetCurrentGameList()->video, 640, 480);
             if (bIsplay)
             {
-                InputManager::RemoveCategory(main); 
-                InputManager::SetCategory(videoFullscreen); 
+                InputManager::RemoveCategory(main);
+                InputManager::SetCategory(videoFullscreen);
                 pApplication->GetAudioManager()->Pause();
             }
         }
@@ -127,7 +129,8 @@ namespace ClassicLauncher
             }
             pApplication->GetTimerManager()->SetTimer(mClickTimer, CALLFUNCTION(OnClick, this), this, 0.5f, false);
         }
-        if (InputManager::IsRelease(InputName::rightFaceRight, main) && pApplication->GetGameListManager()->GetCurrentList() == GameListSelect)  // back
+        if (InputManager::IsRelease(InputName::rightFaceRight, main) &&
+            pApplication->GetGameListManager()->GetCurrentList() == GameListSelect) // back
         {
             InputManager::DisableInput();
             mGuiBlackScreen->FadeInFadeOut();
@@ -147,7 +150,8 @@ namespace ClassicLauncher
         {
             mGuiHorizontalBox->ChangeList(GameListSelect);
             pApplication->GetThemes()->LoadTheme(pApplication);
-            pApplication->GetTimerManager()->SetTimer(mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
+            pApplication->GetTimerManager()->SetTimer(
+                mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
     }
 
@@ -159,7 +163,8 @@ namespace ClassicLauncher
         {
             mGuiHorizontalBox->ChangeList(SystemListSelect);
             pApplication->GetThemes()->LoadTheme(pApplication);
-            pApplication->GetTimerManager()->SetTimer(mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
+            pApplication->GetTimerManager()->SetTimer(
+                mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
     }
 
@@ -170,7 +175,8 @@ namespace ClassicLauncher
         {
             if (mGuiHorizontalBox == nullptr)
             {
-                mGuiHorizontalBox = GetApplication()->GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalBox");
+                mGuiHorizontalBox =
+                    GetApplication()->GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalBox");
                 mGuiHorizontalBox->Init();
                 AddChild(mGuiHorizontalBox);
                 GetApplication()->LoadConfigurationThemes();
@@ -182,4 +188,4 @@ namespace ClassicLauncher
         }
 #endif
     }
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

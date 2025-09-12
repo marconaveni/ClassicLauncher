@@ -1,14 +1,13 @@
 #ifndef VIDEO_PLAYER_H
 #define VIDEO_PLAYER_H
 
-#include <string>
 #include <mutex>
-//#include "vlc/vlc.h"
-#include "Data/Vector2.h"
+#include <string>
 
+#include "Data/Vector2.h"
 #include "Graphics/Image.h"
 #include "Graphics/Texture.h"
-#include "rl_wrap.h"
+
 
 struct libvlc_instance_t;
 struct libvlc_media_t;
@@ -21,10 +20,10 @@ namespace ClassicLauncher
 
     struct VideoContext
     {
-        Image image[2];        // Imagem que será atualizada
+        Image image[2]; // Imagem que será atualizada
         std::mutex frameMutex[2];
         bool frameLock[2];
-	    int	frameId;
+        int frameId;
         int countFrame;
 
         VideoContext()
@@ -49,7 +48,7 @@ namespace ClassicLauncher
         int mHeightVideo = 1;
 
         VideoContext mContext;
-        Texture texture;  // Textura da imagem para renderizar na tela
+        Texture texture; // Textura da imagem para renderizar na tela
         bool bIsEnabledVlC;
         unsigned int mWidth;
         unsigned int mHeight;
@@ -63,7 +62,7 @@ namespace ClassicLauncher
 
         VideoPlayer();
         ~VideoPlayer();
-        bool Init(std::string path, int width, int height, float scale = 1,bool  bFill = false);
+        bool Init(std::string path, int width, int height, float scale = 1, bool bFill = false);
         void Play();
         void Pause();
         void Resume();
@@ -79,6 +78,6 @@ namespace ClassicLauncher
         void SetVolume(int volume);
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

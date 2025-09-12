@@ -2,7 +2,7 @@
 
 #include <utility>
 #include "Entity/Entity.h"
-#include "rl_wrap.h"
+#include "Window/RayWindow.h"
 
 namespace ClassicLauncher
 {
@@ -34,7 +34,7 @@ namespace ClassicLauncher
         {
             if (mCurrentTime <= mDelay)
             {
-                mCurrentTime += rlw::GetFrameTime();
+                mCurrentTime += RayWindow::GetFrameTime();
                 return;
             }
             mCallback();
@@ -53,7 +53,7 @@ namespace ClassicLauncher
     void Timer::Reset()
     {
         mCurrentTime = 0.0;                                // Reset current time
-        mDuration = mDelay / static_cast<double>(rlw::GetFrameTime());  // Set duration based on frame time
+        mDuration = mDelay / static_cast<double>(RayWindow::GetFrameTime());  // Set duration based on frame time
         mIsFunctionCalled = false;                         // Reset the function called state
     }
 

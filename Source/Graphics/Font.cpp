@@ -56,7 +56,7 @@ namespace ClassicLauncher
 
     Vector2f Font::MeasureTextEx(const std::string& text, float fontSize, float spacing)
     {
-        if (!_native || !text.empty())
+        if (_native == nullptr || text.empty())
         {
             return ClassicLauncher::Vector2f{ 0, 0 };
         }

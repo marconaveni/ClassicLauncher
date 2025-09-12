@@ -5,7 +5,7 @@ namespace ray
 {
 #include "rlgl.h"
 }  // namespace ray
-#include "rl_wrap.h"
+
 
 namespace ClassicLauncher
 {

@@ -1,9 +1,6 @@
 #include "Audio/Music.h"
 
 
-#include <memory> // Para std::make_unique
-
-
 #include "raylib.h"
 #include "Music.h"
 
@@ -29,10 +26,10 @@ namespace ClassicLauncher
         Unload();
     }
 
-    bool Music::LoadFromFile(std::string_view path)
+    bool Music::LoadFromFile(const std::filesystem::path& path)
     {
         Unload();
-        m_data->musicStream = ::LoadMusicStream(path.data());
+        m_data->musicStream = ::LoadMusicStream(path.string().c_str());
         m_data->isReady = ::IsMusicValid(m_data->musicStream);
         return m_data->isReady;
     }

@@ -6,7 +6,7 @@
 #include <string>
 #include <thread>
 
-#include "rl_wrap.h"
+
 #include "Graphics/Image.h"
 #include "Graphics/Texture.h"
 

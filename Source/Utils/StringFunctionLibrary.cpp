@@ -20,12 +20,12 @@ namespace ClassicLauncher
 
     void StringFunctionLibrary::ReplaceString(std::string& value, const char* from, const char* to)
     {
-        ReplaceString(value, std::string{ from }, std::string{ to });
+        ReplaceString(value, std::string{from}, std::string{to});
     }
 
     void StringFunctionLibrary::ReplaceString(std::string& value, const std::string& from, const std::string& to)
     {
-        if (from.empty()) 
+        if (from.empty())
         {
             return;
         }
@@ -155,4 +155,4 @@ namespace ClassicLauncher
         return true;
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

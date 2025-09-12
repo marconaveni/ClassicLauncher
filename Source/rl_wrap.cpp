@@ -63,6 +63,13 @@ namespace rlw
     {
         ::SetTraceLogLevel(level);
     }
+
+
+
+
+
+
+
     void SetConfigFlags(unsigned int flags)
     {
         ::SetConfigFlags(flags);
@@ -97,14 +104,7 @@ namespace rlw
     {
         ::SetTargetFPS(fps);
     }
-    int GetFPS()
-    {
-        return ::GetFPS();
-    }
-    float GetFrameTime()
-    {
-        return ::GetFrameTime();
-    }
+
 
     int GetScreenWidth()
     {
@@ -297,14 +297,6 @@ namespace rlw
         ::WaitTime(seconds);
     }
 
-    void* MemAlloc(unsigned int size)
-    {
-        return ::MemAlloc(size);
-    }
-    void MemFree(void* ptr)
-    {
-        ::MemFree(ptr);
-    }
 
     // --- Mouse ---
     bool IsMouseButtonPressed(int button)

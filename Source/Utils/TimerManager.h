@@ -4,6 +4,7 @@
 #include <functional>
 #include <memory>
 #include <unordered_map>
+
 #include "Utils/Timer.h"
 
 namespace ClassicLauncher
@@ -27,11 +28,8 @@ namespace ClassicLauncher
 
         TimerManager() = default;
         ~TimerManager() = default;
-        void SetTimer(TimerHandling& timerHandling,
-                      std::function<void()> callbackFunction,
-                      Entity* targetEntity,
-                      float delay,
-                      bool bLooped = false);
+        void SetTimer(TimerHandling& timerHandling, std::function<void()> callbackFunction, Entity* targetEntity,
+                      float delay, bool bLooped = false);
         void ClearTimer(const TimerHandling& timerHandling);
         void ClearAllTimers();
 
@@ -44,6 +42,6 @@ namespace ClassicLauncher
         void Update() const;
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

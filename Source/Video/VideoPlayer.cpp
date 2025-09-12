@@ -145,11 +145,11 @@ namespace ClassicLauncher
         mWidthVideo = (int)textureSize.x;
         mHeightVideo = (int)textureSize.y;
 
-        mContext.image[0] = { rlw::MemAlloc(mWidthVideo * mHeightVideo * 4),  // 4 bytes pixel (RGBA)
+        mContext.image[0] = { calloc(mWidthVideo * mHeightVideo * 4, 1),  // 4 bytes pixel (RGBA)
                               mWidthVideo,
                               mHeightVideo,
                               1,
-                              rlw::PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 };
+                              PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 };
 
         mContext.image[0].CopyTo(mContext.image[1]);
 

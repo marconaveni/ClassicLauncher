@@ -1,7 +1,8 @@
 #include "FocusManager.h"
+
 #include "Application.h"
-#include "Helper.h" 
 #include "Components/FocusComponent.h"
+#include "Helper.h"
 
 namespace ClassicLauncher
 {
@@ -32,13 +33,14 @@ namespace ClassicLauncher
 
     void FocusManager::RemoveFocus(FocusComponent* focusComponent)
     {
-        mFocusComponents.erase(std::remove_if(mFocusComponents.begin(),
-                                              mFocusComponents.end(),
-                                              [focusComponent](const FocusComponent* focus)
-                                              {
-                                                  return focus == focusComponent;  // Return true element
-                                              }),
-                               mFocusComponents.end());
+        mFocusComponents.erase(std::remove_if(mFocusComponents.begin(),  
+            mFocusComponents.end(),
+            [focusComponent](const FocusComponent* focus)
+            {
+                return focus == focusComponent; // Return true element
+            }),
+            mFocusComponents.end()
+        );
     }
 
     FocusComponent* FocusManager::GetFocusComponent()
@@ -53,4 +55,4 @@ namespace ClassicLauncher
         return nullptr;
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

@@ -101,11 +101,10 @@ namespace ClassicLauncher
 
     void RenderScreen::Unload()
     {
-        // if (rlw::IsRenderTextureValid(mRenderTexture))
-        // {
-        //     rlw::UnloadRenderTexture(mRenderTexture);
-        //     mRenderTexture = rlw::RenderTexture2D{};
-        // }
+         if (mRenderTexture->IsValid())
+         {
+             mRenderTexture->Unload();
+         }
     }
 
     Vector2f RenderScreen::GetRenderScale() const

@@ -1,5 +1,7 @@
 #include "Application.h"
+
 #include <string_view>
+
 #include "Guis/GuiWindow.h"
 #include "Helper.h"
 #include "Utils/ConfigurationManager.h"
@@ -15,7 +17,9 @@ namespace ClassicLauncher
     static Application* sInstanceApplication = nullptr;
 
     Application::Application()
-        : mRenderEntities(&this->mSpriteManager), mEntityManager(&this->mSpriteManager, &this->mTimerManager), mGuiWindow(nullptr)
+        : mRenderEntities(&this->mSpriteManager)
+        , mEntityManager(&this->mSpriteManager, &this->mTimerManager)
+        , mGuiWindow(nullptr)
     {
         if (sInstanceApplication == nullptr)
         {
@@ -53,7 +57,7 @@ namespace ClassicLauncher
 
         if (mConfigurationManager.GetVSync())
         {
-            m_window->SetConfigFlags(RayWindow::Flags::Vsync);  // vsync only enable in fullscreen set before InitWindow
+            m_window->SetConfigFlags(RayWindow::Flags::Vsync); // vsync only enable in fullscreen set before InitWindow
         }
 
 #if _DEBUG
@@ -76,7 +80,8 @@ namespace ClassicLauncher
         m_window->SetExitKey(0);
 #endif
 
-        const std::string musicDir = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "musics");  // theme dir
+        const std::string musicDir =
+            StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "musics"); // theme dir
 
         mThemes.Init(this);
         mThemes.LoadTheme(this);
@@ -94,10 +99,14 @@ namespace ClassicLauncher
 #ifdef _DEBUG
 
         // For visual reference you can upload up to four images to guide you
-        const std::string refPath0 = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref0.png");
-        const std::string refPath1 = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref1.png");
-        const std::string refPath2 = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref2.png");
-        const std::string refPath3 = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref3.png");
+        const std::string refPath0 =
+            StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref0.png");
+        const std::string refPath1 =
+            StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref1.png");
+        const std::string refPath2 =
+            StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref2.png");
+        const std::string refPath3 =
+            StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref3.png");
         mSpriteManager.LoadSprite("ref0", refPath0, 1280 * 2, 720 * 2);
         mSpriteManager.LoadSprite("ref1", refPath1, 1280 * 2, 720 * 2);
         mSpriteManager.LoadSprite("ref2", refPath2, 1280 * 2, 720 * 2);
@@ -250,7 +259,8 @@ namespace ClassicLauncher
 
     void Application::ToggleFullscreen()
     {
-        if (rlw::IsKeyReleased(rlw::KEY_F11) || (rlw::IsKeyDown(rlw::KEY_LEFT_ALT) && rlw::IsKeyReleased(rlw::KEY_ENTER)))
+        if (rlw::IsKeyReleased(rlw::KEY_F11) ||
+            (rlw::IsKeyDown(rlw::KEY_LEFT_ALT) && rlw::IsKeyReleased(rlw::KEY_ENTER)))
         {
             const bool isFullscreen = m_window->ToggleFullscreen();
             mConfigurationManager.SetFullscreen(isFullscreen);
@@ -259,4 +269,4 @@ namespace ClassicLauncher
         }
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

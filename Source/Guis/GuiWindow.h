@@ -36,6 +36,6 @@ namespace ClassicLauncher
         TimerHandling mInputTimer;
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // GUI_WINDOW_H
+#endif // GUI_WINDOW_H

@@ -1,6 +1,7 @@
 #include "GuiTextBlock.h"
 #include "Application.h"
 #include "Utils/Math.h"
+#include "Window/RayWindow.h"
 
 namespace ClassicLauncher
 {
@@ -60,11 +61,11 @@ namespace ClassicLauncher
         {
             if (mDelay < mMaxDelay)
             {
-                mDelay += rlw::GetFrameTime();
+                mDelay += RayWindow::GetFrameTime();
                 return;
             }
 
-            mSpeed = 0.50f * 60.0f * rlw::GetFrameTime();
+            mSpeed = 0.50f * 60.0f * RayWindow::GetFrameTime();
 
             if (positionText - mOffset > 0 || positionText - mOffset < positionText)
             {
@@ -123,7 +124,7 @@ namespace ClassicLauncher
 
     Vector2f GuiTextBlock::MeasureTextBox()
     {
-        return rlw::MeasureTextEx(mFont, mText.c_str(), mSize, mSpacing);
+        return mFont.MeasureTextEx(mText, mSize, mSpacing);
     }
 
     void GuiTextBlock::SetTextOverflowPolicy(TextOverflowPolicy textOverflowPolicy)

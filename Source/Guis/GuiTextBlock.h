@@ -3,7 +3,6 @@
 
 #include <string>
 #include "Entity/EntityGui.h"
-#include "rl_wrap.h"
 #include "Graphics/Font.h"
 
 namespace ClassicLauncher

@@ -30,16 +30,12 @@ namespace ClassicLauncher
         void Notify(Args&&... args)
         {
             {
-                std::lock_guard<std::mutex> lock(queueMutex);  // Add the callback to the queue
+                std::lock_guard<std::mutex> lock(queueMutex); // Add the callback to the queue
                 callbackQueue.emplace(
                     [this, args = std::make_tuple(std::forward<Args>(args)...)]() mutable
                     {
-                        std::apply(
-                            [this](auto&&... args)
-                            {
-                                callbackLoad(std::forward<decltype(args)>(args)...);
-                            },
-                            std::move(args));
+                        std::apply([this](auto&&... args) { callbackLoad(std::forward<decltype(args)>(args)...); },
+                                   std::move(args));
                     });
             }
             cv.notify_all();
@@ -63,10 +59,10 @@ namespace ClassicLauncher
         void StartThread(Fn&& f, Args&&... a)
         {
             auto task = std::make_shared<std::thread>(std::forward<Fn>(f), std::forward<Args>(a)...);
-            task->detach();  // Detach the thread so it runs independently
+            task->detach(); // Detach the thread so it runs independently
         }
     };
 
-}
+} // namespace ClassicLauncher
 
 #endif // THREAD_MANAGER_H

@@ -13,6 +13,7 @@
 #include "Guis/GuiHorizontalBox.h"
 #include "Guis/GuiCard.h"
 #include "Application.h"
+#include "Window/RayWindow.h"
 
 namespace ClassicLauncher
 {
@@ -235,13 +236,13 @@ namespace ClassicLauncher
 
         if (InputManager::IsDown(InputName::rightTriggerFront, main))
         {
-            mSpeed = Math::Clamp(256.0f * 60.0f * rlw::GetFrameTime(), 0.0f, 256.0f);
+            mSpeed = Math::Clamp(256.0f * 60.0f * RayWindow::GetFrameTime(), 0.0f, 256.0f);
         }
         else if (InputManager::IsPress(InputName::leftFaceLeft, main) || InputManager::IsPress(InputName::leftFaceRight, main))
         {
-            mSpeed = 20.0f * 60.0f * rlw::GetFrameTime();
+            mSpeed = 20.0f * 60.0f * RayWindow::GetFrameTime();
             GetApplication()->GetTimerManager()->SetTimer(
-                mTimerInputSpeed, [&]() { mSpeed = Math::Clamp(88.0f * 60.0f * rlw::GetFrameTime(), 0.0f, 256.0f); }, this, 2.5f, false);
+                mTimerInputSpeed, [&]() { mSpeed = Math::Clamp(88.0f * 60.0f * RayWindow::GetFrameTime(), 0.0f, 256.0f); }, this, 2.5f, false);
         }
 
         // PRINT(TEXT("mSpeed %.8f", mSpeed), 5.0f, "mspeed");
