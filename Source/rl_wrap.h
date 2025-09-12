@@ -347,17 +347,18 @@ namespace rlw
     ////////////////////
     ////////////////////
 
-    ClassicLauncher::Font GetFontDefault();
-    bool IsFontValid(ClassicLauncher::Font font);
-    void UnloadFont(ClassicLauncher::Font font);
-    ClassicLauncher::Font LoadFontEx(const char* fileName, int fontSize, int* codepoints, int codepointCount);
+    //ClassicLauncher::Font GetFontDefault();
+    //bool IsFontValid(ClassicLauncher::Font font);
+    //void UnloadFont(ClassicLauncher::Font font);
+    //ClassicLauncher::Font LoadFontEx(const char* fileName, int fontSize, int* codepoints, int codepointCount);
+    //ClassicLauncher::Vector2f MeasureTextEx(ClassicLauncher::Font font, const char* text, float fontSize, float spacing);
+    
     void DrawTextEx(ClassicLauncher::Font font,
                     const char* text,
                     ClassicLauncher::Vector2f position,
                     float fontSize,
                     float spacing,
                     ClassicLauncher::Color tint);
-    ClassicLauncher::Vector2f MeasureTextEx(ClassicLauncher::Font font, const char* text, float fontSize, float spacing);
     
 
 

@@ -17,9 +17,9 @@ namespace ClassicLauncher
     {
 #ifdef _DEBUG
 
-        if (!rlw::IsFontValid(mFont))
+        if (!mFont.IsValid())
         {
-            mFont = rlw::GetFontDefault();
+            mFont = Font::GetFontDefault();
         }
 
         bool bFound = false;
@@ -85,7 +85,7 @@ namespace ClassicLauncher
     void Print::DrawMessage()
     {
 #ifdef _DEBUG
-        if (!rlw::IsFontValid(mFont))
+        if (!mFont.IsValid())
         {
             return;
         }
@@ -123,10 +123,10 @@ namespace ClassicLauncher
 #ifdef _DEBUG
         this->mSize = size;
         this->mSpacing = spacing;
-        mFont = rlw::LoadFontEx(path.c_str(), size, nullptr, 250);
-        if (!rlw::IsFontValid(mFont))
+        mFont.LoadFromFile(path.c_str(), size, nullptr, 250);
+        if (!mFont.IsValid())
         {
-            mFont = rlw::GetFontDefault();
+            mFont = Font::GetFontDefault();
         }
 #endif
     }
@@ -134,7 +134,7 @@ namespace ClassicLauncher
     void Print::Unload()
     {
 #ifdef _DEBUG
-        rlw::UnloadFont(mFont);
+        mFont.Unload();
 #endif
     }
 

@@ -14,13 +14,13 @@ namespace ClassicLauncher
 
     void GuiTextBlock::UpdateFont(const std::string& path)
     {
-        if (rlw::IsFontValid(mFont))
+        if (mFont.IsValid())
         {
-            rlw::UnloadFont(mFont);
+            mFont.Unload();
             mFont = Font();
         }
         const float scale = Themes::GetScaleTexture();
-        mFont = rlw::LoadFontEx(path.data(), mSize * scale, nullptr, 250);
+        mFont.LoadFromFile(path.data(), mSize * scale, nullptr, 250);
     }
 
     GuiTextBlock::GuiTextBlock(const std::string& path, int size, int spacing)
@@ -144,9 +144,9 @@ namespace ClassicLauncher
 
     void GuiTextBlock::UnloadText()
     {
-        if (rlw::IsFontValid(mFont))
+        if (mFont.IsValid())
         {
-            rlw::UnloadFont(mFont);
+            mFont.Unload();
             mFont = Font();
         }
     }
