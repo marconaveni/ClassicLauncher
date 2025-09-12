@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include "Data/Color.h"
+#include "Graphics/Font.h"
 
 #include "rl_wrap.h"
 
@@ -55,7 +56,7 @@ namespace ClassicLauncher
         void InternalPrintOnScreen(const std::string& text, float duration, const std::string& label, const Color& textColor, bool bLog, int sizeY);
         int mSize;
         float mSpacing;
-        rlw::Font mFont;
+        Font mFont;
         std::vector<Message> mMessages;
     };
 

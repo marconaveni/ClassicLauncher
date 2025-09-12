@@ -159,6 +159,8 @@ set(data
     "${CMAKE_SOURCE_DIR}/Source/Data/Transform.h"
 )
 set(graphics
+    "${CMAKE_SOURCE_DIR}/Source/Graphics/Font.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Graphics/Font.h"
     "${CMAKE_SOURCE_DIR}/Source/Graphics/Image.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Graphics/Image.h"
     "${CMAKE_SOURCE_DIR}/Source/Graphics/RenderTexture.cpp"

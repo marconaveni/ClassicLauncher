@@ -85,7 +85,7 @@ namespace ClassicLauncher
     void Print::DrawMessage()
     {
 #ifdef _DEBUG
-        if (!IsFontValid(mFont))
+        if (!rlw::IsFontValid(mFont))
         {
             return;
         }
@@ -105,8 +105,8 @@ namespace ClassicLauncher
             const Vector2f positionRender = { 30, y };
             const Vector2f positionRenderShadow = { 31, y + 1 };
 
-            DrawTextEx(mFont, message.textMessage.data(), positionRenderShadow, mSize, mSpacing, Color::Black);
-            DrawTextEx(mFont, message.textMessage.data(), positionRender, mSize, mSpacing, message.textColor);
+            rlw::DrawTextEx(mFont, message.textMessage.data(), positionRenderShadow, mSize, mSpacing, Color::Black);
+            rlw::DrawTextEx(mFont, message.textMessage.data(), positionRender, mSize, mSpacing, message.textColor);
 
             y += message.size;
 
@@ -134,7 +134,7 @@ namespace ClassicLauncher
     void Print::Unload()
     {
 #ifdef _DEBUG
-        UnloadFont(mFont);
+        rlw::UnloadFont(mFont);
 #endif
     }
 

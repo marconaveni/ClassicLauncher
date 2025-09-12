@@ -17,7 +17,7 @@ namespace ClassicLauncher
         if (rlw::IsFontValid(mFont))
         {
             rlw::UnloadFont(mFont);
-            mFont = rlw::Font();
+            mFont = Font();
         }
         const float scale = Themes::GetScaleTexture();
         mFont = rlw::LoadFontEx(path.data(), mSize * scale, nullptr, 250);
@@ -147,7 +147,7 @@ namespace ClassicLauncher
         if (rlw::IsFontValid(mFont))
         {
             rlw::UnloadFont(mFont);
-            mFont = rlw::Font();
+            mFont = Font();
         }
     }
 

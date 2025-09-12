@@ -15,6 +15,7 @@
 #include "Graphics/Image.h"
 #include "Graphics/RenderTexture.h"
 #include "Graphics/Texture.h"
+#include "Graphics/Font.h"
 
 namespace rlw
 {
@@ -237,15 +238,15 @@ namespace rlw
         char** paths;
     };
 
-    struct Font
-    {
-        int baseSize{};
-        int glyphCount{};
-        int glyphPadding{};
-        // ponteiro pro nativo (::Font*)
-        void* _native{};
-        bool _owned{ false };  // true: veio de LoadFontEx (descarrega); false: default font (não descarrega)
-    };
+    // struct Font
+    // {
+    //     int baseSize{};
+    //     int glyphCount{};
+    //     int glyphPadding{};
+    //     // ponteiro pro nativo (::Font*)
+    //     void* _native{};
+    //     bool _owned{ false };  // true: veio de LoadFontEx (descarrega); false: default font (não descarrega)
+    // };
 
     // --- Logging / Config / Janela ---
     void SetTraceLogCallback(void (*callback)(int logLevel, const char* text, va_list args));
@@ -278,16 +279,7 @@ namespace rlw
 
 
 
-    bool IsFontValid(Font font);
-    void UnloadFont(Font font);
-    Font LoadFontEx(const char* fileName, int fontSize, int* codepoints, int codepointCount);
-    void DrawTextEx(Font font,
-                    const char* text,
-                    ClassicLauncher::Vector2f position,
-                    float fontSize,
-                    float spacing,
-                    ClassicLauncher::Color tint);
-    ClassicLauncher::Vector2f MeasureTextEx(Font font, const char* text, float fontSize, float spacing);
+    
 
     bool IsMouseButtonPressed(int button);
 
@@ -320,7 +312,7 @@ namespace rlw
 
     const char* TextFormat(const char* text, ...);
 
-    Font GetFontDefault();
+    
 
     const char* GetDirectoryPath(const char* filePath);
     bool FileExists(const char* fileName);
@@ -351,6 +343,21 @@ namespace rlw
                         ClassicLauncher::Color tint);
 
     ////////////////////
+    ////////////////////
+    ////////////////////
+    ////////////////////
+
+    ClassicLauncher::Font GetFontDefault();
+    bool IsFontValid(ClassicLauncher::Font font);
+    void UnloadFont(ClassicLauncher::Font font);
+    ClassicLauncher::Font LoadFontEx(const char* fileName, int fontSize, int* codepoints, int codepointCount);
+    void DrawTextEx(ClassicLauncher::Font font,
+                    const char* text,
+                    ClassicLauncher::Vector2f position,
+                    float fontSize,
+                    float spacing,
+                    ClassicLauncher::Color tint);
+    ClassicLauncher::Vector2f MeasureTextEx(ClassicLauncher::Font font, const char* text, float fontSize, float spacing);
     
 
 

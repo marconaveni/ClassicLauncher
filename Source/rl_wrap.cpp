@@ -39,9 +39,6 @@ namespace rlw
         return { r.x, r.y, r.width, r.height };
     }
 
-
-  
-
     static ::FilePathList to_native_path(FilePathList f)
     {
         ::FilePathList n{};
@@ -278,19 +275,6 @@ namespace rlw
         return collision;
     }
 
-    Font GetFontDefault()
-    {
-        static ::Font s_default_native = ::GetFontDefault();
-
-        rlw::Font w{};
-        w.baseSize = s_default_native.baseSize;
-        w.glyphCount = s_default_native.glyphCount;
-        w.glyphPadding = s_default_native.glyphPadding;
-        w._native = &s_default_native;  // ponteiro estável para a estática
-        w._owned = false;               // NÃO descarregar: é o default
-        return w;
-    }
-
     const char* GetDirectoryPath(const char* filePath)
     {
         return ::GetDirectoryPath(filePath);
@@ -320,52 +304,6 @@ namespace rlw
     void MemFree(void* ptr)
     {
         ::MemFree(ptr);
-    }
-
-    // --- Fonte / Texto ---
-    bool IsFontValid(Font font)
-    {
-        if (!font._native) return false;
-        return ::IsFontValid(*static_cast<::Font*>(font._native));
-    }
-    void UnloadFont(Font font)
-    {
-        if (!font._native) return;
-        if (font._owned)
-        {
-            ::UnloadFont(*static_cast<::Font*>(font._native));
-            delete static_cast<::Font*>(font._native);
-        }
-        // se não é dono (default), não faz nada
-    }
-
-    Font LoadFontEx(const char* fileName, int fontSize, int* codepoints, int codepointCount)
-    {
-        ::Font* nf = new ::Font(::LoadFontEx(fileName, fontSize, codepoints, codepointCount));
-        rlw::Font w{};
-        w.baseSize = nf->baseSize;
-        w.glyphCount = nf->glyphCount;
-        w.glyphPadding = nf->glyphPadding;
-        w._native = nf;
-        w._owned = true;  // nós alocamos, então descarregamos depois
-        return w;
-    }
-
-    void DrawTextEx(Font font,
-                    const char* text,
-                    ClassicLauncher::Vector2f position,
-                    float fontSize,
-                    float spacing,
-                    ClassicLauncher::Color tint)
-    {
-        if (!font._native || !text) return;
-        ::DrawTextEx(*static_cast<::Font*>(font._native), text, to_native_vec(position), fontSize, spacing, to_native_color(tint));
-    }
-
-    ClassicLauncher::Vector2f MeasureTextEx(Font font, const char* text, float fontSize, float spacing)
-    {
-        if (!font._native || !text) return ClassicLauncher::Vector2f{ 0, 0 };
-        return to_wrap_vec(::MeasureTextEx(*static_cast<::Font*>(font._native), text, fontSize, spacing));
     }
 
     // --- Mouse ---
@@ -424,7 +362,6 @@ namespace rlw
         delete[] rayImages;
     }
 
-
     void BeginTextureMode(const ClassicLauncher::RenderTexture& target)
     {
         ::RenderTexture2D rayTarget;
@@ -475,6 +412,75 @@ namespace rlw
         rayTex.mipmaps = texture.GetMipmaps();
         rayTex.format = texture.GetFormat();
         ::DrawTexturePro(rayTex, to_native_rec(src), to_native_rec(dst), to_native_vec(origin), rotation, to_native_color(tint));
+    }
+
+    //////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+
+    ClassicLauncher::Font GetFontDefault()
+    {
+        static ::Font s_default_native = ::GetFontDefault();
+
+        ClassicLauncher::Font w{};
+        w.baseSize = s_default_native.baseSize;
+        w.glyphCount = s_default_native.glyphCount;
+        w.glyphPadding = s_default_native.glyphPadding;
+        w._native = &s_default_native;  // ponteiro estável para a estática
+        w._owned = false;               // NÃO descarregar: é o default
+        return w;
+    }
+
+    // --- Fonte / Texto ---
+    bool IsFontValid(ClassicLauncher::Font font)
+    {
+        if (!font._native) return false;
+        return ::IsFontValid(*static_cast<::Font*>(font._native));
+    }
+
+    void UnloadFont(ClassicLauncher::Font font)
+    {
+        if (!font._native) return;
+        if (font._owned)
+        {
+            ::UnloadFont(*static_cast<::Font*>(font._native));
+            delete static_cast<::Font*>(font._native);
+        }
+        // se não é dono (default), não faz nada
+    }
+
+    ClassicLauncher::Font LoadFontEx(const char* fileName, int fontSize, int* codepoints, int codepointCount)
+    {
+        ::Font* nf = new ::Font(::LoadFontEx(fileName, fontSize, codepoints, codepointCount));
+        ClassicLauncher::Font w{};
+        w.baseSize = nf->baseSize;
+        w.glyphCount = nf->glyphCount;
+        w.glyphPadding = nf->glyphPadding;
+        w._native = nf;
+        w._owned = true;  // nós alocamos, então descarregamos depois
+        return w;
+    }
+
+    void DrawTextEx(ClassicLauncher::Font font,
+                    const char* text,
+                    ClassicLauncher::Vector2f position,
+                    float fontSize,
+                    float spacing,
+                    ClassicLauncher::Color tint)
+    {
+        if (!font._native || !text) return;
+        ::DrawTextEx(*static_cast<::Font*>(font._native), text, to_native_vec(position), fontSize, spacing, to_native_color(tint));
+    }
+
+    ClassicLauncher::Vector2f MeasureTextEx(ClassicLauncher::Font font, const char* text, float fontSize, float spacing)
+    {
+        if (!font._native || !text) return ClassicLauncher::Vector2f{ 0, 0 };
+        return to_wrap_vec(::MeasureTextEx(*static_cast<::Font*>(font._native), text, fontSize, spacing));
     }
 
 }  // namespace rlw

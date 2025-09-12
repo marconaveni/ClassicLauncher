@@ -4,6 +4,7 @@
 #include <string>
 #include "Entity/EntityGui.h"
 #include "rl_wrap.h"
+#include "Graphics/Font.h"
 
 namespace ClassicLauncher
 {
@@ -41,7 +42,7 @@ namespace ClassicLauncher
 
     private:
 
-        rlw::Font mFont;
+        Font mFont;
         std::string mText;
         std::string mPathFont;
         int mSize;
