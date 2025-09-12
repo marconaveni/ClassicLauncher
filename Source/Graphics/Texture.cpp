@@ -5,7 +5,7 @@ namespace ray
 {
 #include "rlgl.h"
 }  // namespace ray
-
+#include "rl_wrap.h"
 
 namespace ClassicLauncher
 {
@@ -26,7 +26,7 @@ namespace ClassicLauncher
 
     bool Texture::LoadFromFile(const std::filesystem::path& fileName)
     {
-        Image image(fileName.string());
+        Image image = rlw::LoadImage(fileName.string().c_str());
         return LoadFromImage(&image);
     }
 
@@ -34,17 +34,17 @@ namespace ClassicLauncher
     {
         Unload();
 
-        if ((image->m_width == 0) && (image->m_height == 0))
+        if ((image->width == 0) && (image->height == 0))
         {
             return false;
         }
 
-        m_id = ray::rlLoadTexture(image->m_data, image->m_width, image->m_height, image->m_format, image->m_mipmaps);
+        m_id = ray::rlLoadTexture(image->data, image->width, image->height, image->format, image->mipmaps);
 
-        m_width = image->m_width;
-        m_height = image->m_height;
-        m_mipmaps = image->m_mipmaps;
-        m_format = image->m_format;
+        m_width = image->width;
+        m_height = image->height;
+        m_mipmaps = image->mipmaps;
+        m_format = image->format;
 
         return IsValid();
     }

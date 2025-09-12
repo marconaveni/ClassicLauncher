@@ -6,6 +6,7 @@
 //#include "vlc/vlc.h"
 #include "Data/Vector2.h"
 
+#include "Graphics/Image.h"
 #include "rl_wrap.h"
 
 struct libvlc_instance_t;
@@ -19,7 +20,7 @@ namespace ClassicLauncher
 
     struct VideoContext
     {
-        rlw::Image image[2];        // Imagem que será atualizada
+        Image image[2];        // Imagem que será atualizada
         std::mutex frameMutex[2];
         bool frameLock[2];
 	    int	frameId;
@@ -27,8 +28,8 @@ namespace ClassicLauncher
 
         VideoContext()
         {
-            image[0] = rlw::Image();
-            image[1] = rlw::Image();
+            image[0] = Image();
+            image[1] = Image();
             frameLock[0] = false;
             frameLock[1] = false;
             frameId = 0;

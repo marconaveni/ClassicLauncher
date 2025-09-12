@@ -39,19 +39,19 @@ namespace rlw
         return { r.x, r.y, r.width, r.height };
     }
 
-    static ::Image to_native_img(Image im)
+    static ::Image to_native_img(ClassicLauncher::Image* im)
     {
         ::Image n{};
-        n.data = im.data;
-        n.width = im.width;
-        n.height = im.height;
-        n.mipmaps = im.mipmaps;
-        n.format = im.format;
+        n.data = im->data;
+        n.width = im->width;
+        n.height = im->height;
+        n.mipmaps = im->mipmaps;
+        n.format = im->format;
         return n;
     }
-    static Image to_wrap_img(::Image im)
+    static ClassicLauncher::Image to_wrap_img(::Image im)
     {
-        Image w{};
+        ClassicLauncher::Image w{};
         w.data = im.data;
         w.width = im.width;
         w.height = im.height;
@@ -169,11 +169,11 @@ namespace rlw
     {
         ::SetWindowPosition(x, y);
     }
-    void SetWindowIcons(Image* images, int count)
+    void SetWindowIcons(ClassicLauncher::Image* images, int count)
     {
         // raylib espera ponteiro para Image nativo
         ::Image* native = new ::Image[count];
-        for (int i = 0; i < count; ++i) native[i] = to_native_img(images[i]);
+        for (int i = 0; i < count; ++i) native[i] = to_native_img(&images[i]);
         ::SetWindowIcons(native, count);
         delete[] native;
     }
@@ -234,31 +234,34 @@ namespace rlw
     }
 
     // --- Imagem / Textura ---
-    Image LoadImage(const char* fileName)
+    ClassicLauncher::Image LoadImage(const char* fileName)
     {
         return to_wrap_img(::LoadImage(fileName));
     }
-    void UnloadImage(Image image)
+    void UnloadImage(ClassicLauncher::Image image)
     {
-        ::UnloadImage(to_native_img(image));
+        ::UnloadImage(to_native_img(&image));
     }
-    void ImageResize(Image* image, int newWidth, int newHeight)
+    void ImageResize(ClassicLauncher::Image* image, int newWidth, int newHeight)
     {
-        ::Image tmp = to_native_img(*image);
+        ::Image tmp = to_native_img(image);
         ::ImageResize(&tmp, newWidth, newHeight);
         *image = to_wrap_img(tmp);
     }
-    void ImageResizeNN(Image* image, int newWidth, int newHeight)
+    void ImageResizeNN(ClassicLauncher::Image* image, int newWidth, int newHeight)
     {
-        ::Image tmp = to_native_img(*image);
+        ::Image tmp = to_native_img(image);
         ::ImageResizeNN(&tmp, newWidth, newHeight);
         *image = to_wrap_img(tmp);
     }
 
-    Texture2D LoadTextureFromImage(Image image)
+    Texture2D LoadTextureFromImage(ClassicLauncher::Image image)
     {
-        return to_wrap_texture(::LoadTextureFromImage(to_native_img(image)));
+        return to_wrap_texture(::LoadTextureFromImage(to_native_img(&image)));
     }
+
+
+
     void UnloadTexture(Texture2D texture)
     {
         ::UnloadTexture(to_native_texture(texture));
@@ -504,7 +507,7 @@ namespace rlw
         ::MemFree(ptr);
     }
 
-    Image MakeImage(void* data, int width, int height, int mipmaps, int format)
+    ClassicLauncher::Image MakeImage(void* data, int width, int height, int mipmaps, int format)
     {
         ::Image n{};
         n.data = data;
@@ -516,23 +519,23 @@ namespace rlw
     }
 
     // --- Imagem / Textura utilitários extras ---
-    bool IsImageValid(Image image)
+    bool IsImageValid(ClassicLauncher::Image image)
     {
-        return ::IsImageValid(to_native_img(image));
+        return ::IsImageValid(to_native_img(&image));
     }
     bool IsTextureValid(Texture2D tex)
     {
         return ::IsTextureValid(to_native_texture(tex));
     }
 
-    Image GenImageColor(int width, int height, ClassicLauncher::Color color)
+    ClassicLauncher::Image GenImageColor(int width, int height, ClassicLauncher::Color color)
     {
         return to_wrap_img(::GenImageColor(width, height, to_native_color(color)));
     }
 
-    Image ImageCopy(Image src)
+    ClassicLauncher::Image ImageCopy(ClassicLauncher::Image src)
     {
-        return to_wrap_img(::ImageCopy(to_native_img(src)));
+        return to_wrap_img(::ImageCopy(to_native_img(&src)));
     }
 
     void UpdateTexture(Texture2D texture, const void* pixels)

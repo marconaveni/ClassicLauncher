@@ -7,6 +7,7 @@
 #include <thread>
 
 #include "rl_wrap.h"
+#include "Graphics/Image.h"
 
 namespace ClassicLauncher
 {
@@ -20,11 +21,11 @@ namespace ClassicLauncher
         Sprite& operator=(const Sprite&) = delete;
         ~Sprite();
         void Load(const std::string& file, int width = 0, int height = 0, bool bAspectRatio = true);
-        void Load(const rlw::Image& newImage, int width = 0, int height = 0, bool bAspectRatio = true);
+        void Load(const Image& newImage, int width = 0, int height = 0, bool bAspectRatio = true);
         void Stop();
         void Join();
         rlw::Texture2D* GetTexture();
-        rlw::Image* GetImage();
+        Image* GetImage();
         void ResizeImage(int width, int height, bool bAspectRatio);
         void Unload();
         void UnloadTexture();
@@ -37,7 +38,7 @@ namespace ClassicLauncher
         std::atomic<bool> mIsImageLoaded;
         std::atomic<bool> mIsTextureLoaded;
         std::thread mWorkerThread;
-        rlw::Image mImage;
+        Image mImage;
         rlw::Texture2D mTexture;
         std::string mFilePath;
         void LoadImage(int width, int height, bool bAspectRatio);

@@ -5,6 +5,7 @@
 
 #include "Data/Vector2.h"
 #include "rl_wrap.h"
+#include "Graphics/Image.h"
 
 
 
@@ -14,8 +15,8 @@ namespace ClassicLauncher::UtilsFunctionLibrary
     void SetSizeWithProportionFit(Vector2f& texture, const int widthResize, const int heightResize);
     void SetSizeWithProportionFill(Vector2f& texture, const int widthResize, const int heightResize);
     void SetSizeWithProportion(Vector2f& texture, const int widthResize, const int heightResize, bool bFill = false);
-    void ImageResize(rlw::Image& image, const int newWidth, const int newHeight);
-    void ImageResizeNN(rlw::Image& image, const int newWidth, const int newHeight);
+    void ImageResize(Image& image, const int newWidth, const int newHeight);
+    void ImageResizeNN(Image& image, const int newWidth, const int newHeight);
     rlw::Texture2D LoadTexture(const std::string& path, int width = 0, int height = 0);
     int SetIndexArray(const int index, const int maxArrayLength);
     void UnloadClearTexture(rlw::Texture2D& texture);

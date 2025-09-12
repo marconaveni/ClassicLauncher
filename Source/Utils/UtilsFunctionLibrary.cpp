@@ -53,14 +53,14 @@ namespace ClassicLauncher
         }
     }
 
-    void UtilsFunctionLibrary::ImageResize(rlw::Image& image, const int newWidth, const int newHeight)
+    void UtilsFunctionLibrary::ImageResize(Image& image, const int newWidth, const int newHeight)
     {
         Vector2f newSize{ static_cast<float>(image.width), static_cast<float>(image.height) };
         SetSizeWithProportion(newSize, newWidth, newHeight);
         rlw::ImageResize(&image, static_cast<int>(newSize.x), static_cast<int>(newSize.y));
     }
 
-    void UtilsFunctionLibrary::ImageResizeNN(rlw::Image& image, const int newWidth, const int newHeight)
+    void UtilsFunctionLibrary::ImageResizeNN(Image& image, const int newWidth, const int newHeight)
     {
         Vector2f newSize{ static_cast<float>(image.width), static_cast<float>(image.height) };
         SetSizeWithProportion(newSize, newWidth, newHeight);
@@ -69,7 +69,7 @@ namespace ClassicLauncher
 
     rlw::Texture2D UtilsFunctionLibrary::LoadTexture(const std::string& path, int width, int height)
     {
-        rlw::Image img = rlw::LoadImage(path.c_str());
+        Image img = rlw::LoadImage(path.c_str());
         width = (width > 0) ? width : img.width;
         height = (height > 0) ? height : img.height;
         rlw::ImageResize(&img, width, height);

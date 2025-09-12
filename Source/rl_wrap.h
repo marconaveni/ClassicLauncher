@@ -12,6 +12,7 @@
 #include "Data/Vector2.h"
 #include "Data/Rectangle.h"
 #include "Data/Color.h"
+#include "Graphics/Image.h"
 
 namespace rlw
 {
@@ -227,14 +228,7 @@ namespace rlw
 
     
 
-    struct Image
-    {
-        void* data;
-        int width;
-        int height;
-        int mipmaps;
-        int format;
-    };
+
 
     struct Texture2D
     {
@@ -309,12 +303,12 @@ namespace rlw
 
 
     // --- Imagem / Textura ---
-    Image LoadImage(const char* fileName);
-    void UnloadImage(Image image);
-    void ImageResize(Image* image, int newWidth, int newHeight);
-    void ImageResizeNN(Image* image, int newWidth, int newHeight);
+    ClassicLauncher::Image LoadImage(const char* fileName);
+    void UnloadImage(ClassicLauncher::Image image);
+    void ImageResize(ClassicLauncher::Image* image, int newWidth, int newHeight);
+    void ImageResizeNN(ClassicLauncher::Image* image, int newWidth, int newHeight);
 
-    Texture2D LoadTextureFromImage(Image image);
+    Texture2D LoadTextureFromImage(ClassicLauncher::Image image);
     void UnloadTexture(Texture2D texture);
     void SetTextureFilter(Texture2D texture, int filter);
 
@@ -360,10 +354,10 @@ namespace rlw
     void DrawTexture(Texture2D texture, int posX, int posY, ClassicLauncher::Color tint);
     void DrawTexturePro(Texture2D texture, ClassicLauncher::RectFloat src, ClassicLauncher::RectFloat dst, ClassicLauncher::Vector2f origin, float rotation, ClassicLauncher::Color tint);
 
-    bool IsImageValid(Image image);      // mapeia para IsImageReady
+    bool IsImageValid(ClassicLauncher::Image image);      // mapeia para IsImageReady
     bool IsTextureValid(Texture2D tex);  // mapeia para IsTextureReady
-    Image GenImageColor(int width, int height, ClassicLauncher::Color color);
-    Image ImageCopy(Image src);
+    ClassicLauncher::Image GenImageColor(int width, int height, ClassicLauncher::Color color);
+    ClassicLauncher::Image ImageCopy(ClassicLauncher::Image src);
     void UpdateTexture(Texture2D texture, const void* pixels);
 
     bool IsFontValid(Font font);  
@@ -437,7 +431,7 @@ namespace rlw
     void* MemAlloc(unsigned int size);
     void MemFree(void* ptr);
 
-    Image MakeImage(void* data, int width, int height, int mipmaps, int format);
+    ClassicLauncher::Image MakeImage(void* data, int width, int height, int mipmaps, int format);
 
     //// isso vai sair daqui
 

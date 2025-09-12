@@ -153,7 +153,7 @@ namespace ClassicLauncher
 
         mContext.image[0] = rlw::MakeImage(rlw::MemAlloc(mWidthVideo * mHeightVideo * 4), mWidthVideo, mHeightVideo, 1, rlw::PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
         
-        mContext.image[1] = ImageCopy(mContext.image[0]);
+        mContext.image[1] = rlw::ImageCopy(mContext.image[0]);
 
         texture = rlw::LoadTextureFromImage(mContext.image[0]);
 
@@ -243,15 +243,15 @@ namespace ClassicLauncher
             rlw::UnloadTexture(texture);
             texture = rlw::Texture2D();
         }
-        if (IsImageValid(mContext.image[0]))
+        if (rlw::IsImageValid(mContext.image[0]))
         {
-            UnloadImage(mContext.image[0]);
-            mContext.image[0] = rlw::Image();
+            rlw::UnloadImage(mContext.image[0]);
+            mContext.image[0] = Image();
         }
-        if (IsImageValid(mContext.image[1]))
+        if (rlw::IsImageValid(mContext.image[1]))
         {
-            UnloadImage(mContext.image[1]);
-            mContext.image[1] = rlw::Image();
+            rlw::UnloadImage(mContext.image[1]);
+            mContext.image[1] = Image();
         }
     }
 

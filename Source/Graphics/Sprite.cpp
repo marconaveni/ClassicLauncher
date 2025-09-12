@@ -34,15 +34,15 @@ namespace ClassicLauncher
         }
     }
 
-    void Sprite::Load(const rlw::Image& newImage, const int width, const int height, const bool bAspectRatio)
+    void Sprite::Load(const Image& newImage, const int width, const int height, const bool bAspectRatio)
     {
         if (rlw::IsImageValid(newImage))
         {
             Unload();
-            mImage = ImageCopy(newImage);
+            mImage = rlw::ImageCopy(newImage);
             mFilePath = "[loaded from memory]";
             ResizeImage(width, height, bAspectRatio);
-            mIsImageLoaded = IsImageValid(mImage);
+            mIsImageLoaded = rlw::IsImageValid(mImage);
             LOG(LOG_CLASSIC_TRACE, "Image copied successfully");
         }
     }
@@ -86,8 +86,8 @@ namespace ClassicLauncher
     {
         if (!mIsTextureLoaded && mIsImageLoaded)
         {
-            mTexture = LoadTextureFromImage(mImage);
-            mIsTextureLoaded = IsTextureValid(mTexture);
+            mTexture = rlw::LoadTextureFromImage(mImage);
+            mIsTextureLoaded = rlw::IsTextureValid(mTexture);
             LOG(LOG_CLASSIC_TRACE, "Texture loaded [ID %d] from Image - \"%s\"", mTexture.id, mFilePath.c_str());
             UnloadImage();
         }
@@ -98,7 +98,7 @@ namespace ClassicLauncher
         return nullptr;
     }
 
-    rlw::Image* Sprite::GetImage()
+    Image* Sprite::GetImage()
     {
         if (mIsImageLoaded)
         {
@@ -110,7 +110,7 @@ namespace ClassicLauncher
     void Sprite::ResizeImage(const int width, const int height, bool bAspectRatio)
     {
         std::lock_guard<std::mutex> guard(mMutexSprite);
-        if (width > 0 && height > 0 && IsImageValid(mImage))
+        if (width > 0 && height > 0 && rlw::IsImageValid(mImage))
         {
             if (bAspectRatio)
             {
@@ -118,7 +118,7 @@ namespace ClassicLauncher
             }
             else
             {
-                ImageResize(&mImage, width, height);
+                rlw::ImageResize(&mImage, width, height);
             }
             if (mIsTextureLoaded)
             {
