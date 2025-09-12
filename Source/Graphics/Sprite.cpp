@@ -34,15 +34,15 @@ namespace ClassicLauncher
         }
     }
 
-    void Sprite::Load(const Image& newImage, const int width, const int height, const bool bAspectRatio)
+    void Sprite::Load(Image& newImage, const int width, const int height, const bool bAspectRatio)
     {
-        if (rlw::IsImageValid(newImage))
+        if (newImage.IsValid())
         {
             Unload();
-            mImage = rlw::ImageCopy(newImage);
+            newImage.CopyTo(mImage);
             mFilePath = "[loaded from memory]";
             ResizeImage(width, height, bAspectRatio);
-            mIsImageLoaded = rlw::IsImageValid(mImage);
+            mIsImageLoaded = mImage.IsValid();
             LOG(LOG_CLASSIC_TRACE, "Image copied successfully");
         }
     }
@@ -66,11 +66,11 @@ namespace ClassicLauncher
         if (mIsKeepRunning)
         {
             // std::this_thread::sleep_for(std::chrono::seconds(1)); //for test
-            mImage = rlw::LoadImage(mFilePath.c_str());
-            if (rlw::IsImageValid(mImage))
+            mImage.LoadFromFile(mFilePath);
+            if (mImage.IsValid())
             {
                 ResizeImage(width, height, bAspectRatio);
-                mIsImageLoaded = rlw::IsImageValid(mImage);
+                mIsImageLoaded = mImage.IsValid();
                 LOG(LOG_CLASSIC_TRACE, "Image loaded successfully from - \"%s\"", mFilePath.c_str());
             }
             else
@@ -110,7 +110,7 @@ namespace ClassicLauncher
     void Sprite::ResizeImage(const int width, const int height, bool bAspectRatio)
     {
         std::lock_guard<std::mutex> guard(mMutexSprite);
-        if (width > 0 && height > 0 && rlw::IsImageValid(mImage))
+        if (width > 0 && height > 0 && mImage.IsValid())
         {
             if (bAspectRatio)
             {
@@ -118,7 +118,8 @@ namespace ClassicLauncher
             }
             else
             {
-                rlw::ImageResize(&mImage, width, height);
+                //rlw::ImageResize(&mImage, width, height);
+                mImage.Resize(width, height);
             }
             if (mIsTextureLoaded)
             {
@@ -146,9 +147,9 @@ namespace ClassicLauncher
 
     void Sprite::UnloadImage()
     {
-        if (mIsImageLoaded && rlw::IsImageValid(mImage))
+        if (mIsImageLoaded && mImage.IsValid())
         {
-            rlw::UnloadImage(mImage);
+            mImage.Unload();
             LOG(LOG_CLASSIC_TRACE, "Unloaded Image from - %s", mFilePath.c_str());
             mImage = {};
             mIsImageLoaded = false;

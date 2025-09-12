@@ -26,7 +26,8 @@ namespace ClassicLauncher
 
     bool Texture::LoadFromFile(const std::filesystem::path& fileName)
     {
-        Image image = rlw::LoadImage(fileName.string().c_str());
+        Image image;
+        image.LoadFromFile(fileName);
         return LoadFromImage(&image);
     }
 

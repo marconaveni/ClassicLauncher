@@ -21,7 +21,7 @@ namespace ClassicLauncher
         Sprite& operator=(const Sprite&) = delete;
         ~Sprite();
         void Load(const std::string& file, int width = 0, int height = 0, bool bAspectRatio = true);
-        void Load(const Image& newImage, int width = 0, int height = 0, bool bAspectRatio = true);
+        void Load(Image& newImage, int width = 0, int height = 0, bool bAspectRatio = true);
         void Stop();
         void Join();
         rlw::Texture2D* GetTexture();

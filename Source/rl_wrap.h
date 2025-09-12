@@ -9,16 +9,13 @@
 // Namespace: rlw
 
 #include <cstdarg>
-#include "Data/Vector2.h"
-#include "Data/Rectangle.h"
 #include "Data/Color.h"
+#include "Data/Rectangle.h"
+#include "Data/Vector2.h"
 #include "Graphics/Image.h"
 
 namespace rlw
 {
-
-
-
 
     // Mouse buttons
     typedef enum
@@ -31,7 +28,6 @@ namespace rlw
         MOUSE_BUTTON_FORWARD = 5,  // Mouse button forward (advanced mouse device)
         MOUSE_BUTTON_BACK = 6,     // Mouse button back (advanced mouse device)
     } MouseButton;
-
 
     // Gamepad buttons
     typedef enum
@@ -102,11 +98,10 @@ namespace rlw
     // NOTE 2: Filter is accordingly set for minification and magnification
     typedef enum
     {
-        TEXTURE_FILTER_POINT = 0,        // No filter, just pixel approximation
-        TEXTURE_FILTER_BILINEAR,         // Linear filtering
-        TEXTURE_FILTER_TRILINEAR,        // Trilinear filtering (linear with mipmaps)
+        TEXTURE_FILTER_POINT = 0,  // No filter, just pixel approximation
+        TEXTURE_FILTER_BILINEAR,   // Linear filtering
+        TEXTURE_FILTER_TRILINEAR,  // Trilinear filtering (linear with mipmaps)
     } TextureFilter;
-
 
     // Keyboard keys (US keyboard layout)
     // NOTE: Use GetKeyPressed() to allow redefining
@@ -224,12 +219,6 @@ namespace rlw
         KEY_KP_EQUAL = 336,     // Key: Keypad =
     } KeyboardKey;
 
-
-
-    
-
-
-
     struct Texture2D
     {
         unsigned int id;
@@ -245,7 +234,6 @@ namespace rlw
         Texture2D texture;
         Texture2D depth;  // compat com raylib >=4.x
     };
-
 
     struct AudioStream
     {
@@ -276,7 +264,6 @@ namespace rlw
         char** paths;
     };
 
-
     struct Font
     {
         int baseSize{};
@@ -287,28 +274,14 @@ namespace rlw
         bool _owned{ false };  // true: veio de LoadFontEx (descarrega); false: default font (não descarrega)
     };
 
-
     // --- Logging / Config / Janela ---
     void SetTraceLogCallback(void (*callback)(int logLevel, const char* text, va_list args));
     void SetTraceLogLevel(int logLevel);
 
-
-
-
-
-
-
     int GetFPS();
     float GetFrameTime();
 
-
-    // --- Imagem / Textura ---
-    ClassicLauncher::Image LoadImage(const char* fileName);
-    void UnloadImage(ClassicLauncher::Image image);
-    void ImageResize(ClassicLauncher::Image* image, int newWidth, int newHeight);
-    void ImageResizeNN(ClassicLauncher::Image* image, int newWidth, int newHeight);
-
-    Texture2D LoadTextureFromImage(ClassicLauncher::Image image);
+    
     void UnloadTexture(Texture2D texture);
     void SetTextureFilter(Texture2D texture, int filter);
 
@@ -352,18 +325,25 @@ namespace rlw
 
     // Texturas simples e "pro"
     void DrawTexture(Texture2D texture, int posX, int posY, ClassicLauncher::Color tint);
-    void DrawTexturePro(Texture2D texture, ClassicLauncher::RectFloat src, ClassicLauncher::RectFloat dst, ClassicLauncher::Vector2f origin, float rotation, ClassicLauncher::Color tint);
+    void DrawTexturePro(Texture2D texture,
+                        ClassicLauncher::RectFloat src,
+                        ClassicLauncher::RectFloat dst,
+                        ClassicLauncher::Vector2f origin,
+                        float rotation,
+                        ClassicLauncher::Color tint);
 
-    bool IsImageValid(ClassicLauncher::Image image);      // mapeia para IsImageReady
     bool IsTextureValid(Texture2D tex);  // mapeia para IsTextureReady
-    ClassicLauncher::Image GenImageColor(int width, int height, ClassicLauncher::Color color);
-    ClassicLauncher::Image ImageCopy(ClassicLauncher::Image src);
     void UpdateTexture(Texture2D texture, const void* pixels);
 
-    bool IsFontValid(Font font);  
+    bool IsFontValid(Font font);
     void UnloadFont(Font font);
     Font LoadFontEx(const char* fileName, int fontSize, int* codepoints, int codepointCount);
-    void DrawTextEx(Font font, const char* text, ClassicLauncher::Vector2f position, float fontSize, float spacing, ClassicLauncher::Color tint);
+    void DrawTextEx(Font font,
+                    const char* text,
+                    ClassicLauncher::Vector2f position,
+                    float fontSize,
+                    float spacing,
+                    ClassicLauncher::Color tint);
     ClassicLauncher::Vector2f MeasureTextEx(Font font, const char* text, float fontSize, float spacing);
 
     bool IsMouseButtonPressed(int button);
@@ -385,8 +365,8 @@ namespace rlw
     ClassicLauncher::Vector2f Vector2Clamp(ClassicLauncher::Vector2f value, ClassicLauncher::Vector2f min, ClassicLauncher::Vector2f max);
 
     // --- Áudio ---
-    //void InitAudioDevice();
-    //void CloseAudioDevice();
+    // void InitAudioDevice();
+    // void CloseAudioDevice();
 
     // Music (stream)
     // Music LoadMusicStream(const char* fileName);
@@ -431,13 +411,21 @@ namespace rlw
     void* MemAlloc(unsigned int size);
     void MemFree(void* ptr);
 
-    ClassicLauncher::Image MakeImage(void* data, int width, int height, int mipmaps, int format);
-
+    // --- Imagem / Textura ---
+    // bool IsImageValid(ClassicLauncher::Image image);  // mapeia para IsImageReady
+    // void UnloadImage(ClassicLauncher::Image image);
+    // void ImageResize(ClassicLauncher::Image* image, int newWidth, int newHeight);
+    // void ImageResizeNN(ClassicLauncher::Image* image, int newWidth, int newHeight);
+    // ClassicLauncher::Image ImageCopy(ClassicLauncher::Image src);
+    // ClassicLauncher::Image LoadImage(const char* fileName);
+    //ClassicLauncher::Image GenImageColor(int width, int height, ClassicLauncher::Color color);
+    //ClassicLauncher::Image MakeImage(void* data, int width, int height, int mipmaps, int format);
+    Texture2D LoadTextureFromImage(ClassicLauncher::Image image);
     //// isso vai sair daqui
 
     // Áudio – sanity checks e debug
-    //bool IsAudioDeviceReady();           // proxy de raylib
-   // void LogMusicState(const Music& m);  // imprime campos úteis do Music
+    // bool IsAudioDeviceReady();           // proxy de raylib
+    // void LogMusicState(const Music& m);  // imprime campos úteis do Music
 
 }  // namespace rlw
 

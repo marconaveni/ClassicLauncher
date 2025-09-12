@@ -1,8 +1,8 @@
 #include "VideoPlayer.h"
+#include <vlc/vlc.h>
 #include "Utils/Log.h"
 #include "Utils/Math.h"
 #include "Utils/UtilsFunctionLibrary.h"
-#include <vlc/vlc.h>
 
 namespace ClassicLauncher
 {
@@ -128,7 +128,7 @@ namespace ClassicLauncher
 
         for (unsigned track = 0; track < track_count; ++track)
         {
-            //libvlc_media_track_t* tr = tracks[track];
+            // libvlc_media_track_t* tr = tracks[track];
             if (tracks[track]->i_type == libvlc_track_video)
             {
                 mWidthVideo = tracks[track]->video->i_width;
@@ -145,15 +145,13 @@ namespace ClassicLauncher
         mWidthVideo = (int)textureSize.x;
         mHeightVideo = (int)textureSize.y;
 
-        // mContext.image[0] = { MemAlloc(mWidthVideo * mHeightVideo * 4),  // 4 bytes pixel (RGBA)
-        //                       mWidthVideo,
-        //                       mHeightVideo,
-        //                       1,
-        //                       PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 };
+        mContext.image[0] = { rlw::MemAlloc(mWidthVideo * mHeightVideo * 4),  // 4 bytes pixel (RGBA)
+                              mWidthVideo,
+                              mHeightVideo,
+                              1,
+                              rlw::PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 };
 
-        mContext.image[0] = rlw::MakeImage(rlw::MemAlloc(mWidthVideo * mHeightVideo * 4), mWidthVideo, mHeightVideo, 1, rlw::PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
-        
-        mContext.image[1] = rlw::ImageCopy(mContext.image[0]);
+        mContext.image[0].CopyTo(mContext.image[1]);
 
         texture = rlw::LoadTextureFromImage(mContext.image[0]);
 
@@ -243,14 +241,14 @@ namespace ClassicLauncher
             rlw::UnloadTexture(texture);
             texture = rlw::Texture2D();
         }
-        if (rlw::IsImageValid(mContext.image[0]))
+        if (mContext.image[0].IsValid())
         {
-            rlw::UnloadImage(mContext.image[0]);
+            mContext.image[0].Unload();
             mContext.image[0] = Image();
         }
-        if (rlw::IsImageValid(mContext.image[1]))
+        if (mContext.image[1].IsValid())
         {
-            rlw::UnloadImage(mContext.image[1]);
+            mContext.image[1].Unload();
             mContext.image[1] = Image();
         }
     }
@@ -262,7 +260,8 @@ namespace ClassicLauncher
 
     Vector2f VideoPlayer::GetVideoSize()
     {
-        return (IsTextureValid(texture)) ? Vector2f{ static_cast<float>(texture.width), static_cast<float>(texture.height) } : Vector2f{ 0, 0 };
+        return (IsTextureValid(texture)) ? Vector2f{ static_cast<float>(texture.width), static_cast<float>(texture.height) }
+                                         : Vector2f{ 0, 0 };
         // return Vector2{ static_cast<float>(mWidth), static_cast<float>(mHeight) };
     }
 

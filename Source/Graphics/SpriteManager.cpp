@@ -9,12 +9,14 @@ namespace ClassicLauncher
 
     void SpriteManager::Init()
     {
-        Image transparentImage = rlw::GenImageColor(1, 1, Color::Transparent);
-        Image blackImage = rlw::GenImageColor(1, 1, Color::Black);
+        Image transparentImage;
+        transparentImage.GenerateColor(1, 1, Color::Transparent);
+        Image blackImage;
+        blackImage.GenerateColor(1, 1, Color::Black);
         LoadSprite("transparent", transparentImage);
         LoadSprite("black", blackImage);
-        rlw::UnloadImage(transparentImage);
-        rlw::UnloadImage(blackImage);
+        transparentImage.Unload();
+        blackImage.Unload();
     }
 
     void SpriteManager::LoadSprite(const std::string& name, const std::string& fileName, const int width, const int height, bool bAspectRatio)
@@ -22,7 +24,7 @@ namespace ClassicLauncher
         mSpriteMap[name].Load(fileName, width, height, bAspectRatio);
     }
 
-    void SpriteManager::LoadSprite(const std::string& name, const Image& image, const int width, const int height, bool bAspectRatio)
+    void SpriteManager::LoadSprite(const std::string& name, Image& image, const int width, const int height, bool bAspectRatio)
     {
         mSpriteMap[name].Load(image, width, height, bAspectRatio);
     }

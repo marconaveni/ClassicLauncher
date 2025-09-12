@@ -233,34 +233,6 @@ namespace rlw
         ::ToggleFullscreen();
     }
 
-    // --- Imagem / Textura ---
-    ClassicLauncher::Image LoadImage(const char* fileName)
-    {
-        return to_wrap_img(::LoadImage(fileName));
-    }
-    void UnloadImage(ClassicLauncher::Image image)
-    {
-        ::UnloadImage(to_native_img(&image));
-    }
-    void ImageResize(ClassicLauncher::Image* image, int newWidth, int newHeight)
-    {
-        ::Image tmp = to_native_img(image);
-        ::ImageResize(&tmp, newWidth, newHeight);
-        *image = to_wrap_img(tmp);
-    }
-    void ImageResizeNN(ClassicLauncher::Image* image, int newWidth, int newHeight)
-    {
-        ::Image tmp = to_native_img(image);
-        ::ImageResizeNN(&tmp, newWidth, newHeight);
-        *image = to_wrap_img(tmp);
-    }
-
-    Texture2D LoadTextureFromImage(ClassicLauncher::Image image)
-    {
-        return to_wrap_texture(::LoadTextureFromImage(to_native_img(&image)));
-    }
-
-
 
     void UnloadTexture(Texture2D texture)
     {
@@ -507,36 +479,15 @@ namespace rlw
         ::MemFree(ptr);
     }
 
-    ClassicLauncher::Image MakeImage(void* data, int width, int height, int mipmaps, int format)
-    {
-        ::Image n{};
-        n.data = data;
-        n.width = width;
-        n.height = height;
-        n.mipmaps = mipmaps;
-        n.format = format;
-        return to_wrap_img(n);
-    }
 
-    // --- Imagem / Textura utilitários extras ---
-    bool IsImageValid(ClassicLauncher::Image image)
-    {
-        return ::IsImageValid(to_native_img(&image));
-    }
+
+
     bool IsTextureValid(Texture2D tex)
     {
         return ::IsTextureValid(to_native_texture(tex));
     }
 
-    ClassicLauncher::Image GenImageColor(int width, int height, ClassicLauncher::Color color)
-    {
-        return to_wrap_img(::GenImageColor(width, height, to_native_color(color)));
-    }
 
-    ClassicLauncher::Image ImageCopy(ClassicLauncher::Image src)
-    {
-        return to_wrap_img(::ImageCopy(to_native_img(&src)));
-    }
 
     void UpdateTexture(Texture2D texture, const void* pixels)
     {
@@ -625,5 +576,65 @@ namespace rlw
     // }
 
 
+
+
+    // --- Imagem / Textura utilitários extras ---
+    //bool IsImageValid(ClassicLauncher::Image image)
+    //{
+    //    return ::IsImageValid(to_native_img(&image));
+    //}
+
+    //void UnloadImage(ClassicLauncher::Image image)
+    //{
+    //    ::UnloadImage(to_native_img(&image));
+    //}
+
+
+    //void ImageResize(ClassicLauncher::Image* image, int newWidth, int newHeight)
+    //{
+    //    ::Image tmp = to_native_img(image);
+    //    ::ImageResize(&tmp, newWidth, newHeight);
+    //    *image = to_wrap_img(tmp);
+    //}
+    //void ImageResizeNN(ClassicLauncher::Image* image, int newWidth, int newHeight)
+    //{
+    //    ::Image tmp = to_native_img(image);
+    //    ::ImageResizeNN(&tmp, newWidth, newHeight);
+    //    *image = to_wrap_img(tmp);
+    //}
+
+
+    // ClassicLauncher::Image ImageCopy(ClassicLauncher::Image src)
+    // {
+    //     return to_wrap_img(::ImageCopy(to_native_img(&src)));
+    // }
+
+        // --- Imagem / Textura ---
+    //ClassicLauncher::Image LoadImage(const char* fileName)
+    //{
+    //    return to_wrap_img(::LoadImage(fileName));
+    //}
+
+    //ClassicLauncher::Image GenImageColor(int width, int height, ClassicLauncher::Color color)
+    //{
+    //    return to_wrap_img(::GenImageColor(width, height, to_native_color(color)));
+    //}
+
+    // ClassicLauncher::Image MakeImage(void* data, int width, int height, int mipmaps, int format)
+    // {
+    //     ::Image n{};
+    //     n.data = data;
+    //     n.width = width;
+    //     n.height = height;
+    //     n.mipmaps = mipmaps;
+    //     n.format = format;
+    //     return to_wrap_img(n);
+    // }
+
+
+     Texture2D LoadTextureFromImage(ClassicLauncher::Image image)
+     {
+         return to_wrap_texture(::LoadTextureFromImage(to_native_img(&image)));
+     }
 
 }  // namespace rlw

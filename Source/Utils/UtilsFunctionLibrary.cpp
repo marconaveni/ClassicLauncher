@@ -2,6 +2,7 @@
 
 #include <cstdlib>
 #include "StringFunctionLibrary.h"
+#include "Graphics/Image.h"
 
 namespace ClassicLauncher
 {
@@ -57,24 +58,27 @@ namespace ClassicLauncher
     {
         Vector2f newSize{ static_cast<float>(image.width), static_cast<float>(image.height) };
         SetSizeWithProportion(newSize, newWidth, newHeight);
-        rlw::ImageResize(&image, static_cast<int>(newSize.x), static_cast<int>(newSize.y));
+        // rlw::ImageResize(&image, static_cast<int>(newSize.x), static_cast<int>(newSize.y));
+        image.Resize( static_cast<int>(newSize.x), static_cast<int>(newSize.y));
     }
 
     void UtilsFunctionLibrary::ImageResizeNN(Image& image, const int newWidth, const int newHeight)
     {
         Vector2f newSize{ static_cast<float>(image.width), static_cast<float>(image.height) };
         SetSizeWithProportion(newSize, newWidth, newHeight);
-        rlw::ImageResizeNN(&image, static_cast<int>(newSize.x), static_cast<int>(newSize.y));
+        // rlw::ImageResizeNN(&image, static_cast<int>(newSize.x), static_cast<int>(newSize.y));
+        image.ResizeNN( static_cast<int>(newSize.x), static_cast<int>(newSize.y));
     }
 
     rlw::Texture2D UtilsFunctionLibrary::LoadTexture(const std::string& path, int width, int height)
     {
-        Image img = rlw::LoadImage(path.c_str());
-        width = (width > 0) ? width : img.width;
-        height = (height > 0) ? height : img.height;
-        rlw::ImageResize(&img, width, height);
-        const rlw::Texture2D texture = rlw::LoadTextureFromImage(img);
-        rlw::UnloadImage(img);
+        Image image;
+        image.LoadFromFile(path);
+        width = (width > 0) ? width : image.width;
+        height = (height > 0) ? height : image.height;
+        image.Resize( width, height);
+        const rlw::Texture2D texture = rlw::LoadTextureFromImage(image);
+        image.Unload();
         return texture;
     }
 
