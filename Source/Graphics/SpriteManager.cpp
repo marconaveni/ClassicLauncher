@@ -35,7 +35,7 @@ namespace ClassicLauncher
         mSpriteMap[name].Load(fileName, width, height, bAspectRatio);
     }
 
-    rlw::Texture2D* SpriteManager::GetTexture(const std::string& name)
+    Texture* SpriteManager::GetTexture(const std::string& name)
     {
         auto it = mSpriteMap.find(name);
         if (it == mSpriteMap.end())

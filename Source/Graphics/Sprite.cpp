@@ -3,6 +3,9 @@
 #include <string>
 #include <thread>
 #include "Utils/Log.h"
+#include "Utils/Log.h"
+#include "ClassicAssert.h"
+
 
 #include "Utils/UtilsFunctionLibrary.h"
 
@@ -82,13 +85,14 @@ namespace ClassicLauncher
         Stop();
     }
 
-    rlw::Texture2D* Sprite::GetTexture()
+    Texture* Sprite::GetTexture()
     {
         if (!mIsTextureLoaded && mIsImageLoaded)
         {
-            mTexture = rlw::LoadTextureFromImage(mImage);
-            mIsTextureLoaded = rlw::IsTextureValid(mTexture);
-            LOG(LOG_CLASSIC_TRACE, "Texture loaded [ID %d] from Image - \"%s\"", mTexture.id, mFilePath.c_str());
+            // mTexture = rlw::LoadTextureFromImage(mImage);
+            mTexture.LoadFromImage(&mImage);
+            mIsTextureLoaded = mTexture.IsValid();
+            LOG(LOG_CLASSIC_TRACE, "Texture loaded [ID %d] from Image - \"%s\"", mTexture.GetId(), mFilePath.c_str());
             UnloadImage();
         }
         if (mIsTextureLoaded)
@@ -123,7 +127,7 @@ namespace ClassicLauncher
             }
             if (mIsTextureLoaded)
             {
-                UpdateTexture(mTexture, mImage.data);
+                mTexture.Update(mImage.data);
             }
         }
     }
@@ -136,11 +140,10 @@ namespace ClassicLauncher
 
     void Sprite::UnloadTexture()
     {
-        if (mIsTextureLoaded && rlw::IsTextureValid(mTexture))
+        if (mIsTextureLoaded && mTexture.IsValid())
         {
-            rlw::UnloadTexture(mTexture);
-            LOG(LOG_CLASSIC_TRACE, "Unloaded Texture [ID %d] from - \"%s\"", mTexture.id, mFilePath.c_str());
-            mTexture = {};
+            mTexture.Unload();
+            LOG(LOG_CLASSIC_TRACE, "Unloaded Texture [ID %d] from - \"%s\"", mTexture.GetId(), mFilePath.c_str());
             mIsTextureLoaded = false;
         }
     }

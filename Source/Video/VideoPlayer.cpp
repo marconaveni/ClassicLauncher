@@ -153,7 +153,7 @@ namespace ClassicLauncher
 
         mContext.image[0].CopyTo(mContext.image[1]);
 
-        texture = rlw::LoadTextureFromImage(mContext.image[0]);
+        texture.LoadFromImage(&mContext.image[0]); 
 
         libvlc_video_set_format(mMediaPlayer, "RGBA", mWidthVideo, mHeightVideo, mWidthVideo * 4);
         libvlc_video_set_callbacks(mMediaPlayer, lock, unlock, display, &mContext);
@@ -200,7 +200,8 @@ namespace ClassicLauncher
         if (mContext.frameLock[frame])
         {
             mContext.frameMutex[frame].lock();
-            rlw::UpdateTexture(texture, mContext.image[frame].data);
+            //rlw::UpdateTexture(texture, mContext.image[frame].data);
+            texture.Update(mContext.image[frame].data);
             mContext.frameLock[frame] = false;
             LOG(LOG_CLASSIC_TRACE, "video texture updated %d", mContext.countFrame);
             mContext.frameMutex[frame].unlock();
@@ -236,10 +237,10 @@ namespace ClassicLauncher
         }
 
         // Release raylib resources
-        if (rlw::IsTextureValid(texture))
+        if (texture.IsValid())
         {
-            rlw::UnloadTexture(texture);
-            texture = rlw::Texture2D();
+            texture.Unload();
+            //texture = rlw::Texture2D();
         }
         if (mContext.image[0].IsValid())
         {
@@ -253,14 +254,14 @@ namespace ClassicLauncher
         }
     }
 
-    rlw::Texture2D* VideoPlayer::GetVideoTexture()
+    Texture* VideoPlayer::GetVideoTexture()
     {
-        return (IsTextureValid(texture)) ? &texture : nullptr;
+        return (texture.IsValid()) ? &texture : nullptr;
     }
 
     Vector2f VideoPlayer::GetVideoSize()
     {
-        return (IsTextureValid(texture)) ? Vector2f{ static_cast<float>(texture.width), static_cast<float>(texture.height) }
+        return (texture.IsValid()) ? Vector2f{ static_cast<float>(texture.GetSize().x), static_cast<float>(texture.GetSize().y) }
                                          : Vector2f{ 0, 0 };
         // return Vector2{ static_cast<float>(mWidth), static_cast<float>(mHeight) };
     }

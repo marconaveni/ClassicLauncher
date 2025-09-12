@@ -62,15 +62,7 @@ namespace ClassicLauncher
     void RenderScreen::BeginRender()
     {
         RenderValues();
-
-        rlw::RenderTexture2D target;
-        target.id = mRenderTexture->GetId();
-        target.texture.id = mRenderTexture->GetTextureId();
-        target.texture.width = mRenderTexture->GetSize().x;
-        target.texture.height = mRenderTexture->GetSize().y;
-
-
-        rlw::BeginTextureMode(target);
+        rlw::BeginTextureMode(*mRenderTexture);
         rlw::ClearBackground(Color::WhiteGray);
     }
 
@@ -103,10 +95,8 @@ namespace ClassicLauncher
             mRenderTexture->SetSmooth(true);
         }
 #endif
-        rlw::Texture2D texture;
-        texture = { mRenderTexture->GetTextureId(), mRenderTexture->GetSize().x, mRenderTexture->GetSize().y, 0, 0 };
         // Draw render texture to screen, properly scaled
-        rlw::DrawTexturePro(texture, mSource, mDest, { 0.0f, 0.0f }, 0.0f, Color::White);
+        rlw::DrawTexturePro(*mRenderTexture->GetTexture(), mSource, mDest, { 0.0f, 0.0f }, 0.0f, Color::White);
     }
 
     void RenderScreen::Unload()

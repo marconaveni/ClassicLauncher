@@ -8,6 +8,7 @@
 
 #include "rl_wrap.h"
 #include "Graphics/Image.h"
+#include "Graphics/Texture.h"
 
 namespace ClassicLauncher
 {
@@ -24,7 +25,7 @@ namespace ClassicLauncher
         void Load(Image& newImage, int width = 0, int height = 0, bool bAspectRatio = true);
         void Stop();
         void Join();
-        rlw::Texture2D* GetTexture();
+        Texture* GetTexture();
         Image* GetImage();
         void ResizeImage(int width, int height, bool bAspectRatio);
         void Unload();
@@ -39,7 +40,7 @@ namespace ClassicLauncher
         std::atomic<bool> mIsTextureLoaded;
         std::thread mWorkerThread;
         Image mImage;
-        rlw::Texture2D mTexture;
+        Texture mTexture;
         std::string mFilePath;
         void LoadImage(int width, int height, bool bAspectRatio);
 

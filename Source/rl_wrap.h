@@ -13,6 +13,8 @@
 #include "Data/Rectangle.h"
 #include "Data/Vector2.h"
 #include "Graphics/Image.h"
+#include "Graphics/RenderTexture.h"
+#include "Graphics/Texture.h"
 
 namespace rlw
 {
@@ -219,21 +221,6 @@ namespace rlw
         KEY_KP_EQUAL = 336,     // Key: Keypad =
     } KeyboardKey;
 
-    struct Texture2D
-    {
-        unsigned int id;
-        int width;
-        int height;
-        int mipmaps;
-        int format;
-    };
-
-    struct RenderTexture2D
-    {
-        unsigned int id;
-        Texture2D texture;
-        Texture2D depth;  // compat com raylib >=4.x
-    };
 
     struct AudioStream
     {
@@ -243,20 +230,6 @@ namespace rlw
         unsigned int channels;
     };
 
-    // struct Music
-    // {
-    //     void* _native{};
-    //     unsigned int frameCount{};
-    //     bool looping{};
-    //     int ctxType{};
-    //     void* ctxData{};
-    // };
-
-    // struct Sound
-    // {
-    //     void* _native{};  // -> ::Sound*
-    //     unsigned int frameCount;
-    // };
 
     struct FilePathList
     {
@@ -281,35 +254,15 @@ namespace rlw
     int GetFPS();
     float GetFrameTime();
 
-    
-    void UnloadTexture(Texture2D texture);
-    void SetTextureFilter(Texture2D texture, int filter);
 
-    // --- Render alvo ---
-    RenderTexture2D LoadRenderTexture(int width, int height);
-    void UnloadRenderTexture(RenderTexture2D target);
-    bool IsRenderTextureValid(RenderTexture2D target);
 
-    void BeginTextureMode(RenderTexture2D target);
-    void EndTextureMode();
 
     // --- Desenho 2D ---
     void BeginDrawing();
     void EndDrawing();
     void ClearBackground(ClassicLauncher::Color color);
 
-    void DrawTexturePro(Texture2D texture,
-                        /*source*/ float srcX,
-                        float srcY,
-                        float srcW,
-                        float srcH,
-                        /*dest*/ float dstX,
-                        float dstY,
-                        float dstW,
-                        float dstH,
-                        /*origin*/ float originX,
-                        float originY,
-                        float rotation);
+
 
     // Scissor
     void BeginScissorMode(int x, int y, int width, int height);
@@ -323,17 +276,7 @@ namespace rlw
     bool CheckCollisionPointRec(ClassicLauncher::Vector2f point, ClassicLauncher::RectFloat rec);
     bool CheckCollisionRecs(ClassicLauncher::RectFloat rec1, ClassicLauncher::RectFloat rec2);
 
-    // Texturas simples e "pro"
-    void DrawTexture(Texture2D texture, int posX, int posY, ClassicLauncher::Color tint);
-    void DrawTexturePro(Texture2D texture,
-                        ClassicLauncher::RectFloat src,
-                        ClassicLauncher::RectFloat dst,
-                        ClassicLauncher::Vector2f origin,
-                        float rotation,
-                        ClassicLauncher::Color tint);
 
-    bool IsTextureValid(Texture2D tex);  // mapeia para IsTextureReady
-    void UpdateTexture(Texture2D texture, const void* pixels);
 
     bool IsFontValid(Font font);
     void UnloadFont(Font font);
@@ -364,28 +307,6 @@ namespace rlw
     // --- Math (raymath) ---
     ClassicLauncher::Vector2f Vector2Clamp(ClassicLauncher::Vector2f value, ClassicLauncher::Vector2f min, ClassicLauncher::Vector2f max);
 
-    // --- Áudio ---
-    // void InitAudioDevice();
-    // void CloseAudioDevice();
-
-    // Music (stream)
-    // Music LoadMusicStream(const char* fileName);
-    // bool IsMusicValid(Music music);
-    // void UnloadMusicStream(Music music);
-
-    // void PlayMusicStream(Music music);
-    // void PauseMusicStream(Music music);
-    // void StopMusicStream(Music music);
-    // void SeekMusicStream(Music music, float position);
-    // void UpdateMusicStream(Music music);
-
-    // float GetMusicTimeLength(Music music);
-    // float GetMusicTimePlayed(Music music);
-
-    // // Sound (efeitos)
-    // Sound LoadSound(const char* fileName);
-    // bool IsSoundValid(Sound sound);
-    // void PlaySound(Sound sound);
 
     // --- FS Utils ---
     const char* GetApplicationDirectory();
@@ -411,21 +332,27 @@ namespace rlw
     void* MemAlloc(unsigned int size);
     void MemFree(void* ptr);
 
-    // --- Imagem / Textura ---
-    // bool IsImageValid(ClassicLauncher::Image image);  // mapeia para IsImageReady
-    // void UnloadImage(ClassicLauncher::Image image);
-    // void ImageResize(ClassicLauncher::Image* image, int newWidth, int newHeight);
-    // void ImageResizeNN(ClassicLauncher::Image* image, int newWidth, int newHeight);
-    // ClassicLauncher::Image ImageCopy(ClassicLauncher::Image src);
-    // ClassicLauncher::Image LoadImage(const char* fileName);
-    //ClassicLauncher::Image GenImageColor(int width, int height, ClassicLauncher::Color color);
-    //ClassicLauncher::Image MakeImage(void* data, int width, int height, int mipmaps, int format);
-    Texture2D LoadTextureFromImage(ClassicLauncher::Image image);
-    //// isso vai sair daqui
 
-    // Áudio – sanity checks e debug
-    // bool IsAudioDeviceReady();           // proxy de raylib
-    // void LogMusicState(const Music& m);  // imprime campos úteis do Music
+
+
+    //////////////////ainda em uso 
+
+    void BeginTextureMode(const ClassicLauncher::RenderTexture& target);
+    void EndTextureMode();
+
+
+    // Texturas simples e "pro"
+    void DrawTexture(const ClassicLauncher::Texture& texture, int posX, int posY, ClassicLauncher::Color tint);
+    void DrawTexturePro(const ClassicLauncher::Texture& texture,
+                        ClassicLauncher::RectFloat src,
+                        ClassicLauncher::RectFloat dst,
+                        ClassicLauncher::Vector2f origin,
+                        float rotation,
+                        ClassicLauncher::Color tint);
+
+    ////////////////////
+    
+
 
 }  // namespace rlw
 

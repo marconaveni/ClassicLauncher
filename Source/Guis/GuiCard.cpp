@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "Guis/GuiSizeBox.h"
 #include "Guis/GuiVideoPlayer.h"
+#include "Graphics/Texture.h"
 
 namespace ClassicLauncher
 {
@@ -70,13 +71,13 @@ namespace ClassicLauncher
         EntityGui::Update();
         // mSizeBox->mProperties.offset.x += 0.03f;
         // mSizeBox->mProperties.offset.y += 0.03f;
-        const rlw::Texture2D* textureReference = GetApplication()->GetSpriteManager()->GetTexture(mCover->mTextureName);
+        const Texture* textureReference = GetApplication()->GetSpriteManager()->GetTexture(mCover->mTextureName);
         const Animation& pAnim = GetAnimation("card-zoom");
         if (textureReference != nullptr && mCover->mTextureName != "sprite" && !pAnim.mIsRunning && mCover->mTransform.position.width == 0 && mCover->mTransform.position.height == 0)
         {
             const float scale = Themes::GetScaleTexture();
-            mCover->mTransform.position.width = textureReference->width / scale;
-            mCover->mTransform.position.height = textureReference->height / scale;
+            mCover->mTransform.position.width = textureReference->GetSize().x / scale;
+            mCover->mTransform.position.height = textureReference->GetSize().y / scale;
             mSizeBoxImage->UpdateGuiAttachment();
         }
     }

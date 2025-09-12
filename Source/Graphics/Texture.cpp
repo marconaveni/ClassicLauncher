@@ -57,7 +57,7 @@ namespace ClassicLauncher
         m_height = height;
         m_mipmaps = mipmaps;
         m_format = format;
-        m_id = ray::rlLoadTexture(data, width, height, format,mipmaps);
+        m_id = ray::rlLoadTexture(data, width, height, format, mipmaps);
         return true;
     }
 
@@ -100,6 +100,11 @@ namespace ClassicLauncher
         if (m_id != 0)
         {
             ray::rlUnloadTexture(m_id);
+            m_id = 0;
+            m_width = 0;
+            m_height = 0;
+            m_format = 0;
+            m_mipmaps = 0;
         }
     }
 

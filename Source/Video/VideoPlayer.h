@@ -7,6 +7,7 @@
 #include "Data/Vector2.h"
 
 #include "Graphics/Image.h"
+#include "Graphics/Texture.h"
 #include "rl_wrap.h"
 
 struct libvlc_instance_t;
@@ -48,7 +49,7 @@ namespace ClassicLauncher
         int mHeightVideo = 1;
 
         VideoContext mContext;
-        rlw::Texture2D texture;  // Textura da imagem para renderizar na tela
+        Texture texture;  // Textura da imagem para renderizar na tela
         bool bIsEnabledVlC;
         unsigned int mWidth;
         unsigned int mHeight;
@@ -69,7 +70,7 @@ namespace ClassicLauncher
         void Stop();
         void Update();
         void Unload();
-        rlw::Texture2D* GetVideoTexture();
+        Texture* GetVideoTexture();
         Vector2f GetVideoSize();
         bool IsVideoFinished();
         bool IsVideoPlaying();

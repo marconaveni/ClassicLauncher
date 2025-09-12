@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include "Sprite.h"
 #include "Graphics/Image.h"
+#include "Graphics/Texture.h"
 
 
 namespace ClassicLauncher
@@ -19,7 +20,7 @@ namespace ClassicLauncher
         void LoadSprite(const std::string& name, const std::string& fileName, int width = 0, int height = 0, bool bAspectRatio = true);
         void LoadSprite(const std::string& name, Image& image, int width = 0, int height = 0, bool bAspectRatio = true);
         void UpdateSprite(std::string name, std::string fileName, int width = 0, int height = 0, bool bAspectRatio = true);
-        rlw::Texture2D* GetTexture(const std::string& name);
+        Texture* GetTexture(const std::string& name);
         Image* GetImage(std::string name);
         bool DeleteSprite(std::string name);
         int NumSpritesLoaded();

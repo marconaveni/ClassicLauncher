@@ -70,17 +70,6 @@ namespace ClassicLauncher
         image.ResizeNN( static_cast<int>(newSize.x), static_cast<int>(newSize.y));
     }
 
-    rlw::Texture2D UtilsFunctionLibrary::LoadTexture(const std::string& path, int width, int height)
-    {
-        Image image;
-        image.LoadFromFile(path);
-        width = (width > 0) ? width : image.width;
-        height = (height > 0) ? height : image.height;
-        image.Resize( width, height);
-        const rlw::Texture2D texture = rlw::LoadTextureFromImage(image);
-        image.Unload();
-        return texture;
-    }
 
     int UtilsFunctionLibrary::SetIndexArray(const int index, const int maxArrayLength)
     {
@@ -93,12 +82,6 @@ namespace ClassicLauncher
             return maxArrayLength - std::abs(index);
         }
         return index;
-    }
-
-    void UtilsFunctionLibrary::UnloadClearTexture(rlw::Texture2D& texture)
-    {
-        rlw::UnloadTexture(texture);
-        texture = rlw::Texture2D();
     }
 
     std::string UtilsFunctionLibrary::GetWorkingDirectory()

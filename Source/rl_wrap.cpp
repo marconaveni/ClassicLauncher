@@ -39,83 +39,8 @@ namespace rlw
         return { r.x, r.y, r.width, r.height };
     }
 
-    static ::Image to_native_img(ClassicLauncher::Image* im)
-    {
-        ::Image n{};
-        n.data = im->data;
-        n.width = im->width;
-        n.height = im->height;
-        n.mipmaps = im->mipmaps;
-        n.format = im->format;
-        return n;
-    }
-    static ClassicLauncher::Image to_wrap_img(::Image im)
-    {
-        ClassicLauncher::Image w{};
-        w.data = im.data;
-        w.width = im.width;
-        w.height = im.height;
-        w.mipmaps = im.mipmaps;
-        w.format = im.format;
-        return w;
-    }
 
-    static ::Texture2D to_native_texture(Texture2D t)
-    {
-        ::Texture2D n{};
-        n.id = t.id;
-        n.width = t.width;
-        n.height = t.height;
-        n.mipmaps = t.mipmaps;
-        n.format = t.format;
-        return n;
-    }
-    static Texture2D to_wrap_texture(::Texture2D t)
-    {
-        Texture2D w{};
-        w.id = t.id;
-        w.width = t.width;
-        w.height = t.height;
-        w.mipmaps = t.mipmaps;
-        w.format = t.format;
-        return w;
-    }
-
-    static ::RenderTexture2D to_native_render_texture(RenderTexture2D r)
-    {
-        ::RenderTexture2D n{};
-        n.id = r.id;
-        n.texture = to_native_texture(r.texture);
-        n.depth = to_native_texture(r.depth);
-        return n;
-    }
-    static RenderTexture2D to_wrap_render_texture(::RenderTexture2D r)
-    {
-        RenderTexture2D w{};
-        w.id = r.id;
-        w.texture = to_wrap_texture(r.texture);
-        w.depth = to_wrap_texture(r.depth);
-        return w;
-    }
-
-    // static ::AudioStream to_native_audio_stream(AudioStream s)
-    // {
-    //     ::AudioStream n{};
-    //     n.buffer = reinterpret_cast<::rAudioBuffer*>(s.buffer);
-    //     n.sampleRate = s.sampleRate;
-    //     n.sampleSize = s.sampleSize;
-    //     n.channels = s.channels;
-    //     return n;
-    // }
-    // static AudioStream to_wrap_audio_stream(::AudioStream s)
-    // {
-    //     AudioStream w{};
-    //     w.buffer = reinterpret_cast<void*>(s.buffer);
-    //     w.sampleRate = s.sampleRate;
-    //     w.sampleSize = s.sampleSize;
-    //     w.channels = s.channels;
-    //     return w;
-    // }
+  
 
     static ::FilePathList to_native_path(FilePathList f)
     {
@@ -146,9 +71,6 @@ namespace rlw
         ::SetConfigFlags(flags);
     }
 
-
-
-
     void SetWindowState(unsigned int flags)
     {
         ::SetWindowState(flags);
@@ -169,14 +91,7 @@ namespace rlw
     {
         ::SetWindowPosition(x, y);
     }
-    void SetWindowIcons(ClassicLauncher::Image* images, int count)
-    {
-        // raylib espera ponteiro para Image nativo
-        ::Image* native = new ::Image[count];
-        for (int i = 0; i < count; ++i) native[i] = to_native_img(&images[i]);
-        ::SetWindowIcons(native, count);
-        delete[] native;
-    }
+
     void SetExitKey(int key)
     {
         ::SetExitKey(key);
@@ -233,39 +148,6 @@ namespace rlw
         ::ToggleFullscreen();
     }
 
-
-    void UnloadTexture(Texture2D texture)
-    {
-        ::UnloadTexture(to_native_texture(texture));
-    }
-    void SetTextureFilter(Texture2D texture, int filter)
-    {
-        ::SetTextureFilter(to_native_texture(texture), filter);
-    }
-
-    // --- Render alvo ---
-    RenderTexture2D LoadRenderTexture(int width, int height)
-    {
-        return to_wrap_render_texture(::LoadRenderTexture(width, height));
-    }
-    void UnloadRenderTexture(RenderTexture2D target)
-    {
-        ::UnloadRenderTexture(to_native_render_texture(target));
-    }
-    bool IsRenderTextureValid(RenderTexture2D target)
-    {
-        return ::IsRenderTextureValid(to_native_render_texture(target));
-    }
-
-    void BeginTextureMode(RenderTexture2D target)
-    {
-        ::BeginTextureMode(to_native_render_texture(target));
-    }
-    void EndTextureMode()
-    {
-        ::EndTextureMode();
-    }
-
     // --- Desenho 2D ---
     void BeginDrawing()
     {
@@ -278,25 +160,6 @@ namespace rlw
     void ClearBackground(ClassicLauncher::Color color)
     {
         ::ClearBackground(to_native_color(color));
-    }
-
-    void DrawTexturePro(Texture2D texture,
-                        float srcX,
-                        float srcY,
-                        float srcW,
-                        float srcH,
-                        float dstX,
-                        float dstY,
-                        float dstW,
-                        float dstH,
-                        float originX,
-                        float originY,
-                        float rotation)
-    {
-        ::Rectangle src{ srcX, srcY, srcW, srcH };
-        ::Rectangle dst{ dstX, dstY, dstW, dstH };
-        ::Vector2 origin{ originX, originY };
-        ::DrawTexturePro(to_native_texture(texture), src, dst, origin, rotation, ::WHITE);
     }
 
     // --- Entrada ---
@@ -344,17 +207,6 @@ namespace rlw
     {
         return to_wrap_vec(::Vector2Clamp(to_native_vec(value), to_native_vec(min), to_native_vec(max)));
     }
-
-    // // --- Áudio ---
-    // void InitAudioDevice()
-    // {
-    //     ::InitAudioDevice();
-    // }
-    // void CloseAudioDevice()
-    // {
-    //     ::CloseAudioDevice();
-    // }
- 
 
     // --- FS Utils ---
     const char* GetApplicationDirectory()
@@ -417,22 +269,13 @@ namespace rlw
     {
         bool collision = false;
 
-        if ((rec1.x < (rec2.x + rec2.width) && (rec1.x + rec1.width) > rec2.x) && (rec1.y < (rec2.y + rec2.height) && (rec1.y + rec1.height) > rec2.y))
+        if ((rec1.x < (rec2.x + rec2.width) && (rec1.x + rec1.width) > rec2.x) &&
+            (rec1.y < (rec2.y + rec2.height) && (rec1.y + rec1.height) > rec2.y))
         {
             collision = true;
         }
 
         return collision;
-    }
-
-    void DrawTexture(Texture2D texture, int posX, int posY, ClassicLauncher::Color tint)
-    {
-        ::DrawTexture(to_native_texture(texture), posX, posY, to_native_color(tint));
-    }
-
-    void DrawTexturePro(Texture2D texture, ClassicLauncher::RectFloat src, ClassicLauncher::RectFloat dst, ClassicLauncher::Vector2f origin, float rotation, ClassicLauncher::Color tint)
-    {
-        ::DrawTexturePro(to_native_texture(texture), to_native_rec(src), to_native_rec(dst), to_native_vec(origin), rotation, to_native_color(tint));
     }
 
     Font GetFontDefault()
@@ -479,21 +322,6 @@ namespace rlw
         ::MemFree(ptr);
     }
 
-
-
-
-    bool IsTextureValid(Texture2D tex)
-    {
-        return ::IsTextureValid(to_native_texture(tex));
-    }
-
-
-
-    void UpdateTexture(Texture2D texture, const void* pixels)
-    {
-        ::UpdateTexture(to_native_texture(texture), pixels);
-    }
-
     // --- Fonte / Texto ---
     bool IsFontValid(Font font)
     {
@@ -523,7 +351,12 @@ namespace rlw
         return w;
     }
 
-    void DrawTextEx(Font font, const char* text, ClassicLauncher::Vector2f position, float fontSize, float spacing, ClassicLauncher::Color tint)
+    void DrawTextEx(Font font,
+                    const char* text,
+                    ClassicLauncher::Vector2f position,
+                    float fontSize,
+                    float spacing,
+                    ClassicLauncher::Color tint)
     {
         if (!font._native || !text) return;
         ::DrawTextEx(*static_cast<::Font*>(font._native), text, to_native_vec(position), fontSize, spacing, to_native_color(tint));
@@ -570,71 +403,78 @@ namespace rlw
         return currentBuffer;
     }
 
-    // bool IsAudioDeviceReady()
-    // {
-    //     return ::IsAudioDeviceReady();
-    // }
+    //////////////////////////////////////////////
+
+    void SetWindowIcons(ClassicLauncher::Image* images, int count)
+    {
+        // raylib espera ponteiro para Image nativo
+        ::Image* rayImages = new ::Image[count];
+        for (int i = 0; i < count; ++i)
+        {
+            ::Image rayImage{};
+            rayImage.data = images->data;
+            rayImage.width = images->width;
+            rayImage.height = images->height;
+            rayImage.mipmaps = images->mipmaps;
+            rayImage.format = images->format;
+            rayImages[i] = rayImage;
+        }
+
+        ::SetWindowIcons(rayImages, count);
+        delete[] rayImages;
+    }
 
 
+    void BeginTextureMode(const ClassicLauncher::RenderTexture& target)
+    {
+        ::RenderTexture2D rayTarget;
+        rayTarget.id = target.GetId();
+        rayTarget.texture.id = target.GetTextureId();
+        rayTarget.texture.width = target.GetSize().x;
+        rayTarget.texture.height = target.GetSize().y;
 
+        ::BeginTextureMode(rayTarget);
+    }
 
-    // --- Imagem / Textura utilitários extras ---
-    //bool IsImageValid(ClassicLauncher::Image image)
-    //{
-    //    return ::IsImageValid(to_native_img(&image));
-    //}
+    void EndTextureMode()
+    {
+        ::EndTextureMode();
+    }
 
-    //void UnloadImage(ClassicLauncher::Image image)
-    //{
-    //    ::UnloadImage(to_native_img(&image));
-    //}
+    ///////////////////////////////////////////////
+    //                                           //
+    //                                           //
+    //                                           //
+    //                                           //
+    //                                           //
+    ///////////////////////////////////////////////
 
+    void DrawTexture(const ClassicLauncher::Texture& texture, int posX, int posY, ClassicLauncher::Color tint)
+    {
+        ::Texture2D rayTex{};
+        rayTex.id = texture.GetId();
+        rayTex.width = texture.GetSize().x;
+        rayTex.height = texture.GetSize().y;
+        rayTex.mipmaps = texture.GetMipmaps();
+        rayTex.format = texture.GetFormat();
 
-    //void ImageResize(ClassicLauncher::Image* image, int newWidth, int newHeight)
-    //{
-    //    ::Image tmp = to_native_img(image);
-    //    ::ImageResize(&tmp, newWidth, newHeight);
-    //    *image = to_wrap_img(tmp);
-    //}
-    //void ImageResizeNN(ClassicLauncher::Image* image, int newWidth, int newHeight)
-    //{
-    //    ::Image tmp = to_native_img(image);
-    //    ::ImageResizeNN(&tmp, newWidth, newHeight);
-    //    *image = to_wrap_img(tmp);
-    //}
+        ::DrawTexture(rayTex, posX, posY, to_native_color(tint));
+    }
 
-
-    // ClassicLauncher::Image ImageCopy(ClassicLauncher::Image src)
-    // {
-    //     return to_wrap_img(::ImageCopy(to_native_img(&src)));
-    // }
-
-        // --- Imagem / Textura ---
-    //ClassicLauncher::Image LoadImage(const char* fileName)
-    //{
-    //    return to_wrap_img(::LoadImage(fileName));
-    //}
-
-    //ClassicLauncher::Image GenImageColor(int width, int height, ClassicLauncher::Color color)
-    //{
-    //    return to_wrap_img(::GenImageColor(width, height, to_native_color(color)));
-    //}
-
-    // ClassicLauncher::Image MakeImage(void* data, int width, int height, int mipmaps, int format)
-    // {
-    //     ::Image n{};
-    //     n.data = data;
-    //     n.width = width;
-    //     n.height = height;
-    //     n.mipmaps = mipmaps;
-    //     n.format = format;
-    //     return to_wrap_img(n);
-    // }
-
-
-     Texture2D LoadTextureFromImage(ClassicLauncher::Image image)
-     {
-         return to_wrap_texture(::LoadTextureFromImage(to_native_img(&image)));
-     }
+    void DrawTexturePro(const ClassicLauncher::Texture& texture,
+                        ClassicLauncher::RectFloat src,
+                        ClassicLauncher::RectFloat dst,
+                        ClassicLauncher::Vector2f origin,
+                        float rotation,
+                        ClassicLauncher::Color tint)
+    {
+        ::Texture2D rayTex{};
+        rayTex.id = texture.GetId();
+        rayTex.width = texture.GetSize().x;
+        rayTex.height = texture.GetSize().y;
+        rayTex.mipmaps = texture.GetMipmaps();
+        rayTex.format = texture.GetFormat();
+        ::DrawTexturePro(rayTex, to_native_rec(src), to_native_rec(dst), to_native_vec(origin), rotation, to_native_color(tint));
+    }
 
 }  // namespace rlw

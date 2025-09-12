@@ -90,7 +90,7 @@ namespace ClassicLauncher
             return;
         }
 
-        rlw::Texture2D* texture = mPlayer->GetVideoTexture();
+        Texture* texture = mPlayer->GetVideoTexture();
         if (texture)
         {
             const Transform& transform = mTransform;
@@ -103,11 +103,11 @@ namespace ClassicLauncher
             return;
         }
 
-        rlw::Texture2D* textureFullScreen = mPlayerFullScreen->GetVideoTexture();
+        Texture* textureFullScreen = mPlayerFullScreen->GetVideoTexture();
         if (texture)
         {
             const int scale = static_cast<int>(Themes::GetScaleTexture());
-            const int x = (1280 * scale / 2) - (textureFullScreen->width / 2);
+            const int x = (1280 * scale / 2) - (textureFullScreen->GetSize().x / 2);
             rlw::DrawTexture(*textureFullScreen, x, 0, Color::White);
         }
     }

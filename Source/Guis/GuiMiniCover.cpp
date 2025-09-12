@@ -60,12 +60,12 @@ namespace ClassicLauncher
 
         for (auto& miniCover : mGuiCovers)
         {
-            rlw::Texture2D* textureReference = GetApplication()->GetSpriteManager()->GetTexture(miniCover->mTextureName);
+            Texture* textureReference = GetApplication()->GetSpriteManager()->GetTexture(miniCover->mTextureName);
             const float scale = Themes::GetScaleTexture();
             if (textureReference != nullptr && miniCover->mTextureName != "sprite" && miniCover->mTransform.position.width == 0 && miniCover->mTransform.position.height == 0)
             {
-                miniCover->mTransform.position.width = textureReference->width / scale;
-                miniCover->mTransform.position.height = textureReference->height / scale;
+                miniCover->mTransform.position.width = textureReference->GetSize().x / scale;
+                miniCover->mTransform.position.height = textureReference->GetSize().y / scale;
             }
         }
     }

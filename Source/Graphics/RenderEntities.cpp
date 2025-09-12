@@ -33,7 +33,7 @@ namespace ClassicLauncher
 
     void RenderEntities::DrawEntity(Entity* entity)
     {
-        const rlw::Texture2D* texture = mSpriteManagerReference->GetTexture(entity->mTextureName);
+        const Texture* texture = mSpriteManagerReference->GetTexture(entity->mTextureName);
 
         // if (texture && entity->mToDraw && entity->mTextureName != "transparent")  // todo verify render
         if (texture && entity->mToDraw)
