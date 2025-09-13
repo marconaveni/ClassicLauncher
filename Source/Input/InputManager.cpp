@@ -23,9 +23,9 @@ namespace ClassicLauncher
 
     bool IsModifierKey()
     {
-        return rlw::IsKeyDown(rlw::KEY_LEFT_ALT) || // check if keys modifiers is pressed
-               rlw::IsKeyDown(rlw::KEY_RIGHT_ALT) || rlw::IsKeyDown(rlw::KEY_LEFT_CONTROL) ||
-               rlw::IsKeyDown(rlw::KEY_RIGHT_CONTROL);
+        return Keyboard::IsDown(Keyboard::Key::LEFT_ALT) || // check if keys modifiers is pressed
+               Keyboard::IsDown(Keyboard::Key::RIGHT_ALT) || Keyboard::IsDown(Keyboard::Key::LEFT_CONTROL) ||
+               Keyboard::IsDown(Keyboard::Key::RIGHT_CONTROL);
     }
 
     void InputManager::UpdateInputState()
@@ -41,13 +41,13 @@ namespace ClassicLauncher
             const float maxAmount = 0.4f;
             const int key = input.keyPad;
             const int gamePad = input.gamePad;
-            input.bPress = (rlw::IsKeyPressed(key) || rlw::IsGamepadButtonPressed(mGamePadIdSelected, gamePad)) &&
+            input.bPress = (Keyboard::IsPressed(key) || GamePad::IsPressed(mGamePadIdSelected, gamePad)) &&
                            !bKeyModifier && !mDisableInput;
-            input.bDown = (rlw::IsKeyDown(key) || rlw::IsGamepadButtonDown(mGamePadIdSelected, gamePad)) &&
+            input.bDown = (Keyboard::IsDown(key) || GamePad::IsDown(mGamePadIdSelected, gamePad)) &&
                           !bKeyModifier && !mDisableInput;
-            input.bRelease = (rlw::IsKeyReleased(key) || rlw::IsGamepadButtonReleased(mGamePadIdSelected, gamePad)) &&
+            input.bRelease = (Keyboard::IsReleased(key) || GamePad::IsReleased(mGamePadIdSelected, gamePad)) &&
                              !bKeyModifier && !mDisableInput;
-            input.bUp = (rlw::IsKeyUp(key) || rlw::IsGamepadButtonUp(mGamePadIdSelected, gamePad)) && !bKeyModifier &&
+            input.bUp = (Keyboard::IsUp(key) || GamePad::IsUp(mGamePadIdSelected, gamePad)) && !bKeyModifier &&
                         !mDisableInput;
 
             if (input.bDown)

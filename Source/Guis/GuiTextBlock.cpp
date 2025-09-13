@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "Utils/Math.h"
 #include "Window/RayWindow.h"
+#include "rl_wrap.h"
 
 namespace ClassicLauncher
 {

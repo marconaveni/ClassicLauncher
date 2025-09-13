@@ -6,6 +6,7 @@
 #include "Utils/Math.h"
 #include "Utils/Resources.h"
 #include "Utils/StringFunctionLibrary.h"
+#include "rl_wrap.h"
 
 namespace ClassicLauncher
 {

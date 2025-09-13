@@ -1,5 +1,6 @@
 #include "GuiVideoPlayer.h"
 #include "Application.h"
+#include "rl_wrap.h"
 
 namespace ClassicLauncher
 {

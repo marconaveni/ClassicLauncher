@@ -3,6 +3,9 @@
 #include "Application.h"
 #include "Helper.h"
 #include "rl_wrap.h"
+#include "Utils/Math.h"
+#include "Input/Keyboard.h"
+#include "Input/Mouse.h"
 
 namespace ClassicLauncher
 {
@@ -20,7 +23,7 @@ namespace ClassicLauncher
     {
 #ifdef _DEBUG
 
-        if (rlw::IsKeyReleased(rlw::KEY_FIVE))
+        if (Keyboard::IsReleased(Keyboard::Key::FIVE))
         {
             bEnable = !bEnable;
         }
@@ -73,10 +76,10 @@ namespace ClassicLauncher
         const RectFloat& rectDrawArea = entity->mTransform.GetTransform();  //{ x, y, scale.x, scale.y };
         const Vector2f vec = Application::Get().GetRenderScreen()->GetMousePositionRender();
         Rectangle point = { rectDrawArea.x, rectDrawArea.y, rectDrawArea.width, rectDrawArea.height };
-        if (rlw::CheckCollisionPointRec(vec, point) && bEnable)
+        if (Math::CheckCollisionPointRec(vec, point) && bEnable)
         {
             rlw::DrawRectangleLinesEx(rectDrawArea, 2, Color::Red);
-            if (IsMouseButtonPressed(rlw::MOUSE_BUTTON_LEFT))
+            if (Mouse::IsPressed(Mouse::LEFT))
             {
                 PRINT(std::format("nameID: {}", entity->mNameId).c_str(), 5.0f);
             }
@@ -98,7 +101,7 @@ namespace ClassicLauncher
 
     bool RenderEntities::CheckRender(const RectFloat& rec)
     {
-        return rlw::CheckCollisionRecs(RectFloat(0, 0, 1280, 720), rec);
+        return Math::CheckCollisionRecs(RectFloat(0, 0, 1280, 720), rec);
     }
 
 }  // namespace ClassicLauncher

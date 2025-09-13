@@ -202,8 +202,14 @@ set(guis
     "${CMAKE_SOURCE_DIR}/Source/Guis/GuiWindow.h"
 )
 set(input
+    "${CMAKE_SOURCE_DIR}/Source/Input/Gamepad.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Input/Gamepad.h"
     "${CMAKE_SOURCE_DIR}/Source/Input/InputManager.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Input/InputManager.h"
+    "${CMAKE_SOURCE_DIR}/Source/Input/Keyboard.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Input/Keyboard.h"
+    "${CMAKE_SOURCE_DIR}/Source/Input/Mouse.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Input/Mouse.h"
 )
 set(themes
     "${CMAKE_SOURCE_DIR}/Source/Themes/ConfigurationThemes.cpp"

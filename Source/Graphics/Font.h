@@ -1,5 +1,5 @@
-#ifndef FONT
-#define FONT
+#ifndef FONT_H
+#define FONT_H
 
 #include <filesystem>
 #include <string>
@@ -29,4 +29,4 @@ namespace ClassicLauncher
 
 }  // namespace ClassicLauncher
 
-#endif  // FONT
+#endif  // FONT_H

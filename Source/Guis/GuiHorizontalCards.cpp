@@ -15,6 +15,7 @@
 #include "Application.h"
 #include "Window/RayWindow.h"
 
+
 namespace ClassicLauncher
 {
 
@@ -223,9 +224,9 @@ namespace ClassicLauncher
         //     PRINT(TEXT("Set Scale to %.2f", mTransform.scaleX));
         // }
 
-        if (rlw::IsKeyReleased(rlw::KEY_SEVEN) || rlw::IsKeyReleased(rlw::KEY_SIX))
+        if (Keyboard::IsReleased(Keyboard::SEVEN) || Keyboard::IsReleased(Keyboard::SIX))
         {
-            if (rlw::IsKeyReleased(rlw::KEY_SIX))
+            if (Keyboard::IsReleased(Keyboard::SIX))
             {
                 fps = 15;
             }

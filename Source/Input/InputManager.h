@@ -1,8 +1,11 @@
 #ifndef INPUT_MANAGER_H
 #define INPUT_MANAGER_H
 
-#include "rl_wrap.h"
+#include <cstdint>
 
+#include "Input/Gamepad.h"
+#include "Input/Keyboard.h"
+#include "Input/Mouse.h"
 
 namespace ClassicLauncher
 {
@@ -87,24 +90,24 @@ namespace ClassicLauncher
 
         // clang-format off
         InputMapper mInputs[18]{ 
-            InputMapper(unknown, 0, rlw::KEY_NULL), 
-            InputMapper(leftFaceUp, 1, rlw::KEY_UP), 
-            InputMapper(leftFaceRight, 2, rlw::KEY_RIGHT), 
-            InputMapper(leftFaceDown, 3, rlw::KEY_DOWN), 
-            InputMapper(leftFaceLeft, 4, rlw::KEY_LEFT), 
-            InputMapper(rightFaceUp, 5, rlw::KEY_F), 
-            InputMapper(rightFaceRight, 6, rlw::KEY_BACKSPACE), 
-            InputMapper(rightFaceDown, 7, rlw::KEY_ENTER), 
-            InputMapper(rightFaceLeft, 8, rlw::KEY_A), 
-            InputMapper(leftTriggerFront, 9, rlw::KEY_Q), 
-            InputMapper(leftTriggerBack, 10, rlw::KEY_Z), 
-            InputMapper(rightTriggerFront, 11, rlw::KEY_E), 
-            InputMapper(rightTriggerBack, 12, rlw::KEY_C), 
-            InputMapper(middleFaceLeft, 13, rlw::KEY_ESCAPE), 
-            InputMapper(middleFaceCenter, 14, rlw::KEY_F1), 
-            InputMapper(middleFaceRight, 15, rlw::KEY_S), 
-            InputMapper(leftThumb, 16, rlw::KEY_N), 
-            InputMapper(rightThumb, 17, rlw::KEY_M) 
+            InputMapper(unknown, 0, Keyboard::Key::KEYNULL), 
+            InputMapper(leftFaceUp, 1, Keyboard::Key::UP), 
+            InputMapper(leftFaceRight, 2, Keyboard::Key::RIGHT), 
+            InputMapper(leftFaceDown, 3, Keyboard::Key::DOWN), 
+            InputMapper(leftFaceLeft, 4, Keyboard::Key::LEFT), 
+            InputMapper(rightFaceUp, 5, Keyboard::Key::F), 
+            InputMapper(rightFaceRight, 6, Keyboard::Key::BACKSPACE), 
+            InputMapper(rightFaceDown, 7, Keyboard::Key::ENTER), 
+            InputMapper(rightFaceLeft, 8, Keyboard::Key::A), 
+            InputMapper(leftTriggerFront, 9, Keyboard::Key::Q), 
+            InputMapper(leftTriggerBack, 10, Keyboard::Key::Z), 
+            InputMapper(rightTriggerFront, 11, Keyboard::Key::E), 
+            InputMapper(rightTriggerBack, 12, Keyboard::Key::C), 
+            InputMapper(middleFaceLeft, 13, Keyboard::Key::ESCAPE), 
+            InputMapper(middleFaceCenter, 14, Keyboard::Key::F1), 
+            InputMapper(middleFaceRight, 15, Keyboard::Key::S), 
+            InputMapper(leftThumb, 16, Keyboard::Key::N), 
+            InputMapper(rightThumb, 17, Keyboard::Key::M) 
             };
         // clang-format on
 

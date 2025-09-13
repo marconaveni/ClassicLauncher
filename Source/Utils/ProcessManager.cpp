@@ -3,6 +3,7 @@
 #include "Data/GameListManager.h"
 #include "Utils/Process.h"
 #include "Guis/GuiBlackScreen.h"
+#include "rl_wrap.h"
 
 namespace ClassicLauncher
 {

@@ -1,5 +1,5 @@
-#ifndef RENDER_TEXTURE
-#define RENDER_TEXTURE
+#ifndef RENDER_TEXTURE_H
+#define RENDER_TEXTURE_H
 
 #include "Graphics/Texture.h"
 
@@ -30,9 +30,8 @@ namespace ClassicLauncher
         unsigned int m_id{};
         Texture m_texture{};
         Texture m_depth{};
-        
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // RENDER_TEXTURE
+#endif // RENDER_TEXTURE_H

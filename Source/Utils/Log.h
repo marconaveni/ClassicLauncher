@@ -8,7 +8,7 @@ namespace ClassicLauncher
 
     // Trace log in level Classic Launcher
     // NOTE: Organized by priority level
-    typedef enum
+    enum TraceLogLevel
     {
         LOG_ALL = 0,     // (raylib)Display all logs
         LOG_TRACE = 1,   // (raylib)Trace logging, intended for internal use only
@@ -26,11 +26,12 @@ namespace ClassicLauncher
         LOG_CLASSIC_ERROR = 13,   // (ClassicLauncher)Error logging, used on unrecoverable failures
         LOG_CLASSIC_FATAL = 14,   // (ClassicLauncher)Fatal logging, used to abort program: exit(EXIT_FAILURE)
         LOG_CLASSIC_NONE = 15     // (ClassicLauncher)Disable logging
-    } ClassicTraceLogLevel;
+    };
 
     void LogLevel(int classicLogType, int raylibLogType);
     void TraceLogger(int messageType, const char* text, va_list args);
     void LogClassic(int logType, int line, const char* file, const char* text, ...);
+    const char* TextFormat(const char* text, ...);
 
 } // namespace ClassicLauncher
 

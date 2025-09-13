@@ -1,9 +1,12 @@
 #ifndef MATH_H
 #define MATH_H
 
+#include <algorithm> // std::clamp
 #include <random>
 
 #include "ClassicAssert.h"
+#include "Data/Vector2.h"
+#include "Data/Rectangle.h"
 
 namespace ClassicLauncher::Math
 {
@@ -29,6 +32,21 @@ namespace ClassicLauncher::Math
         return (value < min) ? min : (value > max) ? max : value;
     }
 
+
+
+    template <typename T>
+    inline constexpr bool CheckCollisionPointRec(Vector2<T> point, Rectangle<T> rec)
+    {
+        return ((point.x >= rec.x) && (point.x < (rec.x + rec.width)) && (point.y >= rec.y) && (point.y < (rec.y + rec.height)));
+    }
+
+    template <typename T>
+    inline constexpr bool CheckCollisionRecs(Rectangle<T> rec1, Rectangle<T> rec2)
+    {
+        return ((rec1.x < (rec2.x + rec2.width) && (rec1.x + rec1.width) > rec2.x) &&
+        (rec1.y < (rec2.y + rec2.height) && (rec1.y + rec1.height) > rec2.y));
+    }
+
     inline constexpr int ToInt(float value)
     {
         return static_cast<int>(value);
@@ -37,6 +55,15 @@ namespace ClassicLauncher::Math
     inline constexpr int ToIntRound(float value)
     {
         return static_cast<int>(value >= 0.0f ? value + 0.5f : value - 0.5f);
+    }
+
+    template <typename T>
+    static Vector2<T> VecClamp(Vector2<T> value, Vector2<T> min, Vector2<T> max)
+    {
+        Vector2<T> result{};
+        result.x = std::clamp(value.x, min.x, max.x);
+        result.y = std::clamp(value.y, min.y, max.y);
+        return result;
     }
 
     class RandomGenerator

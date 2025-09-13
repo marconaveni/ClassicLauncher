@@ -3,13 +3,14 @@
 #include <string_view>
 
 #include "Guis/GuiWindow.h"
-#include "Helper.h"
 #include "Utils/ConfigurationManager.h"
 #include "Utils/Log.h"
 #include "Utils/Resources.h"
 #include "Utils/StringFunctionLibrary.h"
 #include "Utils/UtilsFunctionLibrary.h"
 #include "Window/RayWindow.h"
+#include "rl_wrap.h"
+#include "Helper.h"
 
 namespace ClassicLauncher
 {
@@ -201,19 +202,19 @@ namespace ClassicLauncher
             PRINT(TEXT("Current game list %s", pSystemList->name.c_str()), 2.0f, "gameList");
         }
 
-        if (rlw::IsKeyReleased(rlw::KEY_F1))
+        if (Keyboard::IsReleased(Keyboard::F1))
         {
             LogLevel(LOG_CLASSIC_DEBUG, LOG_WARNING);
             LOG(LOG_CLASSIC_DEBUG, "Enabled LOG_CLASSIC_DEBUG, LOG_WARNING");
             PRINT("Enabled LOG_CLASSIC_DEBUG, LOG_WARNING", 5.0f);
         }
-        if (rlw::IsKeyReleased(rlw::KEY_F2))
+        if (Keyboard::IsReleased(Keyboard::F2))
         {
             LogLevel(LOG_CLASSIC_DEBUG, LOG_ALL);
             LOG(LOG_CLASSIC_DEBUG, "Enabled LOG_CLASSIC_DEBUG, LOG_ALL");
             PRINT("Enabled LOG_CLASSIC_DEBUG, LOG_ALL", 5.0f);
         }
-        if (rlw::IsKeyReleased(rlw::KEY_F3))
+        if (Keyboard::IsReleased(Keyboard::F3))
         {
             LogLevel(LOG_CLASSIC_ALL, LOG_ALL);
             LOG(LOG_CLASSIC_DEBUG, "Enabled LOG_CLASSIC_ALL, LOG_ALL");
@@ -226,17 +227,17 @@ namespace ClassicLauncher
             mPrint.PrintOnScreen(TEXT("Changed music"), 5.0f);
         }
 
-        if (rlw::IsKeyReleased(rlw::KEY_S))
+        if (Keyboard::IsReleased(Keyboard::S))
         {
             mAudioManager.Pause();
             mPrint.PrintOnScreen(TEXT("Pause music"), 5.0f);
         }
-        if (rlw::IsKeyReleased(rlw::KEY_D))
+        if (Keyboard::IsReleased(Keyboard::D))
         {
             mAudioManager.Play();
             mPrint.PrintOnScreen(TEXT("Play music"), 5.0f);
         }
-        if (rlw::IsKeyReleased(rlw::KEY_UP))
+        if (Keyboard::IsReleased(Keyboard::UP))
         {
             // mEntityManager.SetZOrder(mGuiWindow.get(), 1);
             std::string homeDir = UtilsFunctionLibrary::GetHomeDir();
@@ -259,8 +260,8 @@ namespace ClassicLauncher
 
     void Application::ToggleFullscreen()
     {
-        if (rlw::IsKeyReleased(rlw::KEY_F11) ||
-            (rlw::IsKeyDown(rlw::KEY_LEFT_ALT) && rlw::IsKeyReleased(rlw::KEY_ENTER)))
+        if (Keyboard::IsReleased(Keyboard::F11) ||
+            (Keyboard::IsDown(Keyboard::LEFT_ALT) && Keyboard::IsReleased(Keyboard::ENTER)))
         {
             const bool isFullscreen = m_window->ToggleFullscreen();
             mConfigurationManager.SetFullscreen(isFullscreen);

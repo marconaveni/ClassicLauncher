@@ -4,6 +4,7 @@
 #include "Themes/Themes.h"
 #include "Utils/Math.h"
 #include "Window/RayWindow.h"
+#include "Input/Keyboard.h"
 #include "rl_wrap.h"
 
 namespace ClassicLauncher
@@ -32,7 +33,7 @@ namespace ClassicLauncher
             mScale = Math::Min<float>(screenWidth / mNewWidth, screenHeight / mNewHeight);
             mVirtualMouse.x = (mouse.x - (screenWidth - (mNewWidth * mScale)) * 0.5f) / mScale;
             mVirtualMouse.y = (mouse.y - (screenHeight - (mNewHeight * mScale)) * 0.5f) / mScale;
-            mVirtualMouse = rlw::Vector2Clamp(mVirtualMouse, { 0.0f, 0.0f }, { mNewWidth, mNewHeight });
+            mVirtualMouse = Math::VecClamp(mVirtualMouse, { 0.0f, 0.0f }, { mNewWidth, mNewHeight });
         }
         else
         {
@@ -86,11 +87,11 @@ namespace ClassicLauncher
                            mNewHeight * mScale };
 
 #ifdef _DEBUG
-        if (rlw::IsKeyReleased(rlw::KEY_K))
+        if (Keyboard::IsReleased(Keyboard::Key::K))
         {
             mRenderTexture->SetSmooth(false);
         }
-        if (rlw::IsKeyReleased(rlw::KEY_J))
+        if (Keyboard::IsReleased(Keyboard::Key::J))
         {
             mRenderTexture->SetSmooth(true);
         }
