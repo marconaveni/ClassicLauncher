@@ -6,6 +6,7 @@
 #include "Window/RayWindow.h"
 #include "Input/Keyboard.h"
 #include "rl_wrap.h"
+#include "Helper.h"
 
 namespace ClassicLauncher
 {
@@ -13,7 +14,7 @@ namespace ClassicLauncher
     RenderScreen::RenderScreen()
         : mRenderTexture(), mWidth(0), mHeight(0), mNewWidth(0), mNewHeight(0), mScale(1), mIsMaintainAspectRatio(true)
     {
-        
+        LOG(LOG_CLASSIC_WARNING, "inicia render screen");
     }
 
     RenderScreen::~RenderScreen()

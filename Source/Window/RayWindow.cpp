@@ -37,6 +37,7 @@ namespace ClassicLauncher
     {
         ray::CloseWindow();
         Unload();
+        m_isReady = ray::IsWindowReady();
     }
 
     void RayWindow::SetState(unsigned int flags)

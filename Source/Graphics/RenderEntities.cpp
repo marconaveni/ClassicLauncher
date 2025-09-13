@@ -6,6 +6,7 @@
 #include "Utils/Math.h"
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
+#include "Graphics/RenderScreen.h"
 
 namespace ClassicLauncher
 {

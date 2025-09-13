@@ -2,6 +2,7 @@
 
 #include <string_view>
 
+#include "Graphics/RenderScreen.h"
 #include "Guis/GuiWindow.h"
 #include "Utils/ConfigurationManager.h"
 #include "Utils/Log.h"
@@ -22,10 +23,7 @@ namespace ClassicLauncher
         , mEntityManager(&this->mSpriteManager, &this->mTimerManager)
         , mGuiWindow(nullptr)
     {
-        if (sInstanceApplication == nullptr)
-        {
-            sInstanceApplication = this;
-        }
+        sInstanceApplication = this;  
     }
 
     Application::~Application()
@@ -46,6 +44,8 @@ namespace ClassicLauncher
     void Application::Init()
     {
         m_window = std::make_unique<RayWindow>();
+        m_renderScreen = std::make_unique<RenderScreen>();
+
         mConfigurationManager.LoadConfiguration();
 
         LogLevel(mConfigurationManager.GetClassicLogLevel(), mConfigurationManager.GetRaylibLogLevel());
@@ -54,7 +54,6 @@ namespace ClassicLauncher
         Resources::SetClassicLauncherDir();
         mGameListManager.Initialize();
 
-        // rlw::InitAudioDevice();
 
         if (mConfigurationManager.GetVSync())
         {
@@ -88,7 +87,7 @@ namespace ClassicLauncher
         mThemes.LoadTheme(this);
 
         mPrint.LoadFont(Resources::GetFont(), 16, 0);
-        mRenderScreen.Init(1280, 720);
+        m_renderScreen->Init(1280, 720);
 
         mAudioManager.Init();
         mAudioManager.LoadMusics(musicDir);
@@ -121,7 +120,7 @@ namespace ClassicLauncher
         //                        rlw::LoadImage(Resources::GetIcon(128).c_str()) };
 
         // rlw::SetWindowIcons(imgs, 5);
-
+        
         if (mGameListManager.GetGameListSize() > 0)
         {
             mGuiWindow = mEntityManager.CreateEntity<GuiWindow>("GuiWindow");
@@ -133,46 +132,46 @@ namespace ClassicLauncher
             // todo create screen not found system list
         }
         Loop();
-
+        
         End();
     }
-
+    
     void Application::CreateProcess()
     {
         GetAudioManager()->Pause();
         GetProcessManager()->CreateProc(this);
     }
-
+    
     void Application::LoadConfigurationThemes()
     {
         LOG(LOG_CLASSIC_WARNING, "here");
         mEntityManager.SetThemeValue();
     }
-
+    
     void Application::Loop()
     {
         while (!m_window->ShouldClose())
         {
             ToggleFullscreen();
-
+            
             // update logic
             Update();
-
+            
             // draw in texture render screen
-            mRenderScreen.BeginRender();
+            m_renderScreen->BeginRender();
             mRenderEntities.DrawEntities(mEntityManager.GetEntities());
-            mRenderScreen.EndRender();
-
+            m_renderScreen->EndRender();
+            
             // draw on window
             Draw();
         }
     }
-
+    
     void Application::Draw()
     {
         rlw::BeginDrawing();
         rlw::ClearBackground(Color::Black);
-        mRenderScreen.Draw();
+        m_renderScreen->Draw();
         mPrint.DrawMessage();
         rlw::EndDrawing();
     }
@@ -180,16 +179,16 @@ namespace ClassicLauncher
     void Application::Update()
     {
         // Log(LOG_CLASSIC_DEBUG, TEXTBOOL(InputManager::GetInputLeftFaceLeft()));
-
+        
         mGuiWindow->Teste();
         mEntityManager.UpdateAll();
-
+        
         mTimerManager.Update();
         mProcessManager.StatusProcessRun(this);
         mInputManager.UpdateInputState();
-
-#ifdef _DEBUG
-
+        
+        #ifdef _DEBUG
+        
         GameList* pSystemList = mGameListManager.GetCurrentGameList();
         PRINT(TEXT("========================================"), 2.0f, "line0", Color::Lime);
         PRINT(TEXT("Music Playing %s", mAudioManager.GetMusicName().c_str()), 2.0f, "music", Color::Lime);
@@ -227,12 +226,12 @@ namespace ClassicLauncher
             mPrint.PrintOnScreen(TEXT("Changed music"), 5.0f);
         }
 
-        if (Keyboard::IsReleased(Keyboard::S))
+        if (Keyboard::IsReleased(Keyboard::P) && mAudioManager.IsPlayMusic())
         {
             mAudioManager.Pause();
             mPrint.PrintOnScreen(TEXT("Pause music"), 5.0f);
         }
-        if (Keyboard::IsReleased(Keyboard::D))
+        else if (Keyboard::IsReleased(Keyboard::P))
         {
             mAudioManager.Play();
             mPrint.PrintOnScreen(TEXT("Play music"), 5.0f);
@@ -251,7 +250,7 @@ namespace ClassicLauncher
 
     void Application::End()
     {
-        mRenderScreen.Unload();
+        m_renderScreen->Unload();
         mPrint.Unload();
         mAudioManager.Unload();
         mSpriteManager.UnloadSprites();

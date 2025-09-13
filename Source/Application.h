@@ -8,7 +8,6 @@
 #include "Data/GameListManager.h"
 #include "Entity/EntityManager.h"
 #include "Graphics/RenderEntities.h"
-#include "Graphics/RenderScreen.h"
 #include "Graphics/SpriteManager.h"
 #include "Input/InputManager.h"
 #include "Themes/Themes.h"
@@ -19,6 +18,9 @@
 
 namespace ClassicLauncher
 {
+
+    class RenderScreen;
+
     class GuiWindow;
     class GuiBlackScreen;
     class ProcessManager;
@@ -37,7 +39,7 @@ namespace ClassicLauncher
         Application();
         ~Application();
         static Application& Get();
-        RenderScreen* GetRenderScreen() { return &mRenderScreen; }
+        RenderScreen* GetRenderScreen() { return m_renderScreen.get(); }
         RenderEntities* GetRenderEntities() { return &mRenderEntities; }
         Print* GetPrint() { return &mPrint; }
         AudioManager* GetAudioManager() { return &mAudioManager; }
@@ -63,7 +65,6 @@ namespace ClassicLauncher
         void End();
         void ToggleFullscreen();
 
-        RenderScreen mRenderScreen;
         RenderEntities mRenderEntities;
         Print mPrint;
         AudioManager mAudioManager;
@@ -76,9 +77,10 @@ namespace ClassicLauncher
         InputManager mInputManager;
         TimerManager mTimerManager;
         ConfigurationManager mConfigurationManager;
-
+        
         GuiWindow* mGuiWindow;
         std::unique_ptr<RayWindow> m_window;
+        std::unique_ptr<RenderScreen> m_renderScreen;
     };
 
 } // namespace ClassicLauncher

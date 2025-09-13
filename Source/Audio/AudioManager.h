@@ -33,6 +33,7 @@ namespace ClassicLauncher
         std::string GetMusicName();
         void ChangeMusic(bool bAutoPlay = true);
         void Unload();
+        [[nodiscard]] bool IsPlayMusic() const { return (m_statusAudio == 1);}
 
     private:
 

@@ -5,6 +5,8 @@ namespace ray
 #include "rlgl.h"
 }  // namespace ray
 
+#include "Window/RayWindow.h"
+
 typedef enum
 {
     PIXELFORMAT_UNCOMPRESSED_GRAYSCALE = 1,  // 8 bit per pixel (no alpha)
@@ -96,16 +98,20 @@ namespace ClassicLauncher
 
     void RenderTexture::Unload()
     {
+
+
+
         if (m_id > 0)
         {
             if (m_texture.m_id > 0)
             {
                 // Color texture attached to FBO is deleted
-                ray::rlUnloadTexture(m_texture.m_id);
+                //m_texture.Unload();
             }
             // NOTE: Depth texture/renderbuffer is automatically
             // queried and deleted before deleting framebuffer
             ray::rlUnloadFramebuffer(m_id);
+            m_id = 0;
         }
     }
 
