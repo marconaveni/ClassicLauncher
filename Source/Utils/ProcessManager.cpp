@@ -4,6 +4,7 @@
 #include "Utils/Process.h"
 #include "Guis/GuiBlackScreen.h"
 #include "rl_wrap.h"
+#include <filesystem>
 
 namespace ClassicLauncher
 {

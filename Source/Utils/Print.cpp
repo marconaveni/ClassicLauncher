@@ -6,6 +6,7 @@
 #include "Data/Vector2.h"
 #include "Math.h"
 #include "Window/RayWindow.h"
+#include "Utils/Resources.h"
 #include "rl_wrap.h"
 
 namespace ClassicLauncher
@@ -22,7 +23,7 @@ namespace ClassicLauncher
 
         if (!mFont.IsValid())
         {
-            mFont = Font::GetFontDefault();
+            LoadFont(Resources::GetFont(), 16, 0);
         }
 
         bool bFound = false;
@@ -103,7 +104,7 @@ namespace ClassicLauncher
         for (const auto& message : mMessages)
         {
             const Vector2f positionRender = {30, y};
-            const Vector2f positionRenderShadow = {31, y + 1};
+            const Vector2f positionRenderShadow = {31, (y + 1)};
 
             rlw::DrawTextEx(mFont, message.textMessage.data(), positionRenderShadow, mSize, mSpacing, Color::Black);
             rlw::DrawTextEx(mFont, message.textMessage.data(), positionRender, mSize, mSpacing, message.textColor);
@@ -121,8 +122,8 @@ namespace ClassicLauncher
     void Print::LoadFont(const std::string& path, int size, float spacing)
     {
 #ifdef _DEBUG
-        this->mSize = size;
-        this->mSpacing = spacing;
+        mSize = size;
+        mSpacing = spacing;
         mFont.LoadFromFile(path.c_str(), size, nullptr, 250);
         if (!mFont.IsValid())
         {

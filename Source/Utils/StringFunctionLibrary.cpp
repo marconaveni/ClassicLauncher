@@ -1,11 +1,14 @@
 #include "StringFunctionLibrary.h"
 
 #include <string>
+#include <cstdarg>
+#include <cstdio>
+#include <cstring>
 
 namespace ClassicLauncher
 {
 
-    std::string StringFunctionLibrary::NormalizePath(const std::string& path)
+    std::string String::NormalizePath(const std::string& path)
     {
         std::string convertedPath = path;
 #ifdef _WIN32
@@ -18,12 +21,12 @@ namespace ClassicLauncher
         return convertedPath;
     }
 
-    void StringFunctionLibrary::ReplaceString(std::string& value, const char* from, const char* to)
+    void String::ReplaceString(std::string& value, const char* from, const char* to)
     {
         ReplaceString(value, std::string{from}, std::string{to});
     }
 
-    void StringFunctionLibrary::ReplaceString(std::string& value, const std::string& from, const std::string& to)
+    void String::ReplaceString(std::string& value, const std::string& from, const std::string& to)
     {
         if (from.empty())
         {
@@ -38,7 +41,7 @@ namespace ClassicLauncher
         }
     }
 
-    std::string StringFunctionLibrary::RemoveDuplicateSlashes(const std::string& input)
+    std::string String::RemoveDuplicateSlashes(const std::string& input)
     {
         std::string result;
         bool bPreviousIsSlash = false;
@@ -68,7 +71,7 @@ namespace ClassicLauncher
         return result;
     }
 
-    std::vector<std::string> StringFunctionLibrary::SplitString(const std::string& input)
+    std::vector<std::string> String::SplitString(const std::string& input)
     {
         std::vector<std::string> tokens;
         std::string token;
@@ -102,40 +105,40 @@ namespace ClassicLauncher
         return tokens;
     }
 
-    std::string StringFunctionLibrary::Ltrim(const std::string& s)
+    std::string String::Ltrim(const std::string& str)
     {
         size_t start = 0;
-        for (size_t i = 0; i < s.size(); ++i)
+        for (size_t i = 0; i < str.size(); ++i)
         {
-            if (!isspace(static_cast<unsigned char>(s[i])))
+            if (!isspace(static_cast<unsigned char>(str[i])))
             {
                 start = i;
                 break;
             }
         }
-        return s.substr(start);
+        return str.substr(start);
     }
 
-    std::string StringFunctionLibrary::Rtrim(const std::string& s)
+    std::string String::Rtrim(const std::string& str)
     {
-        size_t end = s.size();
-        for (size_t i = s.size(); i > 0; --i)
+        size_t end = str.size();
+        for (size_t i = str.size(); i > 0; --i)
         {
-            if (!isspace(static_cast<unsigned char>(s[i - 1])))
+            if (!isspace(static_cast<unsigned char>(str[i - 1])))
             {
                 end = i;
                 break;
             }
         }
-        return s.substr(0, end);
+        return str.substr(0, end);
     }
 
-    std::string StringFunctionLibrary::Trim(const std::string& s)
+    std::string String::Trim(const std::string& str)
     {
-        return Ltrim(Rtrim(s));
+        return Ltrim(Rtrim(str));
     }
 
-    bool StringFunctionLibrary::IsIntegerNumber(const std::string& str)
+    bool String::IsIntegerNumber(const std::string& str)
     {
         if (str.empty() || (str.size() == 1 && str[0] == '-'))
         {
@@ -153,6 +156,36 @@ namespace ClassicLauncher
             }
         }
         return true;
+    }
+
+    const char* String::TextFormat(const char* text, ...)
+    {
+        const int maxTextFormatBuffers = 4; // Maximum number of static buffers for text formatting
+
+        const int maxTextBufferLen = 1024;
+
+        static char buffers[maxTextFormatBuffers][maxTextBufferLen] = {0};
+        static int index = 0;
+
+        char* currentBuffer = buffers[index];
+        memset(currentBuffer, 0, maxTextBufferLen);
+
+        std::va_list args;
+        va_start(args, text);
+        int requiredByteCount = std::vsnprintf(currentBuffer, maxTextBufferLen, text, args);
+        va_end(args);
+
+        if (requiredByteCount >= maxTextBufferLen)
+        {
+            char* truncBuffer = buffers[index] + maxTextBufferLen - 4; // Adding 4 bytes = "...\0"
+            std::sprintf(truncBuffer, "...");
+        }
+
+        index += 1; // Move to next buffer for next function call
+        if (index >= maxTextFormatBuffers)
+            index = 0;
+
+        return currentBuffer;
     }
 
 } // namespace ClassicLauncher

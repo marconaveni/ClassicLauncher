@@ -1,7 +1,7 @@
-﻿#include "Application.h"
+﻿#include "Engine.h"
 
 int main()
 {
-    ClassicLauncher::Application application;
-    application.Init();
+    ClassicLauncher::Engine engine;
+    engine.Run();
 }

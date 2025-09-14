@@ -8,7 +8,7 @@
 
 
 
-namespace ClassicLauncher::UtilsFunctionLibrary
+namespace ClassicLauncher::Utils
 {
 
     void SetSizeWithProportionFit(Vector2f& texture, const int widthResize, const int heightResize);

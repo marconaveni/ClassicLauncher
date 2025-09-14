@@ -2,18 +2,17 @@
 #define HELPER_H
 
 #include "Utils/Log.h"
+#include "Utils/Print.h"
+#include "Utils/StringFunctionLibrary.h"
 
-#define TEXT(...) TextFormat(__VA_ARGS__)
-#define TEXTBOOL(a) TextFormat("%s", (a) == true ? "true" : "false")
+#define TEXT(...) String::TextFormat(__VA_ARGS__)
+#define TEXTBOOL(a) String::TextFormat("%s", (a) == true ? "true" : "false")
 
 #ifdef _DEBUG
-/* const char* text,
- * float duration ,
- * const char* label ,
- * const Color& textColor,
- * bool bLog = false);
- */
-#define PRINT(...) Application::Get().GetPrint()->PrintOnScreen(__VA_ARGS__)
+
+
+//const char* text, float duration , const char* label , const Color& textColor, bool bLog = false
+#define PRINT(...) GetPrint()->PrintOnScreen(__VA_ARGS__)
 #else
 #define PRINT(...)
 #endif

@@ -75,7 +75,7 @@ namespace ClassicLauncher
 #ifdef _DEBUG
 
         const RectFloat& rectDrawArea = entity->mTransform.GetTransform();  //{ x, y, scale.x, scale.y };
-        const Vector2f vec = Application::Get().GetRenderScreen()->GetMousePositionRender();
+        const Vector2f vec = {};  // TODO Refactor  Application::Get().GetRenderScreen()->GetMousePositionRender();
         Rectangle point = { rectDrawArea.x, rectDrawArea.y, rectDrawArea.width, rectDrawArea.height };
         if (Math::CheckCollisionPointRec(vec, point) && bEnable)
         {
@@ -100,9 +100,5 @@ namespace ClassicLauncher
 #endif  // _DEBUG
     }
 
-    bool RenderEntities::CheckRender(const RectFloat& rec)
-    {
-        return Math::CheckCollisionRecs(RectFloat(0, 0, 1280, 720), rec);
-    }
 
 }  // namespace ClassicLauncher

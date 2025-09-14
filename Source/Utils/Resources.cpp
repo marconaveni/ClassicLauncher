@@ -3,19 +3,20 @@
 #include "Utils/UtilsFunctionLibrary.h"
 #include "Helper.h"   
 #include "rl_wrap.h"
+#include <filesystem>
 
 
 namespace ClassicLauncher::Resources
 {
 
-    std::string sClassicLauncherPath;
+    std::string s_classicLauncherPath;
 
     std::string GetResourcesPathFileAbs(const std::string& relativePath)
     {
         std::string path;
         path.append(rlw::GetApplicationDirectory());
         path.append(relativePath);
-        path = StringFunctionLibrary::NormalizePath(path);
+        path = String::NormalizePath(path);
         return path;
     }
 
@@ -56,29 +57,32 @@ namespace ClassicLauncher::Resources
 
     std::string GetClassicLauncherDir()
     {
-        if (sClassicLauncherPath.empty())
+        if (s_classicLauncherPath.empty())
         {
             SetClassicLauncherDir();
         }
-        return sClassicLauncherPath;
+        return s_classicLauncherPath;
     }
 
     void SetClassicLauncherDir()
     {
 #if WIN32
         std::string path = GetResourcesPathFileAbs("portable.txt");  // portable mode is avaliable only windows system
-        if (rlw::FileExists(path.c_str()))
+        // if (rlw::FileExists(path.c_str()))
+        if (std::filesystem::exists(path))
         {
-            sClassicLauncherPath = GetResourcesPathFileAbs(".ClassicLauncher/");
+            s_classicLauncherPath = GetResourcesPathFileAbs(".ClassicLauncher/");
         }
         else
 #endif
         {
-            sClassicLauncherPath = UtilsFunctionLibrary::GetHomeDir() + ".ClassicLauncher/";
-            sClassicLauncherPath = StringFunctionLibrary::NormalizePath(sClassicLauncherPath);
-            if (!rlw::DirectoryExists(sClassicLauncherPath.c_str()))
+            s_classicLauncherPath = Utils::GetHomeDir() + ".ClassicLauncher/";
+            s_classicLauncherPath = String::NormalizePath(s_classicLauncherPath);
+            //if (!rlw::DirectoryExists(sClassicLauncherPath.c_str()))
+            if (!std::filesystem::exists(s_classicLauncherPath))
             {
-                rlw::MakeDirectory(sClassicLauncherPath.c_str());
+                std::filesystem::create_directory(s_classicLauncherPath); // todo fazer testes 
+                //rlw::MakeDirectory(sClassicLauncherPath.c_str());
             }
         }
     }

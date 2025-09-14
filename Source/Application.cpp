@@ -18,8 +18,9 @@ namespace ClassicLauncher
 
     static Application* sInstanceApplication = nullptr;
 
-    Application::Application()
-        : mRenderEntities(&this->mSpriteManager)
+    Application::Application(ConfigurationManager& configManager)
+        : m_configManager(&configManager)
+        , mRenderEntities(&this->mSpriteManager)
         , mEntityManager(&this->mSpriteManager, &this->mTimerManager)
         , mGuiWindow(nullptr)
     {
@@ -43,51 +44,51 @@ namespace ClassicLauncher
 
     void Application::Init()
     {
-        m_window = std::make_unique<RayWindow>();
-        m_renderScreen = std::make_unique<RenderScreen>();
+        // m_window = std::make_unique<RayWindow>();
+        // m_renderScreen = std::make_unique<RenderScreen>();
 
-        mConfigurationManager.LoadConfiguration();
+        //m_configManager.LoadConfiguration();
 
-        LogLevel(mConfigurationManager.GetClassicLogLevel(), mConfigurationManager.GetRaylibLogLevel());
+        LogLevel(m_configManager->GetClassicLogLevel(), m_configManager->GetRaylibLogLevel());
         rlw::SetTraceLogCallback(TraceLogger);
 
         Resources::SetClassicLauncherDir();
         mGameListManager.Initialize();
 
 
-        if (mConfigurationManager.GetVSync())
-        {
-            m_window->SetConfigFlags(RayWindow::Flags::Vsync); // vsync only enable in fullscreen set before InitWindow
-        }
+        // if (m_configManager.GetVSync())
+        // {
+        //     m_window->SetConfigFlags(RayWindow::Flags::Vsync); // vsync only enable in fullscreen set before InitWindow
+        // }
 
-#if _DEBUG
-        std::string_view title = "Classic Launcher [DEVMODE]";
-#else
-        std::string_view title = "Classic Launcher";
-#endif
+// #if _DEBUG
+//         std::string_view title = "Classic Launcher [DEVMODE]";
+// #else
+//         std::string_view title = "Classic Launcher";
+// #endif
 
-        m_window->Init(1280, 720, title.data());
-        m_window->SetTargetFPS(mConfigurationManager.GetTargetFps());
+        // m_window->Init(1280, 720, title.data());
+        // m_window->SetTargetFPS(m_configManager.GetTargetFps());
 
-        if (mConfigurationManager.GetFullscreen())
-        {
-            const bool isFullscreen = m_window->ToggleFullscreen();
-            mConfigurationManager.SetFullscreen(isFullscreen);
-            mConfigurationManager.SaveConfiguration();
-        }
+        // if (m_configManager.GetFullscreen())
+        // {
+        //     const bool isFullscreen = m_window->ToggleFullscreen();
+        //     m_configManager.SetFullscreen(isFullscreen);
+        //     m_configManager.SaveConfiguration();
+        // }
 
-#ifndef _DEBUG
-        m_window->SetExitKey(0);
-#endif
+// #ifndef _DEBUG
+//         m_window->SetExitKey(0);
+// #endif
 
         const std::string musicDir =
-            StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "musics"); // theme dir
+            String::NormalizePath(Resources::GetClassicLauncherDir() + "musics"); // theme dir
 
         mThemes.Init(this);
         mThemes.LoadTheme(this);
 
-        mPrint.LoadFont(Resources::GetFont(), 16, 0);
-        m_renderScreen->Init(1280, 720);
+        // mPrint.LoadFont(Resources::GetFont(), 16, 0);
+        //m_renderScreen->Init(1280, 720);
 
         mAudioManager.Init();
         mAudioManager.LoadMusics(musicDir);
@@ -100,13 +101,13 @@ namespace ClassicLauncher
 
         // For visual reference you can upload up to four images to guide you
         const std::string refPath0 =
-            StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref0.png");
+            String::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref0.png");
         const std::string refPath1 =
-            StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref1.png");
+            String::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref1.png");
         const std::string refPath2 =
-            StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref2.png");
+            String::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref2.png");
         const std::string refPath3 =
-            StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref3.png");
+            String::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref3.png");
         mSpriteManager.LoadSprite("ref0", refPath0, 1280 * 2, 720 * 2);
         mSpriteManager.LoadSprite("ref1", refPath1, 1280 * 2, 720 * 2);
         mSpriteManager.LoadSprite("ref2", refPath2, 1280 * 2, 720 * 2);
@@ -131,9 +132,9 @@ namespace ClassicLauncher
             LOG(LOG_CLASSIC_ERROR, "system list is empty");
             // todo create screen not found system list
         }
-        Loop();
+        // Loop();
         
-        End();
+        //End();
     }
     
     void Application::CreateProcess()
@@ -150,30 +151,34 @@ namespace ClassicLauncher
     
     void Application::Loop()
     {
-        while (!m_window->ShouldClose())
-        {
-            ToggleFullscreen();
+        //while (!m_window->ShouldClose())
+        //{
+            // ToggleFullscreen();
             
             // update logic
-            Update();
+            // Update(); 
             
             // draw in texture render screen
-            m_renderScreen->BeginRender();
-            mRenderEntities.DrawEntities(mEntityManager.GetEntities());
-            m_renderScreen->EndRender();
+          //  m_renderScreen->BeginRender();
+          //  mRenderEntities.DrawEntities(mEntityManager.GetEntities());
+          //  m_renderScreen->EndRender();
             
             // draw on window
-            Draw();
-        }
+            // Draw();
+        //}
     }
     
     void Application::Draw()
     {
-        rlw::BeginDrawing();
-        rlw::ClearBackground(Color::Black);
-        m_renderScreen->Draw();
-        mPrint.DrawMessage();
-        rlw::EndDrawing();
+        // m_renderScreen->BeginRender();  // esse trecho é o begin rendersystem
+        mRenderEntities.DrawEntities(mEntityManager.GetEntities());
+        // m_renderScreen->EndRender();
+
+        //rlw::BeginDrawing();   // esse trecho é o endframe rendersystem
+        //rlw::ClearBackground(Color::Black);
+        ////m_renderScreen->Draw();
+        // mPrint.DrawMessage();
+        //rlw::EndDrawing();
     }
 
     void Application::Update()
@@ -185,10 +190,12 @@ namespace ClassicLauncher
         
         mTimerManager.Update();
         mProcessManager.StatusProcessRun(this);
-        mInputManager.UpdateInputState();
+        //mInputManager.UpdateInputState();
         
         #ifdef _DEBUG
         
+
+
         GameList* pSystemList = mGameListManager.GetCurrentGameList();
         PRINT(TEXT("========================================"), 2.0f, "line0", Color::Lime);
         PRINT(TEXT("Music Playing %s", mAudioManager.GetMusicName().c_str()), 2.0f, "music", Color::Lime);
@@ -223,26 +230,26 @@ namespace ClassicLauncher
         if (InputManager::IsRelease(InputName::rightThumb, main))
         {
             mAudioManager.ChangeMusic();
-            mPrint.PrintOnScreen(TEXT("Changed music"), 5.0f);
+            PRINT(TEXT("Changed music"), 5.0f);
         }
 
         if (Keyboard::IsReleased(Keyboard::P) && mAudioManager.IsPlayMusic())
         {
             mAudioManager.Pause();
-            mPrint.PrintOnScreen(TEXT("Pause music"), 5.0f);
+            PRINT(TEXT("Pause music"), 5.0f);
         }
         else if (Keyboard::IsReleased(Keyboard::P))
         {
             mAudioManager.Play();
-            mPrint.PrintOnScreen(TEXT("Play music"), 5.0f);
+            PRINT(TEXT("Play music"), 5.0f);
         }
         if (Keyboard::IsReleased(Keyboard::UP))
         {
             // mEntityManager.SetZOrder(mGuiWindow.get(), 1);
-            std::string homeDir = UtilsFunctionLibrary::GetHomeDir();
+            std::string homeDir = Utils::GetHomeDir();
 
             LOG(LOG_CLASSIC_DEBUG, TEXT("GetHomeDir %s", homeDir.c_str()));
-            LOG(LOG_CLASSIC_DEBUG, TEXT("GetWorkingDirectory %s", UtilsFunctionLibrary::GetWorkingDirectory().c_str()));
+            LOG(LOG_CLASSIC_DEBUG, TEXT("GetWorkingDirectory %s", Utils::GetWorkingDirectory().c_str()));
             LOG(LOG_CLASSIC_DEBUG, TEXT("GetApplicationDirectory %s", rlw::GetApplicationDirectory()));
         }
 #endif
@@ -250,8 +257,8 @@ namespace ClassicLauncher
 
     void Application::End()
     {
-        m_renderScreen->Unload();
-        mPrint.Unload();
+        // m_renderScreen->Unload();
+        GetPrint()->Unload();
         mAudioManager.Unload();
         mSpriteManager.UnloadSprites();
         mEntityManager.End();
@@ -259,14 +266,14 @@ namespace ClassicLauncher
 
     void Application::ToggleFullscreen()
     {
-        if (Keyboard::IsReleased(Keyboard::F11) ||
-            (Keyboard::IsDown(Keyboard::LEFT_ALT) && Keyboard::IsReleased(Keyboard::ENTER)))
-        {
-            const bool isFullscreen = m_window->ToggleFullscreen();
-            mConfigurationManager.SetFullscreen(isFullscreen);
-            mConfigurationManager.SaveConfiguration();
-            LOG(LOG_CLASSIC_DEBUG, TEXT("Saved is fullscreen config.ini with value %s", TEXTBOOL(isFullscreen)));
-        }
+        // if (Keyboard::IsReleased(Keyboard::F11) ||
+        //     (Keyboard::IsDown(Keyboard::LEFT_ALT) && Keyboard::IsReleased(Keyboard::ENTER)))
+        // {
+        //     const bool isFullscreen = m_window->ToggleFullscreen();
+        //     m_configManager.SetFullscreen(isFullscreen);
+        //     m_configManager.SaveConfiguration();
+        //     LOG(LOG_CLASSIC_DEBUG, TEXT("Saved is fullscreen config.ini with value %s", TEXTBOOL(isFullscreen)));
+        // }
     }
 
 } // namespace ClassicLauncher

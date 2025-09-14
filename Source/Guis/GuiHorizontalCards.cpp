@@ -122,8 +122,8 @@ namespace ClassicLauncher
 
         for (int i = 0; i < 10; i++)
         {
-            int indexFinal = UtilsFunctionLibrary::SetIndexArray(manager->GetGameId() + i - mIdFocus, manager->GetGameListSize());
-            indexFinal = UtilsFunctionLibrary::SetIndexArray(indexFinal, manager->GetGameListSize());
+            int indexFinal = Utils::SetIndexArray(manager->GetGameId() + i - mIdFocus, manager->GetGameListSize());
+            indexFinal = Utils::SetIndexArray(indexFinal, manager->GetGameListSize());
             indexFinal = Math::Clamp(indexFinal, 0, manager->GetGameListSize() - 1);
 
             const std::string name = std::to_string(indexFinal) + "_CV";

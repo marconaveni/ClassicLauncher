@@ -141,7 +141,7 @@ namespace ClassicLauncher
         libvlc_media_tracks_release(tracks, track_count);
 
         Vector2f textureSize((float)mWidthVideo, (float)mHeightVideo);
-        UtilsFunctionLibrary::SetSizeWithProportion(textureSize, mWidth, mHeight, bFill);
+        Utils::SetSizeWithProportion(textureSize, mWidth, mHeight, bFill);
         mWidthVideo = (int)textureSize.x;
         mHeightVideo = (int)textureSize.y;
 

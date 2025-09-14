@@ -1,6 +1,7 @@
 #ifndef RAY_WINDOW_H
 #define RAY_WINDOW_H
 
+#include "Utils/ConfigurationManager.h"
 #include "Window/Window.h"
 
 namespace ClassicLauncher
@@ -10,7 +11,7 @@ namespace ClassicLauncher
     {
     public:
 
-        RayWindow() = default;
+        RayWindow(ConfigurationManager& configManager);
         ~RayWindow();
         virtual void Init(int width, int height, const std::string& title) override;
         virtual bool ShouldClose() override;
@@ -24,7 +25,7 @@ namespace ClassicLauncher
         virtual void SetIcons(const std::vector<std::string>& pathIcons) override;
         virtual void SetExitKey(int key) override;
         virtual void SetTargetFPS(int fps) override;
-        
+
         static int GetFPS();
         static float GetFrameTime();
         static int GetScreenWidth();
@@ -34,7 +35,7 @@ namespace ClassicLauncher
         static int GetMonitorHeight(int monitor);
         static Vector2i GetMonitorPosition(int monitor);
 
-        bool ToggleFullscreen();
+        void PoolEvents();
         void SetConfigFlags(unsigned int flags);
 
         [[nodiscard]] bool IsResize() const { return m_isResized; }
@@ -44,10 +45,12 @@ namespace ClassicLauncher
             inline static constexpr unsigned int Vsync = 0x00000040;
             inline static constexpr unsigned int Resizable = 0x00000004;
             inline static constexpr unsigned int Undecorated = 0x00000008;
-        }; 
+        };
 
     private:
 
+        bool ToggleFullscreen();
+        ConfigurationManager* m_configManager{};
         std::string m_title{};
         Vector2i m_size{};
         Vector2i m_position{};
@@ -58,6 +61,6 @@ namespace ClassicLauncher
         void Unload();
     };
 
-};  // namespace ClassicLauncher
+}; // namespace ClassicLauncher
 
 #endif

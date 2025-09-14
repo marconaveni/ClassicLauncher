@@ -118,7 +118,7 @@ namespace ClassicLauncher
         {
             if (bAspectRatio)
             {
-                UtilsFunctionLibrary::ImageResize(mImage, width, height);
+                Utils::ImageResize(mImage, width, height);
             }
             else
             {

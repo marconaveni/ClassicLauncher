@@ -9,7 +9,7 @@
 namespace ClassicLauncher
 {
 
-    void UtilsFunctionLibrary::SetSizeWithProportionFit(Vector2f& texture, const int widthResize,
+    void Utils::SetSizeWithProportionFit(Vector2f& texture, const int widthResize,
                                                         const int heightResize)
     {
         // Define a nova largura e altura desejadas
@@ -28,7 +28,7 @@ namespace ClassicLauncher
         texture = Vector2f{newWidth, newHeight};
     }
 
-    void UtilsFunctionLibrary::SetSizeWithProportionFill(Vector2f& texture, const int widthResize,
+    void Utils::SetSizeWithProportionFill(Vector2f& texture, const int widthResize,
                                                          const int heightResize)
     {
         float newWidth = static_cast<float>(widthResize);
@@ -46,7 +46,7 @@ namespace ClassicLauncher
         texture = Vector2f{newWidth, newHeight};
     }
 
-    void UtilsFunctionLibrary::SetSizeWithProportion(Vector2f& texture, const int widthResize, const int heightResize,
+    void Utils::SetSizeWithProportion(Vector2f& texture, const int widthResize, const int heightResize,
                                                      bool bFill)
     {
         if (!bFill)
@@ -59,7 +59,7 @@ namespace ClassicLauncher
         }
     }
 
-    void UtilsFunctionLibrary::ImageResize(Image& image, const int newWidth, const int newHeight)
+    void Utils::ImageResize(Image& image, const int newWidth, const int newHeight)
     {
         Vector2f newSize{static_cast<float>(image.width), static_cast<float>(image.height)};
         SetSizeWithProportion(newSize, newWidth, newHeight);
@@ -67,7 +67,7 @@ namespace ClassicLauncher
         image.Resize(static_cast<int>(newSize.x), static_cast<int>(newSize.y));
     }
 
-    void UtilsFunctionLibrary::ImageResizeNN(Image& image, const int newWidth, const int newHeight)
+    void Utils::ImageResizeNN(Image& image, const int newWidth, const int newHeight)
     {
         Vector2f newSize{static_cast<float>(image.width), static_cast<float>(image.height)};
         SetSizeWithProportion(newSize, newWidth, newHeight);
@@ -76,7 +76,7 @@ namespace ClassicLauncher
     }
 
 
-    int UtilsFunctionLibrary::SetIndexArray(const int index, const int maxArrayLength)
+    int Utils::SetIndexArray(const int index, const int maxArrayLength)
     {
         if (index >= maxArrayLength)
         {
@@ -89,14 +89,14 @@ namespace ClassicLauncher
         return index;
     }
 
-    std::string UtilsFunctionLibrary::GetWorkingDirectory()
+    std::string Utils::GetWorkingDirectory()
     {
         std::string newDir = rlw::GetWorkingDirectory();
         newDir += "/";
-        return StringFunctionLibrary::NormalizePath(newDir);
+        return String::NormalizePath(newDir);
     }
 
-    std::string UtilsFunctionLibrary::GetHomeDir()
+    std::string Utils::GetHomeDir()
     {
 #ifdef _WIN32
         const char* homeDir = "USERPROFILE";
@@ -105,15 +105,15 @@ namespace ClassicLauncher
 #endif
         std::string env = getenv(homeDir);
         env += "/";
-        return StringFunctionLibrary::NormalizePath(env);
+        return String::NormalizePath(env);
     }
 
-    bool UtilsFunctionLibrary::ChangeDirectory(const std::string& path)
+    bool Utils::ChangeDirectory(const std::string& path)
     {
         return rlw::ChangeDirectory(path.c_str());
     }
 
-    int UtilsFunctionLibrary::CountChars(const std::string& text, const char compareChar)
+    int Utils::CountChars(const std::string& text, const char compareChar)
     {
         int count = 0;
         for (const char c : text)

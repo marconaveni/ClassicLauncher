@@ -61,9 +61,9 @@ namespace rlw
 
 
     const char* GetDirectoryPath(const char* filePath);
-    bool FileExists(const char* fileName);
-    bool DirectoryExists(const char* dirPath);
-    bool MakeDirectory(const char* dirPath);
+    // bool FileExists(const char* fileName);
+    //bool DirectoryExists(const char* dirPath);
+    //bool MakeDirectory(const char* dirPath);
 
     void WaitTime(double seconds);
 

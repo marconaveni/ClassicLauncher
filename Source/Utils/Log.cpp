@@ -1,23 +1,22 @@
 #include "Log.h"
 
-#include <cstdarg>
-#include <cstdio>
-#include <cstring>
+
 #include <filesystem>
 #include <format>
 #include <string>
 
 #include "rl_wrap.h"
+#include "Utils/Print.h"
 
 namespace ClassicLauncher
 {
-
-    static int sLogClassicLevel = 10;
+    static Print s_print;
+    static int s_logClassicLevel = 10;
 
     void LogLevel(const int classicLogType, const int raylibLogType)
     {
 #ifdef _DEBUG
-        sLogClassicLevel = classicLogType;
+        s_logClassicLevel = classicLogType;
         rlw::SetTraceLogLevel(raylibLogType);
 #else
         sLogClassicLevel = 12;
@@ -27,7 +26,7 @@ namespace ClassicLauncher
 
     void TraceLogger(int messageType, const char* text, va_list args)
     {
-        if (messageType > 7 && messageType < sLogClassicLevel)
+        if (messageType > 7 && messageType < s_logClassicLevel)
         {
             return;
         }
@@ -57,7 +56,7 @@ namespace ClassicLauncher
 
     void LogClassic(const int logType, int line, const char* file, const char* text, ...)
     {
-        if (logType > 7 && logType < sLogClassicLevel)
+        if (logType > 7 && logType < s_logClassicLevel)
         {
             return;
         }
@@ -72,34 +71,10 @@ namespace ClassicLauncher
         va_end(args);
     }
 
-    const char* TextFormat(const char* text, ...)
+
+    Print* GetPrint()
     {
-        const int maxTextFormatBuffers = 4; // Maximum number of static buffers for text formatting
-
-        const int maxTextBufferLen = 1024;
-
-        static char buffers[maxTextFormatBuffers][maxTextBufferLen] = {0};
-        static int index = 0;
-
-        char* currentBuffer = buffers[index];
-        memset(currentBuffer, 0, maxTextBufferLen);
-
-        std::va_list args;
-        va_start(args, text);
-        int requiredByteCount = std::vsnprintf(currentBuffer, maxTextBufferLen, text, args);
-        va_end(args);
-
-        if (requiredByteCount >= maxTextBufferLen)
-        {
-            char* truncBuffer = buffers[index] + maxTextBufferLen - 4; // Adding 4 bytes = "...\0"
-            std::sprintf(truncBuffer, "...");
-        }
-
-        index += 1; // Move to next buffer for next function call
-        if (index >= maxTextFormatBuffers)
-            index = 0;
-
-        return currentBuffer;
+        return &s_print;
     }
 
 } // namespace ClassicLauncher

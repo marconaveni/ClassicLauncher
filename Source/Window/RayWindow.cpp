@@ -1,9 +1,12 @@
 #include "Window/RayWindow.h"
 #include "ClassicAssert.h"
+#include "Input/InputManager.h"
+#include "Helper.h"
 
 namespace ray
 {
 #include "raylib.h"
+#include "RayWindow.h"
 }  // namespace ray
 
 namespace ClassicLauncher
@@ -11,7 +14,12 @@ namespace ClassicLauncher
 
     static std::vector<ray::Image> icons;
 
-    RayWindow::~RayWindow()
+    RayWindow::RayWindow(ConfigurationManager& configManager)
+        : m_configManager(&configManager)
+    {
+    }
+
+    RayWindow::~RayWindow() 
     {
         Close();
     }
@@ -20,10 +28,28 @@ namespace ClassicLauncher
     {
         CLASSIC_ASSERT(!ray::IsWindowReady(), "You not can create another window");
 
+
+        if (m_configManager->GetVSync())
+        {
+            SetConfigFlags(RayWindow::Flags::Vsync); // vsync only enable in fullscreen set before InitWindow
+        }
+
         m_title = title;
         ray::InitWindow(width, height, title.c_str());
         ray::SetWindowSize(width, height);
         ray::SetWindowState(Flags::Resizable);
+        SetTargetFPS(m_configManager->GetTargetFps());
+
+        if (m_configManager->GetFullscreen())
+        {
+            const bool isFullscreen = ToggleFullscreen();
+            m_configManager->SetFullscreen(isFullscreen);
+            m_configManager->SaveConfiguration();
+        }
+
+#ifndef _DEBUG
+        SetExitKey(0);
+#endif
 
         m_isReady = ray::IsWindowReady();
     }
@@ -176,7 +202,7 @@ namespace ClassicLauncher
         return m_isFullScreen;
     }
 
-    void RayWindow::SetConfigFlags(unsigned int flags)
+    void RayWindow::SetConfigFlags(unsigned int flags) 
     {
         ray::SetConfigFlags(flags);
     }
@@ -188,6 +214,18 @@ namespace ClassicLauncher
             ray::UnloadImage(icon);
         }
         icons.clear();
+    }
+
+    void RayWindow::PoolEvents()
+    {
+        if (Keyboard::IsReleased(Keyboard::F11) ||
+            (Keyboard::IsDown(Keyboard::LEFT_ALT) && Keyboard::IsReleased(Keyboard::ENTER)))
+        {
+            const bool isFullscreen = ToggleFullscreen();
+            m_configManager->SetFullscreen(isFullscreen);
+            m_configManager->SaveConfiguration();
+            LOG(LOG_CLASSIC_DEBUG, TEXT("Saved is fullscreen config.ini with value %s", TEXTBOOL(isFullscreen)));
+        }
     }
 
 }  // namespace ClassicLauncher

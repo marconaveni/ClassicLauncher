@@ -5,6 +5,7 @@
 
 namespace ClassicLauncher
 {
+    class Print;
 
     // Trace log in level Classic Launcher
     // NOTE: Organized by priority level
@@ -31,7 +32,7 @@ namespace ClassicLauncher
     void LogLevel(int classicLogType, int raylibLogType);
     void TraceLogger(int messageType, const char* text, va_list args);
     void LogClassic(int logType, int line, const char* file, const char* text, ...);
-    const char* TextFormat(const char* text, ...);
+    Print* GetPrint();
 
 } // namespace ClassicLauncher
 

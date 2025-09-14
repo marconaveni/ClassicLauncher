@@ -10,7 +10,7 @@ namespace ClassicLauncher
 {
     void GameListManager::LoadGameList()
     {
-        using namespace StringFunctionLibrary;
+        using namespace String;
 
         mDocumentGameListXml.Clear();
         const std::string pathXml = NormalizePath(mSystemList[mIdSystemList].romPath + "\\gamelist.xml");
@@ -118,7 +118,7 @@ namespace ClassicLauncher
 
     void GameListManager::LoadSystemList()
     {
-        using namespace StringFunctionLibrary;
+        using namespace String;
 
         mDocumentSystemListXml.Clear();
         const std::string systemListPath = NormalizePath(Resources::GetClassicLauncherDir() + "systemlist.xml");
@@ -155,7 +155,7 @@ namespace ClassicLauncher
 
     void GameListManager::AddId(const int newId)
     {
-        mIdGameList = UtilsFunctionLibrary::SetIndexArray(mIdGameList += newId, static_cast<int>(mGameList.size()));
+        mIdGameList = Utils::SetIndexArray(mIdGameList += newId, static_cast<int>(mGameList.size()));
         if (mCurrentList == CurrentList::GameListSelect)
         {
             mSystemList[mIdSystemList].history.id = mIdGameList;
@@ -256,10 +256,10 @@ namespace ClassicLauncher
         dotSlash = ".\\";
         slash = "\\";
 #endif
-        StringFunctionLibrary::ReplaceString(pGame->path, dotSlash, mSystemList[mIdSystemList].romPath + slash);
-        StringFunctionLibrary::ReplaceString(pGame->image, dotSlash, mSystemList[mIdSystemList].romPath + slash);
-        StringFunctionLibrary::ReplaceString(pGame->thumbnail, dotSlash, mSystemList[mIdSystemList].romPath + slash);
-        StringFunctionLibrary::ReplaceString(pGame->video, dotSlash, mSystemList[mIdSystemList].romPath + slash);
+        String::ReplaceString(pGame->path, dotSlash, mSystemList[mIdSystemList].romPath + slash);
+        String::ReplaceString(pGame->image, dotSlash, mSystemList[mIdSystemList].romPath + slash);
+        String::ReplaceString(pGame->thumbnail, dotSlash, mSystemList[mIdSystemList].romPath + slash);
+        String::ReplaceString(pGame->video, dotSlash, mSystemList[mIdSystemList].romPath + slash);
     }
 
     bool GameListManager::IsValidElement(const tinyxml2::XMLElement* pElement, const char* name)

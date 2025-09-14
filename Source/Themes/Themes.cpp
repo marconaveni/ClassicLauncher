@@ -7,6 +7,7 @@
 #include "Utils/Resources.h"
 #include "Utils/StringFunctionLibrary.h"
 #include "rl_wrap.h"
+#include <filesystem>
 
 namespace ClassicLauncher
 {
@@ -30,10 +31,11 @@ namespace ClassicLauncher
     std::vector<std::string> Themes::GetThemeDirs()
     {
         // repeat code todo remove this after refactor
-        std::string path = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/" +
+        std::string path = String::NormalizePath(Resources::GetClassicLauncherDir() + "themes/" +
                                                                 mCurrentSystemName + "/");
         std::vector<std::string> paths;
-        if (rlw::DirectoryExists(path.c_str()))
+        // if (rlw::DirectoryExists(path.c_str()))
+        if (std::filesystem::exists(path))
         {
             paths.emplace_back(path);
         }
@@ -44,7 +46,8 @@ namespace ClassicLauncher
     bool Themes::GetPathTheme(std::string& file, int monitorWidth, int monitorCompare, const std::string& path,
                               float numScale)
     {
-        if (monitorWidth <= monitorCompare && rlw::FileExists(path.c_str()))
+        // if (monitorWidth <= monitorCompare && rlw::FileExists(path.c_str()))
+        if (monitorWidth <= monitorCompare && std::filesystem::exists(path))
         {
             file = path;
             LOG(LOG_CLASSIC_DEBUG, "%.1f x sprite path [%s]", numScale, path.c_str());
@@ -57,14 +60,13 @@ namespace ClassicLauncher
     {
         if (Application::Get().GetConfigurationManager()->GetForceInternalScale())
         {
-            file = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/sprite.png");
+            file = String::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/sprite.png");
             return Math::Clamp(Application::Get().GetConfigurationManager()->GetInternalScale(), 1, 3);
         }
 
         std::vector<std::string> paths;
         paths = GetThemeDirs();
-        const int monitorWidth =
-            1920; // todo refactor  parte delicada precisa de refactor urgente rlw::GetMonitorWidth(rlw::GetCurrentMonitor());
+        const int monitorWidth = 1920; // todo refactor  parte delicada precisa de refactor urgente rlw::GetMonitorWidth(rlw::GetCurrentMonitor());
         int scales[3] = {1, 2, 3};
         int widths[3] = {1280, 2560, 3840}; //2560
 
@@ -129,7 +131,7 @@ namespace ClassicLauncher
 
     void Themes::LoadConfigurationThemes(Application* pApplication)
     {
-        const std::string path = StringFunctionLibrary::NormalizePath(Resources::GetClassicLauncherDir() + "themes/" +
+        const std::string path = String::NormalizePath(Resources::GetClassicLauncherDir() + "themes/" +
                                                                       mCurrentSystemName + "/config.cfg");
         mConfigurationThemes.LoadConfigurations(path);
         pApplication->LoadConfigurationThemes();

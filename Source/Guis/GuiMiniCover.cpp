@@ -104,7 +104,7 @@ namespace ClassicLauncher
         for (int i = 0; i < numCovers; i++)
         {
             const int index = pManager->GetGameId() + i - static_cast<int>(std::round(numCovers / 2));
-            int indexFinal = UtilsFunctionLibrary::SetIndexArray(index, gameListSize);
+            int indexFinal = Utils::SetIndexArray(index, gameListSize);
             indexFinal = Math::Clamp(indexFinal, 0, gameListSize - 1);
 
             const std::string fileName = pManager->GetCurrentGameList(indexFinal)->image;

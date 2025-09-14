@@ -105,11 +105,11 @@ namespace ClassicLauncher::Process
 
     void CreateProc(int& processId, const std::string& fullPath)
     {
-        std::vector<std::string> paths = StringFunctionLibrary::SplitString(fullPath);  
+        std::vector<std::string> paths = String::SplitString(fullPath);  
 
         for (auto& path : paths)
         {
-            StringFunctionLibrary::ReplaceString(path, "\"", "");
+            String::ReplaceString(path, "\"", "");
         }
 
         pid_t pid = fork();

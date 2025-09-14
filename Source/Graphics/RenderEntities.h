@@ -16,7 +16,6 @@ namespace ClassicLauncher
         void DrawEntities(const std::vector<std::unique_ptr<Entity>>& entities);
         void DrawEntity(Entity* entity);
         static void DrawDebug(Entity* entity);
-        static bool CheckRender(const RectFloat& rec);
 
     private:
 

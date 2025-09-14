@@ -37,7 +37,7 @@ namespace ClassicLauncher
         mGuiVideoPlayer = pApplication->GetEntityManager()->CreateEntity<GuiVideoPlayer>("GuiVideoPlayer");
         mGuiBlackScreen = pApplication->GetEntityManager()->CreateEntity<GuiBlackScreen>("GuiBlackScreen");
         pApplication->GetEntityManager()->SetZOrder(mGuiVideoPlayer, 5);
-        pApplication->GetEntityManager()->SetZOrder(mGuiBlackScreen, 99);
+        pApplication->GetEntityManager()->SetZOrder(mGuiBlackScreen, 999);
 
         pApplication->LoadConfigurationThemes();
 
