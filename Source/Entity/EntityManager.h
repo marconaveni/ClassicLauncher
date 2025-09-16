@@ -24,6 +24,7 @@ namespace ClassicLauncher
         T* CreateEntity(const std::string& name, Args&&... args)
         {
             auto entity = std::make_unique<T>(std::forward<Args>(args)...);
+            entity->m_timerManagerRef = mTimerManagerReference;
             SetNameId(entity.get(), name);
             mTempEntities.push_back(std::move(entity));
             return static_cast<T*>(mTempEntities.back().get());
@@ -50,7 +51,7 @@ namespace ClassicLauncher
         void UpdateAll();
         void UpdatePositionAll();
         void End();
-        void ClearAllEntitys();
+        void ClearAllEntities();
         void SetThemeValue();
 
     private:
@@ -58,7 +59,7 @@ namespace ClassicLauncher
         void SetZOrder();
         void SetNewEntities();
         void SetNameId(Entity* entity, const std::string& name);
-        void DeleteEntitys(bool bIsDeleteEntities);
+        void DeleteEntities(bool bIsDeleteEntities);
 
         std::vector<std::unique_ptr<Entity>> mEntities;
         std::vector<std::unique_ptr<Entity>> mTempEntities;

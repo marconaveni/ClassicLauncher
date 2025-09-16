@@ -137,10 +137,10 @@ namespace ClassicLauncher
         pApplication->LoadConfigurationThemes();
     }
 
-    Themes& Themes::Get()
-    {
-        return *sInstanceThemes;
-    }
+    // Themes& Themes::Get()
+    // {
+    //     return *sInstanceThemes;
+    // }
 
     float Themes::GetScaleTexture()
     {

@@ -61,7 +61,7 @@ namespace ClassicLauncher
 
         target.color.a = 0;
         StartAnimation("card-zoom", time, mTransform, target, Ease::EaseQuadInOut, true);
-        GetApplication()->GetTimerManager()->SetTimer(mTimer, [this]() { mTransform.color.a = 255; }, this, time * 2);
+        GetTimerManager()->SetTimer(mTimer, [this]() { mTransform.color.a = 255; }, this, time * 2);
     }
 
     void GuiFrame::Update()

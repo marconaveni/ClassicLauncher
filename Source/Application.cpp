@@ -4,6 +4,7 @@
 
 #include "Graphics/RenderScreen.h"
 #include "Guis/GuiWindow.h"
+#include "Helper.h"
 #include "Utils/ConfigurationManager.h"
 #include "Utils/Log.h"
 #include "Utils/Resources.h"
@@ -11,7 +12,6 @@
 #include "Utils/UtilsFunctionLibrary.h"
 #include "Window/RayWindow.h"
 #include "rl_wrap.h"
-#include "Helper.h"
 
 namespace ClassicLauncher
 {
@@ -21,10 +21,10 @@ namespace ClassicLauncher
     Application::Application(ConfigurationManager& configManager)
         : m_configManager(&configManager)
         , mRenderEntities(&this->mSpriteManager)
-        , mEntityManager(&this->mSpriteManager, &this->mTimerManager)
+        , m_entityManager(&this->mSpriteManager, &this->mTimerManager)
         , mGuiWindow(nullptr)
     {
-        sInstanceApplication = this;  
+        sInstanceApplication = this;
     }
 
     Application::~Application()
@@ -37,10 +37,10 @@ namespace ClassicLauncher
         return *sInstanceApplication;
     }
 
-    GuiBlackScreen* Application::GetGuiBlackScreen()
-    {
-        return mGuiWindow->GetGuiBlackScreen();
-    }
+    // GuiBlackScreen* Application::GetGuiBlackScreen()
+    // {
+    //     return mGuiWindow->GetGuiBlackScreen();
+    // }
 
     void Application::Init()
     {
@@ -61,11 +61,11 @@ namespace ClassicLauncher
         //     m_window->SetConfigFlags(RayWindow::Flags::Vsync); // vsync only enable in fullscreen set before InitWindow
         // }
 
-// #if _DEBUG
-//         std::string_view title = "Classic Launcher [DEVMODE]";
-// #else
-//         std::string_view title = "Classic Launcher";
-// #endif
+        // #if _DEBUG
+        //         std::string_view title = "Classic Launcher [DEVMODE]";
+        // #else
+        //         std::string_view title = "Classic Launcher";
+        // #endif
 
         // m_window->Init(1280, 720, title.data());
         // m_window->SetTargetFPS(m_configManager.GetTargetFps());
@@ -77,12 +77,11 @@ namespace ClassicLauncher
         //     m_configManager.SaveConfiguration();
         // }
 
-// #ifndef _DEBUG
-//         m_window->SetExitKey(0);
-// #endif
+        // #ifndef _DEBUG
+        //         m_window->SetExitKey(0);
+        // #endif
 
-        const std::string musicDir =
-            String::NormalizePath(Resources::GetClassicLauncherDir() + "musics"); // theme dir
+        const std::string musicDir = String::NormalizePath(Resources::GetClassicLauncherDir() + "musics"); // theme dir
 
         mThemes.Init(this);
         mThemes.LoadTheme(this);
@@ -121,10 +120,10 @@ namespace ClassicLauncher
         //                        rlw::LoadImage(Resources::GetIcon(128).c_str()) };
 
         // rlw::SetWindowIcons(imgs, 5);
-        
+
         if (mGameListManager.GetGameListSize() > 0)
         {
-            mGuiWindow = mEntityManager.CreateEntity<GuiWindow>("GuiWindow");
+            mGuiWindow = m_entityManager.CreateEntity<GuiWindow>("GuiWindow", &m_entityManager);
             mGuiWindow->Init();
         }
         else
@@ -133,45 +132,45 @@ namespace ClassicLauncher
             // todo create screen not found system list
         }
         // Loop();
-        
+
         //End();
     }
-    
+
     void Application::CreateProcess()
     {
-        GetAudioManager()->Pause();
-        GetProcessManager()->CreateProc(this);
+        mAudioManager.Pause();
+        mProcessManager.CreateProc(&mGameListManager);
     }
-    
+
     void Application::LoadConfigurationThemes()
     {
         LOG(LOG_CLASSIC_WARNING, "here");
-        mEntityManager.SetThemeValue();
+        m_entityManager.SetThemeValue();
     }
-    
+
     void Application::Loop()
     {
         //while (!m_window->ShouldClose())
         //{
-            // ToggleFullscreen();
-            
-            // update logic
-            // Update(); 
-            
-            // draw in texture render screen
-          //  m_renderScreen->BeginRender();
-          //  mRenderEntities.DrawEntities(mEntityManager.GetEntities());
-          //  m_renderScreen->EndRender();
-            
-            // draw on window
-            // Draw();
+        // ToggleFullscreen();
+
+        // update logic
+        // Update();
+
+        // draw in texture render screen
+        //  m_renderScreen->BeginRender();
+        //  mRenderEntities.DrawEntities(mEntityManager.GetEntities());
+        //  m_renderScreen->EndRender();
+
+        // draw on window
+        // Draw();
         //}
     }
-    
+
     void Application::Draw()
     {
         // m_renderScreen->BeginRender();  // esse trecho é o begin rendersystem
-        mRenderEntities.DrawEntities(mEntityManager.GetEntities());
+        mRenderEntities.DrawEntities(m_entityManager.GetEntities());
         // m_renderScreen->EndRender();
 
         //rlw::BeginDrawing();   // esse trecho é o endframe rendersystem
@@ -184,16 +183,15 @@ namespace ClassicLauncher
     void Application::Update()
     {
         // Log(LOG_CLASSIC_DEBUG, TEXTBOOL(InputManager::GetInputLeftFaceLeft()));
-        
+
         mGuiWindow->Teste();
-        mEntityManager.UpdateAll();
-        
+        m_entityManager.UpdateAll();
+
         mTimerManager.Update();
-        mProcessManager.StatusProcessRun(this);
+        mProcessManager.StatusProcessRun(mGuiWindow->GetGuiBlackScreen(), &mAudioManager);
         //mInputManager.UpdateInputState();
-        
-        #ifdef _DEBUG
-        
+
+#ifdef _DEBUG
 
 
         GameList* pSystemList = mGameListManager.GetCurrentGameList();
@@ -261,7 +259,7 @@ namespace ClassicLauncher
         GetPrint()->Unload();
         mAudioManager.Unload();
         mSpriteManager.UnloadSprites();
-        mEntityManager.End();
+        m_entityManager.End();
     }
 
     void Application::ToggleFullscreen()

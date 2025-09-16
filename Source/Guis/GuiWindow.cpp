@@ -1,6 +1,7 @@
 #include "GuiWindow.h"
 
 #include "Application.h"
+#include "Entity/EntityManager.h"
 #include "Guis/GuiBlackScreen.h"
 #include "Guis/GuiComponent.h"
 #include "Guis/GuiHorizontalCards.h"
@@ -9,18 +10,22 @@
 
 namespace ClassicLauncher
 {
-    GuiWindow::GuiWindow()
-        : mGuiHorizontalBox(nullptr), mGuiBlackScreen(nullptr), mGuiVideoPlayer(nullptr), mGuiBackground(nullptr)
+    GuiWindow::GuiWindow(EntityManager* entityManager)
+        : mGuiHorizontalBox(nullptr)
+        , mGuiBlackScreen(nullptr)
+        , mGuiVideoPlayer(nullptr)
+        , mGuiBackground(nullptr)
+        , m_entityManagerRef(entityManager)
     {
     }
 
     void GuiWindow::Init()
     {
-        Application* pApplication = GetApplication();
+        
         mTransform.position.width = 1280.0f; //  todo: refactor    (float)pApplication->GetSpecification().width;
         mTransform.position.height = 720.0f; //  todo: refactor    (float)pApplication->GetSpecification().height;
 
-        mGuiBackground = pApplication->GetEntityManager()->CreateEntity<GuiComponent>("GuiBackground");
+        mGuiBackground = m_entityManagerRef->CreateEntity<GuiComponent>("GuiBackground");
         mGuiBackground->mTransform.position.width = 21;
         mGuiBackground->mTransform.position.height = 720;
         mGuiBackground->mTransform.source.x = 0;
@@ -30,16 +35,16 @@ namespace ClassicLauncher
         mGuiBackground->mTextureName = "sprite";
         AddChild(mGuiBackground);
 
-        mGuiHorizontalBox = pApplication->GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalCards");
+        mGuiHorizontalBox = m_entityManagerRef->CreateEntity<GuiHorizontalCards>("GuiHorizontalCards", m_entityManagerRef);
         mGuiHorizontalBox->Init();
         AddChild(mGuiHorizontalBox);
 
-        mGuiVideoPlayer = pApplication->GetEntityManager()->CreateEntity<GuiVideoPlayer>("GuiVideoPlayer");
-        mGuiBlackScreen = pApplication->GetEntityManager()->CreateEntity<GuiBlackScreen>("GuiBlackScreen");
-        pApplication->GetEntityManager()->SetZOrder(mGuiVideoPlayer, 5);
-        pApplication->GetEntityManager()->SetZOrder(mGuiBlackScreen, 999);
+        mGuiVideoPlayer = m_entityManagerRef->CreateEntity<GuiVideoPlayer>("GuiVideoPlayer");
+        mGuiBlackScreen = m_entityManagerRef->CreateEntity<GuiBlackScreen>("GuiBlackScreen");
+        m_entityManagerRef->SetZOrder(mGuiVideoPlayer, 5);
+        m_entityManagerRef->SetZOrder(mGuiBlackScreen, 999);
 
-        pApplication->LoadConfigurationThemes();
+        GetApplication()->LoadConfigurationThemes();
 
 #ifdef _DEBUG
         InputManager::SetCategory(main | debug);
@@ -127,14 +132,14 @@ namespace ClassicLauncher
             {
                 mGuiBlackScreen->FadeInFadeOut();
             }
-            pApplication->GetTimerManager()->SetTimer(mClickTimer, CALLFUNCTION(OnClick, this), this, 0.5f, false);
+            GetTimerManager()->SetTimer(mClickTimer, CALLFUNCTION(OnClick, this), this, 0.5f, false);
         }
         if (InputManager::IsRelease(InputName::rightFaceRight, main) &&
             pApplication->GetGameListManager()->GetCurrentList() == GameListSelect) // back
         {
             InputManager::DisableInput();
             mGuiBlackScreen->FadeInFadeOut();
-            pApplication->GetTimerManager()->SetTimer(mClickTimer, CALLFUNCTION(OnBack, this), this, 0.5f, false);
+            GetTimerManager()->SetTimer(mClickTimer, CALLFUNCTION(OnBack, this), this, 0.5f, false);
         }
     }
 
@@ -150,7 +155,7 @@ namespace ClassicLauncher
         {
             mGuiHorizontalBox->ChangeList(GameListSelect);
             pApplication->GetThemes()->LoadTheme(pApplication);
-            pApplication->GetTimerManager()->SetTimer(
+            GetTimerManager()->SetTimer(
                 mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
     }
@@ -163,7 +168,7 @@ namespace ClassicLauncher
         {
             mGuiHorizontalBox->ChangeList(SystemListSelect);
             pApplication->GetThemes()->LoadTheme(pApplication);
-            pApplication->GetTimerManager()->SetTimer(
+            GetTimerManager()->SetTimer(
                 mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
     }
@@ -175,8 +180,7 @@ namespace ClassicLauncher
         {
             if (mGuiHorizontalBox == nullptr)
             {
-                mGuiHorizontalBox =
-                    GetApplication()->GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalBox");
+                mGuiHorizontalBox = m_entityManagerRef->CreateEntity<GuiHorizontalCards>("GuiHorizontalBox" , m_entityManagerRef);
                 mGuiHorizontalBox->Init();
                 AddChild(mGuiHorizontalBox);
                 GetApplication()->LoadConfigurationThemes();

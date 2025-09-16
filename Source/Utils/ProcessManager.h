@@ -6,7 +6,10 @@
 namespace ClassicLauncher
 {
     class GameListManager;
-    class Application;
+    class GuiBlackScreen;
+    class AudioManager;
+    // class Application;
+
 
     enum class ProcessStatus : std::int8_t
     {
@@ -30,16 +33,18 @@ namespace ClassicLauncher
         bool mIsReadyRunApp = false;
 
         ProcessManager();
-        void CreateProc(Application* pApplication);
+
+
+        void CreateProc(GameListManager* gameListManager);
         ProcessStatus UpdateRun();
-        [[nodiscard]]bool IsApplicationRunning() const;
-        void StatusProcessRun(Application* pApplication);
+        [[nodiscard]] bool IsApplicationRunning() const;
+        void StatusProcessRun(GuiBlackScreen* guiBlackScreen, AudioManager* audioManager);
 
     private:
 
         ProcessStatus mStatus;
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // PROCESS_MANAGER_H
+#endif // PROCESS_MANAGER_H

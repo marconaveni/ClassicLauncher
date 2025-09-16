@@ -6,11 +6,12 @@
 #include "Guis/GuiHorizontalBox.h"
 #include "Guis/GuiComponent.h"
 #include "Application.h"
+#include "Entity/EntityManager.h"
 
 namespace ClassicLauncher
 {
-    GuiMiniCover::GuiMiniCover()
-        : mArrow(nullptr), mSize(32), mSizeCover(28.0f, 40.0f)
+    GuiMiniCover::GuiMiniCover(EntityManager* entityManager)
+        : mArrow(nullptr), mSize(32), mSizeCover(28.0f, 40.0f), m_entityManagerRef(entityManager)
         // : mGuiCovers(), mArrow(nullptr), mSize(23), mSizeCover(40.0f, 58.0f) // test
     {
     }
@@ -21,7 +22,7 @@ namespace ClassicLauncher
         mTransform.position.width = 1280.0f;
         mTransform.position.height = 72.0f;
 
-        mGuiHorizontalBox = GetApplication()->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
+        mGuiHorizontalBox = m_entityManagerRef->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
         mGuiHorizontalBox->mTransform.position.x = mTransform.position.width / 2.0f;
         mGuiHorizontalBox->mTransform.position.y = 20.0f;
         mGuiHorizontalBox->SetAutoSize(true);
@@ -31,8 +32,8 @@ namespace ClassicLauncher
 
         for (int i = 0; i < mSize; i++)
         {
-            auto* miniCover = GetApplication()->GetEntityManager()->CreateEntity<GuiComponent>("miniCover");
-            auto* sizeBox = GetApplication()->GetEntityManager()->CreateEntity<GuiSizeBox>("GuiSizeBox");
+            auto* miniCover = m_entityManagerRef->CreateEntity<GuiComponent>("miniCover");
+            auto* sizeBox = m_entityManagerRef->CreateEntity<GuiSizeBox>("GuiSizeBox");
 
             miniCover->mTextureName = "transparent";
 
@@ -47,7 +48,7 @@ namespace ClassicLauncher
 
         std::vector<RectFloat> recs = { { 1236.0f, 0.0f, 30.0f, 18.0f }, { 1267.0f, 0.0f, 30.0f, 18.0f }, { 1298.0f, 0.0f, 30.0f, 18.0f } };
 
-        mArrow = GetApplication()->GetEntityManager()->CreateEntity<GuiComponent>("arrow");
+        mArrow = m_entityManagerRef->CreateEntity<GuiComponent>("arrow");
         mArrow->mTransform.position.x = mTransform.position.width / 2;
         mArrow->mTextureName = "sprite";
         mArrow->AddAnimationFrame("frame", 0.2f, recs);

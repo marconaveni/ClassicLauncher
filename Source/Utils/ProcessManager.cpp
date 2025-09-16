@@ -3,6 +3,7 @@
 #include "Data/GameListManager.h"
 #include "Utils/Process.h"
 #include "Guis/GuiBlackScreen.h"
+#include "Audio/AudioManager.h"
 #include "rl_wrap.h"
 #include <filesystem>
 
@@ -14,9 +15,8 @@ namespace ClassicLauncher
     {
     }
 
-    void ProcessManager::CreateProc(Application* pApplication)
+    void ProcessManager::CreateProc(GameListManager* gameListManager)
     {
-        GameListManager* gameListManager = pApplication->GetGameListManager();
         GameSystemList* system = gameListManager->GetCurrentSystemList();
         GameList* game = gameListManager->GetCurrentGameList();
         const std::string executable = (game->executable.empty()) ? system->executable : game->executable;
@@ -66,7 +66,7 @@ namespace ClassicLauncher
         return Process::IsApplicationRunning(mProcessId);
     }
 
-    void ProcessManager::StatusProcessRun(Application* pApplication)
+    void ProcessManager::StatusProcessRun(GuiBlackScreen* guiBlackScreen, AudioManager* audioManager)
     {
         switch (mStatus)
         {
@@ -78,8 +78,8 @@ namespace ClassicLauncher
                 break;
             case ProcessStatus::Failed:
             case ProcessStatus::Close:
-                pApplication->GetGuiBlackScreen()->KeepBlack();
-                pApplication->GetAudioManager()->ChangeMusic();
+                guiBlackScreen->KeepBlack();
+                audioManager->ChangeMusic();
                 InputManager::EnableInput();
                 break;
             default:

@@ -3,12 +3,13 @@
 #include "Guis/GuiSizeBox.h"
 #include "Guis/GuiVideoPlayer.h"
 #include "Graphics/Texture.h"
+#include "Entity/EntityManager.h"
 
 namespace ClassicLauncher
 {
 
-    GuiCard::GuiCard(const int x, const int y)
-        : FocusComponent(GetApplication(), this), mTimer(), mTimerVideo()
+    GuiCard::GuiCard(const int x, const int y, EntityManager* entityManager)
+        : FocusComponent(GetApplication(), this), mTimer(), mTimerVideo(), m_entityManager(entityManager)
     {
         mTransform.position.x = static_cast<float>(x);
         mTransform.position.y = static_cast<float>(y);
@@ -20,7 +21,7 @@ namespace ClassicLauncher
         CreateCard(mCardBackgroundSelected, 257, 281, 0, "GuiCardBackgroundSelected");
 
         CreateCard(mCover, 0, 0, 255, "GuiCover", false);
-        mGuiVideoPlayer = GetApplication()->GetEntityManager()->CreateEntity<GuiVideoPlayer>("GuiVideoPlayer");
+        mGuiVideoPlayer = m_entityManager->CreateEntity<GuiVideoPlayer>("GuiVideoPlayer");
 
         CreateCard(mCardMain, 0, 0, 255, "GuiCardMain");
         CreateCard(mCardFavorite, 514, 0, 0, "GuiCardFavorite");
@@ -34,7 +35,7 @@ namespace ClassicLauncher
 
     void GuiCard::CreateCard(GuiComponent*& card, const float sourceX, const float sourceY, unsigned char alpha, const char* title, bool bAddChild)
     {
-        card = GetApplication()->GetEntityManager()->CreateEntity<GuiComponent>(title);
+        card = m_entityManager->CreateEntity<GuiComponent>(title);
         card->mTransform.position.width = mTransform.position.width;
         card->mTransform.position.height = mTransform.position.height;
         card->mTransform.source.x = sourceX;
@@ -49,7 +50,7 @@ namespace ClassicLauncher
 
     void GuiCard::CreateSizeBox()
     {
-        mSizeBoxImage = GetApplication()->GetEntityManager()->CreateEntity<GuiSizeBox>("GuiSizeBoxImage");
+        mSizeBoxImage = m_entityManager->CreateEntity<GuiSizeBox>("GuiSizeBoxImage");
         mSizeBoxImage->mTransform.position.width = 228.0f;
         mSizeBoxImage->mTransform.position.height = 204.0f;
         mSizeBoxImage->mTransform.offset.x = 12.0f;
@@ -57,7 +58,7 @@ namespace ClassicLauncher
         mSizeBoxImage->AttachGui(mCover);
         AddChild(mSizeBoxImage);
 
-        mSizeBoxVideoPlayer = GetApplication()->GetEntityManager()->CreateEntity<GuiSizeBox>("GuiSizeBoxVideo");
+        mSizeBoxVideoPlayer = m_entityManager->CreateEntity<GuiSizeBox>("GuiSizeBoxVideo");
         mSizeBoxVideoPlayer->mTransform.position.width = 228.0f;
         mSizeBoxVideoPlayer->mTransform.position.height = 204.0f;
         mSizeBoxVideoPlayer->mTransform.offset.x = 12.0f;
@@ -112,7 +113,7 @@ namespace ClassicLauncher
     {
         mIsFocus = true;
         FocusAnimation(bForce, 255, 0, "card-focus");
-        GetApplication()->GetTimerManager()->SetTimer(mTimerVideo, CALLFUNCTION(StartVideo, this), this, 5.0f);
+        GetTimerManager()->SetTimer(mTimerVideo, CALLFUNCTION(StartVideo, this), this, 5.0f);
         SetFocus();
     }
 
@@ -187,7 +188,7 @@ namespace ClassicLauncher
     void GuiCard::Click()
     {
         mGuiVideoPlayer->Stop();
-        GetApplication()->GetTimerManager()->ClearTimer(mTimerVideo);
+        GetTimerManager()->ClearTimer(mTimerVideo);
 
         mIsFront = true;
 
@@ -204,22 +205,22 @@ namespace ClassicLauncher
 
         target.color.a = 0;
         StartAnimation("card-zoom", time, mTransform, target, Ease::EaseQuadInOut, true);
-        GetApplication()->GetTimerManager()->SetTimer(mTimer, CALLFUNCTION(Reset, this), this, time * 2);
+        GetTimerManager()->SetTimer(mTimer, CALLFUNCTION(Reset, this), this, time * 2);
     }
 
     void GuiCard::SetFrontCard()
     {
-        Application* pApplication = GetApplication();
+        
         const int order = (mIsFront) ? 1 : 0;
 
-        pApplication->GetEntityManager()->SetZOrder(mCardSelected, order);
-        pApplication->GetEntityManager()->SetZOrder(mCardBackgroundSelected, order);
-        pApplication->GetEntityManager()->SetZOrder(mCardMain, order);
-        pApplication->GetEntityManager()->SetZOrder(mCardBackgroundMain, order);
-        pApplication->GetEntityManager()->SetZOrder(mCardFavorite, order);
-        pApplication->GetEntityManager()->SetZOrder(mCardBackgroundFavorite, order);
-        pApplication->GetEntityManager()->SetZOrder(mCover, order);
-        pApplication->GetEntityManager()->SetZOrder(mGuiVideoPlayer, order);
+        m_entityManager->SetZOrder(mCardSelected, order);
+        m_entityManager->SetZOrder(mCardBackgroundSelected, order);
+        m_entityManager->SetZOrder(mCardMain, order);
+        m_entityManager->SetZOrder(mCardBackgroundMain, order);
+        m_entityManager->SetZOrder(mCardFavorite, order);
+        m_entityManager->SetZOrder(mCardBackgroundFavorite, order);
+        m_entityManager->SetZOrder(mCover, order);
+        m_entityManager->SetZOrder(mGuiVideoPlayer, order);
     }
 
     void GuiCard::SetThemeValue()

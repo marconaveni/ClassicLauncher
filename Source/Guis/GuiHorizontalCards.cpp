@@ -14,12 +14,13 @@
 #include "Guis/GuiCard.h"
 #include "Application.h"
 #include "Window/RayWindow.h"
+#include "Entity/EntityManager.h"
 
 
 namespace ClassicLauncher
 {
 
-    GuiHorizontalCards::GuiHorizontalCards()
+    GuiHorizontalCards::GuiHorizontalCards(EntityManager* entityManager)
         : mGuiTitle(nullptr)
         , mMiniCover(nullptr)
         , mPositionX(0)
@@ -30,6 +31,7 @@ namespace ClassicLauncher
         , mIdFocus(0)
         , mIdLastFocusSystem(3)
         , mSpeed(22.0f)
+        , m_entityManager(entityManager)
     {
         mTransform.position.width = 1280;
         mTransform.position.height = 720;
@@ -37,8 +39,8 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::Init()
     {
-        EntityManager* pEntityManager = GetApplication()->GetEntityManager();
-        mGuiTitle = pEntityManager->CreateEntity<GuiTextBlock>("GuiTitle", Resources::GetFont(), 48, 0);
+    
+        mGuiTitle = m_entityManager->CreateEntity<GuiTextBlock>("GuiTitle", Resources::GetFont(), 48, 0);
         mGuiTitle->mTransform.position.x = 400;
         mGuiTitle->mTransform.position.y = 154;
         mGuiTitle->SetText("Title");
@@ -46,25 +48,25 @@ namespace ClassicLauncher
         mGuiTitle->SetTextOverflowPolicy(TextOverflowPolicy::clip);
         AddChild(mGuiTitle);
 
-        mHorizontalBox = pEntityManager->CreateEntity<GuiHorizontalBox>("Cards_GuiHorizontalBox");
+        mHorizontalBox = m_entityManager->CreateEntity<GuiHorizontalBox>("Cards_GuiHorizontalBox");
         SetHorizontalBoxValues();
         AddChild(mHorizontalBox);
 
         for (int i = 0; i < 10; i++)
         {
-            auto* card = pEntityManager->CreateEntity<GuiCard>("GuiCard", 0, 0);
+            auto* card = m_entityManager->CreateEntity<GuiCard>("GuiCard", 0, 0, m_entityManager);
             mHorizontalBox->AttachGui(card);
             mGuiCards.emplace_back(card);
         }
 
         SetPositionHorizontalBox();
 
-        mMiniCover = pEntityManager->CreateEntity<GuiMiniCover>("MiniCover");
+        mMiniCover = m_entityManager->CreateEntity<GuiMiniCover>("MiniCover", m_entityManager);
         mMiniCover->Init();
         AddChild(mMiniCover);
 
-        mFrame = pEntityManager->CreateEntity<GuiFrame>("Frame", GetApplication()->GetFocusManager());
-        pEntityManager->SetZOrder(mFrame, 80);
+        mFrame = m_entityManager->CreateEntity<GuiFrame>("Frame", GetApplication()->GetFocusManager());
+        m_entityManager->SetZOrder(mFrame, 80);
         AddChild(mFrame);
 
         SetFocus(3, true);
@@ -242,7 +244,7 @@ namespace ClassicLauncher
         else if (InputManager::IsPress(InputName::leftFaceLeft, main) || InputManager::IsPress(InputName::leftFaceRight, main))
         {
             mSpeed = 20.0f * 60.0f * RayWindow::GetFrameTime();
-            GetApplication()->GetTimerManager()->SetTimer(
+            GetTimerManager()->SetTimer(
                 mTimerInputSpeed, [&]() { mSpeed = Math::Clamp(88.0f * 60.0f * RayWindow::GetFrameTime(), 0.0f, 256.0f); }, this, 2.5f, false);
         }
 

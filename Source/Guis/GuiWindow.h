@@ -12,12 +12,13 @@ namespace ClassicLauncher
     class GuiVideoPlayer;
     class GuiComponent;
     class EntityGui;
+    class EntityManager;
 
     class GuiWindow : public EntityGui
     {
     public:
 
-        GuiWindow();
+        GuiWindow(EntityManager* entityManager);
         virtual EntityType GetType() const override { return EntityType::GuiWindowClass; }
         virtual void Update() override;
         void Init();
@@ -34,6 +35,8 @@ namespace ClassicLauncher
         GuiComponent* mGuiBackground;
         TimerHandling mClickTimer;
         TimerHandling mInputTimer;
+
+        EntityManager* m_entityManagerRef;
     };
 
 } // namespace ClassicLauncher

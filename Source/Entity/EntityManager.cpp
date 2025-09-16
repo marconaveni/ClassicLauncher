@@ -13,7 +13,7 @@ namespace ClassicLauncher
 
     EntityManager::~EntityManager()
     {
-        ClearAllEntitys();
+        ClearAllEntities();
     }
 
     void EntityManager::SetNewEntities()
@@ -102,7 +102,7 @@ namespace ClassicLauncher
             entity->UpdatePosition();
             bIsDeleteEntities = entity->mToDelete || bIsDeleteEntities;
         }
-        DeleteEntitys(bIsDeleteEntities);
+        DeleteEntities(bIsDeleteEntities);
         SetZOrder();
     }
 
@@ -113,10 +113,10 @@ namespace ClassicLauncher
             entity->End();
             entity->RemoveAllChildren();
         }
-        ClearAllEntitys();
+        ClearAllEntities();
     }
 
-    void EntityManager::ClearAllEntitys()
+    void EntityManager::ClearAllEntities()
     {
         if (mEntities.empty())
         {
@@ -144,7 +144,7 @@ namespace ClassicLauncher
         }
     }
 
-    void EntityManager::DeleteEntitys(bool bIsDeleteEntities)
+    void EntityManager::DeleteEntities(bool bIsDeleteEntities)
     {
         if (!bIsDeleteEntities)
         {
