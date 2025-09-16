@@ -11,8 +11,8 @@
 
 namespace ClassicLauncher
 {
-    GuiMiniCover::GuiMiniCover()
-        : mArrow(nullptr), mSize(32), mSizeCover(28.0f, 40.0f)
+    GuiMiniCover::GuiMiniCover(GameListManager* gameListManagerRef)
+        : mArrow(nullptr), mSize(32), mSizeCover(28.0f, 40.0f), m_gameListManagerRef(gameListManagerRef)
     // : mGuiCovers(), mArrow(nullptr), mSize(23), mSizeCover(40.0f, 58.0f) // test
     {
     }
@@ -99,9 +99,9 @@ namespace ClassicLauncher
     void GuiMiniCover::SetCovers()
     {
         ClearCovers();
-        GameListManager* pManager = GetApplication()->GetGameListManager();
+        //GameListManager* pManager = GetApplication()->GetGameListManager();
         //SpriteManager* pSpriteManager = GetApplication()->GetSpriteManager();
-        const int gameListSize = pManager->GetGameListSize();
+        const int gameListSize = m_gameListManagerRef->GetGameListSize();
         const float scale = Themes::GetScaleTexture();
 
         if (gameListSize == 0)
@@ -113,11 +113,11 @@ namespace ClassicLauncher
 
         for (int i = 0; i < numCovers; i++)
         {
-            const int index = pManager->GetGameId() + i - static_cast<int>(std::round(numCovers / 2));
+            const int index = m_gameListManagerRef->GetGameId() + i - static_cast<int>(std::round(numCovers / 2));
             int indexFinal = Utils::SetIndexArray(index, gameListSize);
             indexFinal = Math::Clamp(indexFinal, 0, gameListSize - 1);
 
-            const std::string fileName = pManager->GetCurrentGameList(indexFinal)->image;
+            const std::string fileName = m_gameListManagerRef->GetCurrentGameList(indexFinal)->image;
             std::string name = "sprite";
 
             if (!fileName.empty())

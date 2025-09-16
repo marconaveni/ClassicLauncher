@@ -21,7 +21,7 @@
 namespace ClassicLauncher
 {
 
-    GuiHorizontalCards::GuiHorizontalCards()
+    GuiHorizontalCards::GuiHorizontalCards(GameListManager* gameListManagerRef)
         : mGuiTitle(nullptr)
         , mMiniCover(nullptr)
         , mPositionX(0)
@@ -32,6 +32,7 @@ namespace ClassicLauncher
         , mIdFocus(0)
         , mIdLastFocusSystem(3)
         , mSpeed(22.0f)
+        , m_gameListManagerRef(gameListManagerRef)
     {
         mTransform.position.width = 1280;
         mTransform.position.height = 720;
@@ -54,7 +55,7 @@ namespace ClassicLauncher
 
         for (int i = 0; i < 10; i++)
         {
-            auto* card = GetEntityManager()->CreateEntity<GuiCard>("GuiCard", 0, 0);
+            auto* card = GetEntityManager()->CreateEntity<GuiCard>("GuiCard", m_gameListManagerRef);
             card->CreateCards(0, 0);
             mHorizontalBox->AttachGui(card);
             mGuiCards.emplace_back(card);
@@ -62,7 +63,7 @@ namespace ClassicLauncher
 
         SetPositionHorizontalBox();
 
-        mMiniCover = GetEntityManager()->CreateEntity<GuiMiniCover>("MiniCover");
+        mMiniCover = GetEntityManager()->CreateEntity<GuiMiniCover>("MiniCover", m_gameListManagerRef);
         mMiniCover->Init();
         AddChild(mMiniCover);
 
@@ -106,7 +107,7 @@ namespace ClassicLauncher
         mGuiCards[newId]->SetCardFocus(bForce);
         mIsLeft = true;
 
-        const GameList* pGameList = GetApplication()->GetGameListManager()->GetCurrentGameList();
+        const GameList* pGameList = m_gameListManagerRef->GetCurrentGameList();
         mGuiTitle->SetText((pGameList) ? pGameList->name : "");
         // const float scale = Themes::GetScaleTexture();
         mGuiTitle->mTransform.position.x = (1280.0f / 2.0f) - ((mGuiTitle->GetMeasureTextBox().x / 2));
@@ -115,22 +116,22 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::SetCovers()
     {
-        GameListManager* manager = GetApplication()->GetGameListManager();
+        //GameListManager* manager = GetApplication()->GetGameListManager();
         //SpriteManager* spriteManager = GetApplication()->GetSpriteManager();
 
-        if (manager->GetGameListSize() == 0)
+        if (m_gameListManagerRef->GetGameListSize() == 0)
         {
             return;
         }
 
         for (int i = 0; i < 10; i++)
         {
-            int indexFinal = Utils::SetIndexArray(manager->GetGameId() + i - mIdFocus, manager->GetGameListSize());
-            indexFinal = Utils::SetIndexArray(indexFinal, manager->GetGameListSize());
-            indexFinal = Math::Clamp(indexFinal, 0, manager->GetGameListSize() - 1);
+            int indexFinal = Utils::SetIndexArray(m_gameListManagerRef->GetGameId() + i - mIdFocus, m_gameListManagerRef->GetGameListSize());
+            indexFinal = Utils::SetIndexArray(indexFinal, m_gameListManagerRef->GetGameListSize());
+            indexFinal = Math::Clamp(indexFinal, 0, m_gameListManagerRef->GetGameListSize() - 1);
 
             const std::string name = std::to_string(indexFinal) + "_CV";
-            const std::string path = manager->GetCurrentGameList(indexFinal)->image;
+            const std::string path = m_gameListManagerRef->GetCurrentGameList(indexFinal)->image;
 
             if (!path.empty())
             {
@@ -159,25 +160,25 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::ChangeList(const CurrentList list)
     {
-        GameListManager* pGameListManager = GetApplication()->GetGameListManager();
+        //GameListManager* pGameListManager = GetApplication()->GetGameListManager();
         ClearCovers();
         if (list == SystemListSelect)
         {
-            pGameListManager->GetCurrentSystemList()->history.indexCardFocus = mIdFocus;
-            pGameListManager->ChangeGameToSystemList();
+            m_gameListManagerRef->GetCurrentSystemList()->history.indexCardFocus = mIdFocus;
+            m_gameListManagerRef->ChangeGameToSystemList();
             SetFocus(mIdLastFocusSystem, true);
         }
         else
         {
             mIdLastFocusSystem = mIdFocus;
-            pGameListManager->ChangeSystemToGameList();
+            m_gameListManagerRef->ChangeSystemToGameList();
 
-            if (pGameListManager->GetGameListSize() == 0) // If GameList fails it returns to the system selection menu.
+            if (m_gameListManagerRef->GetGameListSize() == 0) // If GameList fails it returns to the system selection menu.
             {
                 ChangeList(CurrentList::SystemListSelect);
             }
 
-            SetFocus(pGameListManager->GetCurrentSystemList()->history.indexCardFocus, true);
+            SetFocus(m_gameListManagerRef->GetCurrentSystemList()->history.indexCardFocus, true);
         }
     }
 
@@ -193,7 +194,7 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::ClearCovers()
     {
-        const int size = GetApplication()->GetGameListManager()->GetGameListSize();
+        const int size = m_gameListManagerRef->GetGameListSize();
         // SpriteManager* pSpriteManager = GetApplication()->GetSpriteManager();
         for (int i = 0; i < size; i++)
         {
@@ -264,7 +265,7 @@ namespace ClassicLauncher
             {
                 Application* pApplication = GetApplication();
                 pApplication->GetAudioManager()->PlayCursor();
-                pApplication->GetGameListManager()->AddId(-1);
+                m_gameListManagerRef->AddId(-1);
                 SetFocus(mIdFocus - 1);
             }
             mIsLeft = true;
@@ -277,7 +278,7 @@ namespace ClassicLauncher
             {
                 Application* pApplication = GetApplication();
                 pApplication->GetAudioManager()->PlayCursor();
-                pApplication->GetGameListManager()->AddId(1);
+                m_gameListManagerRef->AddId(1);
                 SetFocus(mIdFocus + 1);
             }
             mIsRight = true;

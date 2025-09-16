@@ -10,11 +10,12 @@
 
 namespace ClassicLauncher
 {
-    GuiWindow::GuiWindow()
+    GuiWindow::GuiWindow(GameListManager* gameListManagerRef)
         : mGuiHorizontalBox(nullptr)
         , mGuiBlackScreen(nullptr)
         , mGuiVideoPlayer(nullptr)
         , mGuiBackground(nullptr)
+        , m_gameListManagerRef(gameListManagerRef)
     {
     }
 
@@ -34,7 +35,7 @@ namespace ClassicLauncher
         mGuiBackground->mTextureName = "sprite";
         AddChild(mGuiBackground);
 
-        mGuiHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalCards");
+        mGuiHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalCards", m_gameListManagerRef);
         mGuiHorizontalBox->Init();
         AddChild(mGuiHorizontalBox);
 
@@ -107,7 +108,7 @@ namespace ClassicLauncher
         else if (InputManager::IsRelease(InputName::leftFaceDown, main))
         {
             const bool bIsplay =
-                mGuiVideoPlayer->Init(pApplication->GetGameListManager()->GetCurrentGameList()->video, 640, 480);
+                mGuiVideoPlayer->Init(m_gameListManagerRef->GetCurrentGameList()->video, 640, 480);
             if (bIsplay)
             {
                 InputManager::RemoveCategory(main);
@@ -124,7 +125,7 @@ namespace ClassicLauncher
             InputManager::DisableInput();
             pApplication->GetAudioManager()->PlayClick();
             mGuiHorizontalBox->Click();
-            if (pApplication->GetGameListManager()->GetCurrentList() == GameListSelect)
+            if (m_gameListManagerRef->GetCurrentList() == GameListSelect)
             {
                 mGuiBlackScreen->FadeIn();
             }
@@ -135,7 +136,7 @@ namespace ClassicLauncher
             GetTimerManager()->SetTimer(mClickTimer, CALLFUNCTION(OnClick, this), this, 0.5f, false);
         }
         if (InputManager::IsRelease(InputName::rightFaceRight, main) &&
-            pApplication->GetGameListManager()->GetCurrentList() == GameListSelect) // back
+            m_gameListManagerRef->GetCurrentList() == GameListSelect) // back
         {
             InputManager::DisableInput();
             mGuiBlackScreen->FadeInFadeOut();
@@ -147,7 +148,7 @@ namespace ClassicLauncher
     {
         LOG(LOG_CLASSIC_INFO, "Called OnClick");
         Application* pApplication = GetApplication();
-        if (pApplication->GetGameListManager()->GetCurrentList() == GameListSelect)
+        if (m_gameListManagerRef->GetCurrentList() == GameListSelect)
         {
             pApplication->CreateProcess();
         }
@@ -164,7 +165,7 @@ namespace ClassicLauncher
     {
         LOG(LOG_CLASSIC_INFO, "Called OnBack");
         Application* pApplication = GetApplication();
-        if (pApplication->GetGameListManager()->GetCurrentList() == GameListSelect)
+        if (m_gameListManagerRef->GetCurrentList() == GameListSelect)
         {
             mGuiHorizontalBox->ChangeList(SystemListSelect);
             pApplication->GetThemes()->LoadTheme();
@@ -180,7 +181,7 @@ namespace ClassicLauncher
         {
             if (mGuiHorizontalBox == nullptr)
             {
-                mGuiHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalBox");
+                mGuiHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalBox", m_gameListManagerRef);
                 mGuiHorizontalBox->Init();
                 AddChild(mGuiHorizontalBox);
                 GetEntityManager()->SetThemeValue();

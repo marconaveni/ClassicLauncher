@@ -17,6 +17,7 @@ namespace ClassicLauncher
     class GuiHorizontalBox;
     class GuiFrame;
     class EntityManager;
+    class GameListManager;
 
     enum Direction : std::uint8_t
     {
@@ -29,7 +30,7 @@ namespace ClassicLauncher
     {
     public:
 
-        GuiHorizontalCards();
+        GuiHorizontalCards(GameListManager* gameListManagerRef);
         EntityType GetType() const override { return EntityType::GuiHorizontalCardsClass; }
         void Init();
         void Update() override;
@@ -59,7 +60,8 @@ namespace ClassicLauncher
         int mIdLastFocusSystem;
         float mSpeed;
         TimerHandling mTimerInputSpeed;
-  
+        
+        GameListManager* m_gameListManagerRef;
 
 
         void UpdateCards();

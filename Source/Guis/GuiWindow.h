@@ -13,12 +13,13 @@ namespace ClassicLauncher
     class GuiComponent;
     class EntityGui;
     class EntityManager;
+    class GameListManager;
 
     class GuiWindow : public EntityGui
     {
     public:
 
-        GuiWindow();
+        GuiWindow(GameListManager* gameListManagerRef);
         virtual EntityType GetType() const override { return EntityType::GuiWindowClass; }
         virtual void Update() override;
         void Init();
@@ -35,6 +36,8 @@ namespace ClassicLauncher
         GuiComponent* mGuiBackground;
         TimerHandling mClickTimer;
         TimerHandling mInputTimer;
+
+        GameListManager* m_gameListManagerRef;
 
         
     };

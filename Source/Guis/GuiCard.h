@@ -17,13 +17,14 @@ namespace ClassicLauncher
     class GuiVideoPlayer;
     class FocusComponent;
     class EntityManager;
+    class GameListManager;
 
     class GuiCard : public EntityGui, FocusComponent
     {
 
     public:
 
-        GuiCard(int x, int y);
+        GuiCard(GameListManager* gameListManagerRef);
         void CreateCards(int x, int y);
 
 
@@ -58,6 +59,8 @@ namespace ClassicLauncher
         GuiComponent* mCover;
         bool mIsFocus = false;
         bool mIsFront = false;
+
+        GameListManager* m_gameListManagerRef;
 
         void CreateCard(GuiComponent*& card, float sourceX, float sourceY, unsigned char alpha, const char* title, bool bAddChild = true);
         void CreateSizeBox();

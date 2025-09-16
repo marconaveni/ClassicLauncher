@@ -76,7 +76,7 @@ namespace ClassicLauncher
 
         if (mGameListManager.GetGameListSize() > 0)
         {
-            mGuiWindow = m_entityManager.CreateEntity<GuiWindow>("GuiWindow");
+            mGuiWindow = m_entityManager.CreateEntity<GuiWindow>("GuiWindow", &mGameListManager);
             mGuiWindow->Init();
         }
         else

@@ -31,7 +31,7 @@ namespace ClassicLauncher
         int status = -1;
         Process::CreateProc(mProcessId, fullPath, optionalWorkingDirectory, status);
         mStatus = (status == 1) ? ProcessStatus::Open : ProcessStatus::Failed;
-        StatusProcessRun(pApplication);
+        //StatusProcessRun(pApplication);
 #else
         Process::CreateProc(mProcessId, fullPath);
 #endif

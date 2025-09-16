@@ -14,12 +14,13 @@ namespace ClassicLauncher
     class GuiSizeBox;
     class GuiHorizontalBox;
     class EntityManager;
+    class GameListManager;
 
     class GuiMiniCover : public EntityGui
     {
     public:
 
-        GuiMiniCover();
+        GuiMiniCover(GameListManager* gameListManagerRef);
         EntityType GetType() const override { return EntityType::GuiMiniCoverClass; }
         void Init();
         void Update() override;
@@ -37,6 +38,7 @@ namespace ClassicLauncher
         int mSize;
         Vector2f mSizeCover;
 
+        GameListManager* m_gameListManagerRef;
 
         void SetPositionCovers(int numCovers);
     };
