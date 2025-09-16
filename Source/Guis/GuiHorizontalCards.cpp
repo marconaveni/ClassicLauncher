@@ -115,7 +115,7 @@ namespace ClassicLauncher
     void GuiHorizontalCards::SetCovers()
     {
         GameListManager* manager = GetApplication()->GetGameListManager();
-        SpriteManager* spriteManager = GetApplication()->GetSpriteManager();
+        //SpriteManager* spriteManager = GetApplication()->GetSpriteManager();
 
         if (manager->GetGameListSize() == 0) 
         { 
@@ -134,7 +134,7 @@ namespace ClassicLauncher
             if (!path.empty())
             {
                 const float scale = Themes::GetScaleTexture();
-                spriteManager->LoadSprite(name, path, int(228.0f * scale), int(204.0f * scale));
+                GetSpriteManager()->LoadSprite(name, path, int(228.0f * scale), int(204.0f * scale));
                 mGuiCards[i]->SetCover(name);
             }
             else
@@ -146,7 +146,7 @@ namespace ClassicLauncher
         mMiniCover->SetCovers();
         SetPositionHorizontalBox();
 
-        LOG(LOG_CLASSIC_DEBUG, "Num Sprites Loaded after SetCovers %d", spriteManager->NumSpritesLoaded());
+        LOG(LOG_CLASSIC_DEBUG, "Num Sprites Loaded after SetCovers %d", GetSpriteManager()->NumSpritesLoaded());
     }
 
     void GuiHorizontalCards::SetPositionHorizontalBox()
@@ -191,13 +191,13 @@ namespace ClassicLauncher
     void GuiHorizontalCards::ClearCovers()
     {
         const int size = GetApplication()->GetGameListManager()->GetGameListSize();
-        SpriteManager* pSpriteManager = GetApplication()->GetSpriteManager();
+        // SpriteManager* pSpriteManager = GetApplication()->GetSpriteManager();
         for (int i = 0; i < size; i++)
         {
             const std::string coverName = std::to_string(i) + "_CV";
             const std::string miniCoverName = std::to_string(i) + "_MCV";
-            const bool bResult1 = pSpriteManager->DeleteSprite(coverName);
-            const bool bResult2 = pSpriteManager->DeleteSprite(miniCoverName);
+            const bool bResult1 = GetSpriteManager()->DeleteSprite(coverName);
+            const bool bResult2 = GetSpriteManager()->DeleteSprite(miniCoverName);
 
             if (bResult1 && bResult2)
             {
@@ -205,7 +205,7 @@ namespace ClassicLauncher
             }
         }
 
-        LOG(LOG_CLASSIC_DEBUG, "Num Sprites Loaded after ClearCovers %d", pSpriteManager->NumSpritesLoaded());
+        LOG(LOG_CLASSIC_DEBUG, "Num Sprites Loaded after ClearCovers %d", GetSpriteManager()->NumSpritesLoaded());
     }
 
     int fps = 60;

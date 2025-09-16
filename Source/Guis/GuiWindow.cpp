@@ -44,7 +44,8 @@ namespace ClassicLauncher
         m_entityManagerRef->SetZOrder(mGuiVideoPlayer, 5);
         m_entityManagerRef->SetZOrder(mGuiBlackScreen, 999);
 
-        GetApplication()->LoadConfigurationThemes();
+        // GetApplication()->LoadConfigurationThemes();
+        m_entityManagerRef->SetThemeValue();
 
 #ifdef _DEBUG
         InputManager::SetCategory(main | debug);
@@ -154,7 +155,7 @@ namespace ClassicLauncher
         else
         {
             mGuiHorizontalBox->ChangeList(GameListSelect);
-            pApplication->GetThemes()->LoadTheme(pApplication);
+            pApplication->GetThemes()->LoadTheme();
             GetTimerManager()->SetTimer(
                 mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
@@ -167,7 +168,7 @@ namespace ClassicLauncher
         if (pApplication->GetGameListManager()->GetCurrentList() == GameListSelect)
         {
             mGuiHorizontalBox->ChangeList(SystemListSelect);
-            pApplication->GetThemes()->LoadTheme(pApplication);
+            pApplication->GetThemes()->LoadTheme();
             GetTimerManager()->SetTimer(
                 mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
@@ -183,7 +184,7 @@ namespace ClassicLauncher
                 mGuiHorizontalBox = m_entityManagerRef->CreateEntity<GuiHorizontalCards>("GuiHorizontalBox" , m_entityManagerRef);
                 mGuiHorizontalBox->Init();
                 AddChild(mGuiHorizontalBox);
-                GetApplication()->LoadConfigurationThemes();
+                m_entityManagerRef->SetThemeValue();
                 InputManager::EnableInput();
                 return;
             }

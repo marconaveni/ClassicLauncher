@@ -23,6 +23,7 @@ namespace ClassicLauncher
         GuiFrameClass,
     };
 
+    class SpriteManager;
     class TimerManager;
 
     class Entity
@@ -62,6 +63,7 @@ namespace ClassicLauncher
 
         Entity* mParent = nullptr;
         TimerManager* GetTimerManager() { return m_timerManagerRef; }
+        SpriteManager* GetSpriteManager() { return m_spriteManagerReference; }
 
     private:
 
@@ -78,6 +80,7 @@ namespace ClassicLauncher
         std::vector<Entity*> mChildEntities;
         std::string mNameId;
 
+        SpriteManager* m_spriteManagerReference;
         TimerManager* m_timerManagerRef;
 
         void SetZOrder(int zOrder);

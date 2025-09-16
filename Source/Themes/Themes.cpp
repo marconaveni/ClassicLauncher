@@ -1,21 +1,27 @@
 #include "Themes.h"
 
+#include <filesystem>
+
 #include "Application.h"
 #include "Helper.h"
 #include "Utils/Log.h"
 #include "Utils/Math.h"
 #include "Utils/Resources.h"
 #include "Utils/StringFunctionLibrary.h"
+#include "Entity/EntityManager.h"
 #include "rl_wrap.h"
-#include <filesystem>
 
 namespace ClassicLauncher
 {
 
     static Themes* sInstanceThemes = nullptr;
 
-    Themes::Themes()
-        : mScaleTexture(1.0f), mScaleSystem(1.0f)
+    Themes::Themes(GameListManager* gameListManager, SpriteManager* spriteManager, EntityManager* entityManagerRef)
+        : mScaleTexture(1.0f)
+        , mScaleSystem(1.0f)
+        , m_gameListManager(gameListManager)
+        , m_spriteManager(spriteManager)
+        , m_entityManagerRef(entityManagerRef)
     {
         if (sInstanceThemes == nullptr)
         {
@@ -31,8 +37,8 @@ namespace ClassicLauncher
     std::vector<std::string> Themes::GetThemeDirs()
     {
         // repeat code todo remove this after refactor
-        std::string path = String::NormalizePath(Resources::GetClassicLauncherDir() + "themes/" +
-                                                                mCurrentSystemName + "/");
+        std::string path =
+            String::NormalizePath(Resources::GetClassicLauncherDir() + "themes/" + mCurrentSystemName + "/");
         std::vector<std::string> paths;
         // if (rlw::DirectoryExists(path.c_str()))
         if (std::filesystem::exists(path))
@@ -66,7 +72,8 @@ namespace ClassicLauncher
 
         std::vector<std::string> paths;
         paths = GetThemeDirs();
-        const int monitorWidth = 1920; // todo refactor  parte delicada precisa de refactor urgente rlw::GetMonitorWidth(rlw::GetCurrentMonitor());
+        const int monitorWidth =
+            1920; // todo refactor  parte delicada precisa de refactor urgente rlw::GetMonitorWidth(rlw::GetCurrentMonitor());
         int scales[3] = {1, 2, 3};
         int widths[3] = {1280, 2560, 3840}; //2560
 
@@ -88,9 +95,9 @@ namespace ClassicLauncher
         return 1.0f;
     }
 
-    void Themes::Init(Application* pApplication)
+    void Themes::Init()
     {
-        std::vector<GameSystemList*> systems = pApplication->GetGameListManager()->GetAllSystemList();
+        std::vector<GameSystemList*> systems = m_gameListManager->GetAllSystemList();
         for (auto& system : systems)
         {
             mCurrentSystemName = system->systemName;
@@ -102,12 +109,12 @@ namespace ClassicLauncher
         mScaleSystem = GetSpriteByResolution(mPathThemeSystem);
     }
 
-    void Themes::LoadTheme(Application* pApplication)
+    void Themes::LoadTheme()
     {
         std::string file;
-        if (pApplication->GetGameListManager()->GetCurrentList() == CurrentList::GameListSelect)
+        if (m_gameListManager->GetCurrentList() == CurrentList::GameListSelect)
         {
-            GameSystemList* pList = pApplication->GetGameListManager()->GetCurrentSystemList();
+            GameSystemList* pList = m_gameListManager->GetCurrentSystemList();
             mCurrentSystemName = pList->systemName;
             file = pList->pathImageTheme;
             mScaleTexture = pList->scale;
@@ -119,22 +126,23 @@ namespace ClassicLauncher
             mScaleTexture = mScaleSystem;
         }
 
-        LoadConfigurationThemes(pApplication);
+        LoadConfigurationThemes();
 
         if (mLastPathLoaded != file)
         {
-            pApplication->GetSpriteManager()->DeleteSprite("sprite");
-            pApplication->GetSpriteManager()->LoadSprite("sprite", file);
+            m_spriteManager->DeleteSprite("sprite");
+            m_spriteManager->LoadSprite("sprite", file);
             mLastPathLoaded = file;
         }
     }
 
-    void Themes::LoadConfigurationThemes(Application* pApplication)
+    void Themes::LoadConfigurationThemes()
     {
-        const std::string path = String::NormalizePath(Resources::GetClassicLauncherDir() + "themes/" +
-                                                                      mCurrentSystemName + "/config.cfg");
+        const std::string path =
+            String::NormalizePath(Resources::GetClassicLauncherDir() + "themes/" + mCurrentSystemName + "/config.cfg");
         mConfigurationThemes.LoadConfigurations(path);
-        pApplication->LoadConfigurationThemes();
+        // pApplication->LoadConfigurationThemes();
+        m_entityManagerRef->SetThemeValue();
     }
 
     // Themes& Themes::Get()

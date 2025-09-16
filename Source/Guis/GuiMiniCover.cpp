@@ -61,7 +61,7 @@ namespace ClassicLauncher
 
         for (auto& miniCover : mGuiCovers)
         {
-            Texture* textureReference = GetApplication()->GetSpriteManager()->GetTexture(miniCover->mTextureName);
+            Texture* textureReference = GetSpriteManager()->GetTexture(miniCover->mTextureName);
             const float scale = Themes::GetScaleTexture();
             if (textureReference != nullptr && miniCover->mTextureName != "sprite" && miniCover->mTransform.position.width == 0 && miniCover->mTransform.position.height == 0)
             {
@@ -91,7 +91,7 @@ namespace ClassicLauncher
     {
         ClearCovers();
         GameListManager* pManager = GetApplication()->GetGameListManager();
-        SpriteManager* pSpriteManager = GetApplication()->GetSpriteManager();
+        //SpriteManager* pSpriteManager = GetApplication()->GetSpriteManager();
         const int gameListSize = pManager->GetGameListSize();
         const float scale = Themes::GetScaleTexture();
 
@@ -114,7 +114,7 @@ namespace ClassicLauncher
             if (!fileName.empty())
             {
                 name = std::to_string(indexFinal) + "_MCV";
-                pSpriteManager->LoadSprite(name, fileName, mSizeCover.x * scale, mSizeCover.y * scale);
+                GetSpriteManager()->LoadSprite(name, fileName, mSizeCover.x * scale, mSizeCover.y * scale);
             }
 
             if (i - 1 >= 0 && i <= static_cast<int>(mGuiCovers.size()) - 2)

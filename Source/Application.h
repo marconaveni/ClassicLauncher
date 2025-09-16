@@ -39,33 +39,21 @@ namespace ClassicLauncher
         Application(ConfigurationManager& configManager);
         ~Application();
         static Application& Get();
-        //RenderScreen* GetRenderScreen() { return m_renderScreen.get(); }
-        //RenderEntities* GetRenderEntities() { return &mRenderEntities; }
-        //Print* GetPrint() { return &mPrint; }
         AudioManager* GetAudioManager() { return &mAudioManager; }
-        SpriteManager* GetSpriteManager() { return &mSpriteManager; }
-        //EntityManager* GetEntityManager() { return &mEntityManager; }
         GameListManager* GetGameListManager() { return &mGameListManager; }
         ProcessManager* GetProcessManager() { return &mProcessManager; }
         Themes* GetThemes() { return &mThemes; }
-        //TimerManager* GetTimerManager() { return &mTimerManager; }
         FocusManager* GetFocusManager() { return &mFocusManager; }
         ConfigurationManager* GetConfigurationManager() { return m_configManager; }
-        //GuiBlackScreen* GetGuiBlackScreen();
+        
         void Init();
         void CreateProcess();
-        void LoadConfigurationThemes();
-
-
-        void Loop();
         void Update();
         void Draw();
         void End();
-        void ToggleFullscreen();
 
     private:
 
-        // Print mPrint;
         RenderEntities mRenderEntities;
         AudioManager mAudioManager;
         SpriteManager mSpriteManager;
@@ -75,14 +63,10 @@ namespace ClassicLauncher
         FocusManager mFocusManager;
         InputManager mInputManager;
         TimerManager mTimerManager;
-        
-        GuiWindow* mGuiWindow;
-        //std::unique_ptr<RayWindow> m_window;
-        //std::unique_ptr<RenderScreen> m_renderScreen;
-        
-        
         EntityManager m_entityManager;
+
         ConfigurationManager* m_configManager;
+        GuiWindow* mGuiWindow;
     };
 
 } // namespace ClassicLauncher

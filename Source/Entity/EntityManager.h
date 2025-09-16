@@ -6,12 +6,13 @@
 #include <string>
 #include <vector>
 #include "Entity.h"
-#include "Graphics/SpriteManager.h"
+
 
 namespace ClassicLauncher
 {
-    class Entity;
+
     class TimerManager;
+    class SpriteManager;
 
     class EntityManager
     {
@@ -25,6 +26,7 @@ namespace ClassicLauncher
         {
             auto entity = std::make_unique<T>(std::forward<Args>(args)...);
             entity->m_timerManagerRef = mTimerManagerReference;
+            entity->m_spriteManagerReference = mSpriteManagerReference;
             SetNameId(entity.get(), name);
             mTempEntities.push_back(std::move(entity));
             return static_cast<T*>(mTempEntities.back().get());

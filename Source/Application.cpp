@@ -20,9 +20,10 @@ namespace ClassicLauncher
 
     Application::Application(ConfigurationManager& configManager)
         : m_configManager(&configManager)
-        , mRenderEntities(&this->mSpriteManager)
-        , m_entityManager(&this->mSpriteManager, &this->mTimerManager)
+        , mRenderEntities(&mSpriteManager)
+        , m_entityManager(&mSpriteManager, &mTimerManager)
         , mGuiWindow(nullptr)
+        , mThemes(&mGameListManager, &mSpriteManager, &m_entityManager)
     {
         sInstanceApplication = this;
     }
@@ -37,18 +38,9 @@ namespace ClassicLauncher
         return *sInstanceApplication;
     }
 
-    // GuiBlackScreen* Application::GetGuiBlackScreen()
-    // {
-    //     return mGuiWindow->GetGuiBlackScreen();
-    // }
 
     void Application::Init()
     {
-        // m_window = std::make_unique<RayWindow>();
-        // m_renderScreen = std::make_unique<RenderScreen>();
-
-        //m_configManager.LoadConfiguration();
-
         LogLevel(m_configManager->GetClassicLogLevel(), m_configManager->GetRaylibLogLevel());
         rlw::SetTraceLogCallback(TraceLogger);
 
@@ -56,39 +48,12 @@ namespace ClassicLauncher
         mGameListManager.Initialize();
 
 
-        // if (m_configManager.GetVSync())
-        // {
-        //     m_window->SetConfigFlags(RayWindow::Flags::Vsync); // vsync only enable in fullscreen set before InitWindow
-        // }
+        mThemes.Init();
+        mThemes.LoadTheme();
 
-        // #if _DEBUG
-        //         std::string_view title = "Classic Launcher [DEVMODE]";
-        // #else
-        //         std::string_view title = "Classic Launcher";
-        // #endif
 
-        // m_window->Init(1280, 720, title.data());
-        // m_window->SetTargetFPS(m_configManager.GetTargetFps());
-
-        // if (m_configManager.GetFullscreen())
-        // {
-        //     const bool isFullscreen = m_window->ToggleFullscreen();
-        //     m_configManager.SetFullscreen(isFullscreen);
-        //     m_configManager.SaveConfiguration();
-        // }
-
-        // #ifndef _DEBUG
-        //         m_window->SetExitKey(0);
-        // #endif
-
-        const std::string musicDir = String::NormalizePath(Resources::GetClassicLauncherDir() + "musics"); // theme dir
-
-        mThemes.Init(this);
-        mThemes.LoadTheme(this);
-
-        // mPrint.LoadFont(Resources::GetFont(), 16, 0);
-        //m_renderScreen->Init(1280, 720);
-
+        const std::string LauncherDir = Resources::GetClassicLauncherDir();
+        const std::string musicDir = String::NormalizePath(LauncherDir + "musics"); // theme dir
         mAudioManager.Init();
         mAudioManager.LoadMusics(musicDir);
         mAudioManager.LoadCLick(Resources::GetClickAudio());
@@ -99,27 +64,15 @@ namespace ClassicLauncher
 #ifdef _DEBUG
 
         // For visual reference you can upload up to four images to guide you
-        const std::string refPath0 =
-            String::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref0.png");
-        const std::string refPath1 =
-            String::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref1.png");
-        const std::string refPath2 =
-            String::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref2.png");
-        const std::string refPath3 =
-            String::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/ref3.png");
+        const std::string refPath0 = String::NormalizePath(LauncherDir + "themes/debug/ref0.png");
+        const std::string refPath1 = String::NormalizePath(LauncherDir + "themes/debug/ref1.png");
+        const std::string refPath2 = String::NormalizePath(LauncherDir + "themes/debug/ref2.png");
+        const std::string refPath3 = String::NormalizePath(LauncherDir + "themes/debug/ref3.png");
         mSpriteManager.LoadSprite("ref0", refPath0, 1280 * 2, 720 * 2);
         mSpriteManager.LoadSprite("ref1", refPath1, 1280 * 2, 720 * 2);
         mSpriteManager.LoadSprite("ref2", refPath2, 1280 * 2, 720 * 2);
         mSpriteManager.LoadSprite("ref3", refPath3, 1280 * 2, 720 * 2);
 #endif
-
-        // rlw::Image imgs[5] = { rlw::LoadImage(Resources::GetIcon(16).c_str()),
-        //                        rlw::LoadImage(Resources::GetIcon(32).c_str()),
-        //                        rlw::LoadImage(Resources::GetIcon(48).c_str()),
-        //                        rlw::LoadImage(Resources::GetIcon(64).c_str()),
-        //                        rlw::LoadImage(Resources::GetIcon(128).c_str()) };
-
-        // rlw::SetWindowIcons(imgs, 5);
 
         if (mGameListManager.GetGameListSize() > 0)
         {
@@ -142,42 +95,10 @@ namespace ClassicLauncher
         mProcessManager.CreateProc(&mGameListManager);
     }
 
-    void Application::LoadConfigurationThemes()
-    {
-        LOG(LOG_CLASSIC_WARNING, "here");
-        m_entityManager.SetThemeValue();
-    }
-
-    void Application::Loop()
-    {
-        //while (!m_window->ShouldClose())
-        //{
-        // ToggleFullscreen();
-
-        // update logic
-        // Update();
-
-        // draw in texture render screen
-        //  m_renderScreen->BeginRender();
-        //  mRenderEntities.DrawEntities(mEntityManager.GetEntities());
-        //  m_renderScreen->EndRender();
-
-        // draw on window
-        // Draw();
-        //}
-    }
 
     void Application::Draw()
     {
-        // m_renderScreen->BeginRender();  // esse trecho é o begin rendersystem
         mRenderEntities.DrawEntities(m_entityManager.GetEntities());
-        // m_renderScreen->EndRender();
-
-        //rlw::BeginDrawing();   // esse trecho é o endframe rendersystem
-        //rlw::ClearBackground(Color::Black);
-        ////m_renderScreen->Draw();
-        // mPrint.DrawMessage();
-        //rlw::EndDrawing();
     }
 
     void Application::Update()
@@ -262,16 +183,16 @@ namespace ClassicLauncher
         m_entityManager.End();
     }
 
-    void Application::ToggleFullscreen()
-    {
-        // if (Keyboard::IsReleased(Keyboard::F11) ||
-        //     (Keyboard::IsDown(Keyboard::LEFT_ALT) && Keyboard::IsReleased(Keyboard::ENTER)))
-        // {
-        //     const bool isFullscreen = m_window->ToggleFullscreen();
-        //     m_configManager.SetFullscreen(isFullscreen);
-        //     m_configManager.SaveConfiguration();
-        //     LOG(LOG_CLASSIC_DEBUG, TEXT("Saved is fullscreen config.ini with value %s", TEXTBOOL(isFullscreen)));
-        // }
-    }
+    // void Application::ToggleFullscreen()
+    // {
+    //     // if (Keyboard::IsReleased(Keyboard::F11) ||
+    //     //     (Keyboard::IsDown(Keyboard::LEFT_ALT) && Keyboard::IsReleased(Keyboard::ENTER)))
+    //     // {
+    //     //     const bool isFullscreen = m_window->ToggleFullscreen();
+    //     //     m_configManager.SetFullscreen(isFullscreen);
+    //     //     m_configManager.SaveConfiguration();
+    //     //     LOG(LOG_CLASSIC_DEBUG, TEXT("Saved is fullscreen config.ini with value %s", TEXTBOOL(isFullscreen)));
+    //     // }
+    // }
 
 } // namespace ClassicLauncher

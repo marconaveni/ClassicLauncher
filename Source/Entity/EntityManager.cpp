@@ -2,12 +2,13 @@
 #include <algorithm>  // std::sort
 #include <format>
 #include "Application.h"
+#include "Graphics/SpriteManager.h"
 
 namespace ClassicLauncher
 {
 
     EntityManager::EntityManager(SpriteManager* spriteManagerReference, TimerManager* timerManagerReference)
-        : mSpriteManagerReference(spriteManagerReference), mTimerManagerReference(timerManagerReference)
+        :  mSpriteManagerReference(spriteManagerReference), mTimerManagerReference(timerManagerReference)
     {
     }
 

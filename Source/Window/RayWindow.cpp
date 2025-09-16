@@ -98,7 +98,7 @@ namespace ClassicLauncher
         {
             icons.push_back(ray::LoadImage(path.c_str()));
         }
-        SetWindowIcons(icons.data(), icons.size());
+        ray::SetWindowIcons(icons.data(), icons.size());
     }
 
     void RayWindow::SetExitKey(int key)
