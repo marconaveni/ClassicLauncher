@@ -16,12 +16,13 @@ namespace ClassicLauncher
 
     static Themes* sInstanceThemes = nullptr;
 
-    Themes::Themes(GameListManager* gameListManager, SpriteManager* spriteManager, EntityManager* entityManagerRef)
+    Themes::Themes(GameListManager* gameListManager, SpriteManager* spriteManager, EntityManager* entityManagerRef, ConfigurationManager* configManager)
         : mScaleTexture(1.0f)
         , mScaleSystem(1.0f)
         , m_gameListManager(gameListManager)
         , m_spriteManager(spriteManager)
         , m_entityManagerRef(entityManagerRef)
+        , m_configManagerRef(configManager)
     {
         if (sInstanceThemes == nullptr)
         {
@@ -64,10 +65,10 @@ namespace ClassicLauncher
 
     float Themes::GetSpriteByResolution(std::string& file)
     {
-        if (Application::Get().GetConfigurationManager()->GetForceInternalScale())
+        if (m_configManagerRef->GetForceInternalScale())
         {
             file = String::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/sprite.png");
-            return Math::Clamp(Application::Get().GetConfigurationManager()->GetInternalScale(), 1, 3);
+            return Math::Clamp(m_configManagerRef->GetInternalScale(), 1, 3);
         }
 
         std::vector<std::string> paths;
@@ -138,17 +139,10 @@ namespace ClassicLauncher
 
     void Themes::LoadConfigurationThemes()
     {
-        const std::string path =
-            String::NormalizePath(Resources::GetClassicLauncherDir() + "themes/" + mCurrentSystemName + "/config.cfg");
-        mConfigurationThemes.LoadConfigurations(path);
-        // pApplication->LoadConfigurationThemes();
+        const std::string path = Resources::GetClassicLauncherDir() + "themes/" + mCurrentSystemName + "/config.cfg";
+        mConfigurationThemes.LoadConfigurations(String::NormalizePath(path));
         m_entityManagerRef->SetThemeValue();
     }
-
-    // Themes& Themes::Get()
-    // {
-    //     return *sInstanceThemes;
-    // }
 
     float Themes::GetScaleTexture()
     {

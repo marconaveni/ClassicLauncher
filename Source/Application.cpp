@@ -23,7 +23,7 @@ namespace ClassicLauncher
         , mRenderEntities(&mSpriteManager)
         , m_entityManager(&mSpriteManager, &mTimerManager)
         , mGuiWindow(nullptr)
-        , mThemes(&mGameListManager, &mSpriteManager, &m_entityManager)
+        , mThemes(&mGameListManager, &mSpriteManager, &m_entityManager, &configManager)
     {
         sInstanceApplication = this;
     }
@@ -76,7 +76,7 @@ namespace ClassicLauncher
 
         if (mGameListManager.GetGameListSize() > 0)
         {
-            mGuiWindow = m_entityManager.CreateEntity<GuiWindow>("GuiWindow", &m_entityManager);
+            mGuiWindow = m_entityManager.CreateEntity<GuiWindow>("GuiWindow");
             mGuiWindow->Init();
         }
         else

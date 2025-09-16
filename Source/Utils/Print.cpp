@@ -103,8 +103,8 @@ namespace ClassicLauncher
 
         for (const auto& message : mMessages)
         {
-            const Vector2f positionRender = {30, y};
-            const Vector2f positionRenderShadow = {31, (y + 1)};
+            const Vector2f positionRender = Vector2f{30, y};
+            const Vector2f positionRenderShadow = Vector2f{31, (y + 1)};
 
             rlw::DrawTextEx(mFont, message.textMessage.data(), positionRenderShadow, mSize, mSpacing, Color::Black);
             rlw::DrawTextEx(mFont, message.textMessage.data(), positionRender, mSize, mSpacing, message.textColor);

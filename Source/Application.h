@@ -12,7 +12,6 @@
 #include "Input/InputManager.h"
 #include "Themes/Themes.h"
 #include "Utils/ConfigurationManager.h"
-// #include "Utils/Print.h"
 #include "Utils/ProcessManager.h"
 #include "Utils/TimerManager.h"
 
@@ -44,7 +43,7 @@ namespace ClassicLauncher
         ProcessManager* GetProcessManager() { return &mProcessManager; }
         Themes* GetThemes() { return &mThemes; }
         FocusManager* GetFocusManager() { return &mFocusManager; }
-        ConfigurationManager* GetConfigurationManager() { return m_configManager; }
+        // ConfigurationManager* GetConfigurationManager() { return m_configManager; }
         
         void Init();
         void CreateProcess();

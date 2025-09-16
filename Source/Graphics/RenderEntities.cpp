@@ -76,7 +76,7 @@ namespace ClassicLauncher
 
         const RectFloat& rectDrawArea = entity->mTransform.GetTransform();  //{ x, y, scale.x, scale.y };
         const Vector2f vec = {};  // TODO Refactor  Application::Get().GetRenderScreen()->GetMousePositionRender();
-        Rectangle point = { rectDrawArea.x, rectDrawArea.y, rectDrawArea.width, rectDrawArea.height };
+        RectFloat point = RectFloat{ rectDrawArea.x, rectDrawArea.y, rectDrawArea.width, rectDrawArea.height };
         if (Math::CheckCollisionPointRec(vec, point) && bEnable)
         {
             rlw::DrawRectangleLinesEx(rectDrawArea, 2, Color::Red);

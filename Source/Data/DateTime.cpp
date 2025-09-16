@@ -75,7 +75,7 @@ namespace ClassicLauncher
 
     std::string DateTime::ZeroDigits(const int value)
     {
-        return (value < 9) ? "0" + std::to_string(value) : std::to_string(value);
+        return (value < 10) ? "0" + std::to_string(value) : std::to_string(value);
     }
 
 }  // namespace ClassicLauncher

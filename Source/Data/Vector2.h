@@ -9,19 +9,23 @@ namespace ClassicLauncher
     {
     public:
 
-        T x;  // Vector x component
-        T y;  // Vector y component
+        T x; // Vector x component
+        T y; // Vector y component
 
-        Vector2(T x, T y)
+        constexpr explicit Vector2(T x, T y)
             : x(x), y(y)
         {
         }
 
-        Vector2(T x)
-             : x(x), y(y) {};
+        constexpr explicit Vector2(T x)
+            : x(x), y(x)
+        {
+        }
 
-        Vector2()
-            : x(0), y(0) {};
+        constexpr Vector2()
+            : x(0), y(0)
+        {
+        }
 
 
         template <typename U>
@@ -32,11 +36,10 @@ namespace ClassicLauncher
 
         constexpr bool operator==(const Vector2& other) const { return x == other.x && y == other.y; }
         constexpr bool operator!=(const Vector2& other) const { return !(*this == other); }
-        constexpr Vector2 operator+(const Vector2& other) const { return { x + other.x, y + other.y }; }
-        constexpr Vector2 operator-(const Vector2& other) const { return { x - other.x, y - other.y }; }
-        constexpr Vector2 operator*(T scalar) const { return { x * scalar, y * scalar }; }
-        constexpr Vector2 operator/(T scalar) const { return { x / scalar, y / scalar }; }
-
+        constexpr Vector2 operator+(const Vector2& other) const { return {x + other.x, y + other.y}; }
+        constexpr Vector2 operator-(const Vector2& other) const { return {x - other.x, y - other.y}; }
+        constexpr Vector2 operator*(T scalar) const { return {x * scalar, y * scalar}; }
+        constexpr Vector2 operator/(T scalar) const { return {x / scalar, y / scalar}; }
     };
 
     using Vector2f = Vector2<float>;
@@ -45,7 +48,6 @@ namespace ClassicLauncher
     using Size = Vector2<int>;
 
 
+} // namespace ClassicLauncher
 
-}  // namespace ClassicLauncher
-
-#endif  // VECTOR_2_H
+#endif // VECTOR_2_H

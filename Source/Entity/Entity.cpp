@@ -90,7 +90,7 @@ namespace ClassicLauncher
     void Entity::EnableScissorMode(float x, float y, float width, float height)
     {
         mScissorMode = true;
-        mScissorArea = {x, y, width, height};
+        mScissorArea = RectFloat{x, y, width, height};
         for (auto& childEntity : mChildEntities)
         {
             childEntity->EnableScissorMode(mScissorArea.x, mScissorArea.y, mScissorArea.width, mScissorArea.height);

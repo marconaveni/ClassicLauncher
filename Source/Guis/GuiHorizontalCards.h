@@ -29,7 +29,7 @@ namespace ClassicLauncher
     {
     public:
 
-        GuiHorizontalCards(EntityManager* entityManager);
+        GuiHorizontalCards();
         EntityType GetType() const override { return EntityType::GuiHorizontalCardsClass; }
         void Init();
         void Update() override;
@@ -59,7 +59,7 @@ namespace ClassicLauncher
         int mIdLastFocusSystem;
         float mSpeed;
         TimerHandling mTimerInputSpeed;
-        EntityManager* m_entityManager;
+  
 
 
         void UpdateCards();

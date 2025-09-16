@@ -19,7 +19,7 @@ namespace ClassicLauncher
     {
     public:
 
-        GuiMiniCover(EntityManager* entityManager);
+        GuiMiniCover();
         EntityType GetType() const override { return EntityType::GuiMiniCoverClass; }
         void Init();
         void Update() override;
@@ -37,7 +37,6 @@ namespace ClassicLauncher
         int mSize;
         Vector2f mSizeCover;
 
-        EntityManager* m_entityManagerRef;
 
         void SetPositionCovers(int numCovers);
     };

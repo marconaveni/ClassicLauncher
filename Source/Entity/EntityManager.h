@@ -25,6 +25,7 @@ namespace ClassicLauncher
         T* CreateEntity(const std::string& name, Args&&... args)
         {
             auto entity = std::make_unique<T>(std::forward<Args>(args)...);
+            entity->m_entityManagerReference = this;
             entity->m_timerManagerRef = mTimerManagerReference;
             entity->m_spriteManagerReference = mSpriteManagerReference;
             SetNameId(entity.get(), name);

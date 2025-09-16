@@ -23,7 +23,10 @@ namespace ClassicLauncher
 
     public:
 
-        GuiCard(int x, int y, EntityManager* entityManager);
+        GuiCard(int x, int y);
+        void CreateCards(int x, int y);
+
+
         virtual EntityType GetType() const override { return EntityType::GuiCardClass; }
         void Update() override;
         void SetCardFocus(bool bForce = false);
@@ -55,7 +58,6 @@ namespace ClassicLauncher
         GuiComponent* mCover;
         bool mIsFocus = false;
         bool mIsFront = false;
-        EntityManager* m_entityManager;
 
         void CreateCard(GuiComponent*& card, float sourceX, float sourceY, unsigned char alpha, const char* title, bool bAddChild = true);
         void CreateSizeBox();

@@ -62,7 +62,7 @@ namespace ClassicLauncher
         }
 
         ray::Vector2 vec = ray::MeasureTextEx(*static_cast<ray::Font*>(_native), text.c_str(), fontSize, spacing);
-        return { vec.x, vec.y };
+        return Vector2f{ vec.x, vec.y };
     }
 
 }  // namespace ClassicLauncher

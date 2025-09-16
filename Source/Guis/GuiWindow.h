@@ -18,7 +18,7 @@ namespace ClassicLauncher
     {
     public:
 
-        GuiWindow(EntityManager* entityManager);
+        GuiWindow();
         virtual EntityType GetType() const override { return EntityType::GuiWindowClass; }
         virtual void Update() override;
         void Init();
@@ -36,7 +36,7 @@ namespace ClassicLauncher
         TimerHandling mClickTimer;
         TimerHandling mInputTimer;
 
-        EntityManager* m_entityManagerRef;
+        
     };
 
 } // namespace ClassicLauncher

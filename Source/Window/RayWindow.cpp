@@ -149,7 +149,7 @@ namespace ClassicLauncher
     Vector2i RayWindow::GetMonitorPosition(int monitor)
     {
         ray::Vector2 pos = ray::GetMonitorPosition(monitor);
-        return { static_cast<int>(pos.x), static_cast<int>(pos.y) };
+        return Vector2i{ static_cast<int>(pos.x), static_cast<int>(pos.y) };
     }
 
     bool RayWindow::ToggleFullscreen()

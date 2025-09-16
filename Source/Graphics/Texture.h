@@ -63,7 +63,7 @@ namespace ClassicLauncher
         [[nodiscard]] unsigned int GetId() const { return m_id; }
         [[nodiscard]] int GetMipmaps() const { return m_mipmaps; }
         [[nodiscard]] int GetFormat() const { return m_format; }
-        [[nodiscard]] Vector2i GetSize() const { return {m_width, m_height}; }
+        [[nodiscard]] Vector2i GetSize() const { return Vector2i{m_width, m_height}; }
 
     private:
 

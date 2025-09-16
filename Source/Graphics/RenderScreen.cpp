@@ -34,7 +34,7 @@ namespace ClassicLauncher
             mScale = Math::Min<float>(screenWidth / mNewWidth, screenHeight / mNewHeight);
             mVirtualMouse.x = (mouse.x - (screenWidth - (mNewWidth * mScale)) * 0.5f) / mScale;
             mVirtualMouse.y = (mouse.y - (screenHeight - (mNewHeight * mScale)) * 0.5f) / mScale;
-            mVirtualMouse = Math::VecClamp(mVirtualMouse, { 0.0f, 0.0f }, { mNewWidth, mNewHeight });
+            mVirtualMouse = Math::VecClamp(mVirtualMouse, Vector2f{ 0.0f, 0.0f }, Vector2f{ mNewWidth, mNewHeight });
         }
         else
         {
@@ -98,7 +98,7 @@ namespace ClassicLauncher
         }
 #endif
         // Draw render texture to screen, properly scaled
-        rlw::DrawTexturePro(*mRenderTexture->GetTexture(), mSource, mDest, { 0.0f, 0.0f }, 0.0f, Color::White);
+        rlw::DrawTexturePro(*mRenderTexture->GetTexture(), mSource, mDest, Vector2f{ 0.0f, 0.0f }, 0.0f, Color::White);
     }
 
     void RenderScreen::Unload()

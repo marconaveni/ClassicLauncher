@@ -15,29 +15,29 @@ namespace rlw
 
     static ::Vector2 to_native_vec(ClassicLauncher::Vector2f v)
     {
-        return {v.x, v.y};
+        return ::Vector2{v.x, v.y};
     }
     static ClassicLauncher::Vector2f to_wrap_vec(::Vector2 v)
     {
-        return {v.x, v.y};
+        return ClassicLauncher::Vector2f{v.x, v.y};
     }
 
     static ::Color to_native_color(ClassicLauncher::Color c)
     {
-        return {c.r, c.g, c.b, c.a};
+        return ::Color{c.r, c.g, c.b, c.a};
     }
     static ClassicLauncher::Color to_wrap_color(::Color c)
     {
-        return {c.r, c.g, c.b, c.a};
+        return ClassicLauncher::Color{c.r, c.g, c.b, c.a};
     }
 
     static ::Rectangle to_native_rec(ClassicLauncher::RectFloat r)
     {
-        return {r.x, r.y, r.width, r.height};
+        return ::Rectangle{r.x, r.y, r.width, r.height};
     }
     static ClassicLauncher::RectFloat to_wrap_rec(::Rectangle r)
     {
-        return {r.x, r.y, r.width, r.height};
+        return ClassicLauncher::RectFloat{r.x, r.y, r.width, r.height};
     }
 
 
@@ -174,7 +174,6 @@ namespace rlw
     }
 
 
-
     //////////////////////////////////////////////
 
     void SetWindowIcons(ClassicLauncher::Image* images, int count)
@@ -242,7 +241,9 @@ namespace rlw
                     float spacing, ClassicLauncher::Color tint)
     {
         if (!font._native || !text)
+        {
             return;
+        }
         ::DrawTextEx(*static_cast<::Font*>(font._native), text, to_native_vec(position), fontSize, spacing,
                      to_native_color(tint));
     }

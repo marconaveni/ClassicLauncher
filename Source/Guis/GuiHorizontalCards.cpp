@@ -1,26 +1,27 @@
 #include "GuiHorizontalCards.h"
 
 #include <algorithm>
-#include "Helper.h"
+
+#include "Application.h"
+#include "Entity/EntityManager.h"
+#include "Guis/GuiCard.h"
 #include "Guis/GuiFrame.h"
+#include "Guis/GuiHorizontalBox.h"
 #include "Guis/GuiMiniCover.h"
 #include "Guis/GuiTextBlock.h"
+#include "Helper.h"
 #include "Themes/ConfigurationThemes.h"
+#include "Utils/Log.h"
 #include "Utils/Math.h"
 #include "Utils/Resources.h"
 #include "Utils/UtilsFunctionLibrary.h"
-#include "Utils/Log.h"
-#include "Guis/GuiHorizontalBox.h"
-#include "Guis/GuiCard.h"
-#include "Application.h"
 #include "Window/RayWindow.h"
-#include "Entity/EntityManager.h"
 
 
 namespace ClassicLauncher
 {
 
-    GuiHorizontalCards::GuiHorizontalCards(EntityManager* entityManager)
+    GuiHorizontalCards::GuiHorizontalCards()
         : mGuiTitle(nullptr)
         , mMiniCover(nullptr)
         , mPositionX(0)
@@ -31,7 +32,6 @@ namespace ClassicLauncher
         , mIdFocus(0)
         , mIdLastFocusSystem(3)
         , mSpeed(22.0f)
-        , m_entityManager(entityManager)
     {
         mTransform.position.width = 1280;
         mTransform.position.height = 720;
@@ -39,8 +39,8 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::Init()
     {
-    
-        mGuiTitle = m_entityManager->CreateEntity<GuiTextBlock>("GuiTitle", Resources::GetFont(), 48, 0);
+
+        mGuiTitle = GetEntityManager()->CreateEntity<GuiTextBlock>("GuiTitle", Resources::GetFont(), 48, 0);
         mGuiTitle->mTransform.position.x = 400;
         mGuiTitle->mTransform.position.y = 154;
         mGuiTitle->SetText("Title");
@@ -48,25 +48,26 @@ namespace ClassicLauncher
         mGuiTitle->SetTextOverflowPolicy(TextOverflowPolicy::clip);
         AddChild(mGuiTitle);
 
-        mHorizontalBox = m_entityManager->CreateEntity<GuiHorizontalBox>("Cards_GuiHorizontalBox");
+        mHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalBox>("Cards_GuiHorizontalBox");
         SetHorizontalBoxValues();
         AddChild(mHorizontalBox);
 
         for (int i = 0; i < 10; i++)
         {
-            auto* card = m_entityManager->CreateEntity<GuiCard>("GuiCard", 0, 0, m_entityManager);
+            auto* card = GetEntityManager()->CreateEntity<GuiCard>("GuiCard", 0, 0);
+            card->CreateCards(0, 0);
             mHorizontalBox->AttachGui(card);
             mGuiCards.emplace_back(card);
         }
 
         SetPositionHorizontalBox();
 
-        mMiniCover = m_entityManager->CreateEntity<GuiMiniCover>("MiniCover", m_entityManager);
+        mMiniCover = GetEntityManager()->CreateEntity<GuiMiniCover>("MiniCover");
         mMiniCover->Init();
         AddChild(mMiniCover);
 
-        mFrame = m_entityManager->CreateEntity<GuiFrame>("Frame", GetApplication()->GetFocusManager());
-        m_entityManager->SetZOrder(mFrame, 80);
+        mFrame = GetEntityManager()->CreateEntity<GuiFrame>("Frame", GetApplication()->GetFocusManager());
+        GetEntityManager()->SetZOrder(mFrame, 80);
         AddChild(mFrame);
 
         SetFocus(3, true);
@@ -117,8 +118,8 @@ namespace ClassicLauncher
         GameListManager* manager = GetApplication()->GetGameListManager();
         //SpriteManager* spriteManager = GetApplication()->GetSpriteManager();
 
-        if (manager->GetGameListSize() == 0) 
-        { 
+        if (manager->GetGameListSize() == 0)
+        {
             return;
         }
 
@@ -151,7 +152,9 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::SetPositionHorizontalBox()
     {
-        mHorizontalBox->mTransform.position.x = ((1280 - mHorizontalBox->mTransform.position.width) / 2) + GetApplication()->GetThemes()->mConfigurationThemes.horizontalCardsPositionX;
+        mHorizontalBox->mTransform.position.x =
+            ((1280 - mHorizontalBox->mTransform.position.width) / 2) +
+            GetApplication()->GetThemes()->mConfigurationThemes.horizontalCardsPositionX;
     }
 
     void GuiHorizontalCards::ChangeList(const CurrentList list)
@@ -169,7 +172,7 @@ namespace ClassicLauncher
             mIdLastFocusSystem = mIdFocus;
             pGameListManager->ChangeSystemToGameList();
 
-            if (pGameListManager->GetGameListSize() == 0)  // If GameList fails it returns to the system selection menu.
+            if (pGameListManager->GetGameListSize() == 0) // If GameList fails it returns to the system selection menu.
             {
                 ChangeList(CurrentList::SystemListSelect);
             }
@@ -201,7 +204,8 @@ namespace ClassicLauncher
 
             if (bResult1 && bResult2)
             {
-                LOG(LOG_CLASSIC_TRACE, "Sprite deleted index: %d\n  > Cover: %s\n  > Mini Cover: %s ", i, coverName.c_str(), miniCoverName.c_str());
+                LOG(LOG_CLASSIC_TRACE, "Sprite deleted index: %d\n  > Cover: %s\n  > Mini Cover: %s ", i,
+                    coverName.c_str(), miniCoverName.c_str());
             }
         }
 
@@ -241,11 +245,13 @@ namespace ClassicLauncher
         {
             mSpeed = Math::Clamp(256.0f * 60.0f * RayWindow::GetFrameTime(), 0.0f, 256.0f);
         }
-        else if (InputManager::IsPress(InputName::leftFaceLeft, main) || InputManager::IsPress(InputName::leftFaceRight, main))
+        else if (InputManager::IsPress(InputName::leftFaceLeft, main) ||
+                 InputManager::IsPress(InputName::leftFaceRight, main))
         {
             mSpeed = 20.0f * 60.0f * RayWindow::GetFrameTime();
             GetTimerManager()->SetTimer(
-                mTimerInputSpeed, [&]() { mSpeed = Math::Clamp(88.0f * 60.0f * RayWindow::GetFrameTime(), 0.0f, 256.0f); }, this, 2.5f, false);
+                mTimerInputSpeed, [&]()
+                { mSpeed = Math::Clamp(88.0f * 60.0f * RayWindow::GetFrameTime(), 0.0f, 256.0f); }, this, 2.5f, false);
         }
 
         // PRINT(TEXT("mSpeed %.8f", mSpeed), 5.0f, "mspeed");
@@ -350,4 +356,4 @@ namespace ClassicLauncher
         }
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

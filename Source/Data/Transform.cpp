@@ -19,9 +19,9 @@ namespace ClassicLauncher
         sourceWidth = sourceWidth > 0.0f ? sourceWidth : width;
         sourceHeight = sourceHeight > 0.0f ? sourceHeight : height;
 
-        mScale = {scale.x * root.scale.x, scale.y * root.scale.y};
-        mSource = {{sourceX, sourceY}, {width, height}};
-        mTransform = {x, y, mScale.x * sourceWidth, mScale.y * sourceHeight};
+        mScale = Vector2f{scale.x * root.scale.x, scale.y * root.scale.y};
+        mSource = RectFloat{Vector2f{sourceX, sourceY}, Vector2f{width, height}};
+        mTransform = RectFloat{x, y, mScale.x * sourceWidth, mScale.y * sourceHeight};
     }
 
     void Transform::UpdateTransform(Transform& otherTransform)
