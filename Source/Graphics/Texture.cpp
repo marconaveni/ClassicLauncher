@@ -1,10 +1,11 @@
 #include "Texture.h"
+
 #include "Graphics/Image.h"
 
 namespace ray
 {
 #include "rlgl.h"
-}  // namespace ray
+} // namespace ray
 
 
 namespace ClassicLauncher
@@ -68,8 +69,12 @@ namespace ClassicLauncher
             return;
         }
 
-        ray::rlTextureParameters(m_id, RL_TEXTURE_MIN_FILTER, (status) ? RL_TEXTURE_FILTER_LINEAR : RL_TEXTURE_FILTER_NEAREST);
-        ray::rlTextureParameters(m_id, RL_TEXTURE_MAG_FILTER, (status) ? RL_TEXTURE_FILTER_LINEAR : RL_TEXTURE_FILTER_NEAREST);
+        ray::rlTextureParameters(m_id,
+                                 RL_TEXTURE_MIN_FILTER,
+                                 (status) ? RL_TEXTURE_FILTER_LINEAR : RL_TEXTURE_FILTER_NEAREST);
+        ray::rlTextureParameters(m_id,
+                                 RL_TEXTURE_MAG_FILTER,
+                                 (status) ? RL_TEXTURE_FILTER_LINEAR : RL_TEXTURE_FILTER_NEAREST);
     }
 
     void Texture::SetWrap(int wrap)
@@ -78,11 +83,11 @@ namespace ClassicLauncher
 
     bool Texture::IsValid() const
     {
-        return ((m_id > 0) &&      // Validate OpenGL id (texture uploaded to GPU)
-                (m_width > 0) &&   // Validate texture width
-                (m_height > 0) &&  // Validate texture height
-                (m_format > 0) &&  // Validate texture pixel format
-                (m_mipmaps > 0));  // Validate texture mipmaps (at least 1 for basic mipmap level)
+        return ((m_id > 0) &&     // Validate OpenGL id (texture uploaded to GPU)
+                (m_width > 0) &&  // Validate texture width
+                (m_height > 0) && // Validate texture height
+                (m_format > 0) && // Validate texture pixel format
+                (m_mipmaps > 0)); // Validate texture mipmaps (at least 1 for basic mipmap level)
     }
 
     void Texture::Update(const void* pixels)
@@ -108,4 +113,4 @@ namespace ClassicLauncher
         }
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

@@ -4,10 +4,10 @@
 #include <filesystem>
 #include <format>
 
-#include "Utils/Math.h"
+#include "Audio/AudioDevice.h"
 #include "Audio/Music.h"
 #include "Audio/Sound.h"
-#include "Audio/AudioDevice.h"
+#include "Utils/Math.h"
 
 
 namespace ClassicLauncher
@@ -30,7 +30,7 @@ namespace ClassicLauncher
     {
         Unload();
         AudioDevice::GetInstance().Init();
-            
+
         if (!m_isRunning)
         {
             m_isRunning = true;
@@ -40,7 +40,7 @@ namespace ClassicLauncher
 
     void AudioManager::LoadMusic(const std::string& path)
     {
-        
+
         auto music = std::make_unique<Music>();
         music->LoadFromFile(path.c_str());
 
@@ -51,7 +51,7 @@ namespace ClassicLauncher
 
         music->SetLoop(false);
 
-        std::filesystem::path pat = path;        
+        std::filesystem::path pat = path;
         music->name = pat.stem().string();
 
         m_audioMusics.emplace_back(std::move(music));
@@ -60,7 +60,7 @@ namespace ClassicLauncher
     void AudioManager::LoadMusics(const std::string& path, bool bAutoPlay)
     {
         std::filesystem::path directorypath = path;
-        for (const auto& entry : std::filesystem::directory_iterator(directorypath)) 
+        for (const auto& entry : std::filesystem::directory_iterator(directorypath))
         {
             LoadMusic(entry.path().string());
         }
@@ -91,7 +91,7 @@ namespace ClassicLauncher
     }
 
     void AudioManager::PlayClick()
-    {   
+    {
         m_isPlayClick = true;
     }
 
@@ -174,7 +174,7 @@ namespace ClassicLauncher
                     ChangeMusic();
                 }
             }
-            
+
             if (m_clickSound->IsValid() && m_isPlayClick)
             {
                 m_clickSound->Play();
@@ -185,8 +185,8 @@ namespace ClassicLauncher
                 m_cursorSound->Play();
                 m_isPlayCursor = !m_isPlayCursor;
             }
-                
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));  // wait
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(10)); // wait
         }
     }
 
@@ -199,7 +199,7 @@ namespace ClassicLauncher
             m_audioMusics.clear();
             if (m_workerThread.joinable())
             {
-                m_workerThread.join();  // Espera a thread finalizar
+                m_workerThread.join(); // Espera a thread finalizar
             }
         }
     }
@@ -214,4 +214,4 @@ namespace ClassicLauncher
         }
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

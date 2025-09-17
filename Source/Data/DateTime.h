@@ -31,8 +31,8 @@ namespace ClassicLauncher
             const auto inTimeT = std::chrono::system_clock::to_time_t(now);
             currentTime = *std::localtime(&inTimeT);
 
-            year = currentTime.tm_year + 1900;  // add 1900 in year
-            month = currentTime.tm_mon + 1;     // month start with 0
+            year = currentTime.tm_year + 1900; // add 1900 in year
+            month = currentTime.tm_mon + 1;    // month start with 0
             day = currentTime.tm_mday;
             hour = currentTime.tm_hour;
             minute = currentTime.tm_min;
@@ -40,7 +40,7 @@ namespace ClassicLauncher
         }
 
         DateTime& operator=(const std::string& value);
-        DateTime& operator=(const char* value) { return *this = std::string{ value }; };
+        DateTime& operator=(const char* value) { return *this = std::string{value}; };
         bool operator<(const DateTime& a) const { return CompareDates(a); };
         bool operator>(const DateTime& a) const { return a.CompareDates(*this); };
         bool operator!=(const DateTime& a) const { return !(*this == a); };
@@ -48,7 +48,8 @@ namespace ClassicLauncher
         bool operator<=(const DateTime& a) const { return !(*this > a); };
         bool operator==(const DateTime& a) const
         {
-            return (year == a.year) && (month == a.month) && (day == a.day) && (hour == a.hour) && (minute == a.minute) && (second == a.second);
+            return (year == a.year) && (month == a.month) && (day == a.day) && (hour == a.hour) &&
+                   (minute == a.minute) && (second == a.second);
         };
 
         std::string FormatDateTimeToXml() const;
@@ -60,6 +61,6 @@ namespace ClassicLauncher
         static std::string ZeroDigits(const int value);
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

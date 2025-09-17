@@ -1,12 +1,11 @@
 #include "Log.h"
 
-
 #include <filesystem>
 #include <format>
 #include <string>
 
-#include "rl_wrap.h"
 #include "Utils/Print.h"
+#include "rl_wrap.h"
 
 namespace ClassicLauncher
 {

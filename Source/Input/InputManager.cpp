@@ -41,15 +41,27 @@ namespace ClassicLauncher
             const float maxAmount = 0.4f;
             const int key = input.keyPad;
             const int gamePad = input.gamePad;
-            input.bPress = (Keyboard::IsPressed(key) || GamePad::IsPressed(mGamePadIdSelected, gamePad)) &&
-                           !bKeyModifier && !mDisableInput;
-            input.bDown = (Keyboard::IsDown(key) || GamePad::IsDown(mGamePadIdSelected, gamePad)) &&
-                          !bKeyModifier && !mDisableInput;
-            input.bRelease = (Keyboard::IsReleased(key) || GamePad::IsReleased(mGamePadIdSelected, gamePad)) &&
-                             !bKeyModifier && !mDisableInput;
-            input.bUp = (Keyboard::IsUp(key) || GamePad::IsUp(mGamePadIdSelected, gamePad)) && !bKeyModifier &&
-                        !mDisableInput;
 
+            // clang-format off
+
+            input.bPress = (Keyboard::IsPressed(key) || 
+                            GamePad::IsPressed(mGamePadIdSelected, gamePad)) &&
+                            !bKeyModifier && 
+                            !mDisableInput;
+            input.bDown = (Keyboard::IsDown(key) || 
+                            GamePad::IsDown(mGamePadIdSelected, gamePad)) && 
+                            !bKeyModifier &&
+                            !mDisableInput;
+            input.bRelease = (Keyboard::IsReleased(key) || 
+                            GamePad::IsReleased(mGamePadIdSelected, gamePad)) &&
+                            !bKeyModifier && 
+                            !mDisableInput;
+            input.bUp = (Keyboard::IsUp(key) || 
+                            GamePad::IsUp(mGamePadIdSelected, gamePad)) && 
+                            !bKeyModifier && 
+                            !mDisableInput;
+
+            // clang-format on
             if (input.bDown)
             {
                 input.bDown = (input.amoutDown == 0 || input.amoutDown >= maxAmount);

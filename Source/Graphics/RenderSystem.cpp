@@ -1,4 +1,5 @@
 #include "RenderSystem.h"
+
 #include "rl_wrap.h"
 
 namespace ClassicLauncher
@@ -6,9 +7,8 @@ namespace ClassicLauncher
 
     RenderSystem::RenderSystem()
     {
-        
     }
-    
+
     RenderSystem::~RenderSystem()
     {
     }
@@ -30,7 +30,7 @@ namespace ClassicLauncher
 
     void RenderSystem::BeginDraw()
     {
-        rlw::BeginDrawing();   // esse trecho é o endframe rendersystem
+        rlw::BeginDrawing(); // esse trecho é o endframe rendersystem
         rlw::ClearBackground(Color::Black);
         m_renderScreen.Draw();
     }

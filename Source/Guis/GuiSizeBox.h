@@ -27,6 +27,6 @@ namespace ClassicLauncher
         bool mCropGuiAttachment;
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

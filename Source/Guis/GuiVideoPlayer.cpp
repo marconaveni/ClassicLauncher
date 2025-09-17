@@ -1,5 +1,6 @@
 #include "GuiVideoPlayer.h"
-#include "Application.h"
+
+#include "Themes/Themes.h"
 #include "rl_wrap.h"
 
 namespace ClassicLauncher
@@ -18,7 +19,7 @@ namespace ClassicLauncher
         mFilePath = path;
         mPlayer = nullptr;
         mPlayer = std::make_unique<VideoPlayer>();
-        const float scale = Themes::GetScaleTexture();
+        const float scale = ThemesManager::GetScaleTexture();
         const int widthScale = static_cast<int>(width * scale);
         const int heightScale = static_cast<int>(height * scale);
         const bool bIsplay = mPlayer->Init(path, widthScale, heightScale, scale, true);
@@ -36,7 +37,7 @@ namespace ClassicLauncher
         mPlayer->Pause();
         mPlayerFullScreen = nullptr;
         mPlayerFullScreen = std::make_unique<VideoPlayer>();
-        const float scale = Themes::GetScaleTexture();
+        const float scale = ThemesManager::GetScaleTexture();
         mPlayerFullScreen->Init(mFilePath, 1280 * scale, 720 * scale, scale);
         mPlayerFullScreen->Play();
     }
@@ -70,7 +71,7 @@ namespace ClassicLauncher
 
         mPlayer->Update();
 
-        float scale = Themes::GetScaleTexture();
+        float scale = ThemesManager::GetScaleTexture();
         mTransform.position.width = mPlayer->GetVideoSize().x / scale;
         mTransform.position.height = mPlayer->GetVideoSize().y / scale;
 
@@ -107,7 +108,7 @@ namespace ClassicLauncher
         Texture* textureFullScreen = mPlayerFullScreen->GetVideoTexture();
         if (texture)
         {
-            const int scale = static_cast<int>(Themes::GetScaleTexture());
+            const int scale = static_cast<int>(ThemesManager::GetScaleTexture());
             const int x = (1280 * scale / 2) - (textureFullScreen->GetSize().x / 2);
             rlw::DrawTexture(*textureFullScreen, x, 0, Color::White);
         }

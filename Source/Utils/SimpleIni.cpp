@@ -1,5 +1,6 @@
 #include "SimpleIni.h"
-#include <cstdlib>  // strtof
+
+#include <cstdlib> // strtof
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -114,7 +115,6 @@ bool SimpleIni::Open(const char* file)
     fInput.close();
 
 
-
     return true;
 }
 
@@ -200,7 +200,7 @@ float SimpleIni::GetFloat(const std::string& section, const std::string& key, co
         return defaultValue;
     }
 
-    while (!value.empty() && std::isspace(value.back())) 
+    while (!value.empty() && std::isspace(value.back()))
     {
         value.pop_back();
     }

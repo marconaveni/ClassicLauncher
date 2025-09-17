@@ -3,7 +3,7 @@
 namespace ray
 {
 #include "raylib.h"
-}  // namespace ray
+} // namespace ray
 
 namespace ClassicLauncher::Mouse
 {
@@ -17,12 +17,12 @@ namespace ClassicLauncher::Mouse
     {
         return ray::IsMouseButtonDown(button);
     }
-    
+
     bool IsReleased(int button)
     {
         return ray::IsMouseButtonReleased(button);
     }
-    
+
     bool IsUp(int button)
     {
         return ray::IsMouseButtonUp(button);

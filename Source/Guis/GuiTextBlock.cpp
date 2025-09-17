@@ -1,5 +1,6 @@
 #include "GuiTextBlock.h"
-#include "Application.h"
+
+#include "Themes/Themes.h"
 #include "Utils/Math.h"
 #include "Window/RayWindow.h"
 #include "rl_wrap.h"
@@ -21,7 +22,7 @@ namespace ClassicLauncher
             mFont.Unload();
             mFont = Font();
         }
-        const float scale = Themes::GetScaleTexture();
+        const float scale = ThemesManager::GetScaleTexture();
         mFont.LoadFromFile(path.data(), mSize * scale, nullptr, 250);
     }
 
@@ -81,10 +82,16 @@ namespace ClassicLauncher
     void GuiTextBlock::Draw()
     {
         mColor.a = mTransform.color.a;
-        Vector2f posi = Vector2f{ mTransform.GetTransform().x, mTransform.GetTransform().y };
-        posi.x += mOffset * Themes::GetScaleTexture();
+        Vector2f posi = Vector2f{mTransform.GetTransform().x, mTransform.GetTransform().y};
+        posi.x += mOffset * ThemesManager::GetScaleTexture();
         Vector2f scale = mTransform.GetScale();
-        rlw::DrawTextEx(mFont, mText.data(), posi, mSize * Math::Max(scale.x * Themes::GetScaleTexture(), scale.y * Themes::GetScaleTexture()), mSpacing, mColor);
+        rlw::DrawTextEx(
+            mFont,
+            mText.data(),
+            posi,
+            mSize * Math::Max(scale.x * ThemesManager::GetScaleTexture(), scale.y * ThemesManager::GetScaleTexture()),
+            mSpacing,
+            mColor);
     }
 
     void GuiTextBlock::End()
@@ -153,4 +160,4 @@ namespace ClassicLauncher
         }
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

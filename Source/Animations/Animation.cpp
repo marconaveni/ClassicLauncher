@@ -1,12 +1,20 @@
 #include "Animation.h"
-#include "reasings/reasings.h"
+
 #include "Window/RayWindow.h"
+#include "reasings/reasings.h"
 
 namespace ClassicLauncher
 {
 
     Animation::Animation()
-        : mCurrentTime(0), mDuration(0), mIsStart(false), mIsRunning(false), mIsFinish(false), mIsReset(false), mRelative(false), mType(Ease::EaseLinearNone)
+        : mCurrentTime(0)
+        , mDuration(0)
+        , mIsStart(false)
+        , mIsRunning(false)
+        , mIsFinish(false)
+        , mIsReset(false)
+        , mRelative(false)
+        , mType(Ease::EaseLinearNone)
     {
     }
 
@@ -35,15 +43,42 @@ namespace ClassicLauncher
         {
             if (mCurrentTime <= mDuration)
             {
-                mCurrentTransform.position.x = GetAnimation(mCurrentTime, mStartTransform.position.x, mFinalTransform.position.x - mStartTransform.position.x, mDuration);
-                mCurrentTransform.position.y = GetAnimation(mCurrentTime, mStartTransform.position.y, mFinalTransform.position.y - mStartTransform.position.y, mDuration);
-                mCurrentTransform.scale.x = GetAnimation(mCurrentTime, mStartTransform.scale.x, mFinalTransform.scale.x - mStartTransform.scale.x, mDuration);
-                mCurrentTransform.scale.y = GetAnimation(mCurrentTime, mStartTransform.scale.y, mFinalTransform.scale.y - mStartTransform.scale.y, mDuration);
-                mCurrentTransform.rotation = GetAnimation(mCurrentTime, mStartTransform.rotation, mFinalTransform.rotation - mStartTransform.rotation, mDuration);
-                mCurrentTransform.color.r = GetAnimation(mCurrentTime, mStartTransform.color.r, mFinalTransform.color.r - mStartTransform.color.r, mDuration);
-                mCurrentTransform.color.g = GetAnimation(mCurrentTime, mStartTransform.color.g, mFinalTransform.color.g - mStartTransform.color.g, mDuration);
-                mCurrentTransform.color.b = GetAnimation(mCurrentTime, mStartTransform.color.b, mFinalTransform.color.b - mStartTransform.color.b, mDuration);
-                mCurrentTransform.color.a = GetAnimation(mCurrentTime, mStartTransform.color.a, mFinalTransform.color.a - mStartTransform.color.a, mDuration);
+                mCurrentTransform.position.x = GetAnimation(mCurrentTime,
+                                                            mStartTransform.position.x,
+                                                            mFinalTransform.position.x - mStartTransform.position.x,
+                                                            mDuration);
+                mCurrentTransform.position.y = GetAnimation(mCurrentTime,
+                                                            mStartTransform.position.y,
+                                                            mFinalTransform.position.y - mStartTransform.position.y,
+                                                            mDuration);
+                mCurrentTransform.scale.x = GetAnimation(mCurrentTime,
+                                                         mStartTransform.scale.x,
+                                                         mFinalTransform.scale.x - mStartTransform.scale.x,
+                                                         mDuration);
+                mCurrentTransform.scale.y = GetAnimation(mCurrentTime,
+                                                         mStartTransform.scale.y,
+                                                         mFinalTransform.scale.y - mStartTransform.scale.y,
+                                                         mDuration);
+                mCurrentTransform.rotation = GetAnimation(mCurrentTime,
+                                                          mStartTransform.rotation,
+                                                          mFinalTransform.rotation - mStartTransform.rotation,
+                                                          mDuration);
+                mCurrentTransform.color.r = GetAnimation(mCurrentTime,
+                                                         mStartTransform.color.r,
+                                                         mFinalTransform.color.r - mStartTransform.color.r,
+                                                         mDuration);
+                mCurrentTransform.color.g = GetAnimation(mCurrentTime,
+                                                         mStartTransform.color.g,
+                                                         mFinalTransform.color.g - mStartTransform.color.g,
+                                                         mDuration);
+                mCurrentTransform.color.b = GetAnimation(mCurrentTime,
+                                                         mStartTransform.color.b,
+                                                         mFinalTransform.color.b - mStartTransform.color.b,
+                                                         mDuration);
+                mCurrentTransform.color.a = GetAnimation(mCurrentTime,
+                                                         mStartTransform.color.a,
+                                                         mFinalTransform.color.a - mStartTransform.color.a,
+                                                         mDuration);
 
                 mCurrentTime += RayWindow::GetFrameTime();
                 return;
@@ -80,64 +115,36 @@ namespace ClassicLauncher
     {
         switch (mType)
         {
-            case Ease::EaseLinearNone:
-                return EaseLinearNone(t, b, c, d);
-            case Ease::EaseLinearIn:
-                return EaseLinearIn(t, b, c, d);
-            case Ease::EaseLinearOut:
-                return EaseLinearOut(t, b, c, d);
-            case Ease::EaseLinearInOut:
-                return EaseLinearInOut(t, b, c, d);
-            case Ease::EaseSineIn:
-                return EaseSineIn(t, b, c, d);
-            case Ease::EaseSineOut:
-                return EaseSineOut(t, b, c, d);
-            case Ease::EaseSineInOut:
-                return EaseSineInOut(t, b, c, d);
-            case Ease::EaseCircIn:
-                return EaseCircIn(t, b, c, d);
-            case Ease::EaseCircOut:
-                return EaseCircOut(t, b, c, d);
-            case Ease::EaseCircInOut:
-                return EaseCircInOut(t, b, c, d);
-            case Ease::EaseCubicIn:
-                return EaseCubicIn(t, b, c, d);
-            case Ease::EaseCubicOut:
-                return EaseCubicOut(t, b, c, d);
-            case Ease::EaseCubicInOut:
-                return EaseCubicInOut(t, b, c, d);
-            case Ease::EaseQuadIn:
-                return EaseQuadIn(t, b, c, d);
-            case Ease::EaseQuadOut:
-                return EaseQuadOut(t, b, c, d);
-            case Ease::EaseQuadInOut:
-                return EaseQuadInOut(t, b, c, d);
-            case Ease::EaseExpoIn:
-                return EaseExpoIn(t, b, c, d);
-            case Ease::EaseExpoOut:
-                return EaseExpoOut(t, b, c, d);
-            case Ease::EaseExpoInOut:
-                return EaseExpoInOut(t, b, c, d);
-            case Ease::EaseBackIn:
-                return EaseBackIn(t, b, c, d);
-            case Ease::EaseBackOut:
-                return EaseBackOut(t, b, c, d);
-            case Ease::EaseBackInOut:
-                return EaseBackInOut(t, b, c, d);
-            case Ease::EaseBounceOut:
-                return EaseBounceOut(t, b, c, d);
-            case Ease::EaseBounceIn:
-                return EaseBounceIn(t, b, c, d);
-            case Ease::EaseBounceInOut:
-                return EaseBounceInOut(t, b, c, d);
-            case Ease::EaseElasticIn:
-                return EaseElasticIn(t, b, c, d);
-            case Ease::EaseElasticOut:
-                return EaseElasticOut(t, b, c, d);
-            case Ease::EaseElasticInOut:
-                return EaseElasticInOut(t, b, c, d);
+            case Ease::EaseLinearNone: return EaseLinearNone(t, b, c, d);
+            case Ease::EaseLinearIn: return EaseLinearIn(t, b, c, d);
+            case Ease::EaseLinearOut: return EaseLinearOut(t, b, c, d);
+            case Ease::EaseLinearInOut: return EaseLinearInOut(t, b, c, d);
+            case Ease::EaseSineIn: return EaseSineIn(t, b, c, d);
+            case Ease::EaseSineOut: return EaseSineOut(t, b, c, d);
+            case Ease::EaseSineInOut: return EaseSineInOut(t, b, c, d);
+            case Ease::EaseCircIn: return EaseCircIn(t, b, c, d);
+            case Ease::EaseCircOut: return EaseCircOut(t, b, c, d);
+            case Ease::EaseCircInOut: return EaseCircInOut(t, b, c, d);
+            case Ease::EaseCubicIn: return EaseCubicIn(t, b, c, d);
+            case Ease::EaseCubicOut: return EaseCubicOut(t, b, c, d);
+            case Ease::EaseCubicInOut: return EaseCubicInOut(t, b, c, d);
+            case Ease::EaseQuadIn: return EaseQuadIn(t, b, c, d);
+            case Ease::EaseQuadOut: return EaseQuadOut(t, b, c, d);
+            case Ease::EaseQuadInOut: return EaseQuadInOut(t, b, c, d);
+            case Ease::EaseExpoIn: return EaseExpoIn(t, b, c, d);
+            case Ease::EaseExpoOut: return EaseExpoOut(t, b, c, d);
+            case Ease::EaseExpoInOut: return EaseExpoInOut(t, b, c, d);
+            case Ease::EaseBackIn: return EaseBackIn(t, b, c, d);
+            case Ease::EaseBackOut: return EaseBackOut(t, b, c, d);
+            case Ease::EaseBackInOut: return EaseBackInOut(t, b, c, d);
+            case Ease::EaseBounceOut: return EaseBounceOut(t, b, c, d);
+            case Ease::EaseBounceIn: return EaseBounceIn(t, b, c, d);
+            case Ease::EaseBounceInOut: return EaseBounceInOut(t, b, c, d);
+            case Ease::EaseElasticIn: return EaseElasticIn(t, b, c, d);
+            case Ease::EaseElasticOut: return EaseElasticOut(t, b, c, d);
+            case Ease::EaseElasticInOut: return EaseElasticInOut(t, b, c, d);
         }
         return EaseLinearNone(t, b, c, d);
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

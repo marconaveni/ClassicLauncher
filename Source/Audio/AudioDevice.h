@@ -10,13 +10,14 @@ namespace ClassicLauncher
         AudioDevice(const AudioDevice&) = delete;
         AudioDevice& operator=(const AudioDevice&) = delete;
 
-        
+
         void Init();
         void Shutdown();
         bool IsReady();
         void SetMasterVolume(float volume);
-        
+
         static AudioDevice& GetInstance();
+
     private:
 
         AudioDevice() = default;
@@ -24,6 +25,6 @@ namespace ClassicLauncher
 
         bool m_isInitialized = false;
     };
-} // namespace Fusion::Audio
+} // namespace ClassicLauncher
 
 #endif // AUDIO_DEVICE_H

@@ -1,4 +1,5 @@
 #include "GuiFrame.h"
+
 #include "Application.h"
 #include "Components/FocusComponent.h"
 #include "Components/FocusManager.h"
@@ -27,18 +28,17 @@ namespace ClassicLauncher
                 const float x = focus->GetEntity()->mTransform.position.x + focus->GetEntity()->mTransform.root.position.x;
                 const float y = focus->GetEntity()->mTransform.position.y + focus->GetEntity()->mTransform.root.position.y;
 
-                if (x == mTransform.position.x  && y == mTransform.position.y)
+                if (x == mTransform.position.x && y == mTransform.position.y)
                 {
                     return;
                 }
-                
+
                 if (!GetAnimation("frame-move").GetAnimationIsRun() && !GetAnimation("card-zoom").GetAnimationIsRun())
                 {
                     target.position.x = x;
                     target.position.y = y;
                     StartAnimation("frame-move", 0.15f, mTransform, target, Ease::EaseQuadInOut, false);
                 }
-
             }
         }
     }
@@ -69,4 +69,4 @@ namespace ClassicLauncher
         EntityGui::Update();
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

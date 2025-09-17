@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+
 #include "Entity/EntityGui.h"
 #include "Video/VideoPlayer.h"
 
@@ -36,6 +37,6 @@ namespace ClassicLauncher
         std::string mFilePath;
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // GUI_VIDEO_PLAYER_H
+#endif // GUI_VIDEO_PLAYER_H

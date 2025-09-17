@@ -1,12 +1,12 @@
 ﻿#include "RenderScreen.h"
 
 #include "Graphics/RenderTexture.h"
+#include "Helper.h"
+#include "Input/Keyboard.h"
 #include "Themes/Themes.h"
 #include "Utils/Math.h"
 #include "Window/RayWindow.h"
-#include "Input/Keyboard.h"
 #include "rl_wrap.h"
-#include "Helper.h"
 
 namespace ClassicLauncher
 {
@@ -34,7 +34,7 @@ namespace ClassicLauncher
             mScale = Math::Min<float>(screenWidth / mNewWidth, screenHeight / mNewHeight);
             mVirtualMouse.x = (mouse.x - (screenWidth - (mNewWidth * mScale)) * 0.5f) / mScale;
             mVirtualMouse.y = (mouse.y - (screenHeight - (mNewHeight * mScale)) * 0.5f) / mScale;
-            mVirtualMouse = Math::VecClamp(mVirtualMouse, Vector2f{ 0.0f, 0.0f }, Vector2f{ mNewWidth, mNewHeight });
+            mVirtualMouse = Math::VecClamp(mVirtualMouse, Vector2f{0.0f, 0.0f}, Vector2f{mNewWidth, mNewHeight});
         }
         else
         {
@@ -46,10 +46,10 @@ namespace ClassicLauncher
 
     void RenderScreen::Init(const int screenWidth, const int screenHeight)
     {
-        const float scale = Themes::GetScaleTexture();
+        const float scale = ThemesManager::GetScaleTexture();
         mWidth = screenWidth * scale;
         mHeight = screenHeight * scale;
-        
+
         mRenderTexture = std::make_unique<RenderTexture>(mWidth, mHeight);
         mRenderTexture->SetSmooth(true);
     }
@@ -81,11 +81,11 @@ namespace ClassicLauncher
         const auto textureWidth = static_cast<float>(mRenderTexture->GetSize().x);
         const auto textureHeight = static_cast<float>(mRenderTexture->GetSize().y);
 
-        mSource = Rectangle{ 0.0f, 0.0f, textureWidth, -textureHeight };
-        mDest = Rectangle{ (screenWidth - (mNewWidth * mScale)) * 0.5f,
-                           (screenHeight - (mNewHeight * mScale)) * 0.5f,
-                           mNewWidth * mScale,
-                           mNewHeight * mScale };
+        mSource = Rectangle{0.0f, 0.0f, textureWidth, -textureHeight};
+        mDest = Rectangle{(screenWidth - (mNewWidth * mScale)) * 0.5f,
+                          (screenHeight - (mNewHeight * mScale)) * 0.5f,
+                          mNewWidth * mScale,
+                          mNewHeight * mScale};
 
 #ifdef _DEBUG
         if (Keyboard::IsReleased(Keyboard::Key::K))
@@ -98,22 +98,22 @@ namespace ClassicLauncher
         }
 #endif
         // Draw render texture to screen, properly scaled
-        rlw::DrawTexturePro(*mRenderTexture->GetTexture(), mSource, mDest, Vector2f{ 0.0f, 0.0f }, 0.0f, Color::White);
+        rlw::DrawTexturePro(*mRenderTexture->GetTexture(), mSource, mDest, Vector2f{0.0f, 0.0f}, 0.0f, Color::White);
     }
 
     void RenderScreen::Unload()
     {
-         if (mRenderTexture->IsValid())
-         {
-             mRenderTexture->Unload();
-         }
+        if (mRenderTexture->IsValid())
+        {
+            mRenderTexture->Unload();
+        }
     }
 
     Vector2f RenderScreen::GetRenderScale() const
     {
         const float scaleWidth = static_cast<float>(RayWindow::GetScreenWidth()) / mWidth;
         const float scaleHeight = static_cast<float>(RayWindow::GetScreenHeight()) / mHeight;
-        return Vector2f{ scaleWidth, scaleHeight };
+        return Vector2f{scaleWidth, scaleHeight};
     }
 
     Vector2f RenderScreen::GetMousePositionRender() const
@@ -131,4 +131,4 @@ namespace ClassicLauncher
         return (mIsMaintainAspectRatio) ? static_cast<int>(mHeight) : RayWindow::GetScreenHeight();
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

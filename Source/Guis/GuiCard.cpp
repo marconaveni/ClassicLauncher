@@ -1,10 +1,14 @@
 #include "GuiCard.h"
 
-#include "Application.h"
+
 #include "Entity/EntityManager.h"
 #include "Graphics/Texture.h"
 #include "Guis/GuiSizeBox.h"
 #include "Guis/GuiVideoPlayer.h"
+#include "Themes/Themes.h"
+
+#include "Data/GameListManager.h"
+#include "Graphics/SpriteManager.h"
 
 namespace ClassicLauncher
 {
@@ -12,26 +16,7 @@ namespace ClassicLauncher
     GuiCard::GuiCard(GameListManager* gameListManagerRef, FocusManager* focusManagerRef)
         : FocusComponent(focusManagerRef, this), mTimer(), mTimerVideo(), m_gameListManagerRef(gameListManagerRef)
     {
-        // mTransform.position.x = static_cast<float>(x);
-        // mTransform.position.y = static_cast<float>(y);
-        // mTransform.position.width = 256;
-        // mTransform.position.height = 280;
-
-        // CreateCard(mCardBackgroundMain, 0, 281, 255, "GuiCardBackgroundMain");   // aqui os ponteiros m_entityManagerReference ainda está nulo como documento isso melhor para evitar de chamar o Getters
-        // CreateCard(mCardBackgroundFavorite, 514, 281, 0, "GuiCardBackgroundFavorite");
-        // CreateCard(mCardBackgroundSelected, 257, 281, 0, "GuiCardBackgroundSelected");
-
-        // CreateCard(mCover, 0, 0, 255, "GuiCover", false);
-        // mGuiVideoPlayer = GetEntityManager()->CreateEntity<GuiVideoPlayer>("GuiVideoPlayer");
-
-        // CreateCard(mCardMain, 0, 0, 255, "GuiCardMain");
-        // CreateCard(mCardFavorite, 514, 0, 0, "GuiCardFavorite");
-        // CreateCard(mCardSelected, 257, 0, 0, "GuiCardSelected");
-
-        // CreateSizeBox();
-        // SetCover();
-
-        // mCardSelected->mProperties.offset.x = -15;
+        // aqui os ponteiros m_entityManagerReference ainda está nulo como documento isso melhor para evitar de chamar o Getters
     }
 
     void GuiCard::CreateCards(int x, int y)
@@ -56,8 +41,12 @@ namespace ClassicLauncher
         SetCover();
     }
 
-    void GuiCard::CreateCard(GuiComponent*& card, const float sourceX, const float sourceY, unsigned char alpha,
-                             const char* title, bool bAddChild)
+    void GuiCard::CreateCard(GuiComponent*& card,
+                             const float sourceX,
+                             const float sourceY,
+                             unsigned char alpha,
+                             const char* title,
+                             bool bAddChild)
     {
         card = GetEntityManager()->CreateEntity<GuiComponent>(title);
         card->mTransform.position.width = mTransform.position.width;
@@ -101,7 +90,7 @@ namespace ClassicLauncher
         if (textureReference != nullptr && mCover->mTextureName != "sprite" && !pAnim.mIsRunning &&
             mCover->mTransform.position.width == 0 && mCover->mTransform.position.height == 0)
         {
-            const float scale = Themes::GetScaleTexture();
+            const float scale = ThemesManager::GetScaleTexture();
             mCover->mTransform.position.width = textureReference->GetSize().x / scale;
             mCover->mTransform.position.height = textureReference->GetSize().y / scale;
             mSizeBoxImage->UpdateGuiAttachment();
@@ -120,10 +109,10 @@ namespace ClassicLauncher
         mCardBackgroundSelected->mTransform.color.SetOpacity(b);
         Transform target = mCardSelected->mTransform;
         target.color.a = a;
-        mCardSelected->StartAnimation(nameAnimation, 0.2f, mCardSelected->mTransform, target, Ease::EaseLinearNone,
-                                      false);
-        mCardBackgroundSelected->StartAnimation(nameAnimation, 0.2f, mCardSelected->mTransform, target,
-                                                Ease::EaseLinearNone, false);
+        mCardSelected
+            ->StartAnimation(nameAnimation, 0.2f, mCardSelected->mTransform, target, Ease::EaseLinearNone, false);
+        mCardBackgroundSelected
+            ->StartAnimation(nameAnimation, 0.2f, mCardSelected->mTransform, target, Ease::EaseLinearNone, false);
     }
 
     void GuiCard::StartVideo()
@@ -252,10 +241,10 @@ namespace ClassicLauncher
 
     void GuiCard::SetThemeValue()
     {
-        mSizeBoxImage->mTransform.offset.x = GetApplication()->GetThemes()->mConfigurationThemes.offsetImageX;
-        mSizeBoxImage->mTransform.offset.y = GetApplication()->GetThemes()->mConfigurationThemes.offsetImageY;
-        mSizeBoxVideoPlayer->mTransform.offset.x = GetApplication()->GetThemes()->mConfigurationThemes.offsetVideoX;
-        mSizeBoxVideoPlayer->mTransform.offset.y = GetApplication()->GetThemes()->mConfigurationThemes.offsetVideoY;
+        mSizeBoxImage->mTransform.offset.x = ThemesManager::Get().mConfigurationThemes.offsetImageX;
+        mSizeBoxImage->mTransform.offset.y = ThemesManager::Get().mConfigurationThemes.offsetImageY;
+        mSizeBoxVideoPlayer->mTransform.offset.x = ThemesManager::Get().mConfigurationThemes.offsetVideoX;
+        mSizeBoxVideoPlayer->mTransform.offset.y = ThemesManager::Get().mConfigurationThemes.offsetVideoY;
     }
 
 } // namespace ClassicLauncher

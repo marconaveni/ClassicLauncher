@@ -34,14 +34,13 @@ namespace ClassicLauncher
 
     void FocusManager::RemoveFocus(FocusComponent* focusComponent)
     {
-        mFocusComponents.erase(std::remove_if(mFocusComponents.begin(),  
-            mFocusComponents.end(),
-            [focusComponent](const FocusComponent* focus)
-            {
-                return focus == focusComponent; // Return true element
-            }),
-            mFocusComponents.end()
-        );
+        mFocusComponents.erase(std::remove_if(mFocusComponents.begin(),
+                                              mFocusComponents.end(),
+                                              [focusComponent](const FocusComponent* focus)
+                                              {
+                                                  return focus == focusComponent; // Return true element
+                                              }),
+                               mFocusComponents.end());
     }
 
     FocusComponent* FocusManager::GetFocusComponent()

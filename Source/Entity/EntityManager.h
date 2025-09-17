@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+
 #include "Entity.h"
 
 
@@ -19,7 +20,9 @@ namespace ClassicLauncher
     {
     public:
 
-        EntityManager(SpriteManager* spriteManagerReference, TimerManager* timerManagerReference, FocusManager* focusManagerRef);
+        EntityManager(SpriteManager* spriteManagerReference,
+                      TimerManager* timerManagerReference,
+                      FocusManager* focusManagerRef);
         ~EntityManager();
 
         template <typename T, typename... Args>
@@ -76,6 +79,6 @@ namespace ClassicLauncher
         bool mHasNewEntity = false;
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // ENTITYMANAGER_H
+#endif // ENTITYMANAGER_H

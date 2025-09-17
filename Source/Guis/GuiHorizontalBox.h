@@ -2,6 +2,7 @@
 #define GUI_HORIZONTAL_BOX
 
 #include <vector>
+
 #include "Entity/EntityGui.h"
 
 namespace ClassicLauncher
@@ -29,6 +30,6 @@ namespace ClassicLauncher
         bool mIsAutoSize = false;
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

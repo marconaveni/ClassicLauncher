@@ -3,7 +3,7 @@
 namespace ray
 {
 #include "raylib.h"
-}  // namespace ray
+} // namespace ray
 
 namespace ClassicLauncher
 {
@@ -15,11 +15,11 @@ namespace ClassicLauncher
 
     bool Image::IsValid() const
     {
-        return ((data != NULL) &&  // Validate pixel data available
-                (width > 0) &&     // Validate image width
-                (height > 0) &&    // Validate image height
-                (format > 0) &&    // Validate image format
-                (mipmaps > 0));    // Validate image mipmaps (at least 1 for basic mipmap level);
+        return ((data != NULL) && // Validate pixel data available
+                (width > 0) &&    // Validate image width
+                (height > 0) &&   // Validate image height
+                (format > 0) &&   // Validate image format
+                (mipmaps > 0));   // Validate image mipmaps (at least 1 for basic mipmap level);
     }
 
     void Image::LoadFromFile(const std::filesystem::path& fileName)
@@ -94,7 +94,7 @@ namespace ClassicLauncher
     void Image::GenerateColor(int widthImg, int heightImg, Color color)
     {
         ray::Image rayImg{};
-        rayImg = ray::GenImageColor(widthImg, heightImg, { color.r, color.g, color.b, color.a });
+        rayImg = ray::GenImageColor(widthImg, heightImg, {color.r, color.g, color.b, color.a});
         data = rayImg.data;
         width = rayImg.width;
         height = rayImg.height;
@@ -102,4 +102,4 @@ namespace ClassicLauncher
         format = rayImg.format;
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

@@ -17,14 +17,14 @@ namespace ClassicLauncher
         bool SaveConfiguration();
 
         // Getters
-        [[nodiscard]]int GetInternalScale() const { return mInternalScale; }
-        [[nodiscard]]bool GetForceInternalScale() const { return mForceInternalScale; }
-        [[nodiscard]]int GetVolume() const { return mVolume; }
-        [[nodiscard]]int GetTargetFps() const { return mTargetFps; }
-        [[nodiscard]]int GetClassicLogLevel() const { return mClassicLogLevel; }
-        [[nodiscard]]int GetRaylibLogLevel() const { return mRaylibLogLevel; }
-        [[nodiscard]]bool GetVSync() const { return mVSync; }
-        [[nodiscard]]bool GetFullscreen() const { return mFullscreen; }
+        [[nodiscard]] int GetInternalScale() const { return mInternalScale; }
+        [[nodiscard]] bool GetForceInternalScale() const { return mForceInternalScale; }
+        [[nodiscard]] int GetVolume() const { return mVolume; }
+        [[nodiscard]] int GetTargetFps() const { return mTargetFps; }
+        [[nodiscard]] int GetClassicLogLevel() const { return mClassicLogLevel; }
+        [[nodiscard]] int GetRaylibLogLevel() const { return mRaylibLogLevel; }
+        [[nodiscard]] bool GetVSync() const { return mVSync; }
+        [[nodiscard]] bool GetFullscreen() const { return mFullscreen; }
 
         // Setters
         void SetInternalScale(int internalscale) { mInternalScale = internalscale; }
@@ -51,6 +51,6 @@ namespace ClassicLauncher
         bool mFullscreen;
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

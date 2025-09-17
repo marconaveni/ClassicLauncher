@@ -13,8 +13,11 @@ namespace ClassicLauncher
         }
     }
 
-    void TimerManager::SetTimer(TimerHandling& timerHandling, std::function<void()> callbackFunction,
-                                Entity* targetEntity, float delay, bool bLooped)
+    void TimerManager::SetTimer(TimerHandling& timerHandling,
+                                std::function<void()> callbackFunction,
+                                Entity* targetEntity,
+                                float delay,
+                                bool bLooped)
     {
         ValidTimerHandling(timerHandling);
 

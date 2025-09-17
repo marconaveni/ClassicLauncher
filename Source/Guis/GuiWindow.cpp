@@ -1,22 +1,28 @@
 #include "GuiWindow.h"
 
-#include "Application.h"
+#include "Audio/AudioManager.h"
 #include "Entity/EntityManager.h"
 #include "Guis/GuiBlackScreen.h"
 #include "Guis/GuiComponent.h"
 #include "Guis/GuiHorizontalCards.h"
 #include "Guis/GuiVideoPlayer.h"
+#include "Input/InputManager.h"
+#include "Themes/Themes.h"
 #include "Utils/Log.h"
+#include "Utils/ProcessManager.h"
 
 namespace ClassicLauncher
 {
-    GuiWindow::GuiWindow(GameListManager* gameListManagerRef, AudioManager& audioManagerRef)
+    GuiWindow::GuiWindow(GameListManager* gameListManagerRef,
+                         AudioManager& audioManagerRef,
+                         ProcessManager& processManagerRef)
         : mGuiHorizontalBox(nullptr)
         , mGuiBlackScreen(nullptr)
         , mGuiVideoPlayer(nullptr)
         , mGuiBackground(nullptr)
         , m_gameListManagerRef(gameListManagerRef)
         , m_audioManagerRef(&audioManagerRef)
+        , m_processManagerRef(&processManagerRef)
     {
     }
 
@@ -36,8 +42,9 @@ namespace ClassicLauncher
         mGuiBackground->mTextureName = "sprite";
         AddChild(mGuiBackground);
 
-        mGuiHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalCards>(
-            "GuiHorizontalCards", m_gameListManagerRef, m_audioManagerRef);
+        mGuiHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalCards",
+                                                                                 m_gameListManagerRef,
+                                                                                 m_audioManagerRef);
         mGuiHorizontalBox->Init();
         AddChild(mGuiHorizontalBox);
 
@@ -85,7 +92,6 @@ namespace ClassicLauncher
 
 #endif
 
-        Application* pApplication = GetApplication();
 
         if (InputManager::IsRelease(InputName::leftFaceUp, videoFullscreen))
         {
@@ -148,15 +154,15 @@ namespace ClassicLauncher
     void GuiWindow::OnClick()
     {
         LOG(LOG_CLASSIC_INFO, "Called OnClick");
-        Application* pApplication = GetApplication();
         if (m_gameListManagerRef->GetCurrentList() == GameListSelect)
         {
-            pApplication->CreateProcess();
+            m_audioManagerRef->Pause();
+            m_processManagerRef->CreateProc(m_gameListManagerRef);
         }
         else
         {
             mGuiHorizontalBox->ChangeList(GameListSelect);
-            pApplication->GetThemes()->LoadTheme();
+            ThemesManager::Get().LoadTheme();
             GetTimerManager()->SetTimer(mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
     }
@@ -164,11 +170,11 @@ namespace ClassicLauncher
     void GuiWindow::OnBack()
     {
         LOG(LOG_CLASSIC_INFO, "Called OnBack");
-        Application* pApplication = GetApplication();
+
         if (m_gameListManagerRef->GetCurrentList() == GameListSelect)
         {
             mGuiHorizontalBox->ChangeList(SystemListSelect);
-            pApplication->GetThemes()->LoadTheme();
+            ThemesManager::Get().LoadTheme();
             GetTimerManager()->SetTimer(mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
     }
@@ -180,7 +186,9 @@ namespace ClassicLauncher
         {
             if (mGuiHorizontalBox == nullptr)
             {
-                mGuiHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalBox", m_gameListManagerRef, m_audioManagerRef);
+                mGuiHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalBox",
+                                                                                         m_gameListManagerRef,
+                                                                                         m_audioManagerRef);
                 mGuiHorizontalBox->Init();
                 AddChild(mGuiHorizontalBox);
                 GetEntityManager()->SetThemeValue();

@@ -2,8 +2,9 @@
 #define IMAGE_H
 
 #include <filesystem>
-#include "Data/Rectangle.h"
+
 #include "Data/Color.h"
+#include "Data/Rectangle.h"
 
 
 namespace ClassicLauncher
@@ -14,7 +15,7 @@ namespace ClassicLauncher
     public:
 
         Image() = default;
-        ~Image() = default; 
+        ~Image() = default;
         Image(void* data, int width, int height, int mipmaps, int format);
         void* data{};
         int width{};
@@ -31,6 +32,6 @@ namespace ClassicLauncher
         void GenerateColor(int widthImg, int heightImg, Color color);
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // TEXTURE
+#endif // TEXTURE

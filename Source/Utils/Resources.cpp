@@ -1,9 +1,11 @@
 #include "Resources.h"
+
+#include <filesystem>
+
+#include "Helper.h"
 #include "Utils/StringFunctionLibrary.h"
 #include "Utils/UtilsFunctionLibrary.h"
-#include "Helper.h"   
 #include "rl_wrap.h"
-#include <filesystem>
 
 
 namespace ClassicLauncher::Resources
@@ -67,7 +69,7 @@ namespace ClassicLauncher::Resources
     void SetClassicLauncherDir()
     {
 #if WIN32
-        std::string path = GetResourcesPathFileAbs("portable.txt");  // portable mode is avaliable only windows system
+        std::string path = GetResourcesPathFileAbs("portable.txt"); // portable mode is avaliable only windows system
         // if (rlw::FileExists(path.c_str()))
         if (std::filesystem::exists(path))
         {
@@ -81,7 +83,7 @@ namespace ClassicLauncher::Resources
             //if (!rlw::DirectoryExists(sClassicLauncherPath.c_str()))
             if (!std::filesystem::exists(s_classicLauncherPath))
             {
-                std::filesystem::create_directory(s_classicLauncherPath); // todo fazer testes 
+                std::filesystem::create_directory(s_classicLauncherPath); // todo fazer testes
                 //rlw::MakeDirectory(sClassicLauncherPath.c_str());
             }
         }
@@ -92,4 +94,4 @@ namespace ClassicLauncher::Resources
         return false;
     }
 
-}  // namespace ClassicLauncher::Resources
+} // namespace ClassicLauncher::Resources

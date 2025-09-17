@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+
 #include "Data/DateTime.h"
 #include "tinyxml2/tinyxml2.h"
 
@@ -68,6 +69,7 @@ namespace ClassicLauncher
     struct GameSystemList
     {
     public:
+
         int mapIndex = -1;
         std::string executable;
         std::string arguments;
@@ -143,6 +145,6 @@ namespace ClassicLauncher
         static bool IsValidElement(const tinyxml2::XMLElement* pElement, const char* name = "");
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // GAMELISTMANAGER_H
+#endif // GAMELISTMANAGER_H

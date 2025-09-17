@@ -1,8 +1,7 @@
 #include "Audio/Music.h"
 
-
-#include "raylib.h"
 #include "Music.h"
+#include "raylib.h"
 
 
 namespace ClassicLauncher
@@ -11,7 +10,7 @@ namespace ClassicLauncher
 
     struct Music::MusicData
     {
-        ::Music musicStream {};
+        ::Music musicStream{};
         bool isReady = false;
     };
 
@@ -102,4 +101,4 @@ namespace ClassicLauncher
         }
     }
 
-} // namespace Fusion::Audio
+} // namespace ClassicLauncher

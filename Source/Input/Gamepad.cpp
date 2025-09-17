@@ -3,7 +3,7 @@
 namespace ray
 {
 #include "raylib.h"
-}  // namespace ray
+} // namespace ray
 
 
 namespace ClassicLauncher::GamePad
@@ -12,17 +12,17 @@ namespace ClassicLauncher::GamePad
     {
         return ray::IsGamepadButtonPressed(gamepad, button);
     }
-    
+
     bool IsDown(int gamepad, int button)
     {
         return ray::IsGamepadButtonDown(gamepad, button);
     }
-    
+
     bool IsReleased(int gamepad, int button)
     {
         return ray::IsGamepadButtonReleased(gamepad, button);
     }
-    
+
     bool IsUp(int gamepad, int button)
     {
         return ray::IsGamepadButtonUp(gamepad, button);

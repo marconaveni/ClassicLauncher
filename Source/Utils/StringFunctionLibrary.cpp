@@ -1,9 +1,9 @@
 #include "StringFunctionLibrary.h"
 
-#include <string>
 #include <cstdarg>
 #include <cstdio>
 #include <cstring>
+#include <string>
 
 namespace ClassicLauncher
 {

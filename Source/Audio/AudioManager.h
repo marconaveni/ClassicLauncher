@@ -33,7 +33,7 @@ namespace ClassicLauncher
         std::string GetMusicName();
         void ChangeMusic(bool bAutoPlay = true);
         void Unload();
-        [[nodiscard]] bool IsPlayMusic() const { return (m_statusAudio == 1);}
+        [[nodiscard]] bool IsPlayMusic() const { return (m_statusAudio == 1); }
 
     private:
 
@@ -45,23 +45,23 @@ namespace ClassicLauncher
         };
 
         std::mutex m_musicMutex;
-        std::thread m_workerThread;        // Thread work
-        std::atomic<bool> m_isRunning;     // Thread is Running
-        std::atomic<bool> m_isPlayClick;   // Sinalize thread to play m_clickSound
-        std::atomic<bool> m_isPlayCursor;  // Sinalize thread to play m_cursorSound
-        std::atomic<int> m_statusAudio;    // Status Current Audio Music
+        std::thread m_workerThread;       // Thread work
+        std::atomic<bool> m_isRunning;    // Thread is Running
+        std::atomic<bool> m_isPlayClick;  // Sinalize thread to play m_clickSound
+        std::atomic<bool> m_isPlayCursor; // Sinalize thread to play m_cursorSound
+        std::atomic<int> m_statusAudio;   // Status Current Audio Music
 
-        std::unique_ptr<Sound> m_clickSound;   //
-        std::unique_ptr<Sound> m_cursorSound;  //
+        std::unique_ptr<Sound> m_clickSound;  //
+        std::unique_ptr<Sound> m_cursorSound; //
 
-        std::vector<std::unique_ptr<Music>> m_audioMusics;  // Array Struct Audio musics
-        int m_idAudioMusic{};                                 // id music
+        std::vector<std::unique_ptr<Music>> m_audioMusics; // Array Struct Audio musics
+        int m_idAudioMusic{};                              // id music
 
         void LoadMusic(const std::string& path);
         void Update();
         int GenerateId();
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

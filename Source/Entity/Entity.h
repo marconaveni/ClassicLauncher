@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+
 #include "Data/Transform.h"
 
 namespace ClassicLauncher
@@ -40,10 +41,10 @@ namespace ClassicLauncher
         virtual void Update() {}
         virtual void Draw() {}
         virtual void End() {}
-        virtual void UpdatePosition();                  // Update the position of the entity
-        virtual void SelfDelete();                      // Delete the entity and all its children
-        virtual void AddChild(Entity* childEntity);     // Add a child to the entity
-        virtual void RemoveChild(Entity* childEntity);  // Remove a child from the entity
+        virtual void UpdatePosition();                 // Update the position of the entity
+        virtual void SelfDelete();                     // Delete the entity and all its children
+        virtual void AddChild(Entity* childEntity);    // Add a child to the entity
+        virtual void RemoveChild(Entity* childEntity); // Remove a child from the entity
         virtual void RemoveAllChildren();
         virtual void RemoveRootChild();
         virtual void SetThemeValue() {};
@@ -92,6 +93,6 @@ namespace ClassicLauncher
         void SetZOrder(int zOrder);
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // ENTITY_H
+#endif // ENTITY_H

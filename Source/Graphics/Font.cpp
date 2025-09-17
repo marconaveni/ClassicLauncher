@@ -3,7 +3,7 @@
 namespace ray
 {
 #include "raylib.h"
-}  // namespace ray
+} // namespace ray
 
 namespace ClassicLauncher
 {
@@ -25,7 +25,7 @@ namespace ClassicLauncher
         if (_owned)
         {
             ray::UnloadFont(*static_cast<ray::Font*>(_native));
-            delete static_cast<ray::Font*>(_native);  // delete own ptr caution here
+            delete static_cast<ray::Font*>(_native); // delete own ptr caution here
         }
     }
 
@@ -35,8 +35,8 @@ namespace ClassicLauncher
         baseSize = rayFont->baseSize;
         glyphCount = rayFont->glyphCount;
         glyphPadding = rayFont->glyphPadding;
-        _native = rayFont;  // we keep the pointer here
-        _owned = true;      // we allocate, then we unload later
+        _native = rayFont; // we keep the pointer here
+        _owned = true;     // we allocate, then we unload later
     }
 
     Font Font::GetFontDefault()
@@ -48,8 +48,8 @@ namespace ClassicLauncher
             defaultFont.baseSize = s_default_native.baseSize;
             defaultFont.glyphCount = s_default_native.glyphCount;
             defaultFont.glyphPadding = s_default_native.glyphPadding;
-            defaultFont._native = &s_default_native;  // ponteiro estável para a estática
-            defaultFont._owned = false;               // NÃO descarregar: é o default
+            defaultFont._native = &s_default_native; // ponteiro estável para a estática
+            defaultFont._owned = false;              // NÃO descarregar: é o default
         }
         return defaultFont;
     }
@@ -58,11 +58,11 @@ namespace ClassicLauncher
     {
         if (_native == nullptr || text.empty())
         {
-            return ClassicLauncher::Vector2f{ 0, 0 };
+            return ClassicLauncher::Vector2f{0, 0};
         }
 
         ray::Vector2 vec = ray::MeasureTextEx(*static_cast<ray::Font*>(_native), text.c_str(), fontSize, spacing);
-        return Vector2f{ vec.x, vec.y };
+        return Vector2f{vec.x, vec.y};
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

@@ -3,13 +3,15 @@
 #include <algorithm> // std::sort
 #include <format>
 
-#include "Application.h"
+#include "Utils/TimerManager.h"
 #include "Graphics/SpriteManager.h"
 
 namespace ClassicLauncher
 {
 
-    EntityManager::EntityManager(SpriteManager* spriteManagerReference, TimerManager* timerManagerReference, FocusManager* focusManagerRef)
+    EntityManager::EntityManager(SpriteManager* spriteManagerReference,
+                                 TimerManager* timerManagerReference,
+                                 FocusManager* focusManagerRef)
         : mSpriteManagerReference(spriteManagerReference)
         , mTimerManagerReference(timerManagerReference)
         , m_focusManagerReference(focusManagerRef)
@@ -73,7 +75,8 @@ namespace ClassicLauncher
         {
             return;
         }
-        std::sort(mEntities.begin(), mEntities.end(),
+        std::sort(mEntities.begin(),
+                  mEntities.end(),
                   [](const std::unique_ptr<Entity>& a, const std::unique_ptr<Entity>& b)
                   { return a->GetIdZOrder() < b->GetIdZOrder(); });
         mPrepareNewOrdination = false;
@@ -164,7 +167,8 @@ namespace ClassicLauncher
             }
         }
 
-        mEntities.erase(std::remove_if(mEntities.begin(), mEntities.end(),
+        mEntities.erase(std::remove_if(mEntities.begin(),
+                                       mEntities.end(),
                                        [](const std::unique_ptr<Entity>& entity)
                                        {
                                            return !entity; // Return true element

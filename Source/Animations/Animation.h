@@ -76,6 +76,6 @@ namespace ClassicLauncher
         float GetAnimation(float t, float b, float c, float d) const;
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // ANIMATION_H
+#endif // ANIMATION_H

@@ -1,12 +1,11 @@
 #include "Sprite.h"
+
 #include <atomic>
 #include <string>
 #include <thread>
-#include "Utils/Log.h"
-#include "Utils/Log.h"
+
 #include "ClassicAssert.h"
-
-
+#include "Utils/Log.h"
 #include "Utils/UtilsFunctionLibrary.h"
 
 namespace ClassicLauncher
@@ -52,7 +51,7 @@ namespace ClassicLauncher
 
     void Sprite::Stop()
     {
-        mIsKeepRunning = false;  // Sinaliza para encerrar
+        mIsKeepRunning = false; // Sinaliza para encerrar
     }
 
     void Sprite::Join()
@@ -159,4 +158,4 @@ namespace ClassicLauncher
         }
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

@@ -9,13 +9,14 @@
 // Namespace: rlw
 
 #include <cstdarg>
+
 #include "Data/Color.h"
 #include "Data/Rectangle.h"
 #include "Data/Vector2.h"
+#include "Graphics/Font.h"
 #include "Graphics/Image.h"
 #include "Graphics/RenderTexture.h"
 #include "Graphics/Texture.h"
-#include "Graphics/Font.h"
 
 namespace rlw
 {
@@ -32,7 +33,6 @@ namespace rlw
     void ClearBackground(ClassicLauncher::Color color);
 
 
-
     // Scissor
     void BeginScissorMode(int x, int y, int width, int height);
     void EndScissorMode();
@@ -40,13 +40,11 @@ namespace rlw
     // Retângulos
     void DrawRectangle(int x, int y, int width, int height, ClassicLauncher::Color color);
     void DrawRectangleLinesEx(ClassicLauncher::RectFloat rec, float lineThick, ClassicLauncher::Color color);
- 
+
 
     // --- Entrada ---
 
     ClassicLauncher::Vector2f GetMousePosition();
-
-
 
 
     // --- FS Utils ---
@@ -54,10 +52,6 @@ namespace rlw
     const char* GetWorkingDirectory();
     bool ChangeDirectory(const char* path);
     const char* GetFileNameWithoutExt(const char* filePath);
-
-
-
-    
 
 
     const char* GetDirectoryPath(const char* filePath);
@@ -68,7 +62,7 @@ namespace rlw
     void WaitTime(double seconds);
 
 
-    //////////////////ainda em uso 
+    //////////////////ainda em uso
 
     void BeginTextureMode(const ClassicLauncher::RenderTexture& target);
     void EndTextureMode();
@@ -83,16 +77,15 @@ namespace rlw
                         float rotation,
                         ClassicLauncher::Color tint);
 
-    
+
     void DrawTextEx(ClassicLauncher::Font font,
                     const char* text,
                     ClassicLauncher::Vector2f position,
                     float fontSize,
                     float spacing,
                     ClassicLauncher::Color tint);
-    
 
 
-}  // namespace rlw
+} // namespace rlw
 
-#endif  // RL_WRAP_H
+#endif // RL_WRAP_H

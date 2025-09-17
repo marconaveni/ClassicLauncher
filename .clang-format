@@ -22,6 +22,7 @@ EmptyLineAfterAccessModifier: Always
 KeepEmptyLinesAtTheStartOfBlocks: true
 MaxEmptyLinesToKeep: 2
 
+
 # Braces
 BreakBeforeBraces: Custom
 BraceWrapping:
@@ -42,6 +43,14 @@ BraceWrapping:
     SplitEmptyFunction: true
     SplitEmptyRecord: true
     SplitEmptyNamespace: true
+
+# Function parameters formatting
+BinPackParameters: false
+AllowAllParametersOfDeclarationOnNextLine: false
+
+# if arguments formatting
+BinPackArguments: false
+AllowAllArgumentsOnNextLine: false
 
 
 # case
@@ -81,9 +90,12 @@ ReflowComments: Never
 # lambdas
 AllowShortLambdasOnASingleLine: Inline
 
-# ordenação de includes
+# order and includes
 SortIncludes: true
 IncludeBlocks: Regroup
+
+# macros
+AlignEscapedNewlines: LeftWithLastLine
 
 IncludeCategories:
   - Regex: '^<.*>'

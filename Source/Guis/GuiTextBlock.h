@@ -2,6 +2,7 @@
 #define GUI_TEXT_BLOCK_H
 
 #include <string>
+
 #include "Entity/EntityGui.h"
 #include "Graphics/Font.h"
 
@@ -60,6 +61,6 @@ namespace ClassicLauncher
         Vector2f MeasureTextBox();
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

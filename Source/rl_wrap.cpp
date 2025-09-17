@@ -223,8 +223,11 @@ namespace rlw
         ::DrawTexture(rayTex, posX, posY, to_native_color(tint));
     }
 
-    void DrawTexturePro(const ClassicLauncher::Texture& texture, ClassicLauncher::RectFloat src,
-                        ClassicLauncher::RectFloat dst, ClassicLauncher::Vector2f origin, float rotation,
+    void DrawTexturePro(const ClassicLauncher::Texture& texture,
+                        ClassicLauncher::RectFloat src,
+                        ClassicLauncher::RectFloat dst,
+                        ClassicLauncher::Vector2f origin,
+                        float rotation,
                         ClassicLauncher::Color tint)
     {
         ::Texture2D rayTex{};
@@ -237,8 +240,12 @@ namespace rlw
                          to_native_color(tint));
     }
 
-    void DrawTextEx(ClassicLauncher::Font font, const char* text, ClassicLauncher::Vector2f position, float fontSize,
-                    float spacing, ClassicLauncher::Color tint)
+    void DrawTextEx(ClassicLauncher::Font font,
+                    const char* text,
+                    ClassicLauncher::Vector2f position,
+                    float fontSize,
+                    float spacing,
+                    ClassicLauncher::Color tint)
     {
         if (!font._native || !text)
         {

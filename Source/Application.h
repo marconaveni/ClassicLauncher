@@ -25,7 +25,7 @@ namespace ClassicLauncher
     class ProcessManager;
     class VideoPlayer;
     class InputManager;
-    class Themes;
+    class ThemesManager;
     class TimerManager;
     class FocusManager;
     class ConfigurationManager;
@@ -37,16 +37,8 @@ namespace ClassicLauncher
 
         Application(ConfigurationManager& configManager);
         ~Application();
-        static Application& Get();
-        // AudioManager* GetAudioManager() { return &mAudioManager; }
-        // GameListManager* GetGameListManager() { return &mGameListManager; }
-        // ProcessManager* GetProcessManager() { return &mProcessManager; }
-        Themes* GetThemes() { return &mThemes; }
-        // FocusManager* GetFocusManager() { return &mFocusManager; }
-        // ConfigurationManager* GetConfigurationManager() { return m_configManager; }
         
         void Init();
-        void CreateProcess();
         void Update();
         void Draw();
         void End();
@@ -58,7 +50,7 @@ namespace ClassicLauncher
         SpriteManager mSpriteManager;
         GameListManager mGameListManager;
         ProcessManager mProcessManager;
-        Themes mThemes;
+        ThemesManager mThemes;
         FocusManager mFocusManager;
         InputManager mInputManager;
         TimerManager mTimerManager;

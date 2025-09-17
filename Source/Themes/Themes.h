@@ -15,15 +15,15 @@ namespace ClassicLauncher
     class EntityManager;
     class ConfigurationManager;
 
-    class Themes
+    class ThemesManager
     {
     public:
 
-        Themes(GameListManager* gameListManager, SpriteManager* spriteManager, EntityManager* entityManagerRef, ConfigurationManager* configManager);
-        ~Themes();
+        ThemesManager(GameListManager* gameListManager, SpriteManager* spriteManager, EntityManager* entityManagerRef, ConfigurationManager* configManager);
+        ~ThemesManager();
         void Init();
         void LoadTheme();
-        // static Themes& Get();
+        static ThemesManager& Get();
         static float GetScaleTexture();
         ConfigurationThemes mConfigurationThemes;
 

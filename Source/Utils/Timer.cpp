@@ -1,6 +1,7 @@
 #include "Timer.h"
 
 #include <utility>
+
 #include "Entity/Entity.h"
 #include "Window/RayWindow.h"
 
@@ -18,7 +19,10 @@ namespace ClassicLauncher
     {
     }
 
-    void Timer::SetTimer(std::function<void()> callbackFunction, Entity* targetEntity, const float delay, const bool bIsLoop)
+    void Timer::SetTimer(std::function<void()> callbackFunction,
+                         Entity* targetEntity,
+                         const float delay,
+                         const bool bIsLoop)
     {
         mCallback = std::move(callbackFunction);
         mTargetEntity = targetEntity;
@@ -45,16 +49,16 @@ namespace ClassicLauncher
             }
             else
             {
-                mIsFunctionCalled = true;  // Mark the function as already called
+                mIsFunctionCalled = true; // Mark the function as already called
             }
         }
     }
 
     void Timer::Reset()
     {
-        mCurrentTime = 0.0;                                // Reset current time
-        mDuration = mDelay / static_cast<double>(RayWindow::GetFrameTime());  // Set duration based on frame time
-        mIsFunctionCalled = false;                         // Reset the function called state
+        mCurrentTime = 0.0;                                                  // Reset current time
+        mDuration = mDelay / static_cast<double>(RayWindow::GetFrameTime()); // Set duration based on frame time
+        mIsFunctionCalled = false;                                           // Reset the function called state
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

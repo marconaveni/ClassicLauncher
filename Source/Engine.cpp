@@ -1,9 +1,11 @@
 #include "Engine.h"
 
 #include <string_view>
+#include <format>
 
 #include "Helper.h"
 #include "Utils/Resources.h"
+#include "ClassicLauncher.h"
 
 namespace ClassicLauncher
 {
@@ -24,9 +26,9 @@ namespace ClassicLauncher
         m_configurationManager.LoadConfiguration();
 
 #if _DEBUG
-        std::string_view title = "Classic Launcher [DEVMODE]";
+        std::string title = std::format("Classic Launcher [DEVMODE] {}" , PRODUCT_VERSION_STRING);
 #else
-        std::string_view title = "Classic Launcher";
+        std::string title = "Classic Launcher";
 #endif
 
 
@@ -37,7 +39,7 @@ namespace ClassicLauncher
                                          Resources::GetIcon(128).c_str()
         };
 
-        m_window.Init(1280, 720, title.data());
+        m_window.Init(1280, 720, title);
         m_window.SetIcons(imgs);
         m_application.Init();
         m_renderSystem.Init(1280, 720);
@@ -59,6 +61,7 @@ namespace ClassicLauncher
         }
 
         m_application.End();
+        GetPrint()->Unload();
     }
 
 

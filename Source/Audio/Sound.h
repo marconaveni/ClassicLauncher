@@ -1,8 +1,8 @@
 #ifndef SOUND_H
 #define SOUND_H
 
-#include <memory>
 #include <filesystem>
+#include <memory>
 
 namespace ClassicLauncher
 {
@@ -34,6 +34,6 @@ namespace ClassicLauncher
         std::unique_ptr<SoundData> m_data;
         void Unload();
     };
-} // namespace Fusion::Audio
+} // namespace ClassicLauncher
 
 #endif // SOUND_H

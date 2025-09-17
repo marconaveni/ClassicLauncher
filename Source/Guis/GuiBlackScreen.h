@@ -9,7 +9,7 @@ namespace ClassicLauncher
 
     class GuiBlackScreen : public EntityGui
     {
-        
+
     public:
 
         GuiBlackScreen();
@@ -23,6 +23,6 @@ namespace ClassicLauncher
         virtual void AnimationFinished(const std::string& name) override;
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // GUI_BLACK_SCREEN_H
+#endif // GUI_BLACK_SCREEN_H

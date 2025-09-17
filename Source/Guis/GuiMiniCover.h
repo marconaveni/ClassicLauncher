@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+
 #include "Entity/EntityGui.h"
 
 namespace ClassicLauncher
@@ -43,6 +44,6 @@ namespace ClassicLauncher
         void SetPositionCovers(int numCovers);
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // GUI_MINI_COVER_H
+#endif // GUI_MINI_COVER_H

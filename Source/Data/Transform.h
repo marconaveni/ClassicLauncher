@@ -13,15 +13,15 @@ namespace ClassicLauncher
 
         Vector2f offset{};
         RectFloat position{};
-        Vector2f scale{ 1.0f, 1.0f };
+        Vector2f scale{1.0f, 1.0f};
         float rotation{};
-        Color color{ 255, 255, 255, 255 };
+        Color color{255, 255, 255, 255};
         RectFloat source{};
 
         struct Root
         {
             Vector2f position{};
-            Vector2f scale{ 1.0f, 1.0f };
+            Vector2f scale{1.0f, 1.0f};
         };
 
         Root root;
@@ -40,10 +40,10 @@ namespace ClassicLauncher
 
         RectFloat mTransform{};
         RectFloat mSource{};
-        Vector2f mScale{ 1.0f, 1.0f };
+        Vector2f mScale{1.0f, 1.0f};
     };
 
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // TRANSFORM_H
+#endif // TRANSFORM_H

@@ -1,18 +1,16 @@
 #include "EntityGui.h"
+
+
 #include "Graphics/SpriteAnimator.h"
-#include "Application.h"
-#include "ClassicAssert.h"
 #include "Window/RayWindow.h"
 
 namespace ClassicLauncher
 {
-    
+
     EntityGui::EntityGui()
     {
-        mApplication = &Application::Get();
-        CLASSIC_ASSERT(mApplication ,"This m_application pointer never is null");
     }
-    
+
     void EntityGui::Update()
     {
         Entity::Update();
@@ -25,12 +23,12 @@ namespace ClassicLauncher
             mTransform.position.width = rec.width;
             mTransform.position.height = rec.height;
         }
-        
+
         for (auto& animation : mAnimations)
         {
             const std::string& name = animation.first;
             Animation& anim = animation.second;
-            
+
             if (anim.mIsStart)
             {
                 AnimationStarted(name);
@@ -50,7 +48,7 @@ namespace ClassicLauncher
             }
         }
     }
-    
+
     void EntityGui::UpdateTransform(const Animation& anim)
     {
         mTransform.position.x = anim.mCurrentTransform.position.x;
@@ -69,10 +67,16 @@ namespace ClassicLauncher
                                    bool bForceReset)
     {
         Animation& anim = mAnimations[name];
-        anim.StartAnimation(durationAnimation, startAnimationTransform, finalAnimationTransform, typeAnimation, bForceReset);
+        anim.StartAnimation(durationAnimation,
+                            startAnimationTransform,
+                            finalAnimationTransform,
+                            typeAnimation,
+                            bForceReset);
     }
 
-    void EntityGui::AddAnimationFrame(const std::string& name, const float timeAnimation, const std::vector<RectFloat>& spriteIndices)
+    void EntityGui::AddAnimationFrame(const std::string& name,
+                                      const float timeAnimation,
+                                      const std::vector<RectFloat>& spriteIndices)
     {
         if (mSpriteAnimations.find(name) != mSpriteAnimations.end())
         {

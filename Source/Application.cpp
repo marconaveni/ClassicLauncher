@@ -16,7 +16,6 @@
 namespace ClassicLauncher
 {
 
-    static Application* sInstanceApplication = nullptr;
 
     Application::Application(ConfigurationManager& configManager)
         : m_configManager(&configManager)
@@ -24,20 +23,12 @@ namespace ClassicLauncher
         , m_entityManager(&mSpriteManager, &mTimerManager, &mFocusManager)
         , mGuiWindow(nullptr)
         , mThemes(&mGameListManager, &mSpriteManager, &m_entityManager, &configManager)
-    {
-        sInstanceApplication = this;
+    {       
     }
 
     Application::~Application()
-    {
-        sInstanceApplication = nullptr;
+    {    
     }
-
-    Application& Application::Get()
-    {
-        return *sInstanceApplication;
-    }
-
 
     void Application::Init()
     {
@@ -76,7 +67,7 @@ namespace ClassicLauncher
 
         if (mGameListManager.GetGameListSize() > 0)
         {
-            mGuiWindow = m_entityManager.CreateEntity<GuiWindow>("GuiWindow", &mGameListManager, mAudioManager);
+            mGuiWindow = m_entityManager.CreateEntity<GuiWindow>("GuiWindow", &mGameListManager, mAudioManager, mProcessManager);
             mGuiWindow->Init();
         }
         else
@@ -84,17 +75,8 @@ namespace ClassicLauncher
             LOG(LOG_CLASSIC_ERROR, "system list is empty");
             // todo create screen not found system list
         }
-        // Loop();
 
-        //End();
     }
-
-    void Application::CreateProcess()
-    {
-        mAudioManager.Pause();
-        mProcessManager.CreateProc(&mGameListManager);
-    }
-
 
     void Application::Draw()
     {
@@ -110,7 +92,6 @@ namespace ClassicLauncher
 
         mTimerManager.Update();
         mProcessManager.StatusProcessRun(mGuiWindow->GetGuiBlackScreen(), &mAudioManager);
-        //mInputManager.UpdateInputState();
 
 #ifdef _DEBUG
 
@@ -176,8 +157,6 @@ namespace ClassicLauncher
 
     void Application::End()
     {
-        // m_renderScreen->Unload();
-        GetPrint()->Unload();
         mAudioManager.Unload();
         mSpriteManager.UnloadSprites();
         m_entityManager.End();

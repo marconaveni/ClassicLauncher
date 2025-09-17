@@ -1,4 +1,5 @@
 #include "Entity.h"
+
 #include <algorithm>
 
 namespace ClassicLauncher
@@ -6,7 +7,15 @@ namespace ClassicLauncher
 
 
     Entity::Entity()
-        : mToDelete(false), mToDraw(true), mScissorMode(false), mVisible(true), mZOrder(0), mIdZOrder(0), mId(0), mChildEntities(), mNameId()
+        : mToDelete(false)
+        , mToDraw(true)
+        , mScissorMode(false)
+        , mVisible(true)
+        , mZOrder(0)
+        , mIdZOrder(0)
+        , mId(0)
+        , mChildEntities()
+        , mNameId()
     {
     }
 
@@ -53,7 +62,7 @@ namespace ClassicLauncher
                                             mChildEntities.end(),
                                             [childEntity](const Entity* entity)
                                             {
-                                                return entity == childEntity;  // Return true element
+                                                return entity == childEntity; // Return true element
                                             }),
                              mChildEntities.end());
     }
@@ -102,4 +111,4 @@ namespace ClassicLauncher
         mZOrder = zOrder;
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

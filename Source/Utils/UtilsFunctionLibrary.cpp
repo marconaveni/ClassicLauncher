@@ -9,8 +9,7 @@
 namespace ClassicLauncher
 {
 
-    void Utils::SetSizeWithProportionFit(Vector2f& texture, const int widthResize,
-                                                        const int heightResize)
+    void Utils::SetSizeWithProportionFit(Vector2f& texture, const int widthResize, const int heightResize)
     {
         // Define a nova largura e altura desejadas
         float newWidth = static_cast<float>(widthResize);   // Largura desejada
@@ -28,8 +27,7 @@ namespace ClassicLauncher
         texture = Vector2f{newWidth, newHeight};
     }
 
-    void Utils::SetSizeWithProportionFill(Vector2f& texture, const int widthResize,
-                                                         const int heightResize)
+    void Utils::SetSizeWithProportionFill(Vector2f& texture, const int widthResize, const int heightResize)
     {
         float newWidth = static_cast<float>(widthResize);
         float newHeight = static_cast<float>(heightResize);
@@ -46,8 +44,7 @@ namespace ClassicLauncher
         texture = Vector2f{newWidth, newHeight};
     }
 
-    void Utils::SetSizeWithProportion(Vector2f& texture, const int widthResize, const int heightResize,
-                                                     bool bFill)
+    void Utils::SetSizeWithProportion(Vector2f& texture, const int widthResize, const int heightResize, bool bFill)
     {
         if (!bFill)
         {

@@ -1,4 +1,5 @@
 #include "GuiHorizontalBox.h"
+
 #include "Utils/Math.h"
 
 namespace ClassicLauncher
@@ -46,7 +47,7 @@ namespace ClassicLauncher
             Transform& transform = guiElement->mTransform;
             if (mIsAffectScale)
             {
-                scale = transform.GetScale().x;    //transform.rootScaleX * transform.scaleX;
+                scale = transform.GetScale().x; //transform.rootScaleX * transform.scaleX;
             }
             transform.position.x = x + width + mTransform.offset.x;
             transform.position.y = mTransform.offset.y;
@@ -55,7 +56,7 @@ namespace ClassicLauncher
             if (mIsAutoSize)
             {
                 spacer += mSpacer;
-                const float canvasScaleWidth = transform.GetScale().x; // (transform.rootScaleX * transform.scaleX);
+                const float canvasScaleWidth = transform.GetScale().x;  // (transform.rootScaleX * transform.scaleX);
                 const float canvasScaleHeight = transform.GetScale().y; // (transform.rootScaleY * transform.scaleY);
                 canvasWidth += (transform.position.width) / (canvasScaleWidth);
                 canvasHeight = Math::Max(transform.position.height / canvasScaleHeight, canvasHeight);
@@ -65,9 +66,9 @@ namespace ClassicLauncher
         if (mIsAutoSize)
         {
             spacer -= mSpacer;
-            mTransform.position.width = (canvasWidth + spacer / mTransform.GetScale().x) * scale;   //(canvasWidth + spacer / (mTransform.rootScaleX * mTransform.scaleX)) * scale;
+            mTransform.position.width = (canvasWidth + spacer / mTransform.GetScale().x) * scale; 
             mTransform.position.height = canvasHeight * scale;
         }
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

@@ -8,4 +8,4 @@ namespace ClassicLauncher
         mTransform.position.height = 50.0f;
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

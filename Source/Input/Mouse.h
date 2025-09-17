@@ -21,6 +21,6 @@ namespace ClassicLauncher::Mouse
     bool IsReleased(int button);
     bool IsUp(int button);
 
-} // namespace ClassicLauncher
+} // namespace ClassicLauncher::Mouse
 
 #endif // MOUSE_H

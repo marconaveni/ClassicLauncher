@@ -1,5 +1,6 @@
 #include "GuiBlackScreen.h"
-#include "Application.h"
+
+
 
 namespace ClassicLauncher
 {
@@ -26,7 +27,7 @@ namespace ClassicLauncher
         target.color.a = 0;
         StartAnimation("fade-out", 0.3f, mTransform, target, Ease::EaseQuadOut, false);
     }
-    
+
     void GuiBlackScreen::FadeInFadeOut()
     {
         mTransform.color.SetOpacity(0);
@@ -36,11 +37,10 @@ namespace ClassicLauncher
     }
 
     void GuiBlackScreen::KeepBlack()
-    {        
+    {
         mTransform.color.SetOpacity(255);
-        Transform target = mTransform;   
+        Transform target = mTransform;
         StartAnimation("keep", 1.0f, mTransform, target, Ease::EaseLinearNone, false);
-
     }
 
     void GuiBlackScreen::SetOpacity(int opacity)
@@ -52,7 +52,7 @@ namespace ClassicLauncher
     {
         EntityGui::Update();
     }
-    
+
     void GuiBlackScreen::AnimationFinished(const std::string& name)
     {
         if (name == "fade-in-out")
@@ -64,4 +64,4 @@ namespace ClassicLauncher
             FadeOut();
         }
     }
-}  // namespace  ClassicLauncher
+} // namespace  ClassicLauncher

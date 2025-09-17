@@ -15,12 +15,13 @@ namespace ClassicLauncher
     class EntityManager;
     class GameListManager;
     class AudioManager;
+    class ProcessManager;
 
     class GuiWindow : public EntityGui
     {
     public:
 
-        GuiWindow(GameListManager* gameListManagerRef, AudioManager& audioManagerRef);
+        GuiWindow(GameListManager* gameListManagerRef, AudioManager& audioManagerRef, ProcessManager& processManagerRef);
         virtual EntityType GetType() const override { return EntityType::GuiWindowClass; }
         virtual void Update() override;
         void Init();
@@ -40,8 +41,7 @@ namespace ClassicLauncher
 
         GameListManager* m_gameListManagerRef;
         AudioManager* m_audioManagerRef;
-
-        
+        ProcessManager* m_processManagerRef;
     };
 
 } // namespace ClassicLauncher

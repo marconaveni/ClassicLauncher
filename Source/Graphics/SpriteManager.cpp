@@ -1,4 +1,5 @@
 #include "SpriteManager.h"
+
 #include "Data/Color.h"
 
 namespace ClassicLauncher
@@ -19,17 +20,29 @@ namespace ClassicLauncher
         blackImage.Unload();
     }
 
-    void SpriteManager::LoadSprite(const std::string& name, const std::string& fileName, const int width, const int height, bool bAspectRatio)
+    void SpriteManager::LoadSprite(const std::string& name,
+                                   const std::string& fileName,
+                                   const int width,
+                                   const int height,
+                                   bool bAspectRatio)
     {
         mSpriteMap[name].Load(fileName, width, height, bAspectRatio);
     }
 
-    void SpriteManager::LoadSprite(const std::string& name, Image& image, const int width, const int height, bool bAspectRatio)
+    void SpriteManager::LoadSprite(const std::string& name,
+                                   Image& image,
+                                   const int width,
+                                   const int height,
+                                   bool bAspectRatio)
     {
         mSpriteMap[name].Load(image, width, height, bAspectRatio);
     }
 
-    void SpriteManager::UpdateSprite(std::string name, std::string fileName, const int width, const int height, bool bAspectRatio)
+    void SpriteManager::UpdateSprite(std::string name,
+                                     std::string fileName,
+                                     const int width,
+                                     const int height,
+                                     bool bAspectRatio)
     {
         mSpriteMap[name].Unload();
         mSpriteMap[name].Load(fileName, width, height, bAspectRatio);
@@ -56,7 +69,7 @@ namespace ClassicLauncher
         if (it != mSpriteMap.end())
         {
             it->second.Unload();
-            mSpriteMap.erase(it); 
+            mSpriteMap.erase(it);
             return true;
         }
         return false;
@@ -64,7 +77,7 @@ namespace ClassicLauncher
 
     int SpriteManager::NumSpritesLoaded()
     {
-        return static_cast<int>(mSpriteMap.size()) ;
+        return static_cast<int>(mSpriteMap.size());
     }
 
     void SpriteManager::UnloadSprites()
@@ -72,4 +85,4 @@ namespace ClassicLauncher
         mSpriteMap.clear();
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

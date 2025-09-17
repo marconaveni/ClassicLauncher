@@ -19,7 +19,10 @@ namespace ClassicLauncher
         UpdateGuiAttachment();
         if (mCropGuiAttachment)
         {
-            EnableScissorMode(mTransform.GetTransform().x, mTransform.GetTransform().y, mTransform.position.width, mTransform.position.height);
+            EnableScissorMode(mTransform.GetTransform().x,
+                              mTransform.GetTransform().y,
+                              mTransform.position.width,
+                              mTransform.position.height);
         }
     }
 
@@ -34,10 +37,12 @@ namespace ClassicLauncher
         {
             return;
         }
+
+        // todo refactor to decrease line size
         mGuiAttachment->mTransform.position.x = (mTransform.position.width * mTransform.root.scale.x - mGuiAttachment->mTransform.position.width * mGuiAttachment->mTransform.root.scale.x) / 2;
         mGuiAttachment->mTransform.offset.x = mTransform.offset.x; 
         mGuiAttachment->mTransform.position.y = (mTransform.position.height * mTransform.root.scale.y - mGuiAttachment->mTransform.position.height * mGuiAttachment->mTransform.root.scale.y) / 2;
         mGuiAttachment->mTransform.offset.y = mTransform.offset.y;
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

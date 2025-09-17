@@ -1,19 +1,20 @@
 #include "ConfigurationManager.h"
+
 #include "Utils/Resources.h"
 
 namespace ClassicLauncher
 {
 
 #ifdef _DEBUG
-    #define LOG_SECTION_NAME "debug"
-    #define CLASSIC_LOG_LEVEL 10
-    #define RAYLIB_LOG_LEVEL 4
-    #define FULLSCREEN false
-    #else
-    #define LOG_SECTION_NAME "log"
-    #define CLASSIC_LOG_LEVEL 13
-    #define RAYLIB_LOG_LEVEL 5
-    #define FULLSCREEN true
+#define LOG_SECTION_NAME "debug"
+#define CLASSIC_LOG_LEVEL 10
+#define RAYLIB_LOG_LEVEL 4
+#define FULLSCREEN false
+#else
+#define LOG_SECTION_NAME "log"
+#define CLASSIC_LOG_LEVEL 13
+#define RAYLIB_LOG_LEVEL 5
+#define FULLSCREEN true
 #endif
 
 
@@ -65,7 +66,7 @@ namespace ClassicLauncher
 
         if (!config.Open(path.c_str()))
         {
-            SetValues(config);          
+            SetValues(config);
             config.Save(path.c_str());
             return;
         }
@@ -76,8 +77,8 @@ namespace ClassicLauncher
     bool ConfigurationManager::SaveConfiguration()
     {
         SimpleIni config;
-        SetValues(config);  
-        return config.Save(Resources::GetDefaultConfigurations().c_str());     
+        SetValues(config);
+        return config.Save(Resources::GetDefaultConfigurations().c_str());
     }
 
 #undef LOG_SECTION_NAME
@@ -85,4 +86,4 @@ namespace ClassicLauncher
 #undef RAYLIB_LOG_LEVEL
 #undef FULLSCREEN
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

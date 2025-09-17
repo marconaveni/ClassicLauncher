@@ -18,6 +18,6 @@ namespace ClassicLauncher::Resources
     void SetClassicLauncherDir();
     bool CheckResources();
 
-}  // namespace ClassicLauncher::Resources
+} // namespace ClassicLauncher::Resources
 
 #endif

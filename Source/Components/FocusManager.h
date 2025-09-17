@@ -25,6 +25,6 @@ namespace ClassicLauncher
         FocusComponent* GetFocusComponent();
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

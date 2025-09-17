@@ -3,6 +3,7 @@
 
 #include <map>
 #include <vector>
+
 #include "Animations/Animation.h"
 #include "Entity/Entity.h"
 #include "Graphics/SpriteAnimator.h"
@@ -23,7 +24,7 @@ namespace ClassicLauncher
         virtual void AnimationUpdate(const std::string& name) {}
         virtual void AnimationFinished(const std::string& name) {}
 
-        Application* GetApplication() { return mApplication; }
+        // Application* GetApplication() { return mApplication; }
         Animation& GetAnimation(const std::string& name) { return mAnimations[name]; }
 
         void StartAnimation(const std::string& name,
@@ -32,16 +33,18 @@ namespace ClassicLauncher
                             const Transform& finalAnimationTransform,
                             Ease typeAnimation = Ease::EaseLinearNone,
                             bool bForceReset = true);
-        void AddAnimationFrame(const std::string& name, const float timeAnimation, const std::vector<RectFloat>& spriteIndices);
+        void AddAnimationFrame(const std::string& name,
+                               const float timeAnimation,
+                               const std::vector<RectFloat>& spriteIndices);
 
     private:
 
         std::map<std::string, SpriteAnimator> mSpriteAnimations;
         std::map<std::string, Animation> mAnimations;
-        Application* mApplication;
+        //Application* mApplication;
         void UpdateTransform(const Animation& anim);
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

@@ -1,8 +1,8 @@
 #ifndef MUSIC_H
 #define MUSIC_H
 
-#include <memory>
 #include <filesystem>
+#include <memory>
 #include <string>
 
 namespace ClassicLauncher
@@ -10,6 +10,7 @@ namespace ClassicLauncher
     class Music
     {
     public:
+
         Music();
         ~Music();
 
@@ -34,10 +35,11 @@ namespace ClassicLauncher
         std::string name{};
 
     private:
+
         struct MusicData; // PIMPL Idiom https://www.geeksforgeeks.org/cpp/pimpl-idiom-in-c-with-examples/
         std::unique_ptr<MusicData> m_data;
         void Unload();
     };
-}
+} // namespace ClassicLauncher
 
 #endif // MUSIC_H

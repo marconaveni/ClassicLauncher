@@ -1,6 +1,7 @@
 #include "GameListManager.h"
 
 #include <algorithm>
+
 #include "Utils/Math.h"
 #include "Utils/Resources.h"
 #include "Utils/StringFunctionLibrary.h"
@@ -25,6 +26,7 @@ namespace ClassicLauncher
 
         while (pGame)
         {
+            // clang-format off
             auto game = GameList();
             game.mapIndex = index;
             game.path = IsValidElement(pGame, "path") ? NormalizePath(pGame->FirstChildElement("path")->GetText()) : "";
@@ -48,6 +50,7 @@ namespace ClassicLauncher
             game.lastPlayed = IsValidElement(pGame, "lastplayed") ? NormalizePath(pGame->FirstChildElement("lastplayed")->GetText()) : "";
             ReplaceCurrentPath(&game);
             mGameList.push_back(game);
+            // clang-format on
 
             pGame = pGame->NextSiblingElement("game");
             index++;
@@ -105,14 +108,9 @@ namespace ClassicLauncher
 
         switch (mCurrentList)
         {
-            case SystemListSelect:
-                LoadSystemToGameList();
-                break;
-            case GameListSelect:
-                LoadGameList();
-                break;
-            default:
-                break;
+            case SystemListSelect: LoadSystemToGameList(); break;
+            case GameListSelect: LoadGameList(); break;
+            default: break;
         }
     }
 
@@ -133,6 +131,7 @@ namespace ClassicLauncher
 
         while (pSystem)
         {
+            // clang-format off
             GameSystemList systems;
             systems.mapIndex = index;
             systems.executable = IsValidElement(pSystem, "executable") ? NormalizePath(pSystem->FirstChildElement("executable")->GetText()) : "";
@@ -148,6 +147,7 @@ namespace ClassicLauncher
 
             pSystem = pSystem->NextSiblingElement("system");
             index++;
+            // clang-format on
         }
         mSystemList.shrink_to_fit();
         SystemListSortByName();
@@ -240,12 +240,16 @@ namespace ClassicLauncher
 
     void GameListManager::GameListSortByName()
     {
-        std::sort(mGameList.begin(), mGameList.end(), [](const GameList& a, const GameList& b) { return a.name < b.name; });
+        std::sort(mGameList.begin(),
+                  mGameList.end(),
+                  [](const GameList& a, const GameList& b) { return a.name < b.name; });
     }
 
     void GameListManager::SystemListSortByName()
     {
-        std::sort(mSystemList.begin(), mSystemList.end(), [](const GameSystemList& a, const GameSystemList& b) { return a.systemLabel < b.systemLabel; });
+        std::sort(mSystemList.begin(),
+                  mSystemList.end(),
+                  [](const GameSystemList& a, const GameSystemList& b) { return a.systemLabel < b.systemLabel; });
     }
 
     void GameListManager::ReplaceCurrentPath(GameList* pGame) const
@@ -272,4 +276,4 @@ namespace ClassicLauncher
         return bIsValid;
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

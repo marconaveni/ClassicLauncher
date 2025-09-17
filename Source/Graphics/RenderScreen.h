@@ -2,6 +2,7 @@
 #define RENDER_SCREEN_H
 
 #include <memory>
+
 #include "Data/Rectangle.h"
 #include "Data/Vector2.h"
 
@@ -44,6 +45,6 @@ namespace ClassicLauncher
         Vector2f mVirtualMouse;
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

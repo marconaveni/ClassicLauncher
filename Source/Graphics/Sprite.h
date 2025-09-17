@@ -6,7 +6,6 @@
 #include <string>
 #include <thread>
 
-
 #include "Graphics/Image.h"
 #include "Graphics/Texture.h"
 
@@ -43,9 +42,8 @@ namespace ClassicLauncher
         Texture mTexture;
         std::string mFilePath;
         void LoadImage(int width, int height, bool bAspectRatio);
-
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

@@ -3,11 +3,12 @@
 
 
 #include <string>
-#include "GuiComponent.h"
-#include "Utils/TimerManager.h"
+
 #include "Components/FocusComponent.h"
 #include "Entity/Entity.h"
 #include "Entity/EntityGui.h"
+#include "GuiComponent.h"
+#include "Utils/TimerManager.h"
 
 namespace ClassicLauncher
 {
@@ -62,12 +63,17 @@ namespace ClassicLauncher
 
         GameListManager* m_gameListManagerRef;
 
-        void CreateCard(GuiComponent*& card, float sourceX, float sourceY, unsigned char alpha, const char* title, bool bAddChild = true);
+        void CreateCard(GuiComponent*& card,
+                        float sourceX,
+                        float sourceY,
+                        unsigned char alpha,
+                        const char* title,
+                        bool bAddChild = true);
         void CreateSizeBox();
         void StartVideo();
-        void FocusAnimation(bool bForce, int a,  int b, const char* nameAnimation);
+        void FocusAnimation(bool bForce, int a, int b, const char* nameAnimation);
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // GUI_CARD_H
+#endif // GUI_CARD_H

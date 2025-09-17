@@ -1,8 +1,7 @@
 #include "Audio/Sound.h"
 
-
-#include "raylib.h"
 #include "Sound.h"
+#include "raylib.h"
 
 
 namespace ClassicLauncher
@@ -77,4 +76,4 @@ namespace ClassicLauncher
         }
     }
 
-} // namespace Fusion::Audio
+} // namespace ClassicLauncher

@@ -18,6 +18,6 @@ namespace ClassicLauncher::String
     bool IsIntegerNumber(const std::string& str);
     const char* TextFormat(const char* text, ...);
 
-}  // namespace ClassicLauncher::StringFunctionLibrary
+} // namespace ClassicLauncher::String
 
 #endif

@@ -2,6 +2,7 @@
 #define RENDER_ENTITIES_H
 
 #include <memory>
+
 #include "Entity/Entity.h"
 #include "Graphics/SpriteManager.h"
 
@@ -22,6 +23,6 @@ namespace ClassicLauncher
         SpriteManager* mSpriteManagerReference;
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

@@ -42,13 +42,13 @@ namespace ClassicLauncher
         // if (texture && entity->mToDraw && entity->mTextureName != "transparent")  // todo verify render
         if (texture && entity->mToDraw)
         {
-            entity->mTransform.SetTransforms(Themes::GetScaleTexture());
+            entity->mTransform.SetTransforms(ThemesManager::GetScaleTexture());
 
             if (entity->mScissorMode)
             {
                 RectFloat scissorArea = entity->mScissorArea;
-                scissorArea.width = scissorArea.width * entity->mTransform.root.scale.x * Themes::GetScaleTexture();
-                scissorArea.height = scissorArea.height * entity->mTransform.root.scale.y * Themes::GetScaleTexture();
+                scissorArea.width = scissorArea.width * entity->mTransform.root.scale.x * ThemesManager::GetScaleTexture();
+                scissorArea.height = scissorArea.height * entity->mTransform.root.scale.y * ThemesManager::GetScaleTexture();
                 rlw::BeginScissorMode(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height);
             }
 
@@ -93,8 +93,8 @@ namespace ClassicLauncher
         {
             const Color tint = Color(255, 0, 0, 55);
             RectFloat scissorArea = entity->mScissorArea;
-            scissorArea.width = scissorArea.width * entity->mTransform.root.scale.x * Themes::GetScaleTexture();
-            scissorArea.height = scissorArea.height * entity->mTransform.root.scale.y * Themes::GetScaleTexture();
+            scissorArea.width = scissorArea.width * entity->mTransform.root.scale.x * ThemesManager::GetScaleTexture();
+            scissorArea.height = scissorArea.height * entity->mTransform.root.scale.y * ThemesManager::GetScaleTexture();
             rlw::DrawRectangle(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height, tint);
         }
 #endif  // _DEBUG

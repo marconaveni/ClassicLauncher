@@ -20,17 +20,17 @@ namespace ClassicLauncher
 
     private:
 
-        double mDelay;                    // Delay time before the timer triggers
-        double mDuration;                 // Duration of the timer
-        double mCurrentTime;              // Current elapsed time
-        bool mIsFunctionCalled;           // Flag to check if the function has been called
-        bool mIsLoop;                     // Flag to determine if the timer is looping
-        bool mIsActive;                   // Flag to check if the timer is active
-        Entity* mTargetEntity;            // Pointer to the target entity
-        std::function<void()> mCallback;  // Pointer to the callback function to be called
+        double mDelay;                   // Delay time before the timer triggers
+        double mDuration;                // Duration of the timer
+        double mCurrentTime;             // Current elapsed time
+        bool mIsFunctionCalled;          // Flag to check if the function has been called
+        bool mIsLoop;                    // Flag to determine if the timer is looping
+        bool mIsActive;                  // Flag to check if the timer is active
+        Entity* mTargetEntity;           // Pointer to the target entity
+        std::function<void()> mCallback; // Pointer to the callback function to be called
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #define CALLFUNCTION(functionName, object) \
     [object]()                             \
@@ -38,4 +38,4 @@ namespace ClassicLauncher
         object->functionName();            \
     }
 
-#endif  // TIMER_H
+#endif // TIMER_H

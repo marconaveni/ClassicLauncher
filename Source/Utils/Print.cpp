@@ -5,8 +5,8 @@
 
 #include "Data/Vector2.h"
 #include "Math.h"
-#include "Window/RayWindow.h"
 #include "Utils/Resources.h"
+#include "Window/RayWindow.h"
 #include "rl_wrap.h"
 
 namespace ClassicLauncher
@@ -16,8 +16,12 @@ namespace ClassicLauncher
     {
     }
 
-    void Print::InternalPrintOnScreen(const std::string& text, float duration, const std::string& label,
-                                      const Color& textColor, bool bLog, int sizeY)
+    void Print::InternalPrintOnScreen(const std::string& text,
+                                      float duration,
+                                      const std::string& label,
+                                      const Color& textColor,
+                                      bool bLog,
+                                      int sizeY)
     {
 #ifdef _DEBUG
 
@@ -57,7 +61,10 @@ namespace ClassicLauncher
 #endif
     }
 
-    void Print::PrintOnScreen(const char* text, const float duration, const char* label, const Color& textColor,
+    void Print::PrintOnScreen(const char* text,
+                              const float duration,
+                              const char* label,
+                              const Color& textColor,
                               const bool bLog)
     {
 
@@ -95,7 +102,8 @@ namespace ClassicLauncher
             return;
         }
 
-        mMessages.erase(std::remove_if(mMessages.begin(), mMessages.end(),
+        mMessages.erase(std::remove_if(mMessages.begin(),
+                                       mMessages.end(),
                                        [](Message& message) { return !message.IsTimeElapsed(); }),
                         mMessages.end());
 

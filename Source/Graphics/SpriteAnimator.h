@@ -2,6 +2,7 @@
 #define SPRITE_ANIMATOR_H
 
 #include <vector>
+
 #include "Data/Rectangle.h"
 
 namespace ClassicLauncher
@@ -16,7 +17,11 @@ namespace ClassicLauncher
         }
 
         SpriteAnimator(const float timeAnimation, const std::vector<RectFloat>& spriteIndices)
-            : mTimeAnimation(timeAnimation), mCurrentTime(0.0f), mAlpha(0.0f), mSpriteIndices(spriteIndices), mCurrentSpriteIndex(0)
+            : mTimeAnimation(timeAnimation)
+            , mCurrentTime(0.0f)
+            , mAlpha(0.0f)
+            , mSpriteIndices(spriteIndices)
+            , mCurrentSpriteIndex(0)
         {
         }
 
@@ -37,7 +42,7 @@ namespace ClassicLauncher
 
                 if (mCurrentSpriteIndex >= mSpriteIndices.size())
                 {
-                    mCurrentSpriteIndex = 0;  // Restart Animation (loop)
+                    mCurrentSpriteIndex = 0; // Restart Animation (loop)
                 }
             }
         }
@@ -47,12 +52,12 @@ namespace ClassicLauncher
 
     private:
 
-        float mTimeAnimation;                   // Total duration to advance to the next sprite
-        float mCurrentTime;                     // Total elapsed time
-        float mAlpha;                           // Interpolating factor between 0 and 1
-        std::vector<RectFloat> mSpriteIndices;  // Vector with the indices or IDs of the sprites
-        size_t mCurrentSpriteIndex;             // Current sprite index
+        float mTimeAnimation;                  // Total duration to advance to the next sprite
+        float mCurrentTime;                    // Total elapsed time
+        float mAlpha;                          // Interpolating factor between 0 and 1
+        std::vector<RectFloat> mSpriteIndices; // Vector with the indices or IDs of the sprites
+        size_t mCurrentSpriteIndex;            // Current sprite index
     };
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

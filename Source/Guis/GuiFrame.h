@@ -25,6 +25,6 @@ namespace ClassicLauncher
         TimerHandling mTimer;
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

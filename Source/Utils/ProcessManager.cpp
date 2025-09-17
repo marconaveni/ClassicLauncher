@@ -1,11 +1,13 @@
 #include "ProcessManager.h"
-#include "Application.h"
-#include "Data/GameListManager.h"
-#include "Utils/Process.h"
-#include "Guis/GuiBlackScreen.h"
-#include "Audio/AudioManager.h"
-#include "rl_wrap.h"
+
 #include <filesystem>
+
+#include "Application.h"
+#include "Audio/AudioManager.h"
+#include "Data/GameListManager.h"
+#include "Guis/GuiBlackScreen.h"
+#include "Utils/Process.h"
+#include "rl_wrap.h"
 
 namespace ClassicLauncher
 {
@@ -70,22 +72,18 @@ namespace ClassicLauncher
     {
         switch (mStatus)
         {
-            case ProcessStatus::None:
-            case ProcessStatus::Open:
-                break;
-            case ProcessStatus::Running:
-                rlw::WaitTime(2.5);
-                break;
-            case ProcessStatus::Failed:
+            case ProcessStatus::None: break;
+            case ProcessStatus::Open: break;
+            case ProcessStatus::Running: rlw::WaitTime(2.5); break;
+            case ProcessStatus::Failed: break;
             case ProcessStatus::Close:
                 guiBlackScreen->KeepBlack();
                 audioManager->ChangeMusic();
                 InputManager::EnableInput();
                 break;
-            default:
-                break; 
+            default: break;
         }
         mStatus = UpdateRun();
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

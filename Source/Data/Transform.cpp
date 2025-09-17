@@ -33,4 +33,4 @@ namespace ClassicLauncher
         otherTransform.color.a = color.a <= otherTransform.color.a ? color.a : otherTransform.color.a;
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

@@ -1,7 +1,7 @@
 #include "Audio/AudioDevice.h"
 
-#include "raylib.h"
 #include "AudioDevice.h"
+#include "raylib.h"
 
 namespace ClassicLauncher
 {
@@ -10,7 +10,7 @@ namespace ClassicLauncher
     void AudioDevice::Init()
     {
         m_isInitialized = ::IsAudioDeviceReady();
-        if(!m_isInitialized)
+        if (!m_isInitialized)
         {
             ::InitAudioDevice();
             m_isInitialized = ::IsAudioDeviceReady();
@@ -42,4 +42,4 @@ namespace ClassicLauncher
         return instance;
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

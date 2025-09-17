@@ -2,8 +2,11 @@
 
 #include <algorithm>
 
-#include "Application.h"
+
 #include "Entity/EntityManager.h"
+#include "Graphics/SpriteManager.h"
+#include "Input/InputManager.h"
+#include "Audio/AudioManager.h"
 #include "Guis/GuiCard.h"
 #include "Guis/GuiFrame.h"
 #include "Guis/GuiHorizontalBox.h"
@@ -16,6 +19,7 @@
 #include "Utils/Resources.h"
 #include "Utils/UtilsFunctionLibrary.h"
 #include "Window/RayWindow.h"
+#include "Themes/Themes.h"
 
 
 namespace ClassicLauncher
@@ -78,8 +82,8 @@ namespace ClassicLauncher
     void GuiHorizontalCards::SetHorizontalBoxValues()
     {
         mHorizontalBox->SetAutoSize(true);
-        const float space = GetApplication()->GetThemes()->mConfigurationThemes.horizontalCardsSpace;
-        const float y = GetApplication()->GetThemes()->mConfigurationThemes.horizontalCardsPositionY;
+        const float space = ThemesManager::Get().mConfigurationThemes.horizontalCardsSpace;
+        const float y = ThemesManager::Get().mConfigurationThemes.horizontalCardsPositionY;
 
         mHorizontalBox->SetSpace(space);
         mHorizontalBox->mTransform.position.y = y;
@@ -137,7 +141,7 @@ namespace ClassicLauncher
 
             if (!path.empty())
             {
-                const float scale = Themes::GetScaleTexture();
+                const float scale = ThemesManager::GetScaleTexture();
                 GetSpriteManager()->LoadSprite(name, path, int(228.0f * scale), int(204.0f * scale));
                 mGuiCards[i]->SetCover(name);
             }
@@ -157,12 +161,12 @@ namespace ClassicLauncher
     {
         mHorizontalBox->mTransform.position.x =
             ((1280 - mHorizontalBox->mTransform.position.width) / 2) +
-            GetApplication()->GetThemes()->mConfigurationThemes.horizontalCardsPositionX;
+            ThemesManager::Get().mConfigurationThemes.horizontalCardsPositionX;
     }
 
     void GuiHorizontalCards::ChangeList(const CurrentList list)
     {
-        //GameListManager* pGameListManager = GetApplication()->GetGameListManager();
+        // GameListManager* pGameListManager = GetApplication()->GetGameListManager();
         ClearCovers();
         if (list == SystemListSelect)
         {
@@ -175,7 +179,8 @@ namespace ClassicLauncher
             mIdLastFocusSystem = mIdFocus;
             m_gameListManagerRef->ChangeSystemToGameList();
 
-            if (m_gameListManagerRef->GetGameListSize() == 0) // If GameList fails it returns to the system selection menu.
+            // If GameList fails it returns to the system selection menu.
+            if (m_gameListManagerRef->GetGameListSize() == 0)
             {
                 ChangeList(CurrentList::SystemListSelect);
             }
@@ -207,8 +212,11 @@ namespace ClassicLauncher
 
             if (bResult1 && bResult2)
             {
-                LOG(LOG_CLASSIC_TRACE, "Sprite deleted index: %d\n  > Cover: %s\n  > Mini Cover: %s ", i,
-                    coverName.c_str(), miniCoverName.c_str());
+                LOG(LOG_CLASSIC_TRACE,
+                    "Sprite deleted index: %d\n  > Cover: %s\n  > Mini Cover: %s ",
+                    i,
+                    coverName.c_str(),
+                    miniCoverName.c_str());
             }
         }
 
@@ -251,10 +259,18 @@ namespace ClassicLauncher
         else if (InputManager::IsPress(InputName::leftFaceLeft, main) ||
                  InputManager::IsPress(InputName::leftFaceRight, main))
         {
-            mSpeed = 20.0f * 60.0f * RayWindow::GetFrameTime();
+            const float time = RayWindow::GetFrameTime();
+            mSpeed = 20.0f * 60.0f * time;
             GetTimerManager()->SetTimer(
-                mTimerInputSpeed, [&]()
-                { mSpeed = Math::Clamp(88.0f * 60.0f * RayWindow::GetFrameTime(), 0.0f, 256.0f); }, this, 2.5f, false);
+                mTimerInputSpeed,
+                [&]()
+                {
+                    const float time = RayWindow::GetFrameTime();
+                    mSpeed = Math::Clamp(88.0f * 60.0f * time, 0.0f, 256.0f);
+                },
+                this,
+                2.5f,
+                false);
         }
 
         // PRINT(TEXT("mSpeed %.8f", mSpeed), 5.0f, "mspeed");
@@ -265,7 +281,6 @@ namespace ClassicLauncher
         {
             if (!mIsLeft)
             {
-                Application* pApplication = GetApplication();
                 m_audioManagerRef->PlayCursor();
                 m_gameListManagerRef->AddId(-1);
                 SetFocus(mIdFocus - 1);
@@ -278,8 +293,7 @@ namespace ClassicLauncher
         {
             if (!mIsRight)
             {
-                Application* pApplication = GetApplication();
-                m_audioManagerRef->PlayCursor();            
+                m_audioManagerRef->PlayCursor();
                 m_gameListManagerRef->AddId(1);
                 SetFocus(mIdFocus + 1);
             }

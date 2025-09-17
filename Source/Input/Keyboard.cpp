@@ -3,7 +3,7 @@
 namespace ray
 {
 #include "raylib.h"
-}  // namespace ray
+} // namespace ray
 
 
 namespace ClassicLauncher::Keyboard
@@ -12,17 +12,17 @@ namespace ClassicLauncher::Keyboard
     {
         return ray::IsKeyPressed(key);
     }
-    
+
     bool IsDown(int key)
     {
         return ray::IsKeyDown(key);
     }
-    
+
     bool IsReleased(int key)
     {
         return ray::IsKeyReleased(key);
     }
-    
+
     bool IsUp(int key)
     {
         return ray::IsKeyUp(key);
@@ -30,4 +30,3 @@ namespace ClassicLauncher::Keyboard
 
 
 } // namespace ClassicLauncher::Keyboard
-

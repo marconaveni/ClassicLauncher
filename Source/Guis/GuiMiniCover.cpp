@@ -1,6 +1,5 @@
 #include "GuiMiniCover.h"
 
-#include "Application.h"
 #include "Entity/EntityManager.h"
 #include "Graphics/SpriteManager.h"
 #include "Guis/GuiComponent.h"
@@ -8,6 +7,11 @@
 #include "Guis/GuiSizeBox.h"
 #include "Utils/Math.h"
 #include "Utils/UtilsFunctionLibrary.h"
+
+
+
+#include "Data/GameListManager.h"
+#include "Themes/Themes.h"
 
 namespace ClassicLauncher
 {
@@ -66,7 +70,7 @@ namespace ClassicLauncher
         for (auto& miniCover : mGuiCovers)
         {
             Texture* textureReference = GetSpriteManager()->GetTexture(miniCover->mTextureName);
-            const float scale = Themes::GetScaleTexture();
+            const float scale = ThemesManager::GetScaleTexture();
             if (textureReference != nullptr && miniCover->mTextureName != "sprite" &&
                 miniCover->mTransform.position.width == 0 && miniCover->mTransform.position.height == 0)
             {
@@ -102,7 +106,7 @@ namespace ClassicLauncher
         //GameListManager* pManager = GetApplication()->GetGameListManager();
         //SpriteManager* pSpriteManager = GetApplication()->GetSpriteManager();
         const int gameListSize = m_gameListManagerRef->GetGameListSize();
-        const float scale = Themes::GetScaleTexture();
+        const float scale = ThemesManager::GetScaleTexture();
 
         if (gameListSize == 0)
         {
