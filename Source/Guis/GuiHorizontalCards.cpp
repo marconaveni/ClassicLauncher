@@ -21,7 +21,7 @@
 namespace ClassicLauncher
 {
 
-    GuiHorizontalCards::GuiHorizontalCards(GameListManager* gameListManagerRef)
+    GuiHorizontalCards::GuiHorizontalCards(GameListManager* gameListManagerRef, AudioManager* audioManagerRef)
         : mGuiTitle(nullptr)
         , mMiniCover(nullptr)
         , mPositionX(0)
@@ -33,6 +33,7 @@ namespace ClassicLauncher
         , mIdLastFocusSystem(3)
         , mSpeed(22.0f)
         , m_gameListManagerRef(gameListManagerRef)
+        , m_audioManagerRef(audioManagerRef)
     {
         mTransform.position.width = 1280;
         mTransform.position.height = 720;
@@ -126,7 +127,8 @@ namespace ClassicLauncher
 
         for (int i = 0; i < 10; i++)
         {
-            int indexFinal = Utils::SetIndexArray(m_gameListManagerRef->GetGameId() + i - mIdFocus, m_gameListManagerRef->GetGameListSize());
+            int indexFinal = Utils::SetIndexArray(m_gameListManagerRef->GetGameId() + i - mIdFocus,
+                                                  m_gameListManagerRef->GetGameListSize());
             indexFinal = Utils::SetIndexArray(indexFinal, m_gameListManagerRef->GetGameListSize());
             indexFinal = Math::Clamp(indexFinal, 0, m_gameListManagerRef->GetGameListSize() - 1);
 
@@ -264,7 +266,7 @@ namespace ClassicLauncher
             if (!mIsLeft)
             {
                 Application* pApplication = GetApplication();
-                pApplication->GetAudioManager()->PlayCursor();
+                m_audioManagerRef->PlayCursor();
                 m_gameListManagerRef->AddId(-1);
                 SetFocus(mIdFocus - 1);
             }
@@ -277,7 +279,7 @@ namespace ClassicLauncher
             if (!mIsRight)
             {
                 Application* pApplication = GetApplication();
-                pApplication->GetAudioManager()->PlayCursor();
+                m_audioManagerRef->PlayCursor();            
                 m_gameListManagerRef->AddId(1);
                 SetFocus(mIdFocus + 1);
             }

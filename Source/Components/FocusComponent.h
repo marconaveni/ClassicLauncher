@@ -12,14 +12,6 @@ namespace ClassicLauncher
 
     class FocusComponent
     {
-    private:
-
-        friend class FocusManager;
-
-        bool mIsFocus;
-        FocusManager* m_focusRef;
-        Entity* mEntity;
-
     public:
 
         FocusComponent(FocusManager* focusManagerRef, Entity* entity);
@@ -30,8 +22,16 @@ namespace ClassicLauncher
         virtual void OnFocus() = 0;
         virtual void OnLostFocus() = 0;
         virtual void OnChangeFocus() {}
+
+    private:
+
+        friend class FocusManager;
+
+        bool mIsFocus;
+        FocusManager* m_focusRef;
+        Entity* mEntity;
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

@@ -38,7 +38,7 @@ namespace ClassicLauncher
         Application(ConfigurationManager& configManager);
         ~Application();
         static Application& Get();
-        AudioManager* GetAudioManager() { return &mAudioManager; }
+        // AudioManager* GetAudioManager() { return &mAudioManager; }
         // GameListManager* GetGameListManager() { return &mGameListManager; }
         // ProcessManager* GetProcessManager() { return &mProcessManager; }
         Themes* GetThemes() { return &mThemes; }

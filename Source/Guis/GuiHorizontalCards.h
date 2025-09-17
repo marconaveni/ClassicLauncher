@@ -18,6 +18,7 @@ namespace ClassicLauncher
     class GuiFrame;
     class EntityManager;
     class GameListManager;
+    class AudioManager;
 
     enum Direction : std::uint8_t
     {
@@ -30,7 +31,7 @@ namespace ClassicLauncher
     {
     public:
 
-        GuiHorizontalCards(GameListManager* gameListManagerRef);
+        GuiHorizontalCards(GameListManager* gameListManagerRef, AudioManager* audioManagerRef);
         EntityType GetType() const override { return EntityType::GuiHorizontalCardsClass; }
         void Init();
         void Update() override;
@@ -62,6 +63,7 @@ namespace ClassicLauncher
         TimerHandling mTimerInputSpeed;
         
         GameListManager* m_gameListManagerRef;
+        AudioManager* m_audioManagerRef;
 
 
         void UpdateCards();

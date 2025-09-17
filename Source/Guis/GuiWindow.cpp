@@ -10,18 +10,19 @@
 
 namespace ClassicLauncher
 {
-    GuiWindow::GuiWindow(GameListManager* gameListManagerRef)
+    GuiWindow::GuiWindow(GameListManager* gameListManagerRef, AudioManager& audioManagerRef)
         : mGuiHorizontalBox(nullptr)
         , mGuiBlackScreen(nullptr)
         , mGuiVideoPlayer(nullptr)
         , mGuiBackground(nullptr)
         , m_gameListManagerRef(gameListManagerRef)
+        , m_audioManagerRef(&audioManagerRef)
     {
     }
 
     void GuiWindow::Init()
     {
-        
+
         mTransform.position.width = 1280.0f; //  todo: refactor    (float)pApplication->GetSpecification().width;
         mTransform.position.height = 720.0f; //  todo: refactor    (float)pApplication->GetSpecification().height;
 
@@ -35,7 +36,8 @@ namespace ClassicLauncher
         mGuiBackground->mTextureName = "sprite";
         AddChild(mGuiBackground);
 
-        mGuiHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalCards", m_gameListManagerRef);
+        mGuiHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalCards>(
+            "GuiHorizontalCards", m_gameListManagerRef, m_audioManagerRef);
         mGuiHorizontalBox->Init();
         AddChild(mGuiHorizontalBox);
 
@@ -93,7 +95,7 @@ namespace ClassicLauncher
                 return;
             }
             mGuiVideoPlayer->Stop();
-            pApplication->GetAudioManager()->Play();
+            m_audioManagerRef->Play();
             InputManager::SetCategory(main);
             InputManager::RemoveCategory(videoFullscreen);
         }
@@ -107,13 +109,12 @@ namespace ClassicLauncher
         }
         else if (InputManager::IsRelease(InputName::leftFaceDown, main))
         {
-            const bool bIsplay =
-                mGuiVideoPlayer->Init(m_gameListManagerRef->GetCurrentGameList()->video, 640, 480);
+            const bool bIsplay = mGuiVideoPlayer->Init(m_gameListManagerRef->GetCurrentGameList()->video, 640, 480);
             if (bIsplay)
             {
                 InputManager::RemoveCategory(main);
                 InputManager::SetCategory(videoFullscreen);
-                pApplication->GetAudioManager()->Pause();
+                m_audioManagerRef->Pause();
             }
         }
         if (InputManager::IsRelease(InputName::rightFaceLeft, main | videoFullscreen))
@@ -123,7 +124,7 @@ namespace ClassicLauncher
         if (InputManager::IsRelease(InputName::rightFaceDown, main))
         {
             InputManager::DisableInput();
-            pApplication->GetAudioManager()->PlayClick();
+            m_audioManagerRef->PlayClick();
             mGuiHorizontalBox->Click();
             if (m_gameListManagerRef->GetCurrentList() == GameListSelect)
             {
@@ -156,8 +157,7 @@ namespace ClassicLauncher
         {
             mGuiHorizontalBox->ChangeList(GameListSelect);
             pApplication->GetThemes()->LoadTheme();
-            GetTimerManager()->SetTimer(
-                mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
+            GetTimerManager()->SetTimer(mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
     }
 
@@ -169,8 +169,7 @@ namespace ClassicLauncher
         {
             mGuiHorizontalBox->ChangeList(SystemListSelect);
             pApplication->GetThemes()->LoadTheme();
-            GetTimerManager()->SetTimer(
-                mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
+            GetTimerManager()->SetTimer(mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
     }
 
@@ -181,7 +180,7 @@ namespace ClassicLauncher
         {
             if (mGuiHorizontalBox == nullptr)
             {
-                mGuiHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalBox", m_gameListManagerRef);
+                mGuiHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalBox", m_gameListManagerRef, m_audioManagerRef);
                 mGuiHorizontalBox->Init();
                 AddChild(mGuiHorizontalBox);
                 GetEntityManager()->SetThemeValue();

@@ -91,7 +91,7 @@ namespace ClassicLauncher
     }
 
     void AudioManager::PlayClick()
-    {
+    {   
         m_isPlayClick = true;
     }
 
