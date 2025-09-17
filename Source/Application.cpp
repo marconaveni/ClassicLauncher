@@ -21,7 +21,7 @@ namespace ClassicLauncher
     Application::Application(ConfigurationManager& configManager)
         : m_configManager(&configManager)
         , mRenderEntities(&mSpriteManager)
-        , m_entityManager(&mSpriteManager, &mTimerManager)
+        , m_entityManager(&mSpriteManager, &mTimerManager, &mFocusManager)
         , mGuiWindow(nullptr)
         , mThemes(&mGameListManager, &mSpriteManager, &m_entityManager, &configManager)
     {
@@ -183,16 +183,5 @@ namespace ClassicLauncher
         m_entityManager.End();
     }
 
-    // void Application::ToggleFullscreen()
-    // {
-    //     // if (Keyboard::IsReleased(Keyboard::F11) ||
-    //     //     (Keyboard::IsDown(Keyboard::LEFT_ALT) && Keyboard::IsReleased(Keyboard::ENTER)))
-    //     // {
-    //     //     const bool isFullscreen = m_window->ToggleFullscreen();
-    //     //     m_configManager.SetFullscreen(isFullscreen);
-    //     //     m_configManager.SaveConfiguration();
-    //     //     LOG(LOG_CLASSIC_DEBUG, TEXT("Saved is fullscreen config.ini with value %s", TEXTBOOL(isFullscreen)));
-    //     // }
-    // }
 
 } // namespace ClassicLauncher

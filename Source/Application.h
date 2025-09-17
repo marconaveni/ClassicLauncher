@@ -42,7 +42,7 @@ namespace ClassicLauncher
         // GameListManager* GetGameListManager() { return &mGameListManager; }
         // ProcessManager* GetProcessManager() { return &mProcessManager; }
         Themes* GetThemes() { return &mThemes; }
-        FocusManager* GetFocusManager() { return &mFocusManager; }
+        // FocusManager* GetFocusManager() { return &mFocusManager; }
         // ConfigurationManager* GetConfigurationManager() { return m_configManager; }
         
         void Init();

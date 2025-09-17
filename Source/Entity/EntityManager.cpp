@@ -1,14 +1,18 @@
 #include "EntityManager.h"
-#include <algorithm>  // std::sort
+
+#include <algorithm> // std::sort
 #include <format>
+
 #include "Application.h"
 #include "Graphics/SpriteManager.h"
 
 namespace ClassicLauncher
 {
 
-    EntityManager::EntityManager(SpriteManager* spriteManagerReference, TimerManager* timerManagerReference)
-        :  mSpriteManagerReference(spriteManagerReference), mTimerManagerReference(timerManagerReference)
+    EntityManager::EntityManager(SpriteManager* spriteManagerReference, TimerManager* timerManagerReference, FocusManager* focusManagerRef)
+        : mSpriteManagerReference(spriteManagerReference)
+        , mTimerManagerReference(timerManagerReference)
+        , m_focusManagerReference(focusManagerRef)
     {
     }
 
@@ -23,7 +27,7 @@ namespace ClassicLauncher
         {
             return;
         }
-        
+
         for (auto& entity : mTempEntities)
         {
             mEntities.push_back(std::move(entity));
@@ -69,9 +73,9 @@ namespace ClassicLauncher
         {
             return;
         }
-        std::sort(mEntities.begin(),
-                  mEntities.end(),
-                  [](const std::unique_ptr<Entity>& a, const std::unique_ptr<Entity>& b) { return a->GetIdZOrder() < b->GetIdZOrder(); });
+        std::sort(mEntities.begin(), mEntities.end(),
+                  [](const std::unique_ptr<Entity>& a, const std::unique_ptr<Entity>& b)
+                  { return a->GetIdZOrder() < b->GetIdZOrder(); });
         mPrepareNewOrdination = false;
     }
 
@@ -129,7 +133,7 @@ namespace ClassicLauncher
             entity.reset();
             entity = nullptr;
         }
-        mEntities.clear();  // Limpa o vetor
+        mEntities.clear(); // Limpa o vetor
         mEntities.shrink_to_fit();
     }
 
@@ -160,11 +164,10 @@ namespace ClassicLauncher
             }
         }
 
-        mEntities.erase(std::remove_if(mEntities.begin(),
-                                       mEntities.end(),
+        mEntities.erase(std::remove_if(mEntities.begin(), mEntities.end(),
                                        [](const std::unique_ptr<Entity>& entity)
                                        {
-                                           return !entity;  // Return true element
+                                           return !entity; // Return true element
                                        }),
                         mEntities.end());
 
@@ -172,4 +175,4 @@ namespace ClassicLauncher
         mPrepareNewOrdination = true;
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

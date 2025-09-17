@@ -26,6 +26,7 @@ namespace ClassicLauncher
     class SpriteManager;
     class TimerManager;
     class EntityManager;
+    class FocusManager;
 
     class Entity
     {
@@ -66,6 +67,7 @@ namespace ClassicLauncher
         TimerManager* GetTimerManager() { return m_timerManagerRef; }
         SpriteManager* GetSpriteManager() { return m_spriteManagerReference; }
         EntityManager* GetEntityManager() { return m_entityManagerReference; }
+        FocusManager* GetFocusManager() { return m_focusManagerRef; }
 
     private:
 
@@ -85,6 +87,7 @@ namespace ClassicLauncher
         SpriteManager* m_spriteManagerReference;
         TimerManager* m_timerManagerRef;
         EntityManager* m_entityManagerReference;
+        FocusManager* m_focusManagerRef;
 
         void SetZOrder(int zOrder);
     };

@@ -2,23 +2,24 @@
 #include "FocusManager.h"
 #include "Application.h"
 #include "Entity/Entity.h"
+#include "Components/FocusManager.h"
 
 namespace ClassicLauncher
 {
-    FocusComponent::FocusComponent(Application* application, Entity* entity)
-    : mApplication(application), mEntity(entity)
+    FocusComponent::FocusComponent(FocusManager* focusManagerRef, Entity* entity)
+    : m_focusRef(focusManagerRef), mEntity(entity)
     {  
-        mApplication->GetFocusManager()->AddFocus(this);
+        m_focusRef->AddFocus(this);
     }
     
     FocusComponent::~FocusComponent()
     {
-        mApplication->GetFocusManager()->RemoveFocus(this);
+        m_focusRef->RemoveFocus(this);
     }
 
     void FocusComponent::SetFocus()
     {
-        mApplication->GetFocusManager()->UpdateFocus(this);
+        m_focusRef->UpdateFocus(this);
         mIsFocus = true;
     }
 

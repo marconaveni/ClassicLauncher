@@ -8,6 +8,7 @@ namespace ClassicLauncher
 {
     class Application;
     class Entity;
+    class FocusManager;
 
     class FocusComponent
     {
@@ -16,12 +17,12 @@ namespace ClassicLauncher
         friend class FocusManager;
 
         bool mIsFocus;
-        Application* mApplication;
+        FocusManager* m_focusRef;
         Entity* mEntity;
 
     public:
 
-        FocusComponent(Application* application, Entity* entity);
+        FocusComponent(FocusManager* focusManagerRef, Entity* entity);
         ~FocusComponent();
         void SetFocus();
         bool GetFocus() { return mIsFocus; }

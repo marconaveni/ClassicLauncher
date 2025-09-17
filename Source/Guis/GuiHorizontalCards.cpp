@@ -55,7 +55,7 @@ namespace ClassicLauncher
 
         for (int i = 0; i < 10; i++)
         {
-            auto* card = GetEntityManager()->CreateEntity<GuiCard>("GuiCard", m_gameListManagerRef);
+            auto* card = GetEntityManager()->CreateEntity<GuiCard>("GuiCard", m_gameListManagerRef, GetFocusManager());
             card->CreateCards(0, 0);
             mHorizontalBox->AttachGui(card);
             mGuiCards.emplace_back(card);
@@ -67,7 +67,7 @@ namespace ClassicLauncher
         mMiniCover->Init();
         AddChild(mMiniCover);
 
-        mFrame = GetEntityManager()->CreateEntity<GuiFrame>("Frame", GetApplication()->GetFocusManager());
+        mFrame = GetEntityManager()->CreateEntity<GuiFrame>("Frame", GetFocusManager());
         GetEntityManager()->SetZOrder(mFrame, 80);
         AddChild(mFrame);
 

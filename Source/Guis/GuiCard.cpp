@@ -9,8 +9,8 @@
 namespace ClassicLauncher
 {
 
-    GuiCard::GuiCard(GameListManager* gameListManagerRef)
-        : FocusComponent(GetApplication(), this), mTimer(), mTimerVideo(), m_gameListManagerRef(gameListManagerRef)
+    GuiCard::GuiCard(GameListManager* gameListManagerRef, FocusManager* focusManagerRef)
+        : FocusComponent(focusManagerRef, this), mTimer(), mTimerVideo(), m_gameListManagerRef(gameListManagerRef)
     {
         // mTransform.position.x = static_cast<float>(x);
         // mTransform.position.y = static_cast<float>(y);

@@ -24,7 +24,7 @@ namespace ClassicLauncher
 
     public:
 
-        GuiCard(GameListManager* gameListManagerRef);
+        GuiCard(GameListManager* gameListManagerRef, FocusManager* focusManagerRef);
         void CreateCards(int x, int y);
 
 
