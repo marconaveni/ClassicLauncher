@@ -50,7 +50,7 @@ namespace ClassicLauncher
         mWidth = screenWidth * scale;
         mHeight = screenHeight * scale;
 
-        mRenderTexture = std::make_unique<RenderTexture>(mWidth, mHeight);
+        mRenderTexture = std::make_unique<RenderTexture>(static_cast<int>(mWidth), static_cast<int>(mHeight));
         mRenderTexture->SetSmooth(true);
     }
 

@@ -18,7 +18,7 @@ namespace ClassicLauncher
         s_logClassicLevel = classicLogType;
         rlw::SetTraceLogLevel(raylibLogType);
 #else
-        sLogClassicLevel = 12;
+        s_logClassicLevel = 12;
         rlw::SetTraceLogLevel(5);
 #endif
     }
