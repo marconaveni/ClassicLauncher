@@ -69,20 +69,6 @@
             }
         },
         {
-            "name": "windows-mingw-debug-tidy",
-            "displayName": "Windows MinGW Debug ClangTidyChecks",
-            "description": "Build with MinGW (GCC) in Debug Mode",
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/windows-mingw-debug-tidy",
-            "cacheVariables": {
-                "CMAKE_CXX_CLANG_TIDY": "clang-tidy",
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-                "CMAKE_C_COMPILER": "gcc.exe",
-                "CMAKE_CXX_COMPILER": "g++.exe"
-            }
-        },
-        {
             "name": "windows-mingw-release",
             "displayName": "Windows MinGW Release",
             "description": "Build with MinGW (GCC) in Release Mode",
@@ -93,6 +79,32 @@
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
                 "CMAKE_C_COMPILER": "gcc.exe",
                 "CMAKE_CXX_COMPILER": "g++.exe"
+            }
+        },
+                {
+            "name": "windows-clang-debug",
+            "displayName": "Windows Clang Debug",
+            "description": "Build with Clang in Debug Mode",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/windows-clang-debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_C_COMPILER": "clang.exe",
+                "CMAKE_CXX_COMPILER": "clang++.exe"
+            }
+        },
+        {
+            "name": "windows-clang-release",
+            "displayName": "Windows Clang Release",
+            "description": "Build with Clang in Release Mode",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/windows-clang-release",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_C_COMPILER": "clang.exe",
+                "CMAKE_CXX_COMPILER": "clang++.exe"
             }
         }
     ],
@@ -127,6 +139,16 @@
             "name": "windows-mingw-release-build",
             "displayName": "Release",
             "configurePreset": "windows-mingw-release"
+        },
+        {
+            "name": "windows-clang-debug-build",
+            "displayName": "Debug",
+            "configurePreset": "windows-clang-debug"
+        },
+        {
+            "name": "windows-clang-release-build",
+            "displayName": "Release",
+            "configurePreset": "windows-clang-release"
         }
     ]
 }

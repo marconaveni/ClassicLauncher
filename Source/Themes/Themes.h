@@ -19,7 +19,10 @@ namespace ClassicLauncher
     {
     public:
 
-        ThemesManager(GameListManager* gameListManager, SpriteManager* spriteManager, EntityManager* entityManagerRef, ConfigurationManager* configManager);
+        ThemesManager(GameListManager* gameListManager,
+                      SpriteManager* spriteManager,
+                      EntityManager* entityManagerRef,
+                      ConfigurationManager* configManager);
         ~ThemesManager();
         void Init();
         void LoadTheme();
@@ -40,7 +43,10 @@ namespace ClassicLauncher
         float mScaleTexture;
         float mScaleSystem;
         std::string mPathThemeSystem;
-        static bool GetPathTheme(std::string& file, int monitorWidth, int monitorCompare, const std::string& path,
+        static bool GetPathTheme(std::string& file,
+                                 int monitorWidth,
+                                 int monitorCompare,
+                                 const std::string& path,
                                  float numScale);
         float GetSpriteByResolution(std::string& file);
         void LoadConfigurationThemes();

@@ -4,7 +4,7 @@ project(ClassicLauncher LANGUAGES CXX)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Compile configurations
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -23,35 +23,34 @@ endif()
 
 if(CLASSIC_LAUNCHER_FLAGS)
     if(MSVC)
-        set(CMAKE_CXX_FLAGS " /EHsc /W3")
+        target_compile_options(ClassicLauncher PRIVATE /EHsc /W3)
         message(STATUS "[Classic Launcher] Added flags /EHsc /W3")
     else()
-        set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wpedantic")
+       target_compile_options(ClassicLauncher PRIVATE -Wall -Wextra -Wpedantic)
         message(STATUS "[Classic Launcher] Added flags -Wall -Wextra -Wpedantic")
     endif()
 endif()
 
 if (CLASSIC_LAUNCHER_FSANITIZE)
     if(MSVC)
-        set(CMAKE_CXX_FLAGS_DEBUG "/MDd /fsanitize=address")
-        set(CMAKE_EXE_LINKER_FLAGS_DEBUG "/fsanitize=address")
+        string(APPEND CMAKE_CXX_FLAGS_DEBUG " /MDd /fsanitize=address")
+        string(APPEND CMAKE_EXE_LINKER_FLAGS_DEBUG " /fsanitize=address")
     else()
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fsanitize=address")
-        set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -fsanitize=address")
+        string(APPEND CMAKE_CXX_FLAGS " -g -fsanitize=address")
+        string(APPEND CMAKE_LINKER_FLAGS " -fsanitize=address")
     endif()
     message(STATUS "[Classic Launcher] fsanitize is enabled")
 else()
     message(STATUS "[Classic Launcher] fsanitize is disabled")
 endif()
 
-set(CMAKE_CXX_FLAGS_RELEASE "-O2 ")
+if(MSVC)
+    string(APPEND CMAKE_CXX_FLAGS_RELEASE " /O2")
+else()
+    string(APPEND CMAKE_CXX_FLAGS_RELEASE " -O2")
+endif()
 
 
-# Add header files
-include_directories(
-    ${CMAKE_SOURCE_DIR}/Source
-    ${CMAKE_SOURCE_DIR}/extern
-)
 
 message(STATUS "[Classic Launcher] Source dir is: " ${CMAKE_SOURCE_DIR})
 
@@ -82,11 +81,9 @@ if(MINGW)
     endif()
 endif()
 
-
+################## setup libvlc windows #####################
 if(WIN32)  
     
-    # setup libvlc windows
-
     set(EXTERN_LIBDIR ${CMAKE_CURRENT_SOURCE_DIR}/extern)
     set(
         CMAKE_PREFIX_PATH
@@ -122,234 +119,15 @@ if(WIN32)
 
 endif() # WIN32
 
-
-# Source files
-set(animations
-    "${CMAKE_SOURCE_DIR}/Source/Animations/Animation.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Animations/Animation.h"
-)
-set(audio
-    "${CMAKE_SOURCE_DIR}/Source/Audio/AudioManager.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Audio/AudioManager.h"
-    "${CMAKE_SOURCE_DIR}/Source/Audio/AudioDevice.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Audio/AudioDevice.h"
-    "${CMAKE_SOURCE_DIR}/Source/Audio/AudioManager.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Audio/AudioManager.h"
-    "${CMAKE_SOURCE_DIR}/Source/Audio/Music.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Audio/Music.h"
-    "${CMAKE_SOURCE_DIR}/Source/Audio/Sound.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Audio/Sound.h"
-
-)
-set(components
-    "${CMAKE_SOURCE_DIR}/Source/Components/FocusComponent.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Components/FocusComponent.h"
-    "${CMAKE_SOURCE_DIR}/Source/Components/FocusManager.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Components/FocusManager.h"
-)
-set(data
-    "${CMAKE_SOURCE_DIR}/Source/Data/Color.h"
-    "${CMAKE_SOURCE_DIR}/Source/Data/DateTime.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Data/DateTime.h"
-    "${CMAKE_SOURCE_DIR}/Source/Data/GameListManager.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Data/GameListManager.h"
-    "${CMAKE_SOURCE_DIR}/Source/Data/Rectangle.h"
-    "${CMAKE_SOURCE_DIR}/Source/Data/Vector2.h"
-    "${CMAKE_SOURCE_DIR}/Source/Data/Transform.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Data/Transform.h"
-)
-set(graphics
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/Font.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/Font.h"
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/Image.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/Image.h"
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/RenderEntities.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/RenderEntities.h"
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/RenderScreen.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/RenderScreen.h"
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/RenderSystem.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/RenderSystem.h"
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/RenderTexture.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/RenderTexture.h"
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/Texture.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/Texture.h"
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/Sprite.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/Sprite.h"
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/SpriteAnimator.h"
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/SpriteManager.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Graphics/SpriteManager.h"
-)
-set(guis
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiBlackScreen.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiBlackScreen.h"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiCard.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiCard.h"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiComponent.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiComponent.h"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiFrame.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiFrame.h"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiHorizontalBox.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiHorizontalBox.h"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiHorizontalCards.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiHorizontalCards.h"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiMiniCover.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiMiniCover.h"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiSizeBox.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiSizeBox.h"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiTextBlock.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiTextBlock.h"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiVideoPlayer.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiVideoPlayer.h"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiWindow.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Guis/GuiWindow.h"
-)
-set(input
-    "${CMAKE_SOURCE_DIR}/Source/Input/Gamepad.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Input/Gamepad.h"
-    "${CMAKE_SOURCE_DIR}/Source/Input/InputManager.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Input/InputManager.h"
-    "${CMAKE_SOURCE_DIR}/Source/Input/Keyboard.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Input/Keyboard.h"
-    "${CMAKE_SOURCE_DIR}/Source/Input/Mouse.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Input/Mouse.h"
-)
-set(themes
-    "${CMAKE_SOURCE_DIR}/Source/Themes/ConfigurationThemes.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Themes/ConfigurationThemes.h"
-    "${CMAKE_SOURCE_DIR}/Source/Themes/Themes.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Themes/Themes.h"
-)
-set(entity
-    "${CMAKE_SOURCE_DIR}/Source/Entity/EntityGui.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Entity/EntityGui.h"
-    "${CMAKE_SOURCE_DIR}/Source/Entity/Entity.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Entity/Entity.h"
-    "${CMAKE_SOURCE_DIR}/Source/Entity/EntityManager.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Entity/EntityManager.h"
-)
-set(utils
-    "${CMAKE_SOURCE_DIR}/Source/Utils/ConfigurationManager.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/ConfigurationManager.h"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/Log.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/Log.h"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/Math.h"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/Print.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/Print.h"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/Process.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/Process.h"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/ProcessManager.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/ProcessManager.h"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/Resources.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/Resources.h"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/SimpleIni.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/SimpleIni.h"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/StringFunctionLibrary.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/StringFunctionLibrary.h"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/ThreadManager.h"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/Timer.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/Timer.h"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/TimerManager.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/TimerManager.h"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/UtilsFunctionLibrary.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Utils/UtilsFunctionLibrary.h"
-    )
-set(video     
-    "${CMAKE_SOURCE_DIR}/Source/Video/VideoPlayer.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Video/VideoPlayer.h"
-)
-set(src
-    "${CMAKE_SOURCE_DIR}/Source/Application.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Application.h"
-    "${CMAKE_SOURCE_DIR}/Source/Engine.cpp"
-    "${CMAKE_SOURCE_DIR}/Source/Engine.h"
-    "${CMAKE_SOURCE_DIR}/Source/ClassicAssert.h"
-    "${CMAKE_SOURCE_DIR}/Source/ClassicLauncher.h"
-    "${CMAKE_SOURCE_DIR}/Source/Helper.h"
-    "${CMAKE_SOURCE_DIR}/Source/Main.cpp"
-
+include_directories(   # Add header files
+    "${CMAKE_SOURCE_DIR}/Source"
+    "${CMAKE_SOURCE_DIR}/Source/Extern"
 )
 
-set(wrap
-    "${CMAKE_SOURCE_DIR}/Source/rl_wrap.h"
-    "${CMAKE_SOURCE_DIR}/Source/rl_wrap.cpp"
-)
-    
-set(extern 
-    "${CMAKE_SOURCE_DIR}/extern/tinyxml2/tinyxml2.cpp"
-    "${CMAKE_SOURCE_DIR}/extern/tinyxml2/tinyxml2.h"
-    "${CMAKE_SOURCE_DIR}/extern/reasings/reasings.h"
-)
-
-set(window_src_files  
-   "${CMAKE_SOURCE_DIR}/Source/Window/RayWindow.h"
-   "${CMAKE_SOURCE_DIR}/Source/Window/RayWindow.cpp"
-   "${CMAKE_SOURCE_DIR}/Source/Window/Window.h"
- )
-set(window_header_files 
-)
+add_executable(ClassicLauncher) # start ClassicLauncher 
+include(${CMAKE_SOURCE_DIR}/CMake/ListSources.cmake) # Add Source Files
 
 
-    
-if(MSVC)
-    LIST(APPEND src
-        "${CMAKE_SOURCE_DIR}/Source/ClassicLauncher.rc"
-    )
-endif()
-
-source_group("Source\\Animations" FILES ${animations})
-source_group("Source\\Audio"      FILES ${audio})
-source_group("Source\\Components" FILES ${components})
-source_group("Source\\Data"       FILES ${data})
-source_group("Source\\Entity"     FILES ${entity})
-source_group("Source\\Graphics"   FILES ${graphics})
-source_group("Source\\Guis"       FILES ${guis})
-source_group("Source\\Input"      FILES ${input})
-source_group("Source\\Themes"     FILES ${themes})
-source_group("Source\\Utils"      FILES ${utils})
-source_group("Source\\Video"      FILES ${video})
-#source_group("Source\\Window"     FILES ${window_header_files} ${window_src_files})
-source_group("Source"             FILES ${src})
-source_group("Extern"             FILES ${extern})
-
-# List of source files
-set(srcs   
-    ${animations}
-    ${audio}
-    ${components}
-    ${data}  
-    ${entity}
-    ${graphics}
-    ${guis}
-    ${input}
-    ${themes}
-    ${utils}
-    ${video}
-    ${src}  
-    ${wrap}  
-    ${extern}
-   # ${window_header_files} 
-    ${window_src_files}
-)
-
-
-# Add the executable
-add_executable(ClassicLauncher ${srcs})
-
-
-#target_include_directories(ClassicLauncher PRIVATE 
-#    "${CMAKE_SOURCE_DIR}/Source"
-#    "${CMAKE_SOURCE_DIR}/Source/Animations"
-#    "${CMAKE_SOURCE_DIR}/Source/Audio"
-#    "${CMAKE_SOURCE_DIR}/Source/Components"
-#    "${CMAKE_SOURCE_DIR}/Source/Data"
-#    "${CMAKE_SOURCE_DIR}/Source/Entity"
-#    "${CMAKE_SOURCE_DIR}/Source/Graphics"
-#    "${CMAKE_SOURCE_DIR}/Source/Guis"
-#    "${CMAKE_SOURCE_DIR}/Source/Input"
-#    "${CMAKE_SOURCE_DIR}/Source/Themes"
-#    "${CMAKE_SOURCE_DIR}/Source/Utils"
-#    "${CMAKE_SOURCE_DIR}/Source/Video"
-#)
 
 if(WIN32)
 
@@ -426,7 +204,7 @@ elseif (CLASSIC_RASPBERRY_PI)
         vlc
     )
 
-else()
+else() # Linux
 
     set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
     set(GLFW_BUILD_WAYLAND ON  CACHE BOOL "" FORCE)
@@ -437,7 +215,6 @@ else()
 
     # Add `_DEBUG` only Debug build
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        message(STATUS "[Classic Launcher] passou aqui ${debug}")                              # todo remover
         target_compile_definitions(ClassicLauncher PRIVATE     
             ${debug}
             ${forcetheme}
@@ -445,7 +222,15 @@ else()
     endif()
 
     # Linux
-    target_link_libraries(${PROJECT_NAME} raylib GL m pthread dl rt vlc)
+    target_link_libraries(${PROJECT_NAME} 
+        raylib 
+        GL 
+        m 
+        pthread 
+        dl 
+        rt 
+        vlc
+    )
 endif()
 
 add_custom_command(TARGET ClassicLauncher POST_BUILD
