@@ -3,8 +3,8 @@
 #include <filesystem>
 
 #include "Helper.h"
-#include "Utils/StringFunctionLibrary.h"
-#include "Utils/UtilsFunctionLibrary.h"
+#include "Utils/String.h"
+#include "Utils/Utils.h"
 #include "rl_wrap.h"
 
 

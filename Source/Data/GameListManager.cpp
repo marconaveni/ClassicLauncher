@@ -4,8 +4,8 @@
 
 #include "Utils/Math.h"
 #include "Utils/Resources.h"
-#include "Utils/StringFunctionLibrary.h"
-#include "Utils/UtilsFunctionLibrary.h"
+#include "Utils/String.h"
+#include "Utils/Utils.h"
 
 namespace ClassicLauncher
 {

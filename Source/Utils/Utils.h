@@ -1,5 +1,5 @@
-#ifndef UTILS_FUNCTION_LIBRARY_H
-#define UTILS_FUNCTION_LIBRARY_H
+#ifndef UTILS_H
+#define UTILS_H
 
 #include <string>
 

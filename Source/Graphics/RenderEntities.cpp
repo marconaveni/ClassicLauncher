@@ -1,12 +1,13 @@
 #include "RenderEntities.h"
 #include <format>
-#include "Application.h"
 #include "Helper.h"
 #include "rl_wrap.h"
 #include "Utils/Math.h"
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
-#include "Graphics/RenderScreen.h"
+#include "Themes/Themes.h"
+#include "Graphics/SpriteManager.h"
+#include "Window/RayWindow.h"
 
 namespace ClassicLauncher
 {
@@ -16,14 +17,13 @@ namespace ClassicLauncher
 #endif
 
     RenderEntities::RenderEntities(SpriteManager* spriteManagerReference)
-        : mSpriteManagerReference(spriteManagerReference)
+        : m_spriteManagerReference(spriteManagerReference)
     {
     }
 
     void RenderEntities::DrawEntities(const std::vector<std::unique_ptr<Entity>>& entities)
     {
 #ifdef _DEBUG
-
         if (Keyboard::IsReleased(Keyboard::Key::FIVE))
         {
             bEnable = !bEnable;
@@ -37,7 +37,7 @@ namespace ClassicLauncher
 
     void RenderEntities::DrawEntity(Entity* entity)
     {
-        const Texture* texture = mSpriteManagerReference->GetTexture(entity->mTextureName);
+        const Texture* texture = m_spriteManagerReference->GetTexture(entity->mTextureName);
 
         // if (texture && entity->mToDraw && entity->mTextureName != "transparent")  // todo verify render
         if (texture && entity->mToDraw)
@@ -59,7 +59,9 @@ namespace ClassicLauncher
                                 entity->mTransform.rotation,
                                 entity->mTransform.color);
             entity->Draw();
+#ifdef _DEBUG
             DrawDebug(entity);
+#endif  // _DEBUG
 
             if (entity->mScissorMode)
             {
@@ -72,12 +74,12 @@ namespace ClassicLauncher
 
     void RenderEntities::DrawDebug(Entity* entity)
     {
-#ifdef _DEBUG
+
 
         const RectFloat& rectDrawArea = entity->mTransform.GetTransform();  //{ x, y, scale.x, scale.y };
         const Vector2f vec = {};  // TODO Refactor  Application::Get().GetRenderScreen()->GetMousePositionRender();
         RectFloat point = RectFloat{ rectDrawArea.x, rectDrawArea.y, rectDrawArea.width, rectDrawArea.height };
-        if (Math::CheckCollisionPointRec(vec, point) && bEnable)
+        if (Math::CheckCollisionPointRec(RayWindow::GetVirtualMouse(), point) && bEnable)
         {
             rlw::DrawRectangleLinesEx(rectDrawArea, 2, Color::Red);
             if (Mouse::IsPressed(Mouse::LEFT))
@@ -97,7 +99,7 @@ namespace ClassicLauncher
             scissorArea.height = scissorArea.height * entity->mTransform.root.scale.y * ThemesManager::GetScaleTexture();
             rlw::DrawRectangle(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height, tint);
         }
-#endif  // _DEBUG
+
     }
 
 

@@ -1,5 +1,6 @@
 #include "RenderSystem.h"
 
+#include "Graphics/RenderEntities.h"
 #include "rl_wrap.h"
 
 namespace ClassicLauncher

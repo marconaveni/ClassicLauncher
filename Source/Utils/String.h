@@ -1,5 +1,5 @@
-#ifndef STRING_FUNCTION_LIBRARY_H
-#define STRING_FUNCTION_LIBRARY_H
+#ifndef STRING_H
+#define STRING_H
 
 #include <string>
 #include <vector>

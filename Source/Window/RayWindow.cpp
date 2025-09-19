@@ -1,25 +1,27 @@
 #include "Window/RayWindow.h"
+
 #include "ClassicAssert.h"
-#include "Input/InputManager.h"
 #include "Helper.h"
+#include "Input/InputManager.h"
 
 namespace ray
 {
-#include "raylib.h"
 #include "RayWindow.h"
-}  // namespace ray
+#include "raylib.h"
+} // namespace ray
 
 namespace ClassicLauncher
 {
 
     static std::vector<ray::Image> icons;
+    Vector2f RayWindow::m_virtualMouse = Vector2{0.0f};
 
     RayWindow::RayWindow(ConfigurationManager& configManager)
         : m_configManager(&configManager)
     {
     }
 
-    RayWindow::~RayWindow() 
+    RayWindow::~RayWindow()
     {
         Close();
     }
@@ -149,7 +151,18 @@ namespace ClassicLauncher
     Vector2i RayWindow::GetMonitorPosition(int monitor)
     {
         ray::Vector2 pos = ray::GetMonitorPosition(monitor);
-        return Vector2i{ static_cast<int>(pos.x), static_cast<int>(pos.y) };
+        return Vector2i{static_cast<int>(pos.x), static_cast<int>(pos.y)};
+    }
+
+    Vector2i RayWindow::GetMousePosition()
+    {
+        ray::Vector2 pos = ray::GetMousePosition();
+        return Vector2i{static_cast<int>(pos.x), static_cast<int>(pos.y)};
+    }
+
+    Vector2f RayWindow::GetVirtualMouse()
+    {
+        return m_virtualMouse;
     }
 
     bool RayWindow::ToggleFullscreen()
@@ -202,9 +215,14 @@ namespace ClassicLauncher
         return m_isFullScreen;
     }
 
-    void RayWindow::SetConfigFlags(unsigned int flags) 
+    void RayWindow::SetConfigFlags(unsigned int flags)
     {
         ray::SetConfigFlags(flags);
+    }
+
+    bool RayWindow::IsResize()
+    {
+        return ray::IsWindowResized();
     }
 
     void RayWindow::Unload()
@@ -218,6 +236,8 @@ namespace ClassicLauncher
 
     void RayWindow::PoolEvents()
     {
+        
+
         if (Keyboard::IsReleased(Keyboard::F11) ||
             (Keyboard::IsDown(Keyboard::LEFT_ALT) && Keyboard::IsReleased(Keyboard::ENTER)))
         {
@@ -228,4 +248,4 @@ namespace ClassicLauncher
         }
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

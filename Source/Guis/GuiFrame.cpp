@@ -1,6 +1,6 @@
 #include "GuiFrame.h"
 
-#include "Application.h"
+
 #include "Components/FocusComponent.h"
 #include "Components/FocusManager.h"
 

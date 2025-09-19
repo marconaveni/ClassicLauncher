@@ -34,11 +34,13 @@ namespace ClassicLauncher
         static int GetMonitorWidth(int monitor);
         static int GetMonitorHeight(int monitor);
         static Vector2i GetMonitorPosition(int monitor);
+        static Vector2i GetMousePosition();
+        static Vector2f GetVirtualMouse();
 
         void PoolEvents();
         void SetConfigFlags(unsigned int flags);
 
-        [[nodiscard]] bool IsResize() const { return m_isResized; }
+        [[nodiscard]] static bool IsResize();
 
         struct Flags
         {
@@ -49,15 +51,17 @@ namespace ClassicLauncher
 
     private:
 
-        bool ToggleFullscreen();
-        ConfigurationManager* m_configManager{};
+        friend class RenderScreen;
+
+        static Vector2f m_virtualMouse;
         std::string m_title{};
         Vector2i m_size{};
         Vector2i m_position{};
-        bool m_isResized{};
         bool m_isFullScreen{};
         bool m_isReady{};
+        ConfigurationManager* m_configManager{};
 
+        bool ToggleFullscreen();
         void Unload();
     };
 

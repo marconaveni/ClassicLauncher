@@ -1,6 +1,5 @@
 #include "FocusManager.h"
 
-#include "Application.h"
 #include "Components/FocusComponent.h"
 #include "Helper.h"
 

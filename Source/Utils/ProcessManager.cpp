@@ -2,8 +2,9 @@
 
 #include <filesystem>
 
-#include "Application.h"
+
 #include "Audio/AudioManager.h"
+#include "Input/InputManager.h"
 #include "Data/GameListManager.h"
 #include "Guis/GuiBlackScreen.h"
 #include "Utils/Process.h"

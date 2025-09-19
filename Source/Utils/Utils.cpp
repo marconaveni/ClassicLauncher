@@ -1,9 +1,9 @@
-#include "UtilsFunctionLibrary.h"
+#include "Utils.h"
 
 #include <cstdlib>
 
 #include "Graphics/Image.h"
-#include "StringFunctionLibrary.h"
+#include "String.h"
 #include "rl_wrap.h"
 
 namespace ClassicLauncher

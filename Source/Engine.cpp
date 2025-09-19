@@ -9,12 +9,10 @@
 
 namespace ClassicLauncher
 {
-    ConfigurationManager* configInstance = nullptr;
 
     Engine::Engine()
         : m_application(m_configurationManager), m_window(m_configurationManager), m_renderSystem()
     {
-        configInstance = &m_configurationManager;
     }
 
     Engine::~Engine()

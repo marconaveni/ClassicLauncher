@@ -1,6 +1,5 @@
 #include "FocusComponent.h"
 
-#include "Application.h"
 #include "Components/FocusManager.h"
 #include "Entity/Entity.h"
 #include "FocusManager.h"

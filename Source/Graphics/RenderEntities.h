@@ -4,10 +4,11 @@
 #include <memory>
 
 #include "Entity/Entity.h"
-#include "Graphics/SpriteManager.h"
 
 namespace ClassicLauncher
 {
+
+    class SpriteManager;
 
     class RenderEntities
     {
@@ -16,11 +17,11 @@ namespace ClassicLauncher
         explicit RenderEntities(SpriteManager* spriteManagerReference);
         void DrawEntities(const std::vector<std::unique_ptr<Entity>>& entities);
         void DrawEntity(Entity* entity);
-        static void DrawDebug(Entity* entity);
+        void DrawDebug(Entity* entity);
 
     private:
 
-        SpriteManager* mSpriteManagerReference;
+        SpriteManager* m_spriteManagerReference = nullptr;
     };
 
 } // namespace ClassicLauncher

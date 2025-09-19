@@ -29,7 +29,7 @@ namespace ClassicLauncher
 
     private:
 
-        void RenderValues();
+        void UpdateValues();
         [[nodiscard]] int GetWidth() const;
         [[nodiscard]] int GetHeight() const;
 

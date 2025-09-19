@@ -3,7 +3,7 @@
 
 #include "Utils/Log.h"
 #include "Utils/Print.h"
-#include "Utils/StringFunctionLibrary.h"
+#include "Utils/String.h"
 
 #define TEXT(...) String::TextFormat(__VA_ARGS__)
 #define TEXTBOOL(a) String::TextFormat("%s", (a) == true ? "true" : "false")

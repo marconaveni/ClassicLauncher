@@ -13,6 +13,8 @@
 namespace ClassicLauncher
 {
 
+    class EntityManager;
+
     class Engine
     {
     public:
@@ -28,6 +30,7 @@ namespace ClassicLauncher
         InputManager m_inputManager;
         Application m_application;
         ConfigurationManager m_configurationManager;
+        
     };
 
 

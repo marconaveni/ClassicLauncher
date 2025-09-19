@@ -2,7 +2,7 @@
 #include <vlc/vlc.h>
 #include "Utils/Log.h"
 #include "Utils/Math.h"
-#include "Utils/UtilsFunctionLibrary.h"
+#include "Utils/Utils.h"
 
 namespace ClassicLauncher
 {

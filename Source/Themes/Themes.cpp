@@ -2,13 +2,15 @@
 
 #include <filesystem>
 
-#include "Application.h"
+#include "Utils/ConfigurationManager.h"
+#include "Graphics/SpriteManager.h"
+#include "Data/GameListManager.h"
 #include "Entity/EntityManager.h"
 #include "Helper.h"
 #include "Utils/Log.h"
 #include "Utils/Math.h"
 #include "Utils/Resources.h"
-#include "Utils/StringFunctionLibrary.h"
+#include "Utils/String.h"
 #include "rl_wrap.h"
 
 namespace ClassicLauncher

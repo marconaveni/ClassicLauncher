@@ -21,9 +21,11 @@ namespace ClassicLauncher
     {
     }
 
-    void RenderScreen::RenderValues()
+    void RenderScreen::UpdateValues()
     {
-        const Vector2f mouse = rlw::GetMousePosition();
+        //const Vector2f mouse = rlw::GetMousePosition();
+        Vector2f mouse = Vector2f{RayWindow::GetMousePosition()};
+        
         const auto screenWidth = static_cast<float>(RayWindow::GetScreenWidth());
         const auto screenHeight = static_cast<float>(RayWindow::GetScreenHeight());
         mNewWidth = static_cast<float>(GetWidth());
@@ -42,6 +44,15 @@ namespace ClassicLauncher
             mVirtualMouse.x = (mouse.x / screenWidth) * mWidth;
             mVirtualMouse.y = (mouse.y / screenHeight) * mHeight;
         }
+
+        RayWindow::m_virtualMouse = mVirtualMouse;
+
+        if ( RayWindow::IsResize())
+        {
+            LOG(LOG_CLASSIC_WARNING, "is resized");
+        }
+        
+        //LOG(LOG_CLASSIC_WARNING, "mouse virtual x: %.2f y: %.2f" , mVirtualMouse.x, mVirtualMouse.y);
     }
 
     void RenderScreen::Init(const int screenWidth, const int screenHeight)
@@ -63,7 +74,7 @@ namespace ClassicLauncher
 
     void RenderScreen::BeginRender()
     {
-        RenderValues();
+        UpdateValues();
         rlw::BeginTextureMode(*mRenderTexture);
         rlw::ClearBackground(Color::WhiteGray);
     }
