@@ -1,6 +1,6 @@
 #include "GuiVideoPlayer.h"
 
-#include "Themes/Themes.h"
+#include "Themes/ThemesManager.h"
 #include "rl_wrap.h"
 
 namespace ClassicLauncher

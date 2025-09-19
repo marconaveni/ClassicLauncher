@@ -19,7 +19,7 @@
 #include "Utils/Resources.h"
 #include "Utils/Utils.h"
 #include "Window/RayWindow.h"
-#include "Themes/Themes.h"
+#include "Themes/ThemesManager.h"
 
 
 namespace ClassicLauncher
@@ -281,19 +281,19 @@ namespace ClassicLauncher
         {
             if (!mIsLeft)
             {
-                m_audioManagerRef->PlayCursor();
+                m_audioManagerRef->PlaySound("cursor");
                 m_gameListManagerRef->AddId(-1);
                 SetFocus(mIdFocus - 1);
             }
             mIsLeft = true;
             mIsNeedUpdate = true;
         }
-
+        
         if (InputManager::IsDown(InputName::leftFaceRight, main) && !mIsLeft)
         {
             if (!mIsRight)
             {
-                m_audioManagerRef->PlayCursor();
+                m_audioManagerRef->PlaySound("cursor");
                 m_gameListManagerRef->AddId(1);
                 SetFocus(mIdFocus + 1);
             }

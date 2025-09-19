@@ -3,17 +3,19 @@
 
 
 #include <memory>
+
 #include "Application.h"
+#include "Audio/AudioManager.h"
+#include "Graphics/RenderSystem.h"
+#include "Graphics/SpriteManager.h"
 #include "Input/InputManager.h"
 #include "Utils/ConfigurationManager.h"
-#include "Graphics/RenderSystem.h"
+#include "Utils/TimerManager.h"
 #include "Window/RayWindow.h"
 
 
 namespace ClassicLauncher
 {
-
-    class EntityManager;
 
     class Engine
     {
@@ -26,11 +28,13 @@ namespace ClassicLauncher
     private:
 
         RayWindow m_window;
-        RenderSystem m_renderSystem; 
+        RenderSystem m_renderSystem;
         InputManager m_inputManager;
         Application m_application;
         ConfigurationManager m_configurationManager;
-        
+        SpriteManager m_spriteManager;
+        TimerManager m_timerManager;
+        AudioManager m_audioManager;
     };
 
 

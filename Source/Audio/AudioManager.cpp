@@ -67,17 +67,35 @@ namespace ClassicLauncher
         ChangeMusic(bAutoPlay);
     }
 
-    void AudioManager::LoadCursor(const std::string& path)
+    //void AudioManager::LoadCursor(const std::string& path)
+    //{
+    //    m_cursorSound->LoadFromFile(path);
+    //}
+    //
+    //void AudioManager::LoadCLick(const std::string& path)
+    //{
+    //    m_clickSound->LoadFromFile(path);
+    //}
+    
+    void AudioManager::LoadSound(const std::filesystem::path& path, const std::string& name)
     {
-        m_cursorSound->LoadFromFile(path);
+        if (name.compare("click"))
+        {
+            m_clickSound->LoadFromFile(path);
+        }
+        if (name.compare("cursor"))
+        {
+            m_cursorSound->LoadFromFile(path);
+        }
     }
 
-    void AudioManager::LoadCLick(const std::string& path)
+    void AudioManager::PlaySound(const std::string& name)
     {
-        m_clickSound->LoadFromFile(path);
+        m_isPlayClick = (name.compare("click"));
+        m_isPlayCursor = (name.compare("cursor"));
     }
 
-    void AudioManager::Play()
+    void AudioManager::PlayMusic()
     {
         if (!m_audioMusics.empty())
         {
@@ -90,15 +108,15 @@ namespace ClassicLauncher
         }
     }
 
-    void AudioManager::PlayClick()
-    {
-        m_isPlayClick = true;
-    }
+    // void AudioManager::PlayClick()
+    // {
+        // m_isPlayClick = true;
+    // }
 
-    void AudioManager::PlayCursor()
-    {
-        m_isPlayCursor = true;
-    }
+    // void AudioManager::PlayCursor()
+    // {
+        // m_isPlayCursor = true;
+    // }
 
     void AudioManager::Pause()
     {
@@ -142,7 +160,7 @@ namespace ClassicLauncher
             currentMusic->Seek(0);
             if (bAutoPlay)
             {
-                Play();
+                PlayMusic();
             }
         }
     }
@@ -174,6 +192,17 @@ namespace ClassicLauncher
                     ChangeMusic();
                 }
             }
+
+            //if (m_clickSound->IsValid() && m_isPlayClick)
+            //{
+            //    m_clickSound->Play();
+            //    m_isPlayClick = !m_isPlayClick;
+            //}
+            //if (m_cursorSound->IsValid() && m_isPlayCursor)
+            //{
+            //    m_cursorSound->Play();
+            //    m_isPlayCursor = !m_isPlayCursor;
+            //}
 
             if (m_clickSound->IsValid() && m_isPlayClick)
             {

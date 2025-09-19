@@ -2,13 +2,16 @@
 
 #include <string_view>
 
+#include "Audio/AudioManager.h"
 #include "Graphics/RenderScreen.h"
+#include "Graphics/SpriteManager.h"
 #include "Guis/GuiWindow.h"
 #include "Helper.h"
 #include "Utils/ConfigurationManager.h"
 #include "Utils/Log.h"
 #include "Utils/Resources.h"
 #include "Utils/String.h"
+#include "Utils/TimerManager.h"
 #include "Utils/Utils.h"
 #include "Window/RayWindow.h"
 #include "rl_wrap.h"
@@ -17,17 +20,22 @@ namespace ClassicLauncher
 {
 
 
-    Application::Application(ConfigurationManager& configManager)
+    Application::Application(ConfigurationManager& configManager,
+                             SpriteManager& spriteManager,
+                             TimerManager& timerManager,
+                             AudioManager& audioManager)
         : m_configManager(&configManager)
-        , mRenderEntities(&mSpriteManager)
-        , m_entityManager(&mSpriteManager, &mTimerManager, &mFocusManager)
-        , mGuiWindow(nullptr)
-        , mThemes(&mGameListManager, &mSpriteManager, &m_entityManager, &configManager)
-    {       
+        , m_spriteManager(&spriteManager)
+        , m_timerManager(&timerManager)
+        , m_audioManager(&audioManager)
+        , m_renderEntities(&spriteManager)
+        , m_entityManager(&spriteManager, &timerManager, &m_focusManager)
+        , m_themesManager(&m_gameListManager, &spriteManager, &m_entityManager, &configManager)
+    {
     }
 
     Application::~Application()
-    {    
+    {
     }
 
     void Application::Init()
@@ -36,21 +44,21 @@ namespace ClassicLauncher
         rlw::SetTraceLogCallback(TraceLogger);
 
         Resources::SetClassicLauncherDir();
-        mGameListManager.Initialize();
+        m_gameListManager.Initialize();
 
 
-        mThemes.Init();
-        mThemes.LoadTheme();
+        m_themesManager.Init();
+        m_themesManager.LoadTheme();
 
 
         const std::string LauncherDir = Resources::GetClassicLauncherDir();
         const std::string musicDir = String::NormalizePath(LauncherDir + "musics"); // theme dir
-        mAudioManager.Init();
-        mAudioManager.LoadMusics(musicDir);
-        mAudioManager.LoadCLick(Resources::GetClickAudio());
-        mAudioManager.LoadCursor(Resources::GetCursorAudio());
+        m_audioManager->Init();
+        m_audioManager->LoadMusics(musicDir, true);
+        m_audioManager->LoadSound(Resources::GetClickAudio(), "click");
+        m_audioManager->LoadSound(Resources::GetCursorAudio(), "cursor");
 
-        mSpriteManager.Init();
+        m_spriteManager->Init();
 
 #ifdef _DEBUG
 
@@ -59,15 +67,18 @@ namespace ClassicLauncher
         const std::string refPath1 = String::NormalizePath(LauncherDir + "themes/debug/ref1.png");
         const std::string refPath2 = String::NormalizePath(LauncherDir + "themes/debug/ref2.png");
         const std::string refPath3 = String::NormalizePath(LauncherDir + "themes/debug/ref3.png");
-        mSpriteManager.LoadSprite("ref0", refPath0, 1280 * 2, 720 * 2);
-        mSpriteManager.LoadSprite("ref1", refPath1, 1280 * 2, 720 * 2);
-        mSpriteManager.LoadSprite("ref2", refPath2, 1280 * 2, 720 * 2);
-        mSpriteManager.LoadSprite("ref3", refPath3, 1280 * 2, 720 * 2);
+        m_spriteManager->LoadSprite("ref0", refPath0, 1280 * 2, 720 * 2);
+        m_spriteManager->LoadSprite("ref1", refPath1, 1280 * 2, 720 * 2);
+        m_spriteManager->LoadSprite("ref2", refPath2, 1280 * 2, 720 * 2);
+        m_spriteManager->LoadSprite("ref3", refPath3, 1280 * 2, 720 * 2);
 #endif
 
-        if (mGameListManager.GetGameListSize() > 0)
+        if (m_gameListManager.GetGameListSize() > 0)
         {
-            mGuiWindow = m_entityManager.CreateEntity<GuiWindow>("GuiWindow", &mGameListManager, mAudioManager, mProcessManager);
+            mGuiWindow = m_entityManager.CreateEntity<GuiWindow>("GuiWindow",
+                                                                 &m_gameListManager,
+                                                                 *m_audioManager,
+                                                                 m_processManager);
             mGuiWindow->Init();
         }
         else
@@ -75,12 +86,11 @@ namespace ClassicLauncher
             LOG(LOG_CLASSIC_ERROR, "system list is empty");
             // todo create screen not found system list
         }
-
     }
 
     void Application::Draw()
     {
-        mRenderEntities.DrawEntities(m_entityManager.GetEntities());
+        m_renderEntities.DrawEntities(m_entityManager.GetEntities());
     }
 
     void Application::Update()
@@ -90,15 +100,15 @@ namespace ClassicLauncher
         mGuiWindow->Teste();
         m_entityManager.UpdateAll();
 
-        mTimerManager.Update();
-        mProcessManager.StatusProcessRun(mGuiWindow->GetGuiBlackScreen(), &mAudioManager);
+        m_timerManager->Update();
+        m_processManager.StatusProcessRun(mGuiWindow->GetGuiBlackScreen(), m_audioManager);
 
 #ifdef _DEBUG
 
 
-        GameList* pSystemList = mGameListManager.GetCurrentGameList();
+        GameList* pSystemList = m_gameListManager.GetCurrentGameList();
         PRINT(TEXT("========================================"), 2.0f, "line0", Color::Lime);
-        PRINT(TEXT("Music Playing %s", mAudioManager.GetMusicName().c_str()), 2.0f, "music", Color::Lime);
+        PRINT(TEXT("Music Playing %s", m_audioManager->GetMusicName().c_str()), 2.0f, "music", Color::Lime);
         PRINT(TEXT("========================================"), 2.0f, "line", Color::Green);
         PRINT(TEXT("%d fps", RayWindow::GetFPS()), 2.0f, "fps", Color::Green);
         PRINT(TEXT("%.6f ms", RayWindow::GetFrameTime()), 2.0f, "ms", Color::Green);
@@ -129,18 +139,18 @@ namespace ClassicLauncher
 
         if (InputManager::IsRelease(InputName::rightThumb, main))
         {
-            mAudioManager.ChangeMusic();
+            m_audioManager->ChangeMusic();
             PRINT(TEXT("Changed music"), 5.0f);
         }
 
-        if (Keyboard::IsReleased(Keyboard::P) && mAudioManager.IsPlayMusic())
+        if (Keyboard::IsReleased(Keyboard::P) && m_audioManager->IsPlayMusic())
         {
-            mAudioManager.Pause();
+            m_audioManager->Pause();
             PRINT(TEXT("Pause music"), 5.0f);
         }
         else if (Keyboard::IsReleased(Keyboard::P))
         {
-            mAudioManager.Play();
+            m_audioManager->PlayMusic();
             PRINT(TEXT("Play music"), 5.0f);
         }
         if (Keyboard::IsReleased(Keyboard::UP))
@@ -157,8 +167,8 @@ namespace ClassicLauncher
 
     void Application::End()
     {
-        mAudioManager.Unload();
-        mSpriteManager.UnloadSprites();
+        m_audioManager->Unload();
+        m_spriteManager->UnloadSprites();
         m_entityManager.End();
     }
 

@@ -3,17 +3,14 @@
 
 #include <memory>
 
-#include "Audio/AudioManager.h"
 #include "Components/FocusManager.h"
 #include "Data/GameListManager.h"
 #include "Entity/EntityManager.h"
 #include "Graphics/RenderEntities.h"
-#include "Graphics/SpriteManager.h"
 #include "Input/InputManager.h"
-#include "Themes/Themes.h"
-#include "Utils/ConfigurationManager.h"
+#include "Themes/ThemesManager.h"
 #include "Utils/ProcessManager.h"
-#include "Utils/TimerManager.h"
+
 
 namespace ClassicLauncher
 {
@@ -28,16 +25,22 @@ namespace ClassicLauncher
     class ThemesManager;
     class TimerManager;
     class FocusManager;
-    class ConfigurationManager;
     class RayWindow;
+    class ConfigurationManager;
+    class SpriteManager;
+    class TimerManager;
+    class AudioManager;
 
     class Application
     {
     public:
 
-        Application(ConfigurationManager& configManager);
+        Application(ConfigurationManager& configManager,
+                    SpriteManager& spriteManager,
+                    TimerManager& timerManager,
+                    AudioManager& audioManager);
         ~Application();
-        
+
         void Init();
         void Update();
         void Draw();
@@ -45,19 +48,19 @@ namespace ClassicLauncher
 
     private:
 
-        RenderEntities mRenderEntities;
-        AudioManager mAudioManager;
-        SpriteManager mSpriteManager;
-        GameListManager mGameListManager;
-        ProcessManager mProcessManager;
-        ThemesManager mThemes;
-        FocusManager mFocusManager;
-        InputManager mInputManager;
-        TimerManager mTimerManager;
+        RenderEntities m_renderEntities;
+        GameListManager m_gameListManager;
+        ProcessManager m_processManager;
+        ThemesManager m_themesManager;
+        FocusManager m_focusManager;
         EntityManager m_entityManager;
 
-        ConfigurationManager* m_configManager;
-        GuiWindow* mGuiWindow;
+        ConfigurationManager* m_configManager = nullptr;
+        SpriteManager* m_spriteManager = nullptr;
+        TimerManager* m_timerManager = nullptr;
+        AudioManager* m_audioManager = nullptr;
+
+        GuiWindow* mGuiWindow = nullptr;
     };
 
 } // namespace ClassicLauncher

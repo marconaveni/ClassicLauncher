@@ -3,7 +3,7 @@
 #include "Graphics/RenderTexture.h"
 #include "Helper.h"
 #include "Input/Keyboard.h"
-#include "Themes/Themes.h"
+#include "Themes/ThemesManager.h"
 #include "Utils/Math.h"
 #include "Window/RayWindow.h"
 #include "rl_wrap.h"

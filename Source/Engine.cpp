@@ -1,17 +1,18 @@
 #include "Engine.h"
 
-#include <string_view>
 #include <format>
+#include <string_view>
 
+#include "ClassicLauncher.h"
 #include "Helper.h"
 #include "Utils/Resources.h"
-#include "ClassicLauncher.h"
 
 namespace ClassicLauncher
 {
 
     Engine::Engine()
-        : m_application(m_configurationManager), m_window(m_configurationManager), m_renderSystem()
+        : m_application(m_configurationManager, m_spriteManager, m_timerManager, m_audioManager)
+        , m_window(m_configurationManager)
     {
     }
 
@@ -24,18 +25,17 @@ namespace ClassicLauncher
         m_configurationManager.LoadConfiguration();
 
 #if _DEBUG
-        std::string title = std::format("Classic Launcher [DEVMODE] {}" , PRODUCT_VERSION_STRING);
+        std::string title = std::format("Classic Launcher [DEVMODE] {}", PRODUCT_VERSION_STRING);
 #else
         std::string title = "Classic Launcher";
 #endif
 
 
-        std::vector<std::string> imgs = {Resources::GetIcon(16).c_str(), 
+        std::vector<std::string> imgs = {Resources::GetIcon(16).c_str(),
                                          Resources::GetIcon(32).c_str(),
-                                         Resources::GetIcon(48).c_str(), 
+                                         Resources::GetIcon(48).c_str(),
                                          Resources::GetIcon(64).c_str(),
-                                         Resources::GetIcon(128).c_str()
-        };
+                                         Resources::GetIcon(128).c_str()};
 
         m_window.Init(1280, 720, title);
         m_window.SetIcons(imgs);

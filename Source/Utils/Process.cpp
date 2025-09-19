@@ -113,7 +113,7 @@ namespace ClassicLauncher::Process
 #include <vector>
 
 #include "Log.h"
-#include "StringFunctionLibrary.h"
+#include "String.h"
 
 namespace ClassicLauncher::Process
 {

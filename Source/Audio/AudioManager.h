@@ -7,6 +7,7 @@
 #include <string>
 #include <thread>
 #include <vector>
+#include <filesystem>
 
 namespace ClassicLauncher
 {
@@ -23,11 +24,13 @@ namespace ClassicLauncher
 
         void Init();
         void LoadMusics(const std::string& path, bool bAutoPlay = true);
-        void LoadCursor(const std::string& path);
-        void LoadCLick(const std::string& path);
-        void Play();
-        void PlayClick();
-        void PlayCursor();
+        //void LoadCursor(const std::string& path);
+        //void LoadCLick(const std::string& path);
+        void LoadSound(const std::filesystem::path& path, const std::string& name);
+        void PlaySound(const std::string& name);
+        void PlayMusic();
+        //void PlayClick();
+        //void PlayCursor();
         void Pause();
         void Stop();
         std::string GetMusicName();

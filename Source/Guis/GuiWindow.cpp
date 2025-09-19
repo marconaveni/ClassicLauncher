@@ -7,7 +7,7 @@
 #include "Guis/GuiHorizontalCards.h"
 #include "Guis/GuiVideoPlayer.h"
 #include "Input/InputManager.h"
-#include "Themes/Themes.h"
+#include "Themes/ThemesManager.h"
 #include "Utils/Log.h"
 #include "Utils/ProcessManager.h"
 
@@ -101,7 +101,7 @@ namespace ClassicLauncher
                 return;
             }
             mGuiVideoPlayer->Stop();
-            m_audioManagerRef->Play();
+            m_audioManagerRef->PlayMusic();
             InputManager::SetCategory(main);
             InputManager::RemoveCategory(videoFullscreen);
         }
@@ -130,7 +130,7 @@ namespace ClassicLauncher
         if (InputManager::IsRelease(InputName::rightFaceDown, main))
         {
             InputManager::DisableInput();
-            m_audioManagerRef->PlayClick();
+            m_audioManagerRef->PlaySound("click");
             mGuiHorizontalBox->Click();
             if (m_gameListManagerRef->GetCurrentList() == GameListSelect)
             {

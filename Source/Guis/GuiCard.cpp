@@ -5,7 +5,7 @@
 #include "Graphics/Texture.h"
 #include "Guis/GuiSizeBox.h"
 #include "Guis/GuiVideoPlayer.h"
-#include "Themes/Themes.h"
+#include "Themes/ThemesManager.h"
 
 #include "Data/GameListManager.h"
 #include "Graphics/SpriteManager.h"

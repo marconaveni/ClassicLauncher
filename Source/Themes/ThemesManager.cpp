@@ -1,4 +1,4 @@
-#include "Themes.h"
+#include "ThemesManager.h"
 
 #include <filesystem>
 
@@ -45,7 +45,6 @@ namespace ClassicLauncher
         // repeat code todo remove this after refactor
         std::string path = String::NormalizePath(Resources::GetClassicLauncherDir() + "themes/" + mCurrentSystemName + "/");
         std::vector<std::string> paths;
-        // if (rlw::DirectoryExists(path.c_str()))
         if (std::filesystem::exists(path))
         {
             paths.emplace_back(path);
@@ -60,7 +59,6 @@ namespace ClassicLauncher
                                      const std::string& path,
                                      float numScale)
     {
-        // if (monitorWidth <= monitorCompare && rlw::FileExists(path.c_str()))
         if (monitorWidth <= monitorCompare && std::filesystem::exists(path))
         {
             file = path;

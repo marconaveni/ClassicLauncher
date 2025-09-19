@@ -11,7 +11,7 @@
 
 
 #include "Data/GameListManager.h"
-#include "Themes/Themes.h"
+#include "Themes/ThemesManager.h"
 
 namespace ClassicLauncher
 {
