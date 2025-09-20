@@ -100,6 +100,7 @@ namespace ClassicLauncher
         }
 
         rlw::BeginTextureMode(m_renderTexture);
+        rlw::ClearBackground(Color::Transparent);
 
         Vector2f sizeVideo{
             static_cast<float>(textureVideo->GetSize().x),

@@ -20,6 +20,8 @@ namespace ClassicLauncher
             Rectangle rec = spriteAnimation.second.GetCurrentSprite();
             m_transform.source.x = rec.x;
             m_transform.source.y = rec.y;
+            m_transform.source.width = rec.width;
+            m_transform.source.height = rec.height;
             m_transform.position.width = rec.width;
             m_transform.position.height = rec.height;
         }

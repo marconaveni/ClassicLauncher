@@ -34,7 +34,7 @@ namespace ClassicLauncher
 #endif
 
         m_renderScale = ThemesManager::GetScaleRenderer();
-        
+
         for (const auto& entity : entities)
         {
             DrawEntity(entity.get());
@@ -82,7 +82,7 @@ namespace ClassicLauncher
 
             rlw::DrawRectangleLinesEx(finalTransformRect, 1, Color::Cyan);
 
-            DrawText(entity->mNameId.c_str(), finalTransformRect.x, finalTransformRect.y, 16, ::WHITE);
+           // DrawText(entity->mNameId.c_str(), finalTransformRect.x, finalTransformRect.y, 16, ::WHITE);
 
             //rlw::DrawTexturePro(*texture,
             //    RectFloat{ 0 , 562 , 21 ,720 }, //    posição spritesheet

@@ -68,11 +68,11 @@ namespace ClassicLauncher
         }
 
         SetPositionHorizontalBox();
-//
-        //mMiniCover = GetEntityManager()->CreateEntity<GuiMiniCover>("MiniCover", m_gameListManagerRef);
-        //mMiniCover->Init();
-        //AddChild(mMiniCover);
-//
+
+        mMiniCover = GetEntityManager()->CreateEntity<GuiMiniCover>("MiniCover", m_gameListManagerRef);
+        mMiniCover->Init();
+        AddChild(mMiniCover);
+
         //mFrame = GetEntityManager()->CreateEntity<GuiFrame>("Frame", GetFocusManager());
         //GetEntityManager()->SetZOrder(mFrame, 80);
         //AddChild(mFrame);
@@ -150,7 +150,7 @@ namespace ClassicLauncher
             }
         }
 
-        //mMiniCover->SetCovers();
+        mMiniCover->SetCovers();
         SetPositionHorizontalBox();
 
         LOG(LOG_CLASSIC_DEBUG, "Num Sprites Loaded after SetCovers %d", GetSpriteManager()->NumSpritesLoaded());

@@ -78,7 +78,7 @@ namespace ClassicLauncher
 
         std::vector<std::string> paths;
         paths = GetThemeDirs();
-        const int monitorWidth = 1280; // todo refactor  parte delicada precisa de refactor urgente rlw::GetMonitorWidth(rlw::GetCurrentMonitor());
+        const int monitorWidth = 1920; // todo refactor  parte delicada precisa de refactor urgente rlw::GetMonitorWidth(rlw::GetCurrentMonitor());
         int scales[3] = {1, 2, 3};
         int widths[3] = {1280, 2560, 3840}; //2560
 
