@@ -22,6 +22,7 @@ namespace ClassicLauncher
     private:
 
         SpriteManager* m_spriteManagerReference = nullptr;
+        float m_renderScale = 1;
     };
 
 } // namespace ClassicLauncher

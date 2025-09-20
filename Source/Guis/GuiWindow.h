@@ -32,7 +32,7 @@ namespace ClassicLauncher
 
     private:
 
-        GuiHorizontalCards* mGuiHorizontalBox;
+        GuiHorizontalCards* m_guiHorizontalCards;
         GuiBlackScreen* mGuiBlackScreen;
         GuiVideoPlayer* mGuiVideoPlayer;
         GuiComponent* mGuiBackground;

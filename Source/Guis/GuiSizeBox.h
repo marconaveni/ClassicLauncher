@@ -17,7 +17,7 @@ namespace ClassicLauncher
         virtual EntityType GetType() const override { return EntityType::GuiSizeBoxClass; }
         void AttachGui(EntityGui* guiAttachment);
         virtual void Update() override;
-        virtual void UpdatePosition() override;
+        virtual void UpdateWorldTransform() override;
         void UpdateGuiAttachment();
         void SetCropGuiAttachment(const bool bEnable) { mCropGuiAttachment = bEnable; }
 

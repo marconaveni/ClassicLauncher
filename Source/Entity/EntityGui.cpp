@@ -18,10 +18,10 @@ namespace ClassicLauncher
         {
             spriteAnimation.second.Update(RayWindow::GetFrameTime());
             Rectangle rec = spriteAnimation.second.GetCurrentSprite();
-            mTransform.source.x = rec.x;
-            mTransform.source.y = rec.y;
-            mTransform.position.width = rec.width;
-            mTransform.position.height = rec.height;
+            m_transform.source.x = rec.x;
+            m_transform.source.y = rec.y;
+            m_transform.position.width = rec.width;
+            m_transform.position.height = rec.height;
         }
 
         for (auto& animation : mAnimations)
@@ -51,12 +51,12 @@ namespace ClassicLauncher
 
     void EntityGui::UpdateTransform(const Animation& anim)
     {
-        mTransform.position.x = anim.mCurrentTransform.position.x;
-        mTransform.position.y = anim.mCurrentTransform.position.y;
-        mTransform.scale.x = anim.mCurrentTransform.scale.x;
-        mTransform.scale.y = anim.mCurrentTransform.scale.y;
-        mTransform.rotation = anim.mCurrentTransform.rotation;
-        mTransform.color = anim.mCurrentTransform.color;
+        m_transform.position.x = anim.mCurrentTransform.position.x;
+        m_transform.position.y = anim.mCurrentTransform.position.y;
+        m_transform.scale.x = anim.mCurrentTransform.scale.x;
+        m_transform.scale.y = anim.mCurrentTransform.scale.y;
+        m_transform.rotation = anim.mCurrentTransform.rotation;
+        m_transform.color = anim.mCurrentTransform.color;
     }
 
     void EntityGui::StartAnimation(const std::string& name,

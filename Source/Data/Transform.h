@@ -11,36 +11,12 @@ namespace ClassicLauncher
     {
     public:
 
-        Vector2f offset{};
-        RectFloat position{};
-        Vector2f scale{1.0f, 1.0f};
-        float rotation{};
+        RectFloat position{};        // Posição local (relativa ao pai)
+        Vector2f scale{1.0f, 1.0f}; // Escala local (relativa ao pai)
+        float rotation{};           // Rotação local (relativa ao pai)
         Color color{255, 255, 255, 255};
-        RectFloat source{};
+        RectFloat source{}; // Área da textura a ser usada (isso está bom)
 
-        struct Root
-        {
-            Vector2f position{};
-            Vector2f scale{1.0f, 1.0f};
-        };
-
-        Root root;
-
-        RectFloat GetTransform() { return mTransform; }
-        RectFloat GetSource() { return mSource; }
-        Vector2f GetScale() { return mScale; }
-
-        void UpdateTransform(Transform& otherTransform);
-
-    private:
-
-        friend class RenderEntities;
-
-        void SetTransforms(const float m);
-
-        RectFloat mTransform{};
-        RectFloat mSource{};
-        Vector2f mScale{1.0f, 1.0f};
     };
 
 

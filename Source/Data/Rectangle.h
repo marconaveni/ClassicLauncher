@@ -21,17 +21,17 @@ namespace ClassicLauncher
         {
         }
 
-        constexpr explicit Rectangle(const T& rect)
+        constexpr Rectangle(const T& rect)
             : x(rect.x), y(rect.y), width(rect.width), height(rect.height)
         {
         }
 
-        constexpr explicit Rectangle(const Vector2<T>& position, const Vector2<T>& size)
+        constexpr Rectangle(const Vector2<T>& position, const Vector2<T>& size)
             : x(position.x), y(position.y), width(size.x), height(size.y)
         {
         }
 
-        constexpr explicit Rectangle(T x, T y, T width, T height)
+        constexpr Rectangle(T x, T y, T width, T height)
             : x(x), y(y), width(width), height(height)
         {
         }

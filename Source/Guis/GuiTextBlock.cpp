@@ -22,7 +22,7 @@ namespace ClassicLauncher
             mFont.Unload();
             mFont = Font();
         }
-        const float scale = ThemesManager::GetScaleTexture();
+        const float scale = ThemesManager::GetScaleRenderer();
         mFont.LoadFromFile(path.data(), mSize * scale, nullptr, 250);
     }
 
@@ -55,7 +55,7 @@ namespace ClassicLauncher
 
         if (mTextOverflowPolicy == TextOverflowPolicy::clip)
         {
-            EnableScissorMode(mTransform.GetTransform().x, mTransform.GetTransform().y, mDesiredWidth, mMensuredText.y);
+            //EnableScissorMode(m_transform.GetTransform().x, m_transform.GetTransform().y, mDesiredWidth, mMensuredText.y);
         }
 
         const int positionText = mDesiredWidth - (int)mMensuredText.x;
@@ -81,17 +81,17 @@ namespace ClassicLauncher
 
     void GuiTextBlock::Draw()
     {
-        mColor.a = mTransform.color.a;
-        Vector2f posi = Vector2f{mTransform.GetTransform().x, mTransform.GetTransform().y};
-        posi.x += mOffset * ThemesManager::GetScaleTexture();
-        Vector2f scale = mTransform.GetScale();
-        rlw::DrawTextEx(
-            mFont,
-            mText.data(),
-            posi,
-            mSize * Math::Max(scale.x * ThemesManager::GetScaleTexture(), scale.y * ThemesManager::GetScaleTexture()),
-            mSpacing,
-            mColor);
+        //mColor.a = m_transform.color.a;
+        //Vector2f posi = Vector2f{m_transform.GetTransform().x, m_transform.GetTransform().y};
+        //posi.x += mOffset * ThemesManager::GetScaleTexture();
+        //Vector2f scale = m_transform.GetScale();
+        //rlw::DrawTextEx(
+        //    mFont,
+        //    mText.data(),
+        //    posi,
+        //    mSize * Math::Max(scale.x * ThemesManager::GetScaleTexture(), scale.y * ThemesManager::GetScaleTexture()),
+        //    mSpacing,
+        //    mColor);
     }
 
     void GuiTextBlock::End()
@@ -106,8 +106,8 @@ namespace ClassicLauncher
         mDelay = 1;
 
         mMensuredText = MeasureTextBox();
-        mTransform.source.width = mMensuredText.x;
-        mTransform.source.height = mMensuredText.y;
+        m_transform.source.width = mMensuredText.x;
+        m_transform.source.height = mMensuredText.y;
     }
 
     void GuiTextBlock::SetSize(int size)

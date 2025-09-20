@@ -39,20 +39,20 @@ namespace ClassicLauncher
         , m_gameListManagerRef(gameListManagerRef)
         , m_audioManagerRef(audioManagerRef)
     {
-        mTransform.position.width = 1280;
-        mTransform.position.height = 720;
+        m_transform.position.width = 1280;
+        m_transform.position.height = 720;
     }
 
     void GuiHorizontalCards::Init()
     {
 
-        mGuiTitle = GetEntityManager()->CreateEntity<GuiTextBlock>("GuiTitle", Resources::GetFont(), 48, 0);
-        mGuiTitle->mTransform.position.x = 400;
-        mGuiTitle->mTransform.position.y = 154;
-        mGuiTitle->SetText("Title");
-        mGuiTitle->SetDesiredWidth(1010);
-        mGuiTitle->SetTextOverflowPolicy(TextOverflowPolicy::clip);
-        AddChild(mGuiTitle);
+        // mGuiTitle = GetEntityManager()->CreateEntity<GuiTextBlock>("GuiTitle", Resources::GetFont(), 48, 0);
+        // mGuiTitle->m_transform.position.x = 400;
+        // mGuiTitle->m_transform.position.y = 154;
+        // mGuiTitle->SetText("Title");
+        // mGuiTitle->SetDesiredWidth(1010);
+        // mGuiTitle->SetTextOverflowPolicy(TextOverflowPolicy::clip);
+        // AddChild(mGuiTitle);
 
         mHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalBox>("Cards_GuiHorizontalBox");
         SetHorizontalBoxValues();
@@ -63,19 +63,20 @@ namespace ClassicLauncher
             auto* card = GetEntityManager()->CreateEntity<GuiCard>("GuiCard", m_gameListManagerRef, GetFocusManager());
             card->CreateCards(0, 0);
             mHorizontalBox->AttachGui(card);
+            //AddChild(card);
             mGuiCards.emplace_back(card);
         }
 
         SetPositionHorizontalBox();
-
-        mMiniCover = GetEntityManager()->CreateEntity<GuiMiniCover>("MiniCover", m_gameListManagerRef);
-        mMiniCover->Init();
-        AddChild(mMiniCover);
-
-        mFrame = GetEntityManager()->CreateEntity<GuiFrame>("Frame", GetFocusManager());
-        GetEntityManager()->SetZOrder(mFrame, 80);
-        AddChild(mFrame);
-
+//
+        //mMiniCover = GetEntityManager()->CreateEntity<GuiMiniCover>("MiniCover", m_gameListManagerRef);
+        //mMiniCover->Init();
+        //AddChild(mMiniCover);
+//
+        //mFrame = GetEntityManager()->CreateEntity<GuiFrame>("Frame", GetFocusManager());
+        //GetEntityManager()->SetZOrder(mFrame, 80);
+        //AddChild(mFrame);
+//
         SetFocus(3, true);
     }
 
@@ -86,7 +87,7 @@ namespace ClassicLauncher
         const float y = ThemesManager::Get().mConfigurationThemes.horizontalCardsPositionY;
 
         mHorizontalBox->SetSpace(space);
-        mHorizontalBox->mTransform.position.y = y;
+        mHorizontalBox->m_transform.position.y = y;
     }
 
     void GuiHorizontalCards::SetThemeValue()
@@ -113,16 +114,14 @@ namespace ClassicLauncher
         mIsLeft = true;
 
         const GameList* pGameList = m_gameListManagerRef->GetCurrentGameList();
-        mGuiTitle->SetText((pGameList) ? pGameList->name : "");
+        //mGuiTitle->SetText((pGameList) ? pGameList->name : "");
         // const float scale = Themes::GetScaleTexture();
-        mGuiTitle->mTransform.position.x = (1280.0f / 2.0f) - ((mGuiTitle->GetMeasureTextBox().x / 2));
-        mGuiTitle->mTransform.position.x = Math::Clamp(mGuiTitle->mTransform.position.x, 135, 1280);
+        //mGuiTitle->m_transform.position.x = (1280.0f / 2.0f) - ((mGuiTitle->GetMeasureTextBox().x / 2));
+        //mGuiTitle->m_transform.position.x = Math::Clamp(mGuiTitle->m_transform.position.x, 135, 1280);
     }
 
     void GuiHorizontalCards::SetCovers()
     {
-        //GameListManager* manager = GetApplication()->GetGameListManager();
-        //SpriteManager* spriteManager = GetApplication()->GetSpriteManager();
 
         if (m_gameListManagerRef->GetGameListSize() == 0)
         {
@@ -141,8 +140,8 @@ namespace ClassicLauncher
 
             if (!path.empty())
             {
-                const float scale = ThemesManager::GetScaleTexture();
-                GetSpriteManager()->LoadSprite(name, path, int(228.0f * scale), int(204.0f * scale));
+                const float renderScale = ThemesManager::GetScaleRenderer();
+                GetSpriteManager()->LoadSprite(name, path, int(228.0f * renderScale), int(204.0f * renderScale));
                 mGuiCards[i]->SetCover(name);
             }
             else
@@ -151,7 +150,7 @@ namespace ClassicLauncher
             }
         }
 
-        mMiniCover->SetCovers();
+        //mMiniCover->SetCovers();
         SetPositionHorizontalBox();
 
         LOG(LOG_CLASSIC_DEBUG, "Num Sprites Loaded after SetCovers %d", GetSpriteManager()->NumSpritesLoaded());
@@ -159,8 +158,8 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::SetPositionHorizontalBox()
     {
-        mHorizontalBox->mTransform.position.x =
-            ((1280 - mHorizontalBox->mTransform.position.width) / 2) +
+        mHorizontalBox->m_transform.position.x =
+            ((1280 - mHorizontalBox->m_transform.position.width) / 2) +
             ThemesManager::Get().mConfigurationThemes.horizontalCardsPositionX;
     }
 
@@ -192,7 +191,7 @@ namespace ClassicLauncher
     void GuiHorizontalCards::Click()
     {
         mGuiCards[mIdFocus]->Click();
-        mFrame->Click();
+        //mFrame->Click();
         for (GuiCard*& card : mGuiCards)
         {
             card->SetFrontCard();
@@ -202,7 +201,7 @@ namespace ClassicLauncher
     void GuiHorizontalCards::ClearCovers()
     {
         const int size = m_gameListManagerRef->GetGameListSize();
-        // SpriteManager* pSpriteManager = GetApplication()->GetSpriteManager();
+
         for (int i = 0; i < size; i++)
         {
             const std::string coverName = std::to_string(i) + "_CV";
@@ -227,6 +226,8 @@ namespace ClassicLauncher
     void GuiHorizontalCards::Update()
     {
         EntityGui::Update();
+
+        //return;   /// remover 
 
         // if (InputManager::IsDown(InputName::leftFaceDown, debug))
         //{
@@ -314,7 +315,7 @@ namespace ClassicLauncher
         {
             if (mIdFocus < 3 || mIdFocus > 6)
             {
-                mHorizontalBox->mTransform.position.x -= mSpeed;
+                mHorizontalBox->m_transform.position.x -= mSpeed;
             }
             mLastDirection = Left;
         }
@@ -322,7 +323,7 @@ namespace ClassicLauncher
         {
             if (mIdFocus < 3 || mIdFocus > 6)
             {
-                mHorizontalBox->mTransform.position.x += mSpeed;
+                mHorizontalBox->m_transform.position.x += mSpeed;
             }
             mLastDirection = Right;
         }
@@ -354,7 +355,7 @@ namespace ClassicLauncher
         }
         else
         {
-            mFrame->SetFrame();
+            //mFrame->SetFrame();
         }
 
         UpdateCards();

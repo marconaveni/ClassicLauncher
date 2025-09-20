@@ -41,7 +41,7 @@ namespace ClassicLauncher
         virtual void Update() {}
         virtual void Draw() {}
         virtual void End() {}
-        virtual void UpdatePosition();                 // Update the position of the entity
+        virtual void UpdateWorldTransform();                 // Update the position of the entity
         virtual void SelfDelete();                     // Delete the entity and all its children
         virtual void AddChild(Entity* childEntity);    // Add a child to the entity
         virtual void RemoveChild(Entity* childEntity); // Remove a child from the entity
@@ -58,7 +58,8 @@ namespace ClassicLauncher
         [[nodiscard]] int GetZOrder() const { return mZOrder; }
         [[nodiscard]] int GetIdZOrder() const { return mIdZOrder; }
 
-        Transform mTransform;
+        Transform m_transform;
+        Transform m_worldTransform;
         std::string mTextureName = "transparent";
         RectFloat mScissorArea;
 

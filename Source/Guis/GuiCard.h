@@ -57,7 +57,8 @@ namespace ClassicLauncher
         GuiSizeBox* mSizeBoxImage;
         GuiSizeBox* mSizeBoxVideoPlayer;
         GuiVideoPlayer* mGuiVideoPlayer;
-        GuiComponent* mCover;
+        GuiComponent* m_coverDefault;
+        GuiComponent* m_cover;
         bool mIsFocus = false;
         bool mIsFront = false;
 

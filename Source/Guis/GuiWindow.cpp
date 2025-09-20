@@ -16,7 +16,7 @@ namespace ClassicLauncher
     GuiWindow::GuiWindow(GameListManager* gameListManagerRef,
                          AudioManager& audioManagerRef,
                          ProcessManager& processManagerRef)
-        : mGuiHorizontalBox(nullptr)
+        : m_guiHorizontalCards(nullptr)
         , mGuiBlackScreen(nullptr)
         , mGuiVideoPlayer(nullptr)
         , mGuiBackground(nullptr)
@@ -29,32 +29,30 @@ namespace ClassicLauncher
     void GuiWindow::Init()
     {
 
-        mTransform.position.width = 1280.0f; //  todo: refactor    (float)pApplication->GetSpecification().width;
-        mTransform.position.height = 720.0f; //  todo: refactor    (float)pApplication->GetSpecification().height;
+        m_transform.position.width = 1280.0f; //  todo: refactor    (float)pApplication->GetSpecification().width;
+        m_transform.position.height = 720.0f; //  todo: refactor    (float)pApplication->GetSpecification().height;
 
         mGuiBackground = GetEntityManager()->CreateEntity<GuiComponent>("GuiBackground");
-        mGuiBackground->mTransform.position.width = 21;
-        mGuiBackground->mTransform.position.height = 720;
-        mGuiBackground->mTransform.source.x = 0;
-        mGuiBackground->mTransform.source.y = 562;
-        mGuiBackground->mTransform.source.width = 1280;
-        mGuiBackground->mTransform.source.height = 720;
+
+        mGuiBackground->m_transform.position.x = 0;
+        mGuiBackground->m_transform.position.y = 0;
+        mGuiBackground->m_transform.position.width = 1280;
+        mGuiBackground->m_transform.position.height = 720;
+
+        mGuiBackground->m_transform.source.x = 0;
+        mGuiBackground->m_transform.source.y = 562;
+        mGuiBackground->m_transform.source.width = 21;
+        mGuiBackground->m_transform.source.height = 720;
+
         mGuiBackground->mTextureName = "sprite";
         AddChild(mGuiBackground);
 
-        mGuiHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalCards",
-                                                                                 m_gameListManagerRef,
-                                                                                 m_audioManagerRef);
-        mGuiHorizontalBox->Init();
-        AddChild(mGuiHorizontalBox);
+        m_guiHorizontalCards = GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalCards",
+                                                                                    m_gameListManagerRef,
+                                                                                    m_audioManagerRef);
+        m_guiHorizontalCards->Init();
+        AddChild(m_guiHorizontalCards);
 
-        mGuiVideoPlayer = GetEntityManager()->CreateEntity<GuiVideoPlayer>("GuiVideoPlayer");
-        mGuiBlackScreen = GetEntityManager()->CreateEntity<GuiBlackScreen>("GuiBlackScreen");
-        GetEntityManager()->SetZOrder(mGuiVideoPlayer, 5);
-        GetEntityManager()->SetZOrder(mGuiBlackScreen, 999);
-
-        // GetApplication()->LoadConfigurationThemes();
-        GetEntityManager()->SetThemeValue();
 
 #ifdef _DEBUG
         InputManager::SetCategory(main | debug);
@@ -66,79 +64,38 @@ namespace ClassicLauncher
     void GuiWindow::Update()
     {
         EntityGui::Update();
-
-
-#ifdef _DEBUG
-        if (Keyboard::IsReleased(Keyboard::Key::ONE))
+        if (Keyboard::IsDown(Keyboard::Key::A))
         {
-            mTextureName = mTextureName != "ref0" ? "ref0" : "transparent";
-            mGuiBackground->mTextureName = mTextureName != "transparent" ? "transparent" : "sprite";
+            m_transform.position.x -= 10;
         }
-        if (Keyboard::IsReleased(Keyboard::Key::TWO))
+        if (Keyboard::IsDown(Keyboard::Key::D))
         {
-            mTextureName = mTextureName != "ref1" ? "ref1" : "transparent";
-            mGuiBackground->mTextureName = mTextureName != "transparent" ? "transparent" : "sprite";
-        }
-        if (Keyboard::IsReleased(Keyboard::Key::THREE))
-        {
-            mTextureName = mTextureName != "ref2" ? "ref2" : "transparent";
-            mGuiBackground->mTextureName = mTextureName != "transparent" ? "transparent" : "sprite";
-        }
-        if (Keyboard::IsReleased(Keyboard::Key::FOUR))
-        {
-            mTextureName = mTextureName != "ref3" ? "ref3" : "transparent";
-            mGuiBackground->mTextureName = mTextureName != "transparent" ? "transparent" : "sprite";
+            m_transform.position.x += 10;
         }
 
-#endif
-
-
-        if (InputManager::IsRelease(InputName::leftFaceUp, videoFullscreen))
+        if (Keyboard::IsDown(Keyboard::Key::KP_ADD))
         {
-            if (mGuiVideoPlayer->IsPlayingFullscreen())
-            {
-                mGuiVideoPlayer->StopFullscreen();
-                return;
-            }
-            mGuiVideoPlayer->Stop();
-            m_audioManagerRef->PlayMusic();
-            InputManager::SetCategory(main);
-            InputManager::RemoveCategory(videoFullscreen);
+            m_transform.scale.x += 0.1;
+            m_transform.scale.y += 0.1;
+        }
+        if (Keyboard::IsDown(Keyboard::Key::KP_SUBTRACT))
+        {
+            m_transform.scale.x -= 0.1;
+            m_transform.scale.y -= 0.1;
         }
 
-        if (InputManager::IsRelease(InputName::leftFaceDown, videoFullscreen))
-        {
-            if (mGuiVideoPlayer->IsPlaying())
-            {
-                mGuiVideoPlayer->InitFullscreen();
-            }
-        }
-        else if (InputManager::IsRelease(InputName::leftFaceDown, main))
-        {
-            const bool bIsplay = mGuiVideoPlayer->Init(m_gameListManagerRef->GetCurrentGameList()->video, 640, 480);
-            if (bIsplay)
-            {
-                InputManager::RemoveCategory(main);
-                InputManager::SetCategory(videoFullscreen);
-                m_audioManagerRef->Pause();
-            }
-        }
-        if (InputManager::IsRelease(InputName::rightFaceLeft, main | videoFullscreen))
-        {
-            mGuiHorizontalBox->Click();
-        }
         if (InputManager::IsRelease(InputName::rightFaceDown, main))
         {
             InputManager::DisableInput();
             m_audioManagerRef->PlaySound("click");
-            mGuiHorizontalBox->Click();
+            m_guiHorizontalCards->Click();
             if (m_gameListManagerRef->GetCurrentList() == GameListSelect)
             {
-                mGuiBlackScreen->FadeIn();
+               // mGuiBlackScreen->FadeIn();
             }
             else
             {
-                mGuiBlackScreen->FadeInFadeOut();
+               // mGuiBlackScreen->FadeInFadeOut();
             }
             GetTimerManager()->SetTimer(mClickTimer, CALLFUNCTION(OnClick, this), this, 0.5f, false);
         }
@@ -146,9 +103,13 @@ namespace ClassicLauncher
             m_gameListManagerRef->GetCurrentList() == GameListSelect) // back
         {
             InputManager::DisableInput();
-            mGuiBlackScreen->FadeInFadeOut();
+            // mGuiBlackScreen->FadeInFadeOut();
             GetTimerManager()->SetTimer(mClickTimer, CALLFUNCTION(OnBack, this), this, 0.5f, false);
         }
+
+
+
+
     }
 
     void GuiWindow::OnClick()
@@ -161,8 +122,8 @@ namespace ClassicLauncher
         }
         else
         {
-            mGuiHorizontalBox->ChangeList(GameListSelect);
-            ThemesManager::Get().LoadTheme();
+            m_guiHorizontalCards->ChangeList(GameListSelect);
+            // ThemesManager::Get().LoadTheme();
             GetTimerManager()->SetTimer(mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
     }
@@ -173,31 +134,13 @@ namespace ClassicLauncher
 
         if (m_gameListManagerRef->GetCurrentList() == GameListSelect)
         {
-            mGuiHorizontalBox->ChangeList(SystemListSelect);
-            ThemesManager::Get().LoadTheme();
+            m_guiHorizontalCards->ChangeList(SystemListSelect);
+            // ThemesManager::Get().LoadTheme();
             GetTimerManager()->SetTimer(mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
     }
 
     void GuiWindow::Teste()
     {
-#ifdef _DEBUG
-        if (Keyboard::IsReleased(Keyboard::Key::EIGHT))
-        {
-            if (mGuiHorizontalBox == nullptr)
-            {
-                mGuiHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalBox",
-                                                                                         m_gameListManagerRef,
-                                                                                         m_audioManagerRef);
-                mGuiHorizontalBox->Init();
-                AddChild(mGuiHorizontalBox);
-                GetEntityManager()->SetThemeValue();
-                InputManager::EnableInput();
-                return;
-            }
-            mGuiHorizontalBox->SelfDelete();
-            mGuiHorizontalBox = nullptr;
-        }
-#endif
     }
 } // namespace ClassicLauncher

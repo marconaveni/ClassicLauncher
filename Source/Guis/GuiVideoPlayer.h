@@ -6,6 +6,7 @@
 
 #include "Entity/EntityGui.h"
 #include "Video/VideoPlayer.h"
+#include "Graphics/RenderTexture.h"
 
 namespace ClassicLauncher
 {
@@ -26,15 +27,18 @@ namespace ClassicLauncher
         void StopFullscreen();
         void Update() override;
         void Draw() override;
+        void DrawVideo();
         void End() override;
         bool IsPlaying();
         bool IsPlayingFullscreen();
-
+        
     private:
-
+        
+        RenderTexture m_renderTexture;
         std::unique_ptr<VideoPlayer> mPlayer;
         std::unique_ptr<VideoPlayer> mPlayerFullScreen;
         std::string mFilePath;
+        float m_renderScale = 1;
     };
 
 } // namespace ClassicLauncher

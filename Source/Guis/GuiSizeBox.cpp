@@ -19,16 +19,16 @@ namespace ClassicLauncher
         UpdateGuiAttachment();
         if (mCropGuiAttachment)
         {
-            EnableScissorMode(mTransform.GetTransform().x,
-                              mTransform.GetTransform().y,
-                              mTransform.position.width,
-                              mTransform.position.height);
+           // EnableScissorMode(m_transform.GetTransform().x,
+           //                   m_transform.GetTransform().y,
+           //                   m_transform.position.width,
+           //                   m_transform.position.height);
         }
     }
 
-    void GuiSizeBox::UpdatePosition()
+    void GuiSizeBox::UpdateWorldTransform()
     {
-        EntityGui::UpdatePosition();
+        EntityGui::UpdateWorldTransform();
     }
 
     void GuiSizeBox::UpdateGuiAttachment()
@@ -39,10 +39,10 @@ namespace ClassicLauncher
         }
 
         // todo refactor to decrease line size
-        mGuiAttachment->mTransform.position.x = (mTransform.position.width * mTransform.root.scale.x - mGuiAttachment->mTransform.position.width * mGuiAttachment->mTransform.root.scale.x) / 2;
-        mGuiAttachment->mTransform.offset.x = mTransform.offset.x; 
-        mGuiAttachment->mTransform.position.y = (mTransform.position.height * mTransform.root.scale.y - mGuiAttachment->mTransform.position.height * mGuiAttachment->mTransform.root.scale.y) / 2;
-        mGuiAttachment->mTransform.offset.y = mTransform.offset.y;
+        //mGuiAttachment->m_transform.position.x = (m_transform.position.width * m_transform.root.scale.x - mGuiAttachment->m_transform.position.width * mGuiAttachment->m_transform.root.scale.x) / 2;
+        //mGuiAttachment->m_transform.offset.x = m_transform.offset.x; 
+        //mGuiAttachment->m_transform.position.y = (m_transform.position.height * m_transform.root.scale.y - mGuiAttachment->m_transform.position.height * mGuiAttachment->m_transform.root.scale.y) / 2;
+        //mGuiAttachment->m_transform.offset.y = m_transform.offset.y;
     }
 
 } // namespace ClassicLauncher

@@ -27,7 +27,7 @@ namespace ClassicLauncher
         void Init();
         void LoadTheme();
         static ThemesManager& Get();
-        static float GetScaleTexture();
+        static float GetScaleRenderer();
         ConfigurationThemes mConfigurationThemes;
 
     private:

@@ -57,7 +57,7 @@ namespace ClassicLauncher
         static void SetVisibleAll(Entity* entity, bool bVisible);
         void SetZOrder(Entity* entity, int zOrder);
         void UpdateAll();
-        void UpdatePositionAll();
+        void UpdateWorldTransform();
         void End();
         void ClearAllEntities();
         void SetThemeValue();

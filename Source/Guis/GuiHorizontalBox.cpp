@@ -7,14 +7,14 @@ namespace ClassicLauncher
 
     GuiHorizontalBox::GuiHorizontalBox()
     {
-        mTransform.position.width = 10.0f;
-        mTransform.position.height = 10.0f;
+        m_transform.position.width = 10.0f;
+        m_transform.position.height = 10.0f;
     }
 
     void GuiHorizontalBox::AttachGui(EntityGui* guiComponent)
     {
-        guiComponent->mTransform.position.x = 0;
-        guiComponent->mTransform.position.y = 0;
+        guiComponent->m_transform.position.x = 0;
+        guiComponent->m_transform.position.y = 0;
         AddChild(guiComponent);
         mGuiElements.push_back(guiComponent);
     }
@@ -27,8 +27,8 @@ namespace ClassicLauncher
         }
         RemoveAllChildren();
         mGuiElements.clear();
-        mTransform.position.width = 10.0f;
-        mTransform.position.height = 10.0f;
+        m_transform.position.width = 10.0f;
+        m_transform.position.height = 10.0f;
     }
 
     void GuiHorizontalBox::Update()
@@ -44,30 +44,34 @@ namespace ClassicLauncher
 
         for (auto& guiElement : mGuiElements)
         {
-            Transform& transform = guiElement->mTransform;
+            Transform& transform = guiElement->m_transform;
             if (mIsAffectScale)
             {
-                scale = transform.GetScale().x; //transform.rootScaleX * transform.scaleX;
+                //scale = transform.GetScale().x; //transform.rootScaleX * transform.scaleX;
             }
-            transform.position.x = x + width + mTransform.offset.x;
-            transform.position.y = mTransform.offset.y;
-            width += (transform.position.width + mSpacer) * scale;
+            //transform.position.x = x + width + m_transform.offset.x;
+            //transform.position.y = m_transform.offset.y;
+            //width += (transform.position.width + mSpacer) * scale;
 
             if (mIsAutoSize)
             {
                 spacer += mSpacer;
-                const float canvasScaleWidth = transform.GetScale().x;  // (transform.rootScaleX * transform.scaleX);
-                const float canvasScaleHeight = transform.GetScale().y; // (transform.rootScaleY * transform.scaleY);
-                canvasWidth += (transform.position.width) / (canvasScaleWidth);
-                canvasHeight = Math::Max(transform.position.height / canvasScaleHeight, canvasHeight);
+                transform.position.x = transform.position.width * x;
+                x++;
+                canvasWidth += transform.position.width;
+                canvasHeight = transform.position.height > canvasHeight ? transform.position.height : canvasHeight;
+                //const float canvasScaleWidth = transform.GetScale().x;  // (transform.rootScaleX * transform.scaleX);
+                //const float canvasScaleHeight = transform.GetScale().y; // (transform.rootScaleY * transform.scaleY);
+                //canvasWidth += (transform.position.width) / (canvasScaleWidth);
+                //canvasHeight = Math::Max(transform.position.height / canvasScaleHeight, canvasHeight);
             }
         }
 
         if (mIsAutoSize)
         {
-            spacer -= mSpacer;
-            mTransform.position.width = (canvasWidth + spacer / mTransform.GetScale().x) * scale; 
-            mTransform.position.height = canvasHeight * scale;
+           // spacer -= mSpace
+           m_transform.position.width = canvasWidth;
+           m_transform.position.height = canvasHeight; 
         }
     }
 

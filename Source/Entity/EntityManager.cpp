@@ -99,15 +99,15 @@ namespace ClassicLauncher
             entity->mToDraw = entity->mVisible;
             entity->Update();
         }
-        UpdatePositionAll();
+        UpdateWorldTransform();
     }
 
-    void EntityManager::UpdatePositionAll()
+    void EntityManager::UpdateWorldTransform()
     {
         bool bIsDeleteEntities = false;
         for (auto& entity : mEntities)
         {
-            entity->UpdatePosition();
+            entity->UpdateWorldTransform();
             bIsDeleteEntities = entity->mToDelete || bIsDeleteEntities;
         }
         DeleteEntities(bIsDeleteEntities);

@@ -12,12 +12,12 @@ namespace ClassicLauncher
         T x; // Vector x component
         T y; // Vector y component
 
-        constexpr explicit Vector2(T x, T y)
+        constexpr Vector2(T x, T y)
             : x(x), y(y)
         {
         }
 
-        constexpr explicit Vector2(T x)
+        constexpr Vector2(T x)
             : x(x), y(x)
         {
         }
@@ -36,8 +36,8 @@ namespace ClassicLauncher
 
         constexpr bool operator==(const Vector2& other) const { return x == other.x && y == other.y; }
         constexpr bool operator!=(const Vector2& other) const { return !(*this == other); }
-        constexpr Vector2 operator+(const Vector2& other) const { return {x + other.x, y + other.y}; }
-        constexpr Vector2 operator-(const Vector2& other) const { return {x - other.x, y - other.y}; }
+        constexpr Vector2 operator+(const Vector2& other) const { return Vector2{x + other.x, y + other.y}; }
+        constexpr Vector2 operator-(const Vector2& other) const { return Vector2{x - other.x, y - other.y}; }
         constexpr Vector2 operator*(T scalar) const { return {x * scalar, y * scalar}; }
         constexpr Vector2 operator/(T scalar) const { return {x / scalar, y / scalar}; }
     };

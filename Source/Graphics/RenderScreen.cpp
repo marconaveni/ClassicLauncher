@@ -57,9 +57,9 @@ namespace ClassicLauncher
 
     void RenderScreen::Init(const int screenWidth, const int screenHeight)
     {
-        const float scale = ThemesManager::GetScaleTexture();
-        mWidth = screenWidth * scale;
-        mHeight = screenHeight * scale;
+        const float renderScale = ThemesManager::GetScaleRenderer();
+        mWidth = screenWidth * renderScale;
+        mHeight = screenHeight * renderScale;
 
         mRenderTexture = std::make_unique<RenderTexture>(static_cast<int>(mWidth), static_cast<int>(mHeight));
         mRenderTexture->SetSmooth(true);
