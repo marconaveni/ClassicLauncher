@@ -72,6 +72,14 @@ namespace ClassicLauncher
         {
             m_transform.position.x += 10;
         }
+        if (Keyboard::IsDown(Keyboard::Key::W))
+        {
+            m_transform.position.y -= 10;
+        }
+        if (Keyboard::IsDown(Keyboard::Key::S))
+        {
+            m_transform.position.y += 10;
+        }
 
         if (Keyboard::IsDown(Keyboard::Key::KP_ADD))
         {

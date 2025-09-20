@@ -46,13 +46,17 @@ namespace ClassicLauncher
     void GuiHorizontalCards::Init()
     {
 
-        // mGuiTitle = GetEntityManager()->CreateEntity<GuiTextBlock>("GuiTitle", Resources::GetFont(), 48, 0);
-        // mGuiTitle->m_transform.position.x = 400;
-        // mGuiTitle->m_transform.position.y = 154;
-        // mGuiTitle->SetText("Title");
-        // mGuiTitle->SetDesiredWidth(1010);
-        // mGuiTitle->SetTextOverflowPolicy(TextOverflowPolicy::clip);
-        // AddChild(mGuiTitle);
+        mGuiTitle = GetEntityManager()->CreateEntity<GuiTextBlock>("GuiTitle", Resources::GetFont(), 48, 0);
+        mGuiTitle->m_transform.position.x = (1280 - 1010) / 2;
+        mGuiTitle->m_transform.position.y = 154;
+        mGuiTitle->m_transform.position.width = 1010;
+        mGuiTitle->m_transform.position.height = 32;
+
+        mGuiTitle->SetText("Title");
+        //mGuiTitle->SetDesiredWidth(1010);
+        mGuiTitle->SetTextOverflowPolicy(TextOverflowPolicy::clip);
+        mGuiTitle->SetTextCenter(true);
+        AddChild(mGuiTitle);
 
         mHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalBox>("Cards_GuiHorizontalBox");
         SetHorizontalBoxValues();
@@ -114,7 +118,7 @@ namespace ClassicLauncher
         mIsLeft = true;
 
         const GameList* pGameList = m_gameListManagerRef->GetCurrentGameList();
-        //mGuiTitle->SetText((pGameList) ? pGameList->name : "");
+        mGuiTitle->SetText((pGameList) ? pGameList->name : "");
         // const float scale = Themes::GetScaleTexture();
         //mGuiTitle->m_transform.position.x = (1280.0f / 2.0f) - ((mGuiTitle->GetMeasureTextBox().x / 2));
         //mGuiTitle->m_transform.position.x = Math::Clamp(mGuiTitle->m_transform.position.x, 135, 1280);
@@ -165,7 +169,6 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::ChangeList(const CurrentList list)
     {
-        // GameListManager* pGameListManager = GetApplication()->GetGameListManager();
         ClearCovers();
         if (list == SystemListSelect)
         {

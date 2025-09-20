@@ -22,14 +22,14 @@ namespace ClassicLauncher
             mFont.Unload();
             mFont = Font();
         }
-        const float scale = ThemesManager::GetScaleRenderer();
-        mFont.LoadFromFile(path.data(), mSize * scale, nullptr, 250);
+        m_renderScale = ThemesManager::GetScaleRenderer();
+        mFont.LoadFromFile(path.data(), mSize * m_renderScale, nullptr, 250);
     }
 
     GuiTextBlock::GuiTextBlock(const std::string& path, int size, int spacing)
         : mFont()
-        , mSize()
-        , mSpacing()
+        , mSize(size)
+        , mSpacing(spacing)
         , mColor(Color::White)
         , mTextMovement(false)
         , mDesiredWidth(10)
@@ -53,12 +53,19 @@ namespace ClassicLauncher
     {
         EntityGui::Update();
 
-        if (mTextOverflowPolicy == TextOverflowPolicy::clip)
+        if (m_centerText && m_transform.position.width > GetMeasureTextBox().x)
         {
-            //EnableScissorMode(m_transform.GetTransform().x, m_transform.GetTransform().y, mDesiredWidth, mMensuredText.y);
+            const float widthPosition = m_transform.position.width * m_worldTransform.scale.x * m_transform.scale.x;
+            const float widthText = GetMeasureTextBox().x * m_worldTransform.scale.x * m_transform.scale.x;
+            m_positionText = (widthPosition * m_renderScale - widthText * m_renderScale) / 2.0f;
+        }
+        else
+        {
+            m_positionText = 0.0f;
         }
 
-        const int positionText = mDesiredWidth - (int)mMensuredText.x;
+
+        const int positionText = m_transform.position.width - (int)mMensuredText.x;
         if (mTextOverflowPolicy == TextOverflowPolicy::clip && positionText < 0)
         {
             if (mDelay < mMaxDelay)
@@ -81,17 +88,32 @@ namespace ClassicLauncher
 
     void GuiTextBlock::Draw()
     {
-        //mColor.a = m_transform.color.a;
-        //Vector2f posi = Vector2f{m_transform.GetTransform().x, m_transform.GetTransform().y};
-        //posi.x += mOffset * ThemesManager::GetScaleTexture();
-        //Vector2f scale = m_transform.GetScale();
-        //rlw::DrawTextEx(
-        //    mFont,
-        //    mText.data(),
-        //    posi,
-        //    mSize * Math::Max(scale.x * ThemesManager::GetScaleTexture(), scale.y * ThemesManager::GetScaleTexture()),
-        //    mSpacing,
-        //    mColor);
+
+        RectFloat finalTransformRect{
+            m_worldTransform.position.x * m_worldTransform.scale.x * m_renderScale,
+            m_worldTransform.position.y * m_worldTransform.scale.y * m_renderScale,
+            m_transform.position.width * m_worldTransform.scale.x * m_renderScale, // Largura base * escala final
+            m_transform.position.height * m_worldTransform.scale.y * m_renderScale // Altura base * escala final
+        };
+
+        if (mTextOverflowPolicy == TextOverflowPolicy::clip)
+        {
+            rlw::BeginScissorMode(finalTransformRect.x,
+                                  finalTransformRect.y,
+                                  finalTransformRect.width,
+                                  finalTransformRect.height);
+        }
+        rlw::DrawTextEx(
+            mFont,
+            mText.data(),
+            Vector2f{finalTransformRect.x + m_positionText + mOffset, finalTransformRect.y}, // Vector2f{300 , 400},
+            mSize * m_worldTransform.scale.y * m_renderScale,
+            mSpacing * m_renderScale,
+            mColor);
+        if (mTextOverflowPolicy == TextOverflowPolicy::clip)
+        {
+            rlw::EndScissorMode();
+        }
     }
 
     void GuiTextBlock::End()
@@ -106,8 +128,8 @@ namespace ClassicLauncher
         mDelay = 1;
 
         mMensuredText = MeasureTextBox();
-        m_transform.source.width = mMensuredText.x;
-        m_transform.source.height = mMensuredText.y;
+        //m_transform.position.width = mMensuredText.x;
+        m_transform.position.height = mMensuredText.y;
     }
 
     void GuiTextBlock::SetSize(int size)

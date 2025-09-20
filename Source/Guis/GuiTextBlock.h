@@ -40,6 +40,8 @@ namespace ClassicLauncher
         void SetOffSetMoveText(float speed, float maxDelay);
         void UnloadText();
 
+        inline void SetTextCenter(bool enable) { m_centerText = enable; }
+
     private:
 
         Font mFont;
@@ -57,6 +59,9 @@ namespace ClassicLauncher
         float mSpeed;
         float mMaxDelay;
         TextOverflowPolicy mTextOverflowPolicy;
+        bool m_centerText = false;
+        float m_positionText = 0.0f;
+        float m_renderScale = 1;
 
         Vector2f MeasureTextBox();
     };

@@ -37,6 +37,7 @@ namespace ClassicLauncher
         glyphPadding = rayFont->glyphPadding;
         _native = rayFont; // we keep the pointer here
         _owned = true;     // we allocate, then we unload later
+        ray::SetTextureFilter(rayFont->texture, ray::TEXTURE_FILTER_BILINEAR);
     }
 
     Font Font::GetFontDefault()
