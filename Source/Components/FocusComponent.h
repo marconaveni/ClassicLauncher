@@ -22,14 +22,17 @@ namespace ClassicLauncher
         virtual void OnFocus() = 0;
         virtual void OnLostFocus() = 0;
         virtual void OnChangeFocus() {}
+        Vector2f GetPositionFocus() const { return m_positionWorld; }
 
     private:
 
         friend class FocusManager;
+        friend class RenderEntities;
 
-        bool mIsFocus;
-        FocusManager* m_focusRef;
-        Entity* mEntity;
+        bool mIsFocus = false;
+        FocusManager* m_focusRef = nullptr;
+        Entity* mEntity = nullptr;
+        Vector2f m_positionWorld{};
     };
 
 } // namespace ClassicLauncher

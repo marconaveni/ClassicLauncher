@@ -77,7 +77,7 @@ namespace ClassicLauncher
         mMiniCover->Init();
         AddChild(mMiniCover);
 
-        //mFrame = GetEntityManager()->CreateEntity<GuiFrame>("Frame", GetFocusManager());
+        mFrame = GetEntityManager()->CreateEntity<GuiFrame>("Frame", GetFocusManager());
         //GetEntityManager()->SetZOrder(mFrame, 80);
         //AddChild(mFrame);
 //
@@ -119,9 +119,6 @@ namespace ClassicLauncher
 
         const GameList* pGameList = m_gameListManagerRef->GetCurrentGameList();
         mGuiTitle->SetText((pGameList) ? pGameList->name : "");
-        // const float scale = Themes::GetScaleTexture();
-        //mGuiTitle->m_transform.position.x = (1280.0f / 2.0f) - ((mGuiTitle->GetMeasureTextBox().x / 2));
-        //mGuiTitle->m_transform.position.x = Math::Clamp(mGuiTitle->m_transform.position.x, 135, 1280);
     }
 
     void GuiHorizontalCards::SetCovers()
@@ -194,7 +191,7 @@ namespace ClassicLauncher
     void GuiHorizontalCards::Click()
     {
         mGuiCards[mIdFocus]->Click();
-        //mFrame->Click();
+        mFrame->Click();
         for (GuiCard*& card : mGuiCards)
         {
             card->SetFrontCard();
@@ -358,7 +355,7 @@ namespace ClassicLauncher
         }
         else
         {
-            //mFrame->SetFrame();
+            mFrame->SetFrame();
         }
 
         UpdateCards();

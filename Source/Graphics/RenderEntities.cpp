@@ -2,6 +2,7 @@
 
 #include <format>
 
+#include "Components/FocusComponent.h"
 #include "Graphics/SpriteManager.h"
 #include "Helper.h"
 #include "Input/Keyboard.h"
@@ -53,36 +54,79 @@ namespace ClassicLauncher
 
             // Use a mWorldTransform para obter os valores finais
 
-            
 
-            RectFloat sourceRect{
-                entity->m_transform.source.x * m_renderScale,
-                entity->m_transform.source.y * m_renderScale,
-                entity->m_transform.source.width * m_renderScale ,
-                entity->m_transform.source.height * m_renderScale
-            };
+            RectFloat sourceRect{entity->m_transform.source.x * m_renderScale,
+                                 entity->m_transform.source.y * m_renderScale,
+                                 entity->m_transform.source.width * m_renderScale,
+                                 entity->m_transform.source.height * m_renderScale};
 
             //float finalScale = 2.0f;
 
             RectFloat finalTransformRect{
-                entity->m_worldTransform.position.x * entity->m_worldTransform.scale.x * m_renderScale,
-                entity->m_worldTransform.position.y * entity->m_worldTransform.scale.y * m_renderScale,
-                entity->m_transform.position.width * entity->m_worldTransform.scale.x  * m_renderScale, // Largura base * escala final
-                entity->m_transform.position.height * entity->m_worldTransform.scale.y * m_renderScale   // Altura base * escala final
+                entity->m_worldTransform.position.x * /* entity->m_worldTransform.scale.x * */ m_renderScale,
+                entity->m_worldTransform.position.y * /* entity->m_worldTransform.scale.y * */ m_renderScale,
+                entity->m_transform.position.width * entity->m_worldTransform.scale.x *  m_renderScale, // Largura base * escala final
+                entity->m_transform.position.height * entity->m_worldTransform.scale.y * m_renderScale // Altura base * escala final
             };
 
-            // ... Lógica do Scissor Mode ...
+            
+
+////////////////
+
+
+
+// // pega o tamanho base sem escala
+// float baseW = entity->m_transform.position.width;
+// float baseH = entity->m_transform.position.height;
+
+// // pega a escala aplicada
+// float sx = entity->m_worldTransform.scale.x;
+// float sy = entity->m_worldTransform.scale.y;
+
+// // calcula o tamanho final
+// float newW = baseW * sx * m_renderScale;
+// float newH = baseH * sy * m_renderScale;
+
+// // compensa para centralizar
+// float offsetX = (newW - baseW * m_renderScale) * 0.5f;
+// float offsetY = (newH - baseH * m_renderScale) * 0.5f;
+
+// finalTransformRect.x -= offsetX;
+// finalTransformRect.y -= offsetY;
+// finalTransformRect.width  = newW;
+// finalTransformRect.height = newH;
+
+///////
 
             rlw::DrawTexturePro(*texture,
                                 sourceRect,         /* RectFloat{0, 562, 21, 720}, posição spritesheet */
                                 finalTransformRect, /* RectFloat{0, 0, 1280, 720} posx posy tam_rect  larg_rect */
-                                Vector2f{0, 0},
+                                Vector2f{0.0, 0.0},
                                 entity->m_worldTransform.rotation,
                                 entity->m_worldTransform.color);
 
             rlw::DrawRectangleLinesEx(finalTransformRect, 1, Color::Cyan);
 
-           // DrawText(entity->mNameId.c_str(), finalTransformRect.x, finalTransformRect.y, 16, ::WHITE);
+
+                
+
+
+
+            if (entity->mNameId == "0_Frame")
+            {
+                // depois de montar finalTransformRect
+                LOG(LOG_CLASSIC_DEBUG,
+                    "Render pos(%.2f, %.2f) size(%.2f, %.2f) scale(%.2f, %.2f)",
+                    finalTransformRect.x,
+                    finalTransformRect.y,
+                    finalTransformRect.width,
+                    finalTransformRect.height,
+                    entity->m_worldTransform.scale.x,
+                    entity->m_worldTransform.scale.y);
+            }
+
+
+            // DrawText(entity->mNameId.c_str(), finalTransformRect.x, finalTransformRect.y, 16, ::WHITE);
 
             //rlw::DrawTexturePro(*texture,
             //    RectFloat{ 0 , 562 , 21 ,720 }, //    posição spritesheet

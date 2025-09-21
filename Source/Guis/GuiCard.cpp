@@ -19,8 +19,8 @@ namespace ClassicLauncher
 
     void GuiCard::CreateCards(int x, int y)
     {
-        m_transform.position.x = 100; //static_cast<float>(x);
-        m_transform.position.y = 100; //static_cast<float>(y);
+        m_transform.position.x = 0; //static_cast<float>(x);
+        m_transform.position.y = 0; //static_cast<float>(y);
         m_transform.position.width = 256;
         m_transform.position.height = 280;
 
