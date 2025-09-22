@@ -6,7 +6,7 @@
 
 #include "Components/FocusComponent.h"
 #include "Entity/Entity.h"
-#include "Entity/EntityGui.h"
+#include "Guis/Components/GuiCanvas.h"
 #include "GuiComponent.h"
 #include "Utils/TimerManager.h"
 
@@ -20,7 +20,7 @@ namespace ClassicLauncher
     class EntityManager;
     class GameListManager;
 
-    class GuiCard : public EntityGui, FocusComponent
+    class GuiCard : public GuiCanvas, FocusComponent
     {
 
     public:

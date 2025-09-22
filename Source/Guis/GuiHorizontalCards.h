@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "Data/GameListManager.h"
-#include "Entity/EntityGui.h"
+#include "Guis/Components/GuiCanvas.h"
 #include "Utils/TimerManager.h"
 
 

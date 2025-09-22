@@ -4,7 +4,7 @@
 #include "Entity/EntityManager.h"
 #include "Graphics/SpriteManager.h"
 #include "Graphics/Texture.h"
-#include "Guis/GuiSizeBox.h"
+#include "Guis/Components/GuiSizeBox.h"
 #include "Guis/GuiVideoPlayer.h"
 #include "Themes/ThemesManager.h"
 
@@ -31,7 +31,7 @@ namespace ClassicLauncher
         CreateCard(m_coverDefault, 0, 0, 255, "GuiCover", true);
         CreateCard(m_cover, 0, 0, 255, "GuiCover", false);
         AddChild(m_cover);
-        
+
         mGuiVideoPlayer = GetEntityManager()->CreateEntity<GuiVideoPlayer>("GuiVideoPlayer");
         mGuiVideoPlayer->m_transform.position.x = 12;
         mGuiVideoPlayer->m_transform.position.y = 12;
@@ -95,8 +95,9 @@ namespace ClassicLauncher
 
     void GuiCard::SetCover(const std::string& name)
     {
-        m_coverDefault->m_transform.position.x = 24.0f;
-        m_coverDefault->m_transform.position.y = 13.0f;
+        // m_coverDefault->m_transform.position.x = 24.0f;
+        // m_coverDefault->m_transform.position.y = 13.0f;
+        SetOffset(m_coverDefault, {24.0f, 13.0f});
         m_coverDefault->m_transform.position.width = 204.0f;
         m_coverDefault->m_transform.position.height = 202.0f;
 
@@ -109,8 +110,9 @@ namespace ClassicLauncher
         m_cover->mTextureName = "transparent";
         if (!name.empty())
         {
-            m_cover->m_transform.position.x = 12.0f;
-            m_cover->m_transform.position.y = 12.0f;
+            //m_cover->m_transform.position.x = 12.0f;
+            //m_cover->m_transform.position.y = 12.0f;
+            SetOffset(m_cover, {12.0f, 12.0f});
             m_cover->m_transform.position.width = 228.0f;
             m_cover->m_transform.position.height = 204.0f;
 
@@ -124,7 +126,7 @@ namespace ClassicLauncher
 
     void GuiCard::Update()
     {
-        EntityGui::Update();
+        GuiCanvas::Update();
 
         Texture* textureReference = GetSpriteManager()->GetTexture(m_cover->mTextureName);
         if (textureReference != nullptr)
@@ -135,8 +137,9 @@ namespace ClassicLauncher
 
             const float widthTex = textureReference->GetSize().x / renderScale;
             const float HeightTex = textureReference->GetSize().y / renderScale;
-            m_cover->m_transform.position.x = ((228.0f - widthTex) / 2.0f) + 12;
-            m_cover->m_transform.position.y = ((204.0f - HeightTex) / 2.0f) + 12;
+            const float xCoverPos = ((228.0f - widthTex) / 2.0f) + 12;
+            const float yCoverPos = ((204.0f - HeightTex) / 2.0f) + 12;
+            SetOffset(m_cover, {xCoverPos, yCoverPos});
             m_cover->m_transform.position.width = widthTex;
             m_cover->m_transform.position.height = HeightTex;
 
@@ -189,9 +192,9 @@ namespace ClassicLauncher
 
         // if (mIsFocus)
         // {
-             //mGuiVideoPlayer->Init("/mnt/arquivos/Emulators/roms/switch/media/videos/Mario Party Superstars [01006FE013472000].mp4", 228, 204);
-             //mGuiVideoPlayer->Init("/mnt/arquivos/Emulators/roms/snes/brazil/media/videos/Top Racer (J) [T+Por].mp4", 228, 204);
-             //mGuiVideoPlayer->Init("/mnt/arquivos/Emulators/roms/snes/brazil/media/videos/Megaman VII (U) [T+Por].mp4", 228, 204);
+        //mGuiVideoPlayer->Init("/mnt/arquivos/Emulators/roms/switch/media/videos/Mario Party Superstars [01006FE013472000].mp4", 228, 204);
+        //mGuiVideoPlayer->Init("/mnt/arquivos/Emulators/roms/snes/brazil/media/videos/Top Racer (J) [T+Por].mp4", 228, 204);
+        //mGuiVideoPlayer->Init("/mnt/arquivos/Emulators/roms/snes/brazil/media/videos/Megaman VII (U) [T+Por].mp4", 228, 204);
         //     mSizeBoxVideoPlayer->SetCropGuiAttachment(true);
         // }
     }
@@ -208,7 +211,7 @@ namespace ClassicLauncher
     {
         mIsFocus = false;
         // FocusAnimation(bForce, 0, 255, "card-lost-focus");
-         mGuiVideoPlayer->Stop();
+        mGuiVideoPlayer->Stop();
         // mSizeBoxVideoPlayer->SetCropGuiAttachment(false);
     }
 
@@ -259,19 +262,30 @@ namespace ClassicLauncher
 
         // mIsFront = true;
 
-        // const float time = 0.3f;
-        // const float scale = 1.75f;
+        const float time = 3.3f;
+        const float scale = 2.0f;
 
-        // Transform target = m_transform;
+        Transform target = m_transform ;
 
-        // target.scale.x = scale;
-        // target.scale.y = scale;
+       // target.position = m_worldTransform.position;
+        //m_transform.position.x = -100;
+        //return; 
 
-        // target.position.x += (-target.position.width / 2 * target.scale.x) + target.position.width / 2;
-        // target.position.y += (-target.position.height / 2 * target.scale.y) + target.position.height / 2;
+        target.scale.x = scale;
+        target.scale.y = scale;
 
-        // target.color.a = 0;
-        // StartAnimation("card-zoom", time, m_transform, target, Ease::EaseQuadInOut, true);
+        const float width = target.position.width * m_worldTransform.scale.x;
+        const float height = target.position.height * m_worldTransform.scale.y;
+
+        //target.position.x +=  (-width / 2 * scale) + width / 2;
+        //target.position.y +=  (-width / 2 * scale) + width / 2;
+        target.position.x = -width * (scale - 1);
+        //target.position.y += -height * (scale - 1);
+
+        target.color.a = 0;
+
+        //m_animationTransform.position.x = -10;
+        StartAnimation("card-zoom", time, m_worldTransform, target, Ease::EaseQuadInOut, true);
         // GetTimerManager()->SetTimer(mTimer, CALLFUNCTION(Reset, this), this, time * 2);
     }
 

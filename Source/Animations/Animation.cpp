@@ -51,6 +51,14 @@ namespace ClassicLauncher
                                                             mStartTransform.position.y,
                                                             mFinalTransform.position.y - mStartTransform.position.y,
                                                             mDuration);
+                mCurrentTransform.offset.x = GetAnimation(mCurrentTime,
+                                                            mStartTransform.offset.x,
+                                                            mFinalTransform.offset.x - mStartTransform.offset.x,
+                                                            mDuration);
+                mCurrentTransform.offset.y = GetAnimation(mCurrentTime,
+                                                            mStartTransform.offset.y,
+                                                            mFinalTransform.offset.y - mStartTransform.offset.y,
+                                                            mDuration);
                 mCurrentTransform.scale.x = GetAnimation(mCurrentTime,
                                                          mStartTransform.scale.x,
                                                          mFinalTransform.scale.x - mStartTransform.scale.x,
@@ -88,17 +96,18 @@ namespace ClassicLauncher
         }
     }
 
-    void Animation::FinishAnimation()
+    bool Animation::FinishAnimation()
     {
         mIsFinish = true;
-        ResetAnimation();
+        return ResetAnimation();
     }
 
-    void Animation::ResetAnimation()
+    bool Animation::ResetAnimation()
     {
         mIsRunning = false;
         mCurrentTransform = (mIsReset) ? mStartTransform : mFinalTransform;
         mCurrentTime = 0;
+        return mIsReset;
     }
 
     bool Animation::GetAnimationIsRun() const

@@ -35,6 +35,8 @@ namespace ClassicLauncher
         mGuiBackground = GetEntityManager()->CreateEntity<GuiComponent>("GuiBackground");
 
         mGuiBackground->m_transform.position.x = 0;
+        mGuiBackground->m_transform.offset.x = 10;
+        mGuiBackground->m_transform.offset.y = 10;
         mGuiBackground->m_transform.position.y = 0;
         mGuiBackground->m_transform.position.width = 1280;
         mGuiBackground->m_transform.position.height = 720;
@@ -63,7 +65,7 @@ namespace ClassicLauncher
 
     void GuiWindow::Update()
     {
-        EntityGui::Update();
+        GuiCanvas::Update();
         if (Keyboard::IsDown(Keyboard::Key::A))
         {
             m_transform.position.x -= 10;

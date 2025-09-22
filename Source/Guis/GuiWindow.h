@@ -1,7 +1,7 @@
 #ifndef GUI_WINDOW_H
 #define GUI_WINDOW_H
 
-#include "Entity/EntityGui.h"
+#include "Guis/Components/GuiCanvas.h"
 #include "Utils/TimerManager.h"
 
 namespace ClassicLauncher
@@ -12,12 +12,13 @@ namespace ClassicLauncher
     class GuiVideoPlayer;
     class GuiComponent;
     class EntityGui;
+    class GuiCanvas;
     class EntityManager;
     class GameListManager;
     class AudioManager;
     class ProcessManager;
 
-    class GuiWindow : public EntityGui
+    class GuiWindow : public GuiCanvas
     {
     public:
 

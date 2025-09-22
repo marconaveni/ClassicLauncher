@@ -21,28 +21,27 @@ namespace ClassicLauncher
 
     void Entity::UpdateWorldTransform()
     {
-        // 1. Calcular a transformação de mundo DESTA entidade
         if (mParent)
         {
-            // Combina a transformação do pai com a sua transformação local
             m_worldTransform.position.x = mParent->m_worldTransform.position.x + m_transform.position.x;
             m_worldTransform.position.y = mParent->m_worldTransform.position.y + m_transform.position.y;
+            m_worldTransform.offset.x = mParent->m_worldTransform.offset.x + m_transform.offset.x;
+            m_worldTransform.offset.y = mParent->m_worldTransform.offset.y + m_transform.offset.y;
             m_worldTransform.scale.x = mParent->m_worldTransform.scale.x * m_transform.scale.x;
             m_worldTransform.scale.y = mParent->m_worldTransform.scale.y * m_transform.scale.y;
             m_worldTransform.rotation = mParent->m_worldTransform.rotation + m_transform.rotation;
 
             // Propaga a opacidade (alpha) do pai para o filho
             unsigned char parentAlpha = mParent->m_worldTransform.color.a;
-            m_worldTransform.color.a = static_cast<unsigned char>(
-                (static_cast<int>(m_transform.color.a) * static_cast<int>(parentAlpha)) / 255);
+            m_worldTransform.color.a = static_cast<unsigned char>((static_cast<int>(m_transform.color.a) * static_cast<int>(parentAlpha)) / 255);
+
         }
         else
         {
-            // Se não tem pai, a transformação de mundo é a sua própria transformação local
             m_worldTransform = m_transform;
+            m_worldAnimationTransform = m_animationTransform;
         }
 
-        // 2. Chamar recursivamente para os filhos
         for (auto& entity : mChildEntities)
         {
             entity->UpdateWorldTransform();

@@ -22,6 +22,7 @@ namespace ClassicLauncher
         GuiHorizontalBoxClass,
         GuiBlackScreenClass,
         GuiFrameClass,
+        GuiCanvasClass,
     };
 
     class SpriteManager;
@@ -41,7 +42,7 @@ namespace ClassicLauncher
         virtual void Update() {}
         virtual void Draw() {}
         virtual void End() {}
-        virtual void UpdateWorldTransform();                 // Update the position of the entity
+        virtual void UpdateWorldTransform();           // Update the position of the entity
         virtual void SelfDelete();                     // Delete the entity and all its children
         virtual void AddChild(Entity* childEntity);    // Add a child to the entity
         virtual void RemoveChild(Entity* childEntity); // Remove a child from the entity
@@ -60,10 +61,13 @@ namespace ClassicLauncher
 
         Transform m_transform;
         Transform m_worldTransform;
+        Transform m_animationTransform;
+        Transform m_worldAnimationTransform;
         std::string mTextureName = "transparent";
         RectFloat mScissorArea;
 
     protected:
+
 
         Entity* mParent = nullptr;
         TimerManager* GetTimerManager() { return m_timerManagerRef; }

@@ -2,24 +2,23 @@
 
 #include <algorithm>
 
-
+#include "Audio/AudioManager.h"
 #include "Entity/EntityManager.h"
 #include "Graphics/SpriteManager.h"
-#include "Input/InputManager.h"
-#include "Audio/AudioManager.h"
+#include "Guis/Components/GuiHorizontalBox.h"
 #include "Guis/GuiCard.h"
 #include "Guis/GuiFrame.h"
-#include "Guis/GuiHorizontalBox.h"
 #include "Guis/GuiMiniCover.h"
 #include "Guis/GuiTextBlock.h"
 #include "Helper.h"
+#include "Input/InputManager.h"
 #include "Themes/ConfigurationThemes.h"
+#include "Themes/ThemesManager.h"
 #include "Utils/Log.h"
 #include "Utils/Math.h"
 #include "Utils/Resources.h"
 #include "Utils/Utils.h"
 #include "Window/RayWindow.h"
-#include "Themes/ThemesManager.h"
 
 
 namespace ClassicLauncher
@@ -59,8 +58,8 @@ namespace ClassicLauncher
         AddChild(mGuiTitle);
 
         mHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalBox>("Cards_GuiHorizontalBox");
-        SetHorizontalBoxValues();
         AddChild(mHorizontalBox);
+        SetHorizontalBoxValues();
 
         for (int i = 0; i < 10; i++)
         {
@@ -75,12 +74,12 @@ namespace ClassicLauncher
 
         mMiniCover = GetEntityManager()->CreateEntity<GuiMiniCover>("MiniCover", m_gameListManagerRef);
         mMiniCover->Init();
-        AddChild(mMiniCover);
+        //AddChild(mMiniCover);
 
         mFrame = GetEntityManager()->CreateEntity<GuiFrame>("Frame", GetFocusManager());
         //GetEntityManager()->SetZOrder(mFrame, 80);
         //AddChild(mFrame);
-//
+        //
         SetFocus(3, true);
     }
 
@@ -91,7 +90,7 @@ namespace ClassicLauncher
         const float y = ThemesManager::Get().mConfigurationThemes.horizontalCardsPositionY;
 
         mHorizontalBox->SetSpace(space);
-        mHorizontalBox->m_transform.position.y = y;
+        mHorizontalBox->m_transform.offset.y = y;
     }
 
     void GuiHorizontalCards::SetThemeValue()
@@ -159,9 +158,9 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::SetPositionHorizontalBox()
     {
-        mHorizontalBox->m_transform.position.x =
-            ((1280 - mHorizontalBox->m_transform.position.width) / 2) +
-            ThemesManager::Get().mConfigurationThemes.horizontalCardsPositionX;
+        const float x = ((1280 - mHorizontalBox->m_transform.position.width) / 2) + ThemesManager::Get().mConfigurationThemes.horizontalCardsPositionX;
+        mHorizontalBox->m_transform.offset.x = -638 - 23;
+    
     }
 
     void GuiHorizontalCards::ChangeList(const CurrentList list)
@@ -227,7 +226,7 @@ namespace ClassicLauncher
     {
         EntityGui::Update();
 
-        //return;   /// remover 
+        //return;   /// remover
 
         // if (InputManager::IsDown(InputName::leftFaceDown, debug))
         //{
@@ -289,7 +288,7 @@ namespace ClassicLauncher
             mIsLeft = true;
             mIsNeedUpdate = true;
         }
-        
+
         if (InputManager::IsDown(InputName::leftFaceRight, main) && !mIsLeft)
         {
             if (!mIsRight)
@@ -314,8 +313,8 @@ namespace ClassicLauncher
         if (mPositionX > -356 && mPositionX < 0 && mIsRight)
         {
             if (mIdFocus < 3 || mIdFocus > 6)
-            {
-                mHorizontalBox->m_transform.position.x -= mSpeed;
+            {      
+                mHorizontalBox->m_transform.offset.x -= mSpeed;
             }
             mLastDirection = Left;
         }
@@ -323,7 +322,7 @@ namespace ClassicLauncher
         {
             if (mIdFocus < 3 || mIdFocus > 6)
             {
-                mHorizontalBox->m_transform.position.x += mSpeed;
+                mHorizontalBox->m_transform.offset.x += mSpeed;
             }
             mLastDirection = Right;
         }
@@ -365,10 +364,10 @@ namespace ClassicLauncher
     {
         if (!mIsLeft && !mIsRight && mIsNeedUpdate)
         {
-            mHorizontalBox->ClearAll();
+            //mHorizontalBox->ClearAll();
             for (auto& guiCard : mGuiCards)
             {
-                mHorizontalBox->AttachGui(guiCard);
+                //mHorizontalBox->AttachGui(guiCard);
             }
             mIsNeedUpdate = false;
         }

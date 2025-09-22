@@ -24,7 +24,6 @@ namespace ClassicLauncher
         virtual void AnimationUpdate(const std::string& name) {}
         virtual void AnimationFinished(const std::string& name) {}
 
-        // Application* GetApplication() { return mApplication; }
         Animation& GetAnimation(const std::string& name) { return mAnimations[name]; }
 
         void StartAnimation(const std::string& name,
@@ -38,11 +37,10 @@ namespace ClassicLauncher
                                const std::vector<RectFloat>& spriteIndices);
 
     private:
-
+      
         std::map<std::string, SpriteAnimator> mSpriteAnimations;
         std::map<std::string, Animation> mAnimations;
-        //Application* mApplication;
-        void UpdateTransform(const Animation& anim);
+        virtual void UpdateTransformAnimation(const Animation& anim);
     };
 
 } // namespace ClassicLauncher

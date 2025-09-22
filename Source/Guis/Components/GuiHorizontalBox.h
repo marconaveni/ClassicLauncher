@@ -3,18 +3,19 @@
 
 #include <vector>
 
-#include "Entity/EntityGui.h"
+#include "Guis/Components/GuiCanvas.h"
 
 namespace ClassicLauncher
 {
 
-    class GuiHorizontalBox : public EntityGui
+    class GuiHorizontalBox : public GuiCanvas
     {
     public:
 
         GuiHorizontalBox();
         ~GuiHorizontalBox() = default;
         virtual EntityType GetType() const override { return EntityType::GuiHorizontalBoxClass; }
+        virtual void UpdateWorldTransform() override;
         void SetAffectScale(bool bIsAffectScale) { mIsAffectScale = bIsAffectScale; }
         void SetSpace(float spacer) { mSpacer = spacer; }
         void SetAutoSize(bool bIsAutoSize) { mIsAutoSize = bIsAutoSize; }

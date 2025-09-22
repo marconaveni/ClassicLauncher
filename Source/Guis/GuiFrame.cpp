@@ -29,8 +29,10 @@ namespace ClassicLauncher
             if (focus->GetFocus())
             {
                 Transform target = m_transform;
-                const float x = Math::Clamp(focus->GetPositionFocus().x, 130.0f, 898.0f);
-                const float y = focus->GetPositionFocus().y;
+               // const float x = Math::Clamp(focus->GetPositionFocus().x, 130.0f, 898.0f);
+               // const float y = focus->GetPositionFocus().y;
+                const float x = 0;
+                const float y = 0;
 
                 if (x == m_transform.position.x && y == m_transform.position.y)
                 {
@@ -52,7 +54,13 @@ namespace ClassicLauncher
         const float width = 256;
         const float height = 280;
 
-        const float time = 0.3f;
+
+       // m_transform.offset.x = 300;
+       // m_transform.offset.y = 300;
+
+
+
+        const float time = 3.3f;
         const float scale = 1.75f;
 
         Transform target = m_transform;
@@ -65,12 +73,14 @@ namespace ClassicLauncher
 
         target.color.a = 0;
         StartAnimation("card-zoom", time, m_transform, target, Ease::EaseQuadInOut, true);
-        GetTimerManager()->SetTimer(mTimer, [this]() { m_transform.color.a = 255; }, this, time * 1);
+        //GetTimerManager()->SetTimer(mTimer, [this]() { m_transform.color.a = 255; }, this, time * 1);
     }
 
     void GuiFrame::Update()
     {
         EntityGui::Update();
+
+       // m_transform.offset.x = 300; //teste
     }
 
 } // namespace ClassicLauncher

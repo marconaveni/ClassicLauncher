@@ -66,8 +66,8 @@ namespace ClassicLauncher
                             Ease typeAnimation = Ease::EaseLinearNone,
                             bool bForceReset = true);
         void UpdateAnimation();
-        void FinishAnimation();
-        void ResetAnimation();
+        bool FinishAnimation();
+        bool ResetAnimation();
         bool GetAnimationIsRun() const;
         bool GetAnimationFinish() const;
 

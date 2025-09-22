@@ -1,6 +1,5 @@
 #include "EntityGui.h"
 
-
 #include "Graphics/SpriteAnimator.h"
 #include "Window/RayWindow.h"
 
@@ -40,21 +39,25 @@ namespace ClassicLauncher
             if (anim.mIsRunning)
             {
                 AnimationUpdate(name);
-                UpdateTransform(anim);
+                UpdateTransformAnimation(anim);
             }
             if (anim.mIsFinish)
             {
                 AnimationFinished(name);
                 anim.ResetAnimation();
-                UpdateTransform(anim);
+                UpdateTransformAnimation(anim);
+                m_animationTransform = Transform();
+                
             }
         }
     }
 
-    void EntityGui::UpdateTransform(const Animation& anim)
+    void EntityGui::UpdateTransformAnimation(const Animation& anim)
     {
         m_transform.position.x = anim.mCurrentTransform.position.x;
         m_transform.position.y = anim.mCurrentTransform.position.y;
+        m_transform.offset.x = anim.mCurrentTransform.offset.x;
+        m_transform.offset.y = anim.mCurrentTransform.offset.y;
         m_transform.scale.x = anim.mCurrentTransform.scale.x;
         m_transform.scale.y = anim.mCurrentTransform.scale.y;
         m_transform.rotation = anim.mCurrentTransform.rotation;

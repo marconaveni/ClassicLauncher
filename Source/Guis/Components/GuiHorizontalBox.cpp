@@ -11,6 +11,11 @@ namespace ClassicLauncher
         m_transform.position.height = 10.0f;
     }
 
+    void GuiHorizontalBox::UpdateWorldTransform()
+    {
+        EntityGui::UpdateWorldTransform();
+    }
+
     void GuiHorizontalBox::AttachGui(EntityGui* guiComponent)
     {
         guiComponent->m_transform.position.x = 0;
@@ -35,35 +40,27 @@ namespace ClassicLauncher
     {
         EntityGui::Update();
 
+        
+        
         float x = 0;
-        float width = 0;
         float canvasWidth = 0;
         float canvasHeight = 0;
-        float scale = 1;
         float spacer = 0;
 
         for (auto& guiElement : mGuiElements)
         {
             Transform& transform = guiElement->m_transform;
-            if (mIsAffectScale)
-            {
-                //scale = transform.GetScale().x; //transform.rootScaleX * transform.scaleX;
-            }
-            //transform.position.x = x + width + m_transform.offset.x;
-            //transform.position.y = m_transform.offset.y;
-            //width += (transform.position.width + mSpacer) * scale;
+            Transform& worldTransform = guiElement->m_worldTransform;
 
             if (mIsAutoSize)
             {
-                spacer += mSpacer;
-                transform.position.x = transform.position.width * x;
+
+                spacer += mSpacer;      
+                transform.offset.x = (transform.position.width /* * m_worldTransform.scale.x */) * x ;
                 x++;
+
                 canvasWidth += transform.position.width;
                 canvasHeight = transform.position.height > canvasHeight ? transform.position.height : canvasHeight;
-                //const float canvasScaleWidth = transform.GetScale().x;  // (transform.rootScaleX * transform.scaleX);
-                //const float canvasScaleHeight = transform.GetScale().y; // (transform.rootScaleY * transform.scaleY);
-                //canvasWidth += (transform.position.width) / (canvasScaleWidth);
-                //canvasHeight = Math::Max(transform.position.height / canvasScaleHeight, canvasHeight);
             }
         }
 
@@ -74,5 +71,6 @@ namespace ClassicLauncher
            m_transform.position.height = canvasHeight; 
         }
     }
+
 
 } // namespace ClassicLauncher

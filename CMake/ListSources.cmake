@@ -21,6 +21,9 @@ file(GLOB graphics_headers "Source/Graphics/*.h")
 file(GLOB guis_sources "Source/Guis/*.cpp")
 file(GLOB guis_headers "Source/Guis/*.h")
 
+file(GLOB guis_components_sources "Source/Guis/Components/*.cpp")
+file(GLOB guis_components_headers "Source/Guis/Components/*.h")
+
 file(GLOB input_sources "Source/Input/*.cpp")
 file(GLOB input_headers "Source/Input/*.h")
 
@@ -45,35 +48,37 @@ file(GLOB src_headers "Source/*.h")
 
 
 # Group for better Visual in IDE
-source_group("Source\\Animations" FILES ${animations_sources})
-source_group("Source\\Audio"      FILES ${audio_sources})
-source_group("Source\\Components" FILES ${components_sources})
-source_group("Source\\Data"       FILES ${data_sources})
-source_group("Source\\Entity"     FILES ${entity_sources})
-source_group("Source\\Graphics"   FILES ${graphics_sources})
-source_group("Source\\Guis"       FILES ${guis_sources})
-source_group("Source\\Input"      FILES ${input_sources})
-source_group("Source\\Themes"     FILES ${themes_sources})
-source_group("Source\\Utils"      FILES ${utils_sources})
-source_group("Source\\Video"      FILES ${video_sources})
-source_group("Source\\Window"     FILES ${window_sources})
-source_group("Source\\Extern"     FILES ${extern_sources})
-source_group("Source"             FILES ${src_sources})
+source_group("Source\\Animations"        FILES ${animations_sources})
+source_group("Source\\Audio"             FILES ${audio_sources})
+source_group("Source\\Components"        FILES ${components_sources})
+source_group("Source\\Data"              FILES ${data_sources})
+source_group("Source\\Entity"            FILES ${entity_sources})
+source_group("Source\\Graphics"          FILES ${graphics_sources})
+source_group("Source\\Guis"              FILES ${guis_sources})
+source_group("Source\\Guis\\Components"  FILES ${guis_components_sources})
+source_group("Source\\Input"             FILES ${input_sources})
+source_group("Source\\Themes"            FILES ${themes_sources})
+source_group("Source\\Utils"             FILES ${utils_sources})
+source_group("Source\\Video"             FILES ${video_sources})
+source_group("Source\\Window"            FILES ${window_sources})
+source_group("Source\\Extern"            FILES ${extern_sources})
+source_group("Source"                    FILES ${src_sources})
 
-source_group("Headers\\Animations" FILES ${animations_headers})
-source_group("Headers\\Audio"      FILES ${audio_headers})
-source_group("Headers\\Components" FILES ${components_headers})
-source_group("Headers\\Data"       FILES ${data_headers})
-source_group("Headers\\Entity"     FILES ${entity_headers})
-source_group("Headers\\Graphics"   FILES ${graphics_headers})
-source_group("Headers\\Guis"       FILES ${guis_headers})
-source_group("Headers\\Input"      FILES ${input_headers})
-source_group("Headers\\Themes"     FILES ${themes_headers})
-source_group("Headers\\Utils"      FILES ${utils_headers})
-source_group("Headers\\Video"      FILES ${video_headers})
-source_group("Headers\\Window"     FILES ${window_headers})
-source_group("Headers\\Extern"     FILES ${extern_headers}) 
-source_group("Headers"             FILES ${src_headers})
+source_group("Headers\\Animations"       FILES ${animations_headers})
+source_group("Headers\\Audio"            FILES ${audio_headers})
+source_group("Headers\\Components"       FILES ${components_headers})
+source_group("Headers\\Data"             FILES ${data_headers})
+source_group("Headers\\Entity"           FILES ${entity_headers})
+source_group("Headers\\Graphics"         FILES ${graphics_headers})
+source_group("Headers\\Guis"             FILES ${guis_headers})
+source_group("Headers\\Guis\\Components" FILES ${guis_components_headers})
+source_group("Headers\\Input"            FILES ${input_headers})
+source_group("Headers\\Themes"           FILES ${themes_headers})
+source_group("Headers\\Utils"            FILES ${utils_headers})
+source_group("Headers\\Video"            FILES ${video_headers})
+source_group("Headers\\Window"           FILES ${window_headers})
+source_group("Headers\\Extern"           FILES ${extern_headers}) 
+source_group("Headers"                   FILES ${src_headers})
 
 message(STATUS ${extern_headers})
 
@@ -86,6 +91,7 @@ set(srcs
     ${entity_sources}
     ${graphics_sources}
     ${guis_sources}
+    ${guis_components_sources}
     ${input_sources}
     ${themes_sources}
     ${utils_sources}
@@ -104,6 +110,7 @@ set(headers
     ${entity_headers}
     ${graphics_headers}
     ${guis_headers}
+    ${guis_components_headers}
     ${input_headers}
     ${themes_headers}
     ${utils_headers}
