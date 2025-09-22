@@ -90,7 +90,7 @@ namespace ClassicLauncher
         const float y = ThemesManager::Get().mConfigurationThemes.horizontalCardsPositionY;
 
         mHorizontalBox->SetSpace(space);
-        mHorizontalBox->m_transform.offset.y = y;
+        mHorizontalBox->m_transform.position.y = y;
     }
 
     void GuiHorizontalCards::SetThemeValue()
@@ -158,8 +158,8 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::SetPositionHorizontalBox()
     {
-        const float x = ((1280 - mHorizontalBox->m_transform.position.width) / 2) + ThemesManager::Get().mConfigurationThemes.horizontalCardsPositionX;
-        mHorizontalBox->m_transform.offset.x = -638 - 23;
+        const float x = ((m_transform.position.width - mHorizontalBox->m_transform.position.width) / 2)  + ThemesManager::Get().mConfigurationThemes.horizontalCardsPositionX;
+        mHorizontalBox->m_transform.position.x = x;
     
     }
 
@@ -314,7 +314,7 @@ namespace ClassicLauncher
         {
             if (mIdFocus < 3 || mIdFocus > 6)
             {      
-                mHorizontalBox->m_transform.offset.x -= mSpeed;
+                mHorizontalBox->m_transform.position.x -= mSpeed;
             }
             mLastDirection = Left;
         }
@@ -322,7 +322,7 @@ namespace ClassicLauncher
         {
             if (mIdFocus < 3 || mIdFocus > 6)
             {
-                mHorizontalBox->m_transform.offset.x += mSpeed;
+                mHorizontalBox->m_transform.position.x += mSpeed;
             }
             mLastDirection = Right;
         }
@@ -364,10 +364,10 @@ namespace ClassicLauncher
     {
         if (!mIsLeft && !mIsRight && mIsNeedUpdate)
         {
-            //mHorizontalBox->ClearAll();
+            mHorizontalBox->ClearAll();
             for (auto& guiCard : mGuiCards)
             {
-                //mHorizontalBox->AttachGui(guiCard);
+                mHorizontalBox->AttachGui(guiCard);
             }
             mIsNeedUpdate = false;
         }

@@ -56,7 +56,7 @@ namespace ClassicLauncher
             {
 
                 spacer += mSpacer;      
-                transform.offset.x = (transform.position.width /* * m_worldTransform.scale.x */) * x ;
+                transform.position.x = (transform.position.width  * m_worldTransform.scale.x ) * x ;
                 x++;
 
                 canvasWidth += transform.position.width;

@@ -23,6 +23,7 @@ namespace ClassicLauncher
         m_transform.position.y = 0; //static_cast<float>(y);
         m_transform.position.width = 256;
         m_transform.position.height = 280;
+        m_transform.origin = {0.5, 0.5};
 
         CreateCard(mCardBackgroundMain, 0, 281, 255, "GuiCardBackgroundMain");
         CreateCard(mCardBackgroundFavorite, 514, 281, 0, "GuiCardBackgroundFavorite");
@@ -262,6 +263,8 @@ namespace ClassicLauncher
 
         // mIsFront = true;
 
+
+ 
         const float time = 3.3f;
         const float scale = 2.0f;
 
@@ -277,15 +280,17 @@ namespace ClassicLauncher
         const float width = target.position.width * m_worldTransform.scale.x;
         const float height = target.position.height * m_worldTransform.scale.y;
 
-        //target.position.x +=  (-width / 2 * scale) + width / 2;
-        //target.position.y +=  (-width / 2 * scale) + width / 2;
-        target.position.x = -width * (scale - 1);
+        target.position.x +=  (-width / 2 * scale) + width / 2;
+        target.position.y +=  (-height / 2 * scale) + height / 2;
+        //target.position.x = -width * (scale - 1);
+       // target.offset.x = -m_transform.offset.x;  //(-width / 2 * scale) + width / 2;
+        //target.position.x = -20 ;  //(-width / 2 * scale) + width / 2;
         //target.position.y += -height * (scale - 1);
 
         target.color.a = 0;
 
         //m_animationTransform.position.x = -10;
-        StartAnimation("card-zoom", time, m_worldTransform, target, Ease::EaseQuadInOut, true);
+        StartAnimation("card-zoom", time, m_transform, target, Ease::EaseQuadInOut, true);
         // GetTimerManager()->SetTimer(mTimer, CALLFUNCTION(Reset, this), this, time * 2);
     }
 

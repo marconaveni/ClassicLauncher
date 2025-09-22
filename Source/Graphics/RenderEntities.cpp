@@ -62,7 +62,7 @@ namespace ClassicLauncher
 
             float finalScale = 2.0f;
 
-        
+    
 
             RectFloat finalTransformRect{
                 (entity->m_worldTransform.position.x + (entity->m_worldTransform.offset.x * entity->m_worldTransform.scale.x)) * m_renderScale,
@@ -72,10 +72,21 @@ namespace ClassicLauncher
             };
 
 
+            Vector2f origin{
+            //  entity->m_transform.position.width * entity->m_worldTransform.origin.x,
+            //     entity->m_transform.position.height * entity->m_worldTransform.origin.y 
+            };
+            
+
+            if (origin.x > 0)
+            {
+                LOG(LOG_CLASSIC_DEBUG, "Render origin(%.2f) (%s)", origin.x , entity->mNameId.c_str() );
+            }
+            
             rlw::DrawTexturePro(*texture,
                                 sourceRect,         /* RectFloat{0, 562, 21, 720}, posição spritesheet */
                                 finalTransformRect, /* RectFloat{0, 0, 1280, 720} posx posy tam_rect  larg_rect */
-                                Vector2f{0.0f, 0.0f},
+                                origin,
                                 entity->m_worldTransform.rotation,
                                 entity->m_worldTransform.color);
 
@@ -86,18 +97,18 @@ namespace ClassicLauncher
 
 
 
-            if (entity->mNameId == "0_Frame")
-            {
-                // depois de montar finalTransformRect
-                LOG(LOG_CLASSIC_DEBUG,
-                    "Render pos(%.2f, %.2f) size(%.2f, %.2f) scale(%.2f, %.2f)",
-                    finalTransformRect.x,
-                    finalTransformRect.y,
-                    finalTransformRect.width,
-                    finalTransformRect.height,
-                    entity->m_worldTransform.scale.x,
-                    entity->m_worldTransform.scale.y);
-            }
+            // if (entity->mNameId == "0_Frame")
+            // {
+            //     // depois de montar finalTransformRect
+            //     LOG(LOG_CLASSIC_DEBUG,
+            //         "Render pos(%.2f, %.2f) size(%.2f, %.2f) scale(%.2f, %.2f)",
+            //         finalTransformRect.x,
+            //         finalTransformRect.y,
+            //         finalTransformRect.width,
+            //         finalTransformRect.height,
+            //         entity->m_worldTransform.scale.x,
+            //         entity->m_worldTransform.scale.y);
+            // }
 
 
             // DrawText(entity->mNameId.c_str(), finalTransformRect.x, finalTransformRect.y, 16, ::WHITE);

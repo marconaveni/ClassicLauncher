@@ -29,10 +29,10 @@ namespace ClassicLauncher
             if (focus->GetFocus())
             {
                 Transform target = m_transform;
-               // const float x = Math::Clamp(focus->GetPositionFocus().x, 130.0f, 898.0f);
-               // const float y = focus->GetPositionFocus().y;
-                const float x = 0;
-                const float y = 0;
+                const float x = Math::Clamp(focus->GetPositionFocus().x, 130.0f, 898.0f);
+                const float y = focus->GetPositionFocus().y;
+                //const float x = 0;
+                //const float y = 0;
 
                 if (x == m_transform.position.x && y == m_transform.position.y)
                 {

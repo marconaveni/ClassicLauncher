@@ -36,11 +36,11 @@ namespace ClassicLauncher
                                const float timeAnimation,
                                const std::vector<RectFloat>& spriteIndices);
 
+        virtual void UpdateTransformAnimation(const Animation& anim);
     private:
       
         std::map<std::string, SpriteAnimator> mSpriteAnimations;
         std::map<std::string, Animation> mAnimations;
-        virtual void UpdateTransformAnimation(const Animation& anim);
     };
 
 } // namespace ClassicLauncher

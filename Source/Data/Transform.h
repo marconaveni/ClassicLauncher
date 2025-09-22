@@ -17,6 +17,7 @@ namespace ClassicLauncher
         Color color{255, 255, 255, 255};
         RectFloat source{}; // Área da textura a ser usada (isso está bom)
         Vector2f offset{};
+        Vector2f origin{};
 
     private:
 
