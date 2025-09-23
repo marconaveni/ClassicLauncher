@@ -5,6 +5,7 @@
 #include <mutex>
 #include <string>
 #include <thread>
+#include <memory>
 
 #include "Graphics/Image.h"
 #include "Graphics/Texture.h"
@@ -39,7 +40,7 @@ namespace ClassicLauncher
         std::atomic<bool> mIsTextureLoaded;
         std::thread mWorkerThread;
         Image mImage;
-        Texture mTexture;
+        std::unique_ptr<Texture> mTexture;
         std::string mFilePath;
         void LoadImage(int width, int height, bool bAspectRatio);
     };

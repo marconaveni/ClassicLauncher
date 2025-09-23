@@ -6,6 +6,7 @@
 
 #include "Graphics/Image.h"
 #include "Graphics/Texture.h"
+#include "Graphics/RenderTexture.h"
 #include "Sprite.h"
 
 
@@ -18,6 +19,7 @@ namespace ClassicLauncher
 
         SpriteManager();
         void Init();
+        void LoadRenderTexture(const std::string& name, int width, int height);
         void LoadSprite(const std::string& name, Image& image, int width = 0, int height = 0, bool bAspectRatio = true);
         void LoadSprite(const std::string& name,
                         const std::string& fileName,
@@ -30,6 +32,7 @@ namespace ClassicLauncher
                           int height = 0,
                           bool bAspectRatio = true);
         Texture* GetTexture(const std::string& name);
+        RenderTexture* GetRenderTexture(const std::string& name);
         Image* GetImage(std::string name);
         bool DeleteSprite(std::string name);
         int NumSpritesLoaded();
@@ -38,6 +41,7 @@ namespace ClassicLauncher
     private:
 
         std::unordered_map<std::string, Sprite> mSpriteMap;
+        std::unordered_map<std::string, RenderTexture> m_renderTextureMap;
     };
 
 } // namespace ClassicLauncher

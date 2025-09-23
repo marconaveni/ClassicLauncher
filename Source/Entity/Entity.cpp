@@ -36,24 +36,11 @@ namespace ClassicLauncher
             // Propaga a opacidade (alpha) do pai para o filho
             unsigned char parentAlpha = mParent->m_worldTransform.color.a;
             m_worldTransform.color.a = static_cast<unsigned char>((static_cast<int>(m_transform.color.a) * static_cast<int>(parentAlpha)) / 255);
-            
-            //m_worldAnimationTransform.position.x = mParent->m_worldAnimationTransform.position.x + m_animationTransform.position.x;
-            //m_worldAnimationTransform.position.y = mParent->m_worldAnimationTransform.position.y + m_animationTransform.position.y;
-            //m_worldAnimationTransform.offset.x = mParent->m_worldTransform.offset.x + m_transform.offset.x;
-            //m_worldAnimationTransform.offset.y = mParent->m_worldTransform.offset.y + m_transform.offset.y;
-            //m_worldAnimationTransform.scale.x = mParent->m_worldAnimationTransform.scale.x * m_animationTransform.scale.x;
-            //m_worldAnimationTransform.scale.y = mParent->m_worldAnimationTransform.scale.y * m_animationTransform.scale.y;
-            //m_worldAnimationTransform.rotation = mParent->m_worldAnimationTransform.rotation + m_animationTransform.rotation;
-//
-            //// Propaga a opacidade (alpha) do pai para o filho
-            //unsigned char parentAlphaAni = mParent->m_worldTransform.color.a;
-            //m_worldTransform.color.a = static_cast<unsigned char>((static_cast<int>(m_animationTransform.color.a) * static_cast<int>(parentAlphaAni)) / 255);
 
         }
         else
         {
             m_worldTransform = m_transform;
-            m_worldAnimationTransform = m_animationTransform;
         }
 
         for (auto& entity : mChildEntities)

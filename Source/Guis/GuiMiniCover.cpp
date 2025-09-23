@@ -27,15 +27,12 @@ namespace ClassicLauncher
         mGuiHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
         mGuiHorizontalBox->m_transform.position.x = 0; //m_transform.position.width / 2.0f;
         mGuiHorizontalBox->m_transform.position.y = 20.0f;
-        mGuiHorizontalBox->SetAutoSize(true);
-        //mGuiHorizontalBox->SetAffectScale(true);
-        //mGuiHorizontalBox->SetSpace(1.0f);
+        mGuiHorizontalBox->SetSpace(1.0f);
         AddChild(mGuiHorizontalBox);
 
         for (int i = 0; i < mSize; i++)
         {
             auto* miniCover = GetEntityManager()->CreateEntity<GuiComponent>("miniCover");
-            //auto* sizeBox = GetEntityManager()->CreateEntity<GuiSizeBox>("GuiSizeBox");
             miniCover->m_transform.position.width = mSizeCover.x;
             miniCover->m_transform.position.height = mSizeCover.y;
             

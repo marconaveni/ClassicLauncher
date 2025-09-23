@@ -19,13 +19,14 @@ namespace ClassicLauncher
     class FocusComponent;
     class EntityManager;
     class GameListManager;
+    class AudioManager;
 
     class GuiCard : public GuiCanvas, FocusComponent
     {
 
     public:
 
-        GuiCard(GameListManager* gameListManagerRef, FocusManager* focusManagerRef);
+        GuiCard(GameListManager* gameListManagerRef, FocusManager* focusManagerRef, AudioManager* audioManagerRef);
         void CreateCards(int x, int y);
 
 
@@ -45,7 +46,6 @@ namespace ClassicLauncher
 
     private:
 
-        TimerHandling mTimer;
         TimerHandling mTimerVideo;
 
         GuiComponent* mCardMain;
@@ -54,15 +54,15 @@ namespace ClassicLauncher
         GuiComponent* mCardBackgroundMain;
         GuiComponent* mCardBackgroundSelected;
         GuiComponent* mCardBackgroundFavorite;
-        GuiSizeBox* mSizeBoxImage;
-        GuiSizeBox* mSizeBoxVideoPlayer;
         GuiVideoPlayer* mGuiVideoPlayer;
         GuiComponent* m_coverDefault;
         GuiComponent* m_cover;
         bool mIsFocus = false;
         bool mIsFront = false;
+        bool m_isChangeTexture = false;
 
         GameListManager* m_gameListManagerRef;
+        AudioManager* m_audioManagerRef;
 
         void CreateCard(GuiComponent*& card,
                         float sourceX,
@@ -70,7 +70,6 @@ namespace ClassicLauncher
                         unsigned char alpha,
                         const char* title,
                         bool bAddChild = true);
-        void CreateSizeBox();
         void StartVideo();
         void FocusAnimation(bool bForce, int a, int b, const char* nameAnimation);
     };

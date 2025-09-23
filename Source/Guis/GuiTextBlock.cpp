@@ -89,12 +89,7 @@ namespace ClassicLauncher
     void GuiTextBlock::Draw()
     {
 
-        RectFloat finalTransformRect{
-            m_worldTransform.position.x * m_worldTransform.scale.x * m_renderScale,
-            m_worldTransform.position.y * m_worldTransform.scale.y * m_renderScale,
-            m_transform.position.width * m_worldTransform.scale.x * m_renderScale, // Largura base * escala final
-            m_transform.position.height * m_worldTransform.scale.y * m_renderScale // Altura base * escala final
-        };
+        RectFloat finalTransformRect = m_finalTransformRect;
 
         if (mTextOverflowPolicy == TextOverflowPolicy::clip)
         {

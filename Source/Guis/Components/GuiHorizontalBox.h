@@ -16,9 +16,7 @@ namespace ClassicLauncher
         ~GuiHorizontalBox() = default;
         virtual EntityType GetType() const override { return EntityType::GuiHorizontalBoxClass; }
         virtual void UpdateWorldTransform() override;
-        void SetAffectScale(bool bIsAffectScale) { mIsAffectScale = bIsAffectScale; }
-        void SetSpace(float spacer) { mSpacer = spacer; }
-        void SetAutoSize(bool bIsAutoSize) { mIsAutoSize = bIsAutoSize; }
+        void SetSpace(float spacer) { m_spacer = spacer; }
         void AttachGui(EntityGui* guiComponent);
         void ClearAll();
         virtual void Update() override;
@@ -26,9 +24,7 @@ namespace ClassicLauncher
     private:
 
         std::vector<EntityGui*> mGuiElements;
-        bool mIsAffectScale = false;
-        float mSpacer = 0;
-        bool mIsAutoSize = false;
+        float m_spacer = 0;
     };
 
 } // namespace ClassicLauncher

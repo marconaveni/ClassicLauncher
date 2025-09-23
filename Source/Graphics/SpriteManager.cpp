@@ -20,6 +20,15 @@ namespace ClassicLauncher
         blackImage.Unload();
     }
 
+    void SpriteManager::LoadRenderTexture(const std::string& name, int width, int height)
+    {
+        auto it = m_renderTextureMap.find(name);
+        if (it == m_renderTextureMap.end())
+        {     
+            m_renderTextureMap[name].Load(width, height);
+        }
+    }
+
     void SpriteManager::LoadSprite(const std::string& name,
                                    const std::string& fileName,
                                    const int width,
@@ -52,10 +61,20 @@ namespace ClassicLauncher
     {
         auto it = mSpriteMap.find(name);
         if (it == mSpriteMap.end())
-        {
+        {     
             return mSpriteMap["transparent"].GetTexture();
         }
         return mSpriteMap[name].GetTexture();
+    }
+
+    RenderTexture* SpriteManager::GetRenderTexture(const std::string& name)
+    {
+        auto it = m_renderTextureMap.find(name);
+        if (it == m_renderTextureMap.end())
+        {
+            return nullptr;
+        }
+        return &m_renderTextureMap[name];
     }
 
     Image* SpriteManager::GetImage(std::string name)

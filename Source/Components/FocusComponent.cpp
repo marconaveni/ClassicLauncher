@@ -2,8 +2,8 @@
 
 #include "Components/FocusManager.h"
 #include "Entity/Entity.h"
-#include "Themes/ThemesManager.h"
 #include "FocusManager.h"
+#include "Themes/ThemesManager.h"
 
 namespace ClassicLauncher
 {
@@ -20,19 +20,19 @@ namespace ClassicLauncher
 
     void FocusComponent::SetFocus()
     {
-        m_focusRef->UpdateFocus(this);
+        m_focusRef->SetFocus(this);
         mIsFocus = true;
+        UpdateFocus();
+    }
 
-        float m_renderScale = 1 ; //ThemesManager::GetScaleRenderer();
+    void FocusComponent::UpdateFocus()
+    {
+        const Transform& transform = mEntity->m_worldTransform;
 
-        Vector2f finalTransformVec{
-            mEntity->m_worldTransform.position.x * mEntity->m_worldTransform.scale.x * m_renderScale,
-            mEntity->m_worldTransform.position.y * mEntity->m_worldTransform.scale.y * m_renderScale
+        m_positionWorld = {
+            (transform.position.x + (transform.offset.x * transform.scale.x)),
+            (transform.position.y + (transform.offset.y * transform.scale.y)),
         };
-
-        m_positionWorld = finalTransformVec;
-
-
     }
 
 

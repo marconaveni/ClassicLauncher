@@ -12,7 +12,7 @@ namespace ClassicLauncher
         mFocusComponents.push_back(focusComponent);
     }
 
-    void FocusManager::UpdateFocus(FocusComponent* focusComponent)
+    void FocusManager::SetFocus(FocusComponent* focusComponent)
     {
         PRINT(TEXT("focus count %d", mFocusComponents.size()), 5.0f, "focusComp");
         for (auto& focus : mFocusComponents)
@@ -20,6 +20,7 @@ namespace ClassicLauncher
             if (focus == focusComponent && !focus->mIsFocus)
             {
                 focus->mIsFocus = true;
+                m_currentFocusComponent = focus;
                 focus->OnFocus();
             }
             else if (focus->mIsFocus)
@@ -28,6 +29,17 @@ namespace ClassicLauncher
                 focus->OnLostFocus();
             }
             focus->OnChangeFocus();
+        }
+    }
+
+    void FocusManager::Update()
+    {
+        for (auto& focus : mFocusComponents)
+        {
+            if (focus->mIsFocus)
+            {
+                focus->UpdateFocus();   
+            }
         }
     }
 

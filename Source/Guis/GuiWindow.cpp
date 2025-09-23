@@ -35,8 +35,8 @@ namespace ClassicLauncher
         mGuiBackground = GetEntityManager()->CreateEntity<GuiComponent>("GuiBackground");
 
         mGuiBackground->m_transform.position.x = 0;
-        mGuiBackground->m_transform.offset.x = 10;
-        mGuiBackground->m_transform.offset.y = 10;
+        mGuiBackground->m_transform.offset.x = 0;
+        mGuiBackground->m_transform.offset.y = 0;
         mGuiBackground->m_transform.position.y = 0;
         mGuiBackground->m_transform.position.width = 1280;
         mGuiBackground->m_transform.position.height = 720;
@@ -54,6 +54,8 @@ namespace ClassicLauncher
                                                                                     m_audioManagerRef);
         m_guiHorizontalCards->Init();
         AddChild(m_guiHorizontalCards);
+
+        mGuiBlackScreen = GetEntityManager()->CreateEntity<GuiBlackScreen>("GuiBlackScreen");
 
 
 #ifdef _DEBUG
@@ -101,11 +103,11 @@ namespace ClassicLauncher
             m_guiHorizontalCards->Click();
             if (m_gameListManagerRef->GetCurrentList() == GameListSelect)
             {
-               // mGuiBlackScreen->FadeIn();
+               mGuiBlackScreen->FadeIn();
             }
             else
             {
-               // mGuiBlackScreen->FadeInFadeOut();
+               mGuiBlackScreen->FadeInFadeOut();
             }
             GetTimerManager()->SetTimer(mClickTimer, CALLFUNCTION(OnClick, this), this, 0.5f, false);
         }
@@ -113,11 +115,9 @@ namespace ClassicLauncher
             m_gameListManagerRef->GetCurrentList() == GameListSelect) // back
         {
             InputManager::DisableInput();
-            // mGuiBlackScreen->FadeInFadeOut();
+            mGuiBlackScreen->FadeInFadeOut();
             GetTimerManager()->SetTimer(mClickTimer, CALLFUNCTION(OnBack, this), this, 0.5f, false);
         }
-
-
 
 
     }

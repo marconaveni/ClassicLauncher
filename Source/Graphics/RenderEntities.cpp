@@ -64,7 +64,7 @@ namespace ClassicLauncher
 
     
 
-            RectFloat finalTransformRect{
+            entity->m_finalTransformRect = RectFloat{
                 (entity->m_worldTransform.position.x + (entity->m_worldTransform.offset.x * entity->m_worldTransform.scale.x)) * m_renderScale,
                 (entity->m_worldTransform.position.y + (entity->m_worldTransform.offset.y * entity->m_worldTransform.scale.y)) * m_renderScale,
                 entity->m_transform.position.width * entity->m_worldTransform.scale.x * m_renderScale, // Largura base * escala final
@@ -85,12 +85,12 @@ namespace ClassicLauncher
             
             rlw::DrawTexturePro(*texture,
                                 sourceRect,         /* RectFloat{0, 562, 21, 720}, posição spritesheet */
-                                finalTransformRect, /* RectFloat{0, 0, 1280, 720} posx posy tam_rect  larg_rect */
-                                origin,
+                                entity->m_finalTransformRect, /* RectFloat{0, 0, 1280, 720} posx posy tam_rect  larg_rect */
+                                Vector2f{},
                                 entity->m_worldTransform.rotation,
                                 entity->m_worldTransform.color);
 
-            rlw::DrawRectangleLinesEx(finalTransformRect, 1, Color::Cyan);
+            rlw::DrawRectangleLinesEx(entity->m_finalTransformRect, 1, Color::Cyan);
 
 
                 

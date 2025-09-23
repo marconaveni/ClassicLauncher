@@ -99,6 +99,7 @@ namespace ClassicLauncher
 
         mGuiWindow->Teste();
         m_entityManager.UpdateAll();
+        m_focusManager.Update();
 
         m_timerManager->Update();
         m_processManager.StatusProcessRun(mGuiWindow->GetGuiBlackScreen(), m_audioManager);

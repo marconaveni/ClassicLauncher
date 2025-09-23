@@ -54,13 +54,7 @@ namespace ClassicLauncher
         const float width = 256;
         const float height = 280;
 
-
-       // m_transform.offset.x = 300;
-       // m_transform.offset.y = 300;
-
-
-
-        const float time = 3.3f;
+        const float time = 0.3f;
         const float scale = 1.75f;
 
         Transform target = m_transform;

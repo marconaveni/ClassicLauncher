@@ -22,6 +22,7 @@ namespace ClassicLauncher
         virtual void OnFocus() = 0;
         virtual void OnLostFocus() = 0;
         virtual void OnChangeFocus() {}
+        void UpdateFocus();
         Vector2f GetPositionFocus() const { return m_positionWorld; }
 
     private:

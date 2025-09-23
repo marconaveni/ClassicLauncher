@@ -63,7 +63,10 @@ namespace ClassicLauncher
 
         for (int i = 0; i < 10; i++)
         {
-            auto* card = GetEntityManager()->CreateEntity<GuiCard>("GuiCard", m_gameListManagerRef, GetFocusManager());
+            auto* card = GetEntityManager()->CreateEntity<GuiCard>("GuiCard",
+                                                       m_gameListManagerRef,
+                                                       GetFocusManager(),
+                                                       m_audioManagerRef);
             card->CreateCards(0, 0);
             mHorizontalBox->AttachGui(card);
             //AddChild(card);
@@ -74,7 +77,7 @@ namespace ClassicLauncher
 
         mMiniCover = GetEntityManager()->CreateEntity<GuiMiniCover>("MiniCover", m_gameListManagerRef);
         mMiniCover->Init();
-        //AddChild(mMiniCover);
+        AddChild(mMiniCover);
 
         mFrame = GetEntityManager()->CreateEntity<GuiFrame>("Frame", GetFocusManager());
         //GetEntityManager()->SetZOrder(mFrame, 80);
@@ -85,7 +88,6 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::SetHorizontalBoxValues()
     {
-        mHorizontalBox->SetAutoSize(true);
         const float space = ThemesManager::Get().mConfigurationThemes.horizontalCardsSpace;
         const float y = ThemesManager::Get().mConfigurationThemes.horizontalCardsPositionY;
 
@@ -130,8 +132,7 @@ namespace ClassicLauncher
 
         for (int i = 0; i < 10; i++)
         {
-            int indexFinal = Utils::SetIndexArray(m_gameListManagerRef->GetGameId() + i - mIdFocus,
-                                                  m_gameListManagerRef->GetGameListSize());
+            int indexFinal = Utils::SetIndexArray(m_gameListManagerRef->GetGameId() + i - mIdFocus, m_gameListManagerRef->GetGameListSize());
             indexFinal = Utils::SetIndexArray(indexFinal, m_gameListManagerRef->GetGameListSize());
             indexFinal = Math::Clamp(indexFinal, 0, m_gameListManagerRef->GetGameListSize() - 1);
 
@@ -226,20 +227,8 @@ namespace ClassicLauncher
     {
         EntityGui::Update();
 
-        //return;   /// remover
+        // m_transform.offset.y -= 1;
 
-        // if (InputManager::IsDown(InputName::leftFaceDown, debug))
-        //{
-        //     mTransform.scaleX += 0.1;
-        //     mTransform.scaleY += 0.1;
-        //     PRINT(TEXT("Set Scale to %.2f", mTransform.scaleX));
-        // }
-        // if (InputManager::IsDown(InputName::leftFaceUp, debug))
-        //{
-        //     mTransform.scaleX -= 0.1;
-        //     mTransform.scaleY -= 0.1;
-        //     PRINT(TEXT("Set Scale to %.2f", mTransform.scaleX));
-        // }
 
         if (Keyboard::IsReleased(Keyboard::SEVEN) || Keyboard::IsReleased(Keyboard::SIX))
         {

@@ -61,15 +61,13 @@ namespace ClassicLauncher
 
         Transform m_transform;
         Transform m_worldTransform;
-        Transform m_animationTransform;
-        Transform m_worldAnimationTransform;
         std::string mTextureName = "transparent";
         RectFloat mScissorArea;
 
     protected:
 
-
         Entity* mParent = nullptr;
+        RectFloat m_finalTransformRect;
         TimerManager* GetTimerManager() { return m_timerManagerRef; }
         SpriteManager* GetSpriteManager() { return m_spriteManagerReference; }
         EntityManager* GetEntityManager() { return m_entityManagerReference; }
@@ -79,6 +77,7 @@ namespace ClassicLauncher
 
         friend class EntityManager;
         friend class RenderEntities;
+        friend class FocusComponent;
 
         bool mToDelete;
         bool mToDraw;

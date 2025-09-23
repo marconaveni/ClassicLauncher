@@ -118,6 +118,18 @@ namespace ClassicLauncher
         // m_isPlayCursor = true;
     // }
 
+    void AudioManager::MusicVolume(float volume)
+    {
+        if (!m_audioMusics.empty())
+        {
+            Music* currentMusic = m_audioMusics[m_idAudioMusic].get();
+            if (m_statusAudio == Status::Playing)
+            {
+                currentMusic->SetVolume(volume);
+            }
+        }
+    }
+
     void AudioManager::Pause()
     {
         if (!m_audioMusics.empty())

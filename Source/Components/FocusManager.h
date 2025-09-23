@@ -13,13 +13,15 @@ namespace ClassicLauncher
     private:
 
         std::vector<FocusComponent*> mFocusComponents;
+        FocusComponent* m_currentFocusComponent;
 
     public:
 
         FocusManager() = default;
         ~FocusManager() = default;
         void AddFocus(FocusComponent* focusComponent);
-        void UpdateFocus(FocusComponent* focusComponent);
+        void SetFocus(FocusComponent* focusComponent);
+        void Update();
         void RemoveFocus(FocusComponent* focusComponent);
         std::vector<FocusComponent*>& GetAllFocusComponents() { return mFocusComponents; }
         FocusComponent* GetFocusComponent();

@@ -44,10 +44,7 @@ namespace ClassicLauncher
             if (anim.mIsFinish)
             {
                 AnimationFinished(name);
-                if (anim.ResetAnimation())
-                {
-                    m_animationTransform = Transform();
-                }
+                anim.ResetAnimation();           
                 UpdateTransformAnimation(anim);
             }
         }

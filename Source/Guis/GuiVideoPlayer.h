@@ -6,7 +6,6 @@
 
 #include "Entity/EntityGui.h"
 #include "Video/VideoPlayer.h"
-#include "Graphics/RenderTexture.h"
 
 namespace ClassicLauncher
 {
@@ -14,6 +13,7 @@ namespace ClassicLauncher
     class GuiComponent;
     class Application;
     class EntityGui;
+    class RenderTexture;
 
     class GuiVideoPlayer : public EntityGui
     {
@@ -34,7 +34,7 @@ namespace ClassicLauncher
         
     private:
         
-        RenderTexture m_renderTexture;
+        RenderTexture* m_renderTexture;
         std::unique_ptr<VideoPlayer> mPlayer;
         std::unique_ptr<VideoPlayer> mPlayerFullScreen;
         std::string mFilePath;

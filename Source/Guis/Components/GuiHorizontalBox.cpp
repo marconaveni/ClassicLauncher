@@ -40,8 +40,6 @@ namespace ClassicLauncher
     {
         EntityGui::Update();
 
-        
-        
         float x = 0;
         float canvasWidth = 0;
         float canvasHeight = 0;
@@ -52,24 +50,17 @@ namespace ClassicLauncher
             Transform& transform = guiElement->m_transform;
             Transform& worldTransform = guiElement->m_worldTransform;
 
-            if (mIsAutoSize)
-            {
+            spacer += m_spacer;
+            transform.position.x = ((transform.position.width + m_spacer) * m_worldTransform.scale.x) * x;
+            x++;
 
-                spacer += mSpacer;      
-                transform.position.x = (transform.position.width  * m_worldTransform.scale.x ) * x ;
-                x++;
-
-                canvasWidth += transform.position.width;
-                canvasHeight = transform.position.height > canvasHeight ? transform.position.height : canvasHeight;
-            }
+            canvasWidth += transform.position.width;
+            canvasHeight = transform.position.height > canvasHeight ? transform.position.height : canvasHeight;
         }
 
-        if (mIsAutoSize)
-        {
-           // spacer -= mSpace
-           m_transform.position.width = canvasWidth;
-           m_transform.position.height = canvasHeight; 
-        }
+        spacer -= m_spacer;
+        m_transform.position.width = canvasWidth + spacer;
+        m_transform.position.height = canvasHeight;
     }
 
 

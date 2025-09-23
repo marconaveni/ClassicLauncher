@@ -89,14 +89,15 @@ namespace ClassicLauncher
         if (!mIsTextureLoaded && mIsImageLoaded)
         {
             // mTexture = rlw::LoadTextureFromImage(mImage);
-            mTexture.LoadFromImage(&mImage);
-            mIsTextureLoaded = mTexture.IsValid();
-            LOG(LOG_CLASSIC_TRACE, "Texture loaded [ID %d] from Image - \"%s\"", mTexture.GetId(), mFilePath.c_str());
+            mTexture = std::make_unique<Texture>();
+            mTexture->LoadFromImage(&mImage);
+            mIsTextureLoaded = mTexture->IsValid();
+            LOG(LOG_CLASSIC_TRACE, "Texture loaded [ID %d] from Image - \"%s\"", mTexture->GetId(), mFilePath.c_str());
             UnloadImage();
         }
         if (mIsTextureLoaded)
         {
-            return &mTexture;
+            return mTexture.get();
         }
         return nullptr;
     }
@@ -126,7 +127,7 @@ namespace ClassicLauncher
             }
             if (mIsTextureLoaded)
             {
-                mTexture.Update(mImage.data);
+                mTexture->Update(mImage.data);
             }
         }
     }
@@ -139,10 +140,10 @@ namespace ClassicLauncher
 
     void Sprite::UnloadTexture()
     {
-        if (mIsTextureLoaded && mTexture.IsValid())
+        if (mIsTextureLoaded && mTexture->IsValid())
         {
-            mTexture.Unload();
-            LOG(LOG_CLASSIC_TRACE, "Unloaded Texture [ID %d] from - \"%s\"", mTexture.GetId(), mFilePath.c_str());
+            mTexture->Unload();
+            LOG(LOG_CLASSIC_TRACE, "Unloaded Texture [ID %d] from - \"%s\"", mTexture->GetId(), mFilePath.c_str());
             mIsTextureLoaded = false;
         }
     }

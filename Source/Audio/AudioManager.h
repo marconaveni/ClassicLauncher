@@ -31,6 +31,7 @@ namespace ClassicLauncher
         void PlayMusic();
         //void PlayClick();
         //void PlayCursor();
+        void MusicVolume(float volume);
         void Pause();
         void Stop();
         std::string GetMusicName();

@@ -33,7 +33,6 @@ namespace ClassicLauncher
     private:
 
         std::vector<GuiComponent*> mGuiCovers;
-        std::vector<GuiSizeBox*> mGuiSizeBoxs;
         GuiHorizontalBox* mGuiHorizontalBox;
         GuiComponent* mArrow;
         int mSize;
