@@ -3,8 +3,9 @@
 #include <algorithm> // std::sort
 #include <format>
 
-#include "Utils/TimerManager.h"
 #include "Graphics/SpriteManager.h"
+#include "Utils/TimerManager.h"
+#include "Helper.h"
 
 namespace ClassicLauncher
 {
@@ -35,7 +36,7 @@ namespace ClassicLauncher
             mEntities.push_back(std::move(entity));
         }
         mTempEntities.clear();
-        mPrepareNewOrdination = true;
+        m_markOrder = true;
     }
 
     void EntityManager::SetNameId(Entity* entity, const std::string& name)
@@ -57,8 +58,8 @@ namespace ClassicLauncher
         }
 
         entity->mNameId = std::format("{}_{}", counter, name);
-        entity->mId = GetEntitySize();
-        entity->mIdZOrder = GetEntitySize();
+        entity->m_zOrder.insertionIndex = m_counter;
+        m_counter++;
     }
 
     void EntityManager::SetVisibleAll(Entity* entity, bool bVisible)
@@ -71,23 +72,52 @@ namespace ClassicLauncher
 
     void EntityManager::SetZOrder()
     {
-        if (!mPrepareNewOrdination)
+        if (!m_markOrder)
         {
             return;
         }
+
+        
+        // for (auto& e : mEntities)
+        // {
+
+        //     std::string name = std::format(
+        //         "Entities insert {} zindex {} name {}",
+        //            e->GetZOrder().insertionIndex, e->GetZOrder().id , e->mNameId
+        //         );
+        //     LOG(LOG_CLASSIC_WARNING, "%s", name.c_str());
+        // }
+        
+
         std::sort(mEntities.begin(),
                   mEntities.end(),
                   [](const std::unique_ptr<Entity>& a, const std::unique_ptr<Entity>& b)
-                  { return a->GetIdZOrder() < b->GetIdZOrder(); });
-        mPrepareNewOrdination = false;
+                  {
+                      if (a->GetZOrder().id != b->GetZOrder().id)
+                      {
+                          return a->GetZOrder().id < b->GetZOrder().id; // z menor desenha antes
+                      }
+                      return a->GetZOrder().insertionIndex < b->GetZOrder().insertionIndex;
+                  });
+        m_markOrder = false;
+
+
+        // LOG(LOG_CLASSIC_ERROR, "#######################");
+        // for (auto& e : mEntities)
+        // {
+
+        //     std::string name = std::format(
+        //         "Entities insert {} zindex {} name {}",
+        //            e->GetZOrder().insertionIndex, e->GetZOrder().id , e->mNameId
+        //         );
+        //     LOG(LOG_CLASSIC_WARNING, "%s", name.c_str());
+        // }
     }
 
     void EntityManager::SetZOrder(Entity* entity, int zOrder)
     {
-        const int multiply = GetEntitySize() * zOrder;
         entity->SetZOrder(zOrder);
-        entity->mIdZOrder = entity->mId + multiply;
-        mPrepareNewOrdination = true;
+        m_markOrder = true;
     }
 
     void EntityManager::UpdateAll()
@@ -138,6 +168,7 @@ namespace ClassicLauncher
         }
         mEntities.clear(); // Limpa o vetor
         mEntities.shrink_to_fit();
+        m_counter = 0;
     }
 
     void EntityManager::SetThemeValue()
@@ -176,7 +207,7 @@ namespace ClassicLauncher
                         mEntities.end());
 
         mTimerManagerReference->ClearAllTimers();
-        mPrepareNewOrdination = true;
+        m_markOrder = true;
     }
 
 } // namespace ClassicLauncher

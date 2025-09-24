@@ -26,7 +26,7 @@ namespace ClassicLauncher
         std::vector<FocusComponent*> focusComponents = mFocusManager->GetAllFocusComponents();
         for (auto& focus : focusComponents)
         {
-            if (focus->GetFocus())
+            if (focus->IsFocus())
             {
                 Transform target = m_transform;
                 const float x = Math::Clamp(focus->GetPositionFocus().x, 130.0f, 898.0f);

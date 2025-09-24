@@ -11,9 +11,6 @@ namespace ClassicLauncher
         , mToDraw(true)
         , mScissorMode(false)
         , mVisible(true)
-        , mZOrder(0)
-        , mIdZOrder(0)
-        , mId(0)
         , mChildEntities()
         , mNameId()
     {
@@ -124,7 +121,7 @@ namespace ClassicLauncher
 
     void Entity::SetZOrder(int zOrder)
     {
-        mZOrder = zOrder;
+        m_zOrder.id = zOrder;
     }
 
 } // namespace ClassicLauncher

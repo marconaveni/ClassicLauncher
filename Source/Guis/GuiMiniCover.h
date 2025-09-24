@@ -27,16 +27,24 @@ namespace ClassicLauncher
         void Update() override;
         void End() override;
         void SetCovers();
-        static void SetCover(const std::string& name, GuiComponent* miniCover);
+        void SetCover(const std::string& name, GuiComponent* miniCover);
         void ClearCovers();
 
     private:
 
-        std::vector<GuiComponent*> mGuiCovers;
+        struct MiniCover
+        {
+            GuiComponent* gui = nullptr;
+            bool focus = false;
+        };
+        
+
+        std::vector<MiniCover> mGuiCovers;
         GuiHorizontalBox* mGuiHorizontalBox;
         GuiComponent* mArrow;
         int mSize;
         Vector2f mSizeCover;
+        bool m_focus = false;
 
         GameListManager* m_gameListManagerRef;
 

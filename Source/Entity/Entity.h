@@ -34,10 +34,10 @@ namespace ClassicLauncher
     {
     public:
 
+        struct ZOrder;
+
         Entity();
         virtual ~Entity() = default;
-        bool operator<(const Entity& entity) const { return entity.mId < mId; }
-        bool operator>(const Entity& entity) const { return mZOrder > entity.mZOrder; }
         [[nodiscard]] virtual EntityType GetType() const = 0;
         virtual void Update() {}
         virtual void Draw() {}
@@ -56,18 +56,27 @@ namespace ClassicLauncher
         void EnableScissorMode(float x, float y, float width, float height);
         void DisableScissorMode() { mScissorMode = false; }
         void SetVisible(const bool bEnable) { mVisible = bEnable; }
-        [[nodiscard]] int GetZOrder() const { return mZOrder; }
-        [[nodiscard]] int GetIdZOrder() const { return mIdZOrder; }
+        [[nodiscard]] ZOrder GetZOrder() const { return m_zOrder; }
+        const Transform& GetWorldTransform() const { return m_worldTransform; }
 
         Transform m_transform;
         Transform m_worldTransform;
         std::string mTextureName = "transparent";
         RectFloat mScissorArea;
 
+        
+        struct ZOrder
+        {
+            int id = 0;
+            int insertionIndex = 0;
+        };
+
     protected:
 
         Entity* mParent = nullptr;
+        std::vector<Entity*> mChildEntities;
         RectFloat m_finalTransformRect;
+        
         TimerManager* GetTimerManager() { return m_timerManagerRef; }
         SpriteManager* GetSpriteManager() { return m_spriteManagerReference; }
         EntityManager* GetEntityManager() { return m_entityManagerReference; }
@@ -78,15 +87,14 @@ namespace ClassicLauncher
         friend class EntityManager;
         friend class RenderEntities;
         friend class FocusComponent;
+        
 
         bool mToDelete;
         bool mToDraw;
         bool mScissorMode;
         bool mVisible;
-        int mZOrder;
-        int mIdZOrder;
-        int mId;
-        std::vector<Entity*> mChildEntities;
+
+        ZOrder m_zOrder {};
         std::string mNameId;
 
         SpriteManager* m_spriteManagerReference;
@@ -94,7 +102,8 @@ namespace ClassicLauncher
         EntityManager* m_entityManagerReference;
         FocusManager* m_focusManagerRef;
 
-        void SetZOrder(int zOrder);
+        // note: this should not be called directly use entity manager
+        void SetZOrder(int zOrder); 
     };
 
 } // namespace ClassicLauncher

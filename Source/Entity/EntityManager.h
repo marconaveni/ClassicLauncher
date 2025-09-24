@@ -35,7 +35,7 @@ namespace ClassicLauncher
             entity->m_focusManagerRef = m_focusManagerReference;
             SetNameId(entity.get(), name);
             mTempEntities.push_back(std::move(entity));
-            return static_cast<T*>(mTempEntities.back().get());
+            return static_cast<T*>(mTempEntities.back().get());  // .back last element vector
         }
 
         template <typename T>
@@ -75,8 +75,9 @@ namespace ClassicLauncher
         SpriteManager* mSpriteManagerReference;
         TimerManager* mTimerManagerReference;
         FocusManager* m_focusManagerReference;
-        bool mPrepareNewOrdination = false;
+        bool m_markOrder = false;
         bool mHasNewEntity = false;
+        int m_counter = 0;
     };
 
 } // namespace ClassicLauncher

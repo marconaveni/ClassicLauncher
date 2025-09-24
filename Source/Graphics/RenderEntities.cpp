@@ -44,24 +44,17 @@ namespace ClassicLauncher
 
     void RenderEntities::DrawEntity(Entity* entity)
     {
+
         const Texture* texture = m_spriteManagerReference->GetTexture(entity->mTextureName);
 
         // if (texture && entity->mToDraw && entity->mTextureName != "transparent")  // todo verify render
         if (texture && entity->mToDraw)
         {
 
-            // A lógica de cálculo da transformação final agora é diferente
-
-            // Use a mWorldTransform para obter os valores finais
-
-
             RectFloat sourceRect{entity->m_transform.source.x * m_renderScale,
                                  entity->m_transform.source.y * m_renderScale,
                                  entity->m_transform.source.width * m_renderScale,
                                  entity->m_transform.source.height * m_renderScale};
-
-            float finalScale = 2.0f;
-
     
 
             entity->m_finalTransformRect = RectFloat{
@@ -70,18 +63,7 @@ namespace ClassicLauncher
                 entity->m_transform.position.width * entity->m_worldTransform.scale.x * m_renderScale, // Largura base * escala final
                 entity->m_transform.position.height * entity->m_worldTransform.scale.y * m_renderScale // Altura base * escala final
             };
-
-
-            Vector2f origin{
-            //  entity->m_transform.position.width * entity->m_worldTransform.origin.x,
-            //     entity->m_transform.position.height * entity->m_worldTransform.origin.y 
-            };
             
-
-            if (origin.x > 0)
-            {
-                LOG(LOG_CLASSIC_DEBUG, "Render origin(%.2f) (%s)", origin.x , entity->mNameId.c_str() );
-            }
             
             rlw::DrawTexturePro(*texture,
                                 sourceRect,         /* RectFloat{0, 562, 21, 720}, posição spritesheet */
@@ -93,33 +75,6 @@ namespace ClassicLauncher
             rlw::DrawRectangleLinesEx(entity->m_finalTransformRect, 1, Color::Cyan);
 
 
-                
-
-
-
-            // if (entity->mNameId == "0_Frame")
-            // {
-            //     // depois de montar finalTransformRect
-            //     LOG(LOG_CLASSIC_DEBUG,
-            //         "Render pos(%.2f, %.2f) size(%.2f, %.2f) scale(%.2f, %.2f)",
-            //         finalTransformRect.x,
-            //         finalTransformRect.y,
-            //         finalTransformRect.width,
-            //         finalTransformRect.height,
-            //         entity->m_worldTransform.scale.x,
-            //         entity->m_worldTransform.scale.y);
-            // }
-
-
-            // DrawText(entity->mNameId.c_str(), finalTransformRect.x, finalTransformRect.y, 16, ::WHITE);
-
-            //rlw::DrawTexturePro(*texture,
-            //    RectFloat{ 0 , 562 , 21 ,720 }, //    posição spritesheet
-            //    RectFloat{ 0 , 0 , 1280 ,720  }, //   posx posy tam_rect  larg_rect
-            //    Vector2f{0, 0},
-            //    entity->m_worldTransform.rotation,
-            //    entity->m_worldTransform.color);
-
             // if (entity->mScissorMode)
             // {
             //     RectFloat scissorArea = entity->mScissorArea;
@@ -129,9 +84,7 @@ namespace ClassicLauncher
             //         scissorArea.height * entity->m_transform.root.scale.y * ThemesManager::GetScaleTexture();
             //     rlw::BeginScissorMode(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height);
             // }
-
-            entity->Draw();
-
+            entity->Draw();     
             // if (entity->mScissorMode)
             // {
             //     rlw::EndScissorMode();
@@ -139,6 +92,7 @@ namespace ClassicLauncher
             // }
             entity->mToDraw = false;
         }
+       
     }
 
     void RenderEntities::DrawDebug(Entity* entity)

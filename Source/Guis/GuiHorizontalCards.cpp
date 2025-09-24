@@ -80,9 +80,7 @@ namespace ClassicLauncher
         AddChild(mMiniCover);
 
         mFrame = GetEntityManager()->CreateEntity<GuiFrame>("Frame", GetFocusManager());
-        //GetEntityManager()->SetZOrder(mFrame, 80);
-        //AddChild(mFrame);
-        //
+        GetEntityManager()->SetZOrder(mFrame, 1);
         SetFocus(3, true);
     }
 

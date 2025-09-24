@@ -20,7 +20,7 @@ namespace ClassicLauncher
         FocusManager() = default;
         ~FocusManager() = default;
         void AddFocus(FocusComponent* focusComponent);
-        void SetFocus(FocusComponent* focusComponent);
+        void SetNewFocusComponent(FocusComponent* focusComponent);
         void Update();
         void RemoveFocus(FocusComponent* focusComponent);
         std::vector<FocusComponent*>& GetAllFocusComponents() { return mFocusComponents; }

@@ -51,8 +51,9 @@ namespace ClassicLauncher
             Transform& worldTransform = guiElement->m_worldTransform;
 
             spacer += m_spacer;
-            transform.position.x = ((transform.position.width + m_spacer) * m_worldTransform.scale.x) * x;
-            x++;
+            transform.position.x = x;
+            transform.position.y = 0.0f;
+            x += ((transform.position.width + m_spacer) * m_worldTransform.scale.x);
 
             canvasWidth += transform.position.width;
             canvasHeight = transform.position.height > canvasHeight ? transform.position.height : canvasHeight;

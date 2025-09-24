@@ -1,38 +1,40 @@
 #ifndef FOCUS_COMPONENT_H
 #define FOCUS_COMPONENT_H
 
-#include "Components/FocusManager.h"
 #include "Entity/Entity.h"
 
 namespace ClassicLauncher
 {
     class Application;
-    class Entity;
+    class Transform;
     class FocusManager;
 
     class FocusComponent
     {
     public:
 
-        FocusComponent(FocusManager* focusManagerRef, Entity* entity);
-        ~FocusComponent();
+        explicit FocusComponent(FocusManager* focusManagerRef);
+        virtual ~FocusComponent();
         void SetFocus();
-        bool GetFocus() { return mIsFocus; }
-        Entity* GetEntity() { return mEntity; }
+        [[nodiscard]] bool IsFocus() const { return m_isFocus; }
         virtual void OnFocus() = 0;
         virtual void OnLostFocus() = 0;
         virtual void OnChangeFocus() {}
         void UpdateFocus();
         Vector2f GetPositionFocus() const { return m_positionWorld; }
 
+    protected:
+
+        virtual const Transform& OwnerWorldTransform() const = 0;
+
     private:
 
         friend class FocusManager;
         friend class RenderEntities;
 
-        bool mIsFocus = false;
+        Transform* m_transformEntity = nullptr;
+        bool m_isFocus = false;
         FocusManager* m_focusRef = nullptr;
-        Entity* mEntity = nullptr;
         Vector2f m_positionWorld{};
     };
 

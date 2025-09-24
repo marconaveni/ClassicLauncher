@@ -48,6 +48,7 @@ namespace ClassicLauncher
 
         mGuiBackground->mTextureName = "sprite";
         AddChild(mGuiBackground);
+        
 
         m_guiHorizontalCards = GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalCards",
                                                                                     m_gameListManagerRef,
@@ -56,6 +57,7 @@ namespace ClassicLauncher
         AddChild(m_guiHorizontalCards);
 
         mGuiBlackScreen = GetEntityManager()->CreateEntity<GuiBlackScreen>("GuiBlackScreen");
+        GetEntityManager()->SetZOrder(mGuiBlackScreen, 99);
 
 
 #ifdef _DEBUG

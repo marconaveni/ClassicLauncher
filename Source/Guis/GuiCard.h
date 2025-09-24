@@ -21,7 +21,7 @@ namespace ClassicLauncher
     class GameListManager;
     class AudioManager;
 
-    class GuiCard : public GuiCanvas, FocusComponent
+    class GuiCard : public GuiCanvas, public FocusComponent
     {
 
     public:
@@ -36,8 +36,9 @@ namespace ClassicLauncher
         void RemoveCardFocus(bool bForce = false);
         virtual void OnFocus() override;
         virtual void OnLostFocus() override;
+        virtual const Transform& OwnerWorldTransform() const override { return GetWorldTransform(); };
         void SetCover(const std::string& name = "");
-        [[nodiscard]] bool IsFocus() const;
+        //[[nodiscard]] bool IsFocus() const;
         void Reset();
         void Click();
         void SetFrontCard();
@@ -46,7 +47,8 @@ namespace ClassicLauncher
 
     private:
 
-        TimerHandling mTimerVideo;
+        TimerHandling m_timerVideo;
+        TimerHandling m_timerAnimationReset;
 
         GuiComponent* mCardMain;
         GuiComponent* mCardSelected;
@@ -57,8 +59,8 @@ namespace ClassicLauncher
         GuiVideoPlayer* mGuiVideoPlayer;
         GuiComponent* m_coverDefault;
         GuiComponent* m_cover;
-        bool mIsFocus = false;
-        bool mIsFront = false;
+        //bool mIsFocus = false;
+        //bool mIsFront = false;
         bool m_isChangeTexture = false;
 
         GameListManager* m_gameListManagerRef;

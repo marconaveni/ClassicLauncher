@@ -50,6 +50,7 @@ namespace ClassicLauncher
         const float scale = ThemesManager::GetScaleRenderer();
         mPlayerFullScreen->Init(mFilePath, 1280 * scale, 720 * scale, scale);
         mPlayerFullScreen->Play();
+        GetEntityManager()->SetZOrder(this, 99);  // todo temp
     }
 
     void GuiVideoPlayer::Stop()
@@ -68,6 +69,7 @@ namespace ClassicLauncher
         }
 
         mPlayer->Resume();
+        GetEntityManager()->SetZOrder(this, 1);
     }
 
     void GuiVideoPlayer::Update()

@@ -14,8 +14,8 @@ namespace ClassicLauncher
 {
 
     GuiCard::GuiCard(GameListManager* gameListManagerRef, FocusManager* focusManagerRef, AudioManager* audioManagerRef)
-        : FocusComponent(focusManagerRef, this)
-        , mTimerVideo()
+        : FocusComponent(focusManagerRef)
+        , m_timerVideo()
         , m_gameListManagerRef(gameListManagerRef)
         , m_audioManagerRef(audioManagerRef)
     {
@@ -141,11 +141,11 @@ namespace ClassicLauncher
         }
 
 
-        if (mIsFocus && Keyboard::IsReleased(Keyboard::DOWN))
+        if (IsFocus() && Keyboard::IsReleased(Keyboard::DOWN))
         {
             mGuiVideoPlayer->InitFullscreen();
         }
-        if (mIsFocus && Keyboard::IsReleased(Keyboard::UP))
+        if (IsFocus() && Keyboard::IsReleased(Keyboard::UP))
         {   
             mGuiVideoPlayer->StopFullscreen();
         }
@@ -170,7 +170,7 @@ namespace ClassicLauncher
 
     void GuiCard::StartVideo()
     {
-        if (mIsFocus)
+        if (IsFocus())
         {
             const bool isPlay = mGuiVideoPlayer->Init(m_gameListManagerRef->GetCurrentGameList()->video, 228, 204);
             m_audioManagerRef->MusicVolume(isPlay ? 0.1f : 1.0f);
@@ -179,15 +179,15 @@ namespace ClassicLauncher
 
     void GuiCard::SetCardFocus(bool bForce)
     {
-        mIsFocus = true;
+        // mIsFocus = true;
         FocusAnimation(bForce, 255, 0, "card-focus");
-        GetTimerManager()->SetTimer(mTimerVideo, CALLFUNCTION(StartVideo, this), this, 5.0f);
+        GetTimerManager()->SetTimer(m_timerVideo, CALLFUNCTION(StartVideo, this), this, 5.0f);
         SetFocus();
     }
 
     void GuiCard::RemoveCardFocus(bool bForce)
     {
-        mIsFocus = false;
+        // mIsFocus = false;
         FocusAnimation(bForce, 0, 255, "card-lost-focus");
         mGuiVideoPlayer->Stop();
         m_audioManagerRef->MusicVolume(1.0f);
@@ -201,28 +201,29 @@ namespace ClassicLauncher
     {
     }
 
-    bool GuiCard::IsFocus() const
-    {
-        return mIsFocus;
-    }
+    // bool GuiCard::IsFocus() const
+    // {
+    //     return mIsFocus;
+    // }
 
     void GuiCard::Reset()
     {
         // mIsFront = false;
-        // m_transform.scale.x = 1.0f;
-        // m_transform.scale.y = 1.0f;
+        m_transform.scale.x = 1.0f;
+        m_transform.scale.y = 1.0f;
 
-        // mCardBackgroundMain->m_transform.color.SetOpacity(255);
-        // mCardMain->m_transform.color.SetOpacity(255);
-        // mCardBackgroundSelected->m_transform.color.SetOpacity(255);
-        // mCardSelected->m_transform.color.SetOpacity(255);
-        // m_cover->m_transform.color.SetOpacity(255);
-        // mSizeBoxImage->m_transform.color.SetOpacity(255);
-        // mSizeBoxVideoPlayer->m_transform.color.SetOpacity(255);
-        // mGuiVideoPlayer->m_transform.color.SetOpacity(255);
+        m_transform.color.SetOpacity(255);
+        //mCardBackgroundMain->m_transform.color.SetOpacity(255);
+        //mCardMain->m_transform.color.SetOpacity(255);
+        //mCardBackgroundSelected->m_transform.color.SetOpacity(255);
+        //mCardSelected->m_transform.color.SetOpacity(255);
+        //m_cover->m_transform.color.SetOpacity(255);
+        //m_coverDefault->m_transform.color.SetOpacity(255);
+        //mGuiVideoPlayer->m_transform.color.SetOpacity(255);
 
-        // mCardBackgroundFavorite->m_transform.color.SetOpacity(0); // todo create logic is favorite
-        // mCardFavorite->m_transform.color.SetOpacity(0);           // todo create logic is favorite
+        mCardBackgroundFavorite->m_transform.color.SetOpacity(0); // todo create logic is favorite
+        mCardFavorite->m_transform.color.SetOpacity(0);           // todo create logic is favorite
+        
         // if (m_cover->mTextureName == "sprite")
         // {
         //     SetCover();
@@ -236,7 +237,7 @@ namespace ClassicLauncher
     void GuiCard::Click()
     {
         mGuiVideoPlayer->Stop();
-        GetTimerManager()->ClearTimer(mTimerVideo);
+        GetTimerManager()->ClearTimer(m_timerVideo);
 
 
         const float time = 0.3f;
@@ -255,23 +256,24 @@ namespace ClassicLauncher
 
         target.color.a = 0;
 
-        StartAnimation("card-zoom", time, m_transform, target, Ease::EaseQuadInOut, true);
-        // GetTimerManager()->SetTimer(mTimer, CALLFUNCTION(Reset, this), this, time * 2);
+        StartAnimation("card-zoom", time, m_transform, target, Ease::EaseQuadInOut, false);
+        GetTimerManager()->SetTimer(m_timerAnimationReset, CALLFUNCTION(Reset, this), this, time * 2);
     }
 
     void GuiCard::SetFrontCard()
     {
 
-        // const int order = (mIsFront) ? 1 : 0;
+        const int order = (IsFocus()) ? 1 : 0;
 
-        // GetEntityManager()->SetZOrder(mCardSelected, order);
-        // GetEntityManager()->SetZOrder(mCardBackgroundSelected, order);
-        // GetEntityManager()->SetZOrder(mCardMain, order);
-        // GetEntityManager()->SetZOrder(mCardBackgroundMain, order);
-        // GetEntityManager()->SetZOrder(mCardFavorite, order);
-        // GetEntityManager()->SetZOrder(mCardBackgroundFavorite, order);
-        // GetEntityManager()->SetZOrder(mCover, order);
-        // GetEntityManager()->SetZOrder(mGuiVideoPlayer, order);
+        GetEntityManager()->SetZOrder(mCardSelected, order);
+        GetEntityManager()->SetZOrder(mCardBackgroundSelected, order);
+        GetEntityManager()->SetZOrder(mCardMain, order);
+        GetEntityManager()->SetZOrder(mCardBackgroundMain, order);
+        GetEntityManager()->SetZOrder(mCardFavorite, order);
+        GetEntityManager()->SetZOrder(mCardBackgroundFavorite, order);
+        GetEntityManager()->SetZOrder(m_cover, order);
+        GetEntityManager()->SetZOrder(m_coverDefault, order);
+        GetEntityManager()->SetZOrder(mGuiVideoPlayer, order);
     }
 
     void GuiCard::SetThemeValue()
