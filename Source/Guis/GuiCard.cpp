@@ -28,7 +28,7 @@ namespace ClassicLauncher
         m_transform.position.y = 0; //static_cast<float>(y);
         m_transform.position.width = 256;
         m_transform.position.height = 280;
-        m_transform.origin = {0.5, 0.5};
+        //m_transform.origin = {256 / 2 , 280 / 2};
 
         CreateCard(mCardBackgroundMain, 0, 281, 255, "GuiCardBackgroundMain");
         CreateCard(mCardBackgroundFavorite, 514, 281, 0, "GuiCardBackgroundFavorite");
@@ -179,7 +179,6 @@ namespace ClassicLauncher
 
     void GuiCard::SetCardFocus(bool bForce)
     {
-        // mIsFocus = true;
         FocusAnimation(bForce, 255, 0, "card-focus");
         GetTimerManager()->SetTimer(m_timerVideo, CALLFUNCTION(StartVideo, this), this, 5.0f);
         SetFocus();
@@ -187,7 +186,6 @@ namespace ClassicLauncher
 
     void GuiCard::RemoveCardFocus(bool bForce)
     {
-        // mIsFocus = false;
         FocusAnimation(bForce, 0, 255, "card-lost-focus");
         mGuiVideoPlayer->Stop();
         m_audioManagerRef->MusicVolume(1.0f);

@@ -26,11 +26,6 @@ namespace ClassicLauncher
 
     void GuiHorizontalBox::ClearAll()
     {
-        for (auto& guiComponent : mGuiElements)
-        {
-            guiComponent->RemoveParent();
-        }
-        RemoveAllChildren();
         mGuiElements.clear();
         m_transform.position.width = 10.0f;
         m_transform.position.height = 10.0f;
@@ -53,7 +48,7 @@ namespace ClassicLauncher
             spacer += m_spacer;
             transform.position.x = x;
             transform.position.y = 0.0f;
-            x += ((transform.position.width + m_spacer) * m_worldTransform.scale.x);
+            x += (transform.position.width) + m_spacer;
 
             canvasWidth += transform.position.width;
             canvasHeight = transform.position.height > canvasHeight ? transform.position.height : canvasHeight;

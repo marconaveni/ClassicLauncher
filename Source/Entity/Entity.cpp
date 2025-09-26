@@ -20,15 +20,22 @@ namespace ClassicLauncher
     {
         if (mParent)
         {
-            m_worldTransform.position.x = mParent->m_worldTransform.position.x + m_transform.position.x    ;
-            m_worldTransform.position.y = mParent->m_worldTransform.position.y + m_transform.position.y    ;
-            m_worldTransform.offset.x = mParent->m_worldTransform.offset.x + m_transform.offset.x   ;
-            m_worldTransform.offset.y = mParent->m_worldTransform.offset.y + m_transform.offset.y    ;
-            m_worldTransform.scale.x = mParent->m_worldTransform.scale.x * m_transform.scale.x    ;
-            m_worldTransform.scale.y = mParent->m_worldTransform.scale.y * m_transform.scale.y   ;
-            m_worldTransform.origin.x = mParent->m_worldTransform.origin.x + m_transform.origin.x   ;
-            m_worldTransform.origin.y = mParent->m_worldTransform.origin.y + m_transform.origin.y   ;
-            m_worldTransform.rotation = mParent->m_worldTransform.rotation + m_transform.rotation  ;
+            const float parentX = mParent->m_worldTransform.position.x;
+            const float parentY = mParent->m_worldTransform.position.y;
+            
+
+            m_worldTransform.position.x = parentX + (m_transform.position.x * mParent->m_worldTransform.scale.x);
+            m_worldTransform.position.y = parentY + (m_transform.position.y * mParent->m_worldTransform.scale.y);
+
+            // apply scale
+            m_worldTransform.scale.x = mParent->m_worldTransform.scale.x * m_transform.scale.x;
+            m_worldTransform.scale.y = mParent->m_worldTransform.scale.y * m_transform.scale.y;
+
+            // apply offset
+            m_worldTransform.offset.x = mParent->m_worldTransform.offset.x + m_transform.offset.x;
+            m_worldTransform.offset.y = mParent->m_worldTransform.offset.y + m_transform.offset.y;
+
+            m_worldTransform.rotation = mParent->m_worldTransform.rotation + m_transform.rotation;
 
             // Propaga a opacidade (alpha) do pai para o filho
             unsigned char parentAlpha = mParent->m_worldTransform.color.a;

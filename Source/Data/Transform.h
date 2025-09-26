@@ -11,6 +11,7 @@ namespace ClassicLauncher
     {
     public:
 
+        RectFloat pivot{};       
         RectFloat position{};       // Posição local (relativa ao pai)
         Vector2f scale{1.0f, 1.0f}; // Escala local (relativa ao pai)
         float rotation{};           // Rotação local (relativa ao pai)

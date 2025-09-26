@@ -15,6 +15,7 @@
 #include "Utils/Utils.h"
 #include "Window/RayWindow.h"
 #include "rl_wrap.h"
+#include "Entity/TestEntity.h"
 
 namespace ClassicLauncher
 {
@@ -75,11 +76,14 @@ namespace ClassicLauncher
 
         if (m_gameListManager.GetGameListSize() > 0)
         {
-            mGuiWindow = m_entityManager.CreateEntity<GuiWindow>("GuiWindow",
-                                                                 &m_gameListManager,
-                                                                 *m_audioManager,
-                                                                 m_processManager);
-            mGuiWindow->Init();
+             mGuiWindow = m_entityManager.CreateEntity<GuiWindow>("GuiWindow",
+                                                                  &m_gameListManager,
+                                                                  *m_audioManager,
+                                                                  m_processManager);
+             mGuiWindow->Init();
+
+
+
         }
         else
         {
@@ -95,9 +99,19 @@ namespace ClassicLauncher
 
     void Application::Update()
     {
+
+
+        if (Keyboard::IsReleased(Keyboard::C))
+        {
+            auto testEntity = m_entityManager.CreateEntity<TestEntity>("TestEntity");
+            testEntity->InitAnim();
+        }
+        
+
+
         // Log(LOG_CLASSIC_DEBUG, TEXTBOOL(InputManager::GetInputLeftFaceLeft()));
 
-        mGuiWindow->Teste();
+        //mGuiWindow->Teste();
         m_entityManager.UpdateAll();
         m_focusManager.Update();
 

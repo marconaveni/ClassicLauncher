@@ -14,11 +14,19 @@ namespace ClassicLauncher
 
         m_transform.position.width = 258.0f;
         m_transform.position.height = 282.0f;
+        
+        
+        // m_transform.origin.x = 258.0f / 2;
+        // m_transform.origin.y = 282.0f / 2;
+
 
         m_transform.source.x = 771.0f;
         m_transform.source.y = 0.0f;
         m_transform.source.width = 258.0f;
         m_transform.source.height = 282.0f;
+
+        m_transform.position.x = 100;
+        m_transform.position.y = 100;
     }
 
     void GuiFrame::SetFrame(bool bForce)
@@ -44,6 +52,7 @@ namespace ClassicLauncher
                     target.position.x = x;
                     target.position.y = y;
                     StartAnimation("frame-move", 0.15f, m_transform, target, Ease::EaseQuadInOut, false);
+                    break;
                 }
             }
         }
@@ -74,7 +83,7 @@ namespace ClassicLauncher
     {
         EntityGui::Update();
 
-       // m_transform.offset.x = 300; //teste
+        // m_transform.offset.x = 300; //teste
     }
 
 } // namespace ClassicLauncher
