@@ -40,6 +40,7 @@ namespace ClassicLauncher
         float canvasHeight = 0;
         float spacer = 0;
 
+
         for (auto& guiElement : mGuiElements)
         {
             Transform& transform = guiElement->m_transform;
@@ -57,6 +58,11 @@ namespace ClassicLauncher
         spacer -= m_spacer;
         m_transform.position.width = canvasWidth + spacer;
         m_transform.position.height = canvasHeight;
+    }
+
+    void GuiHorizontalBox::Draw()
+    {
+        
     }
 
 

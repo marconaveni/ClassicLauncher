@@ -12,12 +12,13 @@
 #include "Window/RayWindow.h"
 #include "raylib.h" // isso não pode ficar aqui
 #include "rl_wrap.h"
+#include <iostream>
 
 namespace ClassicLauncher
 {
 
 #ifdef _DEBUG
-    static bool bEnable = false;
+    static bool enableDebug = false;
 #endif
 
     RenderEntities::RenderEntities(SpriteManager* spriteManagerReference)
@@ -30,7 +31,7 @@ namespace ClassicLauncher
 #ifdef _DEBUG
         if (Keyboard::IsReleased(Keyboard::Key::FIVE))
         {
-            bEnable = !bEnable;
+            enableDebug = !enableDebug;
         }
 #endif
 
@@ -46,6 +47,18 @@ namespace ClassicLauncher
     {
 
         const Texture* texture = m_spriteManagerReference->GetTexture(entity->mTextureName);
+
+
+
+        // if (entity->mScissorMode)
+        // {
+        //     RectFloat scissorArea = entity->mScissorArea;
+        //     scissorArea.width =
+        //         scissorArea.width * entity->m_transform.root.scale.x * ThemesManager::GetScaleTexture();
+        //     scissorArea.height =
+        //         scissorArea.height * entity->m_transform.root.scale.y * ThemesManager::GetScaleTexture();
+        //     rlw::BeginScissorMode(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height);
+        // }
 
         // if (texture && entity->mToDraw && entity->mTextureName != "transparent")  // todo verify render
         if (texture && entity->mToDraw)
@@ -65,65 +78,68 @@ namespace ClassicLauncher
             };
             
             
+            Vector2f finalOrigin = {
+                entity->m_transform.origin.x * entity->m_worldTransform.scale.x * m_renderScale,
+                entity->m_transform.origin.y * entity->m_worldTransform.scale.y * m_renderScale
+            };
+
             rlw::DrawTexturePro(*texture,
                                 sourceRect,         /* RectFloat{0, 562, 21, 720}, posição spritesheet */
                                 entity->m_finalTransformRect, /* RectFloat{0, 0, 1280, 720} posx posy tam_rect  larg_rect */
-                                Vector2f{},
+                                finalOrigin,
                                 entity->m_worldTransform.rotation,
                                 entity->m_worldTransform.color);
-
-            rlw::DrawRectangleLinesEx(entity->m_finalTransformRect, 1, Color::Cyan);
-
-
-            // if (entity->mScissorMode)
-            // {
-            //     RectFloat scissorArea = entity->mScissorArea;
-            //     scissorArea.width =
-            //         scissorArea.width * entity->m_transform.root.scale.x * ThemesManager::GetScaleTexture();
-            //     scissorArea.height =
-            //         scissorArea.height * entity->m_transform.root.scale.y * ThemesManager::GetScaleTexture();
-            //     rlw::BeginScissorMode(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height);
-            // }
-            entity->Draw();     
-            // if (entity->mScissorMode)
-            // {
-            //     rlw::EndScissorMode();
-            //     entity->DisableScissorMode();
-            // }
-            entity->mToDraw = false;
+            
         }
-       
+
+        entity->Draw();     
+        
+        // if (entity->mScissorMode)
+        // {
+        //     rlw::EndScissorMode();
+        //     entity->DisableScissorMode();
+        // }
+
+#ifdef _DEBUG
+        if (enableDebug)
+        {
+            DrawDebug(entity);
+        }
+#endif
+        entity->mToDraw = false;
+            
     }
 
     void RenderEntities::DrawDebug(Entity* entity)
     {
+        rlw::DrawRectangleLinesEx(entity->m_finalTransformRect, 1, Color::Cyan);
 
 
-        // const RectFloat& rectDrawArea = entity->mTransform.GetTransform(); //{ x, y, scale.x, scale.y };
-        // const Vector2f vec = {}; // TODO Refactor  Application::Get().GetRenderScreen()->GetMousePositionRender();
-        // RectFloat point = RectFloat{rectDrawArea.x, rectDrawArea.y, rectDrawArea.width, rectDrawArea.height};
-        // if (Math::CheckCollisionPointRec(RayWindow::GetVirtualMouse(), point) && bEnable)
-        // {
-        //     rlw::DrawRectangleLinesEx(rectDrawArea, 2, Color::Red);
-        //     if (Mouse::IsPressed(Mouse::LEFT))
-        //     {
-        //         PRINT(std::format("nameID: {}", entity->mNameId).c_str(), 5.0f);
-        //     }
-        // }
-        // else if (bEnable)
-        // {
-        //     rlw::DrawRectangleLinesEx(rectDrawArea, 1, Color::Cyan);
-        // }
-        // if (entity->mScissorMode && bEnable)
-        // {
-        //     const Color tint = Color(255, 0, 0, 55);
-        //     RectFloat scissorArea = entity->mScissorArea;
-        //     scissorArea.width =
-        //         scissorArea.width * entity->m_transform.root.scale.x * ThemesManager::GetScaleTexture();
-        //     scissorArea.height =
-        //         scissorArea.height * entity->m_transform.root.scale.y * ThemesManager::GetScaleTexture();
-        //     rlw::DrawRectangle(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height, tint);
-        // }
+        ::DrawCircle(entity->m_finalTransformRect.x, entity->m_finalTransformRect.y, 5, ::Color{255,0,0,50});
+        if (Math::CheckCollisionPointRec(RayWindow::GetVirtualMouse(), entity->m_finalTransformRect))
+        {
+            rlw::DrawRectangleLinesEx(entity->m_finalTransformRect, 1, Color::Red);
+            // ::DrawRectangle(entity->m_finalTransformRect.x, 
+            //                 entity->m_finalTransformRect.y, 
+            //                 entity->m_finalTransformRect.width, 
+            //                 entity->m_finalTransformRect.height,
+            //                 ::Color{255,0,0,50});
+            if (Mouse::IsPressed(Mouse::RIGHT))
+            {
+
+
+                LOG(LOG_CLASSIC_DEBUG, std::format("\n-> nameID: {}\n-> x {}\n-> y {}\n-> width {}\n-> height {}", 
+                    entity->mNameId, 
+                    entity->m_finalTransformRect.x,
+                    entity->m_finalTransformRect.y,
+                    entity->m_finalTransformRect.width,
+                    entity->m_finalTransformRect.height
+                ).c_str());
+                std::cin.get();
+            }
+
+        }
+
     }
 
 

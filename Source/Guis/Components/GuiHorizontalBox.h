@@ -20,6 +20,7 @@ namespace ClassicLauncher
         void AttachGui(EntityGui* guiComponent);
         void ClearAll();
         virtual void Update() override;
+        virtual void Draw() override;
 
     private:
 

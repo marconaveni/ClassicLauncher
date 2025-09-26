@@ -16,8 +16,8 @@ namespace ClassicLauncher
         m_transform.position.height = 282.0f;
         
         
-        // m_transform.origin.x = 258.0f / 2;
-        // m_transform.origin.y = 282.0f / 2;
+        //m_transform.origin.x = 258.0f / 2;
+        //m_transform.origin.y = 282.0f / 2;
 
 
         m_transform.source.x = 771.0f;

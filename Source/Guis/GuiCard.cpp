@@ -30,6 +30,9 @@ namespace ClassicLauncher
         m_transform.position.height = 280;
         //m_transform.origin = {256 / 2 , 280 / 2};
 
+        //m_transform.origin.x = m_transform.position.width / 2.0f;
+        //m_transform.origin.y = m_transform.position.height / 2.0f;
+
         CreateCard(mCardBackgroundMain, 0, 281, 255, "GuiCardBackgroundMain");
         CreateCard(mCardBackgroundFavorite, 514, 281, 0, "GuiCardBackgroundFavorite");
         CreateCard(mCardBackgroundSelected, 257, 281, 0, "GuiCardBackgroundSelected");
@@ -75,7 +78,6 @@ namespace ClassicLauncher
         card->m_transform.position.y = 0;
         card->m_transform.position.width = m_transform.position.width;
         card->m_transform.position.height = m_transform.position.height;
-
 
         card->m_transform.source.x = sourceX;
         card->m_transform.source.y = sourceY;
@@ -243,11 +245,11 @@ namespace ClassicLauncher
 
         Transform target = m_transform;
 
-        target.scale.x = scale;
-        target.scale.y = scale;
+        target.scale.x = scale * m_transform.scale.x;
+        target.scale.y = scale * m_transform.scale.y;
 
-        const float width = target.position.width * m_worldTransform.scale.x;
-        const float height = target.position.height * m_worldTransform.scale.y;
+        const float width = target.position.width * m_transform.scale.x;
+        const float height = target.position.height * m_transform.scale.y;
 
         target.position.x += (-width / 2 * scale) + width / 2;
         target.position.y += (-height / 2 * scale) + height / 2;

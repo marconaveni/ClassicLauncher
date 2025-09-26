@@ -159,6 +159,8 @@ namespace ClassicLauncher
     {
         const float x = ((m_transform.position.width - mHorizontalBox->m_transform.position.width) / 2)  + ThemesManager::Get().mConfigurationThemes.horizontalCardsPositionX;
         mHorizontalBox->m_transform.position.x = x;
+       // mHorizontalBox->m_transform.scale.x = 1.5f;
+       // mHorizontalBox->m_transform.scale.y = 1.5f;
     
     }
 

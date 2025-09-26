@@ -20,8 +20,8 @@ namespace ClassicLauncher
     {
         for (auto& entityPos : m_entitiesPositions)
         {
-            entityPos.entity->m_transform.position.x = 0;
-            entityPos.entity->m_transform.position.y = 0;
+            //entityPos.entity->m_transform.position.x = 0;
+            //entityPos.entity->m_transform.position.y = 0;
         }
 
         EntityGui::UpdateWorldTransform();

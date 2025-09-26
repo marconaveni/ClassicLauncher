@@ -70,12 +70,12 @@ namespace ClassicLauncher
             int id = 0;
             int insertionIndex = 0;
         };
+        RectFloat m_finalTransformRect;
 
     protected:
 
         Entity* mParent = nullptr;
         std::vector<Entity*> mChildEntities;
-        RectFloat m_finalTransformRect;
         
         TimerManager* GetTimerManager() { return m_timerManagerRef; }
         SpriteManager* GetSpriteManager() { return m_spriteManagerReference; }
