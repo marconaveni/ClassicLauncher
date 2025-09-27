@@ -57,7 +57,7 @@ namespace ClassicLauncher
         mArrow = GetEntityManager()->CreateEntity<GuiComponent>("arrow");
         mArrow->m_transform.position.x = m_transform.position.width / 2;
         mArrow->mTextureName = "sprite";
-        mArrow->AddAnimationFrame("frame", 0.2f, recs);
+        mArrow->GetAnimationManager().AddAnimationFrame("frame", 0.2f, recs);
         AddChild(mArrow);
     }
 

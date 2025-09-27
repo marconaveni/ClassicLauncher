@@ -51,7 +51,7 @@ namespace ClassicLauncher
                 {
                     target.position.x = x;
                     target.position.y = y;
-                    StartAnimation("frame-move", 0.15f, m_transform, target, Ease::EaseQuadInOut, false);
+                    GetAnimationManager().StartAnimation("frame-move", 0.15f, m_transform, target, Ease::EaseQuadInOut, false);
                     break;
                 }
             }
@@ -75,7 +75,7 @@ namespace ClassicLauncher
         target.position.y += (-height / 2 * target.scale.y) + height / 2;
 
         target.color.a = 0;
-        StartAnimation("card-zoom", time, m_transform, target, Ease::EaseQuadInOut, true);
+        GetAnimationManager().StartAnimation("card-zoom", time, m_transform, target, Ease::EaseQuadInOut, true);
         //GetTimerManager()->SetTimer(mTimer, [this]() { m_transform.color.a = 255; }, this, time * 1);
     }
 

@@ -46,6 +46,13 @@ namespace ClassicLauncher
         {
             return x == other.x && y == other.y && width == other.width && height == other.height;
         }
+
+        constexpr void operator=(const Vector2<T>& other) const
+        {
+            x = other.x; 
+            y = other.y;
+        }
+
         constexpr bool operator!=(const Rectangle& other) const { return !(*this == other); }
 
         void SetPosition(const Vector2<T>& position)

@@ -73,7 +73,7 @@ namespace ClassicLauncher
                         const char* title,
                         bool bAddChild = true);
         void StartVideo();
-        void FocusAnimation(bool bForce, int a, int b, const char* nameAnimation);
+        void FocusAnimation(bool bForce, const int alphaA, const int alphaB, const char* nameAnimation);
     };
 
 } // namespace ClassicLauncher

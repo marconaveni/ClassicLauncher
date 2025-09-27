@@ -154,20 +154,20 @@ namespace ClassicLauncher
         
     }
 
-    void GuiCard::FocusAnimation(bool bForce, const int a, const int b, const char* nameAnimation)
+    void GuiCard::FocusAnimation(bool bForce, const int alphaA, const int alphaB, const char* nameAnimation)
     {
         if (bForce)
         {
-            mCardSelected->m_transform.color.SetOpacity(a);
-            mCardBackgroundSelected->m_transform.color.SetOpacity(a);
+            mCardSelected->m_transform.color.SetOpacity(alphaA);
+            mCardBackgroundSelected->m_transform.color.SetOpacity(alphaA);
             return;
         }
-        mCardSelected->m_transform.color.SetOpacity(b);
-        mCardBackgroundSelected->m_transform.color.SetOpacity(b);
+        mCardSelected->m_transform.color.SetOpacity(alphaB);
+        mCardBackgroundSelected->m_transform.color.SetOpacity(alphaB);
         Transform target = mCardSelected->m_transform;
-        target.color.a = a;
-        mCardSelected->StartAnimation(nameAnimation, 0.2f, mCardSelected->m_transform, target, Ease::EaseLinearNone, false);
-        mCardBackgroundSelected->StartAnimation(nameAnimation, 0.2f, mCardSelected->m_transform, target, Ease::EaseLinearNone, false);
+        target.color.a = alphaA;
+        mCardSelected->GetAnimationManager().StartAnimation(nameAnimation, 0.2f, mCardSelected->m_transform, target, Ease::EaseLinearNone, false);
+        mCardBackgroundSelected->GetAnimationManager().StartAnimation(nameAnimation, 0.2f, mCardSelected->m_transform, target, Ease::EaseLinearNone, false);
     }
 
     void GuiCard::StartVideo()
@@ -256,7 +256,7 @@ namespace ClassicLauncher
 
         target.color.a = 0;
 
-        StartAnimation("card-zoom", time, m_transform, target, Ease::EaseQuadInOut, false);
+        GetAnimationManager().StartAnimation("card-zoom", time, m_transform, target, Ease::EaseQuadInOut, false);
         GetTimerManager()->SetTimer(m_timerAnimationReset, CALLFUNCTION(Reset, this), this, time * 2);
     }
 
