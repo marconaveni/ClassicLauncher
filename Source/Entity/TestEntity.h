@@ -1,7 +1,7 @@
 #ifndef TEST_ENTITY_H
 #define TEST_ENTITY_H
 
-#include "Guis/GuiComponent.h"
+#include "Guis/GuiBase.h"
 #include "Animations/Animation.h"
 #include "Window/RayWindow.h"
 #include "rl_wrap.h"
@@ -16,7 +16,7 @@ namespace ClassicLauncher
         TestEntity()
         {
             // cria filho já na lista de entidades filhos
-            m_child = std::make_unique<GuiComponent>();
+            m_child = std::make_unique<GuiBase>();
             AddChild(m_child.get());
 
             // define transform inicial do pai
@@ -41,7 +41,7 @@ namespace ClassicLauncher
             Transform end = m_transform;
             end.scale = {1.8f, 1.8f}; // anima para 1.8x
 
-            m_anim.StartAnimation(4.5f, start, end, Ease::EaseSineInOut, true);
+            m_anim.StartAnimation(4.5f, m_transform, end, Ease::EaseSineInOut, true);
         }
 
         void Update() override
@@ -65,7 +65,7 @@ namespace ClassicLauncher
         }
 
     private:
-        std::unique_ptr<GuiComponent> m_child;
+        std::unique_ptr<GuiBase> m_child;
         Animation m_anim;
     };
 }

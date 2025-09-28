@@ -3,7 +3,7 @@
 #include "Audio/AudioManager.h"
 #include "Entity/EntityManager.h"
 #include "Guis/GuiBlackScreen.h"
-#include "Guis/GuiComponent.h"
+#include "Guis/GuiBase.h"
 #include "Guis/GuiHorizontalCards.h"
 #include "Guis/GuiVideoPlayer.h"
 #include "Input/InputManager.h"
@@ -32,7 +32,7 @@ namespace ClassicLauncher
         m_transform.position.width = 1280.0f; //  todo: refactor    (float)pApplication->GetSpecification().width;
         m_transform.position.height = 720.0f; //  todo: refactor    (float)pApplication->GetSpecification().height;
 
-        mGuiBackground = GetEntityManager()->CreateEntity<GuiComponent>("GuiBackground");
+        mGuiBackground = GetEntityManager()->CreateEntity<GuiBase>("GuiBackground");
 
         mGuiBackground->m_transform.position.x = 0;
         mGuiBackground->m_transform.offset.x = 0;

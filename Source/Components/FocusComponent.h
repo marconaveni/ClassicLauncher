@@ -1,11 +1,10 @@
 #ifndef FOCUS_COMPONENT_H
 #define FOCUS_COMPONENT_H
 
-#include "Entity/Entity.h"
+#include "Data/Vector2.h"
 
 namespace ClassicLauncher
 {
-    class Application;
     class Transform;
     class FocusManager;
 

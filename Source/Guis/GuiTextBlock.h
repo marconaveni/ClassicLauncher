@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "Entity/EntityGui.h"
+#include "Entity/Entity.h"
 #include "Graphics/Font.h"
 
 namespace ClassicLauncher
@@ -15,9 +15,8 @@ namespace ClassicLauncher
         clip = 0x1
     };
 
-    class EntityGui;
 
-    class GuiTextBlock : public EntityGui
+    class GuiTextBlock : public Entity
     {
     public:
 

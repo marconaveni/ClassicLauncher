@@ -7,7 +7,7 @@ namespace ClassicLauncher
     {
     }
 
-    void GuiSizeBox::AttachGui(EntityGui* guiAttachment)
+    void GuiSizeBox::AttachGui(Entity* guiAttachment)
     {
         mGuiAttachment = guiAttachment;
         AddChild(mGuiAttachment);
@@ -15,7 +15,7 @@ namespace ClassicLauncher
 
     void GuiSizeBox::Update()
     {
-        EntityGui::Update();
+        Entity::Update();
         UpdateGuiAttachment();
         if (mCropGuiAttachment)
         {
@@ -28,7 +28,7 @@ namespace ClassicLauncher
 
     void GuiSizeBox::UpdateWorldTransform()
     {
-        EntityGui::UpdateWorldTransform();
+        Entity::UpdateWorldTransform();
     }
 
     void GuiSizeBox::UpdateGuiAttachment()

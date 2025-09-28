@@ -7,13 +7,13 @@ namespace ClassicLauncher
 
     void GuiCanvas::AddChild(Entity* entity)
     {
-        EntityGui::AddChild(entity);
+        Entity::AddChild(entity);
         m_entitiesPositions.push_back(EntityPosition{entity, Vector2f{}});
     }
 
     void GuiCanvas::Update()
     {
-        EntityGui::Update();
+        Entity::Update();
     }
 
     void GuiCanvas::UpdateWorldTransform()
@@ -24,7 +24,7 @@ namespace ClassicLauncher
             //entityPos.entity->m_transform.position.y = 0;
         }
 
-        EntityGui::UpdateWorldTransform();
+        Entity::UpdateWorldTransform();
     }
 
     void GuiCanvas::SetOffset(Entity* entity, Vector2f position)

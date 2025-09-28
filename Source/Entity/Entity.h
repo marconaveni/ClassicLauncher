@@ -11,7 +11,7 @@ namespace ClassicLauncher
 
     enum class EntityType
     {
-        GuiComponentClass = 1,
+        GuiBaseClass = 1,
         GuiWindowClass,
         GuiCardClass,
         GuiHorizontalCardsClass,
@@ -64,7 +64,7 @@ namespace ClassicLauncher
         std::string mTextureName = "transparent";
         RectFloat mScissorArea;
 
-        
+
         struct ZOrder
         {
             int id = 0;
@@ -76,7 +76,7 @@ namespace ClassicLauncher
 
         Entity* mParent = nullptr;
         std::vector<Entity*> mChildEntities;
-        
+
         TimerManager* GetTimerManager() { return m_timerManagerRef; }
         SpriteManager* GetSpriteManager() { return m_spriteManagerReference; }
         EntityManager* GetEntityManager() { return m_entityManagerReference; }
@@ -87,14 +87,14 @@ namespace ClassicLauncher
         friend class EntityManager;
         friend class RenderEntities;
         friend class FocusComponent;
-        
+
 
         bool mToDelete;
         bool mToDraw;
         bool mScissorMode;
         bool mVisible;
 
-        ZOrder m_zOrder {};
+        ZOrder m_zOrder{};
         std::string mNameId;
 
         SpriteManager* m_spriteManagerReference;
@@ -103,7 +103,7 @@ namespace ClassicLauncher
         FocusManager* m_focusManagerRef;
 
         // note: this should not be called directly use entity manager
-        void SetZOrder(int zOrder); 
+        void SetZOrder(int zOrder);
     };
 
 } // namespace ClassicLauncher

@@ -9,6 +9,7 @@
 #include "Themes/ThemesManager.h"
 #include "Audio/AudioManager.h"
 #include "Input/InputManager.h"
+#include "Guis/GuiBase.h"
 
 namespace ClassicLauncher
 {
@@ -65,14 +66,14 @@ namespace ClassicLauncher
         SetCover();
     }
 
-    void GuiCard::CreateCard(GuiComponent*& card,
+    void GuiCard::CreateCard(GuiBase*& card,
                              const float sourceX,
                              const float sourceY,
                              unsigned char alpha,
                              const char* title,
                              bool bAddChild)
     {
-        card = GetEntityManager()->CreateEntity<GuiComponent>(title);
+        card = GetEntityManager()->CreateEntity<GuiBase>(title);
 
         card->m_transform.position.x = 0;
         card->m_transform.position.y = 0;
@@ -117,6 +118,7 @@ namespace ClassicLauncher
     void GuiCard::Update()
     {
         GuiCanvas::Update();
+        Animatable::UpdateAnimation();
 
         Texture* textureReference = GetSpriteManager()->GetTexture(m_cover->mTextureName);
         if (textureReference != nullptr && m_isChangeTexture)
@@ -146,28 +148,36 @@ namespace ClassicLauncher
         if (IsFocus() && Keyboard::IsReleased(Keyboard::DOWN))
         {
             mGuiVideoPlayer->InitFullscreen();
+            Transform target = mCardSelected->m_transform;
+            target.color.a = 255;
+            //mCardBackgroundSelected->m_transform.color.a = 255;
+            GetAnimationManager().StartAnimation("teste", 0.2f, &mCardBackgroundSelected->m_transform, target, Ease::EaseLinearNone, false);
         }
         if (IsFocus() && Keyboard::IsReleased(Keyboard::UP))
         {   
             mGuiVideoPlayer->StopFullscreen();
+                        Transform target = mCardSelected->m_transform;
+            target.color.a = 0;
+            //mCardBackgroundSelected->m_transform.color.a = 255;
+            GetAnimationManager().StartAnimation("teste", 0.2f, &mCardBackgroundSelected->m_transform, target, Ease::EaseLinearNone, false);
         }
         
     }
 
-    void GuiCard::FocusAnimation(bool bForce, const int alphaA, const int alphaB, const char* nameAnimation)
+    void GuiCard::FocusAnimation(bool bForce, const int alphaA, const int alphaB, const std::string& nameAnimation)
     {
-        if (bForce)
-        {
-            mCardSelected->m_transform.color.SetOpacity(alphaA);
-            mCardBackgroundSelected->m_transform.color.SetOpacity(alphaA);
-            return;
-        }
-        mCardSelected->m_transform.color.SetOpacity(alphaB);
-        mCardBackgroundSelected->m_transform.color.SetOpacity(alphaB);
-        Transform target = mCardSelected->m_transform;
-        target.color.a = alphaA;
-        mCardSelected->GetAnimationManager().StartAnimation(nameAnimation, 0.2f, mCardSelected->m_transform, target, Ease::EaseLinearNone, false);
-        mCardBackgroundSelected->GetAnimationManager().StartAnimation(nameAnimation, 0.2f, mCardSelected->m_transform, target, Ease::EaseLinearNone, false);
+        // if (bForce)
+        // {
+        //     mCardSelected->m_transform.color.SetOpacity(alphaA);
+        //     mCardBackgroundSelected->m_transform.color.SetOpacity(alphaA);
+        //     return;
+        // }
+        // mCardSelected->m_transform.color.SetOpacity(alphaB);
+        // mCardBackgroundSelected->m_transform.color.SetOpacity(alphaB);
+        // Transform target = mCardSelected->m_transform;
+        // target.color.a = alphaA;
+        // mCardSelected->GetAnimationManager().StartAnimation(nameAnimation, 0.2f, mCardSelected->m_transform, target, Ease::EaseLinearNone, false);
+        // mCardBackgroundSelected->GetAnimationManager().StartAnimation(nameAnimation, 0.2f, mCardSelected->m_transform, target, Ease::EaseLinearNone, false);
     }
 
     void GuiCard::StartVideo()
@@ -181,24 +191,52 @@ namespace ClassicLauncher
 
     void GuiCard::SetCardFocus(bool bForce)
     {
-        FocusAnimation(bForce, 255, 0, "card-focus");
         GetTimerManager()->SetTimer(m_timerVideo, CALLFUNCTION(StartVideo, this), this, 5.0f);
         SetFocus();
+
+        // if (bForce)
+        // {
+        //     mCardSelected->m_transform.color.SetOpacity(255);
+        //     mCardBackgroundSelected->m_transform.color.SetOpacity(255);
+        // }
+
+        //FocusAnimation(bForce, 255, 0, "card-focus");
+
+
     }
 
     void GuiCard::RemoveCardFocus(bool bForce)
     {
-        FocusAnimation(bForce, 0, 255, "card-lost-focus");
+        // FocusAnimation(bForce, 0, 255, "card-lost-focus");
         mGuiVideoPlayer->Stop();
         m_audioManagerRef->MusicVolume(1.0f);
+
+
     }
 
     void GuiCard::OnFocus()
     {
+         Transform targetA = mCardSelected->m_transform;
+         targetA.color.a = 255;
+         Transform targetB = mCardBackgroundSelected->m_transform;
+         targetB.color.b = 255;
+         GetAnimationManager().StartAnimation("focus-card-a" , 0.2f, &mCardSelected->m_transform, targetA, Ease::EaseLinearNone, false);
+         GetAnimationManager().StartAnimation("focus-card-b" , 0.2f, &mCardBackgroundSelected->m_transform, targetB, Ease::EaseLinearNone, false);
     }
 
     void GuiCard::OnLostFocus()
     {
+        if (IsFocus())
+        {
+            return;
+        }
+        
+        Transform targetA = mCardSelected->m_transform;
+        targetA.color.a = 0;
+        Transform targetB = mCardBackgroundSelected->m_transform;
+        targetB.color.b = 0;
+        GetAnimationManager().StartAnimation("remove-focus-card-a" , 0.2f, &mCardSelected->m_transform, targetA, Ease::EaseLinearNone, false);
+        GetAnimationManager().StartAnimation("remove-focus-card-b" , 0.2f, &mCardBackgroundSelected->m_transform, targetB, Ease::EaseLinearNone, false);
     }
 
     // bool GuiCard::IsFocus() const
@@ -256,7 +294,7 @@ namespace ClassicLauncher
 
         target.color.a = 0;
 
-        GetAnimationManager().StartAnimation("card-zoom", time, m_transform, target, Ease::EaseQuadInOut, false);
+        GetAnimationManager().StartAnimation("card-zoom", time, &m_transform, target, Ease::EaseQuadInOut, true);
         GetTimerManager()->SetTimer(m_timerAnimationReset, CALLFUNCTION(Reset, this), this, time * 2);
     }
 

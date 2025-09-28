@@ -1,90 +1,98 @@
 #include "AnimationManager.h"
 
+#include "ClassicAssert.h"
 #include "Window/RayWindow.h"
+#include "Helper.h"
 
 
 namespace ClassicLauncher
 {
-    AnimationManager::AnimationManager(Transform& transform)
-        : m_transform(transform)
+    AnimationManager::AnimationManager()
     {
     }
 
     void AnimationManager::Update()
     {
+
+        CLASSIC_ASSERT(m_startCallback && m_runningCallback && m_finishCallback, "callbacks need to be registered");
+
+
         for (auto& spriteAnimation : m_spriteAnimations)
         {
-            spriteAnimation.second.Update(RayWindow::GetFrameTime());
-            Rectangle rec = spriteAnimation.second.GetCurrentSprite();
-            m_transform.source.x = rec.x;
-            m_transform.source.y = rec.y;
-            m_transform.source.width = rec.width;
-            m_transform.source.height = rec.height;
-            m_transform.position.width = rec.width;
-            m_transform.position.height = rec.height;
+            spriteAnimation.second.spriteAnimator.Update(RayWindow::GetFrameTime());
+            Rectangle rec = spriteAnimation.second.spriteAnimator.GetCurrentSprite();
+            spriteAnimation.second.transform->source.x = rec.x;
+            spriteAnimation.second.transform->source.y = rec.y;
+            spriteAnimation.second.transform->source.width = rec.width;
+            spriteAnimation.second.transform->source.height = rec.height;
+            spriteAnimation.second.transform->position.width = rec.width;
+            spriteAnimation.second.transform->position.height = rec.height;
         }
 
-        for (auto& animation : m_animations)
+        for (auto& animationTransform : m_animationsTransform)
         {
-            const std::string& name = animation.first;
-            Animation& anim = animation.second;
+            const std::string& name = animationTransform.first;
+            AnimationTransform& anim = animationTransform.second;
+            Animation& animation = animationTransform.second.animation;
 
-            if (anim.mIsStart)
+
+            if (animation.mIsStart)
             {
+                animation.mIsStart = false;
                 m_startCallback(name);
-                anim.mIsStart = false;
             }
-            anim.UpdateAnimation();
-            if (anim.mIsRunning)
+            if (animation.mIsRunning)
             {
+                animation.UpdateAnimation();
+                UpdateTransformAnimation(anim);
                 m_runningCallback(name);
-                UpdateTransformAnimation(anim);
+                LOG(LOG_CLASSIC_TRACE, "%s", name.c_str());
             }
-            if (anim.mIsFinish)
+            if (animation.mIsFinish)
             {
-                m_finishCallback(name);
-                anim.ResetAnimation();
+                animation.ResetAnimation();
                 UpdateTransformAnimation(anim);
+                m_finishCallback(name);
+                anim.transform = nullptr;
             }
         }
     }
 
-    void AnimationManager::UpdateTransformAnimation(const Animation& anim)
+    void AnimationManager::UpdateTransformAnimation(AnimationTransform& anim)
     {
-        m_transform.position.x = anim.mCurrentTransform.position.x;
-        m_transform.position.y = anim.mCurrentTransform.position.y;
-        m_transform.offset.x = anim.mCurrentTransform.offset.x;
-        m_transform.offset.y = anim.mCurrentTransform.offset.y;
-        m_transform.scale.x = anim.mCurrentTransform.scale.x;
-        m_transform.scale.y = anim.mCurrentTransform.scale.y;
-        m_transform.rotation = anim.mCurrentTransform.rotation;
-        m_transform.color = anim.mCurrentTransform.color;
+
+        if (!anim.transform)
+        {
+            return;
+        }
+
+        *anim.transform = anim.animation.mCurrentTransform;
+        
     }
 
     void AnimationManager::StartAnimation(const std::string& name,
                                           float durationAnimation,
-                                          const Transform& startAnimationTransform,
-                                          const Transform& finalAnimationTransform,
+                                          Transform* finalTransform,
+                                          const Transform& targetTransform,
                                           Ease typeAnimation,
                                           bool bForceReset)
     {
-        Animation& anim = m_animations[name];
-        anim.StartAnimation(durationAnimation,
-                            startAnimationTransform,
-                            finalAnimationTransform,
-                            typeAnimation,
-                            bForceReset);
+        AnimationTransform& anim = m_animationsTransform[name];
+        anim.transform = finalTransform;
+        anim.animation.StartAnimation(durationAnimation, *finalTransform, targetTransform, typeAnimation, bForceReset);
     }
 
     void AnimationManager::AddAnimationFrame(const std::string& name,
                                              const float timeAnimation,
+                                             Transform* transform,
                                              const std::vector<RectFloat>& spriteIndices)
     {
         if (m_spriteAnimations.find(name) != m_spriteAnimations.end())
         {
             m_spriteAnimations.erase(name);
         }
-        m_spriteAnimations[name] = SpriteAnimator(timeAnimation, spriteIndices);
+        m_spriteAnimations[name].spriteAnimator = SpriteAnimator(timeAnimation, spriteIndices);
+        m_spriteAnimations[name].transform = transform;
     }
 
 } // namespace ClassicLauncher

@@ -51,7 +51,7 @@ namespace ClassicLauncher
 
     void GuiTextBlock::Update()
     {
-        EntityGui::Update();
+        Entity::Update();
 
         if (m_centerText && m_transform.position.width > GetMeasureTextBox().x)
         {

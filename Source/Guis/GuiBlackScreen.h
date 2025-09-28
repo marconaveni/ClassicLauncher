@@ -1,13 +1,14 @@
 #ifndef GUI_BLACK_SCREEN_H
 #define GUI_BLACK_SCREEN_H
 
-#include "Entity/EntityGui.h"
+#include "Animations/Animatable.h"
+#include "Entity/Entity.h"
+#include "Utils/TimerManager.h"
 
 namespace ClassicLauncher
 {
-    class EntityGui;
 
-    class GuiBlackScreen : public EntityGui
+    class GuiBlackScreen : public Entity, public Animatable
     {
 
     public:
@@ -17,10 +18,12 @@ namespace ClassicLauncher
         void FadeIn();
         void FadeOut();
         void FadeInFadeOut();
-        void KeepBlack();
         void SetOpacity(int opacity);
         virtual void Update() override;
-        virtual void AnimationFinished(const std::string& name) override;
+
+    private:
+
+        TimerHandling m_timer{};
     };
 
 } // namespace ClassicLauncher

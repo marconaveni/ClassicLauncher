@@ -5,7 +5,7 @@
 #include "Graphics/SpriteManager.h"
 #include "Guis/Components/GuiHorizontalBox.h"
 #include "Guis/Components/GuiSizeBox.h"
-#include "Guis/GuiComponent.h"
+#include "Guis/GuiBase.h"
 #include "Helper.h"
 #include "Themes/ThemesManager.h"
 #include "Utils/Math.h"
@@ -34,7 +34,7 @@ namespace ClassicLauncher
         for (int i = 0; i < mSize; i++)
         {
             MiniCover miniCover;
-            miniCover.gui = GetEntityManager()->CreateEntity<GuiComponent>("miniCover");
+            miniCover.gui = GetEntityManager()->CreateEntity<GuiBase>("miniCover");
             miniCover.gui->m_transform.position.width = mSizeCover.x;
             miniCover.gui->m_transform.position.height = mSizeCover.y;
 
@@ -54,16 +54,17 @@ namespace ClassicLauncher
                                        RectFloat{1267.0f, 0.0f, 30.0f, 18.0f},
                                        RectFloat{1298.0f, 0.0f, 30.0f, 18.0f}};
 
-        mArrow = GetEntityManager()->CreateEntity<GuiComponent>("arrow");
+        mArrow = GetEntityManager()->CreateEntity<GuiBase>("arrow");
         mArrow->m_transform.position.x = m_transform.position.width / 2;
         mArrow->mTextureName = "sprite";
-        mArrow->GetAnimationManager().AddAnimationFrame("frame", 0.2f, recs);
+        GetAnimationManager().AddAnimationFrame("frame",  0.2f, &mArrow->m_transform, recs);
         AddChild(mArrow);
     }
 
     void GuiMiniCover::Update()
     {
-        EntityGui::Update();
+        Entity::Update();
+        Animatable::UpdateAnimation();
 
         for (auto& miniCover : mGuiCovers)
         {
@@ -89,7 +90,7 @@ namespace ClassicLauncher
 
     void GuiMiniCover::End()
     {
-        EntityGui::End();
+        Entity::End();
     }
 
     void GuiMiniCover::SetPositionCovers(int numCovers)
@@ -156,7 +157,7 @@ namespace ClassicLauncher
         SetPositionCovers(numCovers);
     }
 
-    void GuiMiniCover::SetCover(const std::string& name, GuiComponent* miniCover)
+    void GuiMiniCover::SetCover(const std::string& name, GuiBase* miniCover)
     {
         
         miniCover->mTextureName = name;

@@ -4,6 +4,7 @@
 
 namespace ClassicLauncher
 {
+
     GuiBlackScreen::GuiBlackScreen()
     {
         m_transform.color.SetOpacity(0);
@@ -19,7 +20,7 @@ namespace ClassicLauncher
         m_transform.color.SetOpacity(0);
         Transform target = m_transform;
         target.color.a = 255;
-        GetAnimationManager().StartAnimation("fade-in", 0.3f, m_transform, target, Ease::EaseLinearNone, false);
+        GetAnimationManager().StartAnimation("fade-in", 0.3f, &m_transform, target, Ease::EaseLinearNone, false);
     }
 
     void GuiBlackScreen::FadeOut()
@@ -27,7 +28,7 @@ namespace ClassicLauncher
         m_transform.color.SetOpacity(255);
         Transform target = m_transform;
         target.color.a = 0;
-        GetAnimationManager().StartAnimation("fade-out", 0.3f, m_transform, target, Ease::EaseQuadOut, false);
+        GetAnimationManager().StartAnimation("fade-out", 0.3f, &m_transform, target, Ease::EaseLinearNone, false);
     }
 
     void GuiBlackScreen::FadeInFadeOut()
@@ -35,14 +36,8 @@ namespace ClassicLauncher
         m_transform.color.SetOpacity(0);
         Transform target = m_transform;
         target.color.a = 255;
-        GetAnimationManager().StartAnimation("fade-in-out", 0.3f, m_transform, target, Ease::EaseLinearNone, false);
-    }
-
-    void GuiBlackScreen::KeepBlack()
-    {
-        m_transform.color.SetOpacity(255);
-        Transform target = m_transform;
-        GetAnimationManager().StartAnimation("keep", 1.0f, m_transform, target, Ease::EaseLinearNone, false);
+        GetAnimationManager().StartAnimation("fade-in", 0.3f, &m_transform, target, Ease::EaseLinearNone, false);
+        GetTimerManager()->SetTimer(m_timer, CALLFUNCTION(FadeOut, this), this, 1.0);
     }
 
     void GuiBlackScreen::SetOpacity(int opacity)
@@ -52,18 +47,9 @@ namespace ClassicLauncher
 
     void GuiBlackScreen::Update()
     {
-        EntityGui::Update();
+        Entity::Update();
+        Animatable::UpdateAnimation();
     }
 
-    void GuiBlackScreen::AnimationFinished(const std::string& name)
-    {
-        if (name == "fade-in-out")
-        {
-            KeepBlack();
-        }
-        if (name == "keep")
-        {
-            FadeOut();
-        }
-    }
+
 } // namespace  ClassicLauncher

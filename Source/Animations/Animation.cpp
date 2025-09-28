@@ -20,7 +20,7 @@ namespace ClassicLauncher
 
     void Animation::StartAnimation(const float durationAnimation,
                                    const Transform& startAnimation,
-                                   const Transform& finalAnimation,
+                                   const Transform& targetAnimation,
                                    const Ease typeAnimation,
                                    const bool bForceReset)
     {
@@ -31,14 +31,14 @@ namespace ClassicLauncher
         mDuration = durationAnimation;
         mStartTransform = startAnimation;
         mCurrentTransform = startAnimation;
-        mFinalTransform = finalAnimation;
+        mFinalTransform = targetAnimation;
         mIsReset = bForceReset;
         mType = typeAnimation;
     }
 
     void Animation::UpdateAnimation()
     {
-        mIsFinish = false;
+       // mIsFinish = false;
         if (mIsRunning)
         {
             if (mCurrentTime <= mDuration)
@@ -91,7 +91,7 @@ namespace ClassicLauncher
                 mCurrentTime += RayWindow::GetFrameTime();
                 return;
             }
-
+            mIsRunning = false;
             FinishAnimation();
         }
     }
@@ -104,9 +104,8 @@ namespace ClassicLauncher
 
     bool Animation::ResetAnimation()
     {
-        mIsRunning = false;
-        mCurrentTransform = (mIsReset) ? mStartTransform : mFinalTransform;
         mCurrentTime = 0;
+        mCurrentTransform = (mIsReset) ? mStartTransform : mFinalTransform;
         return mIsReset;
     }
 

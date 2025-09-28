@@ -5,19 +5,19 @@
 #include <string>
 #include <vector>
 
-#include "Entity/EntityGui.h"
+#include "Entity/Entity.h"
+#include "Animations/Animatable.h"
 
 namespace ClassicLauncher
 {
 
-    class EntityGui;
-    class GuiComponent;
+    class GuiBase;
     class GuiSizeBox;
     class GuiHorizontalBox;
     class EntityManager;
     class GameListManager;
 
-    class GuiMiniCover : public EntityGui
+    class GuiMiniCover : public Entity, public Animatable
     {
     public:
 
@@ -27,21 +27,21 @@ namespace ClassicLauncher
         void Update() override;
         void End() override;
         void SetCovers();
-        void SetCover(const std::string& name, GuiComponent* miniCover);
+        void SetCover(const std::string& name, GuiBase* miniCover);
         void ClearCovers();
 
     private:
 
         struct MiniCover
         {
-            GuiComponent* gui = nullptr;
+            GuiBase* gui = nullptr;
             bool focus = false;
         };
         
 
         std::vector<MiniCover> mGuiCovers;
         GuiHorizontalBox* mGuiHorizontalBox;
-        GuiComponent* mArrow;
+        GuiBase* mArrow;
         int mSize;
         Vector2f mSizeCover;
         bool m_focus = false;

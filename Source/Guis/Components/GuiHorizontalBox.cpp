@@ -13,10 +13,10 @@ namespace ClassicLauncher
 
     void GuiHorizontalBox::UpdateWorldTransform()
     {
-        EntityGui::UpdateWorldTransform();
+        Entity::UpdateWorldTransform();
     }
 
-    void GuiHorizontalBox::AttachGui(EntityGui* guiComponent)
+    void GuiHorizontalBox::AttachGui(Entity* guiComponent)
     {
         guiComponent->m_transform.position.x = 0;
         guiComponent->m_transform.position.y = 0;
@@ -33,7 +33,7 @@ namespace ClassicLauncher
 
     void GuiHorizontalBox::Update()
     {
-        EntityGui::Update();
+        Entity::Update();
 
         float x = 0;
         float canvasWidth = 0;

@@ -61,8 +61,8 @@ namespace ClassicLauncher
         Animation();
 
         void StartAnimation(float durationAnimation,
-                            const Transform& startAnimationTransform,
-                            const Transform& finalAnimationTransform,
+                            const Transform& startAnimation,
+                            const Transform& targetAnimation,
                             Ease typeAnimation = Ease::EaseLinearNone,
                             bool bForceReset = true);
         void UpdateAnimation();

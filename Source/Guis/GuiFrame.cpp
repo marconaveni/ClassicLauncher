@@ -2,6 +2,7 @@
 
 #include "Components/FocusComponent.h"
 #include "Components/FocusManager.h"
+#include "Helper.h"
 #include "Utils/Math.h"
 
 namespace ClassicLauncher
@@ -14,8 +15,8 @@ namespace ClassicLauncher
 
         m_transform.position.width = 258.0f;
         m_transform.position.height = 282.0f;
-        
-        
+
+
         //m_transform.origin.x = 258.0f / 2;
         //m_transform.origin.y = 282.0f / 2;
 
@@ -31,31 +32,21 @@ namespace ClassicLauncher
 
     void GuiFrame::SetFrame(bool bForce)
     {
-        std::vector<FocusComponent*> focusComponents = mFocusManager->GetAllFocusComponents();
-        for (auto& focus : focusComponents)
+        m_isMove = true;
+    }
+
+    void GuiFrame::AnimationFinished(const std::string& name)
+    {
+        if (name == "frame-move")
         {
-            if (focus->IsFocus())
-            {
-                Transform target = m_transform;
-                const float x = Math::Clamp(focus->GetPositionFocus().x, 130.0f, 898.0f);
-                const float y = focus->GetPositionFocus().y;
-                //const float x = 0;
-                //const float y = 0;
-
-                if (x == m_transform.position.x && y == m_transform.position.y)
-                {
-                    return;
-                }
-
-                if (!GetAnimation("frame-move").GetAnimationIsRun() && !GetAnimation("card-zoom").GetAnimationIsRun())
-                {
-                    target.position.x = x;
-                    target.position.y = y;
-                    GetAnimationManager().StartAnimation("frame-move", 0.15f, m_transform, target, Ease::EaseQuadInOut, false);
-                    break;
-                }
-            }
+            m_isMove = false;
+            LOG(LOG_CLASSIC_DEBUG, "finish animation frame");
         }
+        else{
+            
+            LOG(LOG_CLASSIC_DEBUG, "finish other animation frame");
+        }
+        
     }
 
     void GuiFrame::Click()
@@ -75,14 +66,45 @@ namespace ClassicLauncher
         target.position.y += (-height / 2 * target.scale.y) + height / 2;
 
         target.color.a = 0;
-        GetAnimationManager().StartAnimation("card-zoom", time, m_transform, target, Ease::EaseQuadInOut, true);
+        GetAnimationManager().StartAnimation("card-zoom", time, &m_transform, target, Ease::EaseQuadInOut, true);
         //GetTimerManager()->SetTimer(mTimer, [this]() { m_transform.color.a = 255; }, this, time * 1);
     }
 
     void GuiFrame::Update()
     {
-        EntityGui::Update();
+        
+        std::vector<FocusComponent*> focusComponents = mFocusManager->GetAllFocusComponents();
+        for (auto& focus : focusComponents)
+        {
+            if (focus->IsFocus())
+            {
+                Transform target = m_transform;
+                const float x = Math::Clamp(focus->GetPositionFocus().x, 130.0f, 898.0f);
+                const float y = focus->GetPositionFocus().y;
+                //const float x = 0;
+                //const float y = 0;
 
+                if (x == m_transform.position.x && y == m_transform.position.y)
+                {
+                    return;
+                }
+
+                if (m_isMove && !GetAnimation("frame-move").GetAnimationIsRun() && !GetAnimation("card-zoom").GetAnimationIsRun())
+                {
+                    if (GetAnimation("frame-move").GetAnimationIsRun())
+                    {
+                        LOG(LOG_CLASSIC_DEBUG, "call move frame");
+                        /* code */
+                    }
+
+                    target.position.x = x;
+                    target.position.y = y;
+                    GetAnimationManager().StartAnimation("frame-move", 0.15f, &m_transform, target, Ease::EaseQuadInOut, false);
+                }
+            }
+        }
+
+        Animatable::UpdateAnimation();
         // m_transform.offset.x = 300; //teste
     }
 

@@ -10,8 +10,8 @@ namespace ClassicLauncher
     class GuiHorizontalCards;
     class GuiBlackScreen;
     class GuiVideoPlayer;
-    class GuiComponent;
-    class EntityGui;
+    class GuiBase;
+    class Animatable;
     class GuiCanvas;
     class EntityManager;
     class GameListManager;
@@ -36,7 +36,7 @@ namespace ClassicLauncher
         GuiHorizontalCards* m_guiHorizontalCards;
         GuiBlackScreen* mGuiBlackScreen;
         GuiVideoPlayer* mGuiVideoPlayer;
-        GuiComponent* mGuiBackground;
+        GuiBase* mGuiBackground;
         TimerHandling mClickTimer;
         TimerHandling mInputTimer;
 

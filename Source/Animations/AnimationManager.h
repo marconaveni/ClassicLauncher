@@ -19,21 +19,21 @@ namespace ClassicLauncher
     public:
 
 
-
-
-        AnimationManager(Transform& transform);
+        AnimationManager();
         ~AnimationManager() = default;
         void Update();
-        Animation& GetAnimation(const std::string& name) { return m_animations[name]; }
-        void UpdateTransformAnimation(const Animation& anim);
+        Animation& GetAnimation(const std::string& name) { return m_animationsTransform[name].animation; }
+
         void StartAnimation(const std::string& name,
                             float durationAnimation,
-                            const Transform& startAnimationTransform,
-                            const Transform& finalAnimationTransform,
+                            Transform* finalTransform,
+                            const Transform& targetTransform,
                             Ease typeAnimation = Ease::EaseLinearNone,
                             bool bForceReset = true);
+
         void AddAnimationFrame(const std::string& name,
                                const float timeAnimation,
+                               Transform* transform,
                                const std::vector<RectFloat>& spriteIndices);
 
         void SetStartCallback(std::function<void(const std::string&)> callback)
@@ -51,13 +51,27 @@ namespace ClassicLauncher
 
     private:
 
+        struct AnimationTransform
+        {
+            Animation animation{};
+            Transform* transform = nullptr;
+        };
+
+        struct AnimationSpriteSource
+        {
+            SpriteAnimator spriteAnimator{};
+            Transform* transform = nullptr;
+        };
+
+        void UpdateTransformAnimation(AnimationTransform& anim);
+
         std::function<void(const std::string&)> m_startCallback;
         std::function<void(const std::string&)> m_runningCallback;
         std::function<void(const std::string&)> m_finishCallback;
 
-        Transform& m_transform;
-        std::map<std::string, SpriteAnimator> m_spriteAnimations;
-        std::map<std::string, Animation> m_animations;
+
+        std::map<std::string, AnimationSpriteSource> m_spriteAnimations;
+        std::map<std::string, AnimationTransform> m_animationsTransform;
     };
 } // namespace ClassicLauncher
 

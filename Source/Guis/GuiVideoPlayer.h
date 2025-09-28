@@ -4,18 +4,17 @@
 #include <memory>
 #include <string>
 
-#include "Entity/EntityGui.h"
+#include "Entity/Entity.h"
 #include "Video/VideoPlayer.h"
 
 namespace ClassicLauncher
 {
     class VideoPlayer;
-    class GuiComponent;
+    class GuiBase;
     class Application;
-    class EntityGui;
     class RenderTexture;
 
-    class GuiVideoPlayer : public EntityGui
+    class GuiVideoPlayer : public Entity
     {
     public:
 

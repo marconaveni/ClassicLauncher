@@ -101,12 +101,12 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::Draw()
     {
-        EntityGui::Draw();
+        Entity::Draw();
     }
 
     void GuiHorizontalCards::End()
     {
-        EntityGui::End();
+        Entity::End();
     }
 
     void GuiHorizontalCards::SetFocus(const int newId, bool bForce)
@@ -118,6 +118,7 @@ namespace ClassicLauncher
 
         const GameList* pGameList = m_gameListManagerRef->GetCurrentGameList();
         mGuiTitle->SetText((pGameList) ? pGameList->name : "");
+        mFrame->SetFrame();
     }
 
     void GuiHorizontalCards::SetCovers()
@@ -225,7 +226,7 @@ namespace ClassicLauncher
     int fps = 60;
     void GuiHorizontalCards::Update()
     {
-        EntityGui::Update();
+        Entity::Update();
 
         // m_transform.offset.y -= 1;
 
@@ -345,6 +346,7 @@ namespace ClassicLauncher
         {
             mFrame->SetFrame();
         }
+        
 
         UpdateCards();
     }

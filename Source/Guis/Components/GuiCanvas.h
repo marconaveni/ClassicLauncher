@@ -1,15 +1,15 @@
 #ifndef GUI_CANVAS
 #define GUI_CANVAS
 
-#include "Entity/EntityGui.h"
+#include "Entity/Entity.h"
 #include <vector>
 
 namespace ClassicLauncher
 {
     class Entity;
-    class EntityGui;
+    class Animatable;
 
-    class GuiCanvas : public EntityGui
+    class GuiCanvas : public Entity
     {
     public:
 

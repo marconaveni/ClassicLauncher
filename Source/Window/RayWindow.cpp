@@ -6,7 +6,6 @@
 
 namespace ray
 {
-#include "RayWindow.h"
 #include "raylib.h"
 } // namespace ray
 

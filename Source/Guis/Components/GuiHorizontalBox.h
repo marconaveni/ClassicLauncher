@@ -17,14 +17,14 @@ namespace ClassicLauncher
         virtual EntityType GetType() const override { return EntityType::GuiHorizontalBoxClass; }
         virtual void UpdateWorldTransform() override;
         void SetSpace(float spacer) { m_spacer = spacer; }
-        void AttachGui(EntityGui* guiComponent);
+        void AttachGui(Entity* guiComponent);
         void ClearAll();
         virtual void Update() override;
         virtual void Draw() override;
 
     private:
 
-        std::vector<EntityGui*> mGuiElements;
+        std::vector<Entity*> mGuiElements;
         float m_spacer = 0;
     };
 

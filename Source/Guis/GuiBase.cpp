@@ -1,8 +1,8 @@
-#include "GuiComponent.h"
+#include "GuiBase.h"
 
 namespace ClassicLauncher
 {
-    GuiComponent::GuiComponent()
+    GuiBase::GuiBase()
     {
         m_transform.position.width = 50.0f;
         m_transform.position.height = 50.0f;

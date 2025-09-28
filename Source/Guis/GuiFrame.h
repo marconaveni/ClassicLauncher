@@ -1,14 +1,15 @@
 #ifndef GUI_FRAME_H
 #define GUI_FRAME_H
 
-#include "Entity/EntityGui.h"
+#include "Entity/Entity.h"
+#include "Animations/Animatable.h"
 #include "Utils/TimerManager.h"
 
 namespace ClassicLauncher
 {
     class FocusManager;
 
-    class GuiFrame : public EntityGui
+    class GuiFrame : public Entity,  public Animatable
     {
     public:
 
@@ -16,6 +17,7 @@ namespace ClassicLauncher
         ~GuiFrame() = default;
         void SetFrame(bool bForce = false);
         void Click();
+        virtual void AnimationFinished(const std::string& name) override;
         virtual EntityType GetType() const override { return EntityType::GuiFrameClass; }
         virtual void Update() override;
 
@@ -23,6 +25,7 @@ namespace ClassicLauncher
 
         FocusManager* mFocusManager;
         TimerHandling mTimer;
+        bool m_isMove{false};
     };
 
 } // namespace ClassicLauncher

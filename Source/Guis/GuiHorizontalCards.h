@@ -10,7 +10,7 @@
 namespace ClassicLauncher
 {
 
-    class EntityGui;
+    class Animatable;
     class GuiMiniCover;
     class GuiCard;
     class GuiTextBlock;
@@ -27,7 +27,7 @@ namespace ClassicLauncher
         Right
     };
 
-    class GuiHorizontalCards : public EntityGui
+    class GuiHorizontalCards : public Entity
     {
     public:
 

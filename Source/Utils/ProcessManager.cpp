@@ -77,7 +77,7 @@ namespace ClassicLauncher
             case ProcessStatus::Running: rlw::WaitTime(2.5); break;
             case ProcessStatus::Failed: break;
             case ProcessStatus::Close:
-                guiBlackScreen->KeepBlack();
+                guiBlackScreen->FadeOut();
                 audioManager->ChangeMusic();
                 InputManager::EnableInput();
                 break;

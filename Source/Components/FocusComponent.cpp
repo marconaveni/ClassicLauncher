@@ -1,9 +1,7 @@
 #include "FocusComponent.h"
 
 #include "Components/FocusManager.h"
-#include "Entity/Entity.h"
-#include "FocusManager.h"
-#include "Helper.h"
+#include "Data/Transform.h"
 #include "Themes/ThemesManager.h"
 
 namespace ClassicLauncher

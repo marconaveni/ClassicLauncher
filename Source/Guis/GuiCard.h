@@ -6,14 +6,14 @@
 
 #include "Components/FocusComponent.h"
 #include "Entity/Entity.h"
+#include "Animations/Animatable.h"
 #include "Guis/Components/GuiCanvas.h"
-#include "GuiComponent.h"
 #include "Utils/TimerManager.h"
 
 namespace ClassicLauncher
 {
-    class EntityGui;
-    class GuiComponent;
+    class Animatable;
+    class GuiBase;
     class GuiSizeBox;
     class GuiVideoPlayer;
     class FocusComponent;
@@ -21,7 +21,7 @@ namespace ClassicLauncher
     class GameListManager;
     class AudioManager;
 
-    class GuiCard : public GuiCanvas, public FocusComponent
+    class GuiCard : public GuiCanvas, public FocusComponent, public Animatable
     {
 
     public:
@@ -50,15 +50,15 @@ namespace ClassicLauncher
         TimerHandling m_timerVideo;
         TimerHandling m_timerAnimationReset;
 
-        GuiComponent* mCardMain;
-        GuiComponent* mCardSelected;
-        GuiComponent* mCardFavorite;
-        GuiComponent* mCardBackgroundMain;
-        GuiComponent* mCardBackgroundSelected;
-        GuiComponent* mCardBackgroundFavorite;
+        GuiBase* mCardMain;
+        GuiBase* mCardSelected;
+        GuiBase* mCardFavorite;
+        GuiBase* mCardBackgroundMain;
+        GuiBase* mCardBackgroundSelected;
+        GuiBase* mCardBackgroundFavorite;
         GuiVideoPlayer* mGuiVideoPlayer;
-        GuiComponent* m_coverDefault;
-        GuiComponent* m_cover;
+        GuiBase* m_coverDefault;
+        GuiBase* m_cover;
         //bool mIsFocus = false;
         //bool mIsFront = false;
         bool m_isChangeTexture = false;
@@ -66,14 +66,14 @@ namespace ClassicLauncher
         GameListManager* m_gameListManagerRef;
         AudioManager* m_audioManagerRef;
 
-        void CreateCard(GuiComponent*& card,
+        void CreateCard(GuiBase*& card,
                         float sourceX,
                         float sourceY,
                         unsigned char alpha,
                         const char* title,
                         bool bAddChild = true);
         void StartVideo();
-        void FocusAnimation(bool bForce, const int alphaA, const int alphaB, const char* nameAnimation);
+        void FocusAnimation(bool bForce, const int alphaA, const int alphaB, const std::string& nameAnimation);
     };
 
 } // namespace ClassicLauncher
