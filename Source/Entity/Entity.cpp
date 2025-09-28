@@ -7,12 +7,7 @@ namespace ClassicLauncher
 
 
     Entity::Entity()
-        : mToDelete(false)
-        , mToDraw(true)
-        , mScissorMode(false)
-        , mVisible(true)
-        , mChildEntities()
-        , mNameId()
+        : mToDelete(false), mToDraw(true), mScissorMode(false), mVisible(true), mChildEntities(), mNameId()
     {
     }
 
@@ -22,7 +17,7 @@ namespace ClassicLauncher
         {
             const float parentX = mParent->m_worldTransform.position.x;
             const float parentY = mParent->m_worldTransform.position.y;
-            
+
 
             m_worldTransform.position.x = parentX + (m_transform.position.x * mParent->m_worldTransform.scale.x);
             m_worldTransform.position.y = parentY + (m_transform.position.y * mParent->m_worldTransform.scale.y);
@@ -39,8 +34,8 @@ namespace ClassicLauncher
 
             // Propaga a opacidade (alpha) do pai para o filho
             unsigned char parentAlpha = mParent->m_worldTransform.color.a;
-            m_worldTransform.color.a = static_cast<unsigned char>((static_cast<int>(m_transform.color.a) * static_cast<int>(parentAlpha)) / 255);
-
+            m_worldTransform.color.a = static_cast<unsigned char>(
+                (static_cast<int>(m_transform.color.a) * static_cast<int>(parentAlpha)) / 255);
         }
         else
         {
@@ -130,5 +125,221 @@ namespace ClassicLauncher
     {
         m_zOrder.id = zOrder;
     }
+
+    // Getter and setters
+
+    void Entity::MarkTransformAsDirty()
+    {
+        if (m_isTransformDirty) // Optimization: if it's already dirty, there's no need to propagate it again.
+        {
+            return;
+        }
+
+        m_isTransformDirty = true;
+
+
+        for (auto& child : mChildEntities) // Propagate the "dirty" state to all children, recursively
+        {
+            child->MarkTransformAsDirty();
+        }
+    }
+
+    void Entity::SetPosition(float x, float y)
+    {
+        if (m_transform.position.x != x || m_transform.position.y != y)
+        {
+            MarkTransformAsDirty();
+            m_transform.position.x = x;
+            m_transform.position.y = y;
+        }
+    }
+
+    Vector2f Entity::GetPosition() const
+    {
+        return Vector2f(m_transform.position.x, m_transform.position.y);
+    }
+
+    RectFloat& Entity::GetPositionRef()
+    {
+        MarkTransformAsDirty();
+        return m_transform.position;
+    }
+
+    void Entity::SetSize(float width, float height)
+    {
+        if (m_transform.position.width != width || m_transform.position.height != height)
+        {
+            m_transform.position.width = width;
+            m_transform.position.height = height;
+            MarkTransformAsDirty();
+        }
+    }
+
+    Sizef Entity::GetSize() const
+    {
+        return Sizef(m_transform.position.width, m_transform.position.height);
+    }
+
+    void Entity::SetSource(float x, float y, float width, float height)
+    {
+        if (m_transform.source.x != x || m_transform.source.x != y || m_transform.source.width != width ||
+            m_transform.source.height != height)
+        {
+            m_transform.source.x = x;
+            m_transform.source.y = y;
+            m_transform.source.width = width;
+            m_transform.source.height = height;
+            MarkTransformAsDirty();
+        }
+    }
+
+    RectFloat Entity::GetSource() const
+    {
+        return m_transform.source;
+    }
+
+    RectFloat& Entity::GetSourceRef()
+    {
+        MarkTransformAsDirty();
+        return m_transform.source;
+    }
+
+    void Entity::SetOffset(float x, float y)
+    {
+        if (m_transform.offset.x != x || m_transform.offset.x != y)
+        {
+            MarkTransformAsDirty();
+            m_transform.offset.x = x;
+            m_transform.offset.y = y;
+        }
+    }
+
+    Vector2f Entity::GetOffset() const
+    {
+        return Vector2f(m_transform.offset.x, m_transform.offset.y);
+    }
+
+    Vector2f& Entity::GetOffsetRef()
+    {
+        MarkTransformAsDirty();
+        return m_transform.offset;
+    }
+
+    void Entity::SetOrigin(float x, float y)
+    {
+        if (m_transform.origin.x != x || m_transform.origin.x != y)
+        {
+            MarkTransformAsDirty();
+            m_transform.origin.x = x;
+            m_transform.origin.y = y;
+        }
+    }
+
+    Vector2f Entity::GetOrigin() const
+    {
+        return Vector2f(m_transform.origin.x, m_transform.origin.y);
+    }
+
+    Vector2f& Entity::GetOriginRef()
+    {
+        MarkTransformAsDirty();
+        return m_transform.origin;
+    }
+
+    void Entity::SetScale(float x, float y)
+    {
+        if (m_transform.scale.x != x || m_transform.scale.x != y)
+        {
+            MarkTransformAsDirty();
+            m_transform.scale.x = x;
+            m_transform.scale.y = y;
+        }
+    }
+
+    Vector2f Entity::GetScale() const
+    {
+        return Vector2f(m_transform.scale.x, m_transform.scale.y);
+    }
+
+    Vector2f& Entity::GetScaleRef()
+    {
+        MarkTransformAsDirty();
+        return m_transform.scale;
+    }
+
+    void Entity::SetRotation(float rotation)
+    {
+        if (m_transform.rotation != rotation)
+        {
+            MarkTransformAsDirty();
+            m_transform.rotation = rotation;
+        }
+    }
+
+    float Entity::GetRotation() const
+    {
+        return m_transform.rotation;
+    }
+
+    float& Entity::GetRotationRef()
+    {
+        MarkTransformAsDirty();
+        return m_transform.rotation;
+    }
+
+    void Entity::SetColor(float r, float g, float b)
+    {
+        SetColor(r, g, b, m_transform.color.a);
+    }
+
+    void Entity::SetColor(float r, float g, float b, float a)
+    {
+        if (m_transform.color.r != r || m_transform.color.g != g || m_transform.color.b != b ||
+            m_transform.color.a != a)
+        {
+            MarkTransformAsDirty();
+            m_transform.color.r = r;
+            m_transform.color.g = g;
+            m_transform.color.b = b;
+            m_transform.color.a = a;
+        }
+    }
+
+    void Entity::SetColor(Color color)
+    {
+        SetColor(color.r, color.g, color.b, color.a);
+    }
+
+    void Entity::SetColorRed(float r)
+    {
+        SetColor(r, m_transform.color.g, m_transform.color.b, m_transform.color.a);
+    }
+
+    void Entity::SetColorGreen(float g)
+    {
+        SetColor(m_transform.color.r, g, m_transform.color.b, m_transform.color.a);
+    }
+
+    void Entity::SetColorBlue(float b)
+    {
+        SetColor(m_transform.color.r, m_transform.color.g, b, m_transform.color.a);
+    }
+
+    void Entity::SetOpacity(float a)
+    {
+        SetColor(m_transform.color.r, m_transform.color.g, m_transform.color.b, a);
+    }
+
+    Color Entity::GetColor() const
+    {
+        return m_transform.color;
+    }
+
+    Color& Entity::GetColorRef()
+    {
+        MarkTransformAsDirty();
+        return m_transform.color;
+    }
+
 
 } // namespace ClassicLauncher

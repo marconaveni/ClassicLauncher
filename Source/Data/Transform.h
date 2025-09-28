@@ -11,14 +11,14 @@ namespace ClassicLauncher
     {
     public:
 
-        RectFloat pivot{};       
+        // RectFloat pivot{};       
         RectFloat position{};       // Posição local (relativa ao pai)
-        Vector2f scale{1.0f, 1.0f}; // Escala local (relativa ao pai)
-        float rotation{};           // Rotação local (relativa ao pai)
-        Color color{255, 255, 255, 255};
         RectFloat source{}; // Área da textura a ser usada (isso está bom)
         Vector2f offset{};
         Vector2f origin{};
+        Vector2f scale{1.0f, 1.0f}; // Escala local (relativa ao pai)
+        float rotation{};           // Rotação local (relativa ao pai)
+        Color color{255, 255, 255, 255};
 
     private:
 
