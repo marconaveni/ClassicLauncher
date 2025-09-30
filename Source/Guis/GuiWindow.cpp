@@ -72,19 +72,33 @@ namespace ClassicLauncher
         GuiCanvas::Update();
         if (Keyboard::IsDown(Keyboard::Key::A))
         {
-            m_transform.position.x -= 10;
+            Vector2f pos = GetPosition();
+            pos.x -= 10;
+            SetPosition(pos);
+            //m_transform.position.x -= 10;
+                        
         }
+                    
         if (Keyboard::IsDown(Keyboard::Key::D))
         {
-            m_transform.position.x += 10;
+            Vector2f pos = GetPosition();
+            pos.x += 10;
+            SetPosition(pos);
+            //m_transform.position.x += 10;
         }
         if (Keyboard::IsDown(Keyboard::Key::W))
         {
-            m_transform.position.y -= 10;
+            Vector2f pos = GetPosition();
+            pos.y -= 10;
+            SetPosition(pos);
+            //m_transform.position.y -= 10;
         }
         if (Keyboard::IsDown(Keyboard::Key::S))
         {
-            m_transform.position.y += 10;
+            Vector2f pos = GetPosition();
+            pos.y += 10;
+            SetPosition(pos);
+            //m_transform.position.y += 10;
         }
 
         if (Keyboard::IsDown(Keyboard::Key::KP_ADD))

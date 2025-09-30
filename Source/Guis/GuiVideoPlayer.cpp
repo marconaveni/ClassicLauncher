@@ -147,8 +147,8 @@ namespace ClassicLauncher
 
         rlw::DrawTexturePro(*m_renderTexture->GetTexture(),
                             sourceRect,         /* RectFloat{0, 562, 21, 720}, posição spritesheet */
-                            m_finalTransformRect, /* RectFloat{0, 0, 1280, 720} posx posy tam_rect  larg_rect */
-                            Vector2f{0, 0},
+                            m_finalRender.transform, /* RectFloat{0, 0, 1280, 720} posx posy tam_rect  larg_rect */
+                            m_finalRender.origin,
                             m_worldTransform.rotation,
                             m_worldTransform.color);
 

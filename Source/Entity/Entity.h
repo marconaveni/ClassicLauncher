@@ -110,6 +110,8 @@ namespace ClassicLauncher
         Color GetColor() const;
         Color& GetColorRef();
 
+        Transform& GetTransformRef();
+
         // End Getters and Setters
         // clang-format on
 
@@ -124,7 +126,17 @@ namespace ClassicLauncher
             int id = 0;
             int insertionIndex = 0;
         };
-        RectFloat m_finalTransformRect;
+
+        struct FinalRenderTransform
+        {
+            RectFloat transform{};
+            RectFloat source{};
+            Vector2f origin{};
+        };
+
+        FinalRenderTransform m_finalRender{};
+        
+        //RectFloat m_finalTransformRect;
 
     protected:
 

@@ -13,33 +13,42 @@ namespace ClassicLauncher
 
     void Entity::UpdateWorldTransform()
     {
-        if (mParent)
+
+        if (mParent && mParent->m_isTransformDirty)
         {
-            const float parentX = mParent->m_worldTransform.position.x;
-            const float parentY = mParent->m_worldTransform.position.y;
-
-
-            m_worldTransform.position.x = parentX + (m_transform.position.x * mParent->m_worldTransform.scale.x);
-            m_worldTransform.position.y = parentY + (m_transform.position.y * mParent->m_worldTransform.scale.y);
-
-            // apply scale
-            m_worldTransform.scale.x = mParent->m_worldTransform.scale.x * m_transform.scale.x;
-            m_worldTransform.scale.y = mParent->m_worldTransform.scale.y * m_transform.scale.y;
-
-            // apply offset
-            m_worldTransform.offset.x = mParent->m_worldTransform.offset.x + m_transform.offset.x;
-            m_worldTransform.offset.y = mParent->m_worldTransform.offset.y + m_transform.offset.y;
-
-            m_worldTransform.rotation = mParent->m_worldTransform.rotation + m_transform.rotation;
-
-            // Propaga a opacidade (alpha) do pai para o filho
-            unsigned char parentAlpha = mParent->m_worldTransform.color.a;
-            m_worldTransform.color.a = static_cast<unsigned char>(
-                (static_cast<int>(m_transform.color.a) * static_cast<int>(parentAlpha)) / 255);
+            m_isTransformDirty = true;
         }
-        else
+
+        if (m_isTransformDirty)
         {
-            m_worldTransform = m_transform;
+            if (mParent)
+            {
+                const float parentX = mParent->m_worldTransform.position.x;
+                const float parentY = mParent->m_worldTransform.position.y;
+
+
+                m_worldTransform.position.x = parentX + (m_transform.position.x * mParent->m_worldTransform.scale.x);
+                m_worldTransform.position.y = parentY + (m_transform.position.y * mParent->m_worldTransform.scale.y);
+
+                // apply scale
+                m_worldTransform.scale.x = mParent->m_worldTransform.scale.x * m_transform.scale.x;
+                m_worldTransform.scale.y = mParent->m_worldTransform.scale.y * m_transform.scale.y;
+
+                // apply offset
+                m_worldTransform.offset.x = mParent->m_worldTransform.offset.x + m_transform.offset.x;
+                m_worldTransform.offset.y = mParent->m_worldTransform.offset.y + m_transform.offset.y;
+
+                m_worldTransform.rotation = mParent->m_worldTransform.rotation + m_transform.rotation;
+
+                // Propaga a opacidade (alpha) do pai para o filho
+                unsigned char parentAlpha = mParent->m_worldTransform.color.a;
+                m_worldTransform.color.a = static_cast<unsigned char>(
+                    (static_cast<int>(m_transform.color.a) * static_cast<int>(parentAlpha)) / 255);
+            }
+            else
+            {
+                m_worldTransform = m_transform;
+            }
         }
 
         for (auto& entity : mChildEntities)
@@ -339,6 +348,12 @@ namespace ClassicLauncher
     {
         MarkTransformAsDirty();
         return m_transform.color;
+    }
+
+    Transform& Entity::GetTransformRef()
+    {
+        MarkTransformAsDirty();
+        return m_transform;
     }
 
 

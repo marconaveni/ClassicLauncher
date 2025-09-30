@@ -37,7 +37,7 @@ namespace ClassicLauncher
         Transform target = m_transform;
         target.color.a = 255;
         GetAnimationManager().StartAnimation("fade-in", 0.3f, &m_transform, target, Ease::EaseLinearNone, false);
-        GetTimerManager()->SetTimer(m_timer, CALLFUNCTION(FadeOut, this), this, 1.0);
+        GetTimerManager()->SetTimer(m_timer, CALLFUNCTION(FadeOut, this), this, 1.8f);
     }
 
     void GuiBlackScreen::SetOpacity(int opacity)
