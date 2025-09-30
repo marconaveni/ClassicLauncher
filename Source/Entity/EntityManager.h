@@ -82,4 +82,4 @@ namespace ClassicLauncher
 
 } // namespace ClassicLauncher
 
-#endif // ENTITYMANAGER_H
+#endif // ENTITY_MANAGER_H

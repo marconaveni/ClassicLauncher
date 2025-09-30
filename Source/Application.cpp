@@ -3,6 +3,7 @@
 #include <string_view>
 
 #include "Audio/AudioManager.h"
+#include "Entity/TestEntity.h"
 #include "Graphics/RenderScreen.h"
 #include "Graphics/SpriteManager.h"
 #include "Guis/GuiWindow.h"
@@ -15,7 +16,6 @@
 #include "Utils/Utils.h"
 #include "Window/RayWindow.h"
 #include "rl_wrap.h"
-#include "Entity/TestEntity.h"
 
 namespace ClassicLauncher
 {
@@ -76,14 +76,11 @@ namespace ClassicLauncher
 
         if (m_gameListManager.GetGameListSize() > 0)
         {
-             mGuiWindow = m_entityManager.CreateEntity<GuiWindow>("GuiWindow",
-                                                                  &m_gameListManager,
-                                                                  *m_audioManager,
-                                                                  m_processManager);
-             mGuiWindow->Init();
-
-
-
+            mGuiWindow = m_entityManager.CreateEntity<GuiWindow>("GuiWindow",
+                                                                 &m_gameListManager,
+                                                                 *m_audioManager,
+                                                                 m_processManager);
+            mGuiWindow->Init();
         }
         else
         {
@@ -101,12 +98,25 @@ namespace ClassicLauncher
     {
 
 
+        if (Keyboard::IsReleased(Keyboard::F10))
+        {
+            Entity* parent = mGuiWindow; // Pega uma entidade qualquer como pai
+            for (int i = 0; i < 5000; ++i)
+            {
+                // Cria 5000 entidades filhas, uma dentro da outra (hierarquia profunda)
+                auto* newChild = m_entityManager.CreateEntity<GuiBase>("StressTestChild");
+                newChild->SetPosition(1.0f, 1.0f); // Posição local pequena
+                parent->AddChild(newChild);
+                parent = newChild;
+            }
+            PRINT("Stress Test: 5000 entities created!", 5.0f);
+        }
+
         if (Keyboard::IsReleased(Keyboard::C))
         {
             auto testEntity = m_entityManager.CreateEntity<TestEntity>("TestEntity");
             testEntity->InitAnim();
         }
-        
 
 
         // Log(LOG_CLASSIC_DEBUG, TEXTBOOL(InputManager::GetInputLeftFaceLeft()));

@@ -47,6 +47,7 @@ namespace ClassicLauncher
     {
 
         const Texture* texture = m_spriteManagerReference->GetTexture(entity->mTextureName);
+       // const Texture* texture = &textureTeste;
 
 
         if (entity->m_isTransformDirty)

@@ -49,12 +49,14 @@ namespace ClassicLauncher
             {
                 m_worldTransform = m_transform;
             }
-        }
 
-        for (auto& entity : mChildEntities)
-        {
-            entity->UpdateWorldTransform();
+            for (auto& entity : mChildEntities)
+            {
+                entity->UpdateWorldTransform();
+            }
+            
         }
+        
     }
 
     void Entity::SelfDelete()
