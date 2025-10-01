@@ -57,7 +57,6 @@ namespace ClassicLauncher
         void DisableScissorMode() { mScissorMode = false; }
         void SetVisible(const bool bEnable) { mVisible = bEnable; }
         [[nodiscard]] ZOrder GetZOrder() const { return m_zOrder; }
-        const Transform& GetWorldTransform() const { return m_worldTransform; }
         [[nodiscard]] bool GetTransformIsDirty() const { return m_isTransformDirty; }
         void MarkTransformAsDirty();
         
@@ -98,8 +97,7 @@ namespace ClassicLauncher
         void SetRotation(float rotation);
         float GetRotation() const;
         float& GetRotationRef();
-        
-        
+            
         void SetColor(float r, float g, float b);
         void SetColor(float r, float g, float b, float a);
         void SetColor(Color color);
@@ -111,11 +109,14 @@ namespace ClassicLauncher
         Color& GetColorRef();
 
         Transform& GetTransformRef();
+        Transform& GetWorldTransformRef();
+        const Transform& GetTransform() const { return m_transform; }
+        const Transform& GetWorldTransform() const { return m_worldTransform; }
 
         // End Getters and Setters
         // clang-format on
 
-        Transform m_transform;
+       
         Transform m_worldTransform;
         std::string mTextureName = "transparent";
         RectFloat mScissorArea;
@@ -154,6 +155,7 @@ namespace ClassicLauncher
         friend class RenderEntities;
         friend class FocusComponent;
 
+        Transform m_transform;
 
         bool mToDelete;
         bool mToDraw;

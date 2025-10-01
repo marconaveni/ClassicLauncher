@@ -13,21 +13,24 @@ namespace ClassicLauncher
     {
         mTextureName = "sprite";
 
-        m_transform.position.width = 258.0f;
-        m_transform.position.height = 282.0f;
+        SetSize(258.0f, 282.0f);
+        //m_transform.position.width = 258.0f;
+        //m_transform.position.height = 282.0f;
 
 
         //m_transform.origin.x = 258.0f / 2;
         //m_transform.origin.y = 282.0f / 2;
 
+        SetSource(771.0f, 0.0f, 258.0f, 282.0f);
 
-        m_transform.source.x = 771.0f;
-        m_transform.source.y = 0.0f;
-        m_transform.source.width = 258.0f;
-        m_transform.source.height = 282.0f;
 
-        m_transform.position.x = 100;
-        m_transform.position.y = 100;
+        //m_transform.source.x = 771.0f;
+        //m_transform.source.y = 0.0f;
+        //m_transform.source.width = 258.0f;
+        //m_transform.source.height = 282.0f;
+
+        //m_transform.position.x = 100;
+        //m_transform.position.y = 100;
     }
 
     void GuiFrame::SetFrame(bool bForce)
@@ -42,8 +45,8 @@ namespace ClassicLauncher
             m_isMove = false;
             LOG(LOG_CLASSIC_DEBUG, "finish animation frame");
         }
-        else{
-            
+        else
+        {    
             LOG(LOG_CLASSIC_DEBUG, "finish other animation frame");
         }
         
@@ -57,7 +60,7 @@ namespace ClassicLauncher
         const float time = 0.3f;
         const float scale = 1.75f;
 
-        Transform target = m_transform;
+        Transform target = GetTransform();
 
         target.scale.x = scale;
         target.scale.y = scale;
@@ -66,7 +69,7 @@ namespace ClassicLauncher
         target.position.y += (-height / 2 * target.scale.y) + height / 2;
 
         target.color.a = 0;
-        GetAnimationManager().StartAnimation("card-zoom", time, &m_transform, target, Ease::EaseQuadInOut, true);
+        GetAnimationManager().StartAnimation("card-zoom", time, this, target, Ease::EaseQuadInOut, true);
         //GetTimerManager()->SetTimer(mTimer, [this]() { m_transform.color.a = 255; }, this, time * 1);
     }
 
@@ -78,13 +81,13 @@ namespace ClassicLauncher
         {
             if (focus->IsFocus())
             {
-                Transform target = m_transform;
+                Transform target = GetTransform();
                 const float x = Math::Clamp(focus->GetPositionFocus().x, 130.0f, 898.0f);
                 const float y = focus->GetPositionFocus().y;
                 //const float x = 0;
                 //const float y = 0;
 
-                if (x == m_transform.position.x && y == m_transform.position.y)
+                if (x == GetPosition().x && y == GetPosition().y)
                 {
                     return;
                 }
@@ -99,7 +102,7 @@ namespace ClassicLauncher
 
                     target.position.x = x;
                     target.position.y = y;
-                    GetAnimationManager().StartAnimation("frame-move", 0.15f, &m_transform, target, Ease::EaseQuadInOut, false);
+                    GetAnimationManager().StartAnimation("frame-move", 0.15f, this, target, Ease::EaseQuadInOut, false);
                 }
             }
         }

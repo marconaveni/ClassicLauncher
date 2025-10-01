@@ -14,6 +14,9 @@
 namespace ClassicLauncher
 {
 
+
+    class Entity;
+
     class AnimationManager
     {
     public:
@@ -26,14 +29,14 @@ namespace ClassicLauncher
 
         void StartAnimation(const std::string& name,
                             float durationAnimation,
-                            Transform* finalTransform,
+                            Entity* targetEntity,
                             const Transform& targetTransform,
                             Ease typeAnimation = Ease::EaseLinearNone,
                             bool bForceReset = true);
 
         void AddAnimationFrame(const std::string& name,
                                const float timeAnimation,
-                               Transform* transform,
+                               Entity* targetEntity,
                                const std::vector<RectFloat>& spriteIndices);
 
         void SetStartCallback(std::function<void(const std::string&)> callback)
@@ -54,13 +57,13 @@ namespace ClassicLauncher
         struct AnimationTransform
         {
             Animation animation{};
-            Transform* transform = nullptr;
+            Entity* entity = nullptr;
         };
 
         struct AnimationSpriteSource
         {
             SpriteAnimator spriteAnimator{};
-            Transform* transform = nullptr;
+            Entity* entity = nullptr;
         };
 
         void UpdateTransformAnimation(AnimationTransform& anim);

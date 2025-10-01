@@ -19,6 +19,7 @@ namespace ClassicLauncher
 
 #ifdef _DEBUG
     static bool enableDebug = false;
+    static bool disableCache = false;
 #endif
 
     RenderEntities::RenderEntities(SpriteManager* spriteManagerReference)
@@ -32,6 +33,10 @@ namespace ClassicLauncher
         if (Keyboard::IsReleased(Keyboard::Key::FIVE))
         {
             enableDebug = !enableDebug;
+        }
+        if (Keyboard::IsReleased(Keyboard::Key::SIX))
+        {
+            disableCache = !disableCache;
         }
 #endif
 
@@ -73,7 +78,7 @@ namespace ClassicLauncher
                 entity->m_transform.origin.y * entity->m_worldTransform.scale.y * m_renderScale
             };
 
-            //entity->m_isTransformDirty = false;
+            entity->m_isTransformDirty = false;
                 
         }
         

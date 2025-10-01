@@ -29,7 +29,7 @@ namespace ClassicLauncher
         virtual void Draw() override;
         virtual void End() override;
         void SetText(const std::string& text);
-        void SetSize(int size);
+        void SetSizeFont(int size);
         void SetSpacing(int spacing);
         void SetColor(Color tint);
         Vector2f GetMeasureTextBox();

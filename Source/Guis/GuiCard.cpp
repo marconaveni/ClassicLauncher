@@ -25,14 +25,13 @@ namespace ClassicLauncher
 
     void GuiCard::CreateCards(int x, int y)
     {
-        m_transform.position.x = 0; //static_cast<float>(x);
-        m_transform.position.y = 0; //static_cast<float>(y);
-        m_transform.position.width = 256;
-        m_transform.position.height = 280;
-        //m_transform.origin = {256 / 2 , 280 / 2};
+        SetPosition(0.0f, 0.0f);
+        SetSize(256.0f, 280.0f);
+        // m_transform.position.x = 0; //static_cast<float>(x);
+        // m_transform.position.y = 0; //static_cast<float>(y);
+        // m_transform.position.width = 256;
+        // m_transform.position.height = 280;
 
-        //m_transform.origin.x = m_transform.position.width / 2.0f;
-        //m_transform.origin.y = m_transform.position.height / 2.0f;
 
         CreateCard(mCardBackgroundMain, 0, 281, 255, "GuiCardBackgroundMain");
         CreateCard(mCardBackgroundFavorite, 514, 281, 0, "GuiCardBackgroundFavorite");
@@ -43,8 +42,9 @@ namespace ClassicLauncher
         AddChild(m_cover);
 
         mGuiVideoPlayer = GetEntityManager()->CreateEntity<GuiVideoPlayer>("GuiVideoPlayer");
-        mGuiVideoPlayer->m_transform.offset.x = 12;
-        mGuiVideoPlayer->m_transform.offset.y = 12;
+        mGuiVideoPlayer->SetOffset(12.0f, 12.0f);
+        // mGuiVideoPlayer->m_transform.offset.x = 12;
+        // mGuiVideoPlayer->m_transform.offset.y = 12;
         AddChild(mGuiVideoPlayer);
 
         CreateCard(mCardMain, 0, 0, 255, "GuiCardMain");
@@ -52,15 +52,18 @@ namespace ClassicLauncher
         CreateCard(mCardSelected, 257, 0, 0, "GuiCardSelected");
 
 
-        m_coverDefault->m_transform.offset.x = 24.0f;
-        m_coverDefault->m_transform.offset.y = 13.0f;
-        m_coverDefault->m_transform.position.width = 204.0f;
-        m_coverDefault->m_transform.position.height = 202.0f;
-
-        m_coverDefault->m_transform.source.x = 771;
-        m_coverDefault->m_transform.source.y = 283;
-        m_coverDefault->m_transform.source.width = 204.0f;
-        m_coverDefault->m_transform.source.height = 202.0f;
+        m_coverDefault->SetOffset(24.0f, 13.0f);
+        m_coverDefault->SetSize(204.0f, 202.0f);
+        // m_coverDefault->m_transform.offset.x = 24.0f;
+        // m_coverDefault->m_transform.offset.y = 13.0f;
+        // m_coverDefault->m_transform.position.width = 204.0f;
+        // m_coverDefault->m_transform.position.height = 202.0f;
+        
+        m_coverDefault->SetSource(771.0f, 283.0f, 204.0f, 202.0f);
+        // m_coverDefault->m_transform.source.x = 771;
+        // m_coverDefault->m_transform.source.y = 283;
+        // m_coverDefault->m_transform.source.width = 204.0f;
+        // m_coverDefault->m_transform.source.height = 202.0f;
         m_coverDefault->mTextureName = "sprite";
 
         SetCover();
@@ -75,16 +78,20 @@ namespace ClassicLauncher
     {
         card = GetEntityManager()->CreateEntity<GuiBase>(title);
 
-        card->m_transform.position.x = 0;
-        card->m_transform.position.y = 0;
-        card->m_transform.position.width = m_transform.position.width;
-        card->m_transform.position.height = m_transform.position.height;
+        card->SetPosition(Vector2f{});
+        card->SetSize(GetSize());
+        //card->m_transform.position.x = 0;
+        //card->m_transform.position.y = 0;
+        //card->m_transform.position.width = m_transform.position.width;
+        //card->m_transform.position.height = m_transform.position.height;
 
-        card->m_transform.source.x = sourceX;
-        card->m_transform.source.y = sourceY;
-        card->m_transform.source.width = m_transform.position.width;
-        card->m_transform.source.height = m_transform.position.height;
-        card->m_transform.color.SetOpacity(alpha);
+        card->SetSource(RectFloat{sourceX, sourceY, GetSize().width, GetSize().height});
+        card->SetOpacity(alpha);
+        // card->m_transform.source.x = sourceX;
+        // card->m_transform.source.y = sourceY;
+        // card->m_transform.source.width = m_transform.position.width;
+        // card->m_transform.source.height = m_transform.position.height;
+        // card->m_transform.color.SetOpacity(alpha);
         card->mTextureName = "sprite";
         if (bAddChild)
         {
@@ -95,22 +102,29 @@ namespace ClassicLauncher
     void GuiCard::SetCover(const std::string& name)
     {
 
-        m_coverDefault->m_transform.color.SetOpacity(255);
+        m_coverDefault->SetOpacity(255);
+        //m_coverDefault->m_transform.color.SetOpacity(255);
         m_cover->mTextureName = "transparent";
 
         if (!name.empty())
         {
-            m_cover->m_transform.offset.x = 12.0f;
-            m_cover->m_transform.offset.y = 12.0f;
-            m_cover->m_transform.position.width = 228.0f;
-            m_cover->m_transform.position.height = 204.0f;
 
-            m_cover->m_transform.source.x = 0;
-            m_cover->m_transform.source.y = 0;
-            m_cover->m_transform.source.width = 228.0f;
-            m_cover->m_transform.source.height = 204.0f;
+            m_cover->SetOffset(Vector2f{12.0f});
+            m_cover->SetSize(Sizef{228.0f, 204.0f});
+            //m_cover->m_transform.offset.x = 12.0f;
+            //m_cover->m_transform.offset.y = 12.0f;
+            //m_cover->m_transform.position.width = 228.0f;
+            //m_cover->m_transform.position.height = 204.0f;
+            
+            m_cover->SetSource(RectFloat{0.0f, 0.0f, 228.0f, 204.0f});
+            m_cover->SetSize(Sizef{228.0f, 204.0f});
+            //m_cover->m_transform.source.x = 0;
+            //m_cover->m_transform.source.y = 0;
+            //m_cover->m_transform.source.width = 228.0f;
+            //m_cover->m_transform.source.height = 204.0f;
+            m_coverDefault->SetOpacity(0);
+            //m_coverDefault->m_transform.color.SetOpacity(0);
             m_cover->mTextureName = name;
-            m_coverDefault->m_transform.color.SetOpacity(0);
             m_isChangeTexture = true;
         }
     }
@@ -132,15 +146,19 @@ namespace ClassicLauncher
             const float xCoverPos = ((228.0f - widthTex) / 2.0f) + 12;
             const float yCoverPos = ((204.0f - HeightTex) / 2.0f) + 12;
 
-            m_cover->m_transform.offset.x = xCoverPos;
-            m_cover->m_transform.offset.y = yCoverPos;
-            m_cover->m_transform.position.width = widthTex;
-            m_cover->m_transform.position.height = HeightTex;
+   
+            m_cover->SetOffset(Vector2f{xCoverPos, yCoverPos}); 
+            m_cover->SetSize(Vector2f{widthTex, HeightTex}); 
+            // m_cover->m_transform.offset.x = xCoverPos;
+            // m_cover->m_transform.offset.y = yCoverPos;
+            // m_cover->m_transform.position.width = widthTex;
+            // m_cover->m_transform.position.height = HeightTex;
 
-            m_cover->m_transform.source.x = 0;
-            m_cover->m_transform.source.y = 0;
-            m_cover->m_transform.source.width = widthTex;
-            m_cover->m_transform.source.height = HeightTex;
+            m_cover->SetSource(RectFloat{0.0f, 0.0f, widthTex, HeightTex});
+            // m_cover->m_transform.source.x = 0;
+            // m_cover->m_transform.source.y = 0;
+            // m_cover->m_transform.source.width = widthTex;
+            // m_cover->m_transform.source.height = HeightTex;
             m_isChangeTexture = false;
         }
 
@@ -148,18 +166,18 @@ namespace ClassicLauncher
         if (IsFocus() && Keyboard::IsReleased(Keyboard::DOWN))
         {
             mGuiVideoPlayer->InitFullscreen();
-            Transform target = mCardSelected->m_transform;
+            Transform target = mCardSelected->GetTransform();
             target.color.a = 255;
             //mCardBackgroundSelected->m_transform.color.a = 255;
-            GetAnimationManager().StartAnimation("teste", 0.2f, &mCardBackgroundSelected->m_transform, target, Ease::EaseLinearNone, false);
+            GetAnimationManager().StartAnimation("teste", 0.2f, mCardBackgroundSelected, target, Ease::EaseLinearNone, false);
         }
         if (IsFocus() && Keyboard::IsReleased(Keyboard::UP))
         {   
             mGuiVideoPlayer->StopFullscreen();
-                        Transform target = mCardSelected->m_transform;
+            Transform target = mCardSelected->GetTransform();
             target.color.a = 0;
             //mCardBackgroundSelected->m_transform.color.a = 255;
-            GetAnimationManager().StartAnimation("teste", 0.2f, &mCardBackgroundSelected->m_transform, target, Ease::EaseLinearNone, false);
+            GetAnimationManager().StartAnimation("teste", 0.2f, mCardBackgroundSelected, target, Ease::EaseLinearNone, false);
         }
         
     }
@@ -216,12 +234,12 @@ namespace ClassicLauncher
 
     void GuiCard::OnFocus()
     {
-         Transform targetA = mCardSelected->m_transform;
+         Transform targetA = mCardSelected->GetTransform();
          targetA.color.a = 255;
-         Transform targetB = mCardBackgroundSelected->m_transform;
+         Transform targetB = mCardBackgroundSelected->GetTransform();
          targetB.color.b = 255;
-         GetAnimationManager().StartAnimation("focus-card-a" , 0.2f, &mCardSelected->m_transform, targetA, Ease::EaseLinearNone, false);
-         GetAnimationManager().StartAnimation("focus-card-b" , 0.2f, &mCardBackgroundSelected->m_transform, targetB, Ease::EaseLinearNone, false);
+         GetAnimationManager().StartAnimation("focus-card-a" , 0.2f, mCardSelected, targetA, Ease::EaseLinearNone, false);
+         GetAnimationManager().StartAnimation("focus-card-b" , 0.2f, mCardBackgroundSelected, targetB, Ease::EaseLinearNone, false);
     }
 
     void GuiCard::OnLostFocus()
@@ -231,12 +249,12 @@ namespace ClassicLauncher
             return;
         }
         
-        Transform targetA = mCardSelected->m_transform;
+        Transform targetA = mCardSelected->GetTransform();
         targetA.color.a = 0;
-        Transform targetB = mCardBackgroundSelected->m_transform;
+        Transform targetB = mCardBackgroundSelected->GetTransform();
         targetB.color.b = 0;
-        GetAnimationManager().StartAnimation("remove-focus-card-a" , 0.2f, &mCardSelected->m_transform, targetA, Ease::EaseLinearNone, false);
-        GetAnimationManager().StartAnimation("remove-focus-card-b" , 0.2f, &mCardBackgroundSelected->m_transform, targetB, Ease::EaseLinearNone, false);
+        GetAnimationManager().StartAnimation("remove-focus-card-a" , 0.2f, mCardSelected, targetA, Ease::EaseLinearNone, false);
+        GetAnimationManager().StartAnimation("remove-focus-card-b" , 0.2f, mCardBackgroundSelected, targetB, Ease::EaseLinearNone, false);
     }
 
     // bool GuiCard::IsFocus() const
@@ -247,10 +265,11 @@ namespace ClassicLauncher
     void GuiCard::Reset()
     {
         // mIsFront = false;
-        m_transform.scale.x = 1.0f;
-        m_transform.scale.y = 1.0f;
+        SetScale(Vector2f{1.0f, 1.0f});
+        //m_transform.scale.x = 1.0f;
+        //m_transform.scale.y = 1.0f;
 
-        m_transform.color.SetOpacity(255);
+        SetOpacity(255);
         //mCardBackgroundMain->m_transform.color.SetOpacity(255);
         //mCardMain->m_transform.color.SetOpacity(255);
         //mCardBackgroundSelected->m_transform.color.SetOpacity(255);
@@ -259,8 +278,8 @@ namespace ClassicLauncher
         //m_coverDefault->m_transform.color.SetOpacity(255);
         //mGuiVideoPlayer->m_transform.color.SetOpacity(255);
 
-        mCardBackgroundFavorite->m_transform.color.SetOpacity(0); // todo create logic is favorite
-        mCardFavorite->m_transform.color.SetOpacity(0);           // todo create logic is favorite
+        mCardBackgroundFavorite->SetOpacity(0); // todo create logic is favorite
+        mCardFavorite->SetOpacity(0);           // todo create logic is favorite
         
         // if (m_cover->mTextureName == "sprite")
         // {
@@ -281,20 +300,20 @@ namespace ClassicLauncher
         const float time = 0.3f;
         const float scale = 1.75f;
 
-        Transform target = m_transform;
+        Transform target = GetTransform();
 
-        target.scale.x = scale * m_transform.scale.x;
-        target.scale.y = scale * m_transform.scale.y;
+        target.scale.x = scale * GetTransform().scale.x;
+        target.scale.y = scale * GetTransform().scale.y;
 
-        const float width = target.position.width * m_transform.scale.x;
-        const float height = target.position.height * m_transform.scale.y;
+        const float width = target.position.width * GetTransform().scale.x;
+        const float height = target.position.height * GetTransform().scale.y;
 
         target.position.x += (-width / 2 * scale) + width / 2;
         target.position.y += (-height / 2 * scale) + height / 2;
 
         target.color.a = 0;
 
-        GetAnimationManager().StartAnimation("card-zoom", time, &m_transform, target, Ease::EaseQuadInOut, true);
+        GetAnimationManager().StartAnimation("card-zoom", time, this, target, Ease::EaseQuadInOut, true);
         GetTimerManager()->SetTimer(m_timerAnimationReset, CALLFUNCTION(Reset, this), this, time * 2);
     }
 

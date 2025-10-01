@@ -358,5 +358,11 @@ namespace ClassicLauncher
         return m_transform;
     }
 
+    Transform& Entity::GetWorldTransformRef()
+    {
+        MarkTransformAsDirty();
+        return m_worldTransform;
+    }
+
 
 } // namespace ClassicLauncher

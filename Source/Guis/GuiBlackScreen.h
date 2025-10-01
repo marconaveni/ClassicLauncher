@@ -18,7 +18,6 @@ namespace ClassicLauncher
         void FadeIn();
         void FadeOut();
         void FadeInFadeOut();
-        void SetOpacity(int opacity);
         virtual void Update() override;
 
     private:

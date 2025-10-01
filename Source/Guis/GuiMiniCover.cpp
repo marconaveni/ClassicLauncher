@@ -21,13 +21,16 @@ namespace ClassicLauncher
 
     void GuiMiniCover::Init()
     {
-        m_transform.position.y = 505.0f;
-        m_transform.position.width = 1280.0f;
-        m_transform.position.height = 72.0f;
+        SetPosition({0, 505.0f});
+        SetSize({1280.0f, 72.0f});
+        // m_transform.position.y = 505.0f;
+        // m_transform.position.width = 1280.0f;
+        // m_transform.position.height = 72.0f;
 
         mGuiHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
-        mGuiHorizontalBox->m_transform.position.x = 0; //m_transform.position.width / 2.0f;
-        mGuiHorizontalBox->m_transform.position.y = 20.0f;
+        mGuiHorizontalBox->SetPosition({0, 20.0f});
+        // mGuiHorizontalBox->m_transform.position.x = 0; //m_transform.position.width / 2.0f;
+        // mGuiHorizontalBox->m_transform.position.y = 20.0f;
         mGuiHorizontalBox->SetSpace(1.0f);
         AddChild(mGuiHorizontalBox);
 
@@ -35,13 +38,16 @@ namespace ClassicLauncher
         {
             MiniCover miniCover;
             miniCover.gui = GetEntityManager()->CreateEntity<GuiBase>("miniCover");
-            miniCover.gui->m_transform.position.width = mSizeCover.x;
-            miniCover.gui->m_transform.position.height = mSizeCover.y;
+            miniCover.gui->SetSize(mSizeCover);
+            // miniCover.gui->m_transform.position.width = mSizeCover.x;
+            // miniCover.gui->m_transform.position.height = mSizeCover.y;
 
-            miniCover.gui->m_transform.source.x = 976;
-            miniCover.gui->m_transform.source.y = 283;
-            miniCover.gui->m_transform.source.width = mSizeCover.x;
-            miniCover.gui->m_transform.source.height = mSizeCover.y;
+
+            miniCover.gui->SetSource({976.0f, 283.0f}, mSizeCover);
+           // miniCover.gui->m_transform.source.x = 976;
+           // miniCover.gui->m_transform.source.y = 283;
+           // miniCover.gui->m_transform.source.width = mSizeCover.x;
+           // miniCover.gui->m_transform.source.height = mSizeCover.y;
 
             miniCover.gui->mTextureName = "sprite";
 
@@ -55,9 +61,10 @@ namespace ClassicLauncher
                                        RectFloat{1298.0f, 0.0f, 30.0f, 18.0f}};
 
         mArrow = GetEntityManager()->CreateEntity<GuiBase>("arrow");
-        mArrow->m_transform.position.x = m_transform.position.width / 2;
+        mArrow->SetPosition(GetSize().width / 2, 0);
+        //mArrow->m_transform.position.x = m_transform.position.width / 2;
         mArrow->mTextureName = "sprite";
-        GetAnimationManager().AddAnimationFrame("frame",  0.2f, &mArrow->m_transform, recs);
+        GetAnimationManager().AddAnimationFrame("frame",  0.2f, mArrow, recs);
         AddChild(mArrow);
     }
 
@@ -72,16 +79,20 @@ namespace ClassicLauncher
             const float scale = ThemesManager::GetScaleRenderer();
             if (textureReference != nullptr && miniCover.gui->mTextureName != "sprite" && miniCover.gui->mTextureName != "transparent")
             {
-                miniCover.gui->m_transform.position.width = textureReference->GetSize().x / scale;
-                miniCover.gui->m_transform.position.height = textureReference->GetSize().y / scale;
-                miniCover.gui->m_transform.source.width = textureReference->GetSize().x / scale;
-                miniCover.gui->m_transform.source.height = textureReference->GetSize().y / scale;
+                const Sizef& textureSize = textureReference->GetSize().ToFloat();
+                miniCover.gui->SetSize(textureSize / scale);
+                miniCover.gui->SetSource({0, 0}, textureSize / scale);
+                // miniCover.gui->m_transform.position.width = textureReference->GetSize().x / scale;
+                // miniCover.gui->m_transform.position.height = textureReference->GetSize().y / scale;
+                // miniCover.gui->m_transform.source.width = textureReference->GetSize().x / scale;
+                // miniCover.gui->m_transform.source.height = textureReference->GetSize().y / scale;
             }
  
             if (miniCover.focus)
             {
-                ///* code */gsggd
-                mArrow->m_transform.position.x = miniCover.gui->m_transform.position.x + mGuiHorizontalBox->m_transform.position.x;
+                const float position = miniCover.gui->GetPosition().x + mGuiHorizontalBox->GetPosition().x;
+                mArrow->SetPosition(position, mArrow->GetPosition().y);
+                //mArrow->m_transform.position.x = miniCover.gui->m_transform.position.x + mGuiHorizontalBox->m_transform.position.x;
             }
             
             
@@ -95,26 +106,8 @@ namespace ClassicLauncher
 
     void GuiMiniCover::SetPositionCovers(int numCovers)
     {
-
-        mGuiHorizontalBox->m_transform.position.x = (m_transform.position.width - ((mSizeCover.x + 1) * numCovers)) / 2.0f;
-        
-        //mGuiHorizontalBox->m_transform.position.x = mGuiHorizontalBox->m_transform.position.width / 2;
-        // mArrow->m_transform.position.x = mGuiHorizontalBox->m_transform.position.x + ((mSizeCover.x + 1) * numCovers) / 2.0f;
-        // mArrow->m_transform.position.x =
-        //     (numCovers % 2 == 0) ? mArrow->m_transform.position.x
-        //                          : mArrow->m_transform.position.x - (mArrow->m_transform.position.width / 2);
-        // mArrow->m_transform.position.x--;
- 
-        
-
-        //mArrow->m_transform.position.x = mGuiHorizontalBox->m_transform.position.x + ((mSizeCover.x + 1) * numCovers) / 2.0f;
-        //mArrow->m_transform.position.x =
-        //    (numCovers % 2 == 0) ? mArrow->m_transform.position.x
-        //                         : mArrow->m_transform.position.x - (mArrow->m_transform.position.width / 2);
-        //mArrow->m_transform.position.x--;
-
-        //mGuiHorizontalBox->m_transform.position.x *= m_transform.root.scale.x;
-        //mArrow->m_transform.position.x *= m_transform.root.scale.x;
+        const float x = (GetSize().width - ((mSizeCover.x + 1) * numCovers)) / 2.0f;
+        mGuiHorizontalBox->SetPosition(x , mGuiHorizontalBox->GetPosition().y);
     }
 
     void GuiMiniCover::SetCovers()
@@ -163,21 +156,25 @@ namespace ClassicLauncher
         miniCover->mTextureName = name;
         if (name == "sprite")
         {
-            miniCover->m_transform.position.width = 28;
-            miniCover->m_transform.position.height = 28;
-            miniCover->m_transform.source.x = 976;
-            miniCover->m_transform.source.y = 283;
-            miniCover->m_transform.source.width = 28;
-            miniCover->m_transform.source.height = 28;
+            miniCover->SetSize(28.0f, 28.0f);
+            miniCover->SetSource({976.0f, 283.0f}, miniCover->GetSize());
+            // miniCover->m_transform.position.width = 28;
+            // miniCover->m_transform.position.height = 28;
+            // miniCover->m_transform.source.x = 976;
+            // miniCover->m_transform.source.y = 283;
+            // miniCover->m_transform.source.width = 28;
+            // miniCover->m_transform.source.height = 28;
         }
         else
         {
-            miniCover->m_transform.position.width = 28;
-            miniCover->m_transform.position.height = 28;
-            miniCover->m_transform.source.width = 0;
-            miniCover->m_transform.source.height = 0;
-            miniCover->m_transform.source.x = 0;
-            miniCover->m_transform.source.y = 0;
+            miniCover->SetSize(0.0f, 0.0f);
+            miniCover->SetSource(RectFloat{});
+            // miniCover->m_transform.position.width = 28;
+            // miniCover->m_transform.position.height = 28;
+            // miniCover->m_transform.source.width = 0;
+            // miniCover->m_transform.source.height = 0;
+            // miniCover->m_transform.source.x = 0;
+            // miniCover->m_transform.source.y = 0;
         }
     }
 

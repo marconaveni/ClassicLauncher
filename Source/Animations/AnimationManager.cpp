@@ -2,6 +2,7 @@
 
 #include "ClassicAssert.h"
 #include "Window/RayWindow.h"
+#include "Entity/Entity.h"
 #include "Helper.h"
 
 
@@ -20,13 +21,12 @@ namespace ClassicLauncher
         for (auto& spriteAnimation : m_spriteAnimations)
         {
             spriteAnimation.second.spriteAnimator.Update(RayWindow::GetFrameTime());
-            Rectangle rec = spriteAnimation.second.spriteAnimator.GetCurrentSprite();
-            spriteAnimation.second.transform->source.x = rec.x;
-            spriteAnimation.second.transform->source.y = rec.y;
-            spriteAnimation.second.transform->source.width = rec.width;
-            spriteAnimation.second.transform->source.height = rec.height;
-            spriteAnimation.second.transform->position.width = rec.width;
-            spriteAnimation.second.transform->position.height = rec.height;
+            
+            RectFloat rec = spriteAnimation.second.spriteAnimator.GetCurrentSprite();
+            Entity* entity = spriteAnimation.second.entity;          
+            
+            entity->SetSource(rec);
+            entity->SetSize(rec.width, rec.height);
         }
 
         for (auto& animationTransform : m_animationsTransform)
@@ -53,7 +53,7 @@ namespace ClassicLauncher
                 animation.ResetAnimation();
                 UpdateTransformAnimation(anim);
                 m_finishCallback(name);
-                anim.transform = nullptr;
+                anim.entity = nullptr;
             }
         }
     }
@@ -61,30 +61,37 @@ namespace ClassicLauncher
     void AnimationManager::UpdateTransformAnimation(AnimationTransform& anim)
     {
 
-        if (!anim.transform)
+        if (!anim.entity)
         {
             return;
         }
 
-        *anim.transform = anim.animation.mCurrentTransform;
+        const Transform& transform = anim.animation.mCurrentTransform;
+
+        //*anim.transform = anim.animation.mCurrentTransform;
+        anim.entity->SetPosition(transform.position.x, transform.position.y);
+        anim.entity->SetOffset(transform.offset);
+        anim.entity->SetScale(transform.scale);
+        anim.entity->SetRotation(transform.rotation);
+        anim.entity->SetColor(transform.color);
         
     }
 
     void AnimationManager::StartAnimation(const std::string& name,
                                           float durationAnimation,
-                                          Transform* finalTransform,
+                                          Entity* targetEntity,
                                           const Transform& targetTransform,
                                           Ease typeAnimation,
                                           bool bForceReset)
     {
         AnimationTransform& anim = m_animationsTransform[name];
-        anim.transform = finalTransform;
-        anim.animation.StartAnimation(durationAnimation, *finalTransform, targetTransform, typeAnimation, bForceReset);
+        anim.entity = targetEntity;
+        anim.animation.StartAnimation(durationAnimation, targetEntity->GetTransform(), targetTransform, typeAnimation, bForceReset);
     }
 
     void AnimationManager::AddAnimationFrame(const std::string& name,
                                              const float timeAnimation,
-                                             Transform* transform,
+                                             Entity* targetEntity,
                                              const std::vector<RectFloat>& spriteIndices)
     {
         if (m_spriteAnimations.find(name) != m_spriteAnimations.end())
@@ -92,7 +99,7 @@ namespace ClassicLauncher
             m_spriteAnimations.erase(name);
         }
         m_spriteAnimations[name].spriteAnimator = SpriteAnimator(timeAnimation, spriteIndices);
-        m_spriteAnimations[name].transform = transform;
+        m_spriteAnimations[name].entity = targetEntity;
     }
 
 } // namespace ClassicLauncher

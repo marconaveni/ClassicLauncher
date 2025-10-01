@@ -38,18 +38,23 @@ namespace ClassicLauncher
         , m_gameListManagerRef(gameListManagerRef)
         , m_audioManagerRef(audioManagerRef)
     {
-        m_transform.position.width = 1280;
-        m_transform.position.height = 720;
+        SetSize(Sizef{1280.0f , 720.0f});
+        //m_transform.position.width = 1280;
+        //m_transform.position.height = 720;
     }
 
     void GuiHorizontalCards::Init()
     {
 
         mGuiTitle = GetEntityManager()->CreateEntity<GuiTextBlock>("GuiTitle", Resources::GetFont(), 48, 0);
-        mGuiTitle->m_transform.position.x = (1280 - 1010) / 2;
-        mGuiTitle->m_transform.position.y = 154;
-        mGuiTitle->m_transform.position.width = 1010;
-        mGuiTitle->m_transform.position.height = 32;
+
+        const float x = (1280 - 1010) / 2;
+        mGuiTitle->SetPosition(x, 154.0f);
+        mGuiTitle->SetSize(1010.0f, 32.0f);
+        // mGuiTitle->m_transform.position.x = (1280 - 1010) / 2;
+        // mGuiTitle->m_transform.position.y = 154;
+        // mGuiTitle->m_transform.position.width = 1010;
+        // mGuiTitle->m_transform.position.height = 32;
 
         mGuiTitle->SetText("Title");
         //mGuiTitle->SetDesiredWidth(1010);
@@ -87,10 +92,12 @@ namespace ClassicLauncher
     void GuiHorizontalCards::SetHorizontalBoxValues()
     {
         const float space = ThemesManager::Get().mConfigurationThemes.horizontalCardsSpace;
+        const float x = mHorizontalBox->GetPosition().x;
         const float y = ThemesManager::Get().mConfigurationThemes.horizontalCardsPositionY;
 
         mHorizontalBox->SetSpace(space);
-        mHorizontalBox->m_transform.position.y = y;
+        mHorizontalBox->SetPosition(x, y);
+        // mHorizontalBox->m_transform.position.y = y;
     }
 
     void GuiHorizontalCards::SetThemeValue()
@@ -158,11 +165,9 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::SetPositionHorizontalBox()
     {
-        const float x = ((m_transform.position.width - mHorizontalBox->m_transform.position.width) / 2)  + ThemesManager::Get().mConfigurationThemes.horizontalCardsPositionX;
-        mHorizontalBox->m_transform.position.x = x;
-       // mHorizontalBox->m_transform.scale.x = 1.5f;
-       // mHorizontalBox->m_transform.scale.y = 1.5f;
-    
+        const float x = ((GetSize().width - mHorizontalBox->GetSize().width) / 2)  + ThemesManager::Get().mConfigurationThemes.horizontalCardsPositionX;
+        const float y = mHorizontalBox->GetPosition().y;
+        mHorizontalBox->SetPosition(x, y);         
     }
 
     void GuiHorizontalCards::ChangeList(const CurrentList list)
@@ -304,15 +309,15 @@ namespace ClassicLauncher
         {
             if (mIdFocus < 3 || mIdFocus > 6)
             {      
-                mHorizontalBox->m_transform.position.x -= mSpeed;
+                mHorizontalBox->GetPositionRef().x -= mSpeed;
             }
             mLastDirection = Left;
         }
         else if (mPositionX > 0 && mPositionX < 356 && mIsLeft)
         {
             if (mIdFocus < 3 || mIdFocus > 6)
-            {
-                mHorizontalBox->m_transform.position.x += mSpeed;
+            {               
+                mHorizontalBox->GetPositionRef().x += mSpeed;
             }
             mLastDirection = Right;
         }

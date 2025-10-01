@@ -29,22 +29,29 @@ namespace ClassicLauncher
     void GuiWindow::Init()
     {
 
-        m_transform.position.width = 1280.0f; //  todo: refactor    (float)pApplication->GetSpecification().width;
-        m_transform.position.height = 720.0f; //  todo: refactor    (float)pApplication->GetSpecification().height;
+        SetSize(Sizef{1280.0f, 720.0f});
+
+        //m_transform.position.width = 1280.0f; //  todo: refactor    (float)pApplication->GetSpecification().width;
+        //m_transform.position.height = 720.0f; //  todo: refactor    (float)pApplication->GetSpecification().height;
 
         mGuiBackground = GetEntityManager()->CreateEntity<GuiBase>("GuiBackground");
 
-        mGuiBackground->m_transform.position.x = 0;
-        mGuiBackground->m_transform.offset.x = 0;
-        mGuiBackground->m_transform.offset.y = 0;
-        mGuiBackground->m_transform.position.y = 0;
-        mGuiBackground->m_transform.position.width = 1280;
-        mGuiBackground->m_transform.position.height = 720;
+        mGuiBackground->SetPosition(Vector2f{});
+        mGuiBackground->SetOffset(Vector2f{});
+        mGuiBackground->SetSize(Sizef{1280.0f, 720.0f});
+        //mGuiBackground->m_transform.position.x = 0;
+        //mGuiBackground->m_transform.position.y = 0;
+        //mGuiBackground->m_transform.offset.x = 0;
+        //mGuiBackground->m_transform.offset.y = 0;
+        //mGuiBackground->m_transform.position.width = 1280;
+        //mGuiBackground->m_transform.position.height = 720;
 
-        mGuiBackground->m_transform.source.x = 0;
-        mGuiBackground->m_transform.source.y = 562;
-        mGuiBackground->m_transform.source.width = 21;
-        mGuiBackground->m_transform.source.height = 720;
+
+        mGuiBackground->SetSource(0.0f, 562.0f, 21.0f, 720.0f);
+        //mGuiBackground->m_transform.source.x = 0;
+        //mGuiBackground->m_transform.source.y = 562;
+        //mGuiBackground->m_transform.source.width = 21;
+        //mGuiBackground->m_transform.source.height = 720;
 
         mGuiBackground->mTextureName = "sprite";
         AddChild(mGuiBackground);
@@ -103,13 +110,15 @@ namespace ClassicLauncher
 
         if (Keyboard::IsDown(Keyboard::Key::KP_ADD))
         {
-            m_transform.scale.x += 0.1;
-            m_transform.scale.y += 0.1;
+            SetScale({GetScale() + 0.01f});
+            // m_transform.scale.x += 0.1;
+            // m_transform.scale.y += 0.1;
         }
         if (Keyboard::IsDown(Keyboard::Key::KP_SUBTRACT))
         {
-            m_transform.scale.x -= 0.1;
-            m_transform.scale.y -= 0.1;
+            SetScale({GetScale() - 0.01f});
+            // m_transform.scale.x -= 0.1;
+            // m_transform.scale.y -= 0.1;
         }
 
         if (InputManager::IsRelease(InputName::rightFaceDown, main))

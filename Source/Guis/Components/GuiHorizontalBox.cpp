@@ -7,8 +7,9 @@ namespace ClassicLauncher
 
     GuiHorizontalBox::GuiHorizontalBox()
     {
-        m_transform.position.width = 10.0f;
-        m_transform.position.height = 10.0f;
+        SetSize(10.0f, 10.0f);
+        // m_transform.position.width = 10.0f;
+        // m_transform.position.height = 10.0f;
     }
 
     void GuiHorizontalBox::UpdateWorldTransform()
@@ -18,8 +19,9 @@ namespace ClassicLauncher
 
     void GuiHorizontalBox::AttachGui(Entity* guiComponent)
     {
-        guiComponent->m_transform.position.x = 0;
-        guiComponent->m_transform.position.y = 0;
+        guiComponent->SetPosition(Vector2f{});
+        // guiComponent->m_transform.position.x = 0;
+        // guiComponent->m_transform.position.y = 0;
         AddChild(guiComponent);
         mGuiElements.push_back(guiComponent);
     }
@@ -27,8 +29,9 @@ namespace ClassicLauncher
     void GuiHorizontalBox::ClearAll()
     {
         mGuiElements.clear();
-        m_transform.position.width = 10.0f;
-        m_transform.position.height = 10.0f;
+        SetSize(10.0f, 10.0f);
+        // m_transform.position.width = 10.0f;
+        // m_transform.position.height = 10.0f;
     }
 
     void GuiHorizontalBox::Update()
@@ -43,8 +46,8 @@ namespace ClassicLauncher
 
         for (auto& guiElement : mGuiElements)
         {
-            Transform& transform = guiElement->m_transform;
-            Transform& worldTransform = guiElement->m_worldTransform;
+            Transform& transform = guiElement->GetTransformRef();
+            Transform& worldTransform = guiElement->GetWorldTransformRef();
 
             spacer += m_spacer;
             transform.position.x = x;
@@ -56,8 +59,10 @@ namespace ClassicLauncher
         }
 
         spacer -= m_spacer;
-        m_transform.position.width = canvasWidth + spacer;
-        m_transform.position.height = canvasHeight;
+        
+        const float width = canvasWidth + spacer;
+        const float height = canvasHeight;
+        SetSize(width, height);
     }
 
     void GuiHorizontalBox::Draw()

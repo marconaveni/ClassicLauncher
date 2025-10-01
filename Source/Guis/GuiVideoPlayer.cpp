@@ -1,9 +1,9 @@
 #include "GuiVideoPlayer.h"
 
-#include "Themes/ThemesManager.h"
+#include "Entity/EntityManager.h"
 #include "Graphics/RenderTexture.h"
 #include "Graphics/SpriteManager.h"
-#include "Entity/EntityManager.h"
+#include "Themes/ThemesManager.h"
 #include "rl_wrap.h"
 
 namespace ClassicLauncher
@@ -50,7 +50,7 @@ namespace ClassicLauncher
         const float scale = ThemesManager::GetScaleRenderer();
         mPlayerFullScreen->Init(mFilePath, 1280 * scale, 720 * scale, scale);
         mPlayerFullScreen->Play();
-        GetEntityManager()->SetZOrder(this, 99);  // todo temp
+        GetEntityManager()->SetZOrder(this, 99); // todo temp
     }
 
     void GuiVideoPlayer::Stop()
@@ -83,10 +83,13 @@ namespace ClassicLauncher
 
         mPlayer->Update();
 
-        m_transform.source.width = m_renderTexture->GetTexture()->GetSize().x;
-        m_transform.source.height = m_renderTexture->GetTexture()->GetSize().y;
-        m_transform.position.width = m_renderTexture->GetTexture()->GetSize().x / m_renderScale;
-        m_transform.position.height = m_renderTexture->GetTexture()->GetSize().y / m_renderScale;
+        const Vector2f textureSize = m_renderTexture->GetTexture()->GetSize().ToFloat();
+        SetSource(textureSize.x, textureSize.y);
+        SetSize(textureSize.x / m_renderScale, textureSize.y / m_renderScale);
+        // m_transform.source.width = m_renderTexture->GetTexture()->GetSize().x;
+        // m_transform.source.height = m_renderTexture->GetTexture()->GetSize().y;
+        // m_transform.position.width = m_renderTexture->GetTexture()->GetSize().x / m_renderScale;
+        // m_transform.position.height = m_renderTexture->GetTexture()->GetSize().y / m_renderScale;
 
         DrawVideo();
 
@@ -116,8 +119,8 @@ namespace ClassicLauncher
         };
 
         RectFloat sourceRect{0, 0, sizeVideo.x, sizeVideo.y};
-        RectFloat videoTransformRect{(m_transform.source.width - sizeVideo.x) / 2,  // aqui não é escala
-                                     (m_transform.source.height - sizeVideo.y) / 2, //aqui não é escala
+        RectFloat videoTransformRect{(GetSource().width - sizeVideo.x) / 2,  // aqui não é escala
+                                     (GetSource().height - sizeVideo.y) / 2, //aqui não é escala
                                      sizeVideo.x,
                                      sizeVideo.y};
 
@@ -125,8 +128,8 @@ namespace ClassicLauncher
                             sourceRect,         /* RectFloat{0, 562, 21, 720}, posição spritesheet */
                             videoTransformRect, /* RectFloat{0, 0, 1280, 720} posx posy tam_rect  larg_rect */
                             Vector2f{0, 0},
-                            m_worldTransform.rotation,
-                            m_worldTransform.color);
+                            GetRotation(),
+                            GetColor());
 
         rlw::EndTextureMode();
     }
@@ -142,11 +145,11 @@ namespace ClassicLauncher
 
         RectFloat sourceRect{0,
                              0,
-                             (m_transform.source.width / m_renderScale) * m_renderScale,
-                             (-m_transform.source.height / m_renderScale) * m_renderScale};
+                             (GetSource().width / m_renderScale) * m_renderScale,
+                             (-GetSource().height / m_renderScale) * m_renderScale};
 
         rlw::DrawTexturePro(*m_renderTexture->GetTexture(),
-                            sourceRect,         /* RectFloat{0, 562, 21, 720}, posição spritesheet */
+                            sourceRect,              /* RectFloat{0, 562, 21, 720}, posição spritesheet */
                             m_finalRender.transform, /* RectFloat{0, 0, 1280, 720} posx posy tam_rect  larg_rect */
                             m_finalRender.origin,
                             m_worldTransform.rotation,

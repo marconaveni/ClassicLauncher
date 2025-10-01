@@ -53,10 +53,10 @@ namespace ClassicLauncher
     {
         Entity::Update();
 
-        if (m_centerText && m_transform.position.width > GetMeasureTextBox().x)
+        if (m_centerText && GetSize().width > GetMeasureTextBox().x)
         {
-            const float widthPosition = m_transform.position.width * m_worldTransform.scale.x * m_transform.scale.x;
-            const float widthText = GetMeasureTextBox().x * m_worldTransform.scale.x * m_transform.scale.x;
+            const float widthPosition = GetSize().width * m_worldTransform.scale.x * GetScale().x;
+            const float widthText = GetMeasureTextBox().x * m_worldTransform.scale.x * GetScale().x;
             m_positionText = (widthPosition * m_renderScale - widthText * m_renderScale) / 2.0f;
         }
         else
@@ -65,7 +65,7 @@ namespace ClassicLauncher
         }
 
 
-        const int positionText = m_transform.position.width - (int)mMensuredText.x;
+        const int positionText = (GetSize().width - (int)mMensuredText.x);
         if (mTextOverflowPolicy == TextOverflowPolicy::clip && positionText < 0)
         {
             if (mDelay < mMaxDelay)
@@ -123,11 +123,11 @@ namespace ClassicLauncher
         mDelay = 1;
 
         mMensuredText = MeasureTextBox();
-        //m_transform.position.width = mMensuredText.x;
-        m_transform.position.height = mMensuredText.y;
+        SetSize(GetSize().width, mMensuredText.y);
+        //m_transform.position.height = mMensuredText.y;
     }
 
-    void GuiTextBlock::SetSize(int size)
+    void GuiTextBlock::SetSizeFont(int size)
     {
         LoadNewFont(mPathFont, size, mSpacing);
     }
