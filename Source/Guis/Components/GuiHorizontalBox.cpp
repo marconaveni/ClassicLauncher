@@ -8,8 +8,6 @@ namespace ClassicLauncher
     GuiHorizontalBox::GuiHorizontalBox()
     {
         SetSize(10.0f, 10.0f);
-        // m_transform.position.width = 10.0f;
-        // m_transform.position.height = 10.0f;
     }
 
     void GuiHorizontalBox::UpdateWorldTransform()
@@ -20,7 +18,6 @@ namespace ClassicLauncher
     void GuiHorizontalBox::AttachGui(Entity* guiComponent)
     {
         guiComponent->SetPosition(Vector2f{});
-        AddChild(guiComponent);
         mGuiElements.push_back(guiComponent);
     }
 

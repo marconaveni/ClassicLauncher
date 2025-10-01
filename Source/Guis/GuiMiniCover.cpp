@@ -39,6 +39,7 @@ namespace ClassicLauncher
             miniCover.gui->mTextureName = "sprite";
 
             mGuiHorizontalBox->AttachGui(miniCover.gui);
+            mGuiHorizontalBox->AddChild(miniCover.gui);
             mGuiCovers.emplace_back(miniCover);
         }
 

@@ -68,7 +68,7 @@ namespace ClassicLauncher
                                                        m_audioManagerRef);
             card->CreateCards(0, 0);
             mHorizontalBox->AttachGui(card);
-            //AddChild(card);
+            mHorizontalBox->AddChild(card);
             mGuiCards.emplace_back(card);
         }
 
