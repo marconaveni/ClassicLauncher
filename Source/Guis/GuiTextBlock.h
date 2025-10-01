@@ -31,11 +31,11 @@ namespace ClassicLauncher
         void SetText(const std::string& text);
         void SetSizeFont(int size);
         void SetSpacing(int spacing);
-        void SetColor(Color tint);
+        //void SetColor(Color tint);
         Vector2f GetMeasureTextBox();
         const std::string& GetText() { return mText; }
         void SetTextOverflowPolicy(TextOverflowPolicy textOverflowPolicy);
-        void SetDesiredWidth(int newWidth);
+        //void SetDesiredWidth(int newWidth);
         void SetOffSetMoveText(float speed, float maxDelay);
         void UnloadText();
 
@@ -43,21 +43,18 @@ namespace ClassicLauncher
 
     private:
 
-        Font mFont;
+        Font m_font;
         std::string mText;
-        std::string mPathFont;
-        int mSize;
-        int mSpacing;
-        Color mColor;
-        bool mTextMovement;
-        int mDesiredWidth;
-        float mOffset;
-        bool mToLeft;
-        float mDelay;
-        Vector2f mMensuredText;
-        float mSpeed;
-        float mMaxDelay;
-        TextOverflowPolicy mTextOverflowPolicy;
+        std::string m_pathFont;
+        int m_sizeText;
+        int m_spacing;
+        float m_offsetText;
+        bool m_isLeft;
+        float m_delay;
+        Vector2f m_mensuredText;
+        float m_speed;
+        float m_maxDelay;
+        TextOverflowPolicy m_textOverflowPolicy;
         bool m_centerText = false;
         float m_positionText = 0.0f;
         float m_renderScale = 1;

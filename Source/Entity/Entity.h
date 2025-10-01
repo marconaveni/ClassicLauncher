@@ -110,7 +110,6 @@ namespace ClassicLauncher
         // clang-format on
 
        
-        Transform m_worldTransform;
         std::string mTextureName = "transparent";
         RectFloat mScissorArea;
 
@@ -149,6 +148,7 @@ namespace ClassicLauncher
         friend class FocusComponent;
 
         Transform m_transform;
+        Transform m_worldTransform;
 
         bool mToDelete;
         bool mToDraw;

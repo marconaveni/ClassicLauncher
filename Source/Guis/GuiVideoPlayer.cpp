@@ -121,8 +121,8 @@ namespace ClassicLauncher
                                      sizeVideo.y};
 
         rlw::DrawTexturePro(*textureVideo,
-                            sourceRect,         /* RectFloat{0, 562, 21, 720}, posição spritesheet */
-                            videoTransformRect, /* RectFloat{0, 0, 1280, 720} posx posy tam_rect  larg_rect */
+                            sourceRect,         /* RectFloat{0, 562, 21, 720}, position spritesheet */
+                            videoTransformRect, /* RectFloat{0, 0, 1280, 720} posx posy width_rect  height_rect */
                             Vector2f{0, 0},
                             GetRotation(),
                             GetColor());
@@ -145,11 +145,11 @@ namespace ClassicLauncher
                              (-GetSource().height / m_renderScale) * m_renderScale};
 
         rlw::DrawTexturePro(*m_renderTexture->GetTexture(),
-                            sourceRect,              /* RectFloat{0, 562, 21, 720}, posição spritesheet */
-                            m_finalRender.transform, /* RectFloat{0, 0, 1280, 720} posx posy tam_rect  larg_rect */
+                            sourceRect,              /* RectFloat{0, 562, 21, 720}, position spritesheet */
+                            m_finalRender.transform, /* RectFloat{0, 0, 1280, 720} posx posy width_rect  height_rect */
                             m_finalRender.origin,
-                            m_worldTransform.rotation,
-                            m_worldTransform.color);
+                            GetWorldTransform().rotation,
+                            GetWorldTransform().color);
 
         if (!mPlayerFullScreen)
         {
