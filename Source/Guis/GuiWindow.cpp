@@ -2,8 +2,8 @@
 
 #include "Audio/AudioManager.h"
 #include "Entity/EntityManager.h"
-#include "Guis/GuiBlackScreen.h"
 #include "Guis/GuiBase.h"
+#include "Guis/GuiBlackScreen.h"
 #include "Guis/GuiHorizontalCards.h"
 #include "Guis/GuiVideoPlayer.h"
 #include "Input/InputManager.h"
@@ -43,7 +43,7 @@ namespace ClassicLauncher
 
         mGuiBackground->mTextureName = "sprite";
         AddChild(mGuiBackground);
-        
+
         m_guiHorizontalCards = GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalCards",
                                                                                     m_gameListManagerRef,
                                                                                     m_audioManagerRef);
@@ -68,9 +68,9 @@ namespace ClassicLauncher
         {
             Vector2f pos = GetPosition();
             pos.x -= 10;
-            SetPosition(pos);                     
+            SetPosition(pos);
         }
-                    
+
         if (Keyboard::IsDown(Keyboard::Key::D))
         {
             Vector2f pos = GetPosition();
@@ -101,18 +101,21 @@ namespace ClassicLauncher
 
         if (InputManager::IsRelease(InputName::rightFaceDown, main))
         {
-            InputManager::DisableInput();
-            m_audioManagerRef->PlaySound("click");
-            m_guiHorizontalCards->Click();
-            if (m_gameListManagerRef->GetCurrentList() == GameListSelect)
+            if (!m_guiHorizontalCards->IsMovement())
             {
-               mGuiBlackScreen->FadeIn();
+                InputManager::DisableInput();
+                m_audioManagerRef->PlaySound("click");
+                m_guiHorizontalCards->Click();
+                if (m_gameListManagerRef->GetCurrentList() == GameListSelect)
+                {
+                    mGuiBlackScreen->FadeIn();
+                }
+                else
+                {
+                    mGuiBlackScreen->FadeInFadeOut();
+                }
+                GetTimerManager()->SetTimer(mClickTimer, CALLFUNCTION(OnClick, this), this, 0.5f, false);
             }
-            else
-            {
-               mGuiBlackScreen->FadeInFadeOut();
-            }
-            GetTimerManager()->SetTimer(mClickTimer, CALLFUNCTION(OnClick, this), this, 0.5f, false);
         }
         if (InputManager::IsRelease(InputName::rightFaceRight, main) &&
             m_gameListManagerRef->GetCurrentList() == GameListSelect) // back
@@ -121,8 +124,6 @@ namespace ClassicLauncher
             mGuiBlackScreen->FadeInFadeOut();
             GetTimerManager()->SetTimer(mClickTimer, CALLFUNCTION(OnBack, this), this, 0.5f, false);
         }
-
-
     }
 
     void GuiWindow::OnClick()

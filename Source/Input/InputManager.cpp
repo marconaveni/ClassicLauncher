@@ -65,7 +65,7 @@ namespace ClassicLauncher
             if (input.bDown)
             {
                 input.bDown = (input.amoutDown == 0 || input.amoutDown >= maxAmount);
-                input.amoutDown += RayWindow::GetFrameTime();
+                input.amoutDown += 0.016f * 60 * RayWindow::GetFrameTime();
             }
             else
             {

@@ -2,6 +2,7 @@
 #define GUI_HORIZONTAL_CARDS_H
 
 #include <vector>
+
 #include "Data/GameListManager.h"
 #include "Guis/Components/GuiCanvas.h"
 #include "Utils/TimerManager.h"
@@ -42,6 +43,7 @@ namespace ClassicLauncher
         void ChangeList(CurrentList list);
         void Click();
         void SetHorizontalBoxValues();
+        bool IsMovement() const;
         virtual void SetThemeValue() override;
 
     private:
@@ -60,17 +62,20 @@ namespace ClassicLauncher
         int mIdFocus;
         int mIdLastFocusSystem;
         float mSpeed;
-        TimerHandling mTimerInputSpeed;
-        
+        float m_multiply = 22;
+        bool m_isPress = false;
+        TimerHandling mTimerInputSpeed{};
+
         GameListManager* m_gameListManagerRef;
         AudioManager* m_audioManagerRef;
 
-
+        void CancelMultiply();
         void UpdateCards();
         void SetPositionHorizontalBox();
         void ClearCovers();
+        void SetSpeedCards();
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // GUI_HORIZONTAL_CARDS_H
+#endif // GUI_HORIZONTAL_CARDS_H
