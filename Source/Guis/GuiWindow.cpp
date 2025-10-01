@@ -39,24 +39,11 @@ namespace ClassicLauncher
         mGuiBackground->SetPosition(Vector2f{});
         mGuiBackground->SetOffset(Vector2f{});
         mGuiBackground->SetSize(Sizef{1280.0f, 720.0f});
-        //mGuiBackground->m_transform.position.x = 0;
-        //mGuiBackground->m_transform.position.y = 0;
-        //mGuiBackground->m_transform.offset.x = 0;
-        //mGuiBackground->m_transform.offset.y = 0;
-        //mGuiBackground->m_transform.position.width = 1280;
-        //mGuiBackground->m_transform.position.height = 720;
-
-
         mGuiBackground->SetSource(0.0f, 562.0f, 21.0f, 720.0f);
-        //mGuiBackground->m_transform.source.x = 0;
-        //mGuiBackground->m_transform.source.y = 562;
-        //mGuiBackground->m_transform.source.width = 21;
-        //mGuiBackground->m_transform.source.height = 720;
 
         mGuiBackground->mTextureName = "sprite";
         AddChild(mGuiBackground);
         
-
         m_guiHorizontalCards = GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalCards",
                                                                                     m_gameListManagerRef,
                                                                                     m_audioManagerRef);
@@ -81,9 +68,7 @@ namespace ClassicLauncher
         {
             Vector2f pos = GetPosition();
             pos.x -= 10;
-            SetPosition(pos);
-            //m_transform.position.x -= 10;
-                        
+            SetPosition(pos);                     
         }
                     
         if (Keyboard::IsDown(Keyboard::Key::D))
@@ -91,34 +76,27 @@ namespace ClassicLauncher
             Vector2f pos = GetPosition();
             pos.x += 10;
             SetPosition(pos);
-            //m_transform.position.x += 10;
         }
         if (Keyboard::IsDown(Keyboard::Key::W))
         {
             Vector2f pos = GetPosition();
             pos.y -= 10;
             SetPosition(pos);
-            //m_transform.position.y -= 10;
         }
         if (Keyboard::IsDown(Keyboard::Key::S))
         {
             Vector2f pos = GetPosition();
             pos.y += 10;
             SetPosition(pos);
-            //m_transform.position.y += 10;
         }
 
         if (Keyboard::IsDown(Keyboard::Key::KP_ADD))
         {
             SetScale({GetScale() + 0.01f});
-            // m_transform.scale.x += 0.1;
-            // m_transform.scale.y += 0.1;
         }
         if (Keyboard::IsDown(Keyboard::Key::KP_SUBTRACT))
         {
             SetScale({GetScale() - 0.01f});
-            // m_transform.scale.x -= 0.1;
-            // m_transform.scale.y -= 0.1;
         }
 
         if (InputManager::IsRelease(InputName::rightFaceDown, main))

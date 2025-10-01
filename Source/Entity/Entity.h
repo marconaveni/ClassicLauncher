@@ -67,7 +67,6 @@ namespace ClassicLauncher
         void SetPosition(float x, float y);
         inline void SetPosition(Vector2f position) { SetPosition(position.x, position.y); };
         Vector2f GetPosition() const;
-        RectFloat& GetPositionRef();
 
         void SetSize(float width, float height);  // note: Size is m_transform.position.width and height 
         inline void SetSize(Vector2f size) { SetSize(size.x, size.y); };
@@ -77,26 +76,21 @@ namespace ClassicLauncher
         inline void SetSource(Vector2f position, Sizef size) { SetSource(position.x, position.y, size.width, size.height); };
         inline void SetSource(RectFloat source) { SetSource(source.x, source.y, source.width, source.height); };
         RectFloat GetSource() const;
-        RectFloat& GetSourceRef();
 
         void SetOffset(float x, float y);
         inline void SetOffset(Vector2f offset) { SetOffset(offset.x, offset.y); };
         Vector2f GetOffset() const;
-        Vector2f& GetOffsetRef();
         
         void SetOrigin(float x, float y);
         inline void SetOrigin(Vector2f origin) { SetOrigin(origin.x, origin.y); };
         Vector2f GetOrigin() const;
-        Vector2f& GetOriginRef();
         
         void SetScale(float x, float y);
         inline void SetScale(Vector2f scale) { SetScale(scale.x, scale.y); };
         Vector2f GetScale() const;
-        Vector2f& GetScaleRef();
 
         void SetRotation(float rotation);
         float GetRotation() const;
-        float& GetRotationRef();
             
         void SetColor(float r, float g, float b);
         void SetColor(float r, float g, float b, float a);
@@ -106,7 +100,6 @@ namespace ClassicLauncher
         void SetColorBlue(float b);
         void SetOpacity(float a);
         Color GetColor() const;
-        Color& GetColorRef();
 
         Transform& GetTransformRef();
         Transform& GetWorldTransformRef();

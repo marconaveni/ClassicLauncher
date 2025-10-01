@@ -39,8 +39,6 @@ namespace ClassicLauncher
         , m_audioManagerRef(audioManagerRef)
     {
         SetSize(Sizef{1280.0f , 720.0f});
-        //m_transform.position.width = 1280;
-        //m_transform.position.height = 720;
     }
 
     void GuiHorizontalCards::Init()
@@ -51,10 +49,6 @@ namespace ClassicLauncher
         const float x = (1280 - 1010) / 2;
         mGuiTitle->SetPosition(x, 154.0f);
         mGuiTitle->SetSize(1010.0f, 32.0f);
-        // mGuiTitle->m_transform.position.x = (1280 - 1010) / 2;
-        // mGuiTitle->m_transform.position.y = 154;
-        // mGuiTitle->m_transform.position.width = 1010;
-        // mGuiTitle->m_transform.position.height = 32;
 
         mGuiTitle->SetText("Title");
         //mGuiTitle->SetDesiredWidth(1010);
@@ -97,7 +91,6 @@ namespace ClassicLauncher
 
         mHorizontalBox->SetSpace(space);
         mHorizontalBox->SetPosition(x, y);
-        // mHorizontalBox->m_transform.position.y = y;
     }
 
     void GuiHorizontalCards::SetThemeValue()
@@ -233,8 +226,6 @@ namespace ClassicLauncher
     {
         Entity::Update();
 
-        // m_transform.offset.y -= 1;
-
 
         if (Keyboard::IsReleased(Keyboard::SEVEN) || Keyboard::IsReleased(Keyboard::SIX))
         {
@@ -309,7 +300,9 @@ namespace ClassicLauncher
         {
             if (mIdFocus < 3 || mIdFocus > 6)
             {      
-                mHorizontalBox->GetPositionRef().x -= mSpeed;
+                const float x = mHorizontalBox->GetPosition().x - mSpeed;
+                const float y = mHorizontalBox->GetPosition().y;
+                mHorizontalBox->SetPosition(x, y);
             }
             mLastDirection = Left;
         }
@@ -317,7 +310,9 @@ namespace ClassicLauncher
         {
             if (mIdFocus < 3 || mIdFocus > 6)
             {               
-                mHorizontalBox->GetPositionRef().x += mSpeed;
+                const float x = mHorizontalBox->GetPosition().x + mSpeed;
+                const float y = mHorizontalBox->GetPosition().y;
+                mHorizontalBox->SetPosition(x, y);
             }
             mLastDirection = Right;
         }
@@ -351,8 +346,7 @@ namespace ClassicLauncher
         {
             mFrame->SetFrame();
         }
-        
-
+    
         UpdateCards();
     }
 

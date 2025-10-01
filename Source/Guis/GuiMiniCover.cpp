@@ -23,14 +23,9 @@ namespace ClassicLauncher
     {
         SetPosition({0, 505.0f});
         SetSize({1280.0f, 72.0f});
-        // m_transform.position.y = 505.0f;
-        // m_transform.position.width = 1280.0f;
-        // m_transform.position.height = 72.0f;
 
         mGuiHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
         mGuiHorizontalBox->SetPosition({0, 20.0f});
-        // mGuiHorizontalBox->m_transform.position.x = 0; //m_transform.position.width / 2.0f;
-        // mGuiHorizontalBox->m_transform.position.y = 20.0f;
         mGuiHorizontalBox->SetSpace(1.0f);
         AddChild(mGuiHorizontalBox);
 
@@ -39,18 +34,9 @@ namespace ClassicLauncher
             MiniCover miniCover;
             miniCover.gui = GetEntityManager()->CreateEntity<GuiBase>("miniCover");
             miniCover.gui->SetSize(mSizeCover);
-            // miniCover.gui->m_transform.position.width = mSizeCover.x;
-            // miniCover.gui->m_transform.position.height = mSizeCover.y;
-
-
             miniCover.gui->SetSource({976.0f, 283.0f}, mSizeCover);
-           // miniCover.gui->m_transform.source.x = 976;
-           // miniCover.gui->m_transform.source.y = 283;
-           // miniCover.gui->m_transform.source.width = mSizeCover.x;
-           // miniCover.gui->m_transform.source.height = mSizeCover.y;
 
             miniCover.gui->mTextureName = "sprite";
-
 
             mGuiHorizontalBox->AttachGui(miniCover.gui);
             mGuiCovers.emplace_back(miniCover);
@@ -62,7 +48,6 @@ namespace ClassicLauncher
 
         mArrow = GetEntityManager()->CreateEntity<GuiBase>("arrow");
         mArrow->SetPosition(GetSize().width / 2, 0);
-        //mArrow->m_transform.position.x = m_transform.position.width / 2;
         mArrow->mTextureName = "sprite";
         GetAnimationManager().AddAnimationFrame("frame",  0.2f, mArrow, recs);
         AddChild(mArrow);
@@ -82,19 +67,13 @@ namespace ClassicLauncher
                 const Sizef& textureSize = textureReference->GetSize().ToFloat();
                 miniCover.gui->SetSize(textureSize / scale);
                 miniCover.gui->SetSource({0, 0}, textureSize / scale);
-                // miniCover.gui->m_transform.position.width = textureReference->GetSize().x / scale;
-                // miniCover.gui->m_transform.position.height = textureReference->GetSize().y / scale;
-                // miniCover.gui->m_transform.source.width = textureReference->GetSize().x / scale;
-                // miniCover.gui->m_transform.source.height = textureReference->GetSize().y / scale;
             }
  
             if (miniCover.focus)
             {
                 const float position = miniCover.gui->GetPosition().x + mGuiHorizontalBox->GetPosition().x;
                 mArrow->SetPosition(position, mArrow->GetPosition().y);
-                //mArrow->m_transform.position.x = miniCover.gui->m_transform.position.x + mGuiHorizontalBox->m_transform.position.x;
-            }
-            
+            }        
             
         }
     }
@@ -158,23 +137,11 @@ namespace ClassicLauncher
         {
             miniCover->SetSize(28.0f, 28.0f);
             miniCover->SetSource({976.0f, 283.0f}, miniCover->GetSize());
-            // miniCover->m_transform.position.width = 28;
-            // miniCover->m_transform.position.height = 28;
-            // miniCover->m_transform.source.x = 976;
-            // miniCover->m_transform.source.y = 283;
-            // miniCover->m_transform.source.width = 28;
-            // miniCover->m_transform.source.height = 28;
         }
         else
         {
             miniCover->SetSize(0.0f, 0.0f);
             miniCover->SetSource(RectFloat{});
-            // miniCover->m_transform.position.width = 28;
-            // miniCover->m_transform.position.height = 28;
-            // miniCover->m_transform.source.width = 0;
-            // miniCover->m_transform.source.height = 0;
-            // miniCover->m_transform.source.x = 0;
-            // miniCover->m_transform.source.y = 0;
         }
     }
 

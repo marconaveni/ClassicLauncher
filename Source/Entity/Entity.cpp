@@ -170,12 +170,6 @@ namespace ClassicLauncher
         return Vector2f(m_transform.position.x, m_transform.position.y);
     }
 
-    RectFloat& Entity::GetPositionRef()
-    {
-        MarkTransformAsDirty();
-        return m_transform.position;
-    }
-
     void Entity::SetSize(float width, float height)
     {
         if (m_transform.position.width != width || m_transform.position.height != height)
@@ -209,12 +203,6 @@ namespace ClassicLauncher
         return m_transform.source;
     }
 
-    RectFloat& Entity::GetSourceRef()
-    {
-        MarkTransformAsDirty();
-        return m_transform.source;
-    }
-
     void Entity::SetOffset(float x, float y)
     {
         if (m_transform.offset.x != x || m_transform.offset.x != y)
@@ -228,12 +216,6 @@ namespace ClassicLauncher
     Vector2f Entity::GetOffset() const
     {
         return Vector2f(m_transform.offset.x, m_transform.offset.y);
-    }
-
-    Vector2f& Entity::GetOffsetRef()
-    {
-        MarkTransformAsDirty();
-        return m_transform.offset;
     }
 
     void Entity::SetOrigin(float x, float y)
@@ -251,12 +233,6 @@ namespace ClassicLauncher
         return Vector2f(m_transform.origin.x, m_transform.origin.y);
     }
 
-    Vector2f& Entity::GetOriginRef()
-    {
-        MarkTransformAsDirty();
-        return m_transform.origin;
-    }
-
     void Entity::SetScale(float x, float y)
     {
         if (m_transform.scale.x != x || m_transform.scale.x != y)
@@ -272,12 +248,6 @@ namespace ClassicLauncher
         return Vector2f(m_transform.scale.x, m_transform.scale.y);
     }
 
-    Vector2f& Entity::GetScaleRef()
-    {
-        MarkTransformAsDirty();
-        return m_transform.scale;
-    }
-
     void Entity::SetRotation(float rotation)
     {
         if (m_transform.rotation != rotation)
@@ -289,12 +259,6 @@ namespace ClassicLauncher
 
     float Entity::GetRotation() const
     {
-        return m_transform.rotation;
-    }
-
-    float& Entity::GetRotationRef()
-    {
-        MarkTransformAsDirty();
         return m_transform.rotation;
     }
 
@@ -343,12 +307,6 @@ namespace ClassicLauncher
 
     Color Entity::GetColor() const
     {
-        return m_transform.color;
-    }
-
-    Color& Entity::GetColorRef()
-    {
-        MarkTransformAsDirty();
         return m_transform.color;
     }
 

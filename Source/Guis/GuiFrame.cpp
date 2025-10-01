@@ -14,23 +14,8 @@ namespace ClassicLauncher
         mTextureName = "sprite";
 
         SetSize(258.0f, 282.0f);
-        //m_transform.position.width = 258.0f;
-        //m_transform.position.height = 282.0f;
-
-
-        //m_transform.origin.x = 258.0f / 2;
-        //m_transform.origin.y = 282.0f / 2;
-
         SetSource(771.0f, 0.0f, 258.0f, 282.0f);
 
-
-        //m_transform.source.x = 771.0f;
-        //m_transform.source.y = 0.0f;
-        //m_transform.source.width = 258.0f;
-        //m_transform.source.height = 282.0f;
-
-        //m_transform.position.x = 100;
-        //m_transform.position.y = 100;
     }
 
     void GuiFrame::SetFrame(bool bForce)
@@ -84,8 +69,6 @@ namespace ClassicLauncher
                 Transform target = GetTransform();
                 const float x = Math::Clamp(focus->GetPositionFocus().x, 130.0f, 898.0f);
                 const float y = focus->GetPositionFocus().y;
-                //const float x = 0;
-                //const float y = 0;
 
                 if (x == GetPosition().x && y == GetPosition().y)
                 {
@@ -97,7 +80,6 @@ namespace ClassicLauncher
                     if (GetAnimation("frame-move").GetAnimationIsRun())
                     {
                         LOG(LOG_CLASSIC_DEBUG, "call move frame");
-                        /* code */
                     }
 
                     target.position.x = x;
@@ -108,7 +90,6 @@ namespace ClassicLauncher
         }
 
         Animatable::UpdateAnimation();
-        // m_transform.offset.x = 300; //teste
     }
 
 } // namespace ClassicLauncher

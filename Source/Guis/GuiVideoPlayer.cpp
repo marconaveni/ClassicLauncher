@@ -86,10 +86,6 @@ namespace ClassicLauncher
         const Vector2f textureSize = m_renderTexture->GetTexture()->GetSize().ToFloat();
         SetSource(textureSize.x, textureSize.y);
         SetSize(textureSize.x / m_renderScale, textureSize.y / m_renderScale);
-        // m_transform.source.width = m_renderTexture->GetTexture()->GetSize().x;
-        // m_transform.source.height = m_renderTexture->GetTexture()->GetSize().y;
-        // m_transform.position.width = m_renderTexture->GetTexture()->GetSize().x / m_renderScale;
-        // m_transform.position.height = m_renderTexture->GetTexture()->GetSize().y / m_renderScale;
 
         DrawVideo();
 

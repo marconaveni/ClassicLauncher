@@ -27,11 +27,6 @@ namespace ClassicLauncher
     {
         SetPosition(0.0f, 0.0f);
         SetSize(256.0f, 280.0f);
-        // m_transform.position.x = 0; //static_cast<float>(x);
-        // m_transform.position.y = 0; //static_cast<float>(y);
-        // m_transform.position.width = 256;
-        // m_transform.position.height = 280;
-
 
         CreateCard(mCardBackgroundMain, 0, 281, 255, "GuiCardBackgroundMain");
         CreateCard(mCardBackgroundFavorite, 514, 281, 0, "GuiCardBackgroundFavorite");
@@ -43,8 +38,6 @@ namespace ClassicLauncher
 
         mGuiVideoPlayer = GetEntityManager()->CreateEntity<GuiVideoPlayer>("GuiVideoPlayer");
         mGuiVideoPlayer->SetOffset(12.0f, 12.0f);
-        // mGuiVideoPlayer->m_transform.offset.x = 12;
-        // mGuiVideoPlayer->m_transform.offset.y = 12;
         AddChild(mGuiVideoPlayer);
 
         CreateCard(mCardMain, 0, 0, 255, "GuiCardMain");
@@ -53,17 +46,8 @@ namespace ClassicLauncher
 
 
         m_coverDefault->SetOffset(24.0f, 13.0f);
-        m_coverDefault->SetSize(204.0f, 202.0f);
-        // m_coverDefault->m_transform.offset.x = 24.0f;
-        // m_coverDefault->m_transform.offset.y = 13.0f;
-        // m_coverDefault->m_transform.position.width = 204.0f;
-        // m_coverDefault->m_transform.position.height = 202.0f;
-        
+        m_coverDefault->SetSize(204.0f, 202.0f);  
         m_coverDefault->SetSource(771.0f, 283.0f, 204.0f, 202.0f);
-        // m_coverDefault->m_transform.source.x = 771;
-        // m_coverDefault->m_transform.source.y = 283;
-        // m_coverDefault->m_transform.source.width = 204.0f;
-        // m_coverDefault->m_transform.source.height = 202.0f;
         m_coverDefault->mTextureName = "sprite";
 
         SetCover();
@@ -80,18 +64,8 @@ namespace ClassicLauncher
 
         card->SetPosition(Vector2f{});
         card->SetSize(GetSize());
-        //card->m_transform.position.x = 0;
-        //card->m_transform.position.y = 0;
-        //card->m_transform.position.width = m_transform.position.width;
-        //card->m_transform.position.height = m_transform.position.height;
-
         card->SetSource(RectFloat{sourceX, sourceY, GetSize().width, GetSize().height});
         card->SetOpacity(alpha);
-        // card->m_transform.source.x = sourceX;
-        // card->m_transform.source.y = sourceY;
-        // card->m_transform.source.width = m_transform.position.width;
-        // card->m_transform.source.height = m_transform.position.height;
-        // card->m_transform.color.SetOpacity(alpha);
         card->mTextureName = "sprite";
         if (bAddChild)
         {
@@ -103,27 +77,15 @@ namespace ClassicLauncher
     {
 
         m_coverDefault->SetOpacity(255);
-        //m_coverDefault->m_transform.color.SetOpacity(255);
         m_cover->mTextureName = "transparent";
 
         if (!name.empty())
         {
-
+            m_coverDefault->SetOpacity(0);
             m_cover->SetOffset(Vector2f{12.0f});
-            m_cover->SetSize(Sizef{228.0f, 204.0f});
-            //m_cover->m_transform.offset.x = 12.0f;
-            //m_cover->m_transform.offset.y = 12.0f;
-            //m_cover->m_transform.position.width = 228.0f;
-            //m_cover->m_transform.position.height = 204.0f;
-            
+            m_cover->SetSize(Sizef{228.0f, 204.0f});    
             m_cover->SetSource(RectFloat{0.0f, 0.0f, 228.0f, 204.0f});
             m_cover->SetSize(Sizef{228.0f, 204.0f});
-            //m_cover->m_transform.source.x = 0;
-            //m_cover->m_transform.source.y = 0;
-            //m_cover->m_transform.source.width = 228.0f;
-            //m_cover->m_transform.source.height = 204.0f;
-            m_coverDefault->SetOpacity(0);
-            //m_coverDefault->m_transform.color.SetOpacity(0);
             m_cover->mTextureName = name;
             m_isChangeTexture = true;
         }
@@ -146,19 +108,9 @@ namespace ClassicLauncher
             const float xCoverPos = ((228.0f - widthTex) / 2.0f) + 12;
             const float yCoverPos = ((204.0f - HeightTex) / 2.0f) + 12;
 
-   
             m_cover->SetOffset(Vector2f{xCoverPos, yCoverPos}); 
             m_cover->SetSize(Vector2f{widthTex, HeightTex}); 
-            // m_cover->m_transform.offset.x = xCoverPos;
-            // m_cover->m_transform.offset.y = yCoverPos;
-            // m_cover->m_transform.position.width = widthTex;
-            // m_cover->m_transform.position.height = HeightTex;
-
             m_cover->SetSource(RectFloat{0.0f, 0.0f, widthTex, HeightTex});
-            // m_cover->m_transform.source.x = 0;
-            // m_cover->m_transform.source.y = 0;
-            // m_cover->m_transform.source.width = widthTex;
-            // m_cover->m_transform.source.height = HeightTex;
             m_isChangeTexture = false;
         }
 
@@ -168,7 +120,6 @@ namespace ClassicLauncher
             mGuiVideoPlayer->InitFullscreen();
             Transform target = mCardSelected->GetTransform();
             target.color.a = 255;
-            //mCardBackgroundSelected->m_transform.color.a = 255;
             GetAnimationManager().StartAnimation("teste", 0.2f, mCardBackgroundSelected, target, Ease::EaseLinearNone, false);
         }
         if (IsFocus() && Keyboard::IsReleased(Keyboard::UP))
@@ -176,7 +127,6 @@ namespace ClassicLauncher
             mGuiVideoPlayer->StopFullscreen();
             Transform target = mCardSelected->GetTransform();
             target.color.a = 0;
-            //mCardBackgroundSelected->m_transform.color.a = 255;
             GetAnimationManager().StartAnimation("teste", 0.2f, mCardBackgroundSelected, target, Ease::EaseLinearNone, false);
         }
         
