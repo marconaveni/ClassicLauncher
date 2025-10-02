@@ -11,9 +11,6 @@ namespace ClassicLauncher
     class GuiBlackScreen;
     class GuiVideoPlayer;
     class GuiBase;
-    class Animatable;
-    class GuiCanvas;
-    class EntityManager;
     class GameListManager;
     class AudioManager;
     class ProcessManager;
@@ -29,16 +26,16 @@ namespace ClassicLauncher
         void OnClick();
         void OnBack();
         void Teste();
-        GuiBlackScreen* GetGuiBlackScreen() const { return mGuiBlackScreen; }
+        GuiBlackScreen* GetGuiBlackScreen() const { return m_guiBlackScreen; }
 
     private:
 
         GuiHorizontalCards* m_guiHorizontalCards;
-        GuiBlackScreen* mGuiBlackScreen;
-        GuiVideoPlayer* mGuiVideoPlayer;
-        GuiBase* mGuiBackground;
-        TimerHandling mClickTimer;
-        TimerHandling mInputTimer;
+        GuiBlackScreen* m_guiBlackScreen;
+        GuiVideoPlayer* m_guiVideoPlayer;
+        GuiBase* m_guiBackground;
+        TimerHandling m_clickTimer;
+        TimerHandling m_inputTimer;
 
         GameListManager* m_gameListManagerRef;
         AudioManager* m_audioManagerRef;

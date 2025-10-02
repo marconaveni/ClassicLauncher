@@ -12,7 +12,7 @@ namespace ClassicLauncher
 {
 
     RenderScreen::RenderScreen()
-        : mRenderTexture(), mWidth(0), mHeight(0), mNewWidth(0), mNewHeight(0), mScale(1), mIsMaintainAspectRatio(true)
+        : m_renderTexture(), m_width(0), m_height(0), m_newWidth(0), m_newHeight(0), m_scale(1), m_isMaintainAspectRatio(true)
     {
         LOG(LOG_CLASSIC_WARNING, "inicia render screen");
     }
@@ -28,24 +28,24 @@ namespace ClassicLauncher
         
         const auto screenWidth = static_cast<float>(RayWindow::GetScreenWidth());
         const auto screenHeight = static_cast<float>(RayWindow::GetScreenHeight());
-        mNewWidth = static_cast<float>(GetWidth());
-        mNewHeight = static_cast<float>(GetHeight());
+        m_newWidth = static_cast<float>(GetWidth());
+        m_newHeight = static_cast<float>(GetHeight());
 
-        if (mIsMaintainAspectRatio)
+        if (m_isMaintainAspectRatio)
         {
-            mScale = Math::Min<float>(screenWidth / mNewWidth, screenHeight / mNewHeight);
-            mVirtualMouse.x = (mouse.x - (screenWidth - (mNewWidth * mScale)) * 0.5f) / mScale;
-            mVirtualMouse.y = (mouse.y - (screenHeight - (mNewHeight * mScale)) * 0.5f) / mScale;
-            mVirtualMouse = Math::VecClamp(mVirtualMouse, Vector2f{0.0f, 0.0f}, Vector2f{mNewWidth, mNewHeight});
+            m_scale = Math::Min<float>(screenWidth / m_newWidth, screenHeight / m_newHeight);
+            m_virtualMouse.x = (mouse.x - (screenWidth - (m_newWidth * m_scale)) * 0.5f) / m_scale;
+            m_virtualMouse.y = (mouse.y - (screenHeight - (m_newHeight * m_scale)) * 0.5f) / m_scale;
+            m_virtualMouse = Math::VecClamp(m_virtualMouse, Vector2f{0.0f, 0.0f}, Vector2f{m_newWidth, m_newHeight});
         }
         else
         {
-            mScale = 1;
-            mVirtualMouse.x = (mouse.x / screenWidth) * mWidth;
-            mVirtualMouse.y = (mouse.y / screenHeight) * mHeight;
+            m_scale = 1;
+            m_virtualMouse.x = (mouse.x / screenWidth) * m_width;
+            m_virtualMouse.y = (mouse.y / screenHeight) * m_height;
         }
 
-        RayWindow::m_virtualMouse = mVirtualMouse;
+        RayWindow::m_virtualMouse = m_virtualMouse;
 
         if ( RayWindow::IsResize())
         {
@@ -58,11 +58,11 @@ namespace ClassicLauncher
     void RenderScreen::Init(const int screenWidth, const int screenHeight)
     {
         const float renderScale = ThemesManager::GetScaleRenderer();
-        mWidth = screenWidth * renderScale;
-        mHeight = screenHeight * renderScale;
+        m_width = screenWidth * renderScale;
+        m_height = screenHeight * renderScale;
 
-        mRenderTexture = std::make_unique<RenderTexture>(static_cast<int>(mWidth), static_cast<int>(mHeight));
-        mRenderTexture->SetSmooth(true);
+        m_renderTexture = std::make_unique<RenderTexture>(static_cast<int>(m_width), static_cast<int>(m_height));
+        m_renderTexture->SetSmooth(true);
     }
 
     void RenderScreen::Clear()
@@ -75,7 +75,7 @@ namespace ClassicLauncher
     void RenderScreen::BeginRender()
     {
         UpdateValues();
-        rlw::BeginTextureMode(*mRenderTexture);
+        rlw::BeginTextureMode(*m_renderTexture);
         rlw::ClearBackground(Color::WhiteGray);
     }
 
@@ -89,57 +89,57 @@ namespace ClassicLauncher
 
         const auto screenWidth = static_cast<float>(RayWindow::GetScreenWidth());
         const auto screenHeight = static_cast<float>(RayWindow::GetScreenHeight());
-        const auto textureWidth = static_cast<float>(mRenderTexture->GetSize().x);
-        const auto textureHeight = static_cast<float>(mRenderTexture->GetSize().y);
+        const auto textureWidth = static_cast<float>(m_renderTexture->GetSize().x);
+        const auto textureHeight = static_cast<float>(m_renderTexture->GetSize().y);
 
-        mSource = Rectangle{0.0f, 0.0f, textureWidth, -textureHeight};
-        mDest = Rectangle{(screenWidth - (mNewWidth * mScale)) * 0.5f,
-                          (screenHeight - (mNewHeight * mScale)) * 0.5f,
-                          mNewWidth * mScale,
-                          mNewHeight * mScale};
+        m_source = Rectangle{0.0f, 0.0f, textureWidth, -textureHeight};
+        m_dest = Rectangle{(screenWidth - (m_newWidth * m_scale)) * 0.5f,
+                          (screenHeight - (m_newHeight * m_scale)) * 0.5f,
+                          m_newWidth * m_scale,
+                          m_newHeight * m_scale};
 
 #ifdef _DEBUG
         if (Keyboard::IsReleased(Keyboard::Key::K))
         {
-            mRenderTexture->SetSmooth(false);
+            m_renderTexture->SetSmooth(false);
         }
         if (Keyboard::IsReleased(Keyboard::Key::J))
         {
-            mRenderTexture->SetSmooth(true);
+            m_renderTexture->SetSmooth(true);
         }
 #endif
         // Draw render texture to screen, properly scaled
-        rlw::DrawTexturePro(*mRenderTexture->GetTexture(), mSource, mDest, Vector2f{0.0f, 0.0f}, 0.0f, Color::White);
+        rlw::DrawTexturePro(*m_renderTexture->GetTexture(), m_source, m_dest, Vector2f{0.0f, 0.0f}, 0.0f, Color::White);
     }
 
     void RenderScreen::Unload()
     {
-        if (mRenderTexture->IsValid())
+        if (m_renderTexture->IsValid())
         {
-            mRenderTexture->Unload();
+            m_renderTexture->Unload();
         }
     }
 
     Vector2f RenderScreen::GetRenderScale() const
     {
-        const float scaleWidth = static_cast<float>(RayWindow::GetScreenWidth()) / mWidth;
-        const float scaleHeight = static_cast<float>(RayWindow::GetScreenHeight()) / mHeight;
+        const float scaleWidth = static_cast<float>(RayWindow::GetScreenWidth()) / m_width;
+        const float scaleHeight = static_cast<float>(RayWindow::GetScreenHeight()) / m_height;
         return Vector2f{scaleWidth, scaleHeight};
     }
 
     Vector2f RenderScreen::GetMousePositionRender() const
     {
-        return mVirtualMouse;
+        return m_virtualMouse;
     }
 
     int RenderScreen::GetWidth() const
     {
-        return (mIsMaintainAspectRatio) ? static_cast<int>(mWidth) : RayWindow::GetScreenWidth();
+        return (m_isMaintainAspectRatio) ? static_cast<int>(m_width) : RayWindow::GetScreenWidth();
     }
 
     int RenderScreen::GetHeight() const
     {
-        return (mIsMaintainAspectRatio) ? static_cast<int>(mHeight) : RayWindow::GetScreenHeight();
+        return (m_isMaintainAspectRatio) ? static_cast<int>(m_height) : RayWindow::GetScreenHeight();
     }
 
 } // namespace ClassicLauncher

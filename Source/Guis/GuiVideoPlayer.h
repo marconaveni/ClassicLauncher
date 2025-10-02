@@ -6,6 +6,7 @@
 
 #include "Entity/Entity.h"
 #include "Video/VideoPlayer.h"
+#include "Animations/Animatable.h"
 
 namespace ClassicLauncher
 {
@@ -14,7 +15,7 @@ namespace ClassicLauncher
     class Application;
     class RenderTexture;
 
-    class GuiVideoPlayer : public Entity
+    class GuiVideoPlayer : public Entity, public Animatable
     {
     public:
 
@@ -33,11 +34,12 @@ namespace ClassicLauncher
         
     private:
         
-        RenderTexture* m_renderTexture;
-        std::unique_ptr<VideoPlayer> mPlayer;
-        std::unique_ptr<VideoPlayer> mPlayerFullScreen;
-        std::string mFilePath;
+        RenderTexture* m_renderTexture = nullptr;
+        std::unique_ptr<VideoPlayer> m_player;
+        std::unique_ptr<VideoPlayer> m_playerFullScreen;
+        std::string m_filePath;
         float m_renderScale = 1;
+        void VideoFadeinAnimate(float time);
     };
 
 } // namespace ClassicLauncher

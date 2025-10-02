@@ -25,15 +25,15 @@ namespace ClassicLauncher
 {
 
     GuiHorizontalCards::GuiHorizontalCards(GameListManager* gameListManagerRef, AudioManager* audioManagerRef)
-        : mGuiTitle(nullptr)
-        , mMiniCover(nullptr)
-        , mPositionX(0)
-        , mIsLeft(false)
-        , mIsRight(false)
-        , mIsNeedUpdate(false)
-        , mLastDirection(None)
-        , mIdFocus(0)
-        , mIdLastFocusSystem(3)
+        : m_guiTitle(nullptr)
+        , m_miniCover(nullptr)
+        , m_positionX(0)
+        , m_isLeft(false)
+        , m_isRight(false)
+        , m_isNeedUpdate(false)
+        , m_lastDirection(None)
+        , m_idFocus(0)
+        , m_idLastFocusSystem(3)
         , mSpeed(22.0f)
         , m_gameListManagerRef(gameListManagerRef)
         , m_audioManagerRef(audioManagerRef)
@@ -44,20 +44,20 @@ namespace ClassicLauncher
     void GuiHorizontalCards::Init()
     {
 
-        mGuiTitle = GetEntityManager()->CreateEntity<GuiTextBlock>("GuiTitle", Resources::GetFont(), 48, 0);
+        m_guiTitle = GetEntityManager()->CreateEntity<GuiTextBlock>("GuiTitle", Resources::GetFont(), 48, 0);
 
         const float x = (1280 - 1010) / 2;
-        mGuiTitle->SetPosition(x, 154.0f);
-        mGuiTitle->SetSize(1010.0f, 32.0f);
+        m_guiTitle->SetPosition(x, 154.0f);
+        m_guiTitle->SetSize(1010.0f, 32.0f);
 
-        mGuiTitle->SetText("Title");
+        m_guiTitle->SetText("Title");
         //mGuiTitle->SetDesiredWidth(1010);
-        mGuiTitle->SetTextOverflowPolicy(TextOverflowPolicy::clip);
-        mGuiTitle->SetTextCenter(true);
-        AddChild(mGuiTitle);
+        m_guiTitle->SetTextOverflowPolicy(TextOverflowPolicy::CLIP);
+        m_guiTitle->SetTextCenter(true);
+        AddChild(m_guiTitle);
 
-        mHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalBox>("Cards_GuiHorizontalBox");
-        AddChild(mHorizontalBox);
+        m_horizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalBox>("Cards_GuiHorizontalBox");
+        AddChild(m_horizontalBox);
         SetHorizontalBoxValues();
 
         for (int i = 0; i < 10; i++)
@@ -67,30 +67,30 @@ namespace ClassicLauncher
                                                                    GetFocusManager(),
                                                                    m_audioManagerRef);
             card->CreateCards(0, 0);
-            mHorizontalBox->AttachGui(card);
-            mHorizontalBox->AddChild(card);
-            mGuiCards.emplace_back(card);
+            m_horizontalBox->AttachGui(card);
+            m_horizontalBox->AddChild(card);
+            m_guiCards.emplace_back(card);
         }
 
         SetPositionHorizontalBox();
 
-        mMiniCover = GetEntityManager()->CreateEntity<GuiMiniCover>("MiniCover", m_gameListManagerRef);
-        mMiniCover->Init();
-        AddChild(mMiniCover);
+        m_miniCover = GetEntityManager()->CreateEntity<GuiMiniCover>("MiniCover", m_gameListManagerRef);
+        m_miniCover->Init();
+        AddChild(m_miniCover);
 
-        mFrame = GetEntityManager()->CreateEntity<GuiFrame>("Frame", GetFocusManager());
-        GetEntityManager()->SetZOrder(mFrame, 1);
+        m_frame = GetEntityManager()->CreateEntity<GuiFrame>("Frame");
+        GetEntityManager()->SetZOrder(m_frame, 1);
         SetFocus(3, true);
     }
 
     void GuiHorizontalCards::SetHorizontalBoxValues()
     {
         const float space = ThemesManager::Get().mConfigurationThemes.horizontalCardsSpace;
-        const float x = mHorizontalBox->GetPosition().x;
+        const float x = m_horizontalBox->GetPosition().x;
         const float y = ThemesManager::Get().mConfigurationThemes.horizontalCardsPositionY;
 
-        mHorizontalBox->SetSpace(space);
-        mHorizontalBox->SetPosition(x, y);
+        m_horizontalBox->SetSpace(space);
+        m_horizontalBox->SetPosition(x, y);
     }
 
     void GuiHorizontalCards::SetThemeValue()
@@ -111,13 +111,13 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::SetFocus(const int newId, bool bForce)
     {   
-        mIdFocus = newId;
-        mGuiCards[newId]->SetCardFocus(bForce);
-        mIsLeft = true;
+        m_idFocus = newId;
+        m_guiCards[newId]->SetCardFocus(bForce);
+        m_isLeft = true;
 
         const GameList* pGameList = m_gameListManagerRef->GetCurrentGameList();
-        mGuiTitle->SetText((pGameList) ? pGameList->name : "");
-        mFrame->SetFrame();
+        m_guiTitle->SetText((pGameList) ? pGameList->name : "");
+        m_frame->SetFrame();
     }
 
     void GuiHorizontalCards::SetCovers()
@@ -130,7 +130,7 @@ namespace ClassicLauncher
 
         for (int i = 0; i < 10; i++)
         {
-            int indexFinal = Utils::SetIndexArray(m_gameListManagerRef->GetGameId() + i - mIdFocus,
+            int indexFinal = Utils::SetIndexArray(m_gameListManagerRef->GetGameId() + i - m_idFocus,
                                                   m_gameListManagerRef->GetGameListSize());
             indexFinal = Utils::SetIndexArray(indexFinal, m_gameListManagerRef->GetGameListSize());
             indexFinal = Math::Clamp(indexFinal, 0, m_gameListManagerRef->GetGameListSize() - 1);
@@ -142,15 +142,15 @@ namespace ClassicLauncher
             {
                 const float renderScale = ThemesManager::GetScaleRenderer();
                 GetSpriteManager()->LoadSprite(name, path, int(228.0f * renderScale), int(204.0f * renderScale));
-                mGuiCards[i]->SetCover(name);
+                m_guiCards[i]->SetCover(name);
             }
             else
             {
-                mGuiCards[i]->SetCover();
+                m_guiCards[i]->SetCover();
             }
         }
 
-        mMiniCover->SetCovers();
+        m_miniCover->SetCovers();
         SetPositionHorizontalBox();
 
         LOG(LOG_CLASSIC_DEBUG, "Num Sprites Loaded after SetCovers %d", GetSpriteManager()->NumSpritesLoaded());
@@ -158,9 +158,9 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::SetPositionHorizontalBox()
     {
-        const float x = ((GetSize().width - mHorizontalBox->GetSize().width) / 2) + ThemesManager::Get().mConfigurationThemes.horizontalCardsPositionX;
-        const float y = mHorizontalBox->GetPosition().y;
-        mHorizontalBox->SetPosition(x, y);
+        const float x = ((GetSize().width - m_horizontalBox->GetSize().width) / 2) + ThemesManager::Get().mConfigurationThemes.horizontalCardsPositionX;
+        const float y = m_horizontalBox->GetPosition().y;
+        m_horizontalBox->SetPosition(x, y);
     }
 
     void GuiHorizontalCards::ChangeList(const CurrentList list)
@@ -169,13 +169,13 @@ namespace ClassicLauncher
         CancelMultiply();
         if (list == SystemListSelect)
         {
-            m_gameListManagerRef->GetCurrentSystemList()->history.indexCardFocus = mIdFocus;
+            m_gameListManagerRef->GetCurrentSystemList()->history.indexCardFocus = m_idFocus;
             m_gameListManagerRef->ChangeGameToSystemList();
-            SetFocus(mIdLastFocusSystem, true);
+            SetFocus(m_idLastFocusSystem, true);
         }
         else
         {
-            mIdLastFocusSystem = mIdFocus;
+            m_idLastFocusSystem = m_idFocus;
             m_gameListManagerRef->ChangeSystemToGameList();
 
             // If GameList fails it returns to the system selection menu.
@@ -190,9 +190,9 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::Click()
     {       
-        mGuiCards[mIdFocus]->Click();
-        mFrame->Click();
-        for (GuiCard*& card : mGuiCards)
+        m_guiCards[m_idFocus]->Click();
+        m_frame->Click();
+        for (GuiCard*& card : m_guiCards)
         {
             card->SetFrontCard();
         }
@@ -224,24 +224,24 @@ namespace ClassicLauncher
 
     bool GuiHorizontalCards::IsMovement() const
     {
-        return mPositionX != 0;
+        return m_positionX != 0;
     }
 
     void GuiHorizontalCards::SetSpeedCards()
     {
-        if (InputManager::IsDown(InputName::rightTriggerFront, main))
+        if (InputManager::IsDown(InputName::rightTriggerFront, MAIN))
         {
             m_multiply = 256.0f;
         }
-        else if ((InputManager::IsDown(InputName::leftFaceLeft, main) ||
-                  InputManager::IsDown(InputName::leftFaceRight, main)) &&
+        else if ((InputManager::IsDown(InputName::leftFaceLeft, MAIN) ||
+                  InputManager::IsDown(InputName::leftFaceRight, MAIN)) &&
                  !m_isPress)
         {
             PRINT(TEXT("IsPress"));
             CancelMultiply();
             m_isPress = true;
             GetTimerManager()->SetTimer(
-                mTimerInputSpeed,
+                m_timerInputSpeed,
                 [&]()
                 {
                     PRINT(TEXT("Está acionando"));
@@ -252,8 +252,8 @@ namespace ClassicLauncher
                 2.5f,
                 false);
         }
-        else if (InputManager::IsRelease(InputName::leftFaceLeft, main) ||
-                 InputManager::IsRelease(InputName::leftFaceRight, main))
+        else if (InputManager::IsRelease(InputName::leftFaceLeft, MAIN) ||
+                 InputManager::IsRelease(InputName::leftFaceRight, MAIN))
         {
             PRINT(TEXT("IsRelease"));
             CancelMultiply();
@@ -266,7 +266,7 @@ namespace ClassicLauncher
     {
         m_isPress = false;
         m_multiply = 22.0f;
-        GetTimerManager()->ClearTimer(mTimerInputSpeed);
+        GetTimerManager()->ClearTimer(m_timerInputSpeed);
     }
 
     int fps = 60;
@@ -278,88 +278,88 @@ namespace ClassicLauncher
         SetSpeedCards();
 
 
-        if (InputManager::IsDown(InputName::leftFaceLeft, main) && !mIsRight)
+        if (InputManager::IsDown(InputName::leftFaceLeft, MAIN) && !m_isRight)
         {
-            if (!mIsLeft)
+            if (!m_isLeft)
             {
                 m_audioManagerRef->PlaySound("cursor");
                 m_gameListManagerRef->AddId(-1);
-                SetFocus(mIdFocus - 1);
+                SetFocus(m_idFocus - 1);
             }
-            mIsLeft = true;
-            mIsNeedUpdate = true;
+            m_isLeft = true;
+            m_isNeedUpdate = true;
         }
 
-        if (InputManager::IsDown(InputName::leftFaceRight, main) && !mIsLeft)
+        if (InputManager::IsDown(InputName::leftFaceRight, MAIN) && !m_isLeft)
         {
-            if (!mIsRight)
+            if (!m_isRight)
             {
                 m_audioManagerRef->PlaySound("cursor");
                 m_gameListManagerRef->AddId(1);
-                SetFocus(mIdFocus + 1);
+                SetFocus(m_idFocus + 1);
             }
-            mIsRight = true;
-            mIsNeedUpdate = true;
+            m_isRight = true;
+            m_isNeedUpdate = true;
         }
 
-        if (mIsRight)
+        if (m_isRight)
         {
-            mPositionX = mPositionX - mSpeed;
+            m_positionX = m_positionX - mSpeed;
         }
-        else if (mIsLeft)
+        else if (m_isLeft)
         {
-            mPositionX = mPositionX + mSpeed;
+            m_positionX = m_positionX + mSpeed;
         }
 
-        if (mPositionX > -356 && mPositionX < 0 && mIsRight)
+        if (m_positionX > -356 && m_positionX < 0 && m_isRight)
         {
-            if (mIdFocus < 3 || mIdFocus > 6)
+            if (m_idFocus < 3 || m_idFocus > 6)
             {
-                const float x = mHorizontalBox->GetPosition().x - mSpeed;
-                const float y = mHorizontalBox->GetPosition().y;
-                mHorizontalBox->SetPosition(x, y);
+                const float x = m_horizontalBox->GetPosition().x - mSpeed;
+                const float y = m_horizontalBox->GetPosition().y;
+                m_horizontalBox->SetPosition(x, y);
             }
-            mLastDirection = Left;
+            m_lastDirection = Left;
         }
-        else if (mPositionX > 0 && mPositionX < 356 && mIsLeft)
+        else if (m_positionX > 0 && m_positionX < 356 && m_isLeft)
         {
-            if (mIdFocus < 3 || mIdFocus > 6)
+            if (m_idFocus < 3 || m_idFocus > 6)
             {
-                const float x = mHorizontalBox->GetPosition().x + mSpeed;
-                const float y = mHorizontalBox->GetPosition().y;
-                mHorizontalBox->SetPosition(x, y);
+                const float x = m_horizontalBox->GetPosition().x + mSpeed;
+                const float y = m_horizontalBox->GetPosition().y;
+                m_horizontalBox->SetPosition(x, y);
             }
-            mLastDirection = Right;
+            m_lastDirection = Right;
         }
 
-        if (mPositionX <= -256 || mPositionX >= 256)
+        if (m_positionX <= -256 || m_positionX >= 256)
         {
-            mPositionX = 0;
-            mIsRight = false;
-            mIsLeft = false;
+            m_positionX = 0;
+            m_isRight = false;
+            m_isLeft = false;
             SetCovers();
-            mIsNeedUpdate = true;
+            m_isNeedUpdate = true;
             // todo: add clean textures of vram outside of the screen
         }
 
-        if (mIdFocus < 3 || mIdFocus > 6)
+        if (m_idFocus < 3 || m_idFocus > 6)
         {
-            if (mLastDirection == Left && mPositionX == 0)
+            if (m_lastDirection == Left && m_positionX == 0)
             {
-                std::rotate(mGuiCards.begin(), mGuiCards.begin() + 1, mGuiCards.end());
-                mLastDirection = None;
-                mIdFocus = Math::Clamp(mIdFocus, 3, 6);
+                std::rotate(m_guiCards.begin(), m_guiCards.begin() + 1, m_guiCards.end());
+                m_lastDirection = None;
+                m_idFocus = Math::Clamp(m_idFocus, 3, 6);
             }
-            else if (mLastDirection == Right && mPositionX == 0)
+            else if (m_lastDirection == Right && m_positionX == 0)
             {
-                std::rotate(mGuiCards.rbegin(), mGuiCards.rbegin() + 1, mGuiCards.rend());
-                mLastDirection = None;
-                mIdFocus = Math::Clamp(mIdFocus, 3, 6);
+                std::rotate(m_guiCards.rbegin(), m_guiCards.rbegin() + 1, m_guiCards.rend());
+                m_lastDirection = None;
+                m_idFocus = Math::Clamp(m_idFocus, 3, 6);
             }
         }
         else
         {
-            mFrame->SetFrame();
+            m_frame->SetFrame();
         }
 
         UpdateCards();
@@ -367,14 +367,14 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::UpdateCards()
     {
-        if (!mIsLeft && !mIsRight && mIsNeedUpdate)
+        if (!m_isLeft && !m_isRight && m_isNeedUpdate)
         {
-            mHorizontalBox->ClearAll();
-            for (auto& guiCard : mGuiCards)
+            m_horizontalBox->ClearAll();
+            for (auto& guiCard : m_guiCards)
             {
-                mHorizontalBox->AttachGui(guiCard);
+                m_horizontalBox->AttachGui(guiCard);
             }
-            mIsNeedUpdate = false;
+            m_isNeedUpdate = false;
         }
     }
 

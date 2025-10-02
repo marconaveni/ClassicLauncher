@@ -28,27 +28,27 @@ namespace ClassicLauncher
         SetPosition(0.0f, 0.0f);
         SetSize(256.0f, 280.0f);
 
-        CreateCard(mCardBackgroundMain, 0, 281, 255, "GuiCardBackgroundMain");
-        CreateCard(mCardBackgroundFavorite, 514, 281, 0, "GuiCardBackgroundFavorite");
-        CreateCard(mCardBackgroundSelected, 257, 281, 0, "GuiCardBackgroundSelected");
+        CreateCard(m_cardBackgroundMain, 0, 281, 255, "GuiCardBackgroundMain");
+        CreateCard(m_cardBackgroundFavorite, 514, 281, 0, "GuiCardBackgroundFavorite");
+        CreateCard(m_cardBackgroundSelected, 257, 281, 0, "GuiCardBackgroundSelected");
 
         CreateCard(m_coverDefault, 0, 0, 255, "GuiCover", true);
         CreateCard(m_cover, 0, 0, 255, "GuiCover", false);
         AddChild(m_cover);
 
-        mGuiVideoPlayer = GetEntityManager()->CreateEntity<GuiVideoPlayer>("GuiVideoPlayer");
-        mGuiVideoPlayer->SetOffset(12.0f, 12.0f);
-        AddChild(mGuiVideoPlayer);
+        m_guiVideoPlayer = GetEntityManager()->CreateEntity<GuiVideoPlayer>("GuiVideoPlayer");
+        m_guiVideoPlayer->SetOffset(12.0f, 12.0f);
+        AddChild(m_guiVideoPlayer);
 
-        CreateCard(mCardMain, 0, 0, 255, "GuiCardMain");
-        CreateCard(mCardFavorite, 514, 0, 0, "GuiCardFavorite");
-        CreateCard(mCardSelected, 257, 0, 0, "GuiCardSelected");
+        CreateCard(m_cardMain, 0, 0, 255, "GuiCardMain");
+        CreateCard(m_cardFavorite, 514, 0, 0, "GuiCardFavorite");
+        CreateCard(m_cardSelected, 257, 0, 0, "GuiCardSelected");
 
 
         m_coverDefault->SetOffset(24.0f, 13.0f);
         m_coverDefault->SetSize(204.0f, 202.0f);  
         m_coverDefault->SetSource(771.0f, 283.0f, 204.0f, 202.0f);
-        m_coverDefault->mTextureName = "sprite";
+        m_coverDefault->m_textureName = "sprite";
 
         SetCover();
 
@@ -71,7 +71,7 @@ namespace ClassicLauncher
         card->SetSize(GetSize());
         card->SetSource(RectFloat{sourceX, sourceY, GetSize().width, GetSize().height});
         card->SetOpacity(alpha);
-        card->mTextureName = "sprite";
+        card->m_textureName = "sprite";
         if (bAddChild)
         {
             AddChild(card);
@@ -82,7 +82,7 @@ namespace ClassicLauncher
     {
 
         m_coverDefault->SetOpacity(255);
-        m_cover->mTextureName = "transparent";
+        m_cover->m_textureName = "transparent";
 
         if (!name.empty())
         {
@@ -91,7 +91,7 @@ namespace ClassicLauncher
             m_cover->SetSize(Sizef{228.0f, 204.0f});    
             m_cover->SetSource(RectFloat{0.0f, 0.0f, 228.0f, 204.0f});
             m_cover->SetSize(Sizef{228.0f, 204.0f});
-            m_cover->mTextureName = name;
+            m_cover->m_textureName = name;
             m_isChangeTexture = true;
         }
     }
@@ -101,7 +101,7 @@ namespace ClassicLauncher
         GuiCanvas::Update();
         Animatable::UpdateAnimation();
 
-        Texture* textureReference = GetSpriteManager()->GetTexture(m_cover->mTextureName);
+        Texture* textureReference = GetSpriteManager()->GetTexture(m_cover->m_textureName);
         if (textureReference != nullptr && m_isChangeTexture)
         {
             textureReference->SetSmooth(true);
@@ -122,17 +122,17 @@ namespace ClassicLauncher
 
         if (IsFocus() && Keyboard::IsReleased(Keyboard::DOWN))
         {
-            mGuiVideoPlayer->InitFullscreen();
-            Transform target = mCardSelected->GetTransform();
+            m_guiVideoPlayer->InitFullscreen();
+            Transform target = m_cardSelected->GetTransform();
             target.color.a = 255;
-            GetAnimationManager().StartAnimation("teste", 0.2f, mCardBackgroundSelected, target, Ease::EaseLinearNone, false);
+            GetAnimationManager().StartAnimation("teste", 0.2f, m_cardBackgroundSelected, target, Ease::EaseLinearNone, false);
         }
         if (IsFocus() && Keyboard::IsReleased(Keyboard::UP))
         {   
-            mGuiVideoPlayer->StopFullscreen();
-            Transform target = mCardSelected->GetTransform();
+            m_guiVideoPlayer->StopFullscreen();
+            Transform target = m_cardSelected->GetTransform();
             target.color.a = 0;
-            GetAnimationManager().StartAnimation("teste", 0.2f, mCardBackgroundSelected, target, Ease::EaseLinearNone, false);
+            GetAnimationManager().StartAnimation("teste", 0.2f, m_cardBackgroundSelected, target, Ease::EaseLinearNone, false);
         }
         
     }
@@ -157,7 +157,7 @@ namespace ClassicLauncher
     {
         if (IsFocus())
         {
-            const bool isPlay = mGuiVideoPlayer->Init(m_gameListManagerRef->GetCurrentGameList()->video, 228, 204);
+            const bool isPlay = m_guiVideoPlayer->Init(m_gameListManagerRef->GetCurrentGameList()->video, 228, 204);
             m_audioManagerRef->MusicVolume(isPlay ? 0.1f : 1.0f);
         }
     }
@@ -181,23 +181,23 @@ namespace ClassicLauncher
     void GuiCard::RemoveCardFocus(bool bForce)
     {
         // FocusAnimation(bForce, 0, 255, "card-lost-focus");
-        mGuiVideoPlayer->Stop();
-        m_audioManagerRef->MusicVolume(1.0f);
+        //m_guiVideoPlayer->Stop();
+        //m_audioManagerRef->MusicVolume(1.0f);
 
 
     }
 
     void GuiCard::OnFocus()
     {
-         Transform targetA = mCardSelected->GetTransform();
+         Transform targetA = m_cardSelected->GetTransform();
          targetA.color.a = 255;
-         Transform targetB = mCardBackgroundSelected->GetTransform();
+         Transform targetB = m_cardBackgroundSelected->GetTransform();
          targetB.color.a = 255;
-         Transform targetC = mCardMain->GetTransform();
+         Transform targetC = m_cardMain->GetTransform();
          targetC.color.a = 0;
-         GetAnimationManager().StartAnimation("focus-card-a" , 0.2f, mCardSelected, targetA, Ease::EaseLinearNone, false);
-         GetAnimationManager().StartAnimation("focus-card-b" , 0.2f, mCardBackgroundSelected, targetB, Ease::EaseLinearNone, false);
-         GetAnimationManager().StartAnimation("focus-card-c" , 0.2f, mCardMain, targetC, Ease::EaseLinearNone, false);
+         GetAnimationManager().StartAnimation("focus-card-a" , 0.2f, m_cardSelected, targetA, Ease::EaseLinearNone, false);
+         GetAnimationManager().StartAnimation("focus-card-b" , 0.2f, m_cardBackgroundSelected, targetB, Ease::EaseLinearNone, false);
+         GetAnimationManager().StartAnimation("focus-card-c" , 0.2f, m_cardMain, targetC, Ease::EaseLinearNone, false);
        // mCardBackgroundSelected->SetOpacity(255);
     }
 
@@ -207,16 +207,19 @@ namespace ClassicLauncher
         {
             return;
         }
+
+        m_guiVideoPlayer->Stop();
+        m_audioManagerRef->MusicVolume(1.0f);
         
-        Transform targetA = mCardSelected->GetTransform();
+        Transform targetA = m_cardSelected->GetTransform();
         targetA.color.a = 0;
-        Transform targetB = mCardBackgroundSelected->GetTransform();
+        Transform targetB = m_cardBackgroundSelected->GetTransform();
         targetB.color.a = 0;
-        Transform targetC = mCardMain->GetTransform();
+        Transform targetC = m_cardMain->GetTransform();
         targetC.color.a = 255;
-        GetAnimationManager().StartAnimation("remove-focus-card-a" , 0.2f, mCardSelected, targetA, Ease::EaseLinearNone, false);
-        GetAnimationManager().StartAnimation("remove-focus-card-b" , 0.2f, mCardBackgroundSelected, targetB, Ease::EaseLinearNone, false);
-        GetAnimationManager().StartAnimation("remove-focus-card-c" , 0.2f, mCardMain, targetC, Ease::EaseLinearNone, false);
+        GetAnimationManager().StartAnimation("remove-focus-card-a" , 0.2f, m_cardSelected, targetA, Ease::EaseLinearNone, false);
+        GetAnimationManager().StartAnimation("remove-focus-card-b" , 0.2f, m_cardBackgroundSelected, targetB, Ease::EaseLinearNone, false);
+        GetAnimationManager().StartAnimation("remove-focus-card-c" , 0.2f, m_cardMain, targetC, Ease::EaseLinearNone, false);
     }
 
     // bool GuiCard::IsFocus() const
@@ -240,8 +243,8 @@ namespace ClassicLauncher
         //m_coverDefault->m_transform.color.SetOpacity(255);
         //mGuiVideoPlayer->m_transform.color.SetOpacity(255);
 
-        mCardBackgroundFavorite->SetOpacity(0); // todo create logic is favorite
-        mCardFavorite->SetOpacity(0);           // todo create logic is favorite
+        m_cardBackgroundFavorite->SetOpacity(0); // todo create logic is favorite
+        m_cardFavorite->SetOpacity(0);           // todo create logic is favorite
         
         // if (m_cover->mTextureName == "sprite")
         // {
@@ -256,7 +259,7 @@ namespace ClassicLauncher
 
     void GuiCard::Click()
     {
-        mGuiVideoPlayer->Stop();
+        m_guiVideoPlayer->Stop();
         GetTimerManager()->ClearTimer(m_timerVideo);
 
 
@@ -285,15 +288,15 @@ namespace ClassicLauncher
 
         const int order = (IsFocus()) ? 1 : 0;
 
-        GetEntityManager()->SetZOrder(mCardSelected, order);
-        GetEntityManager()->SetZOrder(mCardBackgroundSelected, order);
-        GetEntityManager()->SetZOrder(mCardMain, order);
-        GetEntityManager()->SetZOrder(mCardBackgroundMain, order);
-        GetEntityManager()->SetZOrder(mCardFavorite, order);
-        GetEntityManager()->SetZOrder(mCardBackgroundFavorite, order);
+        GetEntityManager()->SetZOrder(m_cardSelected, order);
+        GetEntityManager()->SetZOrder(m_cardBackgroundSelected, order);
+        GetEntityManager()->SetZOrder(m_cardMain, order);
+        GetEntityManager()->SetZOrder(m_cardBackgroundMain, order);
+        GetEntityManager()->SetZOrder(m_cardFavorite, order);
+        GetEntityManager()->SetZOrder(m_cardBackgroundFavorite, order);
         GetEntityManager()->SetZOrder(m_cover, order);
         GetEntityManager()->SetZOrder(m_coverDefault, order);
-        GetEntityManager()->SetZOrder(mGuiVideoPlayer, order);
+        GetEntityManager()->SetZOrder(m_guiVideoPlayer, order);
     }
 
     void GuiCard::SetThemeValue()

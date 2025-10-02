@@ -17,9 +17,9 @@ namespace ClassicLauncher
                          AudioManager& audioManagerRef,
                          ProcessManager& processManagerRef)
         : m_guiHorizontalCards(nullptr)
-        , mGuiBlackScreen(nullptr)
-        , mGuiVideoPlayer(nullptr)
-        , mGuiBackground(nullptr)
+        , m_guiBlackScreen(nullptr)
+        , m_guiVideoPlayer(nullptr)
+        , m_guiBackground(nullptr)
         , m_gameListManagerRef(gameListManagerRef)
         , m_audioManagerRef(&audioManagerRef)
         , m_processManagerRef(&processManagerRef)
@@ -34,15 +34,15 @@ namespace ClassicLauncher
         //m_transform.position.width = 1280.0f; //  todo: refactor    (float)pApplication->GetSpecification().width;
         //m_transform.position.height = 720.0f; //  todo: refactor    (float)pApplication->GetSpecification().height;
 
-        mGuiBackground = GetEntityManager()->CreateEntity<GuiBase>("GuiBackground");
+        m_guiBackground = GetEntityManager()->CreateEntity<GuiBase>("GuiBackground");
 
-        mGuiBackground->SetPosition(Vector2f{});
-        mGuiBackground->SetOffset(Vector2f{});
-        mGuiBackground->SetSize(Sizef{1280.0f, 720.0f});
-        mGuiBackground->SetSource(0.0f, 562.0f, 21.0f, 720.0f);
+        m_guiBackground->SetPosition(Vector2f{});
+        m_guiBackground->SetOffset(Vector2f{});
+        m_guiBackground->SetSize(Sizef{1280.0f, 720.0f});
+        m_guiBackground->SetSource(0.0f, 562.0f, 21.0f, 720.0f);
 
-        mGuiBackground->mTextureName = "sprite";
-        AddChild(mGuiBackground);
+        m_guiBackground->m_textureName = "sprite";
+        AddChild(m_guiBackground);
 
         m_guiHorizontalCards = GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalCards",
                                                                                     m_gameListManagerRef,
@@ -50,12 +50,12 @@ namespace ClassicLauncher
         m_guiHorizontalCards->Init();
         AddChild(m_guiHorizontalCards);
 
-        mGuiBlackScreen = GetEntityManager()->CreateEntity<GuiBlackScreen>("GuiBlackScreen");
-        GetEntityManager()->SetZOrder(mGuiBlackScreen, 99);
+        m_guiBlackScreen = GetEntityManager()->CreateEntity<GuiBlackScreen>("GuiBlackScreen");
+        GetEntityManager()->SetZOrder(m_guiBlackScreen, 99);
 
 
 #ifdef _DEBUG
-        InputManager::SetCategory(main | debug);
+        InputManager::SetCategory(MAIN | DEBUG);
 #else
         InputManager::SetCategory(main);
 #endif
@@ -99,7 +99,7 @@ namespace ClassicLauncher
             SetScale({GetScale() - 0.01f});
         }
 
-        if (InputManager::IsRelease(InputName::rightFaceDown, main))
+        if (InputManager::IsRelease(InputName::rightFaceDown, MAIN))
         {
             if (!m_guiHorizontalCards->IsMovement())
             {
@@ -108,21 +108,21 @@ namespace ClassicLauncher
                 m_guiHorizontalCards->Click();
                 if (m_gameListManagerRef->GetCurrentList() == GameListSelect)
                 {
-                    mGuiBlackScreen->FadeIn();
+                    m_guiBlackScreen->FadeIn();
                 }
                 else
                 {
-                    mGuiBlackScreen->FadeInFadeOut();
+                    m_guiBlackScreen->FadeInFadeOut();
                 }
-                GetTimerManager()->SetTimer(mClickTimer, CALLFUNCTION(OnClick, this), this, 0.5f, false);
+                GetTimerManager()->SetTimer(m_clickTimer, CALLFUNCTION(OnClick, this), this, 0.5f, false);
             }
         }
-        if (InputManager::IsRelease(InputName::rightFaceRight, main) &&
+        if (InputManager::IsRelease(InputName::rightFaceRight, MAIN) &&
             m_gameListManagerRef->GetCurrentList() == GameListSelect) // back
         {
             InputManager::DisableInput();
-            mGuiBlackScreen->FadeInFadeOut();
-            GetTimerManager()->SetTimer(mClickTimer, CALLFUNCTION(OnBack, this), this, 0.5f, false);
+            m_guiBlackScreen->FadeInFadeOut();
+            GetTimerManager()->SetTimer(m_clickTimer, CALLFUNCTION(OnBack, this), this, 0.5f, false);
         }
     }
 
@@ -138,7 +138,7 @@ namespace ClassicLauncher
         {
             m_guiHorizontalCards->ChangeList(GameListSelect);
             // ThemesManager::Get().LoadTheme();
-            GetTimerManager()->SetTimer(mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
+            GetTimerManager()->SetTimer(m_inputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
     }
 
@@ -150,7 +150,7 @@ namespace ClassicLauncher
         {
             m_guiHorizontalCards->ChangeList(SystemListSelect);
             // ThemesManager::Get().LoadTheme();
-            GetTimerManager()->SetTimer(mInputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
+            GetTimerManager()->SetTimer(m_inputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
     }
 

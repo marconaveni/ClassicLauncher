@@ -43,20 +43,19 @@ namespace ClassicLauncher
     {
     public:
 
-        float mCurrentTime;
-        float mDuration;
+        float m_currentTime;
+        float m_duration;
 
-        bool mIsStart;
-        bool mIsRunning;
-        bool mIsFinish;
-        bool mIsReset;
-        bool mRelative;
+        bool m_isStart;
+        bool m_isRunning;
+        bool m_isFinish;
+        bool m_isReset;
 
-        Ease mType;
+        Ease m_typeEase;
 
-        Transform mStartTransform;
-        Transform mCurrentTransform;
-        Transform mFinalTransform;
+        Transform m_startTransform;
+        Transform m_currentTransform;
+        Transform m_finalTransform;
 
         Animation();
 

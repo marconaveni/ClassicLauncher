@@ -12,7 +12,7 @@
 namespace ClassicLauncher
 {
     Print::Print()
-        : mSize(20), mSpacing(1), mFont()
+        : m_size(20), m_spacing(1), m_font()
     {
     }
 
@@ -25,13 +25,13 @@ namespace ClassicLauncher
     {
 #ifdef _DEBUG
 
-        if (!mFont.IsValid())
+        if (!m_font.IsValid())
         {
             LoadFont(Resources::GetFont(), 16, 0);
         }
 
         bool bFound = false;
-        for (Message& msg : mMessages)
+        for (Message& msg : m_messages)
         {
             if (label == msg.label)
             {
@@ -56,7 +56,7 @@ namespace ClassicLauncher
             message.label = label;
             message.textColor = textColor;
             message.size = sizeY;
-            mMessages.emplace_back(message);
+            m_messages.emplace_back(message);
         }
 #endif
     }
@@ -81,7 +81,7 @@ namespace ClassicLauncher
                 std::string labelCount;
                 labelCount.append((!labelCompare.empty()) ? labelCompare : std::to_string(Math::Random(1, 3000)));
                 labelCount.append(std::to_string(count));
-                InternalPrintOnScreen(splitMessage, duration, labelCount.c_str(), textColor, bLog, mSize - 3);
+                InternalPrintOnScreen(splitMessage, duration, labelCount.c_str(), textColor, bLog, m_size - 3);
                 splitMessage = "";
                 count++;
                 continue;
@@ -90,32 +90,32 @@ namespace ClassicLauncher
         }
 
         labelCompare = (!labelCompare.empty()) ? labelCompare : std::to_string(Math::Random(1, 3000));
-        InternalPrintOnScreen(splitMessage, duration, labelCompare, textColor, bLog, mSize);
+        InternalPrintOnScreen(splitMessage, duration, labelCompare, textColor, bLog, m_size);
 #endif
     }
 
     void Print::DrawMessage()
     {
 #ifdef _DEBUG
-        if (!mFont.IsValid())
+        if (!m_font.IsValid())
         {
             return;
         }
 
-        mMessages.erase(std::remove_if(mMessages.begin(),
-                                       mMessages.end(),
+        m_messages.erase(std::remove_if(m_messages.begin(),
+                                       m_messages.end(),
                                        [](Message& message) { return !message.IsTimeElapsed(); }),
-                        mMessages.end());
+                        m_messages.end());
 
         float y = 16;
 
-        for (const auto& message : mMessages)
+        for (const auto& message : m_messages)
         {
             const Vector2f positionRender = Vector2f{30, y};
             const Vector2f positionRenderShadow = Vector2f{31, (y + 1)};
 
-            rlw::DrawTextEx(mFont, message.textMessage.data(), positionRenderShadow, mSize, mSpacing, Color::Black);
-            rlw::DrawTextEx(mFont, message.textMessage.data(), positionRender, mSize, mSpacing, message.textColor);
+            rlw::DrawTextEx(m_font, message.textMessage.data(), positionRenderShadow, m_size, m_spacing, Color::Black);
+            rlw::DrawTextEx(m_font, message.textMessage.data(), positionRender, m_size, m_spacing, message.textColor);
 
             y += message.size;
 
@@ -130,12 +130,12 @@ namespace ClassicLauncher
     void Print::LoadFont(const std::string& path, int size, float spacing)
     {
 #ifdef _DEBUG
-        mSize = size;
-        mSpacing = spacing;
-        mFont.LoadFromFile(path.c_str(), size, nullptr, 250);
-        if (!mFont.IsValid())
+        m_size = size;
+        m_spacing = spacing;
+        m_font.LoadFromFile(path.c_str(), size, nullptr, 250);
+        if (!m_font.IsValid())
         {
-            mFont = Font::GetFontDefault();
+            m_font = Font::GetFontDefault();
         }
 #endif
     }
@@ -143,7 +143,7 @@ namespace ClassicLauncher
     void Print::Unload()
     {
 #ifdef _DEBUG
-        mFont.Unload();
+        m_font.Unload();
 #endif
     }
 

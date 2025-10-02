@@ -9,8 +9,9 @@
 namespace ClassicLauncher
 {
     GuiVideoPlayer::GuiVideoPlayer()
-        : mPlayer(nullptr), mPlayerFullScreen(nullptr)
+        : m_player(nullptr), m_playerFullScreen(nullptr)
     {
+        SetOpacity(0);
     }
 
     bool GuiVideoPlayer::Init(const std::string& path, int width, int height)
@@ -22,66 +23,76 @@ namespace ClassicLauncher
 
         m_renderScale = ThemesManager::GetScaleRenderer();
 
-        mFilePath = path;
-        mPlayer = nullptr;
-        mPlayer = std::make_unique<VideoPlayer>();
+        m_filePath = path;
+        m_player = nullptr;
+        m_player = std::make_unique<VideoPlayer>();
         const int widthScale = static_cast<int>(width * m_renderScale);
         const int heightScale = static_cast<int>(height * m_renderScale);
-        const bool bIsplay = mPlayer->Init(path, widthScale, heightScale, m_renderScale, true);
+        const bool bIsplay = m_player->Init(path, widthScale, heightScale, m_renderScale, true);
 
-        GetSpriteManager()->LoadRenderTexture("videoPlayer", width * m_renderScale, height * m_renderScale);
         m_renderTexture = GetSpriteManager()->GetRenderTexture("videoPlayer");
-        m_renderTexture->SetSmooth(true);
-        // m_renderTexture.Load(width * m_renderScale, height * m_renderScale);
-        mPlayer->Play();
+        if (!m_renderTexture)
+        {
+            GetSpriteManager()->LoadRenderTexture("videoPlayer", width * m_renderScale, height * m_renderScale);
+            m_renderTexture = GetSpriteManager()->GetRenderTexture("videoPlayer");
+            m_renderTexture->SetSmooth(true);
+        }
+        
+        m_player->Play();
+        VideoFadeinAnimate(1.0f);
+
+
         return bIsplay;
     }
 
     void GuiVideoPlayer::InitFullscreen()
     {
-        if (!mPlayer)
+        if (!m_player)
         {
             return;
         }
 
-        mPlayer->Pause();
-        mPlayerFullScreen = nullptr;
-        mPlayerFullScreen = std::make_unique<VideoPlayer>();
+        m_player->Pause();
+        m_playerFullScreen = nullptr;
+        m_playerFullScreen = std::make_unique<VideoPlayer>();
         const float scale = ThemesManager::GetScaleRenderer();
-        mPlayerFullScreen->Init(mFilePath, 1280 * scale, 720 * scale, scale);
-        mPlayerFullScreen->Play();
+        m_playerFullScreen->Init(m_filePath, 1280 * scale, 720 * scale, scale);
+        m_playerFullScreen->Play();
         GetEntityManager()->SetZOrder(this, 99); // todo temp
+        VideoFadeinAnimate(0.5f);
     }
 
     void GuiVideoPlayer::Stop()
     {
-        mPlayer = nullptr;
-        mPlayerFullScreen = nullptr;
+        m_player = nullptr;
+        m_playerFullScreen = nullptr;
+        SetSize(Sizef{});
     }
 
     void GuiVideoPlayer::StopFullscreen()
     {
-        mPlayerFullScreen = nullptr;
+        m_playerFullScreen = nullptr;
 
-        if (!mPlayer)
+        if (!m_player)
         {
             return;
         }
 
-        mPlayer->Resume();
+        m_player->Resume();
         GetEntityManager()->SetZOrder(this, 1);
     }
 
     void GuiVideoPlayer::Update()
     {
         Entity::Update();
+        Animatable::UpdateAnimation();
 
-        if (!mPlayer)
+        if (!m_player)
         {
             return;
         }
 
-        mPlayer->Update();
+        m_player->Update();
 
         const Vector2f textureSize = m_renderTexture->GetTexture()->GetSize().ToFloat();
         SetSource(textureSize.x, textureSize.y);
@@ -89,18 +100,18 @@ namespace ClassicLauncher
 
         DrawVideo();
 
-        if (!mPlayerFullScreen)
+        if (!m_playerFullScreen)
         {
             return;
         }
 
-        mPlayerFullScreen->Update();
+        m_playerFullScreen->Update();
     }
 
     void GuiVideoPlayer::DrawVideo()
     {
 
-        Texture* textureVideo = mPlayer->GetVideoTexture();
+        Texture* textureVideo = m_player->GetVideoTexture();
         if (!textureVideo)
         {
             return;
@@ -134,7 +145,7 @@ namespace ClassicLauncher
     {
         Entity::Draw();
 
-        if (!mPlayer)
+        if (!m_player)
         {
             return;
         }
@@ -151,17 +162,19 @@ namespace ClassicLauncher
                             GetWorldTransform().rotation,
                             GetWorldTransform().color);
 
-        if (!mPlayerFullScreen)
+        if (!m_playerFullScreen)
         {
             return;
         }
 
-        Texture* textureFullScreen = mPlayerFullScreen->GetVideoTexture();
+        Texture* textureFullScreen = m_playerFullScreen->GetVideoTexture();
+        Texture* textureBlack = GetSpriteManager()->GetTexture("black");
         if (textureFullScreen)
         {
             const int scale = static_cast<int>(ThemesManager::GetScaleRenderer());
             const int x = (1280 * scale / 2) - (textureFullScreen->GetSize().x / 2);
-            rlw::DrawTexture(*textureFullScreen, x, 0, Color::White);
+            rlw::DrawTexturePro(*textureBlack, {0, 0, 1280 * scale, 720 * scale}, {0, 0, 1280 * scale, 720 * scale},{0, 0}, 0 ,GetWorldTransform().color);
+            rlw::DrawTexture(*textureFullScreen, x, 0, GetWorldTransform().color);
         }
     }
 
@@ -173,12 +186,20 @@ namespace ClassicLauncher
 
     bool GuiVideoPlayer::IsPlaying()
     {
-        return (!mPlayer) ? false : mPlayer->IsVideoPlaying();
+        return (!m_player) ? false : m_player->IsVideoPlaying();
     }
 
     bool GuiVideoPlayer::IsPlayingFullscreen()
     {
-        return (!mPlayerFullScreen) ? false : mPlayerFullScreen->IsVideoPlaying();
+        return (!m_playerFullScreen) ? false : m_playerFullScreen->IsVideoPlaying();
+    }
+
+    void GuiVideoPlayer::VideoFadeinAnimate(float time)
+    {
+        SetOpacity(0);
+        Transform target = GetTransform();
+        target.color.a = 255;
+        GetAnimationManager().StartAnimation("video-fade", time, this, target, Ease::EaseLinearNone, false);
     }
 
 } // namespace ClassicLauncher

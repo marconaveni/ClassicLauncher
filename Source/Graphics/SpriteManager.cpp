@@ -35,7 +35,7 @@ namespace ClassicLauncher
                                    const int height,
                                    bool bAspectRatio)
     {
-        mSpriteMap[name].Load(fileName, width, height, bAspectRatio);
+        m_spriteMap[name].Load(fileName, width, height, bAspectRatio);
     }
 
     void SpriteManager::LoadSprite(const std::string& name,
@@ -44,7 +44,7 @@ namespace ClassicLauncher
                                    const int height,
                                    bool bAspectRatio)
     {
-        mSpriteMap[name].Load(image, width, height, bAspectRatio);
+        m_spriteMap[name].Load(image, width, height, bAspectRatio);
     }
 
     void SpriteManager::UpdateSprite(std::string name,
@@ -53,18 +53,18 @@ namespace ClassicLauncher
                                      const int height,
                                      bool bAspectRatio)
     {
-        mSpriteMap[name].Unload();
-        mSpriteMap[name].Load(fileName, width, height, bAspectRatio);
+        m_spriteMap[name].Unload();
+        m_spriteMap[name].Load(fileName, width, height, bAspectRatio);
     }
 
     Texture* SpriteManager::GetTexture(const std::string& name)
     {
-        auto it = mSpriteMap.find(name);
-        if (it == mSpriteMap.end())
+        auto it = m_spriteMap.find(name);
+        if (it == m_spriteMap.end())
         {     
-            return mSpriteMap["transparent"].GetTexture();
+            return m_spriteMap["transparent"].GetTexture();
         }
-        return mSpriteMap[name].GetTexture();
+        return m_spriteMap[name].GetTexture();
     }
 
     RenderTexture* SpriteManager::GetRenderTexture(const std::string& name)
@@ -79,16 +79,16 @@ namespace ClassicLauncher
 
     Image* SpriteManager::GetImage(std::string name)
     {
-        return mSpriteMap[name].GetImage();
+        return m_spriteMap[name].GetImage();
     }
 
     bool SpriteManager::DeleteSprite(std::string name)
     {
-        auto it = mSpriteMap.find(name);
-        if (it != mSpriteMap.end())
+        auto it = m_spriteMap.find(name);
+        if (it != m_spriteMap.end())
         {
             it->second.Unload();
-            mSpriteMap.erase(it);
+            m_spriteMap.erase(it);
             return true;
         }
         return false;
@@ -96,12 +96,12 @@ namespace ClassicLauncher
 
     int SpriteManager::NumSpritesLoaded()
     {
-        return static_cast<int>(mSpriteMap.size());
+        return static_cast<int>(m_spriteMap.size());
     }
 
     void SpriteManager::UnloadSprites()
     {
-        mSpriteMap.clear();
+        m_spriteMap.clear();
     }
 
 } // namespace ClassicLauncher

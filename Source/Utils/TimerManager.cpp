@@ -6,7 +6,7 @@ namespace ClassicLauncher
 {
     void TimerManager::ValidTimerHandling(TimerHandling& timerHandling) const
     {
-        const int size = static_cast<int>(mTimers.size() - 1);
+        const int size = static_cast<int>(m_timers.size() - 1);
         if (timerHandling.id < 0 || timerHandling.id > size)
         {
             timerHandling.id = -1;
@@ -24,10 +24,10 @@ namespace ClassicLauncher
         if (timerHandling.id < 0)
         {
             std::unique_ptr<Timer> newTimer = std::make_unique<Timer>();
-            timerHandling.id = static_cast<int>(mTimers.size());
-            mTimers.insert(std::make_pair(timerHandling.id, std::move(newTimer)));
+            timerHandling.id = static_cast<int>(m_timers.size());
+            m_timers.insert(std::make_pair(timerHandling.id, std::move(newTimer)));
         }
-        mTimers[timerHandling.id]->SetTimer(std::move(callbackFunction), targetEntity, delay, bLooped);
+        m_timers[timerHandling.id]->SetTimer(std::move(callbackFunction), targetEntity, delay, bLooped);
     }
 
     void TimerManager::ClearTimer(const TimerHandling& timerHandling)
@@ -36,12 +36,12 @@ namespace ClassicLauncher
         {
             return;
         }
-        mTimers[timerHandling.id]->Stop();
+        m_timers[timerHandling.id]->Stop();
     }
 
     void TimerManager::Update() const
     {
-        for (auto& timer : mTimers)
+        for (auto& timer : m_timers)
         {
             timer.second->Update();
         }
@@ -49,11 +49,11 @@ namespace ClassicLauncher
 
     void TimerManager::ClearAllTimers()
     {
-        for (auto& timer : mTimers)
+        for (auto& timer : m_timers)
         {
             timer.second.reset();
         }
-        mTimers.clear();
+        m_timers.clear();
     }
 
 } // namespace ClassicLauncher

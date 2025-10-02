@@ -31,8 +31,8 @@ public:
 
 private:
 
-    std::map<std::string, std::map<std::string, std::string>> mData;
-    std::string mCurrentSection = "default";
+    std::map<std::string, std::map<std::string, std::string>> m_data;
+    std::string m_currentSection = "default";
     void RemoveComments(std::string& str);
     bool SetSection(std::string& str);
     bool SetKeyValue(const std::string& str, std::string& key, std::string& value);

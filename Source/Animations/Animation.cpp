@@ -7,14 +7,13 @@ namespace ClassicLauncher
 {
 
     Animation::Animation()
-        : mCurrentTime(0)
-        , mDuration(0)
-        , mIsStart(false)
-        , mIsRunning(false)
-        , mIsFinish(false)
-        , mIsReset(false)
-        , mRelative(false)
-        , mType(Ease::EaseLinearNone)
+        : m_currentTime(0)
+        , m_duration(0)
+        , m_isStart(false)
+        , m_isRunning(false)
+        , m_isFinish(false)
+        , m_isReset(false)
+        , m_typeEase(Ease::EaseLinearNone)
     {
     }
 
@@ -24,104 +23,104 @@ namespace ClassicLauncher
                                    const Ease typeAnimation,
                                    const bool bForceReset)
     {
-        mIsRunning = true;
-        mIsStart = true;
-        mIsFinish = false;
-        mCurrentTime = 0.0f;
-        mDuration = durationAnimation;
-        mStartTransform = startAnimation;
-        mCurrentTransform = startAnimation;
-        mFinalTransform = targetAnimation;
-        mIsReset = bForceReset;
-        mType = typeAnimation;
+        m_isRunning = true;
+        m_isStart = true;
+        m_isFinish = false;
+        m_currentTime = 0.0f;
+        m_duration = durationAnimation;
+        m_startTransform = startAnimation;
+        m_currentTransform = startAnimation;
+        m_finalTransform = targetAnimation;
+        m_isReset = bForceReset;
+        m_typeEase = typeAnimation;
     }
 
     void Animation::UpdateAnimation()
     {
        // mIsFinish = false;
-        if (mIsRunning)
+        if (m_isRunning)
         {
-            if (mCurrentTime <= mDuration)
+            if (m_currentTime <= m_duration)
             {
-                mCurrentTransform.position.x = GetAnimation(mCurrentTime,
-                                                            mStartTransform.position.x,
-                                                            mFinalTransform.position.x - mStartTransform.position.x,
-                                                            mDuration);
-                mCurrentTransform.position.y = GetAnimation(mCurrentTime,
-                                                            mStartTransform.position.y,
-                                                            mFinalTransform.position.y - mStartTransform.position.y,
-                                                            mDuration);
-                mCurrentTransform.offset.x = GetAnimation(mCurrentTime,
-                                                            mStartTransform.offset.x,
-                                                            mFinalTransform.offset.x - mStartTransform.offset.x,
-                                                            mDuration);
-                mCurrentTransform.offset.y = GetAnimation(mCurrentTime,
-                                                            mStartTransform.offset.y,
-                                                            mFinalTransform.offset.y - mStartTransform.offset.y,
-                                                            mDuration);
-                mCurrentTransform.scale.x = GetAnimation(mCurrentTime,
-                                                         mStartTransform.scale.x,
-                                                         mFinalTransform.scale.x - mStartTransform.scale.x,
-                                                         mDuration);
-                mCurrentTransform.scale.y = GetAnimation(mCurrentTime,
-                                                         mStartTransform.scale.y,
-                                                         mFinalTransform.scale.y - mStartTransform.scale.y,
-                                                         mDuration);
-                mCurrentTransform.rotation = GetAnimation(mCurrentTime,
-                                                          mStartTransform.rotation,
-                                                          mFinalTransform.rotation - mStartTransform.rotation,
-                                                          mDuration);
-                mCurrentTransform.color.r = GetAnimation(mCurrentTime,
-                                                         mStartTransform.color.r,
-                                                         mFinalTransform.color.r - mStartTransform.color.r,
-                                                         mDuration);
-                mCurrentTransform.color.g = GetAnimation(mCurrentTime,
-                                                         mStartTransform.color.g,
-                                                         mFinalTransform.color.g - mStartTransform.color.g,
-                                                         mDuration);
-                mCurrentTransform.color.b = GetAnimation(mCurrentTime,
-                                                         mStartTransform.color.b,
-                                                         mFinalTransform.color.b - mStartTransform.color.b,
-                                                         mDuration);
-                mCurrentTransform.color.a = GetAnimation(mCurrentTime,
-                                                         mStartTransform.color.a,
-                                                         mFinalTransform.color.a - mStartTransform.color.a,
-                                                         mDuration);
+                m_currentTransform.position.x = GetAnimation(m_currentTime,
+                                                            m_startTransform.position.x,
+                                                            m_finalTransform.position.x - m_startTransform.position.x,
+                                                            m_duration);
+                m_currentTransform.position.y = GetAnimation(m_currentTime,
+                                                            m_startTransform.position.y,
+                                                            m_finalTransform.position.y - m_startTransform.position.y,
+                                                            m_duration);
+                m_currentTransform.offset.x = GetAnimation(m_currentTime,
+                                                            m_startTransform.offset.x,
+                                                            m_finalTransform.offset.x - m_startTransform.offset.x,
+                                                            m_duration);
+                m_currentTransform.offset.y = GetAnimation(m_currentTime,
+                                                            m_startTransform.offset.y,
+                                                            m_finalTransform.offset.y - m_startTransform.offset.y,
+                                                            m_duration);
+                m_currentTransform.scale.x = GetAnimation(m_currentTime,
+                                                         m_startTransform.scale.x,
+                                                         m_finalTransform.scale.x - m_startTransform.scale.x,
+                                                         m_duration);
+                m_currentTransform.scale.y = GetAnimation(m_currentTime,
+                                                         m_startTransform.scale.y,
+                                                         m_finalTransform.scale.y - m_startTransform.scale.y,
+                                                         m_duration);
+                m_currentTransform.rotation = GetAnimation(m_currentTime,
+                                                          m_startTransform.rotation,
+                                                          m_finalTransform.rotation - m_startTransform.rotation,
+                                                          m_duration);
+                m_currentTransform.color.r = GetAnimation(m_currentTime,
+                                                         m_startTransform.color.r,
+                                                         m_finalTransform.color.r - m_startTransform.color.r,
+                                                         m_duration);
+                m_currentTransform.color.g = GetAnimation(m_currentTime,
+                                                         m_startTransform.color.g,
+                                                         m_finalTransform.color.g - m_startTransform.color.g,
+                                                         m_duration);
+                m_currentTransform.color.b = GetAnimation(m_currentTime,
+                                                         m_startTransform.color.b,
+                                                         m_finalTransform.color.b - m_startTransform.color.b,
+                                                         m_duration);
+                m_currentTransform.color.a = GetAnimation(m_currentTime,
+                                                         m_startTransform.color.a,
+                                                         m_finalTransform.color.a - m_startTransform.color.a,
+                                                         m_duration);
 
-                mCurrentTime += RayWindow::GetFrameTime();
+                m_currentTime += RayWindow::GetFrameTime();
                 return;
             }
-            mIsRunning = false;
+            m_isRunning = false;
             FinishAnimation();
         }
     }
 
     bool Animation::FinishAnimation()
     {
-        mIsFinish = true;
+        m_isFinish = true;
         return ResetAnimation();
     }
 
     bool Animation::ResetAnimation()
     {
-        mCurrentTime = 0;
-        mCurrentTransform = (mIsReset) ? mStartTransform : mFinalTransform;
-        return mIsReset;
+        m_currentTime = 0;
+        m_currentTransform = (m_isReset) ? m_startTransform : m_finalTransform;
+        return m_isReset;
     }
 
     bool Animation::GetAnimationIsRun() const
     {
-        return mIsRunning;
+        return m_isRunning;
     }
 
     bool Animation::GetAnimationFinish() const
     {
-        return mIsFinish;
+        return m_isFinish;
     }
 
     float Animation::GetAnimation(const float t, const float b, const float c, const float d) const
     {
-        switch (mType)
+        switch (m_typeEase)
         {
             case Ease::EaseLinearNone: return EaseLinearNone(t, b, c, d);
             case Ease::EaseLinearIn: return EaseLinearIn(t, b, c, d);

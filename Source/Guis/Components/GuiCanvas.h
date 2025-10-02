@@ -17,9 +17,6 @@ namespace ClassicLauncher
         virtual void AddChild(Entity* entity) override;
         virtual void Update() override;   
         virtual void UpdateWorldTransform() override;
-        // void SetOffset(Entity* entity, Vector2f position);
-        // void SetOffset(Entity* entity, float x, float y);
-        // [[nodiscard]] Vector2f GetOffset(Entity* entity) const;
 
     private:
 

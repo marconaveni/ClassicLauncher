@@ -18,12 +18,12 @@ namespace ClassicLauncher
     void GuiHorizontalBox::AttachGui(Entity* guiComponent)
     {
         guiComponent->SetPosition(Vector2f{});
-        mGuiElements.push_back(guiComponent);
+        m_guiElements.push_back(guiComponent);
     }
 
     void GuiHorizontalBox::ClearAll()
     {
-        mGuiElements.clear();
+        m_guiElements.clear();
         SetSize(10.0f, 10.0f);
     }
 
@@ -37,7 +37,7 @@ namespace ClassicLauncher
         float spacer = 0;
 
 
-        for (auto& guiElement : mGuiElements)
+        for (auto& guiElement : m_guiElements)
         {
             Transform& transform = guiElement->GetTransformRef();
             Transform& worldTransform = guiElement->GetWorldTransformRef();

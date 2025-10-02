@@ -52,7 +52,7 @@ namespace ClassicLauncher
         music->SetLoop(false);
 
         std::filesystem::path pat = path;
-        music->name = pat.stem().string();
+        music->m_name = pat.stem().string();
 
         m_audioMusics.emplace_back(std::move(music));
     }
@@ -108,16 +108,6 @@ namespace ClassicLauncher
         }
     }
 
-    // void AudioManager::PlayClick()
-    // {
-        // m_isPlayClick = true;
-    // }
-
-    // void AudioManager::PlayCursor()
-    // {
-        // m_isPlayCursor = true;
-    // }
-
     void AudioManager::MusicVolume(float volume)
     {
         if (!m_audioMusics.empty())
@@ -157,7 +147,7 @@ namespace ClassicLauncher
     {
         if (!m_audioMusics.empty())
         {
-            return m_audioMusics[m_idAudioMusic]->name;
+            return m_audioMusics[m_idAudioMusic]->m_name;
         }
         return {};
     }

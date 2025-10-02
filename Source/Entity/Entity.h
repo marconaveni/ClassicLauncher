@@ -51,11 +51,11 @@ namespace ClassicLauncher
         virtual void SetThemeValue() {};
         std::vector<Entity*>& GetChildren();
         Entity* GetRootEntity();
-        [[nodiscard]] Entity* GetParent() const { return mParent; }
-        void RemoveParent() { mParent = nullptr; }
+        [[nodiscard]] Entity* GetParent() const { return m_parent; }
+        void RemoveParent() { m_parent = nullptr; }
         void EnableScissorMode(float x, float y, float width, float height);
-        void DisableScissorMode() { mScissorMode = false; }
-        void SetVisible(const bool bEnable) { mVisible = bEnable; }
+        void DisableScissorMode() { m_isScissorMode = false; }
+        void SetVisible(const bool bEnable) { m_isVisible = bEnable; }
         [[nodiscard]] ZOrder GetZOrder() const { return m_zOrder; }
         [[nodiscard]] bool GetTransformIsDirty() const { return m_isTransformDirty; }
         void MarkTransformAsDirty();
@@ -109,9 +109,9 @@ namespace ClassicLauncher
         // End Getters and Setters
         // clang-format on
 
-       
-        std::string mTextureName = "transparent";
-        RectFloat mScissorArea;
+        
+        RectFloat m_scissorArea;
+        std::string m_textureName = "transparent";
 
 
         struct ZOrder
@@ -133,8 +133,8 @@ namespace ClassicLauncher
 
     protected:
 
-        Entity* mParent = nullptr;
-        std::vector<Entity*> mChildEntities;
+        Entity* m_parent = nullptr;
+        std::vector<Entity*> m_childEntities;
 
         TimerManager* GetTimerManager() { return m_timerManagerRef; }
         SpriteManager* GetSpriteManager() { return m_spriteManagerReference; }
@@ -150,14 +150,14 @@ namespace ClassicLauncher
         Transform m_transform;
         Transform m_worldTransform;
 
-        bool mToDelete;
-        bool mToDraw;
-        bool mScissorMode;
-        bool mVisible;
+        bool m_isCanDelete;
+        bool m_isCanDraw;
+        bool m_isScissorMode;
+        bool m_isVisible;
         bool m_isTransformDirty{true};
 
         ZOrder m_zOrder{};
-        std::string mNameId;
+        std::string m_nameId;
 
         SpriteManager* m_spriteManagerReference;
         TimerManager* m_timerManagerRef;

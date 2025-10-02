@@ -8,14 +8,14 @@
 namespace ClassicLauncher
 {
     Timer::Timer()
-        : mDelay(0)
-        , mDuration(0.0)
-        , mCurrentTime(0.0)
-        , mIsFunctionCalled(false)
-        , mIsLoop(false)
-        , mIsActive(false)
-        , mTargetEntity(nullptr)
-        , mCallback(nullptr)
+        : m_delay(0)
+        , m_duration(0.0)
+        , m_currentTime(0.0)
+        , m_isFunctionCalled(false)
+        , m_isLoop(false)
+        , m_isActive(false)
+        , m_targetEntity(nullptr)
+        , m_callback(nullptr)
     {
     }
 
@@ -24,41 +24,41 @@ namespace ClassicLauncher
                          const float delay,
                          const bool bIsLoop)
     {
-        mCallback = std::move(callbackFunction);
-        mTargetEntity = targetEntity;
-        mDelay = delay;
-        mIsActive = true;
-        mIsLoop = bIsLoop;
+        m_callback = std::move(callbackFunction);
+        m_targetEntity = targetEntity;
+        m_delay = delay;
+        m_isActive = true;
+        m_isLoop = bIsLoop;
         Reset();
     }
 
     void Timer::Update()
     {
-        if (!mIsFunctionCalled && mIsActive)
+        if (!m_isFunctionCalled && m_isActive)
         {
-            if (mCurrentTime <= mDelay)
+            if (m_currentTime <= m_delay)
             {
-                mCurrentTime += RayWindow::GetFrameTime();
+                m_currentTime += RayWindow::GetFrameTime();
                 return;
             }
-            mCallback();
+            m_callback();
 
-            if (mIsLoop)
+            if (m_isLoop)
             {
                 Reset();
             }
             else
             {
-                mIsFunctionCalled = true; // Mark the function as already called
+                m_isFunctionCalled = true; // Mark the function as already called
             }
         }
     }
 
     void Timer::Reset()
     {
-        mCurrentTime = 0.0;                                                  // Reset current time
-        mDuration = mDelay / static_cast<double>(RayWindow::GetFrameTime()); // Set duration based on frame time
-        mIsFunctionCalled = false;                                           // Reset the function called state
+        m_currentTime = 0.0;                                                  // Reset current time
+        m_duration = m_delay / static_cast<double>(RayWindow::GetFrameTime()); // Set duration based on frame time
+        m_isFunctionCalled = false;                                           // Reset the function called state
     }
 
 } // namespace ClassicLauncher

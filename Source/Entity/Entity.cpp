@@ -7,41 +7,41 @@ namespace ClassicLauncher
 
 
     Entity::Entity()
-        : mToDelete(false), mToDraw(true), mScissorMode(false), mVisible(true), mChildEntities(), mNameId()
+        : m_isCanDelete(false), m_isCanDraw(true), m_isScissorMode(false), m_isVisible(true), m_childEntities(), m_nameId()
     {
     }
 
     void Entity::UpdateWorldTransform()
     {
 
-        if (mParent && mParent->m_isTransformDirty)
+        if (m_parent && m_parent->m_isTransformDirty)
         {
             m_isTransformDirty = true;
         }
 
         if (m_isTransformDirty)
         {
-            if (mParent)
+            if (m_parent)
             {
-                const float parentX = mParent->m_worldTransform.position.x;
-                const float parentY = mParent->m_worldTransform.position.y;
+                const float parentX = m_parent->m_worldTransform.position.x;
+                const float parentY = m_parent->m_worldTransform.position.y;
 
 
-                m_worldTransform.position.x = parentX + (m_transform.position.x * mParent->m_worldTransform.scale.x);
-                m_worldTransform.position.y = parentY + (m_transform.position.y * mParent->m_worldTransform.scale.y);
+                m_worldTransform.position.x = parentX + (m_transform.position.x * m_parent->m_worldTransform.scale.x);
+                m_worldTransform.position.y = parentY + (m_transform.position.y * m_parent->m_worldTransform.scale.y);
 
                 // apply scale
-                m_worldTransform.scale.x = mParent->m_worldTransform.scale.x * m_transform.scale.x;
-                m_worldTransform.scale.y = mParent->m_worldTransform.scale.y * m_transform.scale.y;
+                m_worldTransform.scale.x = m_parent->m_worldTransform.scale.x * m_transform.scale.x;
+                m_worldTransform.scale.y = m_parent->m_worldTransform.scale.y * m_transform.scale.y;
 
                 // apply offset
-                m_worldTransform.offset.x = mParent->m_worldTransform.offset.x + m_transform.offset.x;
-                m_worldTransform.offset.y = mParent->m_worldTransform.offset.y + m_transform.offset.y;
+                m_worldTransform.offset.x = m_parent->m_worldTransform.offset.x + m_transform.offset.x;
+                m_worldTransform.offset.y = m_parent->m_worldTransform.offset.y + m_transform.offset.y;
 
-                m_worldTransform.rotation = mParent->m_worldTransform.rotation + m_transform.rotation;
+                m_worldTransform.rotation = m_parent->m_worldTransform.rotation + m_transform.rotation;
 
                 // Propaga a opacidade (alpha) do pai para o filho
-                unsigned char parentAlpha = mParent->m_worldTransform.color.a;
+                unsigned char parentAlpha = m_parent->m_worldTransform.color.a;
                 m_worldTransform.color.a = static_cast<unsigned char>(
                     (static_cast<int>(m_transform.color.a) * static_cast<int>(parentAlpha)) / 255);
             }
@@ -50,7 +50,7 @@ namespace ClassicLauncher
                 m_worldTransform = m_transform;
             }
 
-            for (auto& entity : mChildEntities)
+            for (auto& entity : m_childEntities)
             {
                 entity->UpdateWorldTransform();
             }
@@ -61,8 +61,8 @@ namespace ClassicLauncher
 
     void Entity::SelfDelete()
     {
-        mToDelete = true;
-        for (auto& entity : mChildEntities)
+        m_isCanDelete = true;
+        for (auto& entity : m_childEntities)
         {
             entity->SelfDelete();
             Entity* e = GetRootEntity();
@@ -75,27 +75,27 @@ namespace ClassicLauncher
 
     void Entity::AddChild(Entity* childEntity)
     {
-        if (childEntity->mParent != this)
+        if (childEntity->m_parent != this)
         {
-            childEntity->mParent = this;
-            mChildEntities.emplace_back(childEntity);
+            childEntity->m_parent = this;
+            m_childEntities.emplace_back(childEntity);
         }
     }
 
     void Entity::RemoveChild(Entity* childEntity)
     {
-        mChildEntities.erase(std::remove_if(mChildEntities.begin(),
-                                            mChildEntities.end(),
+        m_childEntities.erase(std::remove_if(m_childEntities.begin(),
+                                            m_childEntities.end(),
                                             [childEntity](const Entity* entity)
                                             {
                                                 return entity == childEntity; // Return true element
                                             }),
-                             mChildEntities.end());
+                             m_childEntities.end());
     }
 
     void Entity::RemoveAllChildren()
     {
-        mChildEntities.clear();
+        m_childEntities.clear();
     }
 
     void Entity::RemoveRootChild()
@@ -109,12 +109,12 @@ namespace ClassicLauncher
 
     std::vector<Entity*>& Entity::GetChildren()
     {
-        return mChildEntities;
+        return m_childEntities;
     }
 
     Entity* Entity::GetRootEntity()
     {
-        Entity* rootParent = mParent;
+        Entity* rootParent = m_parent;
         if (rootParent != nullptr)
         {
             rootParent = rootParent->GetRootEntity();
@@ -124,11 +124,11 @@ namespace ClassicLauncher
 
     void Entity::EnableScissorMode(float x, float y, float width, float height)
     {
-        mScissorMode = true;
-        mScissorArea = RectFloat{x, y, width, height};
-        for (auto& childEntity : mChildEntities)
+        m_isScissorMode = true;
+        m_scissorArea = RectFloat{x, y, width, height};
+        for (auto& childEntity : m_childEntities)
         {
-            childEntity->EnableScissorMode(mScissorArea.x, mScissorArea.y, mScissorArea.width, mScissorArea.height);
+            childEntity->EnableScissorMode(m_scissorArea.x, m_scissorArea.y, m_scissorArea.width, m_scissorArea.height);
         }
     }
 
@@ -149,7 +149,7 @@ namespace ClassicLauncher
         m_isTransformDirty = true;
 
 
-        for (auto& child : mChildEntities) // Propagate the "dirty" state to all children, recursively
+        for (auto& child : m_childEntities) // Propagate the "dirty" state to all children, recursively
         {
             child->MarkTransformAsDirty();
         }

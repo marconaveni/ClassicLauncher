@@ -7,13 +7,12 @@
 
 namespace ClassicLauncher
 {
-    class FocusManager;
 
     class GuiFrame : public Entity,  public Animatable
     {
     public:
 
-        GuiFrame(FocusManager* focusManager);
+        GuiFrame();
         ~GuiFrame() = default;
         void SetFrame(bool bForce = false);
         void Click();
@@ -23,8 +22,7 @@ namespace ClassicLauncher
 
     private:
 
-        FocusManager* mFocusManager;
-        TimerHandling mTimer;
+        TimerHandling m_timer;
         bool m_isMove{false};
     };
 

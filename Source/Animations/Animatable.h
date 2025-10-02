@@ -1,5 +1,5 @@
-#ifndef ENTITY_GUI_H
-#define ENTITY_GUI_H
+#ifndef ANIMATABLE_H
+#define ANIMATABLE_H
 
 
 #include "Animations/AnimationManager.h"
@@ -19,14 +19,14 @@ namespace ClassicLauncher
         virtual void AnimationUpdate(const std::string& name) {}
         virtual void AnimationFinished(const std::string& name) {}
 
-        Animation& GetAnimation(const std::string& name) { return  m_animationManager.GetAnimation(name); }
-        AnimationManager& GetAnimationManager() { return  m_animationManager; }
+        Animation& GetAnimation(const std::string& name) { return m_animationManager.GetAnimation(name); }
+        AnimationManager& GetAnimationManager() { return m_animationManager; }
 
     private:
-      
+
         AnimationManager m_animationManager;
     };
 
 } // namespace ClassicLauncher
 
-#endif
+#endif // ANIMATABLE_H

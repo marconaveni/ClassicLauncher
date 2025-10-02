@@ -24,8 +24,8 @@ namespace ClassicLauncher
         void Unload();
         [[nodiscard]] Vector2f GetRenderScale() const;
         [[nodiscard]] Vector2f GetMousePositionRender() const;
-        [[nodiscard]] int GetScreenWidthGame() const { return static_cast<int>(mWidth); }
-        [[nodiscard]] int GetScreenHeightGame() const { return static_cast<int>(mHeight); }
+        [[nodiscard]] int GetScreenWidthGame() const { return static_cast<int>(m_width); }
+        [[nodiscard]] int GetScreenHeightGame() const { return static_cast<int>(m_height); }
 
     private:
 
@@ -33,16 +33,16 @@ namespace ClassicLauncher
         [[nodiscard]] int GetWidth() const;
         [[nodiscard]] int GetHeight() const;
 
-        std::unique_ptr<RenderTexture> mRenderTexture;
-        RectFloat mSource;
-        RectFloat mDest;
-        float mWidth;
-        float mHeight;
-        float mNewWidth;
-        float mNewHeight;
-        float mScale;
-        bool mIsMaintainAspectRatio;
-        Vector2f mVirtualMouse;
+        std::unique_ptr<RenderTexture> m_renderTexture;
+        RectFloat m_source;
+        RectFloat m_dest;
+        float m_width;
+        float m_height;
+        float m_newWidth;
+        float m_newHeight;
+        float m_scale;
+        bool m_isMaintainAspectRatio;
+        Vector2f m_virtualMouse;
     };
 
 } // namespace ClassicLauncher

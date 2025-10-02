@@ -8,10 +8,9 @@
 namespace ClassicLauncher
 {
 
-    GuiFrame::GuiFrame(FocusManager* focusManager)
-        : mFocusManager(focusManager)
+    GuiFrame::GuiFrame()
     {
-        mTextureName = "sprite";
+        m_textureName = "sprite";
 
         SetSize(258.0f, 282.0f);
         SetSource(771.0f, 0.0f, 258.0f, 282.0f);
@@ -61,7 +60,7 @@ namespace ClassicLauncher
     void GuiFrame::Update()
     {
         
-        std::vector<FocusComponent*> focusComponents = mFocusManager->GetAllFocusComponents();
+        std::vector<FocusComponent*> focusComponents = GetFocusManager()->GetAllFocusComponents();
         for (auto& focus : focusComponents)
         {
             if (focus->IsFocus())

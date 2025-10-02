@@ -11,7 +11,7 @@ SimpleIni::SimpleIni()
 
 SimpleIni::~SimpleIni()
 {
-    mData.clear();
+    m_data.clear();
 }
 
 void SimpleIni::RemoveComments(std::string& str)
@@ -34,7 +34,7 @@ bool SimpleIni::SetSection(std::string& str)
     {
         RemoveComments(str);
         str = Trim(RemoveBrackets(str));
-        mCurrentSection = str;
+        m_currentSection = str;
         return true;
     }
     return false;
@@ -94,7 +94,7 @@ bool SimpleIni::Open(const char* file)
         return false;
     }
 
-    mData.clear();
+    m_data.clear();
     char text[MAX_LINE_TEXT];
 
     while (fInput.getline(text, MAX_LINE_TEXT))
@@ -109,7 +109,7 @@ bool SimpleIni::Open(const char* file)
         RemoveComments(str);
         if (SetKeyValue(str, key, value))
         {
-            SetValue(mCurrentSection, key, value);
+            SetValue(m_currentSection, key, value);
         }
     }
     fInput.close();
@@ -120,7 +120,7 @@ bool SimpleIni::Open(const char* file)
 
 bool SimpleIni::Save(const char* file)
 {
-    if (mData.empty())
+    if (m_data.empty())
     {
         std::cout << "No settings to save.\n";
         return false;
@@ -135,7 +135,7 @@ bool SimpleIni::Save(const char* file)
         return false;
     }
 
-    for (const auto& section : mData)
+    for (const auto& section : m_data)
     {
         if (section.second.empty())
         {
@@ -154,9 +154,9 @@ bool SimpleIni::Save(const char* file)
 
 std::string SimpleIni::GetValue(const std::string& section, const std::string& key, const std::string& defaultValue)
 {
-    if (mData.count(section) && mData[section].count(key))
+    if (m_data.count(section) && m_data[section].count(key))
     {
-        return mData[section][key];
+        return m_data[section][key];
     }
     return defaultValue;
 }
@@ -173,7 +173,7 @@ void SimpleIni::SetValue(const std::string& section, const std::string& key, con
         RemoveValue(section, key, value);
         return;
     }
-    mData[section][key] = value;
+    m_data[section][key] = value;
 }
 
 std::string SimpleIni::GetString(const std::string& section, const std::string& key, const std::string& defaultValue)
@@ -233,11 +233,11 @@ void SimpleIni::SetFloat(const std::string& section, const std::string& key, flo
 
 bool SimpleIni::RemoveValue(const std::string& section, const std::string& key, const std::string& value)
 {
-    if (mData.count(section) == 1)
+    if (m_data.count(section) == 1)
     {
-        if (mData[section].count(key) == 1)
+        if (m_data[section].count(key) == 1)
         {
-            mData[section].erase(key);
+            m_data[section].erase(key);
             return true;
         }
     }

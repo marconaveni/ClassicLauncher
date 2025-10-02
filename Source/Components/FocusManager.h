@@ -6,15 +6,9 @@
 namespace ClassicLauncher
 {
     class FocusComponent;
-    class Entity;
 
     class FocusManager
     {
-    private:
-
-        std::vector<FocusComponent*> mFocusComponents;
-        FocusComponent* m_currentFocusComponent;
-
     public:
 
         FocusManager() = default;
@@ -23,8 +17,13 @@ namespace ClassicLauncher
         void SetNewFocusComponent(FocusComponent* focusComponent);
         void Update();
         void RemoveFocus(FocusComponent* focusComponent);
-        std::vector<FocusComponent*>& GetAllFocusComponents() { return mFocusComponents; }
+        std::vector<FocusComponent*>& GetAllFocusComponents() { return m_focusComponents; }
         FocusComponent* GetFocusComponent();
+
+    private:
+
+        std::vector<FocusComponent*> m_focusComponents;
+        FocusComponent* m_currentFocusComponent;
     };
 
 } // namespace ClassicLauncher

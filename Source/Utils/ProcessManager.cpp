@@ -14,7 +14,7 @@ namespace ClassicLauncher
 {
 
     ProcessManager::ProcessManager()
-        : mStatus(ProcessStatus::None), mProcessId(0), mIsRunning(false)
+        : m_status(ProcessStatus::NONE), m_processId(0), m_isRunning(false)
     {
     }
 
@@ -32,58 +32,58 @@ namespace ClassicLauncher
 #if _WIN32
         const std::string optionalWorkingDirectory = rlw::GetDirectoryPath(executable.c_str());
         int status = -1;
-        Process::CreateProc(mProcessId, fullPath, optionalWorkingDirectory, status);
-        mStatus = (status == 1) ? ProcessStatus::Open : ProcessStatus::Failed;
+        Process::CreateProc(m_processId, fullPath, optionalWorkingDirectory, status);
+        m_status = (status == 1) ? ProcessStatus::OPEN : ProcessStatus::FAILED;
 #else
-        Process::CreateProc(mProcessId, fullPath);
+        Process::CreateProc(m_processId, fullPath);
 #endif
     }
 
     ProcessStatus ProcessManager::UpdateRun()
     {
-        const bool bIsRun = Process::IsApplicationRunning(mProcessId);
+        const bool bIsRun = Process::IsApplicationRunning(m_processId);
         if (bIsRun)
         {
-            if (!mIsRunning)
+            if (!m_isRunning)
             {
-                mIsRunning = true;
-                return ProcessStatus::Open;
+                m_isRunning = true;
+                return ProcessStatus::OPEN;
             }
         }
         else
         {
-            if (mIsRunning)
+            if (m_isRunning)
             {
-                mIsRunning = false;
-                mProcessId = 0;
-                return ProcessStatus::Close;
+                m_isRunning = false;
+                m_processId = 0;
+                return ProcessStatus::CLOSE;
             }
         }
 
-        return bIsRun ? ProcessStatus::Running : ProcessStatus::None;
+        return bIsRun ? ProcessStatus::RUNNING : ProcessStatus::NONE;
     }
 
     bool ProcessManager::IsApplicationRunning() const
     {
-        return Process::IsApplicationRunning(mProcessId);
+        return Process::IsApplicationRunning(m_processId);
     }
 
     void ProcessManager::StatusProcessRun(GuiBlackScreen* guiBlackScreen, AudioManager* audioManager)
     {
-        switch (mStatus)
+        switch (m_status)
         {
-            case ProcessStatus::None: break;
-            case ProcessStatus::Open: break;
-            case ProcessStatus::Running: rlw::WaitTime(2.5); break;
-            case ProcessStatus::Failed: break;
-            case ProcessStatus::Close:
+            case ProcessStatus::NONE: break;
+            case ProcessStatus::OPEN: break;
+            case ProcessStatus::RUNNING: rlw::WaitTime(2.5); break;
+            case ProcessStatus::FAILED: break;
+            case ProcessStatus::CLOSE:
                 guiBlackScreen->FadeOut();
                 audioManager->ChangeMusic();
                 InputManager::EnableInput();
                 break;
             default: break;
         }
-        mStatus = UpdateRun();
+        m_status = UpdateRun();
     }
 
 } // namespace ClassicLauncher

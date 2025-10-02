@@ -22,8 +22,8 @@ namespace ClassicLauncher
                                  SpriteManager* spriteManager,
                                  EntityManager* entityManagerRef,
                                  ConfigurationManager* configManager)
-        : mScaleTexture(1.0f)
-        , mScaleSystem(1.0f)
+        : m_scaleTexture(1.0f)
+        , m_scaleSystem(1.0f)
         , m_gameListManager(gameListManager)
         , m_spriteManager(spriteManager)
         , m_entityManagerRef(entityManagerRef)
@@ -43,7 +43,7 @@ namespace ClassicLauncher
     std::vector<std::string> ThemesManager::GetThemeDirs()
     {
         // repeat code todo remove this after refactor
-        std::string path = String::NormalizePath(Resources::GetClassicLauncherDir() + "themes/" + mCurrentSystemName + "/");
+        std::string path = String::NormalizePath(Resources::GetClassicLauncherDir() + "themes/" + m_currentSystemName + "/");
         std::vector<std::string> paths;
         if (std::filesystem::exists(path))
         {
@@ -105,13 +105,13 @@ namespace ClassicLauncher
         std::vector<GameSystemList*> systems = m_gameListManager->GetAllSystemList();
         for (auto& system : systems)
         {
-            mCurrentSystemName = system->systemName;
+            m_currentSystemName = system->systemName;
             std::string file;
             system->scale = GetSpriteByResolution(file);
             system->pathImageTheme = file;
         }
-        mCurrentSystemName = "default";
-        mScaleSystem = GetSpriteByResolution(mPathThemeSystem);
+        m_currentSystemName = "default";
+        m_scaleSystem = GetSpriteByResolution(m_pathThemeSystem);
     }
 
     void ThemesManager::LoadTheme()
@@ -120,24 +120,24 @@ namespace ClassicLauncher
         if (m_gameListManager->GetCurrentList() == CurrentList::GameListSelect)
         {
             GameSystemList* pList = m_gameListManager->GetCurrentSystemList();
-            mCurrentSystemName = pList->systemName;
+            m_currentSystemName = pList->systemName;
             file = pList->pathImageTheme;
-            mScaleTexture = pList->scale;
+            m_scaleTexture = pList->scale;
         }
         else
         {
-            mCurrentSystemName = "default";
-            file = mPathThemeSystem;
-            mScaleTexture = mScaleSystem;
+            m_currentSystemName = "default";
+            file = m_pathThemeSystem;
+            m_scaleTexture = m_scaleSystem;
         }
 
         LoadConfigurationThemes();
 
-        if (mLastPathLoaded != file)
+        if (m_lastPathLoaded != file)
         {
             m_spriteManager->DeleteSprite("sprite");
             m_spriteManager->LoadSprite("sprite", file);
-            mLastPathLoaded = file;
+            m_lastPathLoaded = file;
         }
     }
 
@@ -148,7 +148,7 @@ namespace ClassicLauncher
 
     void ThemesManager::LoadConfigurationThemes()
     {
-        const std::string path = Resources::GetClassicLauncherDir() + "themes/" + mCurrentSystemName + "/config.cfg";
+        const std::string path = Resources::GetClassicLauncherDir() + "themes/" + m_currentSystemName + "/config.cfg";
         mConfigurationThemes.LoadConfigurations(String::NormalizePath(path));
         m_entityManagerRef->SetThemeValue();
     }
@@ -160,7 +160,7 @@ namespace ClassicLauncher
             return 1;
         }
 
-        return sInstanceThemes->mScaleTexture;
+        return sInstanceThemes->m_scaleTexture;
     }
 
 } // namespace ClassicLauncher

@@ -28,5 +28,4 @@ namespace ClassicLauncher
 
 
 
-
 } // namespace ClassicLauncher

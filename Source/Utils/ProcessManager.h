@@ -8,16 +8,15 @@ namespace ClassicLauncher
     class GameListManager;
     class GuiBlackScreen;
     class AudioManager;
-    // class Application;
 
 
     enum class ProcessStatus : std::int8_t
     {
-        Failed = -1,
-        None = 0,
-        Open = 1,
-        Running = 2,
-        Close = 3
+        FAILED = -1,
+        NONE = 0,
+        OPEN = 1,
+        RUNNING = 2,
+        CLOSE = 3
     };
 
     class ProcessManager
@@ -25,12 +24,12 @@ namespace ClassicLauncher
     public:
 
 #if _WIN32
-        unsigned int mProcessId;
+        unsigned int m_processId;
 #else
-        int mProcessId;
+        int m_processId;
 #endif
-        bool mIsRunning;
-        bool mIsReadyRunApp = false;
+        bool m_isRunning;
+        bool m_isReadyRunApp = false;
 
         ProcessManager();
 
@@ -42,7 +41,7 @@ namespace ClassicLauncher
 
     private:
 
-        ProcessStatus mStatus;
+        ProcessStatus m_status;
     };
 
 } // namespace ClassicLauncher

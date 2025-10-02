@@ -38,7 +38,6 @@ namespace ClassicLauncher
         virtual void OnLostFocus() override;
         virtual const Transform& OwnerWorldTransform() const override { return GetWorldTransform(); };
         void SetCover(const std::string& name = "");
-        //[[nodiscard]] bool IsFocus() const;
         void Reset();
         void Click();
         void SetFrontCard();
@@ -50,17 +49,16 @@ namespace ClassicLauncher
         TimerHandling m_timerVideo;
         TimerHandling m_timerAnimationReset;
 
-        GuiBase* mCardMain;
-        GuiBase* mCardSelected;
-        GuiBase* mCardFavorite;
-        GuiBase* mCardBackgroundMain;
-        GuiBase* mCardBackgroundSelected;
-        GuiBase* mCardBackgroundFavorite;
-        GuiVideoPlayer* mGuiVideoPlayer;
+        GuiBase* m_cardMain;
+        GuiBase* m_cardSelected;
+        GuiBase* m_cardFavorite;
+        GuiBase* m_cardBackgroundMain;
+        GuiBase* m_cardBackgroundSelected;
+        GuiBase* m_cardBackgroundFavorite;
         GuiBase* m_coverDefault;
         GuiBase* m_cover;
-        //bool mIsFocus = false;
-        //bool mIsFront = false;
+        GuiVideoPlayer* m_guiVideoPlayer;
+
         bool m_isChangeTexture = false;
 
         GameListManager* m_gameListManagerRef;

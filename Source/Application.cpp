@@ -76,11 +76,11 @@ namespace ClassicLauncher
 
         if (m_gameListManager.GetGameListSize() > 0)
         {
-            mGuiWindow = m_entityManager.CreateEntity<GuiWindow>("GuiWindow",
+            m_guiWindow = m_entityManager.CreateEntity<GuiWindow>("GuiWindow",
                                                                  &m_gameListManager,
                                                                  *m_audioManager,
                                                                  m_processManager);
-            mGuiWindow->Init();
+            m_guiWindow->Init();
         }
         else
         {
@@ -100,7 +100,7 @@ namespace ClassicLauncher
 
         if (Keyboard::IsReleased(Keyboard::F10))
         {
-            Entity* parent = mGuiWindow; // Pega uma entidade qualquer como pai
+            Entity* parent = m_guiWindow; // Pega uma entidade qualquer como pai
             for (int i = 0; i < 5000; ++i)
             {
                 // Cria 5000 entidades filhas, uma dentro da outra (hierarquia profunda)
@@ -126,7 +126,7 @@ namespace ClassicLauncher
         m_focusManager.Update();
 
         m_timerManager->Update();
-        m_processManager.StatusProcessRun(mGuiWindow->GetGuiBlackScreen(), m_audioManager);
+        m_processManager.StatusProcessRun(m_guiWindow->GetGuiBlackScreen(), m_audioManager);
 
 #ifdef _DEBUG
 
@@ -162,7 +162,7 @@ namespace ClassicLauncher
             PRINT("Enabled LOG_CLASSIC_ALL, LOG_ALL", 5.0f);
         }
 
-        if (InputManager::IsRelease(InputName::rightThumb, main))
+        if (InputManager::IsRelease(InputName::rightThumb, MAIN))
         {
             m_audioManager->ChangeMusic();
             PRINT(TEXT("Changed music"), 5.0f);

@@ -37,10 +37,10 @@ namespace ClassicLauncher
         , m_delay(0)
         , m_speed(0.5f)
         , m_maxDelay(3.0f)
-        , m_textOverflowPolicy(TextOverflowPolicy::none)
+        , m_textOverflowPolicy(TextOverflowPolicy::NONE)
     {
         LoadNewFont(path, size, spacing);
-        mTextureName = "text";
+        m_textureName = "text";
     }
 
     GuiTextBlock::~GuiTextBlock()
@@ -64,7 +64,7 @@ namespace ClassicLauncher
         }
         
         const float positionText = (GetSize().width - m_mensuredText.x) * m_renderScale;
-        if (m_textOverflowPolicy == TextOverflowPolicy::clip && positionText < 0)
+        if (m_textOverflowPolicy == TextOverflowPolicy::CLIP && positionText < 0)
         {
             if (m_delay < m_maxDelay)
             {
@@ -90,7 +90,7 @@ namespace ClassicLauncher
 
         RectFloat finalTransformRect = m_finalRender.transform;
 
-        if (m_textOverflowPolicy == TextOverflowPolicy::clip)
+        if (m_textOverflowPolicy == TextOverflowPolicy::CLIP)
         {
             rlw::BeginScissorMode(finalTransformRect.x,
                                   finalTransformRect.y,
@@ -99,12 +99,12 @@ namespace ClassicLauncher
         }
         rlw::DrawTextEx(
             m_font,
-            mText.data(),
+            m_text.data(),
             Vector2f{finalTransformRect.x + m_positionText + m_offsetText, finalTransformRect.y}, // Vector2f{300 , 400},
             m_sizeText * GetWorldTransform().scale.y * m_renderScale,
             m_spacing * m_renderScale,
             GetColor());
-        if (m_textOverflowPolicy == TextOverflowPolicy::clip)
+        if (m_textOverflowPolicy == TextOverflowPolicy::CLIP)
         {
             rlw::EndScissorMode();
         }
@@ -117,7 +117,7 @@ namespace ClassicLauncher
 
     void GuiTextBlock::SetText(const std::string& text)
     {
-        mText = text;
+        m_text = text;
         m_offsetText = 0;
         m_delay = 1;
 
@@ -147,7 +147,7 @@ namespace ClassicLauncher
 
     Vector2f GuiTextBlock::MeasureTextBox()
     {
-        return m_font.MeasureTextEx(mText, m_sizeText, m_spacing);
+        return m_font.MeasureTextEx(m_text, m_sizeText, m_spacing);
     }
 
     void GuiTextBlock::SetTextOverflowPolicy(TextOverflowPolicy textOverflowPolicy)

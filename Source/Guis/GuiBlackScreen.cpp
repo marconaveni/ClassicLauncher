@@ -10,7 +10,7 @@ namespace ClassicLauncher
         SetOpacity(0);
         SetSize(Sizef{1280.0f, 720.0f});
         SetSource(0.0f, 0.0f, 1280.0f, 720.0f);
-        mTextureName = "black";
+        m_textureName = "black";
     }
 
     void GuiBlackScreen::FadeIn()

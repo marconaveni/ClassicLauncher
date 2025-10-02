@@ -40,7 +40,7 @@ namespace ClassicLauncher
 
     private:
 
-        std::unordered_map<std::string, Sprite> mSpriteMap;
+        std::unordered_map<std::string, Sprite> m_spriteMap;
         std::unordered_map<std::string, RenderTexture> m_renderTextureMap;
     };
 

@@ -13,8 +13,8 @@ namespace ClassicLauncher
     EntityManager::EntityManager(SpriteManager* spriteManagerReference,
                                  TimerManager* timerManagerReference,
                                  FocusManager* focusManagerRef)
-        : mSpriteManagerReference(spriteManagerReference)
-        , mTimerManagerReference(timerManagerReference)
+        : m_spriteManagerReference(spriteManagerReference)
+        , m_timerManagerReference(timerManagerReference)
         , m_focusManagerReference(focusManagerRef)
     {
     }
@@ -26,30 +26,30 @@ namespace ClassicLauncher
 
     void EntityManager::SetNewEntities()
     {
-        if (mTempEntities.empty())
+        if (m_tempEntities.empty())
         {
             return;
         }
 
-        for (auto& entity : mTempEntities)
+        for (auto& entity : m_tempEntities)
         {
-            mEntities.push_back(std::move(entity));
+            m_entities.push_back(std::move(entity));
         }
-        mTempEntities.clear();
+        m_tempEntities.clear();
         m_markOrder = true;
     }
 
     void EntityManager::SetNameId(Entity* entity, const std::string& name)
     {
         int counter = 0;
-        for (const auto& ent : mEntities)
+        for (const auto& ent : m_entities)
         {
             if (ent->GetType() == entity->GetType())
             {
                 counter++;
             }
         }
-        for (const auto& ent : mTempEntities)
+        for (const auto& ent : m_tempEntities)
         {
             if (ent->GetType() == entity->GetType())
             {
@@ -57,7 +57,7 @@ namespace ClassicLauncher
             }
         }
 
-        entity->mNameId = std::format("{}_{}", counter, name);
+        entity->m_nameId = std::format("{}_{}", counter, name);
         entity->m_zOrder.insertionIndex = m_counter;
         m_counter++;
     }
@@ -66,7 +66,7 @@ namespace ClassicLauncher
     {
         for (auto& entity : entity->GetChildren())
         {
-            entity->mVisible = bVisible;
+            entity->m_isVisible = bVisible;
         }
     }
 
@@ -89,8 +89,8 @@ namespace ClassicLauncher
         // }
         
 
-        std::sort(mEntities.begin(),
-                  mEntities.end(),
+        std::sort(m_entities.begin(),
+                  m_entities.end(),
                   [](const std::unique_ptr<Entity>& a, const std::unique_ptr<Entity>& b)
                   {
                       if (a->GetZOrder().id != b->GetZOrder().id)
@@ -124,9 +124,9 @@ namespace ClassicLauncher
     {
         SetNewEntities();
 
-        for (auto& entity : mEntities)
+        for (auto& entity : m_entities)
         {
-            entity->mToDraw = entity->mVisible;
+            entity->m_isCanDraw = entity->m_isVisible;
             entity->Update();
         }
         UpdateWorldTransform();
@@ -135,10 +135,10 @@ namespace ClassicLauncher
     void EntityManager::UpdateWorldTransform()
     {
         bool bIsDeleteEntities = false;
-        for (auto& entity : mEntities)
+        for (auto& entity : m_entities)
         {
             entity->UpdateWorldTransform();
-            bIsDeleteEntities = entity->mToDelete || bIsDeleteEntities;
+            bIsDeleteEntities = entity->m_isCanDelete || bIsDeleteEntities;
         }
         DeleteEntities(bIsDeleteEntities);
         SetZOrder();
@@ -146,7 +146,7 @@ namespace ClassicLauncher
 
     void EntityManager::End()
     {
-        for (auto& entity : mEntities)
+        for (auto& entity : m_entities)
         {
             entity->End();
             entity->RemoveAllChildren();
@@ -156,28 +156,28 @@ namespace ClassicLauncher
 
     void EntityManager::ClearAllEntities()
     {
-        if (mEntities.empty())
+        if (m_entities.empty())
         {
             return;
         }
 
-        for (auto& entity : mEntities)
+        for (auto& entity : m_entities)
         {
             entity.reset();
             entity = nullptr;
         }
-        mEntities.clear(); // Limpa o vetor
-        mEntities.shrink_to_fit();
+        m_entities.clear(); // Limpa o vetor
+        m_entities.shrink_to_fit();
         m_counter = 0;
     }
 
     void EntityManager::SetThemeValue()
     {
-        for (auto& entity : mTempEntities)
+        for (auto& entity : m_tempEntities)
         {
             entity->SetThemeValue();
         }
-        for (auto& entity : mEntities)
+        for (auto& entity : m_entities)
         {
             entity->SetThemeValue();
         }
@@ -190,23 +190,23 @@ namespace ClassicLauncher
             return;
         }
 
-        for (auto& entity : mEntities)
+        for (auto& entity : m_entities)
         {
-            if (entity->mToDelete)
+            if (entity->m_isCanDelete)
             {
                 entity.reset();
             }
         }
 
-        mEntities.erase(std::remove_if(mEntities.begin(),
-                                       mEntities.end(),
+        m_entities.erase(std::remove_if(m_entities.begin(),
+                                       m_entities.end(),
                                        [](const std::unique_ptr<Entity>& entity)
                                        {
                                            return !entity; // Return true element
                                        }),
-                        mEntities.end());
+                        m_entities.end());
 
-        mTimerManagerReference->ClearAllTimers();
+        m_timerManagerReference->ClearAllTimers();
         m_markOrder = true;
     }
 

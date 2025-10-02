@@ -36,19 +36,19 @@ namespace ClassicLauncher
             Animation& animation = animationTransform.second.animation;
 
 
-            if (animation.mIsStart)
+            if (animation.m_isStart)
             {
-                animation.mIsStart = false;
+                animation.m_isStart = false;
                 m_startCallback(name);
             }
-            if (animation.mIsRunning)
+            if (animation.m_isRunning)
             {
                 animation.UpdateAnimation();
                 UpdateTransformAnimation(anim);
                 m_runningCallback(name);
                 LOG(LOG_CLASSIC_TRACE, "%s", name.c_str());
             }
-            if (animation.mIsFinish)
+            if (animation.m_isFinish)
             {
                 animation.ResetAnimation();
                 UpdateTransformAnimation(anim);
@@ -66,7 +66,7 @@ namespace ClassicLauncher
             return;
         }
 
-        const Transform& transform = anim.animation.mCurrentTransform;
+        const Transform& transform = anim.animation.m_currentTransform;
 
         //*anim.transform = anim.animation.mCurrentTransform;
         anim.entity->SetPosition(transform.position.x, transform.position.y);

@@ -62,10 +62,10 @@ namespace ClassicLauncher
                                    const Color& textColor,
                                    bool bLog,
                                    int sizeY);
-        int mSize;
-        float mSpacing;
-        Font mFont;
-        std::vector<Message> mMessages;
+        int m_size;
+        float m_spacing;
+        Font m_font;
+        std::vector<Message> m_messages;
     };
 
 } // namespace ClassicLauncher

@@ -32,7 +32,7 @@ namespace ClassicLauncher
         float GetTimePlayed() const;
         void SetLoop(bool enable);
         void Seek(float time);
-        std::string name{};
+        std::string m_name{};
 
     private:
 

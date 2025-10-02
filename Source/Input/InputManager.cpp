@@ -8,7 +8,7 @@ namespace ClassicLauncher
     static InputManager* sInstanceInputManager = nullptr;
 
     InputManager::InputManager()
-        : mGamePadIdSelected(0), mAmoutDown(0), mDisableInput(false), mCategory(0)
+        : m_gamePadIdSelected(0), m_amoutDown(0), m_disableInput(false), m_category(0)
     {
         if (sInstanceInputManager == nullptr)
         {
@@ -30,9 +30,9 @@ namespace ClassicLauncher
 
     void InputManager::UpdateInputState()
     {
-        for (auto& input : mInputs)
+        for (auto& input : m_inputs)
         {
-            if (mDisableInput)
+            if (m_disableInput)
             {
                 input.CancelInput();
                 continue;
@@ -45,21 +45,21 @@ namespace ClassicLauncher
             // clang-format off
 
             input.bPress = (Keyboard::IsPressed(key) || 
-                            GamePad::IsPressed(mGamePadIdSelected, gamePad)) &&
+                            GamePad::IsPressed(m_gamePadIdSelected, gamePad)) &&
                             !bKeyModifier && 
-                            !mDisableInput;
+                            !m_disableInput;
             input.bDown = (Keyboard::IsDown(key) || 
-                            GamePad::IsDown(mGamePadIdSelected, gamePad)) && 
+                            GamePad::IsDown(m_gamePadIdSelected, gamePad)) && 
                             !bKeyModifier &&
-                            !mDisableInput;
+                            !m_disableInput;
             input.bRelease = (Keyboard::IsReleased(key) || 
-                            GamePad::IsReleased(mGamePadIdSelected, gamePad)) &&
+                            GamePad::IsReleased(m_gamePadIdSelected, gamePad)) &&
                             !bKeyModifier && 
-                            !mDisableInput;
+                            !m_disableInput;
             input.bUp = (Keyboard::IsUp(key) || 
-                            GamePad::IsUp(mGamePadIdSelected, gamePad)) && 
+                            GamePad::IsUp(m_gamePadIdSelected, gamePad)) && 
                             !bKeyModifier && 
-                            !mDisableInput;
+                            !m_disableInput;
 
             // clang-format on
             if (input.bDown)
@@ -80,7 +80,7 @@ namespace ClassicLauncher
         {
             return false;
         }
-        return sInstanceInputManager->mInputs[name].bPress && sInstanceInputManager->CheckCategory(category);
+        return sInstanceInputManager->m_inputs[name].bPress && sInstanceInputManager->CheckCategory(category);
     }
 
     bool InputManager::IsDown(InputName name, unsigned int category)
@@ -89,7 +89,7 @@ namespace ClassicLauncher
         {
             return false;
         }
-        return sInstanceInputManager->mInputs[name].bDown && sInstanceInputManager->CheckCategory(category);
+        return sInstanceInputManager->m_inputs[name].bDown && sInstanceInputManager->CheckCategory(category);
     }
 
     bool InputManager::IsRelease(InputName name, unsigned int category)
@@ -98,7 +98,7 @@ namespace ClassicLauncher
         {
             return false;
         }
-        return sInstanceInputManager->mInputs[name].bRelease && sInstanceInputManager->CheckCategory(category);
+        return sInstanceInputManager->m_inputs[name].bRelease && sInstanceInputManager->CheckCategory(category);
     }
 
     bool InputManager::IsUp(InputName name, unsigned int category)
@@ -107,7 +107,7 @@ namespace ClassicLauncher
         {
             return false;
         }
-        return sInstanceInputManager->mInputs[name].bUp && sInstanceInputManager->CheckCategory(category);
+        return sInstanceInputManager->m_inputs[name].bUp && sInstanceInputManager->CheckCategory(category);
     }
 
     void InputManager::EnableInput()
@@ -117,7 +117,7 @@ namespace ClassicLauncher
             return;
         }
 
-        sInstanceInputManager->mDisableInput = false;
+        sInstanceInputManager->m_disableInput = false;
     }
 
     void InputManager::DisableInput()
@@ -127,8 +127,8 @@ namespace ClassicLauncher
             return;
         }
 
-        sInstanceInputManager->mDisableInput = true;
-        for (auto& input : sInstanceInputManager->mInputs)
+        sInstanceInputManager->m_disableInput = true;
+        for (auto& input : sInstanceInputManager->m_inputs)
         {
             input.CancelInput();
         }
@@ -143,17 +143,17 @@ namespace ClassicLauncher
 
         unsigned int value = 0;
 
-        if ((mCategory & main) == (category & main) && (category & main) > 0)
+        if ((m_category & MAIN) == (category & MAIN) && (category & MAIN) > 0)
         {
-            value |= main;
+            value |= MAIN;
         }
-        if ((mCategory & videoFullscreen) == (category & videoFullscreen) && (category & videoFullscreen) > 0)
+        if ((m_category & VIDEO_FULLSCREEN) == (category & VIDEO_FULLSCREEN) && (category & VIDEO_FULLSCREEN) > 0)
         {
-            value |= videoFullscreen;
+            value |= VIDEO_FULLSCREEN;
         }
-        if ((mCategory & debug) == (category & debug) && (category & debug) > 0)
+        if ((m_category & DEBUG) == (category & DEBUG) && (category & DEBUG) > 0)
         {
-            value |= debug;
+            value |= DEBUG;
         }
 
         return value != 0;
@@ -166,19 +166,19 @@ namespace ClassicLauncher
             return;
         }
 
-        unsigned int& pCategory = sInstanceInputManager->mCategory;
+        unsigned int& pCategory = sInstanceInputManager->m_category;
 
-        if ((pCategory & main) != (category & main) && (category & main) > 0)
+        if ((pCategory & MAIN) != (category & MAIN) && (category & MAIN) > 0)
         {
-            pCategory |= main;
+            pCategory |= MAIN;
         }
-        if ((pCategory & videoFullscreen) != (category & videoFullscreen) && (category & videoFullscreen) > 0)
+        if ((pCategory & VIDEO_FULLSCREEN) != (category & VIDEO_FULLSCREEN) && (category & VIDEO_FULLSCREEN) > 0)
         {
-            pCategory |= videoFullscreen;
+            pCategory |= VIDEO_FULLSCREEN;
         }
-        if ((pCategory & debug) != (category & debug) && (category & debug) > 0)
+        if ((pCategory & DEBUG) != (category & DEBUG) && (category & DEBUG) > 0)
         {
-            pCategory |= debug;
+            pCategory |= DEBUG;
         }
     }
 
@@ -189,19 +189,19 @@ namespace ClassicLauncher
             return;
         }
 
-        unsigned int& pCategory = sInstanceInputManager->mCategory;
+        unsigned int& pCategory = sInstanceInputManager->m_category;
 
-        if ((pCategory & main) > 0 && (category & main) > 0)
+        if ((pCategory & MAIN) > 0 && (category & MAIN) > 0)
         {
-            pCategory &= ~main;
+            pCategory &= ~MAIN;
         }
-        if ((pCategory & videoFullscreen) > 0 && (category & videoFullscreen) > 0)
+        if ((pCategory & VIDEO_FULLSCREEN) > 0 && (category & VIDEO_FULLSCREEN) > 0)
         {
-            pCategory &= ~videoFullscreen;
+            pCategory &= ~VIDEO_FULLSCREEN;
         }
-        if ((pCategory & debug) > 0 && (category & debug) > 0)
+        if ((pCategory & DEBUG) > 0 && (category & DEBUG) > 0)
         {
-            pCategory &= ~debug;
+            pCategory &= ~DEBUG;
         }
     }
 

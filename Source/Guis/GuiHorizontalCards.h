@@ -48,23 +48,23 @@ namespace ClassicLauncher
 
     private:
 
-        GuiTextBlock* mGuiTitle;
-        GuiMiniCover* mMiniCover;
-        GuiHorizontalBox* mHorizontalBox;
-        GuiFrame* mFrame;
-        std::vector<GuiCard*> mGuiCards;
+        GuiTextBlock* m_guiTitle;
+        GuiMiniCover* m_miniCover;
+        GuiHorizontalBox* m_horizontalBox;
+        GuiFrame* m_frame;
+        std::vector<GuiCard*> m_guiCards;
         // float mCardPositions[10]{ -632 - 6, -376 - 6, -120 - 6, 136 - 6, 392 - 6, 648 - 6, 904 - 6, 1160 - 6, 1416 - 6, 1672 - 6 };
-        float mPositionX;
-        bool mIsLeft;
-        bool mIsRight;
-        bool mIsNeedUpdate;
-        Direction mLastDirection;
-        int mIdFocus;
-        int mIdLastFocusSystem;
+        float m_positionX;
+        bool m_isLeft;
+        bool m_isRight;
+        bool m_isNeedUpdate;
+        Direction m_lastDirection;
+        int m_idFocus;
+        int m_idLastFocusSystem;
         float mSpeed;
         float m_multiply = 22;
         bool m_isPress = false;
-        TimerHandling mTimerInputSpeed{};
+        TimerHandling m_timerInputSpeed{};
 
         GameListManager* m_gameListManagerRef;
         AudioManager* m_audioManagerRef;

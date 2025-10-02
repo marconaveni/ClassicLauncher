@@ -38,11 +38,11 @@ namespace ClassicLauncher
         ConfigurationManager* m_configManagerRef;
 
         std::vector<std::string> GetThemeDirs();
-        std::string mCurrentSystemName;
-        std::string mLastPathLoaded;
-        float mScaleTexture;
-        float mScaleSystem;
-        std::string mPathThemeSystem;
+        std::string m_currentSystemName;
+        std::string m_lastPathLoaded;
+        float m_scaleTexture;
+        float m_scaleSystem;
+        std::string m_pathThemeSystem;
         static bool GetPathTheme(std::string& file,
                                  int monitorWidth,
                                  int monitorCompare,

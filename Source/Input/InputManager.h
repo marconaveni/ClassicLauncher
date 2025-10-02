@@ -12,9 +12,9 @@ namespace ClassicLauncher
     // clang-format off
     enum InputCategory
     {    
-        main =              0x00000001,       
-        videoFullscreen =   0x00000010,       
-        debug =             0x10000000       
+        MAIN =              0x00000001,       
+        VIDEO_FULLSCREEN =   0x00000010,       
+        DEBUG =             0x10000000       
     };
     // clang-format on
 
@@ -83,12 +83,12 @@ namespace ClassicLauncher
 
     protected:
 
-        int mGamePadIdSelected;
-        int mAmoutDown;
-        bool mDisableInput;
-        unsigned int mCategory;
+        int m_gamePadIdSelected;
+        int m_amoutDown;
+        bool m_disableInput;
+        unsigned int m_category;
 
-        InputMapper mInputs[18]{InputMapper(unknown, 0, Keyboard::Key::KEYNULL),
+        InputMapper m_inputs[18]{InputMapper(unknown, 0, Keyboard::Key::KEYNULL),
                                 InputMapper(leftFaceUp, 1, Keyboard::Key::UP),
                                 InputMapper(leftFaceRight, 2, Keyboard::Key::RIGHT),
                                 InputMapper(leftFaceDown, 3, Keyboard::Key::DOWN),

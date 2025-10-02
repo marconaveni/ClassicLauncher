@@ -11,8 +11,8 @@ namespace ClassicLauncher
 
     enum TextOverflowPolicy : std::uint8_t
     {
-        none = 0x0,
-        clip = 0x1
+        NONE = 0,
+        CLIP = 1
     };
 
 
@@ -32,7 +32,7 @@ namespace ClassicLauncher
         void SetSizeFont(int size);
         void SetSpacing(int spacing);
         Vector2f GetMeasureTextBox();
-        const std::string& GetText() { return mText; }
+        const std::string& GetText() { return m_text; }
         void SetTextOverflowPolicy(TextOverflowPolicy textOverflowPolicy);
         void SetOffSetMoveText(float speed, float maxDelay);
         void UnloadText();
@@ -42,7 +42,7 @@ namespace ClassicLauncher
     private:
 
         Font m_font;
-        std::string mText;
+        std::string m_text;
         std::string m_pathFont;
         int m_sizeText;
         int m_spacing;

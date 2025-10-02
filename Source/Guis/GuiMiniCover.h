@@ -39,11 +39,11 @@ namespace ClassicLauncher
         };
         
 
-        std::vector<MiniCover> mGuiCovers;
-        GuiHorizontalBox* mGuiHorizontalBox;
-        GuiBase* mArrow;
-        int mSize;
-        Vector2f mSizeCover;
+        std::vector<MiniCover> m_guiMiniCovers;
+        GuiHorizontalBox* m_guiHorizontalBox;
+        GuiBase* m_arrow;
+        int m_size;
+        Vector2f m_sizeCover;
         bool m_focus = false;
 
         GameListManager* m_gameListManagerRef;

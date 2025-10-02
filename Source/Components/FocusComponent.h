@@ -32,7 +32,6 @@ namespace ClassicLauncher
         friend class FocusManager;
         friend class RenderEntities;
 
-        Transform* m_transformEntity = nullptr;
         bool m_isFocus = false;
         FocusManager* m_focusRef = nullptr;
         Vector2f m_positionWorld{};

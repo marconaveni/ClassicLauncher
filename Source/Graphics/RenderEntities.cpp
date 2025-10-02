@@ -51,7 +51,7 @@ namespace ClassicLauncher
     void RenderEntities::DrawEntity(Entity* entity)
     {
 
-        const Texture* texture = m_spriteManagerReference->GetTexture(entity->mTextureName);
+        const Texture* texture = m_spriteManagerReference->GetTexture(entity->m_textureName);
        // const Texture* texture = &textureTeste;
 
 
@@ -94,7 +94,7 @@ namespace ClassicLauncher
 
 
         // if (texture && entity->mToDraw && entity->mTextureName != "transparent")  // todo verify render
-        if (texture && entity->mToDraw && entity->mTextureName != "transparent")
+        if (texture && entity->m_isCanDraw && entity->m_textureName != "transparent")
         {
 
 
@@ -121,7 +121,7 @@ namespace ClassicLauncher
             DrawDebug(entity);
         }
 #endif
-        entity->mToDraw = false;
+        entity->m_isCanDraw = false;
             
     }
 
@@ -144,21 +144,21 @@ namespace ClassicLauncher
 
 
                 LOG(LOG_CLASSIC_DEBUG, std::format("\n-> positions nameID: {}\n-> x {}\n-> y {}\n-> width {}\n-> height {}", 
-                    entity->mNameId, 
+                    entity->m_nameId, 
                     entity->m_transform.position.x,
                     entity->m_transform.position.y,
                     entity->m_transform.position.width,
                     entity->m_transform.position.height
                 ).c_str());
                 LOG(LOG_CLASSIC_DEBUG, std::format("\n-> world positions nameID: {}\n-> x {}\n-> y {}\n-> width {}\n-> height {}", 
-                    entity->mNameId, 
+                    entity->m_nameId, 
                     entity->m_worldTransform.position.x,
                     entity->m_worldTransform.position.y,
                     entity->m_worldTransform.position.width,
                     entity->m_worldTransform.position.height
                 ).c_str());
                 LOG(LOG_CLASSIC_DEBUG, std::format("\n-> finaltransform nameID: {}\n-> x {}\n-> y {}\n-> width {}\n-> height {}", 
-                    entity->mNameId, 
+                    entity->m_nameId, 
                     entity->m_finalRender.transform.x,
                     entity->m_finalRender.transform.y,
                     entity->m_finalRender.transform.width,

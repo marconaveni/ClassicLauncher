@@ -60,7 +60,7 @@ namespace ClassicLauncher
         TimerManager* m_timerManager = nullptr;
         AudioManager* m_audioManager = nullptr;
 
-        GuiWindow* mGuiWindow = nullptr;
+        GuiWindow* m_guiWindow = nullptr;
     };
 
 } // namespace ClassicLauncher

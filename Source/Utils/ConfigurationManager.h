@@ -17,38 +17,38 @@ namespace ClassicLauncher
         bool SaveConfiguration();
 
         // Getters
-        [[nodiscard]] int GetInternalScale() const { return mInternalScale; }
-        [[nodiscard]] bool GetForceInternalScale() const { return mForceInternalScale; }
-        [[nodiscard]] int GetVolume() const { return mVolume; }
-        [[nodiscard]] int GetTargetFps() const { return mTargetFps; }
-        [[nodiscard]] int GetClassicLogLevel() const { return mClassicLogLevel; }
-        [[nodiscard]] int GetRaylibLogLevel() const { return mRaylibLogLevel; }
-        [[nodiscard]] bool GetVSync() const { return mVSync; }
-        [[nodiscard]] bool GetFullscreen() const { return mFullscreen; }
+        [[nodiscard]] int GetInternalScale() const { return m_internalScale; }
+        [[nodiscard]] bool GetForceInternalScale() const { return m_forceInternalScale; }
+        [[nodiscard]] int GetVolume() const { return m_volume; }
+        [[nodiscard]] int GetTargetFps() const { return m_targetFps; }
+        [[nodiscard]] int GetClassicLogLevel() const { return m_classicLogLevel; }
+        [[nodiscard]] int GetRaylibLogLevel() const { return m_raylibLogLevel; }
+        [[nodiscard]] bool GetVSync() const { return m_vsync; }
+        [[nodiscard]] bool GetFullscreen() const { return m_fullscreen; }
 
         // Setters
-        void SetInternalScale(int internalscale) { mInternalScale = internalscale; }
-        void SetForceInternalScale(bool forceInternalScale) { mForceInternalScale = forceInternalScale; }
-        void SetVolume(int volume) { mVolume = volume; }
-        void SetTargetFps(int targetFps) { mTargetFps = targetFps; }
-        void SetClassicLogLevel(int classicLogLevel) { mClassicLogLevel = classicLogLevel; }
-        void SetRaylibLogLevel(int raylibLogLevel) { mRaylibLogLevel = raylibLogLevel; }
-        void SetVSync(bool vSync) { mVSync = vSync; }
-        void SetFullscreen(bool bFullscreen) { mFullscreen = bFullscreen; }
+        void SetInternalScale(int internalscale) { m_internalScale = internalscale; }
+        void SetForceInternalScale(bool forceInternalScale) { m_forceInternalScale = forceInternalScale; }
+        void SetVolume(int volume) { m_volume = volume; }
+        void SetTargetFps(int targetFps) { m_targetFps = targetFps; }
+        void SetClassicLogLevel(int classicLogLevel) { m_classicLogLevel = classicLogLevel; }
+        void SetRaylibLogLevel(int raylibLogLevel) { m_raylibLogLevel = raylibLogLevel; }
+        void SetVSync(bool vSync) { m_vsync = vSync; }
+        void SetFullscreen(bool bFullscreen) { m_fullscreen = bFullscreen; }
 
     private:
 
         void SetValues(SimpleIni& config);
         void GetValues(SimpleIni& config);
 
-        int mInternalScale;
-        bool mForceInternalScale;
-        int mVolume;
-        int mTargetFps;
-        int mClassicLogLevel;
-        int mRaylibLogLevel;
-        bool mVSync;
-        bool mFullscreen;
+        int m_internalScale;
+        bool m_forceInternalScale;
+        int m_volume;
+        int m_targetFps;
+        int m_classicLogLevel;
+        int m_raylibLogLevel;
+        bool m_vsync;
+        bool m_fullscreen;
     };
 
 } // namespace ClassicLauncher

@@ -30,19 +30,19 @@ namespace ClassicLauncher
         {
             auto entity = std::make_unique<T>(std::forward<Args>(args)...);
             entity->m_entityManagerReference = this;
-            entity->m_timerManagerRef = mTimerManagerReference;
-            entity->m_spriteManagerReference = mSpriteManagerReference;
+            entity->m_timerManagerRef = m_timerManagerReference;
+            entity->m_spriteManagerReference = m_spriteManagerReference;
             entity->m_focusManagerRef = m_focusManagerReference;
             SetNameId(entity.get(), name);
-            mTempEntities.push_back(std::move(entity));
-            return static_cast<T*>(mTempEntities.back().get());  // .back last element vector
+            m_tempEntities.push_back(std::move(entity));
+            return static_cast<T*>(m_tempEntities.back().get());  // .back last element vector
         }
 
         template <typename T>
         std::vector<T*> GetEntitiesType(EntityType type)
         {
             std::vector<T*> entities;
-            for (const auto& entity : mEntities)
+            for (const auto& entity : m_entities)
             {
                 if (entity->GetType() == type)
                 {
@@ -52,8 +52,8 @@ namespace ClassicLauncher
             return entities;
         }
 
-        std::vector<std::unique_ptr<Entity>>& GetEntities() { return mEntities; }
-        int GetEntitySize() { return static_cast<int>(mEntities.size() + mTempEntities.size()); }
+        std::vector<std::unique_ptr<Entity>>& GetEntities() { return m_entities; }
+        int GetEntitySize() { return static_cast<int>(m_entities.size() + m_tempEntities.size()); }
         static void SetVisibleAll(Entity* entity, bool bVisible);
         void SetZOrder(Entity* entity, int zOrder);
         void UpdateAll();
@@ -69,14 +69,14 @@ namespace ClassicLauncher
         void SetNameId(Entity* entity, const std::string& name);
         void DeleteEntities(bool bIsDeleteEntities);
 
-        std::vector<std::unique_ptr<Entity>> mEntities;
-        std::vector<std::unique_ptr<Entity>> mTempEntities;
-        std::vector<EntityType> mTypeCount;
-        SpriteManager* mSpriteManagerReference;
-        TimerManager* mTimerManagerReference;
+        std::vector<std::unique_ptr<Entity>> m_entities;
+        std::vector<std::unique_ptr<Entity>> m_tempEntities;
+        std::vector<EntityType> m_typeCount;
+        SpriteManager* m_spriteManagerReference;
+        TimerManager* m_timerManagerReference;
         FocusManager* m_focusManagerReference;
         bool m_markOrder = false;
-        bool mHasNewEntity = false;
+        bool m_hasNewEntity = false;
         int m_counter = 0;
     };
 
