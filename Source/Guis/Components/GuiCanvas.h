@@ -7,7 +7,6 @@
 namespace ClassicLauncher
 {
     class Entity;
-    class Animatable;
 
     class GuiCanvas : public Entity
     {

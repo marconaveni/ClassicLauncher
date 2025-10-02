@@ -110,8 +110,7 @@ namespace ClassicLauncher
     }
 
     void GuiHorizontalCards::SetFocus(const int newId, bool bForce)
-    {
-        mGuiCards[mIdFocus]->RemoveCardFocus(bForce);
+    {   
         mIdFocus = newId;
         mGuiCards[newId]->SetCardFocus(bForce);
         mIsLeft = true;

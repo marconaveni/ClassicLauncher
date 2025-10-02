@@ -17,7 +17,7 @@ namespace ClassicLauncher
         PRINT(TEXT("focus count %d", mFocusComponents.size()), 5.0f, "focusComp");
         for (auto& focus : mFocusComponents)
         {
-            if (focus == focusComponent && !focus->m_isFocus)
+            if (focus == focusComponent)
             {
                 focus->m_isFocus = true;
                 m_currentFocusComponent = focus;

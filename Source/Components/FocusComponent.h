@@ -15,6 +15,7 @@ namespace ClassicLauncher
         explicit FocusComponent(FocusManager* focusManagerRef);
         virtual ~FocusComponent();
         void SetFocus();
+        void RemoveFocus();
         [[nodiscard]] bool IsFocus() const { return m_isFocus; }
         virtual void OnFocus() = 0;
         virtual void OnLostFocus() = 0;

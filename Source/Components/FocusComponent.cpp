@@ -24,6 +24,12 @@ namespace ClassicLauncher
         UpdateFocus();
     }
 
+    void FocusComponent::RemoveFocus()
+    { 
+        m_focusRef->SetNewFocusComponent(nullptr);
+        m_isFocus = false;
+    }
+
     void FocusComponent::UpdateFocus()
     {
         const Transform& transform = OwnerWorldTransform();

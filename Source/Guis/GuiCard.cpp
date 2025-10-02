@@ -51,6 +51,11 @@ namespace ClassicLauncher
         m_coverDefault->mTextureName = "sprite";
 
         SetCover();
+
+
+
+        // mCardSelected->SetOffset(Vector2f{-280, -30 });
+        // mCardMain->SetOffset(Vector2f{0, 30 });
     }
 
     void GuiCard::CreateCard(GuiBase*& card,
@@ -159,7 +164,7 @@ namespace ClassicLauncher
 
     void GuiCard::SetCardFocus(bool bForce)
     {
-        GetTimerManager()->SetTimer(m_timerVideo, CALLFUNCTION(StartVideo, this), this, 5.0f);
+        GetTimerManager()->SetTimer(m_timerVideo, CALLFUNCTION(StartVideo, this), this, 5.0f);     
         SetFocus();
 
         // if (bForce)
@@ -187,9 +192,13 @@ namespace ClassicLauncher
          Transform targetA = mCardSelected->GetTransform();
          targetA.color.a = 255;
          Transform targetB = mCardBackgroundSelected->GetTransform();
-         targetB.color.b = 255;
+         targetB.color.a = 255;
+         Transform targetC = mCardMain->GetTransform();
+         targetC.color.a = 0;
          GetAnimationManager().StartAnimation("focus-card-a" , 0.2f, mCardSelected, targetA, Ease::EaseLinearNone, false);
          GetAnimationManager().StartAnimation("focus-card-b" , 0.2f, mCardBackgroundSelected, targetB, Ease::EaseLinearNone, false);
+         GetAnimationManager().StartAnimation("focus-card-c" , 0.2f, mCardMain, targetC, Ease::EaseLinearNone, false);
+       // mCardBackgroundSelected->SetOpacity(255);
     }
 
     void GuiCard::OnLostFocus()
@@ -202,9 +211,12 @@ namespace ClassicLauncher
         Transform targetA = mCardSelected->GetTransform();
         targetA.color.a = 0;
         Transform targetB = mCardBackgroundSelected->GetTransform();
-        targetB.color.b = 0;
+        targetB.color.a = 0;
+        Transform targetC = mCardMain->GetTransform();
+        targetC.color.a = 255;
         GetAnimationManager().StartAnimation("remove-focus-card-a" , 0.2f, mCardSelected, targetA, Ease::EaseLinearNone, false);
         GetAnimationManager().StartAnimation("remove-focus-card-b" , 0.2f, mCardBackgroundSelected, targetB, Ease::EaseLinearNone, false);
+        GetAnimationManager().StartAnimation("remove-focus-card-c" , 0.2f, mCardMain, targetC, Ease::EaseLinearNone, false);
     }
 
     // bool GuiCard::IsFocus() const
@@ -239,6 +251,7 @@ namespace ClassicLauncher
         //{
         //    RemoveCardFocus(true);
         //}
+        
     }
 
     void GuiCard::Click()
