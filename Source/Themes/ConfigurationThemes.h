@@ -12,7 +12,7 @@ namespace ClassicLauncher
 
         // gui horizontal card values
         float horizontalCardsSpace = 0.0f;
-        float horizontalCardsPositionX = 2.0f;
+        float horizontalCardsPositionX = 2.0f; // todo vefificar esse deslocamento
         float horizontalCardsPositionY = 222.0f;
 
         // gui card values

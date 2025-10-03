@@ -14,6 +14,7 @@ namespace ClassicLauncher
     class SpriteManager;
     class EntityManager;
     class ConfigurationManager;
+    class AudioManager;
 
     class ThemesManager
     {
@@ -22,35 +23,25 @@ namespace ClassicLauncher
         ThemesManager(GameListManager* gameListManager,
                       SpriteManager* spriteManager,
                       EntityManager* entityManagerRef,
-                      ConfigurationManager* configManager);
+                      ConfigurationManager* configManager,
+                      AudioManager* m_audioManagerRef);
         ~ThemesManager();
         void Init();
         void UpdateTheme();
         static ThemesManager& Get();
         static float GetScaleRenderer();
-        ConfigurationThemes mConfigurationThemes;
+        static ConfigurationThemes GetConfigurationThemes();
         std::string GetTheme();
 
     private:
 
-        GameListManager* m_gameListManager;
-        SpriteManager* m_spriteManager;
-        EntityManager* m_entityManagerRef;
-        ConfigurationManager* m_configManagerRef;
+        GameListManager* m_gameListManager = nullptr;
+        SpriteManager* m_spriteManager = nullptr;
+        EntityManager* m_entityManagerRef = nullptr;
+        ConfigurationManager* m_configManagerRef = nullptr;
+        AudioManager* m_audioManagerRef = nullptr;
+
         float m_scaleTexture;
-        
-       // std::vector<std::string> GetThemeDirs();
-        // std::string m_currentSystemName;
-        // std::string m_lastPathLoaded;
-        // float m_scaleSystem;
-        // std::string m_pathThemeSystem;
-        // static bool GetPathTheme(std::string& file,
-        //                          int monitorWidth,
-        //                          int monitorCompare,
-        //                          const std::string& path,
-        //                          float numScale);
-        //float GetSpriteByResolution(std::string& file);
-        //void LoadConfigurationThemes();
     };
 
 } // namespace ClassicLauncher

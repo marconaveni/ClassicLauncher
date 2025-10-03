@@ -31,35 +31,28 @@ namespace ClassicLauncher
         , m_audioManager(&audioManager)
         , m_renderEntities(&spriteManager)
         , m_entityManager(&spriteManager, &timerManager, &m_focusManager)
-        , m_themesManager(&m_gameListManager, &spriteManager, &m_entityManager, &configManager)
+        , m_themesManager(&m_gameListManager, &spriteManager, &m_entityManager, &configManager, &audioManager)
     {
     }
-
+    
     Application::~Application()
-    {
-    }
-
-    void Application::Init()
     {
         LogLevel(m_configManager->GetClassicLogLevel(), m_configManager->GetRaylibLogLevel());
         rlw::SetTraceLogCallback(TraceLogger);
-
         Resources::SetClassicLauncherDirectory();
-        m_themesManager.Init();
-        
-        
-        m_spriteManager->LoadSprite("sprite", Resources::GetSpriteFile());
-        //m_themesManager.LoadTheme();
-        
-        
+    }
+    
+    void Application::Init()
+    {
         m_audioManager->Init();
+        m_themesManager.Init();
+              
         m_audioManager->LoadMusics(Resources::GetMusicDirectory(), true);
-        m_audioManager->LoadSound(Resources::GetClickAudioFile(), "click");
-        m_audioManager->LoadSound(Resources::GetCursorAudioFile(), "cursor");
-        
-        m_spriteManager->Init();
-        
+
+    
+        m_spriteManager->Init();     
         m_gameListManager.Initialize();
+
         if (m_gameListManager.GetGameListSize() > 0)
         {
             m_guiWindow = m_entityManager.CreateEntity<GuiWindow>("GuiWindow",

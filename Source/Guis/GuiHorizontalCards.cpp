@@ -71,8 +71,6 @@ namespace ClassicLauncher
             m_guiCards.emplace_back(card);
         }
 
-        SetPositionHorizontalBox();
-
         m_miniCover = GetEntityManager()->CreateEntity<GuiMiniCover>("MiniCover", m_gameListManagerRef);
         m_miniCover->Init();
         AddChild(m_miniCover);
@@ -84,9 +82,9 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::SetHorizontalBoxValues()
     {
-        const float space =  0; //ThemesManager::Get().mConfigurationThemes.horizontalCardsSpace;
+        const float space = ThemesManager::GetConfigurationThemes().horizontalCardsSpace;
         const float x = m_horizontalBox->GetPosition().x;
-        const float y = 222.0f; //ThemesManager::Get().mConfigurationThemes.horizontalCardsPositionY;
+        const float y = ThemesManager::GetConfigurationThemes().horizontalCardsPositionY;
 
         m_horizontalBox->SetSpace(space);
         m_horizontalBox->SetPosition(x, y);
@@ -110,6 +108,8 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::SetFocus(const int newId, bool bForce)
     {   
+        m_guiCards[m_idFocus]->CloseVideo();
+        
         m_idFocus = newId;
         m_guiCards[newId]->SetCardFocus(bForce);
         m_isLeft = true;
@@ -157,7 +157,8 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::SetPositionHorizontalBox()
     {
-        const float x = ((GetSize().width - m_horizontalBox->GetSize().width) / 2) + ThemesManager::Get().mConfigurationThemes.horizontalCardsPositionX;
+        const float offsetX = ThemesManager::GetConfigurationThemes().horizontalCardsPositionX;
+        const float x = ((GetSize().width - m_horizontalBox->GetSize().width) / 2) + offsetX;
         const float y = m_horizontalBox->GetPosition().y;
         m_horizontalBox->SetPosition(x, y);
     }

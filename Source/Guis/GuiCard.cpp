@@ -107,11 +107,12 @@ namespace ClassicLauncher
             textureReference->SetSmooth(true);
 
             const float renderScale = ThemesManager::GetScaleRenderer();
+            ConfigurationThemes theme = ThemesManager::GetConfigurationThemes(); 
 
             const float widthTex = textureReference->GetSize().x / renderScale;
             const float HeightTex = textureReference->GetSize().y / renderScale;
-            const float xCoverPos = ((228.0f - widthTex) / 2.0f) + 12;
-            const float yCoverPos = ((204.0f - HeightTex) / 2.0f) + 12;
+            const float xCoverPos = ((228.0f - widthTex) / 2.0f) + theme.offsetImageX;
+            const float yCoverPos = ((204.0f - HeightTex) / 2.0f) + theme.offsetImageY;
 
             m_cover->SetOffset(Vector2f{xCoverPos, yCoverPos}); 
             m_cover->SetSize(Vector2f{widthTex, HeightTex}); 
@@ -197,8 +198,6 @@ namespace ClassicLauncher
          targetC.color.a = 0;
          GetAnimationManager().StartAnimation("focus-card-a" , 0.2f, m_cardSelected, targetA, Ease::EaseLinearNone, false);
          GetAnimationManager().StartAnimation("focus-card-b" , 0.2f, m_cardBackgroundSelected, targetB, Ease::EaseLinearNone, false);
-         //GetAnimationManager().StartAnimation("focus-card-c" , 0.2f, m_cardMain, targetC, Ease::EaseLinearNone, false);
-       // mCardBackgroundSelected->SetOpacity(255);
     }
 
     void GuiCard::OnLostFocus()
@@ -208,53 +207,24 @@ namespace ClassicLauncher
             return;
         }
 
-        m_guiVideoPlayer->Stop();
-        m_audioManagerRef->MusicVolume(1.0f);
+        CloseVideo();
         
         Transform targetA = m_cardSelected->GetTransform();
         targetA.color.a = 0;
         Transform targetB = m_cardBackgroundSelected->GetTransform();
         targetB.color.a = 0;
-        Transform targetC = m_cardMain->GetTransform();
-        targetC.color.a = 255;
         GetAnimationManager().StartAnimation("remove-focus-card-a" , 0.2f, m_cardSelected, targetA, Ease::EaseLinearNone, false);
         GetAnimationManager().StartAnimation("remove-focus-card-b" , 0.2f, m_cardBackgroundSelected, targetB, Ease::EaseLinearNone, false);
-       // GetAnimationManager().StartAnimation("remove-focus-card-c" , 0.2f, m_cardMain, targetC, Ease::EaseLinearNone, false);
     }
-
-    // bool GuiCard::IsFocus() const
-    // {
-    //     return mIsFocus;
-    // }
 
     void GuiCard::Reset()
     {
-        // mIsFront = false;
         SetScale(Vector2f{1.0f, 1.0f});
-        //m_transform.scale.x = 1.0f;
-        //m_transform.scale.y = 1.0f;
 
         SetOpacity(255);
-        //mCardBackgroundMain->m_transform.color.SetOpacity(255);
-        //mCardMain->m_transform.color.SetOpacity(255);
-        //mCardBackgroundSelected->m_transform.color.SetOpacity(255);
-        //mCardSelected->m_transform.color.SetOpacity(255);
-        //m_cover->m_transform.color.SetOpacity(255);
-        //m_coverDefault->m_transform.color.SetOpacity(255);
-        //mGuiVideoPlayer->m_transform.color.SetOpacity(255);
 
         m_cardBackgroundFavorite->SetOpacity(0); // todo create logic is favorite
-        m_cardFavorite->SetOpacity(0);           // todo create logic is favorite
-        
-        // if (m_cover->mTextureName == "sprite")
-        // {
-        //     SetCover();
-        // }
-        //if (!mIsFocus)
-        //{
-        //    RemoveCardFocus(true);
-        //}
-        
+        m_cardFavorite->SetOpacity(0);           // todo create logic is favorite   
     }
 
     void GuiCard::Click()
@@ -299,12 +269,18 @@ namespace ClassicLauncher
         GetEntityManager()->SetZOrder(m_guiVideoPlayer, order);
     }
 
+    void GuiCard::CloseVideo()
+    {
+        m_guiVideoPlayer->Stop();
+        m_audioManagerRef->MusicVolume(1.0f);
+    }
+
     void GuiCard::SetThemeValue()
     {
-        // mSizeBoxImage->m_transform.offset.x = ThemesManager::Get().mConfigurationThemes.offsetImageX;
-        // mSizeBoxImage->m_transform.offset.y = ThemesManager::Get().mConfigurationThemes.offsetImageY;
-        // mSizeBoxVideoPlayer->m_transform.offset.x = ThemesManager::Get().mConfigurationThemes.offsetVideoX;
-        // mSizeBoxVideoPlayer->m_transform.offset.y = ThemesManager::Get().mConfigurationThemes.offsetVideoY;
+        ConfigurationThemes theme = ThemesManager::GetConfigurationThemes(); 
+        m_cover->SetOffset(theme.offsetImageX ,theme.offsetImageY);
+        //m_coverDefault->SetOffset(theme.offsetImageX ,theme.offsetImageY);
+        m_guiVideoPlayer->SetOffset(theme.offsetVideoX ,theme.offsetVideoY);
     }
 
 } // namespace ClassicLauncher

@@ -51,10 +51,13 @@ namespace ClassicLauncher
     void RenderEntities::DrawEntity(Entity* entity)
     {
 
-        const Texture* texture = m_spriteManagerReference->GetTexture(entity->m_textureName);
-       // const Texture* texture = &textureTeste;
-
-
+        Texture* texture = nullptr;
+        
+        if (entity->m_isCanDraw && entity->m_textureName != "transparent")
+        {
+            texture = m_spriteManagerReference->GetTexture(entity->m_textureName);
+        }
+    
         if (entity->m_isTransformDirty)
         {
             //LOG(LOG_CLASSIC_DEBUG, "nameID: is dirty %s", entity->mNameId.c_str());
@@ -94,10 +97,8 @@ namespace ClassicLauncher
 
 
         // if (texture && entity->mToDraw && entity->mTextureName != "transparent")  // todo verify render
-        if (texture && entity->m_isCanDraw && entity->m_textureName != "transparent")
+        if (texture)
         {
-
-
             rlw::DrawTexturePro(*texture,
                                 entity->m_finalRender.source,         /* RectFloat{0, 562, 21, 720}, posição spritesheet */
                                 entity->m_finalRender.transform, /* RectFloat{0, 0, 1280, 720} posx posy tam_rect  larg_rect */

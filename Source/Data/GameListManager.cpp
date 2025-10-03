@@ -9,6 +9,7 @@
 #include "Utils/Utils.h"
 #include "Themes/ThemesManager.h"
 #include "Helper.h"
+#include "ClassicAssert.h"
 
 namespace ClassicLauncher
 {
@@ -51,7 +52,7 @@ namespace ClassicLauncher
             game.arguments = IsValidElement(pGame, "arguments") ? NormalizePath(pGame->FirstChildElement("arguments")->GetText()) : "";
             game.releaseDate = IsValidElement(pGame, "releasedate") ? NormalizePath(pGame->FirstChildElement("releasedate")->GetText()) : "";
             game.lastPlayed = IsValidElement(pGame, "lastplayed") ? NormalizePath(pGame->FirstChildElement("lastplayed")->GetText()) : "";
-            ReplaceCurrentPath(&game);
+            ReplaceCurrentPath(&game, mSystemList[mIdSystemList].romPath);
             mGameList.push_back(game);
             // clang-format on
 
@@ -73,7 +74,7 @@ namespace ClassicLauncher
             game.image = system.image;
             game.executable = system.executable;
             game.arguments = system.arguments;
-            ReplaceCurrentPath(&game);
+            ReplaceCurrentPath(&game, system.romPath);
             mGameList.push_back(game);
         }
         mGameList.shrink_to_fit();
@@ -97,6 +98,7 @@ namespace ClassicLauncher
     void GameListManager::ChangeGameToSystemList()
     {
         mIdGameList = mIdSystemList;
+        mIdSystemList = -1;
         mCurrentList = SystemListSelect;
         ClearGameList();
         LoadList();
@@ -223,6 +225,7 @@ namespace ClassicLauncher
 
     GameSystemList* GameListManager::GetCurrentSystemList()
     {
+        CLASSIC_ASSERT(mIdSystemList >= 0, "must be greater than zero");
         return &mSystemList[mIdSystemList];
     }
 
@@ -257,7 +260,7 @@ namespace ClassicLauncher
                   [](const GameSystemList& a, const GameSystemList& b) { return a.systemLabel < b.systemLabel; });
     }
 
-    void GameListManager::ReplaceCurrentPath(GameList* pGame) const
+    void GameListManager::ReplaceCurrentPath(GameList* pGame, const std::string& romPath) const
     {
         std::string dotSlash = "./";
         std::string slash = "/";
@@ -265,10 +268,10 @@ namespace ClassicLauncher
         dotSlash = ".\\";
         slash = "\\";
 #endif
-        String::ReplaceString(pGame->path, dotSlash, mSystemList[mIdSystemList].romPath + slash);
-        String::ReplaceString(pGame->image, dotSlash, mSystemList[mIdSystemList].romPath + slash);
-        String::ReplaceString(pGame->thumbnail, dotSlash, mSystemList[mIdSystemList].romPath + slash);
-        String::ReplaceString(pGame->video, dotSlash, mSystemList[mIdSystemList].romPath + slash);
+        String::ReplaceString(pGame->path, dotSlash, romPath + slash);
+        String::ReplaceString(pGame->image, dotSlash, romPath + slash);
+        String::ReplaceString(pGame->thumbnail, dotSlash, romPath + slash);
+        String::ReplaceString(pGame->video, dotSlash, romPath + slash);
     }
 
     bool GameListManager::IsValidElement(const tinyxml2::XMLElement* pElement, const char* name)

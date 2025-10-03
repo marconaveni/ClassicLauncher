@@ -18,8 +18,8 @@ namespace ClassicLauncher
         , m_isPlayClick(false)
         , m_isPlayCursor(false)
         , m_statusAudio(Status::Stop)
-        , m_clickSound{}
-        , m_cursorSound{}
+        , m_clickSound(nullptr)
+        , m_cursorSound(nullptr)
         , m_idAudioMusic(0)
     {
         m_clickSound = std::make_unique<Sound>();
@@ -67,18 +67,13 @@ namespace ClassicLauncher
         ChangeMusic(bAutoPlay);
     }
 
-    //void AudioManager::LoadCursor(const std::string& path)
-    //{
-    //    m_cursorSound->LoadFromFile(path);
-    //}
-    //
-    //void AudioManager::LoadCLick(const std::string& path)
-    //{
-    //    m_clickSound->LoadFromFile(path);
-    //}
-    
     void AudioManager::LoadSound(const std::filesystem::path& path, const std::string& name)
     {
+        if (!std::filesystem::exists(path))
+        {
+            return;
+        }
+        
         if (name.compare("click"))
         {
             m_clickSound->LoadFromFile(path);
@@ -195,26 +190,18 @@ namespace ClassicLauncher
                 }
             }
 
-            //if (m_clickSound->IsValid() && m_isPlayClick)
-            //{
-            //    m_clickSound->Play();
-            //    m_isPlayClick = !m_isPlayClick;
-            //}
-            //if (m_cursorSound->IsValid() && m_isPlayCursor)
-            //{
-            //    m_cursorSound->Play();
-            //    m_isPlayCursor = !m_isPlayCursor;
-            //}
-
-            if (m_clickSound->IsValid() && m_isPlayClick)
+            if (m_isPlayClick || m_isPlayCursor)
             {
-                m_clickSound->Play();
-                m_isPlayClick = !m_isPlayClick;
-            }
-            if (m_cursorSound->IsValid() && m_isPlayCursor)
-            {
-                m_cursorSound->Play();
-                m_isPlayCursor = !m_isPlayCursor;
+                if (m_clickSound->IsValid() && m_isPlayClick)
+                {
+                    m_clickSound->Play();
+                    m_isPlayClick = !m_isPlayClick;
+                }
+                if (m_cursorSound->IsValid() && m_isPlayCursor)
+                {
+                    m_cursorSound->Play();
+                    m_isPlayCursor = !m_isPlayCursor;
+                }
             }
 
             std::this_thread::sleep_for(std::chrono::milliseconds(10)); // wait

@@ -11,7 +11,7 @@
 #include "Utils/Math.h"
 #include "Utils/Resources.h"
 #include "Utils/String.h"
-#include "rl_wrap.h"
+#include "Audio/AudioManager.h"
 
 namespace ClassicLauncher
 {
@@ -21,12 +21,14 @@ namespace ClassicLauncher
     ThemesManager::ThemesManager(GameListManager* gameListManager,
                                  SpriteManager* spriteManager,
                                  EntityManager* entityManagerRef,
-                                 ConfigurationManager* configManager)
+                                 ConfigurationManager* configManager,
+                                 AudioManager* audioManagerRef)
         : m_scaleTexture(1.0f)
         , m_gameListManager(gameListManager)
         , m_spriteManager(spriteManager)
         , m_entityManagerRef(entityManagerRef)
         , m_configManagerRef(configManager)
+        , m_audioManagerRef(audioManagerRef)
     {
         if (s_instanceThemes == nullptr)
         {
@@ -42,14 +44,32 @@ namespace ClassicLauncher
     void ThemesManager::Init()
     {
         m_scaleTexture = Math::Clamp(m_configManagerRef->GetInternalScale(), 1, 2);
+        m_spriteManager->LoadSprite("sprite", Resources::GetSpriteFile());
+        UpdateTheme();
     }
 
     void ThemesManager::UpdateTheme()
     {
+        if (m_gameListManager->GetCurrentList() == CurrentList::SystemListSelect)
+        {
+            m_audioManagerRef->LoadSound(Resources::GetClickAudioFile(), "click");
+            m_audioManagerRef->LoadSound(Resources::GetCursorAudioFile(), "cursor");
+            m_entityManagerRef->SetThemeValue();
+            return;
+        }
+
         GameSystemList* systemList = m_gameListManager->GetCurrentSystemList();
         if (systemList->theme != "sprite")
         {
             m_spriteManager->LoadSprite(systemList->systemName, systemList->theme);
+            std::filesystem::path path = systemList->theme;
+            path.replace_filename("config.cfg");
+            systemList->configThemes.LoadConfigurations(path.string());
+            path.replace_filename("click.wav");
+            m_audioManagerRef->LoadSound(path, "click");
+            path.replace_filename("cursor.wav");
+            m_audioManagerRef->LoadSound(path, "cursor");
+            m_entityManagerRef->SetThemeValue();
         }
     }
 
@@ -68,12 +88,31 @@ namespace ClassicLauncher
         return s_instanceThemes->m_scaleTexture;
     }
 
+    ConfigurationThemes ThemesManager::GetConfigurationThemes()
+    {
+        if (s_instanceThemes == nullptr)
+        {
+            return ConfigurationThemes();
+        }
+
+        if (s_instanceThemes->m_gameListManager->GetCurrentList() == CurrentList::GameListSelect)
+        {
+            return s_instanceThemes->m_gameListManager->GetCurrentSystemList()->configThemes;
+        }
+        return ConfigurationThemes();
+    }
+
     std::string ThemesManager::GetTheme()
     {
-        GameSystemList* systemList = m_gameListManager->GetCurrentSystemList();
-        if (systemList->theme != "sprite" && m_gameListManager->GetCurrentList() == CurrentList::GameListSelect)
+        if (m_gameListManager->GetCurrentList() == CurrentList::SystemListSelect)
         {
-           return systemList->systemName;
+            return "sprite";
+        }
+
+        GameSystemList* systemList = m_gameListManager->GetCurrentSystemList();
+        if (systemList->theme != "sprite")
+        {
+            return systemList->systemName;
         }
         return "sprite";
     }

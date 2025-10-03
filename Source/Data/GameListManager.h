@@ -7,6 +7,7 @@
 
 #include "Data/DateTime.h"
 #include "tinyxml2/tinyxml2.h"
+#include "Themes/ConfigurationThemes.h"
 
 namespace ClassicLauncher
 {
@@ -82,6 +83,7 @@ namespace ClassicLauncher
         std::string desc;
         HistoryPosition history;
         std::string theme;
+        ConfigurationThemes configThemes;
 
         ~GameSystemList() = default;
 
@@ -92,16 +94,12 @@ namespace ClassicLauncher
 
     class GameListManager
     {
-    public:
-
-        GameListManager()
-            : mCurrentList(SystemListSelect), mIdSystemList(0), mIdGameList(0) {};
 
     private:
 
-        CurrentList mCurrentList;
-        int mIdSystemList;
-        int mIdGameList;
+        CurrentList mCurrentList = SystemListSelect;
+        int mIdSystemList = -1;
+        int mIdGameList = 0;
         tinyxml2::XMLDocument mDocumentGameListXml;
         tinyxml2::XMLDocument mDocumentSystemListXml;
         std::vector<GameList> mGameList;
@@ -134,7 +132,7 @@ namespace ClassicLauncher
 
     private:
 
-        void ReplaceCurrentPath(GameList* pGame) const;
+        void ReplaceCurrentPath(GameList* pGame, const std::string& romPath) const;
         static bool IsValidElement(const tinyxml2::XMLElement* pElement, const char* name = "");
     };
 

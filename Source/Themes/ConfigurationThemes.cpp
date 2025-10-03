@@ -18,7 +18,6 @@ namespace ClassicLauncher
         offsetVideoX = ini.GetFloat("card", "offsetVideoX", 12.0f); //12.0f
         offsetVideoY = ini.GetFloat("card", "offsetVideoY", 12.0f); //12.0f
 
-        // ini.Save("/home/marco/.ClassicLauncher/themes/snes/test.cfg");
     }
 
 } // namespace ClassicLauncher

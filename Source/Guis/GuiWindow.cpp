@@ -137,7 +137,6 @@ namespace ClassicLauncher
         else
         {
             m_guiHorizontalCards->ChangeList(GameListSelect);
-            // ThemesManager::Get().LoadTheme();
             ThemesManager::Get().UpdateTheme();
             GetTimerManager()->SetTimer(m_inputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
@@ -150,7 +149,7 @@ namespace ClassicLauncher
         if (m_gameListManagerRef->GetCurrentList() == GameListSelect)
         {
             m_guiHorizontalCards->ChangeList(SystemListSelect);
-            // ThemesManager::Get().LoadTheme();
+            ThemesManager::Get().UpdateTheme();
             GetTimerManager()->SetTimer(m_inputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
     }

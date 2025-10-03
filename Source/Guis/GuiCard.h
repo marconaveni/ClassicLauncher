@@ -41,6 +41,7 @@ namespace ClassicLauncher
         void Reset();
         void Click();
         void SetFrontCard();
+        void CloseVideo();
         virtual void SetThemeValue() override;
 
 
