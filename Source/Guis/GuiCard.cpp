@@ -83,6 +83,7 @@ namespace ClassicLauncher
 
         m_coverDefault->SetOpacity(255);
         m_cover->m_textureName = "transparent";
+        m_cover->SetSize(Sizef{});  
 
         if (!name.empty())
         {
@@ -279,7 +280,7 @@ namespace ClassicLauncher
     {
         ConfigurationThemes theme = ThemesManager::GetConfigurationThemes(); 
         m_cover->SetOffset(theme.offsetImageX ,theme.offsetImageY);
-        //m_coverDefault->SetOffset(theme.offsetImageX ,theme.offsetImageY);
+        m_coverDefault->SetOffset(theme.offsetDefaultImageX ,theme.offsetDefaultImageY);
         m_guiVideoPlayer->SetOffset(theme.offsetVideoX ,theme.offsetVideoY);
     }
 

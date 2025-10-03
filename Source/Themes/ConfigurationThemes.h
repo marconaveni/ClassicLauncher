@@ -18,6 +18,8 @@ namespace ClassicLauncher
         // gui card values
         float offsetImageX = 12;
         float offsetImageY = 12;
+        float offsetDefaultImageX = 24;
+        float offsetDefaultImageY = 13;
         float offsetVideoX = 12;
         float offsetVideoY = 12;
 
