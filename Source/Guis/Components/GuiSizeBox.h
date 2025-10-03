@@ -1,30 +1,25 @@
 #ifndef GUI_SIZE_BOX
 #define GUI_SIZE_BOX
 
-#include "Entity/Entity.h"
+#include "Guis/Components/GuiCanvas.h"
 
 namespace ClassicLauncher
 {
 
-
-
-    class GuiSizeBox : public Entity
+    class GuiSizeBox : public GuiCanvas
     {
     public:
 
         GuiSizeBox();
         ~GuiSizeBox() = default;
         virtual EntityType GetType() const override { return EntityType::GuiSizeBoxClass; }
-        void AttachGui(Entity* guiAttachment);
+        virtual void AddChild(Entity* child) override;
+        virtual void RemoveChild(Entity* childEntity) override;
         virtual void Update() override;
-        virtual void UpdateWorldTransform() override;
-        void UpdateGuiAttachment();
-        void SetCropGuiAttachment(const bool bEnable) { mCropGuiAttachment = bEnable; }
 
     private:
 
-        Entity* mGuiAttachment;
-        bool mCropGuiAttachment;
+        Entity* m_entity;
     };
 
 } // namespace ClassicLauncher

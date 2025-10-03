@@ -4,11 +4,10 @@
 namespace ClassicLauncher
 {
 
-
     void GuiCanvas::AddChild(Entity* entity)
     {
         Entity::AddChild(entity);
-        m_entitiesPositions.push_back(EntityPosition{entity, Vector2f{}});
+        m_entities.push_back(entity);
     }
 
     void GuiCanvas::Update()
@@ -18,14 +17,12 @@ namespace ClassicLauncher
 
     void GuiCanvas::UpdateWorldTransform()
     {
-        for (auto& entityPos : m_entitiesPositions)
+        for (auto& entity : m_entities)
         {
-            entityPos.entity->SetPosition(Vector2f{});
+            entity->SetPosition(Vector2f{});
         }
-
         Entity::UpdateWorldTransform();
     }
-
 
 
 } // namespace ClassicLauncher

@@ -20,13 +20,7 @@ namespace ClassicLauncher
 
     private:
 
-        struct EntityPosition
-        {
-            Entity* entity = nullptr;
-            Vector2f offset{};
-        };
-
-        std::vector<EntityPosition> m_entitiesPositions;
+        std::vector<Entity*> m_entities;
         
     };
 

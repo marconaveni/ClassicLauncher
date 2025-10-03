@@ -34,6 +34,7 @@ namespace ClassicLauncher
 
         struct MiniCover
         {
+            GuiSizeBox* sizeBox = nullptr;
             GuiBase* gui = nullptr;
             bool focus = false;
         };

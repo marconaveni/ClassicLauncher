@@ -36,10 +36,15 @@ namespace ClassicLauncher
             miniCover.gui->SetSize(m_sizeCover);
             miniCover.gui->SetSource({976.0f, 283.0f}, m_sizeCover);
 
+            miniCover.sizeBox = GetEntityManager()->CreateEntity<GuiSizeBox>("sizeBox");
+            miniCover.sizeBox->SetSize(m_sizeCover);
+
             miniCover.gui->m_textureName = "sprite";
 
-            m_guiHorizontalBox->AttachGui(miniCover.gui);
-            m_guiHorizontalBox->AddChild(miniCover.gui);
+            miniCover.sizeBox->AddChild(miniCover.gui);
+
+            m_guiHorizontalBox->AttachGui(miniCover.sizeBox);
+            m_guiHorizontalBox->AddChild(miniCover.sizeBox);
             m_guiMiniCovers.emplace_back(miniCover);
         }
 
@@ -72,7 +77,7 @@ namespace ClassicLauncher
  
             if (miniCover.focus)
             {
-                const float position = miniCover.gui->GetPosition().x + m_guiHorizontalBox->GetPosition().x;
+                const float position = miniCover.sizeBox->GetPosition().x + m_guiHorizontalBox->GetPosition().x;
                 m_arrow->SetPosition(position, m_arrow->GetPosition().y);
             }        
             

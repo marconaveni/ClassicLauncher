@@ -3,46 +3,32 @@
 namespace ClassicLauncher
 {
     GuiSizeBox::GuiSizeBox()
-        : mGuiAttachment(nullptr), mCropGuiAttachment(false)
+        : m_entity(nullptr)
     {
     }
 
-    void GuiSizeBox::AttachGui(Entity* guiAttachment)
+    void GuiSizeBox::AddChild(Entity* child)
     {
-        mGuiAttachment = guiAttachment;
-        AddChild(mGuiAttachment);
+        if (!m_entity)
+        {
+            m_entity = child;
+            GuiCanvas::AddChild(child);
+        }     
+    }
+
+    void GuiSizeBox::RemoveChild(Entity* childEntity)
+    {
+         GuiCanvas::RemoveChild(childEntity);
+         m_entity = nullptr;
     }
 
     void GuiSizeBox::Update()
     {
         Entity::Update();
-        UpdateGuiAttachment();
-        if (mCropGuiAttachment)
-        {
-           // EnableScissorMode(m_transform.GetTransform().x,
-           //                   m_transform.GetTransform().y,
-           //                   m_transform.position.width,
-           //                   m_transform.position.height);
-        }
+        float x = (GetSize().width - m_entity->GetSize().width) / 2;
+        float y = (GetSize().height - m_entity->GetSize().height) / 2;
+        m_entity->SetOffset(x, y);
     }
 
-    void GuiSizeBox::UpdateWorldTransform()
-    {
-        Entity::UpdateWorldTransform();
-    }
-
-    void GuiSizeBox::UpdateGuiAttachment()
-    {
-        if (mGuiAttachment == nullptr)
-        {
-            return;
-        }
-
-        // todo refactor to decrease line size
-        //mGuiAttachment->m_transform.position.x = (m_transform.position.width * m_transform.root.scale.x - mGuiAttachment->m_transform.position.width * mGuiAttachment->m_transform.root.scale.x) / 2;
-        //mGuiAttachment->m_transform.offset.x = m_transform.offset.x; 
-        //mGuiAttachment->m_transform.position.y = (m_transform.position.height * m_transform.root.scale.y - mGuiAttachment->m_transform.position.height * mGuiAttachment->m_transform.root.scale.y) / 2;
-        //mGuiAttachment->m_transform.offset.y = m_transform.offset.y;
-    }
 
 } // namespace ClassicLauncher
