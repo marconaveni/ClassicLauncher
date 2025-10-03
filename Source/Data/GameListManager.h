@@ -81,14 +81,7 @@ namespace ClassicLauncher
         std::string video;
         std::string desc;
         HistoryPosition history;
-        std::string pathImageTheme;
-        std::string pathTheme;
-        float scale = 1;
-
-        // SystemList()
-        //     : mapIndex(-1), scale(1.0f), history()
-        // {
-        // };
+        std::string theme;
 
         ~GameSystemList() = default;
 

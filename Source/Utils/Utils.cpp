@@ -1,10 +1,9 @@
 #include "Utils.h"
 
-#include <cstdlib>
+//#include <cstdlib>
 
 #include "Graphics/Image.h"
 #include "String.h"
-#include "rl_wrap.h"
 
 namespace ClassicLauncher
 {
@@ -60,7 +59,6 @@ namespace ClassicLauncher
     {
         Vector2f newSize{static_cast<float>(image.width), static_cast<float>(image.height)};
         SetSizeWithProportion(newSize, newWidth, newHeight);
-        // rlw::ImageResize(&image, static_cast<int>(newSize.x), static_cast<int>(newSize.y));
         image.Resize(static_cast<int>(newSize.x), static_cast<int>(newSize.y));
     }
 
@@ -68,7 +66,6 @@ namespace ClassicLauncher
     {
         Vector2f newSize{static_cast<float>(image.width), static_cast<float>(image.height)};
         SetSizeWithProportion(newSize, newWidth, newHeight);
-        // rlw::ImageResizeNN(&image, static_cast<int>(newSize.x), static_cast<int>(newSize.y));
         image.ResizeNN(static_cast<int>(newSize.x), static_cast<int>(newSize.y));
     }
 
@@ -86,29 +83,29 @@ namespace ClassicLauncher
         return index;
     }
 
-    std::string Utils::GetWorkingDirectory()
-    {
-        std::string newDir = rlw::GetWorkingDirectory();
-        newDir += "/";
-        return String::NormalizePath(newDir);
-    }
+    // std::string Utils::GetWorkingDirectory()
+    // {
+    //     std::string newDir = rlw::GetWorkingDirectory();
+    //     newDir += "/";
+    //     return String::NormalizePath(newDir);
+    // }
 
-    std::string Utils::GetHomeDir()
-    {
-#ifdef _WIN32
-        const char* homeDir = "USERPROFILE";
-#else
-        const char* homeDir = "HOME";
-#endif
-        std::string env = getenv(homeDir);
-        env += "/";
-        return String::NormalizePath(env);
-    }
+//     std::string Utils::GetHomeDir()
+//     {
+// #ifdef _WIN32
+//         const char* homeDir = "USERPROFILE";
+// #else
+//         const char* homeDir = "HOME";
+// #endif
+//         std::string env = getenv(homeDir);
+//         env += "/";
+//         return String::NormalizePath(env);
+//     }
 
-    bool Utils::ChangeDirectory(const std::string& path)
-    {
-        return rlw::ChangeDirectory(path.c_str());
-    }
+    // bool Utils::ChangeDirectory(const std::string& path)
+    // {
+    //     return rlw::ChangeDirectory(path.c_str());
+    // }
 
     int Utils::CountChars(const std::string& text, const char compareChar)
     {

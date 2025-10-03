@@ -107,22 +107,22 @@ namespace rlw
     }
 
     // --- FS Utils ---
-    const char* GetApplicationDirectory()
-    {
-        return ::GetApplicationDirectory();
-    }
-    const char* GetWorkingDirectory()
-    {
-        return ::GetWorkingDirectory();
-    }
-    bool ChangeDirectory(const char* path)
-    {
-        return ::ChangeDirectory(path);
-    }
-    const char* GetFileNameWithoutExt(const char* filePath)
-    {
-        return ::GetFileNameWithoutExt(filePath);
-    }
+    // const char* GetApplicationDirectory()
+    // {
+    //     return ::GetApplicationDirectory();
+    // }
+    // const char* GetWorkingDirectory()
+    // {
+    //     return ::GetWorkingDirectory();
+    // }
+    // bool ChangeDirectory(const char* path)
+    // {
+    //     return ::ChangeDirectory(path);
+    // }
+    // const char* GetFileNameWithoutExt(const char* filePath)
+    // {
+    //     return ::GetFileNameWithoutExt(filePath);
+    // }
 
 
     void BeginScissorMode(int x, int y, int width, int height)
@@ -144,27 +144,27 @@ namespace rlw
     }
 
 
-    const char* GetDirectoryPath(const char* filePath)
-    {
-        return ::GetDirectoryPath(filePath);
-    }
-    bool FileExists(const char* fileName)
-    {
-        return ::FileExists(fileName);
-    }
-    bool DirectoryExists(const char* dirPath)
-    {
-        return ::DirectoryExists(dirPath);
-    }
-    bool MakeDirectory(const char* dirPath)
-    {
-        return ::MakeDirectory(dirPath);
-    }
+    // const char* GetDirectoryPath(const char* filePath)
+    // {
+    //     return ::GetDirectoryPath(filePath);
+    // }
+    // bool FileExists(const char* fileName)
+    // {
+    //     return ::FileExists(fileName);
+    // }
+    // bool DirectoryExists(const char* dirPath)
+    // {
+    //     return ::DirectoryExists(dirPath);
+    // }
+    // bool MakeDirectory(const char* dirPath)
+    // {
+    //     return ::MakeDirectory(dirPath);
+    // }
 
-    void WaitTime(double seconds)
-    {
-        ::WaitTime(seconds);
-    }
+    // void WaitTime(double seconds)
+    // {
+    //     ::WaitTime(seconds);
+    // }
 
 
     // --- Mouse ---

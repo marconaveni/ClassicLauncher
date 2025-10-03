@@ -18,7 +18,7 @@ namespace ClassicLauncher
 
         // Getters
         [[nodiscard]] int GetInternalScale() const { return m_internalScale; }
-        [[nodiscard]] bool GetForceInternalScale() const { return m_forceInternalScale; }
+        [[nodiscard]] [[deprecated]] bool GetForceInternalScale() const { return m_forceInternalScale; }
         [[nodiscard]] int GetVolume() const { return m_volume; }
         [[nodiscard]] int GetTargetFps() const { return m_targetFps; }
         [[nodiscard]] int GetClassicLogLevel() const { return m_classicLogLevel; }
@@ -28,7 +28,7 @@ namespace ClassicLauncher
 
         // Setters
         void SetInternalScale(int internalscale) { m_internalScale = internalscale; }
-        void SetForceInternalScale(bool forceInternalScale) { m_forceInternalScale = forceInternalScale; }
+        [[deprecated]] void SetForceInternalScale(bool forceInternalScale) { m_forceInternalScale = forceInternalScale; }
         void SetVolume(int volume) { m_volume = volume; }
         void SetTargetFps(int targetFps) { m_targetFps = targetFps; }
         void SetClassicLogLevel(int classicLogLevel) { m_classicLogLevel = classicLogLevel; }

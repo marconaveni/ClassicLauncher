@@ -1,10 +1,11 @@
-#include "Process.h"
+#include "Platform.h"
 
 #ifdef _WIN32
 
 #include <windows.h>
+#include <filesystem>
 
-namespace ClassicLauncher::Process
+namespace ClassicLauncher::Platform
 {
 
     std::wstring utf8_to_wstring(const std::string& str)
@@ -101,7 +102,20 @@ namespace ClassicLauncher::Process
         return bApplicationRunning;
     }
 
-} // namespace ClassicLauncher::Process
+    std::string GetExecutableDirectory()
+    {
+        char buffer[MAX_PATH];
+        GetModuleFileNameA(NULL, buffer, MAX_PATH);
+        std::filesystem::path exePath(buffer);
+        return exePath.parent_path().string();
+    }
+
+    std::string GetWorkingDirectory()
+    {
+        return std::filesystem::current_path().string();
+    }
+
+} // namespace ClassicLauncher::Platform
 
 #else
 
@@ -110,12 +124,13 @@ namespace ClassicLauncher::Process
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <filesystem>
 #include <vector>
 
 #include "Log.h"
 #include "String.h"
 
-namespace ClassicLauncher::Process
+namespace ClassicLauncher::Platform
 {
 
     void CreateProc(int& processId, const std::string& fullPath)
@@ -197,6 +212,20 @@ namespace ClassicLauncher::Process
         return (processId != 0) && (kill(processId, SIGTERM) == 0);
     }
 
-} // namespace ClassicLauncher::Process
+    std::string GetExecutableDirectory()
+    {
+        char buffer[1024];
+        ssize_t len = readlink("/proc/self/exe", buffer, sizeof(buffer)-1);
+        buffer[len] = '\0';
+        std::filesystem::path exePath(buffer);
+        return exePath.parent_path().string();
+    }
+
+    std::string GetWorkingDirectory()
+    {
+        return std::filesystem::current_path().string();
+    }
+
+} // namespace ClassicLauncher::Platform
 
 #endif //_WIN32

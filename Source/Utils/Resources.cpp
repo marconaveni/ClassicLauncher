@@ -5,7 +5,9 @@
 #include "Helper.h"
 #include "Utils/String.h"
 #include "Utils/Utils.h"
-#include "rl_wrap.h"
+#include "Utils/Math.h"
+#include "Utils/Platform.h"
+#include "Themes/ThemesManager.h"
 
 
 namespace ClassicLauncher::Resources
@@ -13,85 +15,101 @@ namespace ClassicLauncher::Resources
 
     std::string s_classicLauncherPath;
 
-    std::string GetResourcesPathFileAbs(const std::string& relativePath)
-    {
-        std::string path;
-        path.append(rlw::GetApplicationDirectory());
-        path.append(relativePath);
-        path = String::NormalizePath(path);
-        return path;
-    }
-
-    std::string GetDefaultConfigurations()
-    {
-        return GetResourcesPathFileAbs("Resources/config.cfg");
-    }
-
-    std::string GetClickAudio()
-    {
-        return GetResourcesPathFileAbs("Resources/audio/click.wav");
-    }
-
-    std::string GetCursorAudio()
-    {
-        return GetResourcesPathFileAbs("Resources/audio/cursor.wav");
-    }
-
-    std::string GetFont()
-    {
-        return GetResourcesPathFileAbs("Resources/fonts/roboto.ttf");
-    }
-
-    std::string GetSprite()
-    {
-        return GetResourcesPathFileAbs("Resources/textures/sprite.png");
-    }
-
-    std::string GetIcon(int size)
-    {
-        return GetResourcesPathFileAbs(TEXT("Resources/textures/logo%dx%d.png", size, size));
-    }
-
-    std::string GetLogo()
-    {
-        return GetResourcesPathFileAbs("Resources/textures/logo.png");
-    }
-
-    std::string GetClassicLauncherDir()
-    {
-        if (s_classicLauncherPath.empty())
-        {
-            SetClassicLauncherDir();
-        }
-        return s_classicLauncherPath;
-    }
-
-    void SetClassicLauncherDir()
+    void SetClassicLauncherDirectory()
     {
 #if WIN32
-        std::string path = GetResourcesPathFileAbs("portable.txt"); // portable mode is avaliable only windows system
-        // if (rlw::FileExists(path.c_str()))
+        std::string path = GetExecutableDirectory("portable.txt"); // portable mode is avaliable only windows system
+
         if (std::filesystem::exists(path))
         {
-            s_classicLauncherPath = GetResourcesPathFileAbs(".ClassicLauncher/");
+            s_classicLauncherPath = GetExecutableDirectory(".classicLauncher/");
         }
         else
 #endif
         {
-            s_classicLauncherPath = Utils::GetHomeDir() + ".ClassicLauncher/";
+            s_classicLauncherPath = GetHomeDirectory() + ".classicLauncher/";
             s_classicLauncherPath = String::NormalizePath(s_classicLauncherPath);
-            //if (!rlw::DirectoryExists(sClassicLauncherPath.c_str()))
             if (!std::filesystem::exists(s_classicLauncherPath))
             {
                 std::filesystem::create_directory(s_classicLauncherPath); // todo fazer testes
-                //rlw::MakeDirectory(sClassicLauncherPath.c_str());
             }
         }
     }
 
-    bool CheckResources()
+    std::string GetExecutableDirectory(const std::string& aditionalPath)
     {
-        return false;
+        std::string path;
+        path.append(Platform::GetExecutableDirectory());
+        path.append("/");
+        path.append(aditionalPath);
+        path = String::NormalizePath(path);
+        return path;
+    }
+
+    std::string GetClassicLauncherDirectory(const std::string& aditionalPath)
+    {
+        if (s_classicLauncherPath.empty())
+        {
+            SetClassicLauncherDirectory();
+        }
+        std::string path = s_classicLauncherPath;
+        path.append("/");
+        path.append(aditionalPath);
+        path = String::NormalizePath(path);
+        return path;
+    }
+
+    std::string GetConfigurationFile()
+    {
+        return GetExecutableDirectory("Resources/config.cfg");
+    }
+
+    std::string GetClickAudioFile()
+    {
+        return GetExecutableDirectory("Resources/audio/click.wav");
+    }
+
+    std::string GetCursorAudioFile()
+    {
+        return GetExecutableDirectory("Resources/audio/cursor.wav");
+    }
+
+    std::string GetFontFile()
+    {
+        return GetExecutableDirectory("Resources/fonts/roboto.ttf");
+    }
+
+    std::string GetSpriteFile()
+    {
+        int size = Math::ToInt(ThemesManager::GetScaleRenderer());
+        return GetExecutableDirectory(TEXT("Resources/textures/sprite%dx.png", size));
+    }
+
+    std::string GetIconFile(int size)
+    {
+        return GetExecutableDirectory(TEXT("Resources/textures/logo%dx%d.png", size, size));
+    }
+
+    std::string GetLogoFile()
+    {
+        return GetExecutableDirectory("Resources/textures/logo.png");
+    }
+    
+    std::string GetMusicDirectory()
+    {
+        return GetClassicLauncherDirectory("musics");
+    }
+
+    std::string GetThemeDirectory()
+    {
+        return GetClassicLauncherDirectory("themes");
+    }
+
+    std::string GetHomeDirectory()
+    {
+        std::string env = getenv(HOME_DIR);
+        env += "/";
+        return String::NormalizePath(env);
     }
 
 } // namespace ClassicLauncher::Resources

@@ -27,7 +27,7 @@ namespace ClassicLauncher
 
         if (!m_font.IsValid())
         {
-            LoadFont(Resources::GetFont(), 16, 0);
+            LoadFont(Resources::GetFontFile(), 16, 0);
         }
 
         bool bFound = false;

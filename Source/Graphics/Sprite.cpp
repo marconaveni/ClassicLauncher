@@ -24,15 +24,15 @@ namespace ClassicLauncher
         LOG(LOG_CLASSIC_TRACE, "Sprite - thread stopped and class destroyed");
     }
 
-    void Sprite::Load(const std::string& file, const int width, const int height, bool bAspectRatio)
+    void Sprite::Load(const std::filesystem::path& file, const int width, const int height, bool bAspectRatio)
     {
         if (!m_isKeepRunning && !m_isTextureLoaded && !m_isImageLoaded)
         {
             Join();
             m_isKeepRunning = true;
-            m_filePath = file;
+            //m_filePath = file;
             LOG(LOG_CLASSIC_TRACE, "Sprite - starting thread");
-            m_workerThread = std::thread(&Sprite::LoadImage, this, width, height, bAspectRatio);
+            m_workerThread = std::thread(&Sprite::LoadImage, this, file, width, height, bAspectRatio);
         }
     }
 
@@ -62,13 +62,13 @@ namespace ClassicLauncher
         }
     }
 
-    void Sprite::LoadImage(const int width, const int height, bool bAspectRatio)
+    void Sprite::LoadImage(const std::filesystem::path& file,const int width, const int height, bool bAspectRatio)
     {
         // std::this_thread::sleep_for(std::chrono::seconds(1)); //for test
         if (m_isKeepRunning)
         {
             // std::this_thread::sleep_for(std::chrono::seconds(1)); //for test
-            m_image.LoadFromFile(m_filePath);
+            m_image.LoadFromFile(file);
             if (m_image.IsValid())
             {
                 ResizeImage(width, height, bAspectRatio);

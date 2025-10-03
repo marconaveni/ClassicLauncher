@@ -2,11 +2,11 @@
 
 #include <filesystem>
 
-#include "Utils/ConfigurationManager.h"
-#include "Graphics/SpriteManager.h"
 #include "Data/GameListManager.h"
 #include "Entity/EntityManager.h"
+#include "Graphics/SpriteManager.h"
 #include "Helper.h"
+#include "Utils/ConfigurationManager.h"
 #include "Utils/Log.h"
 #include "Utils/Math.h"
 #include "Utils/Resources.h"
@@ -16,151 +16,66 @@
 namespace ClassicLauncher
 {
 
-    static ThemesManager* sInstanceThemes = nullptr;
+    static ThemesManager* s_instanceThemes = nullptr;
 
     ThemesManager::ThemesManager(GameListManager* gameListManager,
                                  SpriteManager* spriteManager,
                                  EntityManager* entityManagerRef,
                                  ConfigurationManager* configManager)
         : m_scaleTexture(1.0f)
-        , m_scaleSystem(1.0f)
         , m_gameListManager(gameListManager)
         , m_spriteManager(spriteManager)
         , m_entityManagerRef(entityManagerRef)
         , m_configManagerRef(configManager)
     {
-        if (sInstanceThemes == nullptr)
+        if (s_instanceThemes == nullptr)
         {
-            sInstanceThemes = this;
+            s_instanceThemes = this;
         }
     }
 
     ThemesManager::~ThemesManager()
     {
-        sInstanceThemes = nullptr;
-    }
-
-    std::vector<std::string> ThemesManager::GetThemeDirs()
-    {
-        // repeat code todo remove this after refactor
-        std::string path = String::NormalizePath(Resources::GetClassicLauncherDir() + "themes/" + m_currentSystemName + "/");
-        std::vector<std::string> paths;
-        if (std::filesystem::exists(path))
-        {
-            paths.emplace_back(path);
-        }
-        paths.emplace_back(Resources::GetResourcesPathFileAbs("Resources/textures/"));
-        return paths;
-    }
-
-    bool ThemesManager::GetPathTheme(std::string& file,
-                                     int monitorWidth,
-                                     int monitorCompare,
-                                     const std::string& path,
-                                     float numScale)
-    {
-        if (monitorWidth <= monitorCompare && std::filesystem::exists(path))
-        {
-            file = path;
-            LOG(LOG_CLASSIC_DEBUG, "%.1f x sprite path [%s]", numScale, path.c_str());
-            return true;
-        }
-        return false;
-    }
-
-    float ThemesManager::GetSpriteByResolution(std::string& file)
-    {
-        if (m_configManagerRef->GetForceInternalScale())
-        {
-            file = String::NormalizePath(Resources::GetClassicLauncherDir() + "themes/debug/sprite.png");
-            return Math::Clamp(m_configManagerRef->GetInternalScale(), 1, 3);
-        }
-
-        std::vector<std::string> paths;
-        paths = GetThemeDirs();
-        const int monitorWidth = 1920; // todo refactor  parte delicada precisa de refactor urgente rlw::GetMonitorWidth(rlw::GetCurrentMonitor());
-        int scales[3] = {1, 2, 3};
-        int widths[3] = {1280, 2560, 3840}; //2560
-
-        for (const auto& path : paths)
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                const bool result = GetPathTheme(file, monitorWidth, widths[i],
-                                                 TEXT("%ssprite%dx.png", path.c_str(), scales[i]), scales[i]);
-                if (result)
-                {
-                    return static_cast<float>(scales[i]);
-                }
-            }
-        }
-
-        file = Resources::GetSprite();
-        LOG(LOG_CLASSIC_DEBUG, "Default sprite path  [%s] ", Resources::GetSprite().c_str());
-        return 1.0f;
+        s_instanceThemes = nullptr;
     }
 
     void ThemesManager::Init()
     {
-        std::vector<GameSystemList*> systems = m_gameListManager->GetAllSystemList();
-        for (auto& system : systems)
-        {
-            m_currentSystemName = system->systemName;
-            std::string file;
-            system->scale = GetSpriteByResolution(file);
-            system->pathImageTheme = file;
-        }
-        m_currentSystemName = "default";
-        m_scaleSystem = GetSpriteByResolution(m_pathThemeSystem);
+        m_scaleTexture = Math::Clamp(m_configManagerRef->GetInternalScale(), 1, 2);
     }
 
-    void ThemesManager::LoadTheme()
+    void ThemesManager::UpdateTheme()
     {
-        std::string file;
-        if (m_gameListManager->GetCurrentList() == CurrentList::GameListSelect)
+        GameSystemList* systemList = m_gameListManager->GetCurrentSystemList();
+        if (systemList->theme != "sprite")
         {
-            GameSystemList* pList = m_gameListManager->GetCurrentSystemList();
-            m_currentSystemName = pList->systemName;
-            file = pList->pathImageTheme;
-            m_scaleTexture = pList->scale;
-        }
-        else
-        {
-            m_currentSystemName = "default";
-            file = m_pathThemeSystem;
-            m_scaleTexture = m_scaleSystem;
-        }
-
-        LoadConfigurationThemes();
-
-        if (m_lastPathLoaded != file)
-        {
-            m_spriteManager->DeleteSprite("sprite");
-            m_spriteManager->LoadSprite("sprite", file);
-            m_lastPathLoaded = file;
+            m_spriteManager->LoadSprite(systemList->systemName, systemList->theme);
         }
     }
 
     ThemesManager& ThemesManager::Get()
     {
-        return *sInstanceThemes;
-    }
-
-    void ThemesManager::LoadConfigurationThemes()
-    {
-        const std::string path = Resources::GetClassicLauncherDir() + "themes/" + m_currentSystemName + "/config.cfg";
-        mConfigurationThemes.LoadConfigurations(String::NormalizePath(path));
-        m_entityManagerRef->SetThemeValue();
+        return *s_instanceThemes;
     }
 
     float ThemesManager::GetScaleRenderer()
     {
-        if (sInstanceThemes == nullptr)
+        if (s_instanceThemes == nullptr)
         {
             return 1;
         }
 
-        return sInstanceThemes->m_scaleTexture;
+        return s_instanceThemes->m_scaleTexture;
+    }
+
+    std::string ThemesManager::GetTheme()
+    {
+        GameSystemList* systemList = m_gameListManager->GetCurrentSystemList();
+        if (systemList->theme != "sprite" && m_gameListManager->GetCurrentList() == CurrentList::GameListSelect)
+        {
+           return systemList->systemName;
+        }
+        return "sprite";
     }
 
 } // namespace ClassicLauncher

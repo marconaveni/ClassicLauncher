@@ -7,8 +7,8 @@
 #include "Input/InputManager.h"
 #include "Data/GameListManager.h"
 #include "Guis/GuiBlackScreen.h"
-#include "Utils/Process.h"
-#include "rl_wrap.h"
+#include "Utils/Platform.h"
+
 
 namespace ClassicLauncher
 {
@@ -30,18 +30,19 @@ namespace ClassicLauncher
         fullPath.append(arguments);
         fullPath.append(path);
 #if _WIN32
-        const std::string optionalWorkingDirectory = rlw::GetDirectoryPath(executable.c_str());
+        std::filesystem::path pathExec(executable);
+        const std::string optionalWorkingDirectory = pathExec.parent_path().string();
         int status = -1;
-        Process::CreateProc(m_processId, fullPath, optionalWorkingDirectory, status);
+        Platform::CreateProc(m_processId, fullPath, optionalWorkingDirectory, status);
         m_status = (status == 1) ? ProcessStatus::OPEN : ProcessStatus::FAILED;
 #else
-        Process::CreateProc(m_processId, fullPath);
+        Platform::CreateProc(m_processId, fullPath);
 #endif
     }
 
     ProcessStatus ProcessManager::UpdateRun()
     {
-        const bool bIsRun = Process::IsApplicationRunning(m_processId);
+        const bool bIsRun = Platform::IsApplicationRunning(m_processId);
         if (bIsRun)
         {
             if (!m_isRunning)
@@ -65,7 +66,7 @@ namespace ClassicLauncher
 
     bool ProcessManager::IsApplicationRunning() const
     {
-        return Process::IsApplicationRunning(m_processId);
+        return Platform::IsApplicationRunning(m_processId);
     }
 
     void ProcessManager::StatusProcessRun(GuiBlackScreen* guiBlackScreen, AudioManager* audioManager)
@@ -74,7 +75,7 @@ namespace ClassicLauncher
         {
             case ProcessStatus::NONE: break;
             case ProcessStatus::OPEN: break;
-            case ProcessStatus::RUNNING: rlw::WaitTime(2.5); break;
+            case ProcessStatus::RUNNING: std::this_thread::sleep_for(std::chrono::seconds(3)); break;
             case ProcessStatus::FAILED: break;
             case ProcessStatus::CLOSE:
                 guiBlackScreen->FadeOut();

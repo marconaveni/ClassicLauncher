@@ -197,7 +197,7 @@ namespace ClassicLauncher
          targetC.color.a = 0;
          GetAnimationManager().StartAnimation("focus-card-a" , 0.2f, m_cardSelected, targetA, Ease::EaseLinearNone, false);
          GetAnimationManager().StartAnimation("focus-card-b" , 0.2f, m_cardBackgroundSelected, targetB, Ease::EaseLinearNone, false);
-         GetAnimationManager().StartAnimation("focus-card-c" , 0.2f, m_cardMain, targetC, Ease::EaseLinearNone, false);
+         //GetAnimationManager().StartAnimation("focus-card-c" , 0.2f, m_cardMain, targetC, Ease::EaseLinearNone, false);
        // mCardBackgroundSelected->SetOpacity(255);
     }
 
@@ -219,7 +219,7 @@ namespace ClassicLauncher
         targetC.color.a = 255;
         GetAnimationManager().StartAnimation("remove-focus-card-a" , 0.2f, m_cardSelected, targetA, Ease::EaseLinearNone, false);
         GetAnimationManager().StartAnimation("remove-focus-card-b" , 0.2f, m_cardBackgroundSelected, targetB, Ease::EaseLinearNone, false);
-        GetAnimationManager().StartAnimation("remove-focus-card-c" , 0.2f, m_cardMain, targetC, Ease::EaseLinearNone, false);
+       // GetAnimationManager().StartAnimation("remove-focus-card-c" , 0.2f, m_cardMain, targetC, Ease::EaseLinearNone, false);
     }
 
     // bool GuiCard::IsFocus() const

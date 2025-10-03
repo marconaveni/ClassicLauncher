@@ -1,11 +1,14 @@
 #include "GameListManager.h"
 
 #include <algorithm>
+#include <filesystem>
 
 #include "Utils/Math.h"
 #include "Utils/Resources.h"
 #include "Utils/String.h"
 #include "Utils/Utils.h"
+#include "Themes/ThemesManager.h"
+#include "Helper.h"
 
 namespace ClassicLauncher
 {
@@ -14,7 +17,7 @@ namespace ClassicLauncher
         using namespace String;
 
         mDocumentGameListXml.Clear();
-        const std::string pathXml = NormalizePath(mSystemList[mIdSystemList].romPath + "\\gamelist.xml");
+        const std::string pathXml = NormalizePath(mSystemList[mIdSystemList].romPath + "/gamelist.xml");
         if (mDocumentGameListXml.LoadFile(pathXml.c_str()) != tinyxml2::XMLError::XML_SUCCESS)
         {
             return;
@@ -119,7 +122,7 @@ namespace ClassicLauncher
         using namespace String;
 
         mDocumentSystemListXml.Clear();
-        const std::string systemListPath = NormalizePath(Resources::GetClassicLauncherDir() + "systemlist.xml");
+        const std::string systemListPath = NormalizePath(Resources::GetClassicLauncherDirectory("systemlist.xml"));
         if (mDocumentSystemListXml.LoadFile(systemListPath.c_str()) != tinyxml2::XMLError::XML_SUCCESS)
         {
             return;
@@ -143,6 +146,8 @@ namespace ClassicLauncher
             systems.screenshot = IsValidElement(pSystem, "thumbnail") ? pSystem->FirstChildElement("thumbnail")->GetText() : "";
             systems.video = IsValidElement(pSystem, "video") ? pSystem->FirstChildElement("video")->GetText() : "";
             systems.desc = IsValidElement(pSystem, "desc") ? pSystem->FirstChildElement("desc")->GetText() : "";
+            const std::string theme = NormalizePath(Resources::GetThemeDirectory() + "/" + systems.systemName + TEXT("/sprite%.0fx.png", ThemesManager::GetScaleRenderer()));
+            systems.theme = (std::filesystem::exists(theme)) ? theme : "sprite";          
             mSystemList.push_back(systems);
 
             pSystem = pSystem->NextSiblingElement("system");

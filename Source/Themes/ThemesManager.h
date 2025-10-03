@@ -25,10 +25,11 @@ namespace ClassicLauncher
                       ConfigurationManager* configManager);
         ~ThemesManager();
         void Init();
-        void LoadTheme();
+        void UpdateTheme();
         static ThemesManager& Get();
         static float GetScaleRenderer();
         ConfigurationThemes mConfigurationThemes;
+        std::string GetTheme();
 
     private:
 
@@ -36,20 +37,20 @@ namespace ClassicLauncher
         SpriteManager* m_spriteManager;
         EntityManager* m_entityManagerRef;
         ConfigurationManager* m_configManagerRef;
-
-        std::vector<std::string> GetThemeDirs();
-        std::string m_currentSystemName;
-        std::string m_lastPathLoaded;
         float m_scaleTexture;
-        float m_scaleSystem;
-        std::string m_pathThemeSystem;
-        static bool GetPathTheme(std::string& file,
-                                 int monitorWidth,
-                                 int monitorCompare,
-                                 const std::string& path,
-                                 float numScale);
-        float GetSpriteByResolution(std::string& file);
-        void LoadConfigurationThemes();
+        
+       // std::vector<std::string> GetThemeDirs();
+        // std::string m_currentSystemName;
+        // std::string m_lastPathLoaded;
+        // float m_scaleSystem;
+        // std::string m_pathThemeSystem;
+        // static bool GetPathTheme(std::string& file,
+        //                          int monitorWidth,
+        //                          int monitorCompare,
+        //                          const std::string& path,
+        //                          float numScale);
+        //float GetSpriteByResolution(std::string& file);
+        //void LoadConfigurationThemes();
     };
 
 } // namespace ClassicLauncher

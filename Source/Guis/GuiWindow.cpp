@@ -138,6 +138,7 @@ namespace ClassicLauncher
         {
             m_guiHorizontalCards->ChangeList(GameListSelect);
             // ThemesManager::Get().LoadTheme();
+            ThemesManager::Get().UpdateTheme();
             GetTimerManager()->SetTimer(m_inputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
     }

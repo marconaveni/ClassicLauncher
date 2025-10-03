@@ -61,7 +61,7 @@ namespace ClassicLauncher
 
     void ConfigurationManager::LoadConfiguration()
     {
-        const std::string path = Resources::GetDefaultConfigurations();
+        const std::string path = Resources::GetConfigurationFile();
         SimpleIni config;
 
         if (!config.Open(path.c_str()))
@@ -78,7 +78,7 @@ namespace ClassicLauncher
     {
         SimpleIni config;
         SetValues(config);
-        return config.Save(Resources::GetDefaultConfigurations().c_str());
+        return config.Save(Resources::GetConfigurationFile().c_str());
     }
 
 #undef LOG_SECTION_NAME

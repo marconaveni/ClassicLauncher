@@ -1,6 +1,7 @@
 #include "SpriteManager.h"
 
 #include "Data/Color.h"
+#include "Themes/ThemesManager.h"
 
 namespace ClassicLauncher
 {
@@ -59,12 +60,18 @@ namespace ClassicLauncher
 
     Texture* SpriteManager::GetTexture(const std::string& name)
     {
-        auto it = m_spriteMap.find(name);
+        std::string find = name;
+        if (name == "sprite")
+        {
+            find = ThemesManager::Get().GetTheme();
+        }
+        
+        auto it = m_spriteMap.find(find);
         if (it == m_spriteMap.end())
         {     
             return m_spriteMap["transparent"].GetTexture();
         }
-        return m_spriteMap[name].GetTexture();
+        return m_spriteMap[find].GetTexture();
     }
 
     RenderTexture* SpriteManager::GetRenderTexture(const std::string& name)

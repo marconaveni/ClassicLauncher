@@ -44,14 +44,13 @@ namespace ClassicLauncher
     void GuiHorizontalCards::Init()
     {
 
-        m_guiTitle = GetEntityManager()->CreateEntity<GuiTextBlock>("GuiTitle", Resources::GetFont(), 48, 0);
+        m_guiTitle = GetEntityManager()->CreateEntity<GuiTextBlock>("GuiTitle", Resources::GetFontFile(), 48, 0);
 
         const float x = (1280 - 1010) / 2;
         m_guiTitle->SetPosition(x, 154.0f);
         m_guiTitle->SetSize(1010.0f, 32.0f);
 
         m_guiTitle->SetText("Title");
-        //mGuiTitle->SetDesiredWidth(1010);
         m_guiTitle->SetTextOverflowPolicy(TextOverflowPolicy::CLIP);
         m_guiTitle->SetTextCenter(true);
         AddChild(m_guiTitle);
@@ -85,9 +84,9 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::SetHorizontalBoxValues()
     {
-        const float space = ThemesManager::Get().mConfigurationThemes.horizontalCardsSpace;
+        const float space =  0; //ThemesManager::Get().mConfigurationThemes.horizontalCardsSpace;
         const float x = m_horizontalBox->GetPosition().x;
-        const float y = ThemesManager::Get().mConfigurationThemes.horizontalCardsPositionY;
+        const float y = 222.0f; //ThemesManager::Get().mConfigurationThemes.horizontalCardsPositionY;
 
         m_horizontalBox->SetSpace(space);
         m_horizontalBox->SetPosition(x, y);

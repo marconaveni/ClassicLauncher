@@ -48,18 +48,18 @@ namespace rlw
 
 
     // --- FS Utils ---
-    const char* GetApplicationDirectory();
-    const char* GetWorkingDirectory();
-    bool ChangeDirectory(const char* path);
-    const char* GetFileNameWithoutExt(const char* filePath);
+    // const char* GetApplicationDirectory();
+    // const char* GetWorkingDirectory();
+    // bool ChangeDirectory(const char* path);
+    // const char* GetFileNameWithoutExt(const char* filePath);
 
 
-    const char* GetDirectoryPath(const char* filePath);
+    //const char* GetDirectoryPath(const char* filePath);
     // bool FileExists(const char* fileName);
     //bool DirectoryExists(const char* dirPath);
     //bool MakeDirectory(const char* dirPath);
 
-    void WaitTime(double seconds);
+   // void WaitTime(double seconds);
 
 
     //////////////////ainda em uso

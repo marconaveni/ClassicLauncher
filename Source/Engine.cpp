@@ -31,11 +31,11 @@ namespace ClassicLauncher
 #endif
 
 
-        std::vector<std::string> imgs = {Resources::GetIcon(16).c_str(),
-                                         Resources::GetIcon(32).c_str(),
-                                         Resources::GetIcon(48).c_str(),
-                                         Resources::GetIcon(64).c_str(),
-                                         Resources::GetIcon(128).c_str()};
+        std::vector<std::string> imgs = {Resources::GetIconFile(16).c_str(),
+                                         Resources::GetIconFile(32).c_str(),
+                                         Resources::GetIconFile(48).c_str(),
+                                         Resources::GetIconFile(64).c_str(),
+                                         Resources::GetIconFile(128).c_str()};
 
         m_window.Init(1280, 720, title);
         m_window.SetIcons(imgs);

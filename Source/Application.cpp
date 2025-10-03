@@ -44,36 +44,22 @@ namespace ClassicLauncher
         LogLevel(m_configManager->GetClassicLogLevel(), m_configManager->GetRaylibLogLevel());
         rlw::SetTraceLogCallback(TraceLogger);
 
-        Resources::SetClassicLauncherDir();
-        m_gameListManager.Initialize();
-
-
+        Resources::SetClassicLauncherDirectory();
         m_themesManager.Init();
-        m_themesManager.LoadTheme();
-
-
-        const std::string LauncherDir = Resources::GetClassicLauncherDir();
-        const std::string musicDir = String::NormalizePath(LauncherDir + "musics"); // theme dir
+        
+        
+        m_spriteManager->LoadSprite("sprite", Resources::GetSpriteFile());
+        //m_themesManager.LoadTheme();
+        
+        
         m_audioManager->Init();
-        m_audioManager->LoadMusics(musicDir, true);
-        m_audioManager->LoadSound(Resources::GetClickAudio(), "click");
-        m_audioManager->LoadSound(Resources::GetCursorAudio(), "cursor");
-
+        m_audioManager->LoadMusics(Resources::GetMusicDirectory(), true);
+        m_audioManager->LoadSound(Resources::GetClickAudioFile(), "click");
+        m_audioManager->LoadSound(Resources::GetCursorAudioFile(), "cursor");
+        
         m_spriteManager->Init();
-
-#ifdef _DEBUG
-
-        // For visual reference you can upload up to four images to guide you
-        const std::string refPath0 = String::NormalizePath(LauncherDir + "themes/debug/ref0.png");
-        const std::string refPath1 = String::NormalizePath(LauncherDir + "themes/debug/ref1.png");
-        const std::string refPath2 = String::NormalizePath(LauncherDir + "themes/debug/ref2.png");
-        const std::string refPath3 = String::NormalizePath(LauncherDir + "themes/debug/ref3.png");
-        m_spriteManager->LoadSprite("ref0", refPath0, 1280 * 2, 720 * 2);
-        m_spriteManager->LoadSprite("ref1", refPath1, 1280 * 2, 720 * 2);
-        m_spriteManager->LoadSprite("ref2", refPath2, 1280 * 2, 720 * 2);
-        m_spriteManager->LoadSprite("ref3", refPath3, 1280 * 2, 720 * 2);
-#endif
-
+        
+        m_gameListManager.Initialize();
         if (m_gameListManager.GetGameListSize() > 0)
         {
             m_guiWindow = m_entityManager.CreateEntity<GuiWindow>("GuiWindow",
@@ -181,11 +167,11 @@ namespace ClassicLauncher
         if (Keyboard::IsReleased(Keyboard::UP))
         {
             // mEntityManager.SetZOrder(mGuiWindow.get(), 1);
-            std::string homeDir = Utils::GetHomeDir();
+            std::string homeDir = Resources::GetHomeDirectory();
 
             LOG(LOG_CLASSIC_DEBUG, TEXT("GetHomeDir %s", homeDir.c_str()));
-            LOG(LOG_CLASSIC_DEBUG, TEXT("GetWorkingDirectory %s", Utils::GetWorkingDirectory().c_str()));
-            LOG(LOG_CLASSIC_DEBUG, TEXT("GetApplicationDirectory %s", rlw::GetApplicationDirectory()));
+            // LOG(LOG_CLASSIC_DEBUG, TEXT("GetWorkingDirectory %s", Utils::GetWorkingDirectory().c_str()));
+            // LOG(LOG_CLASSIC_DEBUG, TEXT("GetApplicationDirectory %s", rlw::GetApplicationDirectory()));
         }
 #endif
     }
