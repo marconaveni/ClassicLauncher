@@ -48,8 +48,7 @@ namespace ClassicLauncher
         m_themesManager.Init();
               
         m_audioManager->LoadMusics(Resources::GetMusicDirectory(), true);
-
-    
+   
         m_spriteManager->Init();     
         m_gameListManager.Initialize();
 
@@ -162,9 +161,6 @@ namespace ClassicLauncher
             // mEntityManager.SetZOrder(mGuiWindow.get(), 1);
             std::string homeDir = Resources::GetHomeDirectory();
 
-            LOG(LOG_CLASSIC_DEBUG, TEXT("GetHomeDir %s", homeDir.c_str()));
-            // LOG(LOG_CLASSIC_DEBUG, TEXT("GetWorkingDirectory %s", Utils::GetWorkingDirectory().c_str()));
-            // LOG(LOG_CLASSIC_DEBUG, TEXT("GetApplicationDirectory %s", rlw::GetApplicationDirectory()));
         }
 #endif
     }

@@ -19,6 +19,9 @@ namespace ClassicLauncher
         offsetDefaultImageY = ini.GetFloat("card", "offsetDefaultImageY", 13.0f); //13.0f
         offsetVideoX = ini.GetFloat("card", "offsetVideoX", 12.0f); //12.0f
         offsetVideoY = ini.GetFloat("card", "offsetVideoY", 12.0f); //12.0f
+        
+        minX = ini.GetFloat("frame", "minX", 130.0f); //130.0f
+        maxX = ini.GetFloat("frame", "maxX", 898.0f); //898.0f
 
     }
 

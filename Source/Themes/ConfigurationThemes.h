@@ -23,6 +23,9 @@ namespace ClassicLauncher
         float offsetVideoX = 12;
         float offsetVideoY = 12;
 
+        // gui frame values
+        float minX = 130.0f; 
+        float maxX = 898.0f;
 
         void LoadConfigurations(const std::string& path);
     };

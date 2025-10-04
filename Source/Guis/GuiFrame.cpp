@@ -4,6 +4,7 @@
 #include "Components/FocusManager.h"
 #include "Helper.h"
 #include "Utils/Math.h"
+#include "Themes/ThemesManager.h"
 
 namespace ClassicLauncher
 {
@@ -66,7 +67,9 @@ namespace ClassicLauncher
             if (focus->IsFocus())
             {
                 Transform target = GetTransform();
-                const float x = Math::Clamp(focus->GetPositionFocus().x, 130.0f, 898.0f);
+                const float min = ThemesManager::GetConfigurationThemes().minX;
+                const float max = ThemesManager::GetConfigurationThemes().maxX;
+                const float x = Math::Clamp(focus->GetPositionFocus().x, min, max);
                 const float y = focus->GetPositionFocus().y;
 
                 if (x == GetPosition().x && y == GetPosition().y)
