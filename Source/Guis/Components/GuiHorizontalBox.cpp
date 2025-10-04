@@ -15,6 +15,12 @@ namespace ClassicLauncher
         Entity::UpdateWorldTransform();
     }
 
+    void GuiHorizontalBox::SetSpace(float spacer)
+    {
+        m_spacer = spacer;
+        Update();
+    }
+
     void GuiHorizontalBox::AttachGui(Entity* guiComponent)
     {
         guiComponent->SetPosition(Vector2f{});
@@ -52,7 +58,7 @@ namespace ClassicLauncher
         }
 
         spacer -= m_spacer;
-        
+
         const float width = canvasWidth + spacer;
         const float height = canvasHeight;
         SetSize(width, height);
@@ -60,7 +66,6 @@ namespace ClassicLauncher
 
     void GuiHorizontalBox::Draw()
     {
-        
     }
 
 

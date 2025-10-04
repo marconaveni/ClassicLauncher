@@ -14,7 +14,8 @@ namespace ClassicLauncher
         m_textureName = "sprite";
 
         SetSize(258.0f, 282.0f);
-        SetSource(771.0f, 0.0f, 258.0f, 282.0f);
+        SetSource(771.0f, 0.0f, 258.0f, 282.0f);             
+        SetLimitArea(RectFloat{130.0f, 0.0f, 898.0f, 720.0f});
 
     }
 
@@ -58,6 +59,20 @@ namespace ClassicLauncher
         //GetTimerManager()->SetTimer(mTimer, [this]() { m_transform.color.a = 255; }, this, time * 1);
     }
 
+    void GuiFrame::SetLimitArea(RectFloat area)
+    {
+        // limit area frame move
+        // ###################### window             
+        // #                    #
+        // #   x#########width  #      
+        // #   #         #      #
+        // #   #         #      #
+        // #   y#########height #      
+        // #                    #
+        // ######################    
+        m_limitAreaMove = area;
+    }
+
     void GuiFrame::Update()
     {
         
@@ -67,10 +82,11 @@ namespace ClassicLauncher
             if (focus->IsFocus())
             {
                 Transform target = GetTransform();
-                const float min = ThemesManager::GetConfigurationThemes().minX;
-                const float max = ThemesManager::GetConfigurationThemes().maxX;
-                const float x = Math::Clamp(focus->GetPositionFocus().x, min, max);
-                const float y = focus->GetPositionFocus().y;
+
+                const float left = ThemesManager::GetConfigurationThemes().offsetLeft;
+                const float right = ThemesManager::GetConfigurationThemes().offsetRight;
+                const float x = Math::Clamp(focus->GetPositionFocus().x, m_limitAreaMove.x - left, m_limitAreaMove.width + right);
+                const float y = Math::Clamp(focus->GetPositionFocus().y, m_limitAreaMove.y, m_limitAreaMove.height);
 
                 if (x == GetPosition().x && y == GetPosition().y)
                 {

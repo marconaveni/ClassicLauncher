@@ -20,8 +20,8 @@ namespace ClassicLauncher
         offsetVideoX = ini.GetFloat("card", "offsetVideoX", 12.0f); //12.0f
         offsetVideoY = ini.GetFloat("card", "offsetVideoY", 12.0f); //12.0f
         
-        minX = ini.GetFloat("frame", "minX", 130.0f); //130.0f
-        maxX = ini.GetFloat("frame", "maxX", 898.0f); //898.0f
+        offsetLeft = ini.GetFloat("frame", "offsetLeft", 0.0f); //0.0f
+        offsetRight = ini.GetFloat("frame", "offsetRight", 0.0f); //0.0f
 
     }
 

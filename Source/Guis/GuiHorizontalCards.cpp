@@ -34,7 +34,7 @@ namespace ClassicLauncher
         , m_lastDirection(None)
         , m_idFocus(0)
         , m_idLastFocusSystem(3)
-        , mSpeed(22.0f)
+        , m_speed(22.0f)
         , m_gameListManagerRef(gameListManagerRef)
         , m_audioManagerRef(audioManagerRef)
     {
@@ -57,7 +57,7 @@ namespace ClassicLauncher
 
         m_horizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalBox>("Cards_GuiHorizontalBox");
         AddChild(m_horizontalBox);
-        //SetHorizontalBoxValues();
+
 
         for (int i = 0; i < 10; i++)
         {
@@ -92,19 +92,29 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::SetPositionHorizontalBox()
     {
-        const float space = ThemesManager::GetConfigurationThemes().horizontalCardsSpace;
+        
         const float offsetX = ThemesManager::GetConfigurationThemes().horizontalCardsPositionX;
+
         const float x = ((GetSize().width - m_horizontalBox->GetSize().width) / 2) + offsetX;
         const float y = ThemesManager::GetConfigurationThemes().horizontalCardsPositionY;
 
-        m_horizontalBox->SetSpace(space);
         m_horizontalBox->SetPosition(x, y);
     }
 
     void GuiHorizontalCards::SetThemeValue()
     {
-        //SetHorizontalBoxValues();
+        const float space = ThemesManager::GetConfigurationThemes().horizontalCardsSpace;
+        m_horizontalBox->SetSpace(space);
         SetPositionHorizontalBox();
+
+        const float cardWidth = ((m_horizontalBox->GetSize().width / 10) * m_horizontalBox->GetScale().x + m_horizontalBox->GetSpace())  ;
+        
+        
+        //const float minX = ((m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * 3 + m_horizontalBox->GetPosition().x) * m_horizontalBox->GetScale().x ;
+        //const float maxX = ((m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * 6 + m_horizontalBox->GetPosition().x) * m_horizontalBox->GetScale().x ;
+        const float minX = ((m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * 3 + m_horizontalBox->GetPosition().x)  ;
+        const float maxX = ((m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * 6 + m_horizontalBox->GetPosition().x) ;
+        m_frame->SetLimitArea(RectFloat{minX , 0.0f, maxX, 720.0f});
     }
 
     void GuiHorizontalCards::Draw()
@@ -118,13 +128,25 @@ namespace ClassicLauncher
     }
 
     void GuiHorizontalCards::SetFocus(const int newId, bool bForce)
-    {   
+    {
         m_guiCards[m_idFocus]->CloseVideo();
-        
+
         m_idFocus = newId;
         m_guiCards[newId]->SetCardFocus(bForce);
 
-        m_isLeft = true;
+        if (bForce)
+        {
+            if (newId <= 3)
+            {
+                m_isLeft = true;
+            }
+            else if (newId >= 4)
+            {
+                m_isRight = true;
+            }
+            SetPositionHorizontalBox();
+        }
+
 
         const GameList* pGameList = m_gameListManagerRef->GetCurrentGameList();
         m_guiTitle->SetText((pGameList) ? pGameList->name : "");
@@ -193,7 +215,7 @@ namespace ClassicLauncher
     }
 
     void GuiHorizontalCards::Click()
-    {       
+    {
         m_guiCards[m_idFocus]->Click();
         m_frame->Click();
         for (GuiCard*& card : m_guiCards)
@@ -263,7 +285,7 @@ namespace ClassicLauncher
             CancelMultiply();
         }
 
-        mSpeed = Math::Clamp(m_multiply * 60.0f * RayWindow::GetFrameTime(), 0.0f, 256.0f);
+        m_speed = Math::Clamp(m_multiply * 60.0f * RayWindow::GetFrameTime(), 0.0f, 256.0f);
     }
 
     void GuiHorizontalCards::CancelMultiply()
@@ -273,13 +295,15 @@ namespace ClassicLauncher
         GetTimerManager()->ClearTimer(m_timerInputSpeed);
     }
 
-    int fps = 60;
     void GuiHorizontalCards::Update()
     {
         Entity::Update();
 
 
         SetSpeedCards();
+
+        const float sizeCard = (m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * m_horizontalBox->GetScale().x ;
+        PRINT(TEXT("sizeCard: %.2f", sizeCard), 2.5f, "sizeCard");
 
 
         if (InputManager::IsDown(InputName::leftFaceLeft, MAIN) && !m_isRight)
@@ -308,41 +332,41 @@ namespace ClassicLauncher
 
         if (m_isRight)
         {
-            m_positionX = m_positionX - mSpeed;
+            m_positionX = m_positionX - m_speed;
         }
         else if (m_isLeft)
         {
-            m_positionX = m_positionX + mSpeed;
+            m_positionX = m_positionX + m_speed;
         }
 
-        if (m_positionX > -356 && m_positionX < 0 && m_isRight)
+        if (m_positionX < 0 && m_isRight)
         {
             if (m_idFocus < 3 || m_idFocus > 6)
             {
-                const float x = m_horizontalBox->GetPosition().x - mSpeed;
+                const float x = m_horizontalBox->GetPosition().x - m_speed;
                 const float y = m_horizontalBox->GetPosition().y;
                 m_horizontalBox->SetPosition(x, y);
             }
             m_lastDirection = Left;
         }
-        else if (m_positionX > 0 && m_positionX < 356 && m_isLeft)
+        else if (m_positionX > 0 && m_isLeft)
         {
             if (m_idFocus < 3 || m_idFocus > 6)
             {
-                const float x = m_horizontalBox->GetPosition().x + mSpeed;
+                const float x = m_horizontalBox->GetPosition().x + m_speed;
                 const float y = m_horizontalBox->GetPosition().y;
                 m_horizontalBox->SetPosition(x, y);
             }
             m_lastDirection = Right;
         }
 
-        if (m_positionX <= -256 || m_positionX >= 256)
+        if (m_positionX <= -sizeCard || m_positionX >= sizeCard)
         {
             m_positionX = 0;
             m_isRight = false;
             m_isLeft = false;
-            SetCovers();
             m_isNeedUpdate = true;
+            SetCovers();
             // todo: add clean textures of vram outside of the screen
         }
 

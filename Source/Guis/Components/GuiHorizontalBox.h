@@ -16,7 +16,8 @@ namespace ClassicLauncher
         ~GuiHorizontalBox() = default;
         virtual EntityType GetType() const override { return EntityType::GuiHorizontalBoxClass; }
         virtual void UpdateWorldTransform() override;
-        void SetSpace(float spacer) { m_spacer = spacer; }
+        void SetSpace(float spacer);
+        [[nodiscard]] float GetSpace() const { return m_spacer; };
         void AttachGui(Entity* guiComponent);
         void ClearAll();
         virtual void Update() override;

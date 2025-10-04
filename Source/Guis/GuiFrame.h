@@ -19,9 +19,11 @@ namespace ClassicLauncher
         virtual void AnimationFinished(const std::string& name) override;
         virtual EntityType GetType() const override { return EntityType::GuiFrameClass; }
         virtual void Update() override;
+        void SetLimitArea(RectFloat area);
 
     private:
 
+        RectFloat m_limitAreaMove{};
         TimerHandling m_timer;
         bool m_isMove{false};
     };

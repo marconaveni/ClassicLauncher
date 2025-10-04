@@ -61,7 +61,7 @@ namespace ClassicLauncher
         Direction m_lastDirection;
         int m_idFocus;
         int m_idLastFocusSystem;
-        float mSpeed;
+        float m_speed;
         float m_multiply = 22;
         bool m_isPress = false;
         TimerHandling m_timerInputSpeed{};
