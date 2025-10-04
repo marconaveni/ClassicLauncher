@@ -12,6 +12,7 @@ namespace ClassicLauncher
         : m_player(nullptr), m_playerFullScreen(nullptr)
     {
         SetOpacity(0);
+        m_gui.SetOpacity(0);
     }
 
     bool GuiVideoPlayer::Init(const std::string& path, int width, int height)
@@ -37,9 +38,9 @@ namespace ClassicLauncher
             m_renderTexture = GetSpriteManager()->GetRenderTexture("videoPlayer");
             m_renderTexture->SetSmooth(true);
         }
-        
+
         m_player->Play();
-        VideoFadeinAnimate(1.0f);
+        VideoFadeinAnimate(1.0f, this);
 
 
         return bIsplay;
@@ -58,8 +59,9 @@ namespace ClassicLauncher
         const float scale = ThemesManager::GetScaleRenderer();
         m_playerFullScreen->Init(m_filePath, 1280 * scale, 720 * scale, scale);
         m_playerFullScreen->Play();
+        m_playerFullScreen->SetLoop(false);
         GetEntityManager()->SetZOrder(this, 99); // todo temp
-        VideoFadeinAnimate(0.5f);
+        VideoFadeinAnimate(0.5f, &m_gui);
     }
 
     void GuiVideoPlayer::Stop()
@@ -94,9 +96,9 @@ namespace ClassicLauncher
 
         m_player->Update();
 
-        const Vector2f textureSize = m_renderTexture->GetTexture()->GetSize().ToFloat();
-        SetSource(textureSize.x, textureSize.y);
-        SetSize(textureSize.x / m_renderScale, textureSize.y / m_renderScale);
+        const Sizef textureSize = m_renderTexture->GetTexture()->GetSize();
+        SetSource(textureSize.width, textureSize.height);
+        SetSize(textureSize.width / m_renderScale, textureSize.height / m_renderScale);
 
         DrawVideo();
 
@@ -106,6 +108,10 @@ namespace ClassicLauncher
         }
 
         m_playerFullScreen->Update();
+        if (m_playerFullScreen->IsVideoFinished())
+        {
+            StopFullscreen();
+        }
     }
 
     void GuiVideoPlayer::DrawVideo()
@@ -120,16 +126,13 @@ namespace ClassicLauncher
         rlw::BeginTextureMode(*m_renderTexture);
         rlw::ClearBackground(Color::Transparent);
 
-        Vector2f sizeVideo{
-            static_cast<float>(textureVideo->GetSize().x),
-            static_cast<float>(textureVideo->GetSize().y),
-        };
+        const Sizef sizeVideo = textureVideo->GetSize();
 
-        RectFloat sourceRect{0, 0, sizeVideo.x, sizeVideo.y};
-        RectFloat videoTransformRect{(GetSource().width - sizeVideo.x) / 2,  // aqui não é escala
-                                     (GetSource().height - sizeVideo.y) / 2, //aqui não é escala
-                                     sizeVideo.x,
-                                     sizeVideo.y};
+        RectFloat sourceRect{0, 0, sizeVideo.width, sizeVideo.height};
+        RectFloat videoTransformRect{(GetSource().width - sizeVideo.width) / 2,   // aqui não é escala
+                                     (GetSource().height - sizeVideo.height) / 2, //aqui não é escala
+                                     sizeVideo.width,
+                                     sizeVideo.height};
 
         rlw::DrawTexturePro(*textureVideo,
                             sourceRect,         /* RectFloat{0, 562, 21, 720}, position spritesheet */
@@ -171,10 +174,16 @@ namespace ClassicLauncher
         Texture* textureBlack = GetSpriteManager()->GetTexture("black");
         if (textureFullScreen)
         {
-            const int scale = static_cast<int>(ThemesManager::GetScaleRenderer());
-            const int x = (1280 * scale / 2) - (textureFullScreen->GetSize().x / 2);
-            rlw::DrawTexturePro(*textureBlack, {0, 0, 1280 * scale, 720 * scale}, {0, 0, 1280 * scale, 720 * scale},{0, 0}, 0 ,GetWorldTransform().color);
-            rlw::DrawTexture(*textureFullScreen, x, 0, GetWorldTransform().color);
+            const Color color = m_gui.GetColor();
+            const float scale = ThemesManager::GetScaleRenderer();
+            const int x = (1280.0f * scale / 2.0f) - (textureFullScreen->GetSize().width / 2.0f);
+            rlw::DrawTexturePro(*textureBlack,
+                                RectFloat{0.0f, 0.0f, 1280.0f * scale, 720.0f * scale},
+                                RectFloat{0.0f, 0.0f, 1280.0f * scale, 720.0f * scale},
+                                Vector2f{0.0f, 0.0f},
+                                0.0f,
+                                color);
+            rlw::DrawTexture(*textureFullScreen, x, 0, color);
         }
     }
 
@@ -194,12 +203,12 @@ namespace ClassicLauncher
         return (!m_playerFullScreen) ? false : m_playerFullScreen->IsVideoPlaying();
     }
 
-    void GuiVideoPlayer::VideoFadeinAnimate(float time)
+    void GuiVideoPlayer::VideoFadeinAnimate(float time, Entity* entity)
     {
-        SetOpacity(0);
-        Transform target = GetTransform();
+        entity->SetOpacity(0);
+        Transform target = entity->GetTransform();
         target.color.a = 255;
-        GetAnimationManager().StartAnimation("video-fade", time, this, target, Ease::EaseLinearNone, false);
+        GetAnimationManager().StartAnimation("video-fade", time, entity, target, Ease::EaseLinearNone, false);
     }
 
 } // namespace ClassicLauncher

@@ -52,7 +52,7 @@ namespace ClassicLauncher
         bool bIsEnabledVlC;
         unsigned int mWidth;
         unsigned int mHeight;
-        bool bLoop;
+        bool bLoop = true;
 
         static void StartVLCInstance();
 
@@ -70,7 +70,7 @@ namespace ClassicLauncher
         void Update();
         void Unload();
         Texture* GetVideoTexture();
-        Vector2f GetVideoSize();
+        Sizef GetVideoSize();
         bool IsVideoFinished();
         bool IsVideoPlaying();
         bool IsVideoStopped();

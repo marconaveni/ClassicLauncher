@@ -67,7 +67,7 @@ namespace ClassicLauncher
     }
 
     VideoPlayer::VideoPlayer()
-        : mContext{}, bIsEnabledVlC(false), mWidth(0), mHeight(0), bLoop(false)
+        : mContext{}, bIsEnabledVlC(false), mWidth(0), mHeight(0), bLoop(true)
     {
         LOG(LOG_CLASSIC_TRACE, "Initializing VideoPlayer...");
         StartVLCInstance();
@@ -211,7 +211,7 @@ namespace ClassicLauncher
             LOG(LOG_CLASSIC_TRACE, "video texture not updated \"mContext.frameLock[%d]\" is locked", mContext.frameLock[frame]);
         }
 
-        if (IsVideoFinished())
+        if (IsVideoFinished() && bLoop)
         {
             Play();
         }
@@ -259,10 +259,9 @@ namespace ClassicLauncher
         return (texture.IsValid()) ? &texture : nullptr;
     }
 
-    Vector2f VideoPlayer::GetVideoSize()
+    Sizef VideoPlayer::GetVideoSize()
     {
-        return (texture.IsValid()) ? Vector2f{ static_cast<float>(texture.GetSize().x), static_cast<float>(texture.GetSize().y) }
-                                         : Vector2f{ 0, 0 };
+        return (texture.IsValid()) ? texture.GetSize() : Sizef{};
         // return Vector2{ static_cast<float>(mWidth), static_cast<float>(mHeight) };
     }
 

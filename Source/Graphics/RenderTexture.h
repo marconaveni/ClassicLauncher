@@ -22,7 +22,7 @@ namespace ClassicLauncher
         void Unload();
         [[nodiscard]] unsigned int GetId() const { return m_id; }
         [[nodiscard]] unsigned int GetTextureId() const { return m_texture.m_id; }
-        [[nodiscard]] Vector2i GetSize() const { return m_texture.GetSize(); }
+        [[nodiscard]] Sizef GetSize() const { return m_texture.GetSize(); }
         Texture* GetTexture() { return &m_texture; }
 
     private:

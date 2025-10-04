@@ -110,8 +110,8 @@ namespace ClassicLauncher
             const float renderScale = ThemesManager::GetScaleRenderer();
             ConfigurationThemes theme = ThemesManager::GetConfigurationThemes(); 
 
-            const float widthTex = textureReference->GetSize().x / renderScale;
-            const float HeightTex = textureReference->GetSize().y / renderScale;
+            const float widthTex = textureReference->GetSize().width / renderScale;
+            const float HeightTex = textureReference->GetSize().height / renderScale;
             const float xCoverPos = ((228.0f - widthTex) / 2.0f) + theme.offsetImageX;
             const float yCoverPos = ((204.0f - HeightTex) / 2.0f) + theme.offsetImageY;
 

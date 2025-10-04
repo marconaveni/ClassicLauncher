@@ -89,8 +89,8 @@ namespace ClassicLauncher
 
         const auto screenWidth = static_cast<float>(RayWindow::GetScreenWidth());
         const auto screenHeight = static_cast<float>(RayWindow::GetScreenHeight());
-        const auto textureWidth = static_cast<float>(m_renderTexture->GetSize().x);
-        const auto textureHeight = static_cast<float>(m_renderTexture->GetSize().y);
+        const auto textureWidth = static_cast<float>(m_renderTexture->GetSize().width);
+        const auto textureHeight = static_cast<float>(m_renderTexture->GetSize().height);
 
         m_source = Rectangle{0.0f, 0.0f, textureWidth, -textureHeight};
         m_dest = Rectangle{(screenWidth - (m_newWidth * m_scale)) * 0.5f,

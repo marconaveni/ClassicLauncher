@@ -200,8 +200,8 @@ namespace rlw
         ::RenderTexture2D rayTarget;
         rayTarget.id = target.GetId();
         rayTarget.texture.id = target.GetTextureId();
-        rayTarget.texture.width = target.GetSize().x;
-        rayTarget.texture.height = target.GetSize().y;
+        rayTarget.texture.width = target.GetSize().width;
+        rayTarget.texture.height = target.GetSize().height;
 
         ::BeginTextureMode(rayTarget);
     }
@@ -215,8 +215,8 @@ namespace rlw
     {
         ::Texture2D rayTex{};
         rayTex.id = texture.GetId();
-        rayTex.width = texture.GetSize().x;
-        rayTex.height = texture.GetSize().y;
+        rayTex.width = texture.GetSize().width;
+        rayTex.height = texture.GetSize().height;
         rayTex.mipmaps = texture.GetMipmaps();
         rayTex.format = texture.GetFormat();
 
@@ -232,8 +232,8 @@ namespace rlw
     {
         ::Texture2D rayTex{};
         rayTex.id = texture.GetId();
-        rayTex.width = texture.GetSize().x;
-        rayTex.height = texture.GetSize().y;
+        rayTex.width = texture.GetSize().width;
+        rayTex.height = texture.GetSize().height;
         rayTex.mipmaps = texture.GetMipmaps();
         rayTex.format = texture.GetFormat();
         ::DrawTexturePro(rayTex, to_native_rec(src), to_native_rec(dst), to_native_vec(origin), rotation,
