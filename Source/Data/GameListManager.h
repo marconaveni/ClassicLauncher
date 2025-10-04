@@ -97,13 +97,13 @@ namespace ClassicLauncher
 
     private:
 
-        CurrentList mCurrentList = SystemListSelect;
-        int mIdSystemList = -1;
-        int mIdGameList = 0;
-        tinyxml2::XMLDocument mDocumentGameListXml;
-        tinyxml2::XMLDocument mDocumentSystemListXml;
-        std::vector<GameList> mGameList;
-        std::vector<GameSystemList> mSystemList;
+        CurrentList m_currentList = SystemListSelect;
+        int m_idSystemList = -1;
+        int m_idGameList = 0;
+        tinyxml2::XMLDocument m_documentGameListXml;
+        tinyxml2::XMLDocument m_documentSystemListXml;
+        std::vector<GameList> m_gameList;
+        std::vector<GameSystemList> m_systemList;
         void LoadGameList();
         void LoadSystemToGameList();
 

@@ -122,19 +122,13 @@ namespace ClassicLauncher
         }
 
 
-        if (IsFocus() && Keyboard::IsReleased(Keyboard::DOWN))
+        if (IsFocus() && InputManager::IsRelease(InputName::leftFaceDown, InputCategory::MAIN))
         {
             m_guiVideoPlayer->InitFullscreen();
-            Transform target = m_cardSelected->GetTransform();
-            target.color.a = 255;
-            GetAnimationManager().StartAnimation("teste", 0.2f, m_cardBackgroundSelected, target, Ease::EaseLinearNone, false);
         }
-        if (IsFocus() && Keyboard::IsReleased(Keyboard::UP))
+        if (IsFocus() && InputManager::IsRelease(InputName::leftFaceUp, InputCategory::MAIN))
         {   
             m_guiVideoPlayer->StopFullscreen();
-            Transform target = m_cardSelected->GetTransform();
-            target.color.a = 0;
-            GetAnimationManager().StartAnimation("teste", 0.2f, m_cardBackgroundSelected, target, Ease::EaseLinearNone, false);
         }
         
     }

@@ -17,14 +17,14 @@ namespace ClassicLauncher
     {
         using namespace String;
 
-        mDocumentGameListXml.Clear();
-        const std::string pathXml = NormalizePath(mSystemList[mIdSystemList].romPath + "/gamelist.xml");
-        if (mDocumentGameListXml.LoadFile(pathXml.c_str()) != tinyxml2::XMLError::XML_SUCCESS)
+        m_documentGameListXml.Clear();
+        const std::string pathXml = NormalizePath(m_systemList[m_idSystemList].romPath + "/gamelist.xml");
+        if (m_documentGameListXml.LoadFile(pathXml.c_str()) != tinyxml2::XMLError::XML_SUCCESS)
         {
             return;
         }
 
-        tinyxml2::XMLElement* pRootElement = mDocumentGameListXml.RootElement();
+        tinyxml2::XMLElement* pRootElement = m_documentGameListXml.RootElement();
         tinyxml2::XMLElement* pGame = pRootElement->FirstChildElement("game");
         int index = 0;
 
@@ -52,20 +52,20 @@ namespace ClassicLauncher
             game.arguments = IsValidElement(pGame, "arguments") ? NormalizePath(pGame->FirstChildElement("arguments")->GetText()) : "";
             game.releaseDate = IsValidElement(pGame, "releasedate") ? NormalizePath(pGame->FirstChildElement("releasedate")->GetText()) : "";
             game.lastPlayed = IsValidElement(pGame, "lastplayed") ? NormalizePath(pGame->FirstChildElement("lastplayed")->GetText()) : "";
-            ReplaceCurrentPath(&game, mSystemList[mIdSystemList].romPath);
-            mGameList.push_back(game);
+            ReplaceCurrentPath(&game, m_systemList[m_idSystemList].romPath);
+            m_gameList.push_back(game);
             // clang-format on
 
             pGame = pGame->NextSiblingElement("game");
             index++;
         }
-        mGameList.shrink_to_fit();
+        m_gameList.shrink_to_fit();
         GameListSortByName();
     }
 
     void GameListManager::LoadSystemToGameList()
     {
-        for (const auto& system : mSystemList)
+        for (const auto& system : m_systemList)
         {
             auto game = GameList();
             game.mapIndex = system.mapIndex;
@@ -75,9 +75,9 @@ namespace ClassicLauncher
             game.executable = system.executable;
             game.arguments = system.arguments;
             ReplaceCurrentPath(&game, system.romPath);
-            mGameList.push_back(game);
+            m_gameList.push_back(game);
         }
-        mGameList.shrink_to_fit();
+        m_gameList.shrink_to_fit();
     }
 
     void GameListManager::Initialize()
@@ -88,30 +88,30 @@ namespace ClassicLauncher
 
     void GameListManager::ChangeSystemToGameList()
     {
-        mIdSystemList = mIdGameList;
-        mCurrentList = GameListSelect;
+        m_idSystemList = m_idGameList;
+        m_currentList = GameListSelect;
         ClearGameList();
         LoadList();
-        mIdGameList = GetCurrentSystemList()->history.id;
+        m_idGameList = GetCurrentSystemList()->history.id;
     }
 
     void GameListManager::ChangeGameToSystemList()
     {
-        mIdGameList = mIdSystemList;
-        mIdSystemList = -1;
-        mCurrentList = SystemListSelect;
+        m_idGameList = m_idSystemList;
+        m_idSystemList = -1;
+        m_currentList = SystemListSelect;
         ClearGameList();
         LoadList();
     }
 
     void GameListManager::LoadList()
     {
-        if (mSystemList.empty())
+        if (m_systemList.empty())
         {
             return;
         }
 
-        switch (mCurrentList)
+        switch (m_currentList)
         {
             case SystemListSelect: LoadSystemToGameList(); break;
             case GameListSelect: LoadGameList(); break;
@@ -123,14 +123,14 @@ namespace ClassicLauncher
     {
         using namespace String;
 
-        mDocumentSystemListXml.Clear();
+        m_documentSystemListXml.Clear();
         const std::string systemListPath = NormalizePath(Resources::GetClassicLauncherDirectory("systemlist.xml"));
-        if (mDocumentSystemListXml.LoadFile(systemListPath.c_str()) != tinyxml2::XMLError::XML_SUCCESS)
+        if (m_documentSystemListXml.LoadFile(systemListPath.c_str()) != tinyxml2::XMLError::XML_SUCCESS)
         {
             return;
         }
 
-        tinyxml2::XMLElement* pRootElement = mDocumentSystemListXml.RootElement();
+        tinyxml2::XMLElement* pRootElement = m_documentSystemListXml.RootElement();
         tinyxml2::XMLElement* pSystem = pRootElement->FirstChildElement("system");
         int index = 0;
 
@@ -150,53 +150,53 @@ namespace ClassicLauncher
             systems.desc = IsValidElement(pSystem, "desc") ? pSystem->FirstChildElement("desc")->GetText() : "";
             const std::string theme = NormalizePath(Resources::GetThemeDirectory() + "/" + systems.systemName + TEXT("/sprite%.0fx.png", ThemesManager::GetScaleRenderer()));
             systems.theme = (std::filesystem::exists(theme)) ? theme : "sprite";          
-            mSystemList.push_back(systems);
+            m_systemList.push_back(systems);
 
             pSystem = pSystem->NextSiblingElement("system");
             index++;
             // clang-format on
         }
-        mSystemList.shrink_to_fit();
+        m_systemList.shrink_to_fit();
         SystemListSortByName();
     }
 
     void GameListManager::AddId(const int newId)
     {
-        mIdGameList = Utils::SetIndexArray(mIdGameList += newId, static_cast<int>(mGameList.size()));
-        if (mCurrentList == CurrentList::GameListSelect)
+        m_idGameList = Utils::SetIndexArray(m_idGameList += newId, static_cast<int>(m_gameList.size()));
+        if (m_currentList == CurrentList::GameListSelect)
         {
-            mSystemList[mIdSystemList].history.id = mIdGameList;
+            m_systemList[m_idSystemList].history.id = m_idGameList;
         }
     }
 
     void GameListManager::ChangeId(const int newId)
     {
-        mIdGameList = Math::Clamp(newId, 0, static_cast<int>(mGameList.size()) - 1);
-        if (mCurrentList == CurrentList::GameListSelect)
+        m_idGameList = Math::Clamp(newId, 0, static_cast<int>(m_gameList.size()) - 1);
+        if (m_currentList == CurrentList::GameListSelect)
         {
-            mSystemList[mIdSystemList].history.id = mIdGameList;
+            m_systemList[m_idSystemList].history.id = m_idGameList;
         }
     }
 
     int GameListManager::GetGameId() const
     {
-        return mIdGameList;
+        return m_idGameList;
     }
 
     int GameListManager::GetSystemId() const
     {
-        return mIdSystemList;
+        return m_idSystemList;
     }
 
     int GameListManager::GetGameListSize()
     {
-        return static_cast<int>(mGameList.size());
+        return static_cast<int>(m_gameList.size());
     }
 
     std::vector<GameList*> GameListManager::GetAllGameList()
     {
         std::vector<GameList*> pGameList;
-        for (auto& game : mGameList)
+        for (auto& game : m_gameList)
         {
             pGameList.push_back(&game);
         }
@@ -206,7 +206,7 @@ namespace ClassicLauncher
     std::vector<GameSystemList*> GameListManager::GetAllSystemList()
     {
         std::vector<GameSystemList*> pSystemList;
-        for (auto& game : mSystemList)
+        for (auto& game : m_systemList)
         {
             pSystemList.push_back(&game);
         }
@@ -215,48 +215,48 @@ namespace ClassicLauncher
 
     GameList* GameListManager::GetCurrentGameList(const int index)
     {
-        return &mGameList[index];
+        return &m_gameList[index];
     }
 
     GameList* GameListManager::GetCurrentGameList()
     {
-        return (!mGameList.empty()) ? &mGameList[mIdGameList] : nullptr;
+        return (!m_gameList.empty()) ? &m_gameList[m_idGameList] : nullptr;
     }
 
     GameSystemList* GameListManager::GetCurrentSystemList()
     {
-        CLASSIC_ASSERT(mIdSystemList >= 0, "must be greater than zero");
-        return &mSystemList[mIdSystemList];
+        CLASSIC_ASSERT(m_idSystemList >= 0, "must be greater than zero");
+        return &m_systemList[m_idSystemList];
     }
 
     void GameListManager::ClearSystemList()
     {
-        mSystemList.clear();
-        mSystemList.shrink_to_fit();
+        m_systemList.clear();
+        m_systemList.shrink_to_fit();
     }
 
     void GameListManager::ClearGameList()
     {
-        mGameList.clear();
-        mGameList.shrink_to_fit();
+        m_gameList.clear();
+        m_gameList.shrink_to_fit();
     }
 
     CurrentList GameListManager::GetCurrentList() const
     {
-        return mCurrentList;
+        return m_currentList;
     }
 
     void GameListManager::GameListSortByName()
     {
-        std::sort(mGameList.begin(),
-                  mGameList.end(),
+        std::sort(m_gameList.begin(),
+                  m_gameList.end(),
                   [](const GameList& a, const GameList& b) { return a.name < b.name; });
     }
 
     void GameListManager::SystemListSortByName()
     {
-        std::sort(mSystemList.begin(),
-                  mSystemList.end(),
+        std::sort(m_systemList.begin(),
+                  m_systemList.end(),
                   [](const GameSystemList& a, const GameSystemList& b) { return a.systemLabel < b.systemLabel; });
     }
 
