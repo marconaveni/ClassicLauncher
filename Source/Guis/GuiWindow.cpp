@@ -57,7 +57,7 @@ namespace ClassicLauncher
 #ifdef _DEBUG
         InputManager::SetCategory(MAIN | DEBUG);
 #else
-        InputManager::SetCategory(main);
+        InputManager::SetCategory(MAIN);
 #endif
     }
 

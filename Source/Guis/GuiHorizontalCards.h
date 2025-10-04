@@ -42,7 +42,7 @@ namespace ClassicLauncher
         void SetCovers();
         void ChangeList(CurrentList list);
         void Click();
-        void SetHorizontalBoxValues();
+        //void SetHorizontalBoxValues();
         bool IsMovement() const;
         virtual void SetThemeValue() override;
 

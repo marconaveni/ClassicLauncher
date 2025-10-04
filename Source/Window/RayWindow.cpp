@@ -49,7 +49,7 @@ namespace ClassicLauncher
         }
 
 #ifndef _DEBUG
-        SetExitKey(0);
+        //SetExitKey(0);
 #endif
 
         m_isReady = ray::IsWindowReady();

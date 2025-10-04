@@ -57,7 +57,7 @@ namespace ClassicLauncher
 
         m_horizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalBox>("Cards_GuiHorizontalBox");
         AddChild(m_horizontalBox);
-        SetHorizontalBoxValues();
+        //SetHorizontalBoxValues();
 
         for (int i = 0; i < 10; i++)
         {
@@ -80,10 +80,21 @@ namespace ClassicLauncher
         SetFocus(3, true);
     }
 
-    void GuiHorizontalCards::SetHorizontalBoxValues()
+    // void GuiHorizontalCards::SetHorizontalBoxValues()
+    // {
+    //     // const float space = ThemesManager::GetConfigurationThemes().horizontalCardsSpace;
+    //     // const float x = m_horizontalBox->GetPosition().x;
+    //     // const float y = ThemesManager::GetConfigurationThemes().horizontalCardsPositionY;
+
+    //     // m_horizontalBox->SetSpace(space);
+    //     // m_horizontalBox->SetPosition(x, y);
+    // }
+
+    void GuiHorizontalCards::SetPositionHorizontalBox()
     {
         const float space = ThemesManager::GetConfigurationThemes().horizontalCardsSpace;
-        const float x = m_horizontalBox->GetPosition().x;
+        const float offsetX = ThemesManager::GetConfigurationThemes().horizontalCardsPositionX;
+        const float x = ((GetSize().width - m_horizontalBox->GetSize().width) / 2) + offsetX;
         const float y = ThemesManager::GetConfigurationThemes().horizontalCardsPositionY;
 
         m_horizontalBox->SetSpace(space);
@@ -92,7 +103,7 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::SetThemeValue()
     {
-        SetHorizontalBoxValues();
+        //SetHorizontalBoxValues();
         SetPositionHorizontalBox();
     }
 
@@ -112,6 +123,7 @@ namespace ClassicLauncher
         
         m_idFocus = newId;
         m_guiCards[newId]->SetCardFocus(bForce);
+
         m_isLeft = true;
 
         const GameList* pGameList = m_gameListManagerRef->GetCurrentGameList();
@@ -153,14 +165,6 @@ namespace ClassicLauncher
         SetPositionHorizontalBox();
 
         LOG(LOG_CLASSIC_DEBUG, "Num Sprites Loaded after SetCovers %d", GetSpriteManager()->NumSpritesLoaded());
-    }
-
-    void GuiHorizontalCards::SetPositionHorizontalBox()
-    {
-        const float offsetX = ThemesManager::GetConfigurationThemes().horizontalCardsPositionX;
-        const float x = ((GetSize().width - m_horizontalBox->GetSize().width) / 2) + offsetX;
-        const float y = m_horizontalBox->GetPosition().y;
-        m_horizontalBox->SetPosition(x, y);
     }
 
     void GuiHorizontalCards::ChangeList(const CurrentList list)
