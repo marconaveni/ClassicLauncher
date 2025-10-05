@@ -4,16 +4,17 @@
 
 #include "Graphics/Image.h"
 #include "String.h"
+#include "ClassicAssert.h"
 
 namespace ClassicLauncher
 {
 
-    void Utils::SetSizeWithProportionFit(Vector2f& texture, const int widthResize, const int heightResize)
+    void Utils::SetSizeWithProportionFit(Vector2f& vector, const int widthResize, const int heightResize)
     {
         // Define a nova largura e altura desejadas
         float newWidth = static_cast<float>(widthResize);   // Largura desejada
         float newHeight = static_cast<float>(heightResize); // Altura desejada
-        const float aspectRatio = texture.x / texture.y;    // Calcula a proporção da imagem original
+        const float aspectRatio = vector.x / vector.y;    // Calcula a proporção da imagem original
 
         if (newWidth / aspectRatio > newHeight) // Ajusta as dimensões para manter a proporção
         {
@@ -23,14 +24,20 @@ namespace ClassicLauncher
         {
             newHeight = newWidth / aspectRatio;
         }
-        texture = Vector2f{newWidth, newHeight};
+        vector = Vector2f{newWidth, newHeight};
     }
 
-    void Utils::SetSizeWithProportionFill(Vector2f& texture, const int widthResize, const int heightResize)
+    void Utils::SetSizeWithProportionFill(Vector2f& vector, const int widthResize, const int heightResize)
     {
+
+        if (vector.x == 0.0f || vector.y == 0.0f) // check evita cair numa divisão por 0 
+        {
+            return;
+        }
+
         float newWidth = static_cast<float>(widthResize);
         float newHeight = static_cast<float>(heightResize);
-        const float aspectRatio = texture.x / texture.y;
+        const float aspectRatio = vector.x / vector.y;
 
         if (newWidth / aspectRatio < newHeight) // Ajusta para preencher completamente a área desejada (Fill)
         {
@@ -40,18 +47,18 @@ namespace ClassicLauncher
         {
             newHeight = newWidth / aspectRatio; // Se a largura está pequena demais, ajusta a altura primeiro
         }
-        texture = Vector2f{newWidth, newHeight};
+        vector = Vector2f{newWidth, newHeight};
     }
 
-    void Utils::SetSizeWithProportion(Vector2f& texture, const int widthResize, const int heightResize, bool bFill)
+    void Utils::SetSizeWithProportion(Vector2f& vector, const int widthResize, const int heightResize, bool bFill)
     {
         if (!bFill)
         {
-            SetSizeWithProportionFit(texture, widthResize, heightResize);
+            SetSizeWithProportionFit(vector, widthResize, heightResize);
         }
         else
         {
-            SetSizeWithProportionFill(texture, widthResize, heightResize);
+            SetSizeWithProportionFill(vector, widthResize, heightResize);
         }
     }
 

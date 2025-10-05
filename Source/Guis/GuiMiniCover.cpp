@@ -15,7 +15,7 @@ namespace ClassicLauncher
 {
     GuiMiniCover::GuiMiniCover(GameListManager* gameListManagerRef)
         : m_arrow(nullptr), m_size(32), m_sizeCover(28.0f, 40.0f), m_gameListManagerRef(gameListManagerRef)
-    // : mGuiCovers(), mArrow(nullptr), mSize(23), mSizeCover(40.0f, 58.0f) // test
+        // : m_arrow(nullptr), m_size(23), m_sizeCover(40.0f, 58.0f), m_gameListManagerRef(gameListManagerRef) //test
     {
     }
 
@@ -42,9 +42,11 @@ namespace ClassicLauncher
             miniCover.gui->m_textureName = "sprite";
 
             miniCover.sizeBox->AddChild(miniCover.gui);
+            miniCover.sizeBox->SetMargin(Margin::LEFT_ONLY);
 
             m_guiHorizontalBox->AttachGui(miniCover.sizeBox);
             m_guiHorizontalBox->AddChild(miniCover.sizeBox);
+            //m_guiHorizontalBox->SelfDelete();
             m_guiMiniCovers.emplace_back(miniCover);
         }
 
@@ -129,6 +131,7 @@ namespace ClassicLauncher
             if (i - 1 >= 0 && i <= static_cast<int>(m_guiMiniCovers.size()) - 2)
             {
                 SetCover(name, m_guiMiniCovers.at(i).gui);
+                m_guiMiniCovers.at(i).sizeBox->Update();
             }
         }
 

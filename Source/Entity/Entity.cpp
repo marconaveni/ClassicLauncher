@@ -65,11 +65,11 @@ namespace ClassicLauncher
         for (auto& entity : m_childEntities)
         {
             entity->SelfDelete();
-            Entity* e = GetRootEntity();
-            if (e != this)
-            {
-                e->RemoveChild(this);
-            }
+            // Entity* e = GetRootEntity();
+            // if (e != this)
+            // {
+            //     e->RemoveChild(this);
+            // }
         }
     }
 

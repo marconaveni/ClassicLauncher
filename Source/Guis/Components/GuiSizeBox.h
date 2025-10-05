@@ -5,6 +5,13 @@
 
 namespace ClassicLauncher
 {
+    enum class Margin
+    {
+        NONE,
+        AUTO,
+        TOP_ONLY,
+        LEFT_ONLY
+    };
 
     class GuiSizeBox : public GuiCanvas
     {
@@ -16,10 +23,15 @@ namespace ClassicLauncher
         virtual void AddChild(Entity* child) override;
         virtual void RemoveChild(Entity* childEntity) override;
         virtual void Update() override;
+        void SetMargin(Margin margin);
+        void SetAspectRatio(bool bAspectRatio);
 
     private:
 
-        Entity* m_entity;
+        void UpdateMargin();
+        Margin m_margin = Margin::AUTO;
+        Entity* m_entity = nullptr;
+        bool m_bAspectRatio = true;
     };
 
 } // namespace ClassicLauncher
