@@ -133,8 +133,8 @@ namespace ClassicLauncher
 
     protected:
 
-        Entity* m_parent = nullptr;
-        std::vector<Entity*> m_childEntities;
+        Entity* m_parent = nullptr;    // move to private
+        std::vector<Entity*> m_childEntities;  // move to private
 
         TimerManager* GetTimerManager() { return m_timerManagerRef; }
         SpriteManager* GetSpriteManager() { return m_spriteManagerReference; }

@@ -33,7 +33,7 @@ namespace ClassicLauncher
                       Entity* targetEntity,
                       float delay,
                       bool bLooped = false);
-        void ClearTimer(const TimerHandling& timerHandling);
+        void ClearTimer(TimerHandling& timerHandling);
         void ClearAllTimers();
 
     private:
@@ -43,6 +43,7 @@ namespace ClassicLauncher
         std::unordered_map<int, std::unique_ptr<Timer>> m_timers;
         void ValidTimerHandling(TimerHandling& timerHandling) const;
         void Update() const;
+        int m_counter = 0;
     };
 
 } // namespace ClassicLauncher

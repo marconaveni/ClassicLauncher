@@ -28,6 +28,11 @@ namespace ClassicLauncher
 
     void GuiSizeBox::Update()
     {
+        if (!m_entity)
+        {
+            return;
+        }
+
         UpdateMargin();
 
         if (m_bAspectRatio)

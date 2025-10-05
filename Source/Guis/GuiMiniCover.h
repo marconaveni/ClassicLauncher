@@ -50,6 +50,7 @@ namespace ClassicLauncher
         GameListManager* m_gameListManagerRef;
 
         void SetPositionCovers(int numCovers);
+        void CreateMiniCovers();
     };
 
 } // namespace ClassicLauncher

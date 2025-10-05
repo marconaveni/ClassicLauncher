@@ -10,6 +10,7 @@
 #include "Themes/ThemesManager.h"
 #include "Utils/Math.h"
 #include "Utils/Utils.h"
+#include "Input/InputManager.h"
 
 namespace ClassicLauncher
 {
@@ -23,6 +24,30 @@ namespace ClassicLauncher
     {
         SetPosition({0, 505.0f});
         SetSize({1280.0f, 72.0f});
+
+        CreateMiniCovers();
+
+        std::vector<RectFloat> recs = {RectFloat{1236.0f, 0.0f, 30.0f, 18.0f},
+                                       RectFloat{1267.0f, 0.0f, 30.0f, 18.0f},
+                                       RectFloat{1298.0f, 0.0f, 30.0f, 18.0f}};
+
+        m_arrow = GetEntityManager()->CreateEntity<GuiBase>("arrow");
+        m_arrow->SetPosition(GetSize().width / 2, 0);
+        m_arrow->m_textureName = "sprite";
+        GetAnimationManager().AddAnimationFrame("frame",  0.2f, m_arrow, recs);
+        AddChild(m_arrow);
+    }
+
+    void GuiMiniCover::CreateMiniCovers()
+    {
+
+        if (m_guiMiniCovers.size() > 0)
+        {
+             m_guiHorizontalBox->SelfDelete();
+             RemoveChild(m_guiHorizontalBox);
+             m_guiMiniCovers.clear();
+        }
+        LOG(LOG_CLASSIC_WARNING, "filhos %d" , GetChildren().size());
 
         m_guiHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
         m_guiHorizontalBox->SetPosition({0, 20.0f});
@@ -46,19 +71,8 @@ namespace ClassicLauncher
 
             m_guiHorizontalBox->AttachGui(miniCover.sizeBox);
             m_guiHorizontalBox->AddChild(miniCover.sizeBox);
-            //m_guiHorizontalBox->SelfDelete();
             m_guiMiniCovers.emplace_back(miniCover);
         }
-
-        std::vector<RectFloat> recs = {RectFloat{1236.0f, 0.0f, 30.0f, 18.0f},
-                                       RectFloat{1267.0f, 0.0f, 30.0f, 18.0f},
-                                       RectFloat{1298.0f, 0.0f, 30.0f, 18.0f}};
-
-        m_arrow = GetEntityManager()->CreateEntity<GuiBase>("arrow");
-        m_arrow->SetPosition(GetSize().width / 2, 0);
-        m_arrow->m_textureName = "sprite";
-        GetAnimationManager().AddAnimationFrame("frame",  0.2f, m_arrow, recs);
-        AddChild(m_arrow);
     }
 
     void GuiMiniCover::Update()
@@ -80,10 +94,19 @@ namespace ClassicLauncher
             if (miniCover.focus)
             {
                 const float position = miniCover.sizeBox->GetPosition().x + m_guiHorizontalBox->GetPosition().x;
-                m_arrow->SetPosition(position, m_arrow->GetPosition().y);
+                const float offset = (miniCover.sizeBox->GetSize().width - m_arrow->GetSize().width) / 2;
+                m_arrow->SetPosition(position + offset, m_arrow->GetPosition().y);
             }        
             
         }
+
+        if (Keyboard::IsReleased(Keyboard::V))
+        {
+            m_size = 23; 
+            m_sizeCover = Vector2f(40.0f, 58.0f);
+            CreateMiniCovers();
+        }
+        
     }
 
     void GuiMiniCover::End()

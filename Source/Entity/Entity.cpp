@@ -62,14 +62,14 @@ namespace ClassicLauncher
     void Entity::SelfDelete()
     {
         m_isCanDelete = true;
+        // Entity* pParent = GetParent();
+        // if (pParent)
+        // {
+        //     pParent->RemoveChild(this);
+        // }    
         for (auto& entity : m_childEntities)
         {
             entity->SelfDelete();
-            // Entity* e = GetRootEntity();
-            // if (e != this)
-            // {
-            //     e->RemoveChild(this);
-            // }
         }
     }
 

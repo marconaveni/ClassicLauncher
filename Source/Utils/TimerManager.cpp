@@ -30,11 +30,15 @@ namespace ClassicLauncher
         m_timers[timerHandling.id]->SetTimer(std::move(callbackFunction), targetEntity, delay, bLooped);
     }
 
-    void TimerManager::ClearTimer(const TimerHandling& timerHandling)
+    void TimerManager::ClearTimer(TimerHandling& timerHandling)
     {
+        ValidTimerHandling(timerHandling);
+        
         if (timerHandling.id < 0)
         {
-            return;
+            std::unique_ptr<Timer> newTimer = std::make_unique<Timer>();
+            timerHandling.id = static_cast<int>(m_timers.size());
+            m_timers.insert(std::make_pair(timerHandling.id, std::move(newTimer)));
         }
         m_timers[timerHandling.id]->Stop();
     }
