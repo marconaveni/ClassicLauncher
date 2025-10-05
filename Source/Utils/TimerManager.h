@@ -40,7 +40,7 @@ namespace ClassicLauncher
 
         friend class Application;
 
-        std::unordered_map<int, std::unique_ptr<Timer>> m_timers;
+        std::unordered_map<TimerHandling*, std::unique_ptr<Timer>> m_timers;
         void ValidTimerHandling(TimerHandling& timerHandling) const;
         void Update() const;
         int m_counter = 0;

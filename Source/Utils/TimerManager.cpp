@@ -25,22 +25,22 @@ namespace ClassicLauncher
         {
             std::unique_ptr<Timer> newTimer = std::make_unique<Timer>();
             timerHandling.id = static_cast<int>(m_timers.size());
-            m_timers.insert(std::make_pair(timerHandling.id, std::move(newTimer)));
+            m_timers.insert(std::make_pair(&timerHandling, std::move(newTimer)));
         }
-        m_timers[timerHandling.id]->SetTimer(std::move(callbackFunction), targetEntity, delay, bLooped);
+        m_timers[&timerHandling]->SetTimer(std::move(callbackFunction), targetEntity, delay, bLooped);
     }
 
     void TimerManager::ClearTimer(TimerHandling& timerHandling)
     {
         ValidTimerHandling(timerHandling);
         
-        if (timerHandling.id < 0)
+        if (timerHandling.id < 0) 
         {
             std::unique_ptr<Timer> newTimer = std::make_unique<Timer>();
             timerHandling.id = static_cast<int>(m_timers.size());
-            m_timers.insert(std::make_pair(timerHandling.id, std::move(newTimer)));
+            m_timers.insert(std::make_pair(&timerHandling, std::move(newTimer)));
         }
-        m_timers[timerHandling.id]->Stop();
+        m_timers[&timerHandling]->Stop();
     }
 
     void TimerManager::Update() const
@@ -55,6 +55,7 @@ namespace ClassicLauncher
     {
         for (auto& timer : m_timers)
         {
+            timer.first->id = -1;
             timer.second.reset();
         }
         m_timers.clear();
