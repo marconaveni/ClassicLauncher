@@ -26,6 +26,7 @@ namespace ClassicLauncher
         void Init();
         void Update() override;
         void End() override;
+        virtual void SetThemeValue() override;
         void SetCovers();
         void SetCover(const std::string& name, GuiBase* miniCover);
         void ClearCovers();
@@ -43,7 +44,7 @@ namespace ClassicLauncher
         std::vector<MiniCover> m_guiMiniCovers;
         GuiHorizontalBox* m_guiHorizontalBox;
         GuiBase* m_arrow;
-        int m_size;
+        int m_numCovers;
         Vector2f m_sizeCover;
         bool m_focus = false;
 

@@ -206,7 +206,7 @@ namespace ClassicLauncher
                                        }),
                         m_entities.end());
 
-        m_timerManagerReference->ClearAllTimers();
+        m_timerManagerReference->ClearAllTimers(); 
         m_markOrder = true;
     }
 

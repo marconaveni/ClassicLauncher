@@ -17,6 +17,7 @@ namespace ClassicLauncher
         void Update();
         void Reset();
         void Stop() { m_isActive = false; }
+        [[nodiscard]] bool IsActive() const { return m_isActive; }
 
     private:
 

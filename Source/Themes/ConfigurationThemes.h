@@ -27,6 +27,14 @@ namespace ClassicLauncher
         float offsetLeft = 0.0f; 
         float offsetRight = 0.0f;
 
+        // gui minicover values
+        int numCovers = 32; 
+        float sizeX = 28.0f;
+        float sizeY = 40.0f;
+        float offsetTopArrow = 0.0f;
+        float offsetTopCover = 0.0f;
+        float offsetLeftCover = 0.0f; 
+
         void LoadConfigurations(const std::string& path);
     };
 

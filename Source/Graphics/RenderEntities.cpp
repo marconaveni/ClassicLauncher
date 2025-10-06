@@ -20,6 +20,7 @@ namespace ClassicLauncher
 #ifdef _DEBUG
     static bool enableDebug = false;
     static bool disableCache = false;
+    ::Texture2D texture;
 #endif
 
     RenderEntities::RenderEntities(SpriteManager* spriteManagerReference)
@@ -46,6 +47,16 @@ namespace ClassicLauncher
         {
             DrawEntity(entity.get());
         }
+#ifdef _DEBUG
+        // if (!::IsTextureValid(texture))
+        // {
+        //     
+        // }
+        // else
+        // {
+        //     ::DrawTexture(texture, 0, 0, ::Color{255, 255, 255, 120});
+        // }
+#endif
     }
 
     void RenderEntities::DrawEntity(Entity* entity)

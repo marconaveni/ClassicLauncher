@@ -50,6 +50,7 @@ namespace ClassicLauncher
             else
             {
                 m_isFunctionCalled = true; // Mark the function as already called
+                m_isActive = false;
             }
         }
     }

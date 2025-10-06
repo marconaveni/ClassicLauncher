@@ -205,7 +205,7 @@ namespace ClassicLauncher
 
     void Entity::SetOffset(float x, float y)
     {
-        if (m_transform.offset.x != x || m_transform.offset.x != y)
+        if (m_transform.offset.x != x || m_transform.offset.y != y)
         {
             MarkTransformAsDirty();
             m_transform.offset.x = x;
@@ -220,7 +220,7 @@ namespace ClassicLauncher
 
     void Entity::SetOrigin(float x, float y)
     {
-        if (m_transform.origin.x != x || m_transform.origin.x != y)
+        if (m_transform.origin.x != x || m_transform.origin.y != y)
         {
             MarkTransformAsDirty();
             m_transform.origin.x = x;
@@ -235,7 +235,7 @@ namespace ClassicLauncher
 
     void Entity::SetScale(float x, float y)
     {
-        if (m_transform.scale.x != x || m_transform.scale.x != y)
+        if (m_transform.scale.x != x || m_transform.scale.y != y)
         {
             MarkTransformAsDirty();
             m_transform.scale.x = x;

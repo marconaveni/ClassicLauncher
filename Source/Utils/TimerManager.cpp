@@ -1,6 +1,9 @@
 #include "TimerManager.h"
 
+#include <algorithm>
 #include <utility>
+
+#include "Helper.h"
 
 namespace ClassicLauncher
 {
@@ -33,8 +36,8 @@ namespace ClassicLauncher
     void TimerManager::ClearTimer(TimerHandling& timerHandling)
     {
         ValidTimerHandling(timerHandling);
-        
-        if (timerHandling.id < 0) 
+
+        if (timerHandling.id < 0)
         {
             std::unique_ptr<Timer> newTimer = std::make_unique<Timer>();
             timerHandling.id = static_cast<int>(m_timers.size());
@@ -49,16 +52,24 @@ namespace ClassicLauncher
         {
             timer.second->Update();
         }
+        LOG(LOG_CLASSIC_WARNING, "num timer %d", m_timers.size());
     }
 
     void TimerManager::ClearAllTimers()
     {
-        for (auto& timer : m_timers)
+        for (auto it = m_timers.begin(); it != m_timers.end();)
         {
-            timer.first->id = -1;
-            timer.second.reset();
+            auto& pTimer = it->second;
+            if (!pTimer->IsActive())
+            {
+                it->first->id = -1;
+                it = m_timers.erase(it); // erase return the next iterator
+            }
+            else
+            {
+                ++it;
+            }
         }
-        m_timers.clear();
     }
 
 } // namespace ClassicLauncher

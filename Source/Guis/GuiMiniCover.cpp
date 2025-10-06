@@ -15,7 +15,7 @@
 namespace ClassicLauncher
 {
     GuiMiniCover::GuiMiniCover(GameListManager* gameListManagerRef)
-        : m_arrow(nullptr), m_size(32), m_sizeCover(28.0f, 40.0f), m_gameListManagerRef(gameListManagerRef)
+        : m_arrow(nullptr), m_numCovers(32), m_sizeCover(28.0f, 40.0f), m_gameListManagerRef(gameListManagerRef)
         // : m_arrow(nullptr), m_size(23), m_sizeCover(40.0f, 58.0f), m_gameListManagerRef(gameListManagerRef) //test
     {
     }
@@ -47,14 +47,14 @@ namespace ClassicLauncher
              RemoveChild(m_guiHorizontalBox);
              m_guiMiniCovers.clear();
         }
-        LOG(LOG_CLASSIC_WARNING, "filhos %d" , GetChildren().size());
+        //LOG(LOG_CLASSIC_WARNING, "children %d" , GetChildren().size());
 
         m_guiHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
         m_guiHorizontalBox->SetPosition({0, 20.0f});
         m_guiHorizontalBox->SetSpace(1.0f);
         AddChild(m_guiHorizontalBox);
 
-        for (int i = 0; i < m_size; i++)
+        for (int i = 0; i < m_numCovers; i++)
         {
             MiniCover miniCover;
             miniCover.gui = GetEntityManager()->CreateEntity<GuiBase>("miniCover");
@@ -102,7 +102,7 @@ namespace ClassicLauncher
 
         if (Keyboard::IsReleased(Keyboard::V))
         {
-            m_size = 23; 
+            m_numCovers = 23; 
             m_sizeCover = Vector2f(40.0f, 58.0f);
             CreateMiniCovers();
         }
@@ -112,6 +112,25 @@ namespace ClassicLauncher
     void GuiMiniCover::End()
     {
         Entity::End();
+    }
+
+    void GuiMiniCover::SetThemeValue()
+    {
+        const int numCovers = ThemesManager::GetConfigurationThemes().numCovers;
+        const float sizeX = ThemesManager::GetConfigurationThemes().sizeX;
+        const float sizeY = ThemesManager::GetConfigurationThemes().sizeY;
+        const float offsetTop = ThemesManager::GetConfigurationThemes().offsetTopCover;
+        const float offsetLeft = ThemesManager::GetConfigurationThemes().offsetLeftCover;
+        const float offsetTopArrow = ThemesManager::GetConfigurationThemes().offsetTopArrow;
+
+        if (sizeX != m_sizeCover.x || sizeY != m_sizeCover.y || numCovers != m_numCovers)
+        {
+            m_numCovers = numCovers; 
+            m_sizeCover = Vector2f(sizeX, sizeY);
+            CreateMiniCovers();
+        }
+        m_guiHorizontalBox->SetOffset(offsetLeft, offsetTop);
+        m_arrow->SetOffset(offsetLeft, offsetTopArrow);
     }
 
     void GuiMiniCover::SetPositionCovers(int numCovers)
@@ -132,7 +151,7 @@ namespace ClassicLauncher
             return;
         }
 
-        const int numCovers = gameListSize < m_size ? gameListSize + 1 : m_size;
+        const int numCovers = gameListSize < m_numCovers ? gameListSize + 1 : m_numCovers;
 
         for (int i = 0; i < numCovers; i++)
         {
