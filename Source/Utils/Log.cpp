@@ -5,7 +5,9 @@
 #include <string>
 
 #include "Utils/Print.h"
+#include "Utils/Resources.h"
 #include "rl_wrap.h"
+#include "Input/InputManager.h"
 
 namespace ClassicLauncher
 {
@@ -68,6 +70,34 @@ namespace ClassicLauncher
         va_start(args, text);
         TraceLogger(logType, textFmt.c_str(), args);
         va_end(args);
+    }
+
+    void UpdateLogLevel()
+    {
+        if (Keyboard::IsReleased(Keyboard::F1))
+        {
+            LogLevel(LOG_CLASSIC_DEBUG, LOG_WARNING);
+            LOG(LOG_CLASSIC_DEBUG, "Enabled LOG_CLASSIC_DEBUG, LOG_WARNING");
+            s_print.PrintOnScreen("Enabled LOG_CLASSIC_DEBUG, LOG_WARNING", 5.0f);
+        }
+        if (Keyboard::IsReleased(Keyboard::F2))
+        {
+            LogLevel(LOG_CLASSIC_DEBUG, LOG_ALL);
+            LOG(LOG_CLASSIC_DEBUG, "Enabled LOG_CLASSIC_DEBUG, LOG_ALL");
+            s_print.PrintOnScreen("Enabled LOG_CLASSIC_DEBUG, LOG_ALL", 5.0f);
+        }
+        if (Keyboard::IsReleased(Keyboard::F3))
+        {
+            LogLevel(LOG_CLASSIC_ALL, LOG_ALL);
+            LOG(LOG_CLASSIC_DEBUG, "Enabled LOG_CLASSIC_ALL, LOG_ALL");
+            s_print.PrintOnScreen("Enabled LOG_CLASSIC_ALL, LOG_ALL", 5.0f);
+        }
+        if (Keyboard::IsReleased(Keyboard::UP))
+        {
+            // mEntityManager.SetZOrder(mGuiWindow.get(), 1);
+            std::string homeDir = Resources::GetHomeDirectory();
+
+        }
     }
 
 

@@ -8,6 +8,8 @@
 #include "Audio/Music.h"
 #include "Audio/Sound.h"
 #include "Utils/Math.h"
+#include "Input/InputManager.h"
+#include "Helper.h"
 
 
 namespace ClassicLauncher
@@ -34,7 +36,7 @@ namespace ClassicLauncher
         if (!m_isRunning)
         {
             m_isRunning = true;
-            m_workerThread = std::thread(&AudioManager::Update, this);
+            m_workerThread = std::thread(&AudioManager::UpdateStream, this);
         }
     }
 
@@ -138,6 +140,26 @@ namespace ClassicLauncher
         }
     }
 
+    void AudioManager::Update()
+    {
+        if (InputManager::IsRelease(InputName::rightThumb, MAIN))
+        {
+            ChangeMusic();
+            PRINT(TEXT("Changed music"), 5.0f);  // todo add callback function to gui layout in release version
+        }
+
+        if (Keyboard::IsReleased(Keyboard::P) && IsPlayMusic())
+        {
+            Pause();
+            PRINT(TEXT("Pause music"), 5.0f);
+        }
+        else if (Keyboard::IsReleased(Keyboard::P))
+        {
+            PlayMusic();
+            PRINT(TEXT("Play music"), 5.0f);
+        }
+    }
+
     std::string AudioManager::GetMusicName()
     {
         if (!m_audioMusics.empty())
@@ -174,7 +196,7 @@ namespace ClassicLauncher
     }
 
 
-    void AudioManager::Update()
+    void AudioManager::UpdateStream()
     {
         while (m_isRunning)
         {

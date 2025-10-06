@@ -30,6 +30,7 @@ namespace ClassicLauncher
         void MusicVolume(float volume);
         void Pause();
         void Stop();
+        void Update();
         std::string GetMusicName();
         void ChangeMusic(bool bAutoPlay = true);
         void Unload();
@@ -58,7 +59,7 @@ namespace ClassicLauncher
         int m_idAudioMusic{};                              // id music
 
         void LoadMusic(const std::string& path);
-        void Update();
+        void UpdateStream();
         int GenerateId();
     };
 

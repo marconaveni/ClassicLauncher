@@ -299,12 +299,9 @@ namespace ClassicLauncher
     {
         Entity::Update();
 
-
         SetSpeedCards();
 
         const float sizeCard = (m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * m_horizontalBox->GetScale().x ;
-        PRINT(TEXT("sizeCard: %.2f", sizeCard), 2.5f, "sizeCard");
-
 
         if (InputManager::IsDown(InputName::leftFaceLeft, MAIN) && !m_isRight)
         {
