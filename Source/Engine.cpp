@@ -22,7 +22,6 @@ namespace ClassicLauncher
 
     void Engine::Run()
     {
-        m_configurationManager.LoadConfiguration();
 
 #if _DEBUG
         std::string title = std::format("Classic Launcher [DEVMODE] {}", PRODUCT_VERSION_STRING);

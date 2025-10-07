@@ -12,50 +12,48 @@
 #include "Window/RayWindow.h"
 #include "raylib.h" // isso não pode ficar aqui
 #include "rl_wrap.h"
+#include "Utils/ConfigurationManager.h"
 #include <iostream>
 
 namespace ClassicLauncher
 {
 
 #ifdef _DEBUG
-    static bool enableDebug = false;
-    static bool disableCache = false;
-    ::Texture2D texture;
+    static bool s_enableDebug = false;
+    static bool s_disableCache = false;
+    static bool s_isThemeEnable = false;
+    static Texture s_texture;
 #endif
 
-    RenderEntities::RenderEntities(SpriteManager* spriteManagerReference)
+    RenderEntities::RenderEntities(SpriteManager* spriteManagerReference, ConfigurationManager* configManager)
         : m_spriteManagerReference(spriteManagerReference)
+        , m_configManagerReference(configManager)
     {
+#ifdef _DEBUG
+        s_isThemeEnable = m_configManagerReference->GetThemeReferenceOverlay();
+#endif
     }
 
     void RenderEntities::DrawEntities(const std::vector<std::unique_ptr<Entity>>& entities)
     {
-#ifdef _DEBUG
-        if (Keyboard::IsReleased(Keyboard::Key::FIVE))
-        {
-            enableDebug = !enableDebug;
-        }
-        if (Keyboard::IsReleased(Keyboard::Key::SIX))
-        {
-            disableCache = !disableCache;
-        }
-#endif
-
         m_renderScale = ThemesManager::GetScaleRenderer();
 
         for (const auto& entity : entities)
         {
             DrawEntity(entity.get());
         }
+
 #ifdef _DEBUG
-        // if (!::IsTextureValid(texture))
-        // {
-        //     
-        // }
-        // else
-        // {
-        //     ::DrawTexture(texture, 0, 0, ::Color{255, 255, 255, 120});
-        // }
+
+        if (Keyboard::IsReleased(Keyboard::Key::FIVE))
+        {
+            s_enableDebug = !s_enableDebug;
+        }
+        if (Keyboard::IsReleased(Keyboard::Key::SIX))
+        {
+            s_disableCache = !s_disableCache;
+        }
+        DrawThemeReference();
 #endif
     }
 
@@ -106,8 +104,6 @@ namespace ClassicLauncher
         //     rlw::BeginScissorMode(scissorArea.x, scissorArea.y, scissorArea.width, scissorArea.height);
         // }
 
-
-        // if (texture && entity->mToDraw && entity->mTextureName != "transparent")  // todo verify render
         if (texture)
         {
             rlw::DrawTexturePro(*texture,
@@ -128,7 +124,7 @@ namespace ClassicLauncher
         // }
 
 #ifdef _DEBUG
-        if (enableDebug)
+        if (s_enableDebug)
         {
             DrawDebug(entity);
         }
@@ -151,36 +147,82 @@ namespace ClassicLauncher
             //                 entity->m_finalTransformRect.width, 
             //                 entity->m_finalTransformRect.height,
             //                 ::Color{255,0,0,50});
-            if (Mouse::IsPressed(Mouse::RIGHT))
+            if (Mouse::IsReleased(Mouse::LEFT))
             {
-
-
-                LOG(LOG_CLASSIC_DEBUG, std::format("\n-> positions nameID: {}\n-> x {}\n-> y {}\n-> width {}\n-> height {}", 
-                    entity->m_nameId, 
-                    entity->m_transform.position.x,
-                    entity->m_transform.position.y,
-                    entity->m_transform.position.width,
-                    entity->m_transform.position.height
-                ).c_str());
-                LOG(LOG_CLASSIC_DEBUG, std::format("\n-> world positions nameID: {}\n-> x {}\n-> y {}\n-> width {}\n-> height {}", 
-                    entity->m_nameId, 
-                    entity->m_worldTransform.position.x,
-                    entity->m_worldTransform.position.y,
-                    entity->m_worldTransform.position.width,
-                    entity->m_worldTransform.position.height
-                ).c_str());
-                LOG(LOG_CLASSIC_DEBUG, std::format("\n-> finaltransform nameID: {}\n-> x {}\n-> y {}\n-> width {}\n-> height {}", 
-                    entity->m_nameId, 
-                    entity->m_finalRender.transform.x,
-                    entity->m_finalRender.transform.y,
-                    entity->m_finalRender.transform.width,
-                    entity->m_finalRender.transform.height
-                ).c_str());
-                std::cin.get();
+                DrawStatistics(entity);
             }
 
         }
 
+    }
+
+    void RenderEntities::DrawStatistics(Entity* entity)
+    {
+        const std::string text = R"(
+nameID: {}
+parent NameID: {}
+texture Name: {}
+m_childEntities Size: {}
+ZOrder id: {}
+ZOrder insertionIndex: {}
+m_transform position x: {}
+m_transform position y: {}
+m_transform position width: {}
+m_transform position height: {}
+m_worldTransform position x: {}
+m_worldTransform position y: {}
+m_worldTransform position width: {}
+m_worldTransform position height: {}
+m_finalRender position x: {}
+m_finalRender position y: {}
+m_finalRender position width: {}
+m_finalRender position height: {}
+)";
+
+        std::string parent = entity->m_parent ? entity->m_parent->m_nameId : "null";
+        int size = static_cast<int>(entity->m_childEntities.size());
+        std::string textFinal =  std::vformat(text, std::make_format_args(
+            entity->m_nameId, 
+            parent, 
+            entity->m_textureName, 
+            size, 
+            entity->m_zOrder.id,
+            entity->m_zOrder.insertionIndex,
+            entity->m_transform.position.x,
+            entity->m_transform.position.y,
+            entity->m_transform.position.width,
+            entity->m_transform.position.height,
+            entity->m_worldTransform.position.x,
+            entity->m_worldTransform.position.y,
+            entity->m_worldTransform.position.width,
+            entity->m_worldTransform.position.height, 
+            entity->m_finalRender.transform.x,
+            entity->m_finalRender.transform.y,
+            entity->m_finalRender.transform.width,
+            entity->m_finalRender.transform.height
+        ));
+        
+        LOG(LOG_CLASSIC_DEBUG, "%s", textFinal.c_str());
+    }
+
+    void RenderEntities::DrawThemeReference()
+    {
+#ifdef _DEBUG        
+        if (!s_isThemeEnable)
+        {
+            return;
+        }
+        
+        if (!s_texture.IsValid())
+        {
+            s_texture.LoadFromFile(m_configManagerReference->GetThemeReferenceImage());
+            s_isThemeEnable = s_texture.IsValid();
+        }
+        else
+        {
+            rlw::DrawTexture(s_texture, 0, 0, Color{255, 255, 255, 120});
+        }
+#endif
     }
 
 

@@ -52,7 +52,7 @@ namespace ClassicLauncher
         {
             timer.second->Update();
         }
-        LOG(LOG_CLASSIC_WARNING, "num timer %d", m_timers.size());
+        // LOG(LOG_CLASSIC_WARNING, "num timer %d", m_timers.size());
     }
 
     void TimerManager::ClearAllTimers()

@@ -29,7 +29,7 @@ namespace ClassicLauncher
         , m_spriteManager(&spriteManager)
         , m_timerManager(&timerManager)
         , m_audioManager(&audioManager)
-        , m_renderEntities(&spriteManager)
+        , m_renderEntities(&spriteManager, &configManager)
         , m_entityManager(&spriteManager, &timerManager, &m_focusManager)
         , m_themesManager(&m_gameListManager, &spriteManager, &m_entityManager, &configManager, &audioManager)
     {

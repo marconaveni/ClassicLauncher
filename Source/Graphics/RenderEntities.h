@@ -9,20 +9,25 @@ namespace ClassicLauncher
 {
 
     class SpriteManager;
+    class ConfigurationManager;
 
     class RenderEntities
     {
     public:
 
-        explicit RenderEntities(SpriteManager* spriteManagerReference);
+        explicit RenderEntities(SpriteManager* spriteManagerReference, ConfigurationManager* configManager);
         void DrawEntities(const std::vector<std::unique_ptr<Entity>>& entities);
+        
+    private:
+        
         void DrawEntity(Entity* entity);
         void DrawDebug(Entity* entity);
-
-    private:
-
+        void DrawStatistics(Entity* entity);
+        void DrawThemeReference();
+        ConfigurationManager* m_configManagerReference = nullptr;
         SpriteManager* m_spriteManagerReference = nullptr;
         float m_renderScale = 1;
+        
     };
 
 } // namespace ClassicLauncher

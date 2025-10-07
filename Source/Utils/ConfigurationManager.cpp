@@ -20,7 +20,7 @@ namespace ClassicLauncher
 
     ConfigurationManager::ConfigurationManager()
         : m_internalScale(2)
-        , m_forceInternalScale(false)
+        , m_themeReferenceOverlay(false)
         , m_volume(100)
         , m_targetFps(60)
         , m_classicLogLevel(CLASSIC_LOG_LEVEL)
@@ -28,6 +28,7 @@ namespace ClassicLauncher
         , m_vsync(true)
         , m_fullscreen(FULLSCREEN)
     {
+        LoadConfiguration();
     }
 
     ConfigurationManager::~ConfigurationManager()
@@ -38,25 +39,27 @@ namespace ClassicLauncher
     void ConfigurationManager::SetValues(SimpleIni& config)
     {
         config.SetInt("configuration", "InternalScale", m_internalScale);
-        config.SetBoolean("configuration", "ForceInternalScale", m_forceInternalScale);
         config.SetInt("configuration", "Volume", m_volume);
         config.SetInt("configuration", "TargetFps", m_targetFps);
         config.SetBoolean("configuration", "VSync", m_vsync);
         config.SetInt(LOG_SECTION_NAME, "ClassicLogLevel", m_classicLogLevel);
         config.SetInt(LOG_SECTION_NAME, "RaylibLogLevel", m_raylibLogLevel);
         config.SetBoolean("configuration", "Fullscreen", m_fullscreen);
+        config.SetBoolean("themes", "themeReferenceOverlay", m_themeReferenceOverlay);
+        config.SetString("themes", "themeReferenceImage", m_themeReferenceImage);
     }
 
     void ConfigurationManager::GetValues(SimpleIni& config)
     {
         m_internalScale = config.GetInt("configuration", "InternalScale", 2);
-        m_forceInternalScale = config.GetBoolean("configuration", "ForceInternalScale", false);
         m_volume = config.GetInt("configuration", "Volume", 100);
         m_targetFps = config.GetInt("configuration", "TargetFps", 60);
         m_vsync = config.GetBoolean("configuration", "VSync", true);
         m_classicLogLevel = config.GetInt(LOG_SECTION_NAME, "ClassicLogLevel", CLASSIC_LOG_LEVEL);
         m_raylibLogLevel = config.GetInt(LOG_SECTION_NAME, "RaylibLogLevel", RAYLIB_LOG_LEVEL);
         m_fullscreen = config.GetBoolean("configuration", "Fullscreen", FULLSCREEN);
+        m_themeReferenceOverlay = config.GetBoolean("themes", "themeReferenceOverlay", false);
+        m_themeReferenceImage = config.GetString("themes", "themeReferenceImage", "none");
     }
 
     void ConfigurationManager::LoadConfiguration()
