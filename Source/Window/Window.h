@@ -2,13 +2,21 @@
 #define WINDOW_H
 
 #include <string>
+#include <string_view>
 #include <vector>
 #include "Data/Vector2.h"
+#include "ClassicLauncher.h"
 
 namespace ClassicLauncher
 {
 
-    //struct Image;
+    struct WindowSpecs
+    {
+        inline static constexpr int Width = 1280;
+        inline static constexpr int Height = 720;
+        inline static constexpr std::string_view Title = TITLE  PRODUCT_VERSION_STRING;  
+    };
+    
 
     class Window
     {

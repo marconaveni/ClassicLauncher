@@ -3,6 +3,7 @@
 #include "Utils/Log.h"
 #include "Utils/Math.h"
 #include "Utils/Utils.h"
+#include "Window/Window.h"
 
 namespace ClassicLauncher
 {
@@ -108,8 +109,8 @@ namespace ClassicLauncher
             return false;
         }
 
-        mWidth = Math::Clamp(width, 0, 1280 * scale);
-        mHeight = Math::Clamp(height, 0, 720 * scale);
+        mWidth = Math::Clamp(width, 0, WindowSpecs::Width * scale);
+        mHeight = Math::Clamp(height, 0, WindowSpecs::Height * scale);
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"

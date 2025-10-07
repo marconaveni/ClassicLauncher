@@ -6,6 +6,7 @@
 #include "Themes/ThemesManager.h"
 #include "rl_wrap.h"
 #include "Utils/Utils.h"
+#include "Window/RayWindow.h"
 
 namespace ClassicLauncher
 {
@@ -58,7 +59,10 @@ namespace ClassicLauncher
         m_playerFullScreen = nullptr;
         m_playerFullScreen = std::make_unique<VideoPlayer>();
         const float scale = ThemesManager::GetScaleRenderer();
-        m_playerFullScreen->Init(m_filePath, 1280, 720, scale);
+        //m_playerFullScreen->Init(m_filePath, WindowSpecs::Width, WindowSpecs::Height, scale);
+        Sizei monitorSize{RayWindow::GetMonitorWidth(RayWindow::GetCurrentMonitor()), 
+                             RayWindow::GetMonitorHeight(RayWindow::GetCurrentMonitor())};
+        m_playerFullScreen->Init(m_filePath, monitorSize.width, monitorSize.height, scale);
         m_playerFullScreen->Play();
         m_playerFullScreen->SetLoop(false);
         GetEntityManager()->SetZOrder(this, 99); // todo temp
@@ -177,15 +181,16 @@ namespace ClassicLauncher
         {
             const Color color = m_gui.GetColor();
             const float scale = ThemesManager::GetScaleRenderer();
+            
 
             rlw::DrawTexturePro(*textureBlack,
-                                RectFloat{0.0f, 0.0f, 1280.0f * scale, 720.0f * scale},
-                                RectFloat{0.0f, 0.0f, 1280.0f * scale, 720.0f * scale},
+                                RectFloat{0.0f, 0.0f, WindowSpecs::Width * scale, WindowSpecs::Height * scale},
+                                RectFloat{0.0f, 0.0f, WindowSpecs::Width * scale, WindowSpecs::Height * scale},
                                 Vector2f{0.0f, 0.0f},
                                 0.0f,
                                 color);
 
-            Vector2f size{
+            Vector2f sizeVideo{
                 textureFullScreen->GetSize().width * scale,
                 textureFullScreen->GetSize().height * scale
             };
@@ -193,11 +198,11 @@ namespace ClassicLauncher
             textureFullScreen->SetSmooth(true);
 
 
-            Utils::SetSizeWithProportionFit(size, 1280 * scale, 720 * scale);
-            const float x = ((1280.0f * scale) - size.x) / 2;
+            Utils::SetSizeWithProportionFit(sizeVideo, WindowSpecs::Width * scale, WindowSpecs::Height * scale);
+            const float x = ((WindowSpecs::Width * scale) - sizeVideo.x) / 2;
             rlw::DrawTexturePro(*textureFullScreen,
                                 RectFloat{0.0f, 0.0f, textureFullScreen->GetSize().width, textureFullScreen->GetSize().height},
-                                RectFloat{x, 0.0f, size.x , size.y},
+                                RectFloat{x, 0.0f, sizeVideo.x , sizeVideo.y},
                                 Vector2f{0.0f, 0.0f},
                                 0.0f,
                                 color);

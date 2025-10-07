@@ -23,12 +23,6 @@ namespace ClassicLauncher
     void Engine::Run()
     {
 
-#if _DEBUG
-        std::string title = std::format("Classic Launcher [DEVMODE] {}", PRODUCT_VERSION_STRING);
-#else
-        std::string title = "Classic Launcher";
-#endif
-
 
         std::vector<std::string> imgs = {Resources::GetIconFile(16).c_str(),
                                          Resources::GetIconFile(32).c_str(),
@@ -36,10 +30,10 @@ namespace ClassicLauncher
                                          Resources::GetIconFile(64).c_str(),
                                          Resources::GetIconFile(128).c_str()};
 
-        m_window.Init(1280, 720, title);
+        m_window.Init(WindowSpecs::Width, WindowSpecs::Height, WindowSpecs::Title.data());
         m_window.SetIcons(imgs);
         m_application.Init();
-        m_renderSystem.Init(1280, 720);
+        m_renderSystem.Init(WindowSpecs::Width, WindowSpecs::Height);
 
         while (!m_window.ShouldClose())
         {

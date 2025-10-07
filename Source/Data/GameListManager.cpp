@@ -225,6 +225,11 @@ namespace ClassicLauncher
 
     GameSystemList* GameListManager::GetCurrentSystemList()
     {
+        if (m_idSystemList < 0)
+        {
+            return nullptr;
+        }
+        
         CLASSIC_ASSERT(m_idSystemList >= 0, "must be greater than zero");
         return &m_systemList[m_idSystemList];
     }

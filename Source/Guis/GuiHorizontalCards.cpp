@@ -204,13 +204,15 @@ namespace ClassicLauncher
             m_idLastFocusSystem = m_idFocus;
             m_gameListManagerRef->ChangeSystemToGameList();
 
-            // If GameList fails it returns to the system selection menu.
-            if (m_gameListManagerRef->GetGameListSize() == 0)
+            GameSystemList* pCurrentList = m_gameListManagerRef->GetCurrentSystemList();
+
+            // If GameList or ptr of CurrentList fails it returns to the system selection menu.
+            if (!pCurrentList || m_gameListManagerRef->GetGameListSize() == 0)
             {
                 ChangeList(CurrentList::SystemListSelect);
             }
-
-            SetFocus(m_gameListManagerRef->GetCurrentSystemList()->history.indexCardFocus, true);
+            
+            SetFocus(pCurrentList->history.indexCardFocus, true);                     
         }
     }
 

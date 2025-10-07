@@ -10,6 +10,7 @@
 #include "Themes/ThemesManager.h"
 #include "Utils/Log.h"
 #include "Utils/ProcessManager.h"
+#include "Window/Window.h"
 
 namespace ClassicLauncher
 {
@@ -29,16 +30,14 @@ namespace ClassicLauncher
     void GuiWindow::Init()
     {
 
-        SetSize(Sizef{1280.0f, 720.0f});
-
-        //m_transform.position.width = 1280.0f; //  todo: refactor    (float)pApplication->GetSpecification().width;
-        //m_transform.position.height = 720.0f; //  todo: refactor    (float)pApplication->GetSpecification().height;
+        const Sizei size{WindowSpecs::Width, WindowSpecs::Height };
+        SetSize(size.ToFloat());
 
         m_guiBackground = GetEntityManager()->CreateEntity<GuiBase>("GuiBackground");
 
         m_guiBackground->SetPosition(Vector2f{});
         m_guiBackground->SetOffset(Vector2f{});
-        m_guiBackground->SetSize(Sizef{1280.0f, 720.0f});
+        m_guiBackground->SetSize(size.ToFloat());
         m_guiBackground->SetSource(0.0f, 562.0f, 21.0f, 720.0f);
 
         m_guiBackground->m_textureName = "sprite";
