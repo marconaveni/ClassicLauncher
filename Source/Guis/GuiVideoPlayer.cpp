@@ -7,6 +7,7 @@
 #include "rl_wrap.h"
 #include "Utils/Utils.h"
 #include "Window/RayWindow.h"
+#include "Input/InputManager.h"
 
 namespace ClassicLauncher
 {
@@ -67,6 +68,9 @@ namespace ClassicLauncher
         m_playerFullScreen->SetLoop(false);
         GetEntityManager()->SetZOrder(this, 99); // todo temp
         VideoFadeinAnimate(0.5f, &m_gui);
+        
+        InputManager::SetCategory(VIDEO_FULLSCREEN);
+        InputManager::RemoveCategory(MAIN);
     }
 
     void GuiVideoPlayer::Stop()
@@ -87,6 +91,9 @@ namespace ClassicLauncher
 
         m_player->Resume();
         GetEntityManager()->SetZOrder(this, 1);
+        
+        InputManager::SetCategory(MAIN);
+        InputManager::RemoveCategory(VIDEO_FULLSCREEN);
     }
 
     void GuiVideoPlayer::Update()

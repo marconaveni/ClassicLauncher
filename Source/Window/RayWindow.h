@@ -36,6 +36,7 @@ namespace ClassicLauncher
         static Vector2i GetMonitorPosition(int monitor);
         static Vector2i GetMousePosition();
         static Vector2f GetVirtualMouse();
+        static void ShowCursor(bool bEnable);     
 
         void PoolEvents();
         void SetConfigFlags(unsigned int flags);

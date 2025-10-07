@@ -41,24 +41,24 @@ namespace ClassicLauncher
     {
     private:
 
-        static libvlc_instance_t* mVLC;
-        libvlc_media_t* mMedia = nullptr;
-        libvlc_media_player_t* mMediaPlayer = nullptr;
-        int mWidthVideo = 1;
-        int mHeightVideo = 1;
+        static libvlc_instance_t* m_VLC;
+        libvlc_media_t* m_media = nullptr;
+        libvlc_media_player_t* m_mediaPlayer = nullptr;
+        int m_widthVideo = 1;
+        int m_heightVideo = 1;
 
-        VideoContext mContext;
-        Texture texture; // Textura da imagem para renderizar na tela
-        bool bIsEnabledVlC;
-        unsigned int mWidth;
-        unsigned int mHeight;
-        bool bLoop = true;
+        VideoContext m_context;
+        Texture m_texture; // Textura da imagem para renderizar na tela
+        bool m_isEnabledVlC;
+        unsigned int m_width;
+        unsigned int m_height;
+        bool m_bLoop = true;
 
         static void StartVLCInstance();
 
     public:
 
-        bool mIsPlaying = false;
+        //bool m_isPlaying = false;
 
         VideoPlayer();
         ~VideoPlayer();
@@ -74,7 +74,7 @@ namespace ClassicLauncher
         bool IsVideoFinished();
         bool IsVideoPlaying();
         bool IsVideoStopped();
-        void SetLoop(bool loop) { bLoop = loop; }
+        void SetLoop(bool loop) { m_bLoop = loop; }
         void SetVolume(int volume);
     };
 

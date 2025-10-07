@@ -125,13 +125,9 @@ namespace ClassicLauncher
         if (IsFocus() && InputManager::IsRelease(InputName::leftFaceDown, InputCategory::MAIN))
         {
             m_guiVideoPlayer->InitFullscreen();
-            InputManager::SetCategory(VIDEO_FULLSCREEN);
-            InputManager::RemoveCategory(MAIN);
         }
         if (IsFocus() && InputManager::IsRelease(InputName::rightFaceRight, InputCategory::VIDEO_FULLSCREEN))
         {   
-            InputManager::SetCategory(MAIN);
-            InputManager::RemoveCategory(VIDEO_FULLSCREEN);
             m_guiVideoPlayer->StopFullscreen();
         }
         

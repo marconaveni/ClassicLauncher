@@ -7,7 +7,7 @@
 
 namespace ClassicLauncher
 {
-    libvlc_instance_t* VideoPlayer::mVLC = nullptr;
+    libvlc_instance_t* VideoPlayer::m_VLC = nullptr;
 
     // VLC prepara para renderizar um frame de vídeo.
     void* lock(void* data, void** p_pixels)
@@ -57,10 +57,10 @@ namespace ClassicLauncher
         };
         int vlc_argc = sizeof(vlc_argv) / sizeof(*vlc_argv);
 
-        if (!mVLC)
+        if (!m_VLC)
         {
-            mVLC = libvlc_new(vlc_argc, vlc_argv);  // LibVLC initialization instance
-            if (!mVLC)
+            m_VLC = libvlc_new(vlc_argc, vlc_argv);  // LibVLC initialization instance
+            if (!m_VLC)
             {
                 LOG(LOG_CLASSIC_FATAL, "LibVLC initialization failure.");
             }
@@ -68,7 +68,7 @@ namespace ClassicLauncher
     }
 
     VideoPlayer::VideoPlayer()
-        : mContext{}, bIsEnabledVlC(false), mWidth(0), mHeight(0), bLoop(true)
+        : m_context{}, m_isEnabledVlC(false), m_width(0), m_height(0), m_bLoop(true)
     {
         LOG(LOG_CLASSIC_TRACE, "Initializing VideoPlayer...");
         StartVLCInstance();
@@ -90,37 +90,37 @@ namespace ClassicLauncher
             LOG(LOG_CLASSIC_WARNING, "path is empty.");
             return false;
         }
-        if (!mVLC)
+        if (!m_VLC)
         {
             LOG(LOG_CLASSIC_ERROR, "LibVLC not initializate.");
             return false;
         }
 
-        mMedia = libvlc_media_new_path(mVLC, path.c_str());
-        if (!mMedia)
+        m_media = libvlc_media_new_path(m_VLC, path.c_str());
+        if (!m_media)
         {
             LOG(LOG_CLASSIC_ERROR, "mMedia initialization failure.");
             return false;
         }
-        mMediaPlayer = libvlc_media_player_new_from_media(mMedia);
-        if (!mMediaPlayer)
+        m_mediaPlayer = libvlc_media_player_new_from_media(m_media);
+        if (!m_mediaPlayer)
         {
             LOG(LOG_CLASSIC_ERROR, "mMediaPlayer initialization failure.\n");
             return false;
         }
 
-        mWidth = Math::Clamp(width, 0, WindowSpecs::Width * scale);
-        mHeight = Math::Clamp(height, 0, WindowSpecs::Height * scale);
+        m_width = Math::Clamp(width, 0, WindowSpecs::Width * scale);
+        m_height = Math::Clamp(height, 0, WindowSpecs::Height * scale);
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-        libvlc_media_parse(mMedia);  // libvlc_media_parse_with_options() is async function
+        libvlc_media_parse(m_media);  // libvlc_media_parse_with_options() is async function
 #pragma GCC diagnostic pop
 
         // Get the media metadata so we can find the aspect ratio
         unsigned track_count;
         libvlc_media_track_t** tracks;
-        track_count = libvlc_media_tracks_get(mMedia, &tracks);
+        track_count = libvlc_media_tracks_get(m_media, &tracks);
 
         if (track_count == 0)
         {
@@ -132,8 +132,8 @@ namespace ClassicLauncher
             // libvlc_media_track_t* tr = tracks[track];
             if (tracks[track]->i_type == libvlc_track_video)
             {
-                mWidthVideo = tracks[track]->video->i_width;
-                mHeightVideo = tracks[track]->video->i_height;
+                m_widthVideo = tracks[track]->video->i_width;
+                m_heightVideo = tracks[track]->video->i_height;
             }
             else if (tracks[track]->i_type == libvlc_track_audio)
             {
@@ -141,78 +141,78 @@ namespace ClassicLauncher
         }
         libvlc_media_tracks_release(tracks, track_count);
 
-        Vector2f textureSize((float)mWidthVideo, (float)mHeightVideo);
-        Utils::SetSizeWithProportion(textureSize, mWidth, mHeight, bFill);
-        mWidthVideo = (int)textureSize.x;
-        mHeightVideo = (int)textureSize.y;
+        Vector2f textureSize((float)m_widthVideo, (float)m_heightVideo);
+        Utils::SetSizeWithProportion(textureSize, m_width, m_height, bFill);
+        m_widthVideo = (int)textureSize.x;
+        m_heightVideo = (int)textureSize.y;
 
-        mContext.image[0] = { calloc(mWidthVideo * mHeightVideo * 4, 1),  // 4 bytes pixel (RGBA)
-                              mWidthVideo,
-                              mHeightVideo,
+        m_context.image[0] = { calloc(m_widthVideo * m_heightVideo * 4, 1),  // 4 bytes pixel (RGBA)
+                              m_widthVideo,
+                              m_heightVideo,
                               1,
                               PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 };
 
-        mContext.image[0].CopyTo(mContext.image[1]);
+        m_context.image[0].CopyTo(m_context.image[1]);
 
-        texture.LoadFromImage(&mContext.image[0]); 
+        m_texture.LoadFromImage(&m_context.image[0]); 
 
-        libvlc_video_set_format(mMediaPlayer, "RGBA", mWidthVideo, mHeightVideo, mWidthVideo * 4);
-        libvlc_video_set_callbacks(mMediaPlayer, lock, unlock, display, &mContext);
+        libvlc_video_set_format(m_mediaPlayer, "RGBA", m_widthVideo, m_heightVideo, m_widthVideo * 4);
+        libvlc_video_set_callbacks(m_mediaPlayer, lock, unlock, display, &m_context);
 
-        bIsEnabledVlC = mVLC && mMedia && mMediaPlayer;
-        return bIsEnabledVlC;
+        m_isEnabledVlC = m_VLC && m_media && m_mediaPlayer;
+        return m_isEnabledVlC;
     }
 
     void VideoPlayer::Play()
     {
-        if (!bIsEnabledVlC) return;
+        if (!m_isEnabledVlC) return;
 
-        libvlc_media_player_stop(mMediaPlayer);
-        libvlc_media_player_play(mMediaPlayer);
+        libvlc_media_player_stop(m_mediaPlayer);
+        libvlc_media_player_play(m_mediaPlayer);
     }
 
     void VideoPlayer::Pause()
     {
-        if (!bIsEnabledVlC) return;
+        if (!m_isEnabledVlC) return;
 
-        libvlc_media_player_pause(mMediaPlayer);
+        libvlc_media_player_pause(m_mediaPlayer);
     }
 
     void VideoPlayer::Resume()
     {
-        if (!bIsEnabledVlC) return;
+        if (!m_isEnabledVlC) return;
 
-        libvlc_media_player_play(mMediaPlayer);
+        libvlc_media_player_play(m_mediaPlayer);
     }
 
     void VideoPlayer::Stop()
     {
-        if (!bIsEnabledVlC) return;
+        if (!m_isEnabledVlC) return;
 
-        libvlc_media_player_stop(mMediaPlayer);
+        libvlc_media_player_stop(m_mediaPlayer);
     }
 
     void VideoPlayer::Update()
     {
-        if (!bIsEnabledVlC) return;
+        if (!m_isEnabledVlC) return;
 
-        int frame = mContext.frameId;
+        int frame = m_context.frameId;
 
-        if (mContext.frameLock[frame])
+        if (m_context.frameLock[frame])
         {
-            mContext.frameMutex[frame].lock();
+            m_context.frameMutex[frame].lock();
             //rlw::UpdateTexture(texture, mContext.image[frame].data);
-            texture.Update(mContext.image[frame].data);
-            mContext.frameLock[frame] = false;
-            LOG(LOG_CLASSIC_TRACE, "video texture updated %d", mContext.countFrame);
-            mContext.frameMutex[frame].unlock();
+            m_texture.Update(m_context.image[frame].data);
+            m_context.frameLock[frame] = false;
+            LOG(LOG_CLASSIC_TRACE, "video texture updated %d", m_context.countFrame);
+            m_context.frameMutex[frame].unlock();
         }
         else
         {
-            LOG(LOG_CLASSIC_TRACE, "video texture not updated \"mContext.frameLock[%d]\" is locked", mContext.frameLock[frame]);
+            LOG(LOG_CLASSIC_TRACE, "video texture not updated \"mContext.frameLock[%d]\" is locked", m_context.frameLock[frame]);
         }
 
-        if (IsVideoFinished() && bLoop)
+        if (IsVideoFinished() && m_bLoop)
         {
             Play();
         }
@@ -220,81 +220,81 @@ namespace ClassicLauncher
 
     void VideoPlayer::Unload()
     {
-        bIsEnabledVlC = false;
+        m_isEnabledVlC = false;
 
         // Release the media player
-        if (mMediaPlayer)
+        if (m_mediaPlayer)
         {
-            libvlc_media_player_stop(mMediaPlayer);
-            libvlc_media_player_release(mMediaPlayer);
-            mMediaPlayer = NULL;
+            libvlc_media_player_stop(m_mediaPlayer);
+            libvlc_media_player_release(m_mediaPlayer);
+            m_mediaPlayer = NULL;
         }
 
         // Release the media
-        if (mMedia)
+        if (m_media)
         {
-            libvlc_media_release(mMedia);
-            mMedia = NULL;
+            libvlc_media_release(m_media);
+            m_media = NULL;
         }
 
         // Release raylib resources
-        if (texture.IsValid())
+        if (m_texture.IsValid())
         {
-            texture.Unload();
+            m_texture.Unload();
             //texture = rlw::Texture2D();
         }
-        if (mContext.image[0].IsValid())
+        if (m_context.image[0].IsValid())
         {
-            mContext.image[0].Unload();
-            mContext.image[0] = Image();
+            m_context.image[0].Unload();
+            m_context.image[0] = Image();
         }
-        if (mContext.image[1].IsValid())
+        if (m_context.image[1].IsValid())
         {
-            mContext.image[1].Unload();
-            mContext.image[1] = Image();
+            m_context.image[1].Unload();
+            m_context.image[1] = Image();
         }
     }
 
     Texture* VideoPlayer::GetVideoTexture()
     {
-        return (texture.IsValid()) ? &texture : nullptr;
+        return (m_texture.IsValid()) ? &m_texture : nullptr;
     }
 
     Sizef VideoPlayer::GetVideoSize()
     {
-        return (texture.IsValid()) ? texture.GetSize() : Sizef{};
+        return (m_texture.IsValid()) ? m_texture.GetSize() : Sizef{};
         // return Vector2{ static_cast<float>(mWidth), static_cast<float>(mHeight) };
     }
 
     bool VideoPlayer::IsVideoFinished()
     {
-        if (!bIsEnabledVlC) return false;
+        if (!m_isEnabledVlC) return false;
 
-        const libvlc_state_t state = libvlc_media_player_get_state(mMediaPlayer);
+        const libvlc_state_t state = libvlc_media_player_get_state(m_mediaPlayer);
         return state == libvlc_Ended || state == libvlc_Error;
     }
 
     bool VideoPlayer::IsVideoPlaying()
     {
-        if (!bIsEnabledVlC) return false;
+        if (!m_isEnabledVlC) return false;
 
-        const libvlc_state_t state = libvlc_media_player_get_state(mMediaPlayer);
+        const libvlc_state_t state = libvlc_media_player_get_state(m_mediaPlayer);
         return state == libvlc_Playing;
     }
 
     bool VideoPlayer::IsVideoStopped()
     {
-        if (!bIsEnabledVlC) return false;
+        if (!m_isEnabledVlC) return false;
 
-        const libvlc_state_t state = libvlc_media_player_get_state(mMediaPlayer);
+        const libvlc_state_t state = libvlc_media_player_get_state(m_mediaPlayer);
         return state == libvlc_Stopped;
     }
 
     void VideoPlayer::SetVolume(int volume)
     {
-        if (!bIsEnabledVlC) return;
+        if (!m_isEnabledVlC) return;
 
-        libvlc_audio_set_volume(mMediaPlayer, volume);
+        libvlc_audio_set_volume(m_mediaPlayer, volume);
     }
 
 }  // namespace ClassicLauncher

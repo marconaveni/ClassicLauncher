@@ -7,6 +7,7 @@
 namespace ray
 {
 #include "raylib.h"
+#include "RayWindow.h"
 } // namespace ray
 
 namespace ClassicLauncher
@@ -164,6 +165,17 @@ namespace ClassicLauncher
         return m_virtualMouse;
     }
 
+
+    void RayWindow::ShowCursor(bool bEnable)
+    {
+        if (bEnable)
+        {
+            ray::ShowCursor();
+            return;
+        }
+        ray::HideCursor();            
+    }
+
     bool RayWindow::ToggleFullscreen()
     {
 #ifdef _WIN32
@@ -211,6 +223,7 @@ namespace ClassicLauncher
             m_isFullScreen = false;
         }
 #endif
+        ShowCursor(!m_isFullScreen);
         return m_isFullScreen;
     }
 
