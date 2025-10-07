@@ -5,20 +5,20 @@
 namespace ClassicLauncher
 {
 
-    static InputManager* sInstanceInputManager = nullptr;
+    static InputManager* s_instanceInputManager = nullptr;
 
     InputManager::InputManager()
         : m_gamePadIdSelected(0), m_amoutDown(0), m_disableInput(false), m_category(0)
     {
-        if (sInstanceInputManager == nullptr)
+        if (s_instanceInputManager == nullptr)
         {
-            sInstanceInputManager = this;
+            s_instanceInputManager = this;
         }
     }
 
     InputManager::~InputManager()
     {
-        sInstanceInputManager = nullptr;
+        s_instanceInputManager = nullptr;
     }
 
     bool IsModifierKey()
@@ -76,59 +76,59 @@ namespace ClassicLauncher
 
     bool InputManager::IsPress(InputName name, unsigned int category)
     {
-        if (!sInstanceInputManager)
+        if (!s_instanceInputManager)
         {
             return false;
         }
-        return sInstanceInputManager->m_inputs[name].bPress && sInstanceInputManager->CheckCategory(category);
+        return s_instanceInputManager->m_inputs[name].bPress && s_instanceInputManager->CheckCategory(category);
     }
 
     bool InputManager::IsDown(InputName name, unsigned int category)
     {
-        if (!sInstanceInputManager)
+        if (!s_instanceInputManager)
         {
             return false;
         }
-        return sInstanceInputManager->m_inputs[name].bDown && sInstanceInputManager->CheckCategory(category);
+        return s_instanceInputManager->m_inputs[name].bDown && s_instanceInputManager->CheckCategory(category);
     }
 
     bool InputManager::IsRelease(InputName name, unsigned int category)
     {
-        if (!sInstanceInputManager)
+        if (!s_instanceInputManager)
         {
             return false;
         }
-        return sInstanceInputManager->m_inputs[name].bRelease && sInstanceInputManager->CheckCategory(category);
+        return s_instanceInputManager->m_inputs[name].bRelease && s_instanceInputManager->CheckCategory(category);
     }
 
     bool InputManager::IsUp(InputName name, unsigned int category)
     {
-        if (!sInstanceInputManager)
+        if (!s_instanceInputManager)
         {
             return false;
         }
-        return sInstanceInputManager->m_inputs[name].bUp && sInstanceInputManager->CheckCategory(category);
+        return s_instanceInputManager->m_inputs[name].bUp && s_instanceInputManager->CheckCategory(category);
     }
 
     void InputManager::EnableInput()
     {
-        if (!sInstanceInputManager)
+        if (!s_instanceInputManager)
         {
             return;
         }
 
-        sInstanceInputManager->m_disableInput = false;
+        s_instanceInputManager->m_disableInput = false;
     }
 
     void InputManager::DisableInput()
     {
-        if (!sInstanceInputManager)
+        if (!s_instanceInputManager)
         {
             return;
         }
 
-        sInstanceInputManager->m_disableInput = true;
-        for (auto& input : sInstanceInputManager->m_inputs)
+        s_instanceInputManager->m_disableInput = true;
+        for (auto& input : s_instanceInputManager->m_inputs)
         {
             input.CancelInput();
         }
@@ -136,7 +136,7 @@ namespace ClassicLauncher
 
     bool InputManager::CheckCategory(unsigned int category) const
     {
-        if (!sInstanceInputManager)
+        if (!s_instanceInputManager)
         {
             return false;
         }
@@ -161,12 +161,12 @@ namespace ClassicLauncher
 
     void InputManager::SetCategory(unsigned int category)
     {
-        if (!sInstanceInputManager)
+        if (!s_instanceInputManager)
         {
             return;
         }
 
-        unsigned int& pCategory = sInstanceInputManager->m_category;
+        unsigned int& pCategory = s_instanceInputManager->m_category;
 
         if ((pCategory & MAIN) != (category & MAIN) && (category & MAIN) > 0)
         {
@@ -184,12 +184,12 @@ namespace ClassicLauncher
 
     void InputManager::RemoveCategory(unsigned int category)
     {
-        if (!sInstanceInputManager)
+        if (!s_instanceInputManager)
         {
             return;
         }
 
-        unsigned int& pCategory = sInstanceInputManager->m_category;
+        unsigned int& pCategory = s_instanceInputManager->m_category;
 
         if ((pCategory & MAIN) > 0 && (category & MAIN) > 0)
         {
