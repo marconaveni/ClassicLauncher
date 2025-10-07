@@ -64,6 +64,14 @@ namespace ClassicLauncher
 
     void Texture::SetSmooth(bool status)
     {
+        if (status == m_smooth)
+        {
+            return; 
+        }
+
+        m_smooth = status;
+
+
         if (!IsValid())
         {
             return;

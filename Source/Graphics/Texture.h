@@ -61,6 +61,7 @@ namespace ClassicLauncher
         void Update(const void* pixels);
         void Update(const void* pixels, RectInt rec);
         void Unload();
+        [[nodiscard]] bool IsSmooth() const { return m_smooth; }
         [[nodiscard]] unsigned int GetId() const { return m_id; }
         [[nodiscard]] int GetMipmaps() const { return m_mipmaps; }
         [[nodiscard]] int GetFormat() const { return m_format; }
@@ -75,6 +76,7 @@ namespace ClassicLauncher
         int m_height{};
         int m_mipmaps{};
         int m_format{};
+        bool m_smooth{false};
     };
 
 } // namespace ClassicLauncher
