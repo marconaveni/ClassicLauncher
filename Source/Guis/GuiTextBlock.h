@@ -4,7 +4,8 @@
 #include <string>
 
 #include "Entity/Entity.h"
-#include "Graphics/Font.h"
+//#include "Graphics/Font.h"
+//#include "Graphics/FontManager.h"
 
 namespace ClassicLauncher
 {
@@ -20,8 +21,9 @@ namespace ClassicLauncher
     {
     public:
 
-        GuiTextBlock(const std::string& path, int size = 16, int spacing = 0);
+        GuiTextBlock();
         ~GuiTextBlock();
+        void Init(const std::string& path, int size = 16, int spacing = 0);
         virtual EntityType GetType() const override { return EntityType::GuiTextBlockClass; }
         void LoadNewFont(const std::string& path, int size = 16, int spacing = 0);
         void UpdateFont(const std::string& path);
@@ -41,9 +43,10 @@ namespace ClassicLauncher
 
     private:
 
-        Font m_font;
+        //Font m_font;
         std::string m_text;
         std::string m_pathFont;
+        std::string m_nameFont;
         int m_sizeText;
         int m_spacing;
         float m_offsetText;

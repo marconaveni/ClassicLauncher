@@ -18,8 +18,8 @@ namespace ClassicLauncher
         int glyphCount{};
         int glyphPadding{};
 
-        void* _native{};    // ponteiro pro nativo (::Font*)
-        bool _owned{false}; // true: veio de LoadFontEx (descarrega); false: default font (não descarrega)
+        void* data{nullptr};      // ponteiro pro nativo (::Font*)
+        bool owned{false}; // true: veio de LoadFontEx (descarrega); false: default font (não descarrega)
 
         [[nodiscard]] bool IsValid() const;
         void Unload();

@@ -9,23 +9,23 @@ namespace ClassicLauncher
 {
     bool Font::IsValid() const
     {
-        if (!_native)
+        if (!data)
         {
             return false;
         }
-        return ray::IsFontValid(*static_cast<ray::Font*>(_native));
+        return ray::IsFontValid(*static_cast<ray::Font*>(data));
     }
 
     void Font::Unload()
     {
-        if (!_native)
+        if (!data)
         {
             return;
         }
-        if (_owned)
+        if (owned)
         {
-            ray::UnloadFont(*static_cast<ray::Font*>(_native));
-            delete static_cast<ray::Font*>(_native); // delete own ptr caution here
+            ray::UnloadFont(*static_cast<ray::Font*>(data));
+            delete static_cast<ray::Font*>(data); // delete own ptr caution here
         }
     }
 
@@ -35,8 +35,8 @@ namespace ClassicLauncher
         baseSize = rayFont->baseSize;
         glyphCount = rayFont->glyphCount;
         glyphPadding = rayFont->glyphPadding;
-        _native = rayFont; // we keep the pointer here
-        _owned = true;     // we allocate, then we unload later
+        data = rayFont; // we keep the pointer here
+        owned = true;     // we allocate, then we unload later
         ray::SetTextureFilter(rayFont->texture, ray::TEXTURE_FILTER_BILINEAR);
     }
 
@@ -49,20 +49,20 @@ namespace ClassicLauncher
             defaultFont.baseSize = s_default_native.baseSize;
             defaultFont.glyphCount = s_default_native.glyphCount;
             defaultFont.glyphPadding = s_default_native.glyphPadding;
-            defaultFont._native = &s_default_native; // ponteiro estável para a estática
-            defaultFont._owned = false;              // NÃO descarregar: é o default
+            defaultFont.data = &s_default_native; // ponteiro estável para a estática
+            defaultFont.owned = false;              // NÃO descarregar: é o default
         }
         return defaultFont;
     }
 
     Vector2f Font::MeasureTextEx(const std::string& text, float fontSize, float spacing)
     {
-        if (_native == nullptr || text.empty())
+        if (data == nullptr || text.empty())
         {
             return ClassicLauncher::Vector2f{0, 0};
         }
 
-        ray::Vector2 vec = ray::MeasureTextEx(*static_cast<ray::Font*>(_native), text.c_str(), fontSize, spacing);
+        ray::Vector2 vec = ray::MeasureTextEx(*static_cast<ray::Font*>(data), text.c_str(), fontSize, spacing);
         return Vector2f{vec.x, vec.y};
     }
 

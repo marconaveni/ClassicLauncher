@@ -15,6 +15,7 @@ namespace ClassicLauncher
     class TimerManager;
     class SpriteManager;
     class FocusManager;
+    class FontManager;
 
     class EntityManager
     {
@@ -22,7 +23,8 @@ namespace ClassicLauncher
 
         EntityManager(SpriteManager* spriteManagerReference,
                       TimerManager* timerManagerReference,
-                      FocusManager* focusManagerRef);
+                      FocusManager* focusManagerRef,
+                      FontManager* fontManagerRef);
         ~EntityManager();
 
         template <typename T, typename... Args>
@@ -33,6 +35,7 @@ namespace ClassicLauncher
             entity->m_timerManagerRef = m_timerManagerReference;
             entity->m_spriteManagerReference = m_spriteManagerReference;
             entity->m_focusManagerRef = m_focusManagerReference;
+            entity->m_fontManagerRef = m_fontManagerReference;
             SetNameId(entity.get(), name);
             m_tempEntities.push_back(std::move(entity));
             return static_cast<T*>(m_tempEntities.back().get());  // .back last element vector
@@ -75,6 +78,7 @@ namespace ClassicLauncher
         SpriteManager* m_spriteManagerReference;
         TimerManager* m_timerManagerReference;
         FocusManager* m_focusManagerReference;
+        FontManager* m_fontManagerReference;
         bool m_markOrder = false;
         bool m_hasNewEntity = false;
         int m_counter = 0;

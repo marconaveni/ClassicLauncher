@@ -8,6 +8,7 @@
 #include "Audio/AudioManager.h"
 #include "Graphics/RenderSystem.h"
 #include "Graphics/SpriteManager.h"
+#include "Graphics/FontManager.h"
 #include "Input/InputManager.h"
 #include "Utils/ConfigurationManager.h"
 #include "Utils/TimerManager.h"
@@ -35,6 +36,7 @@ namespace ClassicLauncher
         SpriteManager m_spriteManager;
         TimerManager m_timerManager;
         AudioManager m_audioManager;
+        FontManager m_fontManager;
     };
 
 

@@ -11,7 +11,7 @@ namespace ClassicLauncher
 {
 
     Engine::Engine()
-        : m_application(m_configurationManager, m_spriteManager, m_timerManager, m_audioManager)
+        : m_application(m_configurationManager, m_spriteManager, m_timerManager, m_audioManager, m_fontManager)
         , m_window(m_configurationManager)
     {
     }

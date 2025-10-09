@@ -30,6 +30,7 @@ namespace ClassicLauncher
     class SpriteManager;
     class TimerManager;
     class AudioManager;
+    class FontManager;
 
     class Application
     {
@@ -38,7 +39,8 @@ namespace ClassicLauncher
         Application(ConfigurationManager& configManager,
                     SpriteManager& spriteManager,
                     TimerManager& timerManager,
-                    AudioManager& audioManager);
+                    AudioManager& audioManager,
+                    FontManager& fontManager);
         ~Application();
 
         void Init();
@@ -59,6 +61,7 @@ namespace ClassicLauncher
         SpriteManager* m_spriteManager = nullptr;
         TimerManager* m_timerManager = nullptr;
         AudioManager* m_audioManager = nullptr;
+        FontManager* m_fontManager = nullptr;
 
         GuiWindow* m_guiWindow = nullptr;
     };

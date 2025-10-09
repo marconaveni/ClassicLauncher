@@ -12,10 +12,13 @@ namespace ClassicLauncher
 
     EntityManager::EntityManager(SpriteManager* spriteManagerReference,
                                  TimerManager* timerManagerReference,
-                                 FocusManager* focusManagerRef)
+                                 FocusManager* focusManagerRef,
+                                 FontManager* fontManagerRef)
         : m_spriteManagerReference(spriteManagerReference)
         , m_timerManagerReference(timerManagerReference)
         , m_focusManagerReference(focusManagerRef)
+        , m_fontManagerReference(fontManagerRef)
+
     {
     }
 

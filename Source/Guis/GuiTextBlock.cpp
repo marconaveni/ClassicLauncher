@@ -4,6 +4,7 @@
 #include "Utils/Math.h"
 #include "Window/RayWindow.h"
 #include "Themes/ThemesManager.h"
+#include "Graphics/FontManager.h"
 #include "Helper.h"
 #include "rl_wrap.h"
 
@@ -19,33 +20,38 @@ namespace ClassicLauncher
 
     void GuiTextBlock::UpdateFont(const std::string& path)
     {
-        if (m_font.IsValid())
-        {
-            m_font.Unload();
-            m_font = Font();
-        }
+        // if (m_font.IsValid())
+        // {
+        //     m_font.Unload();
+        //     m_font = Font();
+        // }
         m_renderScale = ThemesManager::GetScaleRenderer();
-        m_font.LoadFromFile(path, m_sizeText * m_renderScale, nullptr, 250);
+        m_nameFont = GetFontManager()->Load(path, m_sizeText * m_renderScale);
+        //m_font.LoadFromFile(path, m_sizeText * m_renderScale, nullptr, 250);
     }
 
-    GuiTextBlock::GuiTextBlock(const std::string& path, int size, int spacing)
-        : m_font()
-        , m_sizeText(size)
-        , m_spacing(spacing)
-        , m_offsetText(0)
-        , m_isLeft(true)
-        , m_delay(0)
-        , m_speed(0.5f)
-        , m_maxDelay(3.0f)
-        , m_textOverflowPolicy(TextOverflowPolicy::NONE)
+    GuiTextBlock::GuiTextBlock()
+        // : m_sizeText(0)
+        // , m_pathFont(0)
+        // , m_spacing(0)
+        // , m_offsetText(0)
+        // , m_isLeft(true)
+        // , m_delay(0)
+        // , m_speed(0.5f)
+        // , m_maxDelay(3.0f)
+        // , m_textOverflowPolicy(TextOverflowPolicy::NONE)
     {
-        LoadNewFont(path, size, spacing);
         m_textureName = "text";
     }
 
     GuiTextBlock::~GuiTextBlock()
     {
         UnloadText();
+    }
+
+    void GuiTextBlock::Init(const std::string& path, int size, int spacing)
+    {
+        LoadNewFont(path, size, spacing);
     }
 
     void GuiTextBlock::Update()
@@ -88,6 +94,13 @@ namespace ClassicLauncher
     void GuiTextBlock::Draw()
     {
 
+        Font* font = GetFontManager()->GetFont(m_nameFont);
+
+        if (!font)
+        {
+            return;
+        }
+        
         RectFloat finalTransformRect = m_finalRender.transform;
 
         if (m_textOverflowPolicy == TextOverflowPolicy::CLIP)
@@ -98,7 +111,7 @@ namespace ClassicLauncher
                                   finalTransformRect.height);
         }
         rlw::DrawTextEx(
-            m_font,
+            *font,
             m_text.data(),
             Vector2f{finalTransformRect.x + m_positionText + m_offsetText, finalTransformRect.y}, // Vector2f{300 , 400},
             m_sizeText * GetWorldTransform().scale.y * m_renderScale,
@@ -147,7 +160,14 @@ namespace ClassicLauncher
 
     Vector2f GuiTextBlock::MeasureTextBox()
     {
-        return m_font.MeasureTextEx(m_text, m_sizeText, m_spacing);
+        Font* font = GetFontManager()->GetFont(m_nameFont);
+        if (!font)
+        {
+            return Vector2f{};
+        }
+        
+        return font->MeasureTextEx(m_text, m_sizeText, m_spacing);
+        //return m_font.MeasureTextEx(m_text, m_sizeText, m_spacing);
     }
 
     void GuiTextBlock::SetTextOverflowPolicy(TextOverflowPolicy textOverflowPolicy)
@@ -168,11 +188,11 @@ namespace ClassicLauncher
 
     void GuiTextBlock::UnloadText()
     {
-        if (m_font.IsValid())
-        {
-            m_font.Unload();
-            m_font = Font();
-        }
+        // if (m_font.IsValid())
+        // {
+        //     m_font.Unload();
+        //     m_font = Font();
+        // }
     }
 
 } // namespace ClassicLauncher

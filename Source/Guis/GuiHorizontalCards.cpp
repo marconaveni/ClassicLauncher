@@ -44,8 +44,8 @@ namespace ClassicLauncher
     void GuiHorizontalCards::Init()
     {
 
-        m_guiTitle = GetEntityManager()->CreateEntity<GuiTextBlock>("GuiTitle", Resources::GetFontFile(), 48, 0);
-
+        m_guiTitle = GetEntityManager()->CreateEntity<GuiTextBlock>("GuiTitle");
+        m_guiTitle->LoadNewFont(Resources::GetFontFile(), 48, 0); 
         const float x = (1280 - 1010) / 2;
         m_guiTitle->SetPosition(x, 154.0f);
         m_guiTitle->SetSize(1010.0f, 32.0f);

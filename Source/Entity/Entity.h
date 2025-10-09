@@ -26,6 +26,7 @@ namespace ClassicLauncher
     };
 
     class SpriteManager;
+    class FontManager;
     class TimerManager;
     class EntityManager;
     class FocusManager;
@@ -140,6 +141,7 @@ namespace ClassicLauncher
         SpriteManager* GetSpriteManager() { return m_spriteManagerReference; }
         EntityManager* GetEntityManager() { return m_entityManagerReference; }
         FocusManager* GetFocusManager() { return m_focusManagerRef; }
+        FontManager* GetFontManager() { return m_fontManagerRef; }
 
     private:
 
@@ -163,6 +165,7 @@ namespace ClassicLauncher
         TimerManager* m_timerManagerRef;
         EntityManager* m_entityManagerReference;
         FocusManager* m_focusManagerRef;
+        FontManager* m_fontManagerRef;
 
         // note: this should not be called directly use entity manager
         void SetZOrder(int zOrder);

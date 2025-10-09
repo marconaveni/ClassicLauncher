@@ -247,11 +247,11 @@ namespace rlw
                     float spacing,
                     ClassicLauncher::Color tint)
     {
-        if (!font._native || !text)
+        if (!font.data || !text)
         {
             return;
         }
-        ::DrawTextEx(*static_cast<::Font*>(font._native), text, to_native_vec(position), fontSize, spacing,
+        ::DrawTextEx(*static_cast<::Font*>(font.data), text, to_native_vec(position), fontSize, spacing,
                      to_native_color(tint));
     }
 
