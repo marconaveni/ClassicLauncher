@@ -78,7 +78,7 @@ namespace rlw
                         ClassicLauncher::Color tint);
 
 
-    void DrawTextEx(ClassicLauncher::Font font,
+    void DrawTextEx(const ClassicLauncher::Font& font,
                     const char* text,
                     ClassicLauncher::Vector2f position,
                     float fontSize,

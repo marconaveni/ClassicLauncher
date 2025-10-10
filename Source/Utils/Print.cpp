@@ -8,12 +8,23 @@
 #include "Utils/Resources.h"
 #include "Window/RayWindow.h"
 #include "rl_wrap.h"
+#include "Graphics/FontManager.h"
 
 namespace ClassicLauncher
 {
-    Print::Print()
-        : m_size(20), m_spacing(1), m_font()
+
+
+
+    
+    Print::Print(FontManager& fontManager)
+        : m_size(16), m_spacing(0), m_fontManagerRef(&fontManager)
     {
+    }
+
+    void Print::Init()
+    {
+        m_size = 16;
+        m_fontName = m_fontManagerRef->Load(Resources::GetFontFile(), m_size);
     }
 
     void Print::InternalPrintOnScreen(const std::string& text,
@@ -24,11 +35,6 @@ namespace ClassicLauncher
                                       int sizeY)
     {
 #ifdef _DEBUG
-
-        if (!m_font.IsValid())
-        {
-            LoadFont(Resources::GetFontFile(), 16, 0);
-        }
 
         bool bFound = false;
         for (Message& msg : m_messages)
@@ -97,7 +103,9 @@ namespace ClassicLauncher
     void Print::DrawMessage()
     {
 #ifdef _DEBUG
-        if (!m_font.IsValid())
+
+        Font* font = m_fontManagerRef->GetFont(m_fontName);
+        if (!font)
         {
             return;
         }
@@ -114,8 +122,8 @@ namespace ClassicLauncher
             const Vector2f positionRender = Vector2f{30, y};
             const Vector2f positionRenderShadow = Vector2f{31, (y + 1)};
 
-            rlw::DrawTextEx(m_font, message.textMessage.data(), positionRenderShadow, m_size, m_spacing, Color::Black);
-            rlw::DrawTextEx(m_font, message.textMessage.data(), positionRender, m_size, m_spacing, message.textColor);
+            rlw::DrawTextEx(*font, message.textMessage.data(), positionRenderShadow, m_size, m_spacing, Color::Black);
+            rlw::DrawTextEx(*font, message.textMessage.data(), positionRender, m_size, m_spacing, message.textColor);
 
             y += message.size;
 
@@ -127,24 +135,5 @@ namespace ClassicLauncher
 #endif
     }
 
-    void Print::LoadFont(const std::string& path, int size, float spacing)
-    {
-#ifdef _DEBUG
-        m_size = size;
-        m_spacing = spacing;
-        m_font.LoadFromFile(path.c_str(), size, nullptr, 250);
-        if (!m_font.IsValid())
-        {
-            m_font = Font::GetFontDefault();
-        }
-#endif
-    }
-
-    void Print::Unload()
-    {
-#ifdef _DEBUG
-        m_font.Unload();
-#endif
-    }
 
 } // namespace ClassicLauncher

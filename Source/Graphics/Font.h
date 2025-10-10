@@ -9,23 +9,36 @@
 
 namespace ClassicLauncher
 {
+    struct FontImpl;
 
     class Font
     {
     public:
 
-        int baseSize{};
-        int glyphCount{};
-        int glyphPadding{};
+        Font();
+        ~Font();
 
-        void* data{nullptr};      // ponteiro pro nativo (::Font*)
-        bool owned{false}; // true: veio de LoadFontEx (descarrega); false: default font (não descarrega)
+        Font(Font&& other) noexcept;
+        Font& operator=(Font&& other) noexcept;
+        Font(const Font&) = delete;
+        Font& operator=(const Font&) = delete;
 
-        [[nodiscard]] bool IsValid() const;
-        void Unload();
         void LoadFromFile(const std::filesystem::path& fileName, int fontSize, int* codepoints, int codepointCount);
-        static Font GetFontDefault();
+        [[nodiscard]] bool IsValid() const;
         [[nodiscard]] Vector2f MeasureTextEx(const std::string& text, float fontSize, float spacing);
+
+        [[nodiscard]] int GetBaseSize() const;
+        [[nodiscard]] int GetGlyphCount() const;
+        [[nodiscard]] int GetGlyphPadding() const;
+
+        void SetSmooth(bool status);
+
+        [[nodiscard]] void* GetNativeFont() const;
+
+    private:
+
+        std::unique_ptr<FontImpl> m_pimpl;
+        bool m_smooth{false};
     };
 
 

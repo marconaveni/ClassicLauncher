@@ -106,25 +106,6 @@ namespace rlw
         return to_wrap_vec(::GetMousePosition());
     }
 
-    // --- FS Utils ---
-    // const char* GetApplicationDirectory()
-    // {
-    //     return ::GetApplicationDirectory();
-    // }
-    // const char* GetWorkingDirectory()
-    // {
-    //     return ::GetWorkingDirectory();
-    // }
-    // bool ChangeDirectory(const char* path)
-    // {
-    //     return ::ChangeDirectory(path);
-    // }
-    // const char* GetFileNameWithoutExt(const char* filePath)
-    // {
-    //     return ::GetFileNameWithoutExt(filePath);
-    // }
-
-
     void BeginScissorMode(int x, int y, int width, int height)
     {
         ::BeginScissorMode(x, y, width, height);
@@ -142,30 +123,6 @@ namespace rlw
     {
         ::DrawRectangleLinesEx(to_native_rec(rec), lineThick, to_native_color(color));
     }
-
-
-    // const char* GetDirectoryPath(const char* filePath)
-    // {
-    //     return ::GetDirectoryPath(filePath);
-    // }
-    // bool FileExists(const char* fileName)
-    // {
-    //     return ::FileExists(fileName);
-    // }
-    // bool DirectoryExists(const char* dirPath)
-    // {
-    //     return ::DirectoryExists(dirPath);
-    // }
-    // bool MakeDirectory(const char* dirPath)
-    // {
-    //     return ::MakeDirectory(dirPath);
-    // }
-
-    // void WaitTime(double seconds)
-    // {
-    //     ::WaitTime(seconds);
-    // }
-
 
     // --- Mouse ---
     bool IsMouseButtonPressed(int button)
@@ -240,18 +197,18 @@ namespace rlw
                          to_native_color(tint));
     }
 
-    void DrawTextEx(ClassicLauncher::Font font,
+    void DrawTextEx(const ClassicLauncher::Font& font,
                     const char* text,
                     ClassicLauncher::Vector2f position,
                     float fontSize,
                     float spacing,
                     ClassicLauncher::Color tint)
     {
-        if (!font.data || !text)
+        if (!font.GetNativeFont() || !text)
         {
             return;
         }
-        ::DrawTextEx(*static_cast<::Font*>(font.data), text, to_native_vec(position), fontSize, spacing,
+        ::DrawTextEx(*static_cast<::Font*>(font.GetNativeFont()), text, to_native_vec(position), fontSize, spacing,
                      to_native_color(tint));
     }
 

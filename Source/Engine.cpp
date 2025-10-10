@@ -6,6 +6,7 @@
 #include "ClassicLauncher.h"
 #include "Helper.h"
 #include "Utils/Resources.h"
+#include "Utils/Log.h"
 
 namespace ClassicLauncher
 {
@@ -13,7 +14,9 @@ namespace ClassicLauncher
     Engine::Engine()
         : m_application(m_configurationManager, m_spriteManager, m_timerManager, m_audioManager, m_fontManager)
         , m_window(m_configurationManager)
+        , m_print(m_fontManager)
     {
+        RegistryPrint(&m_print);
     }
 
     Engine::~Engine()
@@ -34,6 +37,7 @@ namespace ClassicLauncher
         m_window.SetIcons(imgs);
         m_application.Init();
         m_renderSystem.Init(WindowSpecs::Width, WindowSpecs::Height);
+        m_print.Init();
 
         while (!m_window.ShouldClose())
         {
@@ -45,14 +49,13 @@ namespace ClassicLauncher
             m_renderSystem.EndFrame();
 
             m_renderSystem.BeginDraw(); // inicia o desenho a render screen
-            GetPrint()->DrawMessage();  // note: aqui são desenhos fora da render screen
+            m_print.DrawMessage();  // note: aqui são desenhos fora da render screen
             m_renderSystem.EndDraw();
 
             m_window.PoolEvents();
         }
 
         m_application.End();
-        GetPrint()->Unload();
     }
 
 

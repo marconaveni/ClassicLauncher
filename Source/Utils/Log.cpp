@@ -11,7 +11,7 @@
 
 namespace ClassicLauncher
 {
-    static Print s_print;
+    static Print* s_print = nullptr;
     static int s_logClassicLevel = 10;
 
     void LogLevel(const int classicLogType, const int raylibLogType)
@@ -74,36 +74,40 @@ namespace ClassicLauncher
 
     void UpdateLogLevel()
     {
+        if (!s_print)
+        {
+            return;
+        }
+        
         if (Keyboard::IsReleased(Keyboard::F1))
         {
             LogLevel(LOG_CLASSIC_DEBUG, LOG_WARNING);
             LOG(LOG_CLASSIC_DEBUG, "Enabled LOG_CLASSIC_DEBUG, LOG_WARNING");
-            s_print.PrintOnScreen("Enabled LOG_CLASSIC_DEBUG, LOG_WARNING", 5.0f);
+            s_print->PrintOnScreen("Enabled LOG_CLASSIC_DEBUG, LOG_WARNING", 5.0f);
         }
         if (Keyboard::IsReleased(Keyboard::F2))
         {
             LogLevel(LOG_CLASSIC_DEBUG, LOG_ALL);
             LOG(LOG_CLASSIC_DEBUG, "Enabled LOG_CLASSIC_DEBUG, LOG_ALL");
-            s_print.PrintOnScreen("Enabled LOG_CLASSIC_DEBUG, LOG_ALL", 5.0f);
+            s_print->PrintOnScreen("Enabled LOG_CLASSIC_DEBUG, LOG_ALL", 5.0f);
         }
         if (Keyboard::IsReleased(Keyboard::F3))
         {
             LogLevel(LOG_CLASSIC_ALL, LOG_ALL);
             LOG(LOG_CLASSIC_DEBUG, "Enabled LOG_CLASSIC_ALL, LOG_ALL");
-            s_print.PrintOnScreen("Enabled LOG_CLASSIC_ALL, LOG_ALL", 5.0f);
+            s_print->PrintOnScreen("Enabled LOG_CLASSIC_ALL, LOG_ALL", 5.0f);
         }
-        if (Keyboard::IsReleased(Keyboard::UP))
-        {
-            // mEntityManager.SetZOrder(mGuiWindow.get(), 1);
-            std::string homeDir = Resources::GetHomeDirectory();
+    }
 
-        }
+    void RegistryPrint(Print* print)
+    {
+        s_print = print;
     }
 
 
     Print* GetPrint()
     {
-        return &s_print;
+        return s_print;
     }
 
 } // namespace ClassicLauncher

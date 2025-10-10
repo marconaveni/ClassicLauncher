@@ -33,6 +33,7 @@ namespace ClassicLauncher
     void TraceLogger(int messageType, const char* text, va_list args);
     void LogClassic(int logType, int line, const char* file, const char* text, ...);
     void UpdateLogLevel();
+    void RegistryPrint(Print* print);
     Print* GetPrint();
 
 } // namespace ClassicLauncher

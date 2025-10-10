@@ -7,63 +7,91 @@ namespace ray
 
 namespace ClassicLauncher
 {
-    bool Font::IsValid() const
+
+
+    struct FontImpl
     {
-        if (!data)
+        ray::Font nativeFont{};
+        bool owned{false};
+
+        ~FontImpl()
         {
-            return false;
+            if (owned && ray::IsFontValid(nativeFont))
+            {
+                ray::UnloadFont(nativeFont);
+            }
         }
-        return ray::IsFontValid(*static_cast<ray::Font*>(data));
+    };
+
+
+    Font::Font()
+        : m_pimpl(std::make_unique<FontImpl>())
+    {
     }
 
-    void Font::Unload()
+    Font::~Font() = default;
+
+    // Construtor e atribuição de movimento
+    Font::Font(Font&& other) noexcept = default;
+    Font& Font::operator=(Font&& other) noexcept = default;
+
+    bool Font::IsValid() const
     {
-        if (!data)
-        {
-            return;
-        }
-        if (owned)
-        {
-            ray::UnloadFont(*static_cast<ray::Font*>(data));
-            delete static_cast<ray::Font*>(data); // delete own ptr caution here
-        }
+        return m_pimpl && ray::IsFontValid(m_pimpl->nativeFont);
     }
 
     void Font::LoadFromFile(const std::filesystem::path& fileName, int fontSize, int* codepoints, int codepointCount)
     {
-        ray::Font* rayFont = new ray::Font(ray::LoadFontEx(fileName.string().c_str(), fontSize, codepoints, codepointCount));
-        baseSize = rayFont->baseSize;
-        glyphCount = rayFont->glyphCount;
-        glyphPadding = rayFont->glyphPadding;
-        data = rayFont; // we keep the pointer here
-        owned = true;     // we allocate, then we unload later
-        ray::SetTextureFilter(rayFont->texture, ray::TEXTURE_FILTER_BILINEAR);
-    }
+        m_pimpl->nativeFont = ray::LoadFontEx(fileName.string().c_str(), fontSize, codepoints, codepointCount);
+        m_pimpl->owned = true; // Nós criamos, nós somos donos e devemos descarregá-la.
 
-    Font Font::GetFontDefault()
-    {
-        static Font defaultFont;
-        if (!defaultFont.IsValid())
-        {
-            static ray::Font s_default_native = ray::GetFontDefault();
-            defaultFont.baseSize = s_default_native.baseSize;
-            defaultFont.glyphCount = s_default_native.glyphCount;
-            defaultFont.glyphPadding = s_default_native.glyphPadding;
-            defaultFont.data = &s_default_native; // ponteiro estável para a estática
-            defaultFont.owned = false;              // NÃO descarregar: é o default
-        }
-        return defaultFont;
+        SetSmooth(true);
     }
 
     Vector2f Font::MeasureTextEx(const std::string& text, float fontSize, float spacing)
     {
-        if (data == nullptr || text.empty())
+        if (!IsValid() || text.empty())
         {
-            return ClassicLauncher::Vector2f{0, 0};
+            return {0.0f, 0.0f};
         }
 
-        ray::Vector2 vec = ray::MeasureTextEx(*static_cast<ray::Font*>(data), text.c_str(), fontSize, spacing);
-        return Vector2f{vec.x, vec.y};
+        ray::Vector2 vec = ray::MeasureTextEx(m_pimpl->nativeFont, text.c_str(), fontSize, spacing);
+        return {vec.x, vec.y};
+    }
+
+    int Font::GetBaseSize() const
+    {
+        return m_pimpl ? m_pimpl->nativeFont.baseSize : 0;
+    }
+
+    int Font::GetGlyphCount() const
+    {
+        return m_pimpl ? m_pimpl->nativeFont.glyphCount : 0;
+    }
+
+    int Font::GetGlyphPadding() const
+    {
+        return m_pimpl ? m_pimpl->nativeFont.glyphPadding : 0;
+    }
+
+    void Font::SetSmooth(bool status)
+    {
+        if (status == m_smooth)
+        {
+            return;
+        }
+        
+        m_smooth = status;
+
+        if (ray::IsFontValid(m_pimpl->nativeFont))
+        {
+            ray::SetTextureFilter(m_pimpl->nativeFont.texture, m_smooth ? ray::TEXTURE_FILTER_BILINEAR : ray::TEXTURE_FILTER_POINT);
+        }
+    }
+
+    void* Font::GetNativeFont() const
+    {
+        return m_pimpl ? &m_pimpl->nativeFont : nullptr;
     }
 
 } // namespace ClassicLauncher

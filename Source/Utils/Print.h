@@ -4,13 +4,16 @@
 #include <chrono>
 #include <string>
 #include <vector>
+//#include <memory>
 
 #include "Data/Color.h"
-#include "Graphics/Font.h"
+
 
 
 namespace ClassicLauncher
 {
+
+    class FontManager;
 
     struct Message
     {
@@ -44,15 +47,14 @@ namespace ClassicLauncher
     {
     public:
 
-        Print();
+        Print(FontManager& fontManager);
+        void Init();
         void PrintOnScreen(const char* text,
                            float duration = 2.0f,
                            const char* label = "",
                            const Color& textColor = Color::Cyan,
                            bool bLog = false);
         void DrawMessage();
-        void LoadFont(const std::string& path, int size = 20, float spacing = 1);
-        void Unload();
 
     private:
 
@@ -64,8 +66,9 @@ namespace ClassicLauncher
                                    int sizeY);
         int m_size;
         float m_spacing;
-        Font m_font;
+        std::string m_fontName;
         std::vector<Message> m_messages;
+        FontManager* m_fontManagerRef;
     };
 
 } // namespace ClassicLauncher
