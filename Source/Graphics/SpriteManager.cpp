@@ -106,7 +106,7 @@ namespace ClassicLauncher
         return static_cast<int>(m_spriteMap.size());
     }
 
-    void SpriteManager::UnloadSprites()
+    void SpriteManager::Unload()
     {
         m_spriteMap.clear();
     }

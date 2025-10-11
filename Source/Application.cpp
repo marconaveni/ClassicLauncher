@@ -89,7 +89,7 @@ namespace ClassicLauncher
     void Application::End()
     {
         m_audioManager->Unload();
-        m_spriteManager->UnloadSprites();
+        m_spriteManager->Unload();
         m_entityManager.End();
     }
 

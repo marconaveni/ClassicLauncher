@@ -36,7 +36,7 @@ namespace ClassicLauncher
         Image* GetImage(std::string name);
         bool DeleteSprite(std::string name);
         int NumSpritesLoaded();
-        void UnloadSprites();
+        void Unload();
 
     private:
 

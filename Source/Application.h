@@ -1,7 +1,6 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include <memory>
 
 #include "Components/FocusManager.h"
 #include "Data/GameListManager.h"

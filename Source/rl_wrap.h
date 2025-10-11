@@ -8,7 +8,6 @@
 // Escopo: apenas funções observadas em uso no projeto.
 // Namespace: rlw
 
-#include <cstdarg>
 
 #include "Data/Color.h"
 #include "Data/Rectangle.h"
@@ -40,27 +39,6 @@ namespace rlw
     // Retângulos
     void DrawRectangle(int x, int y, int width, int height, ClassicLauncher::Color color);
     void DrawRectangleLinesEx(ClassicLauncher::RectFloat rec, float lineThick, ClassicLauncher::Color color);
-
-
-    // --- Entrada ---
-
-    ClassicLauncher::Vector2f GetMousePosition();
-
-
-    // --- FS Utils ---
-    // const char* GetApplicationDirectory();
-    // const char* GetWorkingDirectory();
-    // bool ChangeDirectory(const char* path);
-    // const char* GetFileNameWithoutExt(const char* filePath);
-
-
-    //const char* GetDirectoryPath(const char* filePath);
-    // bool FileExists(const char* fileName);
-    //bool DirectoryExists(const char* dirPath);
-    //bool MakeDirectory(const char* dirPath);
-
-   // void WaitTime(double seconds);
-
 
     //////////////////ainda em uso
 

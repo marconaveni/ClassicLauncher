@@ -2,8 +2,6 @@
 #define ENGINE_H
 
 
-#include <memory>
-
 #include "Application.h"
 #include "Audio/AudioManager.h"
 #include "Graphics/RenderSystem.h"

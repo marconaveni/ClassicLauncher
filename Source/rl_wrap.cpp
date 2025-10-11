@@ -101,11 +101,6 @@ namespace rlw
         return ::IsGamepadButtonUp(gamepad, button);
     }
 
-    ClassicLauncher::Vector2f GetMousePosition()
-    {
-        return to_wrap_vec(::GetMousePosition());
-    }
-
     void BeginScissorMode(int x, int y, int width, int height)
     {
         ::BeginScissorMode(x, y, width, height);
