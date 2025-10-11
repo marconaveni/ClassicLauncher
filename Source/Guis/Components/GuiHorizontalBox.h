@@ -25,8 +25,8 @@ namespace ClassicLauncher
 
     private:
 
-        std::vector<Entity*> m_guiElements;
-        float m_spacer = 0;
+        std::vector<Entity*> m_guiElements{};
+        float m_spacer{0.0f};
     };
 
 } // namespace ClassicLauncher

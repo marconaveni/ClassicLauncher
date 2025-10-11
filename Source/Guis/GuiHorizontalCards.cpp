@@ -25,17 +25,7 @@ namespace ClassicLauncher
 {
 
     GuiHorizontalCards::GuiHorizontalCards(GameListManager* gameListManagerRef, AudioManager* audioManagerRef)
-        : m_guiTitle(nullptr)
-        , m_miniCover(nullptr)
-        , m_positionX(0)
-        , m_isLeft(false)
-        , m_isRight(false)
-        , m_isNeedUpdate(false)
-        , m_lastDirection(None)
-        , m_idFocus(0)
-        , m_idLastFocusSystem(3)
-        , m_speed(22.0f)
-        , m_gameListManagerRef(gameListManagerRef)
+        : m_gameListManagerRef(gameListManagerRef)
         , m_audioManagerRef(audioManagerRef)
     {
         SetSize(Sizef{1280.0f, 720.0f});
@@ -109,9 +99,6 @@ namespace ClassicLauncher
 
         const float cardWidth = ((m_horizontalBox->GetSize().width / 10) * m_horizontalBox->GetScale().x + m_horizontalBox->GetSpace())  ;
         
-        
-        //const float minX = ((m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * 3 + m_horizontalBox->GetPosition().x) * m_horizontalBox->GetScale().x ;
-        //const float maxX = ((m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * 6 + m_horizontalBox->GetPosition().x) * m_horizontalBox->GetScale().x ;
         const float minX = ((m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * 3 + m_horizontalBox->GetPosition().x)  ;
         const float maxX = ((m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * 6 + m_horizontalBox->GetPosition().x) ;
         m_frame->SetLimitArea(RectFloat{minX , 0.0f, maxX, 720.0f});
@@ -127,14 +114,14 @@ namespace ClassicLauncher
         Entity::End();
     }
 
-    void GuiHorizontalCards::SetFocus(const int newId, bool bForce)
+    void GuiHorizontalCards::SetFocus(const int newId, bool force)
     {
         m_guiCards[m_idFocus]->CloseVideo();
 
         m_idFocus = newId;
-        m_guiCards[newId]->SetCardFocus(bForce);
+        m_guiCards[newId]->SetCardFocus(force);
 
-        if (bForce)
+        if (force)
         {
             if (newId <= 3)
             {
@@ -148,8 +135,8 @@ namespace ClassicLauncher
         }
 
 
-        const GameList* pGameList = m_gameListManagerRef->GetCurrentGameList();
-        m_guiTitle->SetText((pGameList) ? pGameList->name : "");
+        const GameList* gameList = m_gameListManagerRef->GetCurrentGameList();
+        m_guiTitle->SetText((gameList) ? gameList->name : "");
         m_frame->SetFrame();
     }
 
@@ -204,15 +191,15 @@ namespace ClassicLauncher
             m_idLastFocusSystem = m_idFocus;
             m_gameListManagerRef->ChangeSystemToGameList();
 
-            GameSystemList* pCurrentList = m_gameListManagerRef->GetCurrentSystemList();
+            GameSystemList* currentGameList = m_gameListManagerRef->GetCurrentSystemList();
 
             // If GameList or ptr of CurrentList fails it returns to the system selection menu.
-            if (!pCurrentList || m_gameListManagerRef->GetGameListSize() == 0)
+            if (!currentGameList || m_gameListManagerRef->GetGameListSize() == 0)
             {
                 ChangeList(CurrentList::SystemListSelect);
             }
             
-            SetFocus(pCurrentList->history.indexCardFocus, true);                     
+            SetFocus(currentGameList->history.indexCardFocus, true);                     
         }
     }
 
@@ -234,10 +221,10 @@ namespace ClassicLauncher
         {
             const std::string coverName = std::to_string(i) + "_CV";
             const std::string miniCoverName = std::to_string(i) + "_MCV";
-            const bool bResult1 = GetSpriteManager()->DeleteSprite(coverName);
-            const bool bResult2 = GetSpriteManager()->DeleteSprite(miniCoverName);
+            const bool resultCover = GetSpriteManager()->DeleteSprite(coverName);
+            const bool resultMiniCover = GetSpriteManager()->DeleteSprite(miniCoverName);
 
-            if (bResult1 && bResult2)
+            if (resultCover && resultMiniCover)
             {
                 LOG(LOG_CLASSIC_TRACE,
                     "Sprite deleted index: %d\n  > Cover: %s\n  > Mini Cover: %s ",

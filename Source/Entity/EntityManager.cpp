@@ -80,18 +80,6 @@ namespace ClassicLauncher
             return;
         }
 
-        
-        // for (auto& e : mEntities)
-        // {
-
-        //     std::string name = std::format(
-        //         "Entities insert {} zindex {} name {}",
-        //            e->GetZOrder().insertionIndex, e->GetZOrder().id , e->mNameId
-        //         );
-        //     LOG(LOG_CLASSIC_WARNING, "%s", name.c_str());
-        // }
-        
-
         std::sort(m_entities.begin(),
                   m_entities.end(),
                   [](const std::unique_ptr<Entity>& a, const std::unique_ptr<Entity>& b)
@@ -104,17 +92,6 @@ namespace ClassicLauncher
                   });
         m_markOrder = false;
 
-
-        // LOG(LOG_CLASSIC_ERROR, "#######################");
-        // for (auto& e : mEntities)
-        // {
-
-        //     std::string name = std::format(
-        //         "Entities insert {} zindex {} name {}",
-        //            e->GetZOrder().insertionIndex, e->GetZOrder().id , e->mNameId
-        //         );
-        //     LOG(LOG_CLASSIC_WARNING, "%s", name.c_str());
-        // }
     }
 
     void EntityManager::SetZOrder(Entity* entity, int zOrder)
@@ -186,9 +163,9 @@ namespace ClassicLauncher
         }
     }
 
-    void EntityManager::DeleteEntities(bool bIsDeleteEntities)
+    void EntityManager::DeleteEntities(bool isDeleteEntities)
     {
-        if (!bIsDeleteEntities)
+        if (!isDeleteEntities)
         {
             return;
         }

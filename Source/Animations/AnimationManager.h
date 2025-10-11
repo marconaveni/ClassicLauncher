@@ -32,7 +32,7 @@ namespace ClassicLauncher
                             Entity* targetEntity,
                             const Transform& targetTransform,
                             Ease typeAnimation = Ease::EaseLinearNone,
-                            bool bForceReset = true);
+                            bool forceReset = true);
 
         void AddAnimationFrame(const std::string& name,
                                const float timeAnimation,

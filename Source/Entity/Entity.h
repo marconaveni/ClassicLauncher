@@ -37,7 +37,7 @@ namespace ClassicLauncher
 
         struct ZOrder;
 
-        Entity();
+        Entity() = default;
         virtual ~Entity() = default;
         [[nodiscard]] virtual EntityType GetType() const = 0;
         virtual void Update() {}
@@ -56,7 +56,7 @@ namespace ClassicLauncher
         void RemoveParent() { m_parent = nullptr; }
         void EnableScissorMode(float x, float y, float width, float height);
         void DisableScissorMode() { m_isScissorMode = false; }
-        void SetVisible(const bool bEnable) { m_isVisible = bEnable; }
+        void SetVisible(const bool enable) { m_isVisible = enable; }
         [[nodiscard]] ZOrder GetZOrder() const { return m_zOrder; }
         [[nodiscard]] bool GetTransformIsDirty() const { return m_isTransformDirty; }
         void MarkTransformAsDirty();
@@ -112,13 +112,13 @@ namespace ClassicLauncher
 
         
         RectFloat m_scissorArea;
-        std::string m_textureName = "transparent";
+        std::string m_textureName{"transparent"};
 
 
         struct ZOrder
         {
-            int id = 0;
-            int insertionIndex = 0;
+            int id{0};
+            int insertionIndex{0};
         };
 
         struct FinalRenderTransform
@@ -128,14 +128,12 @@ namespace ClassicLauncher
             Vector2f origin{};
         };
 
-        FinalRenderTransform m_finalRender{};
         
-        //RectFloat m_finalTransformRect;
-
     protected:
-
-        Entity* m_parent = nullptr;    // move to private
-        std::vector<Entity*> m_childEntities;  // move to private
+        
+        Entity* m_parent{nullptr};    
+        std::vector<Entity*> m_childEntities{};  
+        FinalRenderTransform m_finalRender{};
 
         TimerManager* GetTimerManager() { return m_timerManagerRef; }
         SpriteManager* GetSpriteManager() { return m_spriteManagerReference; }
@@ -149,23 +147,23 @@ namespace ClassicLauncher
         friend class RenderEntities;
         friend class FocusComponent;
 
-        Transform m_transform;
-        Transform m_worldTransform;
+        Transform m_transform{};
+        Transform m_worldTransform{};
 
-        bool m_isCanDelete;
-        bool m_isCanDraw;
-        bool m_isScissorMode;
-        bool m_isVisible;
+        bool m_isCanDelete{false};
+        bool m_isCanDraw{true};
+        bool m_isScissorMode{false};
+        bool m_isVisible{true};
         bool m_isTransformDirty{true};
 
         ZOrder m_zOrder{};
-        std::string m_nameId;
+        std::string m_nameId{};
 
-        SpriteManager* m_spriteManagerReference;
-        TimerManager* m_timerManagerRef;
-        EntityManager* m_entityManagerReference;
-        FocusManager* m_focusManagerRef;
-        FontManager* m_fontManagerRef;
+        SpriteManager* m_spriteManagerReference{nullptr};
+        TimerManager* m_timerManagerRef{nullptr};
+        EntityManager* m_entityManagerReference{nullptr};
+        FocusManager* m_focusManagerRef{nullptr};
+        FontManager* m_fontManagerRef{nullptr};
 
         // note: this should not be called directly use entity manager
         void SetZOrder(int zOrder);

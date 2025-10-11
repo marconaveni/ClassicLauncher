@@ -47,23 +47,23 @@ namespace ClassicLauncher
 
     private:
 
-        TimerHandling m_timerVideo;
-        TimerHandling m_timerAnimationReset;
+        TimerHandling m_timerVideo{};
+        TimerHandling m_timerAnimationReset{};
 
-        GuiBase* m_cardMain;
-        GuiBase* m_cardSelected;
-        GuiBase* m_cardFavorite;
-        GuiBase* m_cardBackgroundMain;
-        GuiBase* m_cardBackgroundSelected;
-        GuiBase* m_cardBackgroundFavorite;
-        GuiBase* m_coverDefault;
-        GuiBase* m_cover;
-        GuiVideoPlayer* m_guiVideoPlayer;
+        GuiBase* m_cardMain{nullptr};
+        GuiBase* m_cardSelected{nullptr};
+        GuiBase* m_cardFavorite{nullptr};
+        GuiBase* m_cardBackgroundMain{nullptr};
+        GuiBase* m_cardBackgroundSelected{nullptr};
+        GuiBase* m_cardBackgroundFavorite{nullptr};
+        GuiBase* m_coverDefault{nullptr};
+        GuiBase* m_cover{nullptr};
+        GuiVideoPlayer* m_guiVideoPlayer{nullptr};
 
-        bool m_isChangeTexture = false;
+        bool m_isChangeTexture{false};
 
-        GameListManager* m_gameListManagerRef;
-        AudioManager* m_audioManagerRef;
+        GameListManager* m_gameListManagerRef{nullptr};
+        AudioManager* m_audioManagerRef{nullptr};
 
         void CreateCard(GuiBase*& card,
                         float sourceX,

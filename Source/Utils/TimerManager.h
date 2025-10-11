@@ -19,7 +19,7 @@ namespace ClassicLauncher
 
     private:
 
-        int id = -1;
+        int id{-1};
     };
 
     class TimerManager
@@ -40,10 +40,11 @@ namespace ClassicLauncher
 
         friend class Application;
 
-        std::unordered_map<TimerHandling*, std::unique_ptr<Timer>> m_timers;
         void ValidTimerHandling(TimerHandling& timerHandling) const;
         void Update() const;
-        int m_counter = 0;
+        
+        std::unordered_map<TimerHandling*, std::unique_ptr<Timer>> m_timers{};
+        int m_counter{0};
     };
 
 } // namespace ClassicLauncher

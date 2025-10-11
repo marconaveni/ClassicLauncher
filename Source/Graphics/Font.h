@@ -37,7 +37,7 @@ namespace ClassicLauncher
 
     private:
 
-        std::unique_ptr<FontImpl> m_pimpl;
+        std::unique_ptr<FontImpl> m_pimpl{};
         bool m_smooth{false};
     };
 

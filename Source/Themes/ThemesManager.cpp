@@ -23,8 +23,7 @@ namespace ClassicLauncher
                                  EntityManager* entityManagerRef,
                                  ConfigurationManager* configManager,
                                  AudioManager* audioManagerRef)
-        : m_scaleTexture(1.0f)
-        , m_gameListManager(gameListManager)
+        : m_gameListManager(gameListManager)
         , m_spriteManager(spriteManager)
         , m_entityManagerRef(entityManagerRef)
         , m_configManagerRef(configManager)

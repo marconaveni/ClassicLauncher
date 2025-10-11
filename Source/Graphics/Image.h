@@ -17,11 +17,11 @@ namespace ClassicLauncher
         Image() = default;
         ~Image() = default;
         Image(void* data, int width, int height, int mipmaps, int format);
-        void* data{};
-        int width{};
-        int height{};
-        int mipmaps{};
-        int format{};
+        void* data{nullptr};
+        int width{0};
+        int height{0};
+        int mipmaps{0};
+        int format{0};
 
         [[nodiscard]] bool IsValid() const;
         void LoadFromFile(const std::filesystem::path& fileName);

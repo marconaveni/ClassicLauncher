@@ -9,21 +9,20 @@ namespace ClassicLauncher
 
     struct DateTime
     {
-        int year;
-        int month;
-        int day;
-        int hour;
-        int minute;
-        int second;
+        int year{1900};
+        int month{1};
+        int day{1};
+        int hour{0};
+        int minute{0};
+        int second{0};
 
     private:
 
-        std::tm currentTime;
+        std::tm currentTime{};
 
     public:
 
-        DateTime()
-            : year(1900), month(1), day(1), hour(0), minute(0), second(0), currentTime() {};
+        DateTime() = default;
 
         void GetCurrentTimeAndDate()
         {

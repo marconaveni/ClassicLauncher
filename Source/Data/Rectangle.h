@@ -11,10 +11,10 @@ namespace ClassicLauncher
     {
     public:
 
-        T x;      // position left rectangle
-        T y;      // position top rectangle
-        T width;  // width rectangle
-        T height; // height rectangle
+        T x{};      // position left rectangle
+        T y{};      // position top rectangle
+        T width{};  // width rectangle
+        T height{}; // height rectangle
 
         constexpr Rectangle()
             : x(0), y(0), width(0), height(0)

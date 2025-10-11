@@ -30,16 +30,16 @@ namespace ClassicLauncher
 
     private:
 
-        GuiHorizontalCards* m_guiHorizontalCards;
-        GuiBlackScreen* m_guiBlackScreen;
-        GuiVideoPlayer* m_guiVideoPlayer;
-        GuiBase* m_guiBackground;
-        TimerHandling m_clickTimer;
-        TimerHandling m_inputTimer;
+        GuiHorizontalCards* m_guiHorizontalCards{nullptr};
+        GuiBlackScreen* m_guiBlackScreen{nullptr};
+        GuiVideoPlayer* m_guiVideoPlayer{nullptr};
+        GuiBase* m_guiBackground{nullptr};
+        TimerHandling m_clickTimer{};
+        TimerHandling m_inputTimer{};
 
-        GameListManager* m_gameListManagerRef;
-        AudioManager* m_audioManagerRef;
-        ProcessManager* m_processManagerRef;
+        GameListManager* m_gameListManagerRef{nullptr};
+        AudioManager* m_audioManagerRef{nullptr};
+        ProcessManager* m_processManagerRef{nullptr};
     };
 
 } // namespace ClassicLauncher

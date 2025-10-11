@@ -14,8 +14,8 @@ namespace ClassicLauncher
     {
     public:
 
-        RenderScreen();
-        ~RenderScreen();
+        RenderScreen() = default;
+        ~RenderScreen() = default;
         void Init(int screenWidth, int screenHeight);
         void Clear();
         void BeginRender();
@@ -33,16 +33,16 @@ namespace ClassicLauncher
         [[nodiscard]] int GetWidth() const;
         [[nodiscard]] int GetHeight() const;
 
-        std::unique_ptr<RenderTexture> m_renderTexture;
-        RectFloat m_source;
-        RectFloat m_dest;
-        float m_width;
-        float m_height;
-        float m_newWidth;
-        float m_newHeight;
-        float m_scale;
-        bool m_isMaintainAspectRatio;
-        Vector2f m_virtualMouse;
+        std::unique_ptr<RenderTexture> m_renderTexture{};
+        RectFloat m_source{};
+        RectFloat m_dest{};
+        float m_width{0};
+        float m_height{0};
+        float m_newWidth{0};
+        float m_newHeight{0};
+        float m_scale{1};
+        bool m_isMaintainAspectRatio{true};
+        Vector2f m_virtualMouse{};
     };
 
 } // namespace ClassicLauncher

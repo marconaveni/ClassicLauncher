@@ -24,7 +24,7 @@ namespace ClassicLauncher
 
     private:
 
-        AnimationManager m_animationManager;
+        AnimationManager m_animationManager{};
     };
 
 } // namespace ClassicLauncher

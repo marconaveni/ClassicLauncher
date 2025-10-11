@@ -31,7 +31,7 @@ namespace ClassicLauncher
     private:
 
         struct SoundData; // PIMPL Idiom https://www.geeksforgeeks.org/cpp/pimpl-idiom-in-c-with-examples/
-        std::unique_ptr<SoundData> m_data;
+        std::unique_ptr<SoundData> m_data{};
         void Unload();
     };
 } // namespace ClassicLauncher

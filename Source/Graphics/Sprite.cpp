@@ -11,10 +11,10 @@
 namespace ClassicLauncher
 {
 
-    Sprite::Sprite()
-        : m_isKeepRunning(false), m_isImageLoaded(false), m_isTextureLoaded(false), m_image(), m_texture()
-    {
-    }
+    // Sprite::Sprite()
+    //     : m_isKeepRunning(false), m_isImageLoaded(false), m_isTextureLoaded(false), m_image(), m_texture()
+    // {
+    // }
 
     Sprite::~Sprite()
     {

@@ -3,16 +3,15 @@
 #include "Entity/EntityManager.h"
 #include "Graphics/RenderTexture.h"
 #include "Graphics/SpriteManager.h"
+#include "Input/InputManager.h"
 #include "Themes/ThemesManager.h"
-#include "rl_wrap.h"
 #include "Utils/Utils.h"
 #include "Window/RayWindow.h"
-#include "Input/InputManager.h"
+#include "rl_wrap.h"
 
 namespace ClassicLauncher
 {
     GuiVideoPlayer::GuiVideoPlayer()
-        : m_player(nullptr), m_playerFullScreen(nullptr)
     {
         SetOpacity(0);
         m_gui.SetOpacity(0);
@@ -32,7 +31,7 @@ namespace ClassicLauncher
         m_player = std::make_unique<VideoPlayer>();
         const int widthScale = static_cast<int>(width * m_renderScale);
         const int heightScale = static_cast<int>(height * m_renderScale);
-        const bool bIsplay = m_player->Init(path, widthScale, heightScale, m_renderScale, true);
+        const bool isPlay = m_player->Init(path, widthScale, heightScale, m_renderScale, true);
 
         m_renderTexture = GetSpriteManager()->GetRenderTexture("videoPlayer");
         if (!m_renderTexture)
@@ -46,7 +45,7 @@ namespace ClassicLauncher
         VideoFadeinAnimate(1.0f, this);
 
 
-        return bIsplay;
+        return isPlay;
     }
 
     void GuiVideoPlayer::InitFullscreen()
@@ -60,15 +59,14 @@ namespace ClassicLauncher
         m_playerFullScreen = nullptr;
         m_playerFullScreen = std::make_unique<VideoPlayer>();
         const float scale = ThemesManager::GetScaleRenderer();
-        //m_playerFullScreen->Init(m_filePath, WindowSpecs::Width, WindowSpecs::Height, scale);
-        Sizei monitorSize{RayWindow::GetMonitorWidth(RayWindow::GetCurrentMonitor()), 
-                             RayWindow::GetMonitorHeight(RayWindow::GetCurrentMonitor())};
+
+        Sizei monitorSize{RayWindow::GetMonitorWidth(RayWindow::GetCurrentMonitor()), RayWindow::GetMonitorHeight(RayWindow::GetCurrentMonitor())};
         m_playerFullScreen->Init(m_filePath, monitorSize.width, monitorSize.height, scale);
         m_playerFullScreen->Play();
         m_playerFullScreen->SetLoop(false);
         GetEntityManager()->SetZOrder(this, 99); // todo temp
         VideoFadeinAnimate(0.5f, &m_gui);
-        
+
         InputManager::SetCategory(VIDEO_FULLSCREEN);
         InputManager::RemoveCategory(MAIN);
     }
@@ -91,7 +89,7 @@ namespace ClassicLauncher
 
         m_player->Resume();
         GetEntityManager()->SetZOrder(this, 1);
-        
+
         InputManager::SetCategory(MAIN);
         InputManager::RemoveCategory(VIDEO_FULLSCREEN);
     }
@@ -188,7 +186,7 @@ namespace ClassicLauncher
         {
             const Color color = m_gui.GetColor();
             const float scale = ThemesManager::GetScaleRenderer();
-            
+
 
             rlw::DrawTexturePro(*textureBlack,
                                 RectFloat{0.0f, 0.0f, WindowSpecs::Width * scale, WindowSpecs::Height * scale},
@@ -197,22 +195,20 @@ namespace ClassicLauncher
                                 0.0f,
                                 color);
 
-            Vector2f sizeVideo{
-                textureFullScreen->GetSize().width * scale,
-                textureFullScreen->GetSize().height * scale
-            };
+            Vector2f sizeVideo{textureFullScreen->GetSize().width * scale, textureFullScreen->GetSize().height * scale};
 
             textureFullScreen->SetSmooth(true);
 
 
             Utils::SetSizeWithProportionFit(sizeVideo, WindowSpecs::Width * scale, WindowSpecs::Height * scale);
             const float x = ((WindowSpecs::Width * scale) - sizeVideo.x) / 2;
-            rlw::DrawTexturePro(*textureFullScreen,
-                                RectFloat{0.0f, 0.0f, textureFullScreen->GetSize().width, textureFullScreen->GetSize().height},
-                                RectFloat{x, 0.0f, sizeVideo.x , sizeVideo.y},
-                                Vector2f{0.0f, 0.0f},
-                                0.0f,
-                                color);
+            rlw::DrawTexturePro(
+                *textureFullScreen,
+                RectFloat{0.0f, 0.0f, textureFullScreen->GetSize().width, textureFullScreen->GetSize().height},
+                RectFloat{x, 0.0f, sizeVideo.x, sizeVideo.y},
+                Vector2f{0.0f, 0.0f},
+                0.0f,
+                color);
             //rlw::DrawTexture(*textureFullScreen, x, 0, color);
         }
     }

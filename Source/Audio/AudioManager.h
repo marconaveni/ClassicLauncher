@@ -2,12 +2,12 @@
 #define AUDIO_MANAGER_H
 
 #include <atomic>
+#include <filesystem>
 #include <memory>
 #include <mutex>
 #include <string>
 #include <thread>
 #include <vector>
-#include <filesystem>
 
 namespace ClassicLauncher
 {
@@ -32,7 +32,7 @@ namespace ClassicLauncher
         void Stop();
         void Update();
         std::string GetMusicName();
-        void ChangeMusic(bool bAutoPlay = true);
+        void ChangeMusic(bool autoPlay = true);
         void Unload();
         [[nodiscard]] bool IsPlayMusic() const { return (m_statusAudio == 1); }
 
@@ -45,18 +45,18 @@ namespace ClassicLauncher
             inline static constexpr unsigned int Paused = 2;
         };
 
-        std::mutex m_musicMutex;
-        std::thread m_workerThread;       // Thread work
-        std::atomic<bool> m_isRunning;    // Thread is Running
-        std::atomic<bool> m_isPlayClick;  // Sinalize thread to play m_clickSound
-        std::atomic<bool> m_isPlayCursor; // Sinalize thread to play m_cursorSound
-        std::atomic<int> m_statusAudio;   // Status Current Audio Music
+        std::mutex m_musicMutex{};
+        std::thread m_workerThread{};                 // Thread work
+        std::atomic<bool> m_isRunning{false};         // Thread is Running
+        std::atomic<bool> m_isPlayClick{false};       // Sinalize thread to play m_clickSound
+        std::atomic<bool> m_isPlayCursor{false};      // Sinalize thread to play m_cursorSound
+        std::atomic<int> m_statusAudio{Status::Stop}; // Status Current Audio Music
 
-        std::unique_ptr<Sound> m_clickSound;  //
-        std::unique_ptr<Sound> m_cursorSound; //
+        std::unique_ptr<Sound> m_clickSound{nullptr};  //
+        std::unique_ptr<Sound> m_cursorSound{nullptr}; //
 
-        std::vector<std::unique_ptr<Music>> m_audioMusics; // Array Struct Audio musics
-        int m_idAudioMusic{};                              // id music
+        std::vector<std::unique_ptr<Music>> m_audioMusics{}; // Array Struct Audio musics
+        int m_idAudioMusic{0};                               // id music
 
         void LoadMusic(const std::string& path);
         void UpdateStream();

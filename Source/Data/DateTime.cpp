@@ -64,7 +64,6 @@ namespace ClassicLauncher
         {
             return month < a.month;
         }
-
         if (day != a.day)
         {
             return day < a.day;

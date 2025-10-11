@@ -43,27 +43,29 @@ namespace ClassicLauncher
     {
     public:
 
-        float m_currentTime;
-        float m_duration;
+        Animation() = default;
 
-        bool m_isStart;
-        bool m_isRunning;
-        bool m_isFinish;
-        bool m_isReset;
+        float m_currentTime{0.0f};
+        float m_duration{0.0f};
 
-        Ease m_typeEase;
+        bool m_isStart{false};
+        bool m_isRunning{false};
+        bool m_isFinish{false};
+        bool m_isReset{false};
 
-        Transform m_startTransform;
-        Transform m_currentTransform;
-        Transform m_finalTransform;
+        Ease m_typeEase{Ease::EaseLinearNone};
 
-        Animation();
+        Transform m_startTransform{};
+        Transform m_currentTransform{};
+        Transform m_finalTransform{};
+
+        
 
         void StartAnimation(float durationAnimation,
                             const Transform& startAnimation,
                             const Transform& targetAnimation,
                             Ease typeAnimation = Ease::EaseLinearNone,
-                            bool bForceReset = true);
+                            bool forceReset = true);
         void UpdateAnimation();
         bool FinishAnimation();
         bool ResetAnimation();

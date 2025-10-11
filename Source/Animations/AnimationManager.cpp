@@ -1,9 +1,9 @@
 #include "AnimationManager.h"
 
 #include "ClassicAssert.h"
-#include "Window/RayWindow.h"
 #include "Entity/Entity.h"
 #include "Helper.h"
+#include "Window/RayWindow.h"
 
 
 namespace ClassicLauncher
@@ -21,10 +21,10 @@ namespace ClassicLauncher
         for (auto& spriteAnimation : m_spriteAnimations)
         {
             spriteAnimation.second.spriteAnimator.Update(RayWindow::GetFrameTime());
-            
+
             RectFloat rec = spriteAnimation.second.spriteAnimator.GetCurrentSprite();
-            Entity* entity = spriteAnimation.second.entity;          
-            
+            Entity* entity = spriteAnimation.second.entity;
+
             entity->SetSource(rec);
             entity->SetSize(rec.width, rec.height);
         }
@@ -58,23 +58,21 @@ namespace ClassicLauncher
         }
     }
 
-    void AnimationManager::UpdateTransformAnimation(AnimationTransform& anim)
+    void AnimationManager::UpdateTransformAnimation(AnimationTransform& animationTransform)
     {
 
-        if (!anim.entity)
+        if (!animationTransform.entity)
         {
             return;
         }
 
-        const Transform& transform = anim.animation.m_currentTransform;
+        const Transform& transform = animationTransform.animation.m_currentTransform;
 
-        //*anim.transform = anim.animation.mCurrentTransform;
-        anim.entity->SetPosition(transform.position.x, transform.position.y);
-        anim.entity->SetOffset(transform.offset);
-        anim.entity->SetScale(transform.scale);
-        anim.entity->SetRotation(transform.rotation);
-        anim.entity->SetColor(transform.color);
-        
+        animationTransform.entity->SetPosition(transform.position.x, transform.position.y);
+        animationTransform.entity->SetOffset(transform.offset);
+        animationTransform.entity->SetScale(transform.scale);
+        animationTransform.entity->SetRotation(transform.rotation);
+        animationTransform.entity->SetColor(transform.color);
     }
 
     void AnimationManager::StartAnimation(const std::string& name,
@@ -82,11 +80,15 @@ namespace ClassicLauncher
                                           Entity* targetEntity,
                                           const Transform& targetTransform,
                                           Ease typeAnimation,
-                                          bool bForceReset)
+                                          bool forceReset)
     {
-        AnimationTransform& anim = m_animationsTransform[name];
-        anim.entity = targetEntity;
-        anim.animation.StartAnimation(durationAnimation, targetEntity->GetTransform(), targetTransform, typeAnimation, bForceReset);
+        AnimationTransform& animationTransform = m_animationsTransform[name];
+        animationTransform.entity = targetEntity;
+        animationTransform.animation.StartAnimation(durationAnimation,
+                                                    targetEntity->GetTransform(),
+                                                    targetTransform,
+                                                    typeAnimation,
+                                                    forceReset);
     }
 
     void AnimationManager::AddAnimationFrame(const std::string& name,

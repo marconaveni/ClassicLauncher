@@ -10,8 +10,8 @@ namespace ClassicLauncher
     {
     public:
 
-        T x; // Vector x component
-        T y; // Vector y component
+        T x{}; // Vector x component
+        T y{}; // Vector y component
 
         constexpr Vector2(T x, T y)
             : x(x), y(y)

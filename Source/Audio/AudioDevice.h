@@ -23,7 +23,7 @@ namespace ClassicLauncher
         AudioDevice() = default;
         ~AudioDevice() = default;
 
-        bool m_isInitialized = false;
+        bool m_isInitialized{false};
     };
 } // namespace ClassicLauncher
 

@@ -16,21 +16,17 @@ namespace ClassicLauncher
 
     struct Message
     {
-        std::string textMessage;
-        float duration;
-        std::string label;
-        std::chrono::time_point<std::chrono::steady_clock> start;
-        std::chrono::time_point<std::chrono::steady_clock> end;
-        Color textColor;
-        int size;
+        Message() = default;
 
-        Message()
-            : duration(0), size(0)
-        {
-        }
+        std::string textMessage{};
+        float duration{0.0f};
+        std::string label{};
+        std::chrono::time_point<std::chrono::steady_clock> start{};
+        std::chrono::time_point<std::chrono::steady_clock> end{};
+        Color textColor{};
+        int size{0};
 
         void SetStart() { start = std::chrono::steady_clock::now(); }
-
         void SetEnd() { end = std::chrono::steady_clock::now(); }
 
         bool IsTimeElapsed()
@@ -52,7 +48,7 @@ namespace ClassicLauncher
                            float duration = 2.0f,
                            const char* label = "",
                            const Color& textColor = Color::Cyan,
-                           bool bLog = false);
+                           bool enableLog = false);
         void DrawMessage();
 
     private:
@@ -61,13 +57,13 @@ namespace ClassicLauncher
                                    float duration,
                                    const std::string& label,
                                    const Color& textColor,
-                                   bool bLog,
+                                   bool enableLog,
                                    int sizeY);
-        int m_size;
-        float m_spacing;
-        std::string m_fontName;
-        std::vector<Message> m_messages;
-        FontManager* m_fontManagerRef;
+        int m_size{16};
+        float m_spacing{0};
+        std::string m_fontName{};
+        std::vector<Message> m_messages{};
+        FontManager* m_fontManagerRef{nullptr};
     };
 
 } // namespace ClassicLauncher

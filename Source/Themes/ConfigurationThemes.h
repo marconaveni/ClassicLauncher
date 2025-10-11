@@ -11,29 +11,29 @@ namespace ClassicLauncher
     {
 
         // gui horizontal card values
-        float horizontalCardsSpace = 0.0f;
-        float horizontalCardsPositionX = 2.0f; // todo vefificar esse deslocamento
-        float horizontalCardsPositionY = 222.0f;
+        float horizontalCardsSpace{0.0f};
+        float horizontalCardsPositionX{2.0f}; // todo vefificar esse deslocamento
+        float horizontalCardsPositionY{222.0f};
 
         // gui card values
-        float offsetImageX = 12;
-        float offsetImageY = 12;
-        float offsetDefaultImageX = 24;
-        float offsetDefaultImageY = 13;
-        float offsetVideoX = 12;
-        float offsetVideoY = 12;
+        float offsetImageX{12};
+        float offsetImageY{12};
+        float offsetDefaultImageX{24};
+        float offsetDefaultImageY{13};
+        float offsetVideoX{12};
+        float offsetVideoY{12};
 
         // gui frame values
-        float offsetLeft = 0.0f; 
-        float offsetRight = 0.0f;
+        float offsetLeft{0.0f}; 
+        float offsetRight{0.0f};
 
         // gui minicover values
-        int numCovers = 32; 
-        float sizeX = 28.0f;
-        float sizeY = 40.0f;
-        float offsetTopArrow = 0.0f;
-        float offsetTopCover = 0.0f;
-        float offsetLeftCover = 0.0f; 
+        int numCovers{32}; 
+        float sizeX{28.0f};
+        float sizeY{40.0f};
+        float offsetTopArrow{0.0f};
+        float offsetTopCover{0.0f};
+        float offsetLeftCover{0.0f}; 
 
         void LoadConfigurations(const std::string& path);
     };

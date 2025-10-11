@@ -27,7 +27,7 @@ namespace ClassicLauncher
 
     private:
 
-        unsigned int m_id{};
+        unsigned int m_id{0};
         Texture m_texture{};
         Texture m_depth{};
     };

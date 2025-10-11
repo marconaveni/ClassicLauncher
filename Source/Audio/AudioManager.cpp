@@ -16,13 +16,6 @@ namespace ClassicLauncher
 {
 
     AudioManager::AudioManager()
-        : m_isRunning(false)
-        , m_isPlayClick(false)
-        , m_isPlayCursor(false)
-        , m_statusAudio(Status::Stop)
-        , m_clickSound(nullptr)
-        , m_cursorSound(nullptr)
-        , m_idAudioMusic(0)
     {
         m_clickSound = std::make_unique<Sound>();
         m_cursorSound = std::make_unique<Sound>();
@@ -169,7 +162,7 @@ namespace ClassicLauncher
         return {};
     }
 
-    void AudioManager::ChangeMusic(bool bAutoPlay)
+    void AudioManager::ChangeMusic(bool autoPlay)
     {
         if (!m_audioMusics.empty())
         {
@@ -177,7 +170,7 @@ namespace ClassicLauncher
             m_idAudioMusic = (m_audioMusics.size() > 1) ? GenerateId() : 0;
             Music* currentMusic = m_audioMusics[m_idAudioMusic].get();
             currentMusic->Seek(0);
-            if (bAutoPlay)
+            if (autoPlay)
             {
                 PlayMusic();
             }

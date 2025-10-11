@@ -36,8 +36,8 @@ namespace ClassicLauncher
         void SetClassicLogLevel(int classicLogLevel) { m_classicLogLevel = classicLogLevel; }
         void SetRaylibLogLevel(int raylibLogLevel) { m_raylibLogLevel = raylibLogLevel; }
         void SetVSync(bool vSync) { m_vsync = vSync; }
-        void SetFullscreen(bool bFullscreen) { m_fullscreen = bFullscreen; }
-        void SetThemeReferenceOverlay(bool bThemeReferenceOverlay) { m_themeReferenceOverlay = bThemeReferenceOverlay; }
+        void SetFullscreen(bool fullscreen) { m_fullscreen = fullscreen; }
+        void SetThemeReferenceOverlay(bool themeReferenceOverlay) { m_themeReferenceOverlay = themeReferenceOverlay; }
         void SetThemeReferenceImage(const std::string& themeReferenceImage) { m_themeReferenceImage = themeReferenceImage; }
 
     private:
@@ -45,15 +45,15 @@ namespace ClassicLauncher
         void SetValues(SimpleIni& config);
         void GetValues(SimpleIni& config);
 
-        int m_internalScale;
-        int m_volume;
-        int m_targetFps;
-        int m_classicLogLevel;
-        int m_raylibLogLevel;
-        bool m_vsync;
-        bool m_fullscreen;
-        bool m_themeReferenceOverlay;
-        std::string m_themeReferenceImage;
+        int m_internalScale{2};
+        int m_volume{100};
+        int m_targetFps{60};
+        int m_classicLogLevel{13};
+        int m_raylibLogLevel{5};
+        bool m_vsync{true};
+        bool m_fullscreen{true};
+        bool m_themeReferenceOverlay{false};
+        std::string m_themeReferenceImage{};
     };
 
 } // namespace ClassicLauncher

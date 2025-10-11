@@ -16,14 +16,14 @@ namespace ClassicLauncher
     {
     public:
 
-        FontManager();
+        FontManager() = default;
         ~FontManager();
 
         void Init();
         std::string Load(const std::filesystem::path& path, int size);
         Font* GetFont(const std::string& name);
         
-        std::unordered_map<std::string, std::unique_ptr<Font>> m_font;
+        std::unordered_map<std::string, std::unique_ptr<Font>> m_font{};
 
     private:
 

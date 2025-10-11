@@ -31,8 +31,6 @@ public:
 
 private:
 
-    std::map<std::string, std::map<std::string, std::string>> m_data;
-    std::string m_currentSection = "default";
     void RemoveComments(std::string& str);
     bool SetSection(std::string& str);
     bool SetKeyValue(const std::string& str, std::string& key, std::string& value);
@@ -40,6 +38,9 @@ private:
     std::string RemoveBrackets(const std::string& str);
     std::string GetValue(const std::string& section, const std::string& key, const std::string& defaultValue = "");
     void SetValue(const std::string& section, const std::string& key, const std::string& value);
+
+    std::map<std::string, std::map<std::string, std::string>> m_data{};
+    std::string m_currentSection{"default"};
 };
 
 #endif

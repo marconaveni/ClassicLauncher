@@ -24,7 +24,7 @@ namespace ClassicLauncher
     private:
 
         RectFloat m_limitAreaMove{};
-        TimerHandling m_timer;
+        TimerHandling m_timer{};
         bool m_isMove{false};
     };
 

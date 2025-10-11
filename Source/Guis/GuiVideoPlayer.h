@@ -10,7 +10,7 @@
 
 namespace ClassicLauncher
 {
-    class VideoPlayer;
+    
     class RenderTexture;
 
     class GuiVideoPlayer : public Entity, public Animatable
@@ -32,12 +32,12 @@ namespace ClassicLauncher
         
     private:
         
-        RenderTexture* m_renderTexture = nullptr;
-        GuiBase m_gui;
-        std::unique_ptr<VideoPlayer> m_player;
-        std::unique_ptr<VideoPlayer> m_playerFullScreen;
-        std::string m_filePath;
-        float m_renderScale = 1;
+        RenderTexture* m_renderTexture{nullptr};
+        GuiBase m_gui{};
+        std::unique_ptr<VideoPlayer> m_player{nullptr};
+        std::unique_ptr<VideoPlayer> m_playerFullScreen{nullptr};
+        std::string m_filePath{};
+        float m_renderScale{1};
         void VideoFadeinAnimate(float time, Entity* entity);
     };
 

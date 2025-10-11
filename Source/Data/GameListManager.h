@@ -6,8 +6,8 @@
 #include <vector>
 
 #include "Data/DateTime.h"
-#include "tinyxml2/tinyxml2.h"
 #include "Themes/ConfigurationThemes.h"
+#include "tinyxml2/tinyxml2.h"
 
 namespace ClassicLauncher
 {
@@ -26,30 +26,28 @@ namespace ClassicLauncher
 
     struct GameList
     {
-        int mapIndex;
-        std::string path;
-        std::string name;
-        std::string desc;
-        std::string rating;
-        std::string developer;
-        std::string publisher;
-        std::string genre;
-        std::string players;
-        std::string hash;
-        std::string image;
-        std::string thumbnail;
-        std::string video;
-        std::string genreId;
-        bool bFavorite;
-        int playCount;
-        std::string executable;
-        std::string arguments;
-        DateTime releaseDate;
-        DateTime lastPlayed;
+        int mapIndex{-1};
+        std::string path{};
+        std::string name{};
+        std::string description{};
+        std::string rating{};
+        std::string developer{};
+        std::string publisher{};
+        std::string genre{};
+        std::string players{};
+        std::string hash{};
+        std::string image{};
+        std::string thumbnail{};
+        std::string video{};
+        std::string genreId{};
+        bool isFavorite{false};
+        int playCount{0};
+        std::string executable{};
+        std::string arguments{};
+        DateTime releaseDate{};
+        DateTime lastPlayed{};
 
-        GameList()
-            : mapIndex(-1), bFavorite(false), playCount(0) {};
-        ~GameList() = default;
+        GameList() = default;
 
         bool operator==(const GameList& a) const { return (mapIndex == a.mapIndex); }
         bool operator>(const GameList& a) const { return (mapIndex > a.mapIndex); }
@@ -58,32 +56,28 @@ namespace ClassicLauncher
 
     struct HistoryPosition
     {
-        int id;
-        int indexCardFocus;
+        int id{0};
+        int indexCardFocus{3};
 
-        HistoryPosition()
-            : id(0), indexCardFocus(3)
-        {
-        }
+        HistoryPosition() = default;
     };
 
     struct GameSystemList
     {
-    public:
 
-        int mapIndex = -1;
-        std::string executable;
-        std::string arguments;
-        std::string romPath;
-        std::string systemName;
-        std::string systemLabel;
-        std::string image;
-        std::string screenshot;
-        std::string video;
-        std::string desc;
-        HistoryPosition history;
-        std::string theme;
-        ConfigurationThemes configThemes;
+        int mapIndex{-1};
+        std::string executable{};
+        std::string arguments{};
+        std::string romPath{};
+        std::string systemName{};
+        std::string systemLabel{};
+        std::string image{};
+        std::string screenshot{};
+        std::string video{};
+        std::string desc{};
+        HistoryPosition history{};
+        std::string theme{};
+        ConfigurationThemes configThemes{};
 
         ~GameSystemList() = default;
 
@@ -94,18 +88,6 @@ namespace ClassicLauncher
 
     class GameListManager
     {
-
-    private:
-
-        CurrentList m_currentList = SystemListSelect;
-        int m_idSystemList = -1;
-        int m_idGameList = 0;
-        tinyxml2::XMLDocument m_documentGameListXml;
-        tinyxml2::XMLDocument m_documentSystemListXml;
-        std::vector<GameList> m_gameList;
-        std::vector<GameSystemList> m_systemList;
-        void LoadGameList();
-        void LoadSystemToGameList();
 
     public:
 
@@ -132,8 +114,18 @@ namespace ClassicLauncher
 
     private:
 
-        void ReplaceCurrentPath(GameList* pGame, const std::string& romPath) const;
-        static bool IsValidElement(const tinyxml2::XMLElement* pElement, const char* name = "");
+        void LoadGameList();
+        void LoadSystemToGameList();
+        void ReplaceCurrentPath(GameList* gameList, const std::string& romPath) const;
+        static bool IsValidElement(const tinyxml2::XMLElement* element, const char* name = "");
+
+        CurrentList m_currentList{CurrentList::SystemListSelect};
+        int m_idSystemList{-1};
+        int m_idGameList{0};
+        tinyxml2::XMLDocument m_documentGameListXml{};
+        tinyxml2::XMLDocument m_documentSystemListXml{};
+        std::vector<GameList> m_gameList{};
+        std::vector<GameSystemList> m_gameSystemList{};
     };
 
 } // namespace ClassicLauncher

@@ -5,7 +5,7 @@
 namespace ClassicLauncher
 {
     template <typename T>
-    class Vector2; // circular include todo: need is impl in .cpp or .inl
+    class Vector2; // circular include
 
 
     template <typename T>
@@ -13,8 +13,8 @@ namespace ClassicLauncher
     {
     public:
 
-        T width;  // Vector x component
-        T height; // Vector y component
+        T width{};  // Vector width component
+        T height{}; // Vector height component
 
         constexpr Size(T width, T height)
             : width(width), height(height)

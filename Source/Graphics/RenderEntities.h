@@ -24,9 +24,9 @@ namespace ClassicLauncher
         void DrawDebug(Entity* entity);
         void DrawStatistics(Entity* entity);
         void DrawThemeReference();
-        ConfigurationManager* m_configManagerReference = nullptr;
-        SpriteManager* m_spriteManagerReference = nullptr;
-        float m_renderScale = 1;
+        ConfigurationManager* m_configManagerReference{nullptr};
+        SpriteManager* m_spriteManagerReference{nullptr};
+        float m_renderScale{1};
         
     };
 

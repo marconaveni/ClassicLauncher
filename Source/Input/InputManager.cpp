@@ -8,7 +8,6 @@ namespace ClassicLauncher
     static InputManager* s_instanceInputManager = nullptr;
 
     InputManager::InputManager()
-        : m_gamePadIdSelected(0), m_amoutDown(0), m_disableInput(false), m_category(0)
     {
         if (s_instanceInputManager == nullptr)
         {
@@ -44,27 +43,27 @@ namespace ClassicLauncher
 
             // clang-format off
 
-            input.bPress = (Keyboard::IsPressed(key) || 
+            input.isPress = (Keyboard::IsPressed(key) || 
                             GamePad::IsPressed(m_gamePadIdSelected, gamePad)) &&
                             !bKeyModifier && 
                             !m_disableInput;
-            input.bDown = (Keyboard::IsDown(key) || 
+            input.isDown = (Keyboard::IsDown(key) || 
                             GamePad::IsDown(m_gamePadIdSelected, gamePad)) && 
                             !bKeyModifier &&
                             !m_disableInput;
-            input.bRelease = (Keyboard::IsReleased(key) || 
+            input.isRelease = (Keyboard::IsReleased(key) || 
                             GamePad::IsReleased(m_gamePadIdSelected, gamePad)) &&
                             !bKeyModifier && 
                             !m_disableInput;
-            input.bUp = (Keyboard::IsUp(key) || 
+            input.isUp = (Keyboard::IsUp(key) || 
                             GamePad::IsUp(m_gamePadIdSelected, gamePad)) && 
                             !bKeyModifier && 
                             !m_disableInput;
 
             // clang-format on
-            if (input.bDown)
+            if (input.isDown)
             {
-                input.bDown = (input.amoutDown == 0 || input.amoutDown >= maxAmount);
+                input.isDown = (input.amoutDown == 0 || input.amoutDown >= maxAmount);
                 input.amoutDown += 0.016f * 60 * RayWindow::GetFrameTime();
             }
             else
@@ -80,7 +79,7 @@ namespace ClassicLauncher
         {
             return false;
         }
-        return s_instanceInputManager->m_inputs[name].bPress && s_instanceInputManager->CheckCategory(category);
+        return s_instanceInputManager->m_inputs[name].isPress && s_instanceInputManager->CheckCategory(category);
     }
 
     bool InputManager::IsDown(InputName name, unsigned int category)
@@ -89,7 +88,7 @@ namespace ClassicLauncher
         {
             return false;
         }
-        return s_instanceInputManager->m_inputs[name].bDown && s_instanceInputManager->CheckCategory(category);
+        return s_instanceInputManager->m_inputs[name].isDown && s_instanceInputManager->CheckCategory(category);
     }
 
     bool InputManager::IsRelease(InputName name, unsigned int category)
@@ -98,7 +97,7 @@ namespace ClassicLauncher
         {
             return false;
         }
-        return s_instanceInputManager->m_inputs[name].bRelease && s_instanceInputManager->CheckCategory(category);
+        return s_instanceInputManager->m_inputs[name].isRelease && s_instanceInputManager->CheckCategory(category);
     }
 
     bool InputManager::IsUp(InputName name, unsigned int category)
@@ -107,7 +106,7 @@ namespace ClassicLauncher
         {
             return false;
         }
-        return s_instanceInputManager->m_inputs[name].bUp && s_instanceInputManager->CheckCategory(category);
+        return s_instanceInputManager->m_inputs[name].isUp && s_instanceInputManager->CheckCategory(category);
     }
 
     void InputManager::EnableInput()
@@ -166,19 +165,19 @@ namespace ClassicLauncher
             return;
         }
 
-        unsigned int& pCategory = s_instanceInputManager->m_category;
+        unsigned int& inputCategory = s_instanceInputManager->m_category;
 
-        if ((pCategory & MAIN) != (category & MAIN) && (category & MAIN) > 0)
+        if ((inputCategory & MAIN) != (category & MAIN) && (category & MAIN) > 0)
         {
-            pCategory |= MAIN;
+            inputCategory |= MAIN;
         }
-        if ((pCategory & VIDEO_FULLSCREEN) != (category & VIDEO_FULLSCREEN) && (category & VIDEO_FULLSCREEN) > 0)
+        if ((inputCategory & VIDEO_FULLSCREEN) != (category & VIDEO_FULLSCREEN) && (category & VIDEO_FULLSCREEN) > 0)
         {
-            pCategory |= VIDEO_FULLSCREEN;
+            inputCategory |= VIDEO_FULLSCREEN;
         }
-        if ((pCategory & DEBUG) != (category & DEBUG) && (category & DEBUG) > 0)
+        if ((inputCategory & DEBUG) != (category & DEBUG) && (category & DEBUG) > 0)
         {
-            pCategory |= DEBUG;
+            inputCategory |= DEBUG;
         }
     }
 
@@ -189,19 +188,19 @@ namespace ClassicLauncher
             return;
         }
 
-        unsigned int& pCategory = s_instanceInputManager->m_category;
+        unsigned int& inputCategory = s_instanceInputManager->m_category;
 
-        if ((pCategory & MAIN) > 0 && (category & MAIN) > 0)
+        if ((inputCategory & MAIN) > 0 && (category & MAIN) > 0)
         {
-            pCategory &= ~MAIN;
+            inputCategory &= ~MAIN;
         }
-        if ((pCategory & VIDEO_FULLSCREEN) > 0 && (category & VIDEO_FULLSCREEN) > 0)
+        if ((inputCategory & VIDEO_FULLSCREEN) > 0 && (category & VIDEO_FULLSCREEN) > 0)
         {
-            pCategory &= ~VIDEO_FULLSCREEN;
+            inputCategory &= ~VIDEO_FULLSCREEN;
         }
-        if ((pCategory & DEBUG) > 0 && (category & DEBUG) > 0)
+        if ((inputCategory & DEBUG) > 0 && (category & DEBUG) > 0)
         {
-            pCategory &= ~DEBUG;
+            inputCategory &= ~DEBUG;
         }
     }
 

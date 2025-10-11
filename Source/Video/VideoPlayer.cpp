@@ -68,7 +68,7 @@ namespace ClassicLauncher
     }
 
     VideoPlayer::VideoPlayer()
-        : m_context{}, m_isEnabledVlC(false), m_width(0), m_height(0), m_bLoop(true)
+        : m_context{}, m_isEnabledVlC(false), m_width(0), m_height(0), m_isLoop(true)
     {
         LOG(LOG_CLASSIC_TRACE, "Initializing VideoPlayer...");
         StartVLCInstance();
@@ -82,7 +82,7 @@ namespace ClassicLauncher
         LOG(LOG_CLASSIC_TRACE, "VideoPlayer destroyed.");
     }
 
-    bool VideoPlayer::Init(std::string path, int width, int height, float scale, bool bFill)
+    bool VideoPlayer::Init(std::string path, int width, int height, float scale, bool fill)
     {
         LOG(LOG_CLASSIC_INFO, "Initializing video with path: %s", path.c_str());
         if (path.empty())
@@ -142,7 +142,7 @@ namespace ClassicLauncher
         libvlc_media_tracks_release(tracks, track_count);
 
         Vector2f textureSize((float)m_widthVideo, (float)m_heightVideo);
-        Utils::SetSizeWithProportion(textureSize, m_width, m_height, bFill);
+        Utils::SetSizeWithProportion(textureSize, m_width, m_height, fill);
         m_widthVideo = (int)textureSize.x;
         m_heightVideo = (int)textureSize.y;
 
@@ -201,7 +201,6 @@ namespace ClassicLauncher
         if (m_context.frameLock[frame])
         {
             m_context.frameMutex[frame].lock();
-            //rlw::UpdateTexture(texture, mContext.image[frame].data);
             m_texture.Update(m_context.image[frame].data);
             m_context.frameLock[frame] = false;
             LOG(LOG_CLASSIC_TRACE, "video texture updated %d", m_context.countFrame);
@@ -212,7 +211,7 @@ namespace ClassicLauncher
             LOG(LOG_CLASSIC_TRACE, "video texture not updated \"mContext.frameLock[%d]\" is locked", m_context.frameLock[frame]);
         }
 
-        if (IsVideoFinished() && m_bLoop)
+        if (IsVideoFinished() && m_isLoop)
         {
             Play();
         }
@@ -241,7 +240,6 @@ namespace ClassicLauncher
         if (m_texture.IsValid())
         {
             m_texture.Unload();
-            //texture = rlw::Texture2D();
         }
         if (m_context.image[0].IsValid())
         {
@@ -263,7 +261,6 @@ namespace ClassicLauncher
     Sizef VideoPlayer::GetVideoSize()
     {
         return (m_texture.IsValid()) ? m_texture.GetSize() : Sizef{};
-        // return Vector2{ static_cast<float>(mWidth), static_cast<float>(mHeight) };
     }
 
     bool VideoPlayer::IsVideoFinished()

@@ -11,16 +11,6 @@
 namespace ClassicLauncher
 {
 
-    RenderScreen::RenderScreen()
-        : m_renderTexture(), m_width(0), m_height(0), m_newWidth(0), m_newHeight(0), m_scale(1), m_isMaintainAspectRatio(true)
-    {
-        LOG(LOG_CLASSIC_WARNING, "inicia render screen");
-    }
-
-    RenderScreen::~RenderScreen()
-    {
-    }
-
     void RenderScreen::UpdateValues()
     {
         //const Vector2f mouse = rlw::GetMousePosition();

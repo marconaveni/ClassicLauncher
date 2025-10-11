@@ -7,17 +7,17 @@
 
 namespace ClassicLauncher
 {
-    Timer::Timer()
-        : m_delay(0)
-        , m_duration(0.0)
-        , m_currentTime(0.0)
-        , m_isFunctionCalled(false)
-        , m_isLoop(false)
-        , m_isActive(false)
-        , m_targetEntity(nullptr)
-        , m_callback(nullptr)
-    {
-    }
+    // Timer::Timer()
+    //     : m_delay(0)
+    //     , m_duration(0.0)
+    //     , m_currentTime(0.0)
+    //     , m_isFunctionCalled(false)
+    //     , m_isLoop(false)
+    //     , m_isActive(false)
+    //     , m_targetEntity(nullptr)
+    //     , m_callback(nullptr)
+    // {
+    // }
 
     void Timer::SetTimer(std::function<void()> callbackFunction,
                          Entity* targetEntity,

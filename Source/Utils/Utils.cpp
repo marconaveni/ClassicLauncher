@@ -50,9 +50,9 @@ namespace ClassicLauncher
         vector = Vector2f{newWidth, newHeight};
     }
 
-    void Utils::SetSizeWithProportion(Vector2f& vector, const int widthResize, const int heightResize, bool bFill)
+    void Utils::SetSizeWithProportion(Vector2f& vector, const int widthResize, const int heightResize, bool fill)
     {
-        if (!bFill)
+        if (!fill)
         {
             SetSizeWithProportionFit(vector, widthResize, heightResize);
         }
@@ -89,30 +89,6 @@ namespace ClassicLauncher
         }
         return index;
     }
-
-    // std::string Utils::GetWorkingDirectory()
-    // {
-    //     std::string newDir = rlw::GetWorkingDirectory();
-    //     newDir += "/";
-    //     return String::NormalizePath(newDir);
-    // }
-
-//     std::string Utils::GetHomeDir()
-//     {
-// #ifdef _WIN32
-//         const char* homeDir = "USERPROFILE";
-// #else
-//         const char* homeDir = "HOME";
-// #endif
-//         std::string env = getenv(homeDir);
-//         env += "/";
-//         return String::NormalizePath(env);
-//     }
-
-    // bool Utils::ChangeDirectory(const std::string& path)
-    // {
-    //     return rlw::ChangeDirectory(path.c_str());
-    // }
 
     int Utils::CountChars(const std::string& text, const char compareChar)
     {

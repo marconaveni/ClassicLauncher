@@ -35,20 +35,20 @@ namespace ClassicLauncher
 
         struct MiniCover
         {
-            GuiSizeBox* sizeBox = nullptr;
-            GuiBase* gui = nullptr;
-            bool focus = false;
+            GuiSizeBox* sizeBox{nullptr};
+            GuiBase* gui{nullptr};
+            bool focus{false};
         };
         
 
-        std::vector<MiniCover> m_guiMiniCovers;
-        GuiHorizontalBox* m_guiHorizontalBox;
-        GuiBase* m_arrow;
-        int m_numCovers;
-        Vector2f m_sizeCover;
-        bool m_focus = false;
+        std::vector<MiniCover> m_guiMiniCovers{};
+        GuiHorizontalBox* m_guiHorizontalBox{nullptr};
+        GuiBase* m_arrow{nullptr};
+        int m_numCovers{32};
+        Vector2f m_sizeCover{28.0f, 40.0f};
+        bool m_focus{false};
 
-        GameListManager* m_gameListManagerRef;
+        GameListManager* m_gameListManagerRef{nullptr};
 
         void SetPositionCovers(int numCovers);
         void CreateMiniCovers();

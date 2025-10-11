@@ -19,13 +19,8 @@ namespace ClassicLauncher
 
 
     ConfigurationManager::ConfigurationManager()
-        : m_internalScale(2)
-        , m_themeReferenceOverlay(false)
-        , m_volume(100)
-        , m_targetFps(60)
-        , m_classicLogLevel(CLASSIC_LOG_LEVEL)
+        : m_classicLogLevel(CLASSIC_LOG_LEVEL)
         , m_raylibLogLevel(RAYLIB_LOG_LEVEL)
-        , m_vsync(true)
         , m_fullscreen(FULLSCREEN)
     {
         LoadConfiguration();

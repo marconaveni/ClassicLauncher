@@ -15,8 +15,7 @@
 namespace ClassicLauncher
 {
     GuiMiniCover::GuiMiniCover(GameListManager* gameListManagerRef)
-        : m_arrow(nullptr), m_numCovers(32), m_sizeCover(28.0f, 40.0f), m_gameListManagerRef(gameListManagerRef)
-        // : m_arrow(nullptr), m_size(23), m_sizeCover(40.0f, 58.0f), m_gameListManagerRef(gameListManagerRef) //test
+        : m_gameListManagerRef(gameListManagerRef)
     {
     }
 

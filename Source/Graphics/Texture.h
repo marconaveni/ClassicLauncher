@@ -71,11 +71,11 @@ namespace ClassicLauncher
 
         friend class RenderTexture;
 
-        unsigned int m_id{};
-        int m_width{};
-        int m_height{};
-        int m_mipmaps{};
-        int m_format{};
+        unsigned int m_id{0};
+        int m_width{0};
+        int m_height{0};
+        int m_mipmaps{0};
+        int m_format{0};
         bool m_smooth{false};
     };
 

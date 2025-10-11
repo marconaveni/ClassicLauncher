@@ -47,7 +47,7 @@ namespace ClassicLauncher::DebugOverlay
             PRINT(TEXT("mapIndex: %d", pGameList->mapIndex), s_delay, "gameList-mapIndex", color);
             PRINT(TEXT("Name: %s", pGameList->name.c_str()), s_delay, "gameList-name", color);
             PRINT(TEXT("Path: %s", pGameList->path.c_str()), s_delay, "gameList-path", color);
-            PRINT(TEXT("Favorite: %s", TEXTBOOL(pGameList->bFavorite)), s_delay, "gameList-favorite", color);
+            PRINT(TEXT("Favorite: %s", TEXTBOOL(pGameList->isFavorite)), s_delay, "gameList-favorite", color);
             PRINT(TEXT("========================================"), s_delay, "line-gameList1", color);
         }
     }

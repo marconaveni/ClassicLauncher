@@ -17,13 +17,12 @@ namespace ClassicLauncher
 
     
     Print::Print(FontManager& fontManager)
-        : m_size(16), m_spacing(0), m_fontManagerRef(&fontManager)
+        : m_fontManagerRef(&fontManager)
     {
     }
 
     void Print::Init()
     {
-        m_size = 16;
         m_fontName = m_fontManagerRef->Load(Resources::GetFontFile(), m_size);
     }
 
@@ -31,7 +30,7 @@ namespace ClassicLauncher
                                       float duration,
                                       const std::string& label,
                                       const Color& textColor,
-                                      bool bLog,
+                                      bool enableLog,
                                       int sizeY)
     {
 #ifdef _DEBUG
@@ -44,7 +43,7 @@ namespace ClassicLauncher
                 msg.SetStart();
                 msg.textMessage = text;
                 msg.textColor = textColor;
-                if (bLog)
+                if (enableLog)
                 {
                     std::cout << "LOG_SCREEN: " << msg.textMessage << "\n";
                 }
@@ -71,7 +70,7 @@ namespace ClassicLauncher
                               const float duration,
                               const char* label,
                               const Color& textColor,
-                              const bool bLog)
+                              const bool enableLog)
     {
 
 #ifdef _DEBUG
@@ -87,7 +86,7 @@ namespace ClassicLauncher
                 std::string labelCount;
                 labelCount.append((!labelCompare.empty()) ? labelCompare : std::to_string(Math::Random(1, 3000)));
                 labelCount.append(std::to_string(count));
-                InternalPrintOnScreen(splitMessage, duration, labelCount.c_str(), textColor, bLog, m_size - 3);
+                InternalPrintOnScreen(splitMessage, duration, labelCount.c_str(), textColor, enableLog, m_size - 3);
                 splitMessage = "";
                 count++;
                 continue;
@@ -96,7 +95,7 @@ namespace ClassicLauncher
         }
 
         labelCompare = (!labelCompare.empty()) ? labelCompare : std::to_string(Math::Random(1, 3000));
-        InternalPrintOnScreen(splitMessage, duration, labelCompare, textColor, bLog, m_size);
+        InternalPrintOnScreen(splitMessage, duration, labelCompare, textColor, enableLog, m_size);
 #endif
     }
 

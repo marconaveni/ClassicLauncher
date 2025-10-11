@@ -23,16 +23,15 @@ namespace ClassicLauncher
     {
     public:
 
+        ProcessManager() = default;
+
 #if _WIN32
-        unsigned int m_processId;
+        unsigned int m_processId{0};
 #else
-        int m_processId;
+        int m_processId{0};
 #endif
-        bool m_isRunning;
-        bool m_isReadyRunApp = false;
-
-        ProcessManager();
-
+        bool m_isRunning{false};
+        bool m_isReadyRunApp{false};
 
         void CreateProc(GameListManager* gameListManager);
         ProcessStatus UpdateRun();
@@ -41,7 +40,7 @@ namespace ClassicLauncher
 
     private:
 
-        ProcessStatus m_status;
+        ProcessStatus m_status{ProcessStatus::NONE};
     };
 
 } // namespace ClassicLauncher

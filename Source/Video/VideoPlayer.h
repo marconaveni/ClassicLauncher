@@ -52,7 +52,7 @@ namespace ClassicLauncher
         bool m_isEnabledVlC;
         unsigned int m_width;
         unsigned int m_height;
-        bool m_bLoop = true;
+        bool m_isLoop = true;
 
         static void StartVLCInstance();
 
@@ -62,7 +62,7 @@ namespace ClassicLauncher
 
         VideoPlayer();
         ~VideoPlayer();
-        bool Init(std::string path, int width, int height, float scale = 1, bool bFill = false);
+        bool Init(std::string path, int width, int height, float scale = 1, bool fill = false);
         void Play();
         void Pause();
         void Resume();
@@ -74,7 +74,7 @@ namespace ClassicLauncher
         bool IsVideoFinished();
         bool IsVideoPlaying();
         bool IsVideoStopped();
-        void SetLoop(bool loop) { m_bLoop = loop; }
+        void SetLoop(bool loop) { m_isLoop = loop; }
         void SetVolume(int volume);
     };
 

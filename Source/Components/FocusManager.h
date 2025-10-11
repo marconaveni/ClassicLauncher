@@ -22,8 +22,8 @@ namespace ClassicLauncher
 
     private:
 
-        std::vector<FocusComponent*> m_focusComponents;
-        FocusComponent* m_currentFocusComponent;
+        std::vector<FocusComponent*> m_focusComponents{};
+        FocusComponent* m_currentFocusComponent{nullptr};
     };
 
 } // namespace ClassicLauncher

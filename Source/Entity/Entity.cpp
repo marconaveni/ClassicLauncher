@@ -6,10 +6,10 @@ namespace ClassicLauncher
 {
 
 
-    Entity::Entity()
-        : m_isCanDelete(false), m_isCanDraw(true), m_isScissorMode(false), m_isVisible(true), m_childEntities(), m_nameId()
-    {
-    }
+    // Entity::Entity()
+    //     : m_isCanDelete(false), m_isCanDraw(true), m_isScissorMode(false), m_isVisible(true), m_childEntities(), m_nameId()
+    // {
+    // }
 
     void Entity::UpdateWorldTransform()
     {

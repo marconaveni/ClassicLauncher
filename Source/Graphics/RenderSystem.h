@@ -22,7 +22,7 @@ namespace ClassicLauncher
 
     private:
 
-        RenderScreen m_renderScreen;
+        RenderScreen m_renderScreen{};
     };
 
 } // namespace ClassicLauncher

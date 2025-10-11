@@ -35,7 +35,7 @@ namespace ClassicLauncher
 
         UpdateMargin();
 
-        if (m_bAspectRatio)
+        if (m_aspectRatio)
         {
             Vector2f newSize = m_entity->GetSize();
             //Utils::SetSizeWithProportionFit(newSize, GetSize().width, GetSize().height);
@@ -71,9 +71,9 @@ namespace ClassicLauncher
         m_margin = margin;
     }
 
-    void GuiSizeBox::SetAspectRatio(bool bAspectRatio)
+    void GuiSizeBox::SetAspectRatio(bool aspectRatio)
     {
-        m_bAspectRatio = bAspectRatio;
+        m_aspectRatio = aspectRatio;
     }
 
 

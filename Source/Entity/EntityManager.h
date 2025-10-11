@@ -70,7 +70,7 @@ namespace ClassicLauncher
         void SetZOrder();
         void SetNewEntities();
         void SetNameId(Entity* entity, const std::string& name);
-        void DeleteEntities(bool bIsDeleteEntities);
+        void DeleteEntities(bool isDeleteEntities);
 
         std::vector<std::unique_ptr<Entity>> m_entities;
         std::vector<std::unique_ptr<Entity>> m_tempEntities;

@@ -13,11 +13,6 @@
 namespace ClassicLauncher
 {
 
-    ProcessManager::ProcessManager()
-        : m_status(ProcessStatus::NONE), m_processId(0), m_isRunning(false)
-    {
-    }
-
     void ProcessManager::CreateProc(GameListManager* gameListManager)
     {
         GameSystemList* system = gameListManager->GetCurrentSystemList();

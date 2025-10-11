@@ -41,7 +41,7 @@ namespace ClassicLauncher
         ConfigurationManager* m_configManagerRef = nullptr;
         AudioManager* m_audioManagerRef = nullptr;
 
-        float m_scaleTexture;
+        float m_scaleTexture{1.0f};
     };
 
 } // namespace ClassicLauncher

@@ -41,7 +41,7 @@ namespace ClassicLauncher
         // , m_maxDelay(3.0f)
         // , m_textOverflowPolicy(TextOverflowPolicy::NONE)
     {
-        m_textureName = "text";
+        //m_textureName = "text";
     }
 
     GuiTextBlock::~GuiTextBlock()

@@ -4,8 +4,6 @@
 #include <string>
 
 #include "Entity/Entity.h"
-//#include "Graphics/Font.h"
-//#include "Graphics/FontManager.h"
 
 namespace ClassicLauncher
 {
@@ -43,22 +41,21 @@ namespace ClassicLauncher
 
     private:
 
-        //Font m_font;
-        std::string m_text;
-        std::string m_pathFont;
-        std::string m_nameFont;
-        int m_sizeText;
-        int m_spacing;
-        float m_offsetText;
-        bool m_isLeft;
-        float m_delay;
-        Vector2f m_mensuredText;
-        float m_speed;
-        float m_maxDelay;
-        TextOverflowPolicy m_textOverflowPolicy;
-        bool m_centerText = false;
-        float m_positionText = 0.0f;
-        float m_renderScale = 1;
+        std::string m_text{};
+        std::string m_pathFont{};
+        std::string m_nameFont{};
+        int m_sizeText{0};
+        int m_spacing{0};
+        float m_offsetText{0};
+        bool m_isLeft{false};
+        float m_delay{0.0f};
+        Vector2f m_mensuredText{};
+        float m_speed{0.5f};
+        float m_maxDelay{3.0f};
+        TextOverflowPolicy m_textOverflowPolicy{TextOverflowPolicy::NONE};
+        bool m_centerText{false};
+        float m_positionText{0.0f};
+        float m_renderScale{1};
 
         Vector2f MeasureTextBox();
     };

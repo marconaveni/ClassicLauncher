@@ -6,22 +6,12 @@
 namespace ClassicLauncher
 {
 
-    Animation::Animation()
-        : m_currentTime(0)
-        , m_duration(0)
-        , m_isStart(false)
-        , m_isRunning(false)
-        , m_isFinish(false)
-        , m_isReset(false)
-        , m_typeEase(Ease::EaseLinearNone)
-    {
-    }
 
     void Animation::StartAnimation(const float durationAnimation,
                                    const Transform& startAnimation,
                                    const Transform& targetAnimation,
                                    const Ease typeAnimation,
-                                   const bool bForceReset)
+                                   const bool forceReset)
     {
         m_isRunning = true;
         m_isStart = true;
@@ -31,7 +21,7 @@ namespace ClassicLauncher
         m_startTransform = startAnimation;
         m_currentTransform = startAnimation;
         m_finalTransform = targetAnimation;
-        m_isReset = bForceReset;
+        m_isReset = forceReset;
         m_typeEase = typeAnimation;
     }
 

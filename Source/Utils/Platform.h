@@ -28,6 +28,7 @@ namespace ClassicLauncher::Platform
 
     std::string GetExecutableDirectory();
     std::string GetWorkingDirectory();
+    
 }  // namespace ClassicLauncher::Platform
 
 #endif  // PLATFORM_H

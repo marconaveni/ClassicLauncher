@@ -24,14 +24,14 @@ namespace ClassicLauncher
         virtual void RemoveChild(Entity* childEntity) override;
         virtual void Update() override;
         void SetMargin(Margin margin);
-        void SetAspectRatio(bool bAspectRatio);
+        void SetAspectRatio(bool aspectRatio);
 
     private:
 
         void UpdateMargin();
-        Margin m_margin = Margin::AUTO;
-        Entity* m_entity = nullptr;
-        bool m_bAspectRatio = true;
+        Margin m_margin{Margin::AUTO};
+        Entity* m_entity{nullptr};
+        bool m_aspectRatio{true};
     };
 
 } // namespace ClassicLauncher

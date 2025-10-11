@@ -11,10 +11,10 @@ namespace ClassicLauncher
     {
     public:
 
-        SpriteAnimator()
-            : m_timeAnimation(0.0f), m_currentTime(0.0f), m_alpha(0.0f), m_currentSpriteIndex(0)
-        {
-        }
+        SpriteAnimator() = default;
+        //     : m_timeAnimation(0.0f), m_currentTime(0.0f), m_alpha(0.0f), m_currentSpriteIndex(0)
+        // {
+        // }
 
         SpriteAnimator(const float timeAnimation, const std::vector<RectFloat>& spriteIndices)
             : m_timeAnimation(timeAnimation)
@@ -52,11 +52,11 @@ namespace ClassicLauncher
 
     private:
 
-        float m_timeAnimation;                  // Total duration to advance to the next sprite
-        float m_currentTime;                    // Total elapsed time
-        float m_alpha;                          // Interpolating factor between 0 and 1
-        std::vector<RectFloat> m_spriteIndices; // Vector with the indices or IDs of the sprites
-        size_t m_currentSpriteIndex;            // Current sprite index
+        float m_timeAnimation{0.0f};                  // Total duration to advance to the next sprite
+        float m_currentTime{0.0f};                    // Total elapsed time
+        float m_alpha{0.0f};                          // Interpolating factor between 0 and 1
+        std::vector<RectFloat> m_spriteIndices{};     // Vector with the indices or IDs of the sprites
+        size_t m_currentSpriteIndex{0};               // Current sprite index
     };
 } // namespace ClassicLauncher
 

@@ -6,10 +6,6 @@ namespace ClassicLauncher
 {
 
 
-    FontManager::FontManager()
-    {
-    }
-
     FontManager::~FontManager()
     {
         m_font.clear();

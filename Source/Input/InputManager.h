@@ -42,33 +42,28 @@ namespace ClassicLauncher
 
     struct InputMapper
     {
-        int gamePad;
-        int keyPad;
-        float amoutDown;
-        InputName name;
-        bool bPress;
-        bool bDown;
-        bool bRelease;
-        bool bUp;
+        int gamePad{0};
+        int keyPad{0};
+        float amoutDown{0.0f};
+        InputName name{};
+        bool isPress{false};
+        bool isDown{false};
+        bool isRelease{false};
+        bool isUp{false};
 
         InputMapper(InputName name, int gamePad, int keyPad)
             : gamePad(gamePad)
             , keyPad(keyPad)
-            , amoutDown(0)
             , name(name)
-            , bPress(false)
-            , bDown(false)
-            , bRelease(false)
-            , bUp(false)
         {
         }
 
         void CancelInput()
         {
-            bPress = false;
-            bDown = false;
-            bRelease = false;
-            bUp = false;
+            isPress = false;
+            isDown = false;
+            isRelease = false;
+            isUp = false;
             amoutDown = 0;
         }
     };
@@ -83,10 +78,10 @@ namespace ClassicLauncher
 
     protected:
 
-        int m_gamePadIdSelected;
-        int m_amoutDown;
-        bool m_disableInput;
-        unsigned int m_category;
+        int m_gamePadIdSelected{0};
+        int m_amoutDown{0};
+        bool m_disableInput{false};
+        unsigned int m_category{0};
 
         InputMapper m_inputs[18]{InputMapper(unknown, 0, Keyboard::Key::KEYNULL),
                                 InputMapper(leftFaceUp, 1, Keyboard::Key::UP),
