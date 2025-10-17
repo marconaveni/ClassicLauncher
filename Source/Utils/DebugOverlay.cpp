@@ -40,14 +40,15 @@ namespace ClassicLauncher::DebugOverlay
     void DrawGameListStatus(GameListManager* gameListManager)
     {
         Color color = Color::SkyBlue;
-        GameList* pGameList = gameListManager->GetCurrentGameList();
-        if (pGameList)
+        GameList* gameList = gameListManager->GetCurrentGameList();
+        if (gameList)
         {
             PRINT(TEXT("===========Current GameList============="), s_delay, "line-gameList", color);
-            PRINT(TEXT("mapIndex: %d", pGameList->mapIndex), s_delay, "gameList-mapIndex", color);
-            PRINT(TEXT("Name: %s", pGameList->name.c_str()), s_delay, "gameList-name", color);
-            PRINT(TEXT("Path: %s", pGameList->path.c_str()), s_delay, "gameList-path", color);
-            PRINT(TEXT("Favorite: %s", TEXTBOOL(pGameList->isFavorite)), s_delay, "gameList-favorite", color);
+            PRINT(TEXT("mapIndex: %d", gameList->mapIndex), s_delay, "gameList-mapIndex", color);
+            PRINT(TEXT("Name: %s", gameList->name.c_str()), s_delay, "gameList-name", color);
+            PRINT(TEXT("Path: %s", gameList->path.c_str()), s_delay, "gameList-path", color);
+            PRINT(TEXT("Favorite: %s", TEXTBOOL(gameList->isFavorite)), s_delay, "gameList-favorite", color);
+            PRINT(TEXT("Release Date: %s", gameList->releaseDate.ToLocaleString().c_str()), s_delay, "gameList-releaseDate", color);
             PRINT(TEXT("========================================"), s_delay, "line-gameList1", color);
         }
     }

@@ -135,11 +135,11 @@ namespace ClassicLauncher
         std::vector<Entity*> m_childEntities{};  
         FinalRenderTransform m_finalRender{};
 
-        TimerManager* GetTimerManager() { return m_timerManagerRef; }
-        SpriteManager* GetSpriteManager() { return m_spriteManagerReference; }
-        EntityManager* GetEntityManager() { return m_entityManagerReference; }
-        FocusManager* GetFocusManager() { return m_focusManagerRef; }
-        FontManager* GetFontManager() { return m_fontManagerRef; }
+        TimerManager* GetTimerManager();
+        SpriteManager* GetSpriteManager();
+        EntityManager* GetEntityManager();
+        FocusManager* GetFocusManager();
+        FontManager* GetFontManager();
 
     private:
 

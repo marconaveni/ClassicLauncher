@@ -70,16 +70,6 @@ namespace ClassicLauncher
         SetFocus(3, true);
     }
 
-    // void GuiHorizontalCards::SetHorizontalBoxValues()
-    // {
-    //     // const float space = ThemesManager::GetConfigurationThemes().horizontalCardsSpace;
-    //     // const float x = m_horizontalBox->GetPosition().x;
-    //     // const float y = ThemesManager::GetConfigurationThemes().horizontalCardsPositionY;
-
-    //     // m_horizontalBox->SetSpace(space);
-    //     // m_horizontalBox->SetPosition(x, y);
-    // }
-
     void GuiHorizontalCards::SetPositionHorizontalBox()
     {
         

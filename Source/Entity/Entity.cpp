@@ -2,14 +2,11 @@
 
 #include <algorithm>
 
+#include "ClassicAssert.h"
+
 namespace ClassicLauncher
 {
 
-
-    // Entity::Entity()
-    //     : m_isCanDelete(false), m_isCanDraw(true), m_isScissorMode(false), m_isVisible(true), m_childEntities(), m_nameId()
-    // {
-    // }
 
     void Entity::UpdateWorldTransform()
     {
@@ -54,19 +51,12 @@ namespace ClassicLauncher
             {
                 entity->UpdateWorldTransform();
             }
-            
         }
-        
     }
 
     void Entity::SelfDelete()
     {
         m_isCanDelete = true;
-        // Entity* pParent = GetParent();
-        // if (pParent)
-        // {
-        //     pParent->RemoveChild(this);
-        // }    
         for (auto& entity : m_childEntities)
         {
             entity->SelfDelete();
@@ -85,12 +75,12 @@ namespace ClassicLauncher
     void Entity::RemoveChild(Entity* childEntity)
     {
         m_childEntities.erase(std::remove_if(m_childEntities.begin(),
-                                            m_childEntities.end(),
-                                            [childEntity](const Entity* entity)
-                                            {
-                                                return entity == childEntity; // Return true element
-                                            }),
-                             m_childEntities.end());
+                                             m_childEntities.end(),
+                                             [childEntity](const Entity* entity)
+                                             {
+                                                 return entity == childEntity; // Return true element
+                                             }),
+                              m_childEntities.end());
     }
 
     void Entity::RemoveAllChildren()
@@ -130,6 +120,48 @@ namespace ClassicLauncher
         {
             childEntity->EnableScissorMode(m_scissorArea.x, m_scissorArea.y, m_scissorArea.width, m_scissorArea.height);
         }
+    }
+
+    // Manager Getters 
+
+    TimerManager* Entity::GetTimerManager()
+    {
+        CLASSIC_ASSERT(
+            m_timerManagerRef,
+            "is still null don't call it in the constructor! EntityManager will take care of the assignment");
+        return m_timerManagerRef;
+    }
+
+    SpriteManager* Entity::GetSpriteManager()
+    {
+        CLASSIC_ASSERT(
+            m_spriteManagerReference,
+            "is still null don't call it in the constructor! EntityManager will take care of the assignment");
+        return m_spriteManagerReference;
+    }
+
+    EntityManager* Entity::GetEntityManager()
+    {
+        CLASSIC_ASSERT(
+            m_entityManagerReference,
+            "is still null don't call it in the constructor! EntityManager will take care of the assignment");
+        return m_entityManagerReference;
+    }
+
+    FocusManager* Entity::GetFocusManager()
+    {
+        CLASSIC_ASSERT(
+            m_focusManagerRef,
+            "is still null don't call it in the constructor! EntityManager will take care of the assignment");
+        return m_focusManagerRef;
+    }
+
+    FontManager* Entity::GetFontManager()
+    {
+        CLASSIC_ASSERT(
+            m_fontManagerRef,
+            "is still null don't call it in the constructor! EntityManager will take care of the assignment");
+        return m_fontManagerRef;
     }
 
     void Entity::SetZOrder(int zOrder)

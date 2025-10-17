@@ -6,7 +6,7 @@ namespace ClassicLauncher
 {
     void DateTime::ValidateDateTime()
     {
-        const bool bIsLeapYear = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+        const bool isLeapYear = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
         int maxDay = 31;
 
         switch (month)
@@ -15,7 +15,7 @@ namespace ClassicLauncher
             case 6:
             case 9:
             case 11: maxDay = 30; break;
-            case 2: maxDay = bIsLeapYear ? 29 : 28; break;
+            case 2: maxDay = isLeapYear ? 29 : 28; break;
         }
 
         // Validate date and time ranges
@@ -54,41 +54,78 @@ namespace ClassicLauncher
         return *this;
     }
 
-    bool DateTime::CompareDates(const DateTime& a) const
+    bool DateTime::CompareDates(const DateTime& dateTime) const
     {
-        if (year != a.year)
+        if (year != dateTime.year)
         {
-            return year < a.year;
+            return year < dateTime.year;
         }
-        if (month != a.month)
+        if (month != dateTime.month)
         {
-            return month < a.month;
+            return month < dateTime.month;
         }
-        if (day != a.day)
+        if (day != dateTime.day)
         {
-            return day < a.day;
+            return day < dateTime.day;
         }
-        if (hour != a.hour)
+        if (hour != dateTime.hour)
         {
-            return hour < a.hour;
+            return hour < dateTime.hour;
         }
-        if (minute != a.minute)
+        if (minute != dateTime.minute)
         {
-            return minute < a.minute;
+            return minute < dateTime.minute;
         }
-        if (second != a.second)
+        if (second != dateTime.second)
         {
-            return second < a.second;
+            return second < dateTime.second;
         }
         return false;
     }
 
-    std::string DateTime::FormatDateTimeToXml() const
+    void DateTime::SetCurrentTimeAndDate()
+    {
+        const auto now = std::chrono::system_clock::now();
+        const auto inTimeT = std::chrono::system_clock::to_time_t(now);
+        currentTime = *std::localtime(&inTimeT);
+
+        year = currentTime.tm_year + 1900; // add 1900 in year
+        month = currentTime.tm_mon + 1;    // month start with 0
+        day = currentTime.tm_mday;
+        hour = currentTime.tm_hour;
+        minute = currentTime.tm_min;
+        second = currentTime.tm_sec;
+    }
+
+    std::string DateTime::ToXmlString() const
     {
         std::ostringstream value;
         value << ZeroDigits(year) << ZeroDigits(month) << ZeroDigits(day) << "T" << ZeroDigits(hour)
               << ZeroDigits(minute) << ZeroDigits(second);
         return value.str();
+    }
+
+    std::string DateTime::ToLocaleString() const
+    {
+        std::tm timeinfo{};
+        timeinfo.tm_year = year - 1900;
+        timeinfo.tm_mon = month - 1;
+        timeinfo.tm_mday = day;
+        timeinfo.tm_hour = hour;
+        timeinfo.tm_min = minute;
+        timeinfo.tm_sec = second;
+
+        static bool localeSet = []
+        {
+            std::setlocale(LC_TIME, "");
+            return true;
+        }();
+
+        char formatedDate[64];
+
+        std::strftime(formatedDate, sizeof(formatedDate), "%x %X", &timeinfo);
+
+        return std::string(formatedDate);
     }
 
     std::string DateTime::ZeroDigits(const int value)
