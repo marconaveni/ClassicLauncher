@@ -19,6 +19,7 @@
 #include "Utils/Resources.h"
 #include "Utils/Utils.h"
 #include "Window/RayWindow.h"
+#include "Guis/GuiHintBar.h"
 
 
 namespace ClassicLauncher
@@ -64,6 +65,16 @@ namespace ClassicLauncher
         m_miniCover = GetEntityManager()->CreateEntity<GuiMiniCover>("MiniCover", m_gameListManagerRef);
         m_miniCover->Init();
         AddChild(m_miniCover);
+        
+        m_hintBar = GetEntityManager()->CreateEntity<GuiHintBar>("GuiHintBar");
+        m_hintBar->SetPosition(180, 594.0f);
+        m_hintBar->AddHint({1488, 784, 36, 36}, "0");
+        m_hintBar->AddHint({1340, 562, 36, 36}, "1");
+        m_hintBar->AddHint({1303, 562, 36, 36}, "2");
+        m_hintBar->AddHint({1303, 562, 36, 36}, "3");
+        
+        AddChild(m_hintBar);
+        
 
         m_frame = GetEntityManager()->CreateEntity<GuiFrame>("Frame");
         GetEntityManager()->SetZOrder(m_frame, 1);
@@ -92,6 +103,8 @@ namespace ClassicLauncher
         const float minX = ((m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * 3 + m_horizontalBox->GetPosition().x)  ;
         const float maxX = ((m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * 6 + m_horizontalBox->GetPosition().x) ;
         m_frame->SetLimitArea(RectFloat{minX , 0.0f, maxX, 720.0f});
+
+        // m_hintBar->SetTextColor(Color::Red); Todo: Replace theme
     }
 
     void GuiHorizontalCards::Draw()
@@ -128,6 +141,7 @@ namespace ClassicLauncher
         const GameList* gameList = m_gameListManagerRef->GetCurrentGameList();
         m_guiTitle->SetText((gameList) ? gameList->name : "");
         m_frame->SetFrame();
+        SetTextHintBar();
     }
 
     void GuiHorizontalCards::SetCovers()
@@ -267,6 +281,29 @@ namespace ClassicLauncher
         m_speed = Math::Clamp(m_multiply * 60.0f * RayWindow::GetFrameTime(), 0.0f, 256.0f);
     }
 
+    void GuiHorizontalCards::SetTextHintBar()
+    {
+        CurrentList currentList = m_gameListManagerRef->GetCurrentList();
+        if (currentList == CurrentList::SystemListSelect)
+        {
+            m_hintBar->SetText(0, "Select");
+            m_hintBar->SetText(1, "Ok");
+            m_hintBar->SetText(2, "Exit");
+            m_hintBar->SetVisibility(3, false);
+        }
+        else
+        {
+            m_hintBar->SetText(0, "Select");
+            m_hintBar->SetText(1, "Start Game");
+            m_hintBar->SetText(2, "Back");
+            m_hintBar->SetText(3, "Options");
+            m_hintBar->SetVisibility(3, true);
+        }
+        
+        LOG(LOG_CLASSIC_WARNING,"m_hintBar->GetSize().width %.2f", m_hintBar->GetSize().width );
+
+    }
+
     void GuiHorizontalCards::CancelMultiply()
     {
         m_isPress = false;
@@ -367,6 +404,8 @@ namespace ClassicLauncher
         }
 
         UpdateCards();
+        const float x = (GetSize().width - m_hintBar->GetSize().width) / 2.0f;
+        m_hintBar->SetPosition(x, m_hintBar->GetPosition().y);
     }
 
     void GuiHorizontalCards::UpdateCards()

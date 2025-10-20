@@ -23,6 +23,7 @@ namespace ClassicLauncher
         GuiBlackScreenClass,
         GuiFrameClass,
         GuiCanvasClass,
+        GuiHintBarClass,
     };
 
     class SpriteManager;
@@ -58,6 +59,7 @@ namespace ClassicLauncher
         void DisableScissorMode() { m_isScissorMode = false; }
         void SetVisible(const bool enable) { m_isVisible = enable; }
         [[nodiscard]] ZOrder GetZOrder() const { return m_zOrder; }
+        [[nodiscard]] bool IsVisible() const { return m_isVisible; }
         [[nodiscard]] bool GetTransformIsDirty() const { return m_isTransformDirty; }
         void MarkTransformAsDirty();
         

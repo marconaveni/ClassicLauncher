@@ -58,6 +58,13 @@ namespace ClassicLauncher
     {
         Entity::Update();
 
+        if (m_autoSize)
+        {
+            //SetSize(m_mensuredText.x, m_mensuredText.y);
+            return;
+        }
+        
+
         if (m_centerText && GetSize().width > GetMeasureTextBox().x)
         {
             const float widthPosition = GetSize().width * GetWorldTransform().scale.x * GetScale().x;
@@ -96,7 +103,7 @@ namespace ClassicLauncher
 
         Font* font = GetFontManager()->GetFont(m_nameFont);
 
-        if (!font)
+        if (!font || !IsVisible())
         {
             return;
         }
@@ -135,7 +142,14 @@ namespace ClassicLauncher
         m_delay = 1;
 
         m_mensuredText = MeasureTextBox();
-        SetSize(GetSize().width, m_mensuredText.y);
+        const float x = m_autoSize ? m_mensuredText.x : GetSize().width;
+        SetSize(x, m_mensuredText.y);
+    }
+
+    void GuiTextBlock::SetAutoSize(bool enable)
+    {
+        m_autoSize = enable;
+        SetSize(m_mensuredText.x, m_mensuredText.y);
     }
 
     void GuiTextBlock::SetSizeFont(int size)
@@ -174,11 +188,6 @@ namespace ClassicLauncher
     {
         m_textOverflowPolicy = textOverflowPolicy;
     }
-
-    // void GuiTextBlock::SetDesiredWidth(int newWidth)
-    // {
-    //     mDesiredWidth = newWidth;
-    // }
 
     void GuiTextBlock::SetOffSetMoveText(float speed, float maxDelay)
     {

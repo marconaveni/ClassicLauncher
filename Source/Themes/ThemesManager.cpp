@@ -68,8 +68,8 @@ namespace ClassicLauncher
             m_audioManagerRef->LoadSound(path, "click");
             path.replace_filename("cursor.wav");
             m_audioManagerRef->LoadSound(path, "cursor");
-            m_entityManagerRef->SetThemeValue();
         }
+        m_entityManagerRef->SetThemeValue();
     }
 
     ThemesManager& ThemesManager::Get()

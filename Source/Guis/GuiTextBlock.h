@@ -29,6 +29,7 @@ namespace ClassicLauncher
         virtual void Draw() override;
         virtual void End() override;
         void SetText(const std::string& text);
+        void SetAutoSize(bool enable);
         void SetSizeFont(int size);
         void SetSpacing(int spacing);
         Vector2f GetMeasureTextBox();
@@ -54,6 +55,7 @@ namespace ClassicLauncher
         float m_maxDelay{3.0f};
         TextOverflowPolicy m_textOverflowPolicy{TextOverflowPolicy::NONE};
         bool m_centerText{false};
+        bool m_autoSize{false};
         float m_positionText{0.0f};
         float m_renderScale{1};
 

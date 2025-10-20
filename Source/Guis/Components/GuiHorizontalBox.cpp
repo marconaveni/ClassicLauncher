@@ -45,6 +45,11 @@ namespace ClassicLauncher
 
         for (auto& guiElement : m_guiElements)
         {
+            if (!guiElement->IsVisible())
+            {
+                continue;
+            }
+            
             Transform& transform = guiElement->GetTransformRef();
             Transform& worldTransform = guiElement->GetWorldTransformRef();
 
@@ -59,6 +64,11 @@ namespace ClassicLauncher
 
         spacer -= m_spacer;
 
+        if (spacer < 0)
+        {
+            spacer = 0;
+        }
+        
         const float width = canvasWidth + spacer;
         const float height = canvasHeight;
         SetSize(width, height);

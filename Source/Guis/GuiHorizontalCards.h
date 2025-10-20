@@ -17,6 +17,7 @@ namespace ClassicLauncher
     class GuiTextBlock;
     class GuiHorizontalBox;
     class GuiFrame;
+    class GuiHintBar;
     class EntityManager;
     class GameListManager;
     class AudioManager;
@@ -51,6 +52,7 @@ namespace ClassicLauncher
         GuiMiniCover* m_miniCover{nullptr};
         GuiHorizontalBox* m_horizontalBox{nullptr};
         GuiFrame* m_frame{nullptr};
+        GuiHintBar* m_hintBar{nullptr};
         std::vector<GuiCard*> m_guiCards{};
         float m_positionX{0};
         bool m_isLeft{false};
@@ -72,6 +74,7 @@ namespace ClassicLauncher
         void SetPositionHorizontalBox();
         void ClearCovers();
         void SetSpeedCards();
+        void SetTextHintBar();
     };
 
 } // namespace ClassicLauncher
