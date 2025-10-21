@@ -69,8 +69,8 @@ namespace ClassicLauncher
         m_hintBar = GetEntityManager()->CreateEntity<GuiHintBar>("GuiHintBar");
         m_hintBar->SetPosition(180, 594.0f);
         m_hintBar->AddHint({1488, 784, 36, 36}, "0");
-        m_hintBar->AddHint({1340, 562, 36, 36}, "1");
-        m_hintBar->AddHint({1303, 562, 36, 36}, "2");
+        m_hintBar->AddHint({1545, 562, 81, 36}, "1");
+        m_hintBar->AddHint({1340, 562, 36, 36}, "2");
         m_hintBar->AddHint({1303, 562, 36, 36}, "3");
         
         AddChild(m_hintBar);
@@ -104,7 +104,7 @@ namespace ClassicLauncher
         const float maxX = ((m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * 6 + m_horizontalBox->GetPosition().x) ;
         m_frame->SetLimitArea(RectFloat{minX , 0.0f, maxX, 720.0f});
 
-        // m_hintBar->SetTextColor(Color::Red); Todo: Replace theme
+        m_hintBar->SetTextColor(ThemesManager::GetConfigurationThemes().hintBarFooterColor); 
     }
 
     void GuiHorizontalCards::Draw()
@@ -287,17 +287,17 @@ namespace ClassicLauncher
         if (currentList == CurrentList::SystemListSelect)
         {
             m_hintBar->SetText(0, "Select");
-            m_hintBar->SetText(1, "Ok");
-            m_hintBar->SetText(2, "Exit");
-            m_hintBar->SetVisibility(3, false);
+            m_hintBar->SetVisibility(1, false);
+            m_hintBar->SetText(2, "Ok");
+            m_hintBar->SetText(3, "Exit");
         }
         else
         {
             m_hintBar->SetText(0, "Select");
-            m_hintBar->SetText(1, "Start Game");
-            m_hintBar->SetText(2, "Back");
-            m_hintBar->SetText(3, "Options");
-            m_hintBar->SetVisibility(3, true);
+            m_hintBar->SetText(1, "Options");
+            m_hintBar->SetVisibility(1, true);
+            m_hintBar->SetText(2, "Start Game");
+            m_hintBar->SetText(3, "Back");
         }
         
         LOG(LOG_CLASSIC_WARNING,"m_hintBar->GetSize().width %.2f", m_hintBar->GetSize().width );

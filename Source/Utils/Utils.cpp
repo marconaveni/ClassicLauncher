@@ -1,20 +1,60 @@
 #include "Utils.h"
 
-//#include <cstdlib>
+#include <cerrno>
+#include <cstdint>
+#include <cstdlib>
 
-#include "Graphics/Image.h"
-#include "String.h"
 #include "ClassicAssert.h"
+#include "Graphics/Image.h"
+#include "Log.h"
 
 namespace ClassicLauncher
 {
+    Color Utils::HexToColor(const std::string& hexColor)
+    {
+
+        std::string hexNewColor = hexColor;
+        if (hexColor.size() < 8)
+        {
+            switch (hexColor.size())
+            {
+                case 2: hexNewColor += "0000FF"; break;
+                case 4: hexNewColor += "00FF"; break;
+                case 6: hexNewColor += "FF"; break;
+                default:
+                    LOG(LOG_CLASSIC_ERROR, "Invalid color value in .ini");
+                    return Color::White;
+                    break;
+            }
+        }
+
+        std::uint32_t rgbaValue = 0;
+        char* endPtr;
+        errno = 0;
+        unsigned long tempVal = std::strtoul(hexNewColor.c_str(), &endPtr, 16);
+
+        if (*endPtr != '\0')
+        {
+            LOG(LOG_CLASSIC_ERROR, "Invalid color value in .ini. Character %c is not hexadecimal.", *endPtr);
+            return Color::White;
+        }
+        else if (errno == ERANGE || tempVal > 0xFFFFFFFF)
+        {
+            LOG(LOG_CLASSIC_ERROR, "Color value out of range (overflow)");
+            return Color::White;
+        }
+
+        rgbaValue = static_cast<std::uint32_t>(tempVal);
+        return Color::FromInt(rgbaValue);
+    }
+
 
     void Utils::SetSizeWithProportionFit(Vector2f& vector, const int widthResize, const int heightResize)
     {
         // Define a nova largura e altura desejadas
         float newWidth = static_cast<float>(widthResize);   // Largura desejada
         float newHeight = static_cast<float>(heightResize); // Altura desejada
-        const float aspectRatio = vector.x / vector.y;    // Calcula a proporção da imagem original
+        const float aspectRatio = vector.x / vector.y;      // Calcula a proporção da imagem original
 
         if (newWidth / aspectRatio > newHeight) // Ajusta as dimensões para manter a proporção
         {
@@ -30,7 +70,7 @@ namespace ClassicLauncher
     void Utils::SetSizeWithProportionFill(Vector2f& vector, const int widthResize, const int heightResize)
     {
 
-        if (vector.x == 0.0f || vector.y == 0.0f) // check evita cair numa divisão por 0 
+        if (vector.x == 0.0f || vector.y == 0.0f) // check evita cair numa divisão por 0
         {
             return;
         }

@@ -4,6 +4,8 @@
 
 #include <string>
 
+#include "Data/Color.h"
+
 namespace ClassicLauncher
 {
 
@@ -34,6 +36,9 @@ namespace ClassicLauncher
         float offsetTopArrow{0.0f};
         float offsetTopCover{0.0f};
         float offsetLeftCover{0.0f}; 
+
+        //gui hint bar
+        Color hintBarFooterColor{Color::White};
 
         void LoadConfigurations(const std::string& path);
     };

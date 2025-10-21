@@ -3,6 +3,7 @@
 
 
 #include <string>
+#include <filesystem>
 #include <vector>
 
 #include "Data/DateTime.h"
@@ -54,16 +55,24 @@ namespace ClassicLauncher
         bool operator<(const GameList& a) const { return (mapIndex < a.mapIndex); }
     };
 
-    struct HistoryPosition
-    {
-        int id{0};
-        int indexCardFocus{3};
-
-        HistoryPosition() = default;
-    };
-
     struct GameSystemList
     {
+        struct HistoryPosition
+        {
+            int id{0};
+            int indexCardFocus{3};
+
+            HistoryPosition() = default;
+        };
+
+        struct Theme
+        {
+            std::filesystem::path path{};
+            std::string sprite{"sprite"};
+            bool isDirectoryExist{false};
+            bool isLoaded{false};
+        };
+        
 
         int mapIndex{-1};
         std::string executable{};
@@ -76,7 +85,7 @@ namespace ClassicLauncher
         std::string video{};
         std::string desc{};
         HistoryPosition history{};
-        std::string theme{};
+        Theme theme{};
         ConfigurationThemes configThemes{};
 
         ~GameSystemList() = default;

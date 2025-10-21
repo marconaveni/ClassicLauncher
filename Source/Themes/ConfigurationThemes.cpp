@@ -1,6 +1,7 @@
 #include "ConfigurationThemes.h"
 
 #include "Utils/SimpleIni.h"
+#include "Utils/Utils.h"
 
 namespace ClassicLauncher
 {
@@ -33,6 +34,9 @@ namespace ClassicLauncher
         offsetTopArrow = ini.GetFloat("minicover", "offsetTopArrow", 0.0f);   //0.0f
         offsetTopCover = ini.GetFloat("minicover", "offsetTopCover", 0.0f);   //0.0f
         offsetLeftCover = ini.GetFloat("minicover", "offsetLeftCover", 0.0f); //0.0f
+
+        // hintbar
+        hintBarFooterColor = Utils::HexToColor(ini.GetString("hintBarFooter", "hintBarFooterColor", "FFFFFFFF"));
     }
 
 } // namespace ClassicLauncher

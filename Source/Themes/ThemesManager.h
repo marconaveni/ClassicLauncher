@@ -31,7 +31,7 @@ namespace ClassicLauncher
         static ThemesManager& Get();
         static float GetScaleRenderer();
         static ConfigurationThemes GetConfigurationThemes();
-        std::string GetTheme();
+        std::string GetSpriteTheme();
 
     private:
 

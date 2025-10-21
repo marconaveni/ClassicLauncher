@@ -4,12 +4,14 @@
 #include <string>
 
 #include "Data/Vector2.h"
+#include "Data/Color.h"
 #include "Graphics/Image.h"
 
 
 namespace ClassicLauncher::Utils
 {
 
+    Color HexToColor(const std::string& hexColor);
     void SetSizeWithProportionFit(Vector2f& vector, const int widthResize, const int heightResize);
     void SetSizeWithProportionFill(Vector2f& vector, const int widthResize, const int heightResize);
     void SetSizeWithProportion(Vector2f& vector, const int widthResize, const int heightResize, bool fill = false);

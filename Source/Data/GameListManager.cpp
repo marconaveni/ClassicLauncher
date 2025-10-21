@@ -148,8 +148,14 @@ namespace ClassicLauncher
             systems.screenshot = IsValidElement(systemElement, "thumbnail") ? systemElement->FirstChildElement("thumbnail")->GetText() : "";
             systems.video = IsValidElement(systemElement, "video") ? systemElement->FirstChildElement("video")->GetText() : "";
             systems.desc = IsValidElement(systemElement, "desc") ? systemElement->FirstChildElement("desc")->GetText() : "";
-            const std::string theme = NormalizePath(Resources::GetThemeDirectory() + "/" + systems.systemName + TEXT("/sprite%.0fx.png", ThemesManager::GetScaleRenderer()));
-            systems.theme = (std::filesystem::exists(theme)) ? theme : "sprite";          
+            std::filesystem::path path = NormalizePath(Resources::GetThemeDirectory() + "/" + systems.systemName);
+            std::filesystem::path file = NormalizePath(TEXT("/sprite%.0fx.png", ThemesManager::GetScaleRenderer()));
+            if (std::filesystem::is_directory(path))
+            {
+                systems.theme.path = path;
+                systems.theme.isDirectoryExist = true;
+            }
+            
             m_gameSystemList.push_back(systems);
 
             systemElement = systemElement->NextSiblingElement("system");

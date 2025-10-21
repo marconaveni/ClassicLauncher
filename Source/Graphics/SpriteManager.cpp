@@ -63,7 +63,7 @@ namespace ClassicLauncher
         std::string find = name;
         if (name == "sprite")
         {
-            find = ThemesManager::Get().GetTheme();
+            find = ThemesManager::Get().GetSpriteTheme();
         }
         
         auto it = m_spriteMap.find(find);

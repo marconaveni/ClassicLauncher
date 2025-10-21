@@ -44,7 +44,7 @@ namespace ClassicLauncher
     std::string String::RemoveDuplicateSlashes(const std::string& input)
     {
         std::string result;
-        bool bPreviousIsSlash = false;
+        bool isPreviousIsSlash = false;
 
         for (char c : input)
         {
@@ -55,16 +55,16 @@ namespace ClassicLauncher
 #endif
 
             {
-                if (!bPreviousIsSlash)
+                if (!isPreviousIsSlash)
                 {
                     result += c;
-                    bPreviousIsSlash = true;
+                    isPreviousIsSlash = true;
                 }
             }
             else
             {
                 result += c;
-                bPreviousIsSlash = false;
+                isPreviousIsSlash = false;
             }
         }
 
