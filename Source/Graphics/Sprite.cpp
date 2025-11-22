@@ -24,7 +24,7 @@ namespace ClassicLauncher
         LOG(LOG_CLASSIC_TRACE, "Sprite - thread stopped and class destroyed");
     }
 
-    void Sprite::Load(const std::filesystem::path& file, const int width, const int height, bool bAspectRatio)
+    void Sprite::Load(const std::filesystem::path& file, const int width, const int height, bool aspectRatio)
     {
         if (!m_isKeepRunning && !m_isTextureLoaded && !m_isImageLoaded)
         {
@@ -32,18 +32,18 @@ namespace ClassicLauncher
             m_isKeepRunning = true;
             //m_filePath = file;
             LOG(LOG_CLASSIC_TRACE, "Sprite - starting thread");
-            m_workerThread = std::thread(&Sprite::LoadImage, this, file, width, height, bAspectRatio);
+            m_workerThread = std::thread(&Sprite::LoadImage, this, file, width, height, aspectRatio);
         }
     }
 
-    void Sprite::Load(Image& newImage, const int width, const int height, const bool bAspectRatio)
+    void Sprite::Load(Image& newImage, const int width, const int height, const bool aspectRatio)
     {
         if (newImage.IsValid())
         {
             Unload();
             newImage.CopyTo(m_image);
             m_filePath = "[loaded from memory]";
-            ResizeImage(width, height, bAspectRatio);
+            ResizeImage(width, height, aspectRatio);
             m_isImageLoaded = m_image.IsValid();
             LOG(LOG_CLASSIC_TRACE, "Image copied successfully");
         }
@@ -62,7 +62,7 @@ namespace ClassicLauncher
         }
     }
 
-    void Sprite::LoadImage(const std::filesystem::path& file,const int width, const int height, bool bAspectRatio)
+    void Sprite::LoadImage(const std::filesystem::path& file,const int width, const int height, bool aspectRatio)
     {
         // std::this_thread::sleep_for(std::chrono::seconds(1)); //for test
         if (m_isKeepRunning)
@@ -71,7 +71,7 @@ namespace ClassicLauncher
             m_image.LoadFromFile(file);
             if (m_image.IsValid())
             {
-                ResizeImage(width, height, bAspectRatio);
+                ResizeImage(width, height, aspectRatio);
                 m_isImageLoaded = m_image.IsValid();
                 LOG(LOG_CLASSIC_TRACE, "Image loaded successfully from - \"%s\"", m_filePath.c_str());
             }
@@ -91,6 +91,7 @@ namespace ClassicLauncher
             // mTexture = rlw::LoadTextureFromImage(mImage);
             m_texture = std::make_unique<Texture>();
             m_texture->LoadFromImage(&m_image);
+            m_texture->SetSmooth(false); 
             m_isTextureLoaded = m_texture->IsValid();
             LOG(LOG_CLASSIC_TRACE, "Texture loaded [ID %d] from Image - \"%s\"", m_texture->GetId(), m_filePath.c_str());
             UnloadImage();
@@ -111,12 +112,12 @@ namespace ClassicLauncher
         return nullptr;
     }
 
-    void Sprite::ResizeImage(const int width, const int height, bool bAspectRatio)
+    void Sprite::ResizeImage(const int width, const int height, bool aspectRatio)
     {
         std::lock_guard<std::mutex> guard(m_mutexSprite);
         if (width > 0 && height > 0 && m_image.IsValid())
         {
-            if (bAspectRatio)
+            if (aspectRatio)
             {
                 Utils::ImageResize(m_image, width, height);
             }
