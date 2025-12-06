@@ -1,0 +1,38 @@
+#ifndef GUI_BUTTON_H
+#define GUI_BUTTON_H
+
+
+#include "Animations/Animatable.h"
+#include "Components/FocusComponent.h"
+#include "Guis/Components/GuiCanvas.h"
+
+namespace ClassicLauncher
+{
+
+    class GuiCanvas;
+    class GuiBase;
+
+    class GuiButton : public GuiCanvas, public FocusComponent, public Animatable
+    {
+    public:
+
+        GuiButton(FocusManager* focusManagerRef);
+        ~GuiButton();
+        void Init(const Vector2f sourceIcon);
+        virtual EntityType GetType() const override { return EntityType::GuiButtonClass; }
+
+        void Update() override;
+        virtual void OnFocus() override;
+        virtual void OnLostFocus() override;
+        virtual const Transform& OwnerWorldTransform() const override { return GetWorldTransform(); };
+
+    private:
+
+        GuiBase* m_background{nullptr};
+        GuiBase* m_icon{nullptr};
+    };
+
+} // namespace ClassicLauncher
+
+
+#endif // GUI_BUTTON_H

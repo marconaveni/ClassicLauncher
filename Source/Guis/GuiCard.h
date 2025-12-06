@@ -31,7 +31,7 @@ namespace ClassicLauncher
 
 
         virtual EntityType GetType() const override { return EntityType::GuiCardClass; }
-        void Update() override;
+        virtual void Update() override;
         void SetCardFocus(bool bForce = false);
         void RemoveCardFocus(bool bForce = false);
         virtual void OnFocus() override;

@@ -14,7 +14,6 @@ namespace ClassicLauncher
     class GameListManager;
     class AudioManager;
     class ProcessManager;
-
     class GuiWindow : public GuiCanvas
     {
     public:
@@ -25,8 +24,12 @@ namespace ClassicLauncher
         void Init();
         void OnClick();
         void OnBack();
-        void Teste();
         GuiBlackScreen* GetGuiBlackScreen() const { return m_guiBlackScreen; }
+
+#ifdef _DEBUG       
+        void InitDebug();
+        class GuiButton* m_button;
+#endif
 
     private:
 
