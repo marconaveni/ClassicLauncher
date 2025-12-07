@@ -20,6 +20,7 @@ namespace ClassicLauncher
         m_background = GetEntityManager()->CreateEntity<GuiBase>("GuiBase");
         m_background->SetSize(GetSize());
         m_background->SetSource(Vector2f{1139.0f, 0.0f}, GetSize());
+        m_background->SetOpacity(0);
         m_background->m_textureName = "sprite";
         AddChild(m_background);
 

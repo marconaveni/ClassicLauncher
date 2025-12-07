@@ -37,6 +37,9 @@ namespace ClassicLauncher
 
         // hintbar
         hintBarFooterColor = Utils::HexToColor(ini.GetString("hintBarFooter", "hintBarFooterColor", "FFFFFFFF"));
+        
+        // title
+        titleColor = Utils::HexToColor(ini.GetString("title", "titleColor", "FFFFFFFF"));
     }
 
 } // namespace ClassicLauncher

@@ -40,6 +40,9 @@ namespace ClassicLauncher
         //gui hint bar
         Color hintBarFooterColor{Color::White};
 
+        //gui title
+        Color titleColor{Color::White};
+
         void LoadConfigurations(const std::string& path);
     };
 

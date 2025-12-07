@@ -12,8 +12,6 @@
 #include "Utils/ProcessManager.h"
 #include "Window/Window.h"
 
-#include "Guis/GuiButton.h"
-
 namespace ClassicLauncher
 {
     GuiWindow::GuiWindow(GameListManager* gameListManagerRef,
@@ -159,10 +157,6 @@ namespace ClassicLauncher
 #ifdef _DEBUG
     void GuiWindow::InitDebug()
     {
-
-        m_button = GetEntityManager()->CreateEntity<GuiButton>("GuiButton", GetFocusManager());
-        m_button->Init(Vector2f{1109, 196});
-        m_button->SetPosition(Vector2f{300,400});
     }
 #endif
 

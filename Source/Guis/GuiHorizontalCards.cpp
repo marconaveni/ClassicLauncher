@@ -7,6 +7,7 @@
 #include "Graphics/SpriteManager.h"
 #include "Guis/Components/GuiHorizontalBox.h"
 #include "Guis/GuiCard.h"
+#include "Guis/GuiBase.h"
 #include "Guis/GuiFrame.h"
 #include "Guis/GuiMiniCover.h"
 #include "Guis/GuiTextBlock.h"
@@ -20,6 +21,7 @@
 #include "Utils/Utils.h"
 #include "Window/RayWindow.h"
 #include "Guis/GuiHintBar.h"
+#include "Guis/GuiMenu.h"
 
 
 namespace ClassicLauncher
@@ -34,6 +36,13 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::Init()
     {
+
+        m_guiMenuBackground = GetEntityManager()->CreateEntity<GuiBase>("GuiBase");
+        m_guiMenuBackground->SetPosition(Vector2f{127, 151});
+        m_guiMenuBackground->SetSize(Vector2f{1026, 54});
+        m_guiMenuBackground->SetSource(RectFloat{22, 1164, 1026, 54});
+        m_guiMenuBackground->m_textureName = "sprite";
+        AddChild(m_guiMenuBackground);
 
         m_guiTitle = GetEntityManager()->CreateEntity<GuiTextBlock>("GuiTitle");
         m_guiTitle->LoadNewFont(Resources::GetFontFile(), 48, 0); 
@@ -75,6 +84,25 @@ namespace ClassicLauncher
         
         AddChild(m_hintBar);
         
+        m_guiTopBar = GetEntityManager()->CreateEntity<GuiBase>("GuiBase");
+        m_guiTopBar->SetSize(Vector2f{1280, 96});
+        m_guiTopBar->SetSource(RectFloat{22, 712, 1280, 96});
+        m_guiTopBar->m_textureName = "sprite";
+        AddChild(m_guiTopBar);
+
+        m_guiBottomBar = GetEntityManager()->CreateEntity<GuiBase>("GuiBase");
+        m_guiBottomBar->SetPosition(Vector2f{0, 630});
+        m_guiBottomBar->SetSize(Vector2f{1280, 90});
+        m_guiBottomBar->SetSource(RectFloat{22, 562, 1280, 90});
+        m_guiBottomBar->m_textureName = "sprite";
+        AddChild(m_guiBottomBar);
+
+        m_guiMenu = GetEntityManager()->CreateEntity<GuiMenu>("GuiMenu");
+        m_guiMenu->Init();
+
+        AddChild(m_guiMenu);
+        const float m = (GetSize().width - m_guiMenu->GetSize().width) / 2;
+        m_guiMenu->SetPosition(m, 27);
 
         m_frame = GetEntityManager()->CreateEntity<GuiFrame>("Frame");
         GetEntityManager()->SetZOrder(m_frame, 1);
@@ -105,6 +133,7 @@ namespace ClassicLauncher
         m_frame->SetLimitArea(RectFloat{minX , 0.0f, maxX, 720.0f});
 
         m_hintBar->SetTextColor(ThemesManager::GetConfigurationThemes().hintBarFooterColor); 
+        m_guiTitle->SetColor(ThemesManager::GetConfigurationThemes().titleColor);
     }
 
     void GuiHorizontalCards::Draw()

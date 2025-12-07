@@ -25,6 +25,7 @@ namespace ClassicLauncher
         GuiCanvasClass,
         GuiHintBarClass,
         GuiButtonClass,
+        GuiMenuClass,
     };
 
     class SpriteManager;

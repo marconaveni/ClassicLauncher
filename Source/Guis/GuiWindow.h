@@ -28,7 +28,6 @@ namespace ClassicLauncher
 
 #ifdef _DEBUG       
         void InitDebug();
-        class GuiButton* m_button;
 #endif
 
     private:

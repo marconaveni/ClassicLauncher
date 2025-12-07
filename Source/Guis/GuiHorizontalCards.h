@@ -8,6 +8,7 @@
 #include "Utils/TimerManager.h"
 
 
+
 namespace ClassicLauncher
 {
 
@@ -21,6 +22,8 @@ namespace ClassicLauncher
     class EntityManager;
     class GameListManager;
     class AudioManager;
+    class GuiMenu;
+    class GuiBase;
 
     enum Direction : std::uint8_t
     {
@@ -53,6 +56,10 @@ namespace ClassicLauncher
         GuiHorizontalBox* m_horizontalBox{nullptr};
         GuiFrame* m_frame{nullptr};
         GuiHintBar* m_hintBar{nullptr};
+        GuiMenu* m_guiMenu{nullptr};
+        GuiBase* m_guiMenuBackground{nullptr};
+        GuiBase* m_guiTopBar{nullptr};
+        GuiBase* m_guiBottomBar{nullptr};
         std::vector<GuiCard*> m_guiCards{};
         float m_positionX{0};
         bool m_isLeft{false};
