@@ -32,6 +32,13 @@ namespace ClassicLauncher
         Right
     };
 
+    enum Level : std::uint8_t
+    {
+        Top,
+        Middle,
+        Bottom   
+    };
+
     class GuiHorizontalCards : public Entity
     {
     public:
@@ -66,6 +73,7 @@ namespace ClassicLauncher
         bool m_isRight{false};
         bool m_isNeedUpdate{false};
         Direction m_lastDirection{Direction::None};
+        Level m_level{Level::Middle};
         int m_idFocus{0};
         int m_idLastFocusSystem{3};
         float m_speed{22.0f};
@@ -78,6 +86,7 @@ namespace ClassicLauncher
 
         void CancelMultiply();
         void UpdateCards();
+        void UpdateInput();
         void SetPositionHorizontalBox();
         void ClearCovers();
         void SetSpeedCards();

@@ -17,6 +17,7 @@ namespace ClassicLauncher
         virtual EntityType GetType() const override { return EntityType::GuiMenuClass; }
         void Init();
         void Update() override;
+        void SetButtonFocus(int id);
 
     private:
 
@@ -29,6 +30,7 @@ namespace ClassicLauncher
         void CreateButton(const Vector2f source);
         std::vector<Buttons> m_buttons{};
         GuiBase* m_background{nullptr};
+        int m_id{0};
         
     };
 

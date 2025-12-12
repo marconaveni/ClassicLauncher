@@ -17,7 +17,7 @@ namespace ClassicLauncher
     public:
 
         GuiButton(FocusManager* focusManagerRef);
-        ~GuiButton();
+        ~GuiButton() = default;
         void Init(const Vector2f sourceIcon);
         virtual EntityType GetType() const override { return EntityType::GuiButtonClass; }
 

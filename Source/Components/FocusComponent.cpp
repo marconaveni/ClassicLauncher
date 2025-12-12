@@ -6,27 +6,27 @@
 
 namespace ClassicLauncher
 {
-    FocusComponent::FocusComponent(FocusManager* focusManagerRef)
-        : m_focusRef(focusManagerRef)
+    FocusComponent::FocusComponent(FocusManager* focusManagerRef, FocusCategory focusCategory)
+        : m_focusManagerReference(focusManagerRef), m_focusCategory(focusCategory)
     {
-        m_focusRef->AddFocus(this);
+        m_focusManagerReference->AddFocus(this);
     }
 
     FocusComponent::~FocusComponent()
     {
-        m_focusRef->RemoveFocus(this);
+        m_focusManagerReference->RemoveFocus(this);
     }
 
     void FocusComponent::SetFocus()
     {
-        m_focusRef->SetNewFocusComponent(this);
+        m_focusManagerReference->SetNewFocusComponent(this);
         m_isFocus = true;
         UpdateFocus();
     }
 
     void FocusComponent::RemoveFocus()
-    { 
-        m_focusRef->SetNewFocusComponent(nullptr);
+    {
+        m_focusManagerReference->SetNewFocusComponent(nullptr);
         m_isFocus = false;
     }
 

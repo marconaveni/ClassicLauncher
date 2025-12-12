@@ -14,6 +14,7 @@ namespace ClassicLauncher
 
     void FocusManager::SetNewFocusComponent(FocusComponent* focusComponent)
     {
+        m_currentFocusComponent = nullptr;
         PRINT(TEXT("focus count %d", m_focusComponents.size()), 5.0f, "focusComp");
         for (auto& focus : m_focusComponents)
         {
@@ -54,16 +55,5 @@ namespace ClassicLauncher
                                m_focusComponents.end());
     }
 
-    FocusComponent* FocusManager::GetFocusComponent()
-    {
-        for (auto& focus : m_focusComponents)
-        {
-            if (focus->IsFocus())
-            {
-                return focus;
-            }
-        }
-        return nullptr;
-    }
 
 } // namespace ClassicLauncher

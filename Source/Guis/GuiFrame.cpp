@@ -2,9 +2,11 @@
 
 #include "Components/FocusComponent.h"
 #include "Components/FocusManager.h"
+#include "Entity/EntityManager.h"
+#include "Guis/GuiBase.h"
 #include "Helper.h"
-#include "Utils/Math.h"
 #include "Themes/ThemesManager.h"
+#include "Utils/Math.h"
 
 namespace ClassicLauncher
 {
@@ -14,9 +16,8 @@ namespace ClassicLauncher
         m_textureName = "sprite";
 
         SetSize(258.0f, 282.0f);
-        SetSource(771.0f, 0.0f, 258.0f, 282.0f);             
+        SetSource(771.0f, 0.0f, 258.0f, 282.0f);
         SetLimitArea(RectFloat{130.0f, 0.0f, 898.0f, 720.0f});
-
     }
 
     void GuiFrame::SetFrame(bool bForce)
@@ -29,13 +30,18 @@ namespace ClassicLauncher
         if (name == "frame-move")
         {
             m_isMove = false;
+            FocusComponent* focus = GetFocusManager()->GetFocusComponent();
+            if (focus && focus->GetFocusCategory() == FocusCategory::BUTTON_ICON)
+            {
+                m_frameMenu->SetOpacity(255);
+                SetOpacity(0);
+            }
             LOG(LOG_CLASSIC_DEBUG, "finish animation frame");
         }
         else
-        {    
+        {
             LOG(LOG_CLASSIC_DEBUG, "finish other animation frame");
         }
-        
     }
 
     void GuiFrame::Click()
@@ -62,51 +68,84 @@ namespace ClassicLauncher
     void GuiFrame::SetLimitArea(RectFloat area)
     {
         // limit area frame move
-        // ###################### window             
+        // ###################### window
         // #                    #
-        // #   x#########width  #      
+        // #   x#########width  #
         // #   #         #      #
         // #   #         #      #
-        // #   y#########height #      
+        // #   y#########height #
         // #                    #
-        // ######################    
+        // ######################
         m_limitAreaMove = area;
+    }
+
+    bool GuiFrame::IsFrameMove()
+    {
+        return GetAnimation("frame-move").GetAnimationIsRun();
+    }
+
+    void GuiFrame::UpdateFramePosition()
+    {
+        FocusComponent* focusComponent = GetFocusManager()->GetFocusComponent();
+        if (!focusComponent)
+        {
+            return;
+        }
+
+        Transform target = GetTransform();
+
+        const float left = ThemesManager::GetConfigurationThemes().offsetLeft;
+        const float right = ThemesManager::GetConfigurationThemes().offsetRight;
+        const float x = Math::Clamp(focusComponent->GetPositionFocus().x, m_limitAreaMove.x - left, m_limitAreaMove.width + right);
+        const float y = Math::Clamp(focusComponent->GetPositionFocus().y, m_limitAreaMove.y, m_limitAreaMove.height);
+
+        if (x == GetPosition().x && y == GetPosition().y)
+        {
+            return;
+        }
+
+        const bool isFrameMove = GetAnimation("frame-move").GetAnimationIsRun();
+        const bool isCardZoom = GetAnimation("card-zoom").GetAnimationIsRun();
+
+        if (!isFrameMove && !isCardZoom)
+        {
+
+            target.position.x = x;
+            target.position.y = y;
+            if (focusComponent->GetFocusCategory() == FocusCategory::CARD)
+            {
+                target.scale = 1.0f;
+                target.color.a = 255.0f;
+                SetOpacity(255);
+                m_frameMenu->SetOpacity(0);
+            }
+            else
+            {
+                target.scale.x = 0.38f;
+                target.scale.y = 0.25f;
+            }
+
+            GetAnimationManager().StartAnimation("frame-move", 0.15f, this, target, Ease::EaseQuadInOut, false);
+        }
     }
 
     void GuiFrame::Update()
     {
-        
-        std::vector<FocusComponent*> focusComponents = GetFocusManager()->GetAllFocusComponents();
-        for (auto& focus : focusComponents)
+        if (!m_frameMenu)
         {
-            if (focus->IsFocus())
-            {
-                Transform target = GetTransform();
-
-                const float left = ThemesManager::GetConfigurationThemes().offsetLeft;
-                const float right = ThemesManager::GetConfigurationThemes().offsetRight;
-                const float x = Math::Clamp(focus->GetPositionFocus().x, m_limitAreaMove.x - left, m_limitAreaMove.width + right);
-                const float y = Math::Clamp(focus->GetPositionFocus().y, m_limitAreaMove.y, m_limitAreaMove.height);
-
-                if (x == GetPosition().x && y == GetPosition().y)
-                {
-                    return;
-                }
-
-                if (m_isMove && !GetAnimation("frame-move").GetAnimationIsRun() && !GetAnimation("card-zoom").GetAnimationIsRun())
-                {
-                    if (GetAnimation("frame-move").GetAnimationIsRun())
-                    {
-                        LOG(LOG_CLASSIC_DEBUG, "call move frame");
-                    }
-
-                    target.position.x = x;
-                    target.position.y = y;
-                    GetAnimationManager().StartAnimation("frame-move", 0.15f, this, target, Ease::EaseQuadInOut, false);
-                }
-            }
+            m_frameMenu = GetEntityManager()->CreateEntity<GuiBase>("GuiBase");
+            m_frameMenu->SetSize({108, 82});
+            m_frameMenu->SetSource(RectFloat{1030, 0, 108, 82});
+            m_frameMenu->SetOffset(Vector2f{-6, -6});
+            m_frameMenu->m_textureName = "sprite";
+        }
+        else
+        {
+            m_frameMenu->SetPosition(GetPosition());
         }
 
+
+        UpdateFramePosition();
         Animatable::UpdateAnimation();
     }
 

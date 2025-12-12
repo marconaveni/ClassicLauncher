@@ -1,6 +1,9 @@
 #include "GuiMenu.h"
+
 #include "Entity/EntityManager.h"
 #include "Guis/GuiButton.h"
+#include "Input/InputManager.h"
+#include "Utils/Math.h"
 
 namespace ClassicLauncher
 {
@@ -17,6 +20,27 @@ namespace ClassicLauncher
     void GuiMenu::Update()
     {
         GuiHorizontalBox::Update();
+
+        if (Keyboard::IsDown(Keyboard::Key::C))
+        {
+            m_buttons[0].button->SetFocus();
+        }
+    }
+
+    void GuiMenu::SetButtonFocus(int id)
+    {
+        int idPrevious = m_id;
+        m_id += id;
+        if (m_id < 0)
+        {
+            m_id = m_buttons.size() - 1;
+        }
+        else if (m_id > m_buttons.size() - 1)
+        {
+            m_id = 0;
+        }
+
+        m_buttons[m_id].button->SetFocus();
     }
 
     void GuiMenu::CreateButton(const Vector2f source)

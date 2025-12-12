@@ -52,6 +52,7 @@ namespace ClassicLauncher
             {
                 animation.ResetAnimation();
                 UpdateTransformAnimation(anim);
+                animation.m_isFinish = false;
                 m_finishCallback(name);
                 anim.entity = nullptr;
             }

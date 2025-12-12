@@ -6,11 +6,7 @@
 namespace ClassicLauncher
 {
     GuiButton::GuiButton(FocusManager* focusManagerRef)
-        : FocusComponent(focusManagerRef)
-    {
-    }
-
-    GuiButton::~GuiButton()
+        : FocusComponent(focusManagerRef, FocusCategory::BUTTON_ICON)
     {
     }
 
@@ -39,10 +35,34 @@ namespace ClassicLauncher
 
     void GuiButton::OnFocus()
     {
+        m_background->SetOpacity(255);
+        Transform target = m_icon->GetTransform();
+        //target.scale = 1.1f;
+
+
+
+        const float scale = 1.1f;
+
+        target.scale.x = scale * m_icon->GetTransform().scale.x;
+        target.scale.y = scale * m_icon->GetTransform().scale.y;
+
+        const float width = target.position.width * m_icon->GetTransform().scale.x;
+        const float height = target.position.height * m_icon->GetTransform().scale.y;
+
+        target.offset.x += (-width / 2 * scale) + width / 2;
+        target.offset.y += (-height / 2 * scale) + height / 2;
+
+        GetAnimationManager().StartAnimation("focus", 0.15f, m_icon, target, Ease::EaseLinearNone, false);
     }
 
     void GuiButton::OnLostFocus()
     {
+        m_background->SetOpacity(0);
+        Transform target = m_icon->GetTransform();
+        target.scale = 1.0f;
+        target.offset.x = 0;
+        target.offset.y = 0;
+        GetAnimationManager().StartAnimation("focus", 0.15f, m_icon, target, Ease::EaseLinearNone, false);
     }
 
 } // namespace ClassicLauncher

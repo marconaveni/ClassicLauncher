@@ -1,14 +1,16 @@
 #ifndef GUI_FRAME_H
 #define GUI_FRAME_H
 
-#include "Entity/Entity.h"
 #include "Animations/Animatable.h"
+#include "Entity/Entity.h"
 #include "Utils/TimerManager.h"
+
 
 namespace ClassicLauncher
 {
+    class GuiBase;
 
-    class GuiFrame : public Entity,  public Animatable
+    class GuiFrame : public Entity, public Animatable
     {
     public:
 
@@ -20,9 +22,13 @@ namespace ClassicLauncher
         virtual EntityType GetType() const override { return EntityType::GuiFrameClass; }
         virtual void Update() override;
         void SetLimitArea(RectFloat area);
+        [[nodiscard]] bool IsFrameMove();
 
     private:
 
+        void UpdateFramePosition();
+
+        GuiBase* m_frameMenu{nullptr};
         RectFloat m_limitAreaMove{};
         TimerHandling m_timer{};
         bool m_isMove{false};
