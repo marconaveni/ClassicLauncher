@@ -12,9 +12,11 @@ namespace ClassicLauncher
     // clang-format off
     enum InputCategory
     {    
-        MAIN =              0x00000001,       
-        VIDEO_FULLSCREEN =   0x00000010,       
-        DEBUG =             0x10000000       
+        MAIN_BOTTOM =        0x00000001,       
+        MAIN_CENTER =        0x00000010,       
+        MAIN_TOP =           0x00000100,       
+        VIDEO_FULLSCREEN =   0x00001000,       
+        DEBUG =              0x10000000       
     };
     // clang-format on
 

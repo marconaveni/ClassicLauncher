@@ -24,8 +24,13 @@ namespace ClassicLauncher
         offsetVideoY = ini.GetFloat("card", "offsetVideoY", 12.0f);               //12.0f
 
         // frame
-        offsetLeft = ini.GetFloat("frame", "offsetLeft", 0.0f);   //0.0f
-        offsetRight = ini.GetFloat("frame", "offsetRight", 0.0f); //0.0f
+        offsetLeftFrame = ini.GetFloat("frame", "offsetLeftFrame", 0.0f);        // 0.0f
+        offsetRightFrame = ini.GetFloat("frame", "offsetRightFrame", 0.0f);      // 0.0f
+        offsetTopFrame = ini.GetFloat("frame", "offsetTopFrame", 0.0f);          // 0.0f
+        offsetBottomFrame = ini.GetFloat("frame", "offsetBottomFrame", 0.0f);  // 0.0f
+        
+        // topBar
+        topBarAnimation = ini.GetBoolean("topbar", "topBarAnimation", false); //false
 
         // minicover
         numCovers = ini.GetInt("minicover", "numCovers", 32);                 //32

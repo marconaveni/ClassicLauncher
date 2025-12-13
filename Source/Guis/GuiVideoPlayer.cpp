@@ -68,7 +68,7 @@ namespace ClassicLauncher
         VideoFadeinAnimate(0.5f, &m_gui);
 
         InputManager::SetCategory(VIDEO_FULLSCREEN);
-        InputManager::RemoveCategory(MAIN);
+        InputManager::RemoveCategory(MAIN_CENTER);
     }
 
     void GuiVideoPlayer::Stop()
@@ -90,7 +90,7 @@ namespace ClassicLauncher
         m_player->Resume();
         GetEntityManager()->SetZOrder(this, 1);
 
-        InputManager::SetCategory(MAIN);
+        InputManager::SetCategory(MAIN_CENTER);
         InputManager::RemoveCategory(VIDEO_FULLSCREEN);
     }
 

@@ -26,8 +26,13 @@ namespace ClassicLauncher
         float offsetVideoY{12};
 
         // gui frame values
-        float offsetLeft{0.0f}; 
-        float offsetRight{0.0f};
+        float offsetLeftFrame{0.0f}; 
+        float offsetRightFrame{0.0f};
+        float offsetTopFrame{0.0f};
+        float offsetBottomFrame{720.0f};
+
+        // gui TopBar values
+        bool topBarAnimation{false};
 
         // gui minicover values
         int numCovers{32}; 

@@ -5,7 +5,9 @@
 
 #include "Data/GameListManager.h"
 #include "Guis/Components/GuiCanvas.h"
+#include "Animations/Animatable.h"
 #include "Utils/TimerManager.h"
+#include "Input/InputManager.h"
 
 
 
@@ -32,14 +34,7 @@ namespace ClassicLauncher
         Right
     };
 
-    enum Level : std::uint8_t
-    {
-        Top,
-        Middle,
-        Bottom   
-    };
-
-    class GuiHorizontalCards : public Entity
+    class GuiHorizontalCards : public Entity , public Animatable
     {
     public:
 
@@ -73,13 +68,13 @@ namespace ClassicLauncher
         bool m_isRight{false};
         bool m_isNeedUpdate{false};
         Direction m_lastDirection{Direction::None};
-        Level m_level{Level::Middle};
         int m_idFocus{0};
         int m_idLastFocusSystem{3};
         float m_speed{22.0f};
         float m_multiply{22.0f};
         bool m_isPress{false};
         TimerHandling m_timerInputSpeed{};
+        bool m_topBarAnimation{false};
 
         GameListManager* m_gameListManagerRef{nullptr};
         AudioManager* m_audioManagerRef{nullptr};
@@ -88,6 +83,7 @@ namespace ClassicLauncher
         void UpdateCards();
         void UpdateInput();
         void SetPositionHorizontalBox();
+        void FocusAnimationBar(InputCategory category);
         void ClearCovers();
         void SetSpeedCards();
         void SetTextHintBar();

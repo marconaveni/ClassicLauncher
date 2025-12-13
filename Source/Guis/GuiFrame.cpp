@@ -94,8 +94,8 @@ namespace ClassicLauncher
 
         Transform target = GetTransform();
 
-        const float left = ThemesManager::GetConfigurationThemes().offsetLeft;
-        const float right = ThemesManager::GetConfigurationThemes().offsetRight;
+        const float left = ThemesManager::GetConfigurationThemes().offsetLeftFrame;
+        const float right = ThemesManager::GetConfigurationThemes().offsetRightFrame;
         const float x = Math::Clamp(focusComponent->GetPositionFocus().x, m_limitAreaMove.x - left, m_limitAreaMove.width + right);
         const float y = Math::Clamp(focusComponent->GetPositionFocus().y, m_limitAreaMove.y, m_limitAreaMove.height);
 

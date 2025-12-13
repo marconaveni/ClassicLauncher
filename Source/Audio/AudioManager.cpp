@@ -135,7 +135,7 @@ namespace ClassicLauncher
 
     void AudioManager::Update()
     {
-        if (InputManager::IsRelease(InputName::rightThumb, MAIN))
+        if (InputManager::IsRelease(InputName::rightThumb, MAIN_CENTER))
         {
             ChangeMusic();
             PRINT(TEXT("Changed music"), 5.0f);  // todo add callback function to gui layout in release version

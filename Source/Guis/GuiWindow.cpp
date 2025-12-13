@@ -54,10 +54,10 @@ namespace ClassicLauncher
 
 
 #ifdef _DEBUG
-        InputManager::SetCategory(MAIN | DEBUG);
+        InputManager::SetCategory(MAIN_CENTER | DEBUG);
         InitDebug();
 #else
-        InputManager::SetCategory(MAIN);
+        InputManager::SetCategory(MAIN_CENTER);
 #endif
     }
 
@@ -99,7 +99,7 @@ namespace ClassicLauncher
             SetScale({GetScale() - 0.01f});
         }
 
-        if (InputManager::IsRelease(InputName::rightFaceDown, MAIN))
+        if (InputManager::IsRelease(InputName::rightFaceDown, MAIN_CENTER))
         {
             if (!m_guiHorizontalCards->IsMovement())
             {
@@ -117,9 +117,16 @@ namespace ClassicLauncher
                 GetTimerManager()->SetTimer(m_clickTimer, CALLFUNCTION(OnClick, this), this, 0.5f, false);
             }
         }
-        if (InputManager::IsRelease(InputName::rightFaceRight, MAIN) &&
+        if (InputManager::IsRelease(InputName::rightFaceDown, MAIN_TOP))
+        {    
+            m_audioManagerRef->PlaySound("click");
+
+        }
+        if (InputManager::IsRelease(InputName::rightFaceRight, MAIN_CENTER | MAIN_TOP) &&
             m_gameListManagerRef->GetCurrentList() == GameListSelect) // back
         {
+            InputManager::RemoveCategory(MAIN_TOP);
+            InputManager::SetCategory(MAIN_CENTER);
             InputManager::DisableInput();
             m_guiBlackScreen->FadeInFadeOut();
             GetTimerManager()->SetTimer(m_clickTimer, CALLFUNCTION(OnBack, this), this, 0.5f, false);

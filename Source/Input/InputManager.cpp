@@ -142,9 +142,17 @@ namespace ClassicLauncher
 
         unsigned int value = 0;
 
-        if ((m_category & MAIN) == (category & MAIN) && (category & MAIN) > 0)
+        if ((m_category & MAIN_TOP) == (category & MAIN_TOP) && (category & MAIN_TOP) > 0)
         {
-            value |= MAIN;
+            value |= MAIN_TOP;
+        }
+        if ((m_category & MAIN_CENTER) == (category & MAIN_CENTER) && (category & MAIN_CENTER) > 0)
+        {
+            value |= MAIN_CENTER;
+        }
+        if ((m_category & MAIN_BOTTOM) == (category & MAIN_BOTTOM) && (category & MAIN_BOTTOM) > 0)
+        {
+            value |= MAIN_BOTTOM;
         }
         if ((m_category & VIDEO_FULLSCREEN) == (category & VIDEO_FULLSCREEN) && (category & VIDEO_FULLSCREEN) > 0)
         {
@@ -167,9 +175,17 @@ namespace ClassicLauncher
 
         unsigned int& inputCategory = s_instanceInputManager->m_category;
 
-        if ((inputCategory & MAIN) != (category & MAIN) && (category & MAIN) > 0)
+        if ((inputCategory & MAIN_TOP) != (category & MAIN_TOP) && (category & MAIN_TOP) > 0)
         {
-            inputCategory |= MAIN;
+            inputCategory |= MAIN_TOP;
+        }
+        if ((inputCategory & MAIN_CENTER) != (category & MAIN_CENTER) && (category & MAIN_CENTER) > 0)
+        {
+            inputCategory |= MAIN_CENTER;
+        }
+        if ((inputCategory & MAIN_BOTTOM) != (category & MAIN_BOTTOM) && (category & MAIN_BOTTOM) > 0)
+        {
+            inputCategory |= MAIN_BOTTOM;
         }
         if ((inputCategory & VIDEO_FULLSCREEN) != (category & VIDEO_FULLSCREEN) && (category & VIDEO_FULLSCREEN) > 0)
         {
@@ -190,9 +206,17 @@ namespace ClassicLauncher
 
         unsigned int& inputCategory = s_instanceInputManager->m_category;
 
-        if ((inputCategory & MAIN) > 0 && (category & MAIN) > 0)
+        if ((inputCategory & MAIN_TOP) > 0 && (category & MAIN_TOP) > 0)
         {
-            inputCategory &= ~MAIN;
+            inputCategory &= ~MAIN_TOP;
+        }
+        if ((inputCategory & MAIN_CENTER) > 0 && (category & MAIN_CENTER) > 0)
+        {
+            inputCategory &= ~MAIN_CENTER;
+        }
+        if ((inputCategory & MAIN_BOTTOM) > 0 && (category & MAIN_BOTTOM) > 0)
+        {
+            inputCategory &= ~MAIN_BOTTOM;
         }
         if ((inputCategory & VIDEO_FULLSCREEN) > 0 && (category & VIDEO_FULLSCREEN) > 0)
         {
