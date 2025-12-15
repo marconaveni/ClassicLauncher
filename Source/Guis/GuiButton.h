@@ -23,7 +23,7 @@ namespace ClassicLauncher
 
         void Update() override;
         virtual void OnFocus() override;
-        virtual void OnLostFocus() override;
+        virtual void OnLostFocus(FocusCategory previousFocusCategory) override;
         virtual const Transform& OwnerWorldTransform() const override { return GetWorldTransform(); };
 
     private:

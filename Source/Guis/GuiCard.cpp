@@ -169,8 +169,6 @@ namespace ClassicLauncher
         //     mCardBackgroundSelected->m_transform.color.SetOpacity(255);
         // }
         //FocusAnimation(bForce, 255, 0, "card-focus");
-
-
     }
 
     void GuiCard::RemoveCardFocus(bool bForce)
@@ -192,15 +190,20 @@ namespace ClassicLauncher
          GetAnimationManager().StartAnimation("focus-card-b" , 0.2f, m_cardBackgroundSelected, targetB, Ease::EaseLinearNone, false);
     }
 
-    void GuiCard::OnLostFocus()
+    void GuiCard::OnLostFocus(FocusCategory previousFocusCategory)
     {
         if (IsFocus())
         {
             return;
         }
-
+        
         CloseVideo();
         
+        if (previousFocusCategory != FocusCategory::CARD)
+        {
+            return;
+        }
+
         Transform targetA = m_cardSelected->GetTransform();
         targetA.color.a = 0;
         Transform targetB = m_cardBackgroundSelected->GetTransform();

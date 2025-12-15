@@ -55,7 +55,7 @@ namespace ClassicLauncher
         GetAnimationManager().StartAnimation("focus", 0.15f, m_icon, target, Ease::EaseLinearNone, false);
     }
 
-    void GuiButton::OnLostFocus()
+    void GuiButton::OnLostFocus(FocusCategory previousFocusCategory)
     {
         m_background->SetOpacity(0);
         Transform target = m_icon->GetTransform();

@@ -24,7 +24,7 @@ namespace ClassicLauncher
         void RemoveFocus();
         [[nodiscard]] bool IsFocus() const { return m_isFocus; }
         virtual void OnFocus() = 0;
-        virtual void OnLostFocus() = 0;
+        virtual void OnLostFocus(FocusCategory previousFocusCategory) = 0;
         virtual void OnChangeFocus() {}
         void UpdateFocus();
         Vector2f GetPositionFocus() const { return m_positionWorld; }

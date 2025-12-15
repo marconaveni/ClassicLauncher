@@ -14,23 +14,35 @@ namespace ClassicLauncher
 
     void FocusManager::SetNewFocusComponent(FocusComponent* focusComponent)
     {
-        m_currentFocusComponent = nullptr;
+        // m_currentFocusComponent = nullptr;
+        FocusComponent* newFocusComponent = nullptr;
+        FocusComponent* previousFocusComponent = nullptr;
         PRINT(TEXT("focus count %d", m_focusComponents.size()), 5.0f, "focusComp");
         for (auto& focus : m_focusComponents)
         {
             if (focus == focusComponent)
             {
                 focus->m_isFocus = true;
-                m_currentFocusComponent = focus;
-                focus->OnFocus();
+                newFocusComponent = focus;
             }
             else if (focus->m_isFocus)
             {
                 focus->m_isFocus = false;
-                focus->OnLostFocus();
+                previousFocusComponent = focus;
             }
             focus->OnChangeFocus();
         }
+
+        if (newFocusComponent)
+        {
+            newFocusComponent->OnFocus();
+            m_currentFocusComponent = newFocusComponent;
+        }
+        if (previousFocusComponent)
+        {
+            previousFocusComponent->OnLostFocus(newFocusComponent->GetFocusCategory());
+        }
+        
     }
 
     void FocusManager::Update()

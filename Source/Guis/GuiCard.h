@@ -35,7 +35,7 @@ namespace ClassicLauncher
         void SetCardFocus(bool bForce = false);
         void RemoveCardFocus(bool bForce = false);
         virtual void OnFocus() override;
-        virtual void OnLostFocus() override;
+        virtual void OnLostFocus(FocusCategory previousFocusCategory) override;
         virtual const Transform& OwnerWorldTransform() const override { return GetWorldTransform(); };
         void SetCover(const std::string& name = "");
         void Reset();
