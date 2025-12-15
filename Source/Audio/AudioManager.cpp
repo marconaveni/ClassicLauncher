@@ -93,6 +93,7 @@ namespace ClassicLauncher
             if (m_statusAudio != Status::Playing)
             {
                 currentMusic->Play();
+                currentMusic->SetVolume(m_musicVolume);
                 m_statusAudio = Status::Playing;
             }
         }
@@ -105,6 +106,7 @@ namespace ClassicLauncher
             Music* currentMusic = m_audioMusics[m_idAudioMusic].get();
             if (m_statusAudio == Status::Playing)
             {
+                m_musicVolume = volume;
                 currentMusic->SetVolume(volume);
             }
         }
