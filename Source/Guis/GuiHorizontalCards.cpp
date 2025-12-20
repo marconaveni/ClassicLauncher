@@ -172,7 +172,7 @@ namespace ClassicLauncher
         m_guiCards[m_idFocus]->CloseVideo();
 
         m_idFocus = newId;
-        m_guiCards[newId]->SetCardFocus(force);
+        m_guiCards[newId]->SetCardFocus();
 
         if (force)
         {

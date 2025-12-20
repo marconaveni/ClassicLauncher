@@ -32,8 +32,7 @@ namespace ClassicLauncher
 
         virtual EntityType GetType() const override { return EntityType::GuiCardClass; }
         virtual void Update() override;
-        void SetCardFocus(bool bForce = false);
-        void RemoveCardFocus(bool bForce = false);
+        void SetCardFocus();
         virtual void OnFocus() override;
         virtual void OnLostFocus(FocusCategory previousFocusCategory) override;
         virtual const Transform& OwnerWorldTransform() const override { return GetWorldTransform(); };

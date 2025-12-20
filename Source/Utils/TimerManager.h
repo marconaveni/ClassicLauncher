@@ -32,7 +32,7 @@ namespace ClassicLauncher
                       std::function<void()> callbackFunction,
                       Entity* targetEntity,
                       float delay,
-                      bool bLooped = false);
+                      bool isLooped = false);
         void ClearTimer(TimerHandling& timerHandling);
         void ClearAllTimers();
 

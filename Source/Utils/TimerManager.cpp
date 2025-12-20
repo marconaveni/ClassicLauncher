@@ -20,7 +20,7 @@ namespace ClassicLauncher
                                 std::function<void()> callbackFunction,
                                 Entity* targetEntity,
                                 float delay,
-                                bool bLooped)
+                                bool isLooped)
     {
         ValidTimerHandling(timerHandling);
 
@@ -30,7 +30,7 @@ namespace ClassicLauncher
             timerHandling.id = static_cast<int>(m_timers.size());
             m_timers.insert(std::make_pair(&timerHandling, std::move(newTimer)));
         }
-        m_timers[&timerHandling]->SetTimer(std::move(callbackFunction), targetEntity, delay, bLooped);
+        m_timers[&timerHandling]->SetTimer(std::move(callbackFunction), targetEntity, delay, isLooped);
     }
 
     void TimerManager::ClearTimer(TimerHandling& timerHandling)

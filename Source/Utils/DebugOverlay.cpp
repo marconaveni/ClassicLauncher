@@ -57,29 +57,29 @@ namespace ClassicLauncher::DebugOverlay
     void Update(AudioManager* audio, GameListManager* gameListManager)
     {
 
-        if (Keyboard::IsReleased(Keyboard::KP_1))
+        if (Keyboard::IsReleased(Keyboard::KP_2))
         {
             s_category++;
-            if (s_category > 2)
+            if (s_category > 3)
             {
                 s_category = 0;
             }
         }
-        else if (Keyboard::IsReleased(Keyboard::KP_2))
+        else if (Keyboard::IsReleased(Keyboard::KP_1))
         {
             s_category--;
             if (s_category < 0)
             {
-                s_category = 2;
+                s_category = 3;
             }      
         }
         
         switch (s_category)
         {
-            case 0: DrawStatistics(); break;
-            case 1: DrawAudioManagerStatus(audio); break;
-            case 2: DrawGameListStatus(gameListManager); break;
             default: break;
+            case 1: DrawStatistics(); break;
+            case 2: DrawAudioManagerStatus(audio); break;
+            case 3: DrawGameListStatus(gameListManager); break;
         }
     }
 

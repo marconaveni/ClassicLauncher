@@ -13,7 +13,7 @@ namespace ClassicLauncher
 
         Timer() = default;
         ~Timer() = default;
-        void SetTimer(std::function<void()> callbackFunction, Entity* targetEntity, float delay, bool bIsLoop = false);
+        void SetTimer(std::function<void()> callbackFunction, Entity* targetEntity, float delay, bool isLoop = false);
         void Update();
         void Reset();
         void Stop() { m_isActive = false; }

@@ -158,24 +158,10 @@ namespace ClassicLauncher
         }
     }
 
-    void GuiCard::SetCardFocus(bool bForce)
+    void GuiCard::SetCardFocus()
     {
         GetTimerManager()->SetTimer(m_timerVideo, CALLFUNCTION(StartVideo, this), this, 5.0f);     
         SetFocus();
-
-        // if (bForce)
-        // {
-        //     mCardSelected->m_transform.color.SetOpacity(255);
-        //     mCardBackgroundSelected->m_transform.color.SetOpacity(255);
-        // }
-        //FocusAnimation(bForce, 255, 0, "card-focus");
-    }
-
-    void GuiCard::RemoveCardFocus(bool bForce)
-    {
-        // FocusAnimation(bForce, 0, 255, "card-lost-focus");
-        //m_guiVideoPlayer->Stop();
-        //m_audioManagerRef->MusicVolume(1.0f);
     }
 
     void GuiCard::OnFocus()

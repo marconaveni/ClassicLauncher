@@ -37,8 +37,8 @@ namespace ClassicLauncher
 
     ProcessStatus ProcessManager::UpdateRun()
     {
-        const bool bIsRun = Platform::IsApplicationRunning(m_processId);
-        if (bIsRun)
+        const bool isRun = Platform::IsApplicationRunning(m_processId);
+        if (isRun)
         {
             if (!m_isRunning)
             {
@@ -56,7 +56,7 @@ namespace ClassicLauncher
             }
         }
 
-        return bIsRun ? ProcessStatus::RUNNING : ProcessStatus::NONE;
+        return isRun ? ProcessStatus::RUNNING : ProcessStatus::NONE;
     }
 
     bool ProcessManager::IsApplicationRunning() const
@@ -71,7 +71,7 @@ namespace ClassicLauncher
             case ProcessStatus::NONE: break;
             case ProcessStatus::OPEN: break;
             case ProcessStatus::RUNNING: std::this_thread::sleep_for(std::chrono::seconds(3)); break;
-            case ProcessStatus::FAILED: break;
+            case ProcessStatus::FAILED:
             case ProcessStatus::CLOSE:
                 guiBlackScreen->FadeOut();
                 audioManager->ChangeMusic();
