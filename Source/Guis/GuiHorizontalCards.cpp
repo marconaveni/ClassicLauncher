@@ -100,8 +100,7 @@ namespace ClassicLauncher
         m_guiMenu = GetEntityManager()->CreateEntity<GuiMenu>("GuiMenu");
         m_guiMenu->Init();
         m_guiTopBar->AddChild(m_guiMenu);
-        const float m = (GetSize().width - m_guiMenu->GetSize().width) / 2;
-        m_guiMenu->SetPosition(m, 33.0f);
+
 
         m_frame = GetEntityManager()->CreateEntity<GuiFrame>("Frame");
         GetEntityManager()->SetZOrder(m_frame, 1);
@@ -128,15 +127,15 @@ namespace ClassicLauncher
         }
 
         Transform target = m_guiTopBar->GetTransform();
-        if(category == MAIN_TOP)
+        if (category == MAIN_TOP)
         {
             target.position.y = 0;
         }
-        if(category == MAIN_CENTER)
+        if (category == MAIN_CENTER)
         {
             target.position.y = -6;
         }
-        GetAnimationManager().StartAnimation("bartop" , 0.10f, m_guiTopBar, target, Ease::EaseLinearNone, false);
+        GetAnimationManager().StartAnimation("bartop", 0.10f, m_guiTopBar, target, Ease::EaseLinearNone, false);
     }
 
     void GuiHorizontalCards::SetThemeValue()
@@ -145,10 +144,13 @@ namespace ClassicLauncher
         m_horizontalBox->SetSpace(space);
         SetPositionHorizontalBox();
 
-        const float cardWidth = ((m_horizontalBox->GetSize().width / 10) * m_horizontalBox->GetScale().x + m_horizontalBox->GetSpace());
+        const float cardWidth =
+            ((m_horizontalBox->GetSize().width / 10) * m_horizontalBox->GetScale().x + m_horizontalBox->GetSpace());
 
-        const float minX = ((m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * 3 + m_horizontalBox->GetPosition().x);
-        const float maxX = ((m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * 6 + m_horizontalBox->GetPosition().x);
+        const float minX =
+            ((m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * 3 + m_horizontalBox->GetPosition().x);
+        const float maxX =
+            ((m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * 6 + m_horizontalBox->GetPosition().x);
         const float minY = ThemesManager::GetConfigurationThemes().offsetTopFrame;
         const float maxY = ThemesManager::GetConfigurationThemes().offsetBottomFrame;
         m_frame->SetLimitArea(RectFloat{minX, minY + 27.0f, maxX, maxY + 720.0f});
@@ -255,6 +257,7 @@ namespace ClassicLauncher
 
             SetFocus(currentGameList->history.indexCardFocus, true);
         }
+        SetMenuBar();
     }
 
     void GuiHorizontalCards::Click()
@@ -349,8 +352,16 @@ namespace ClassicLauncher
             m_hintBar->SetText(2, "Start Game");
             m_hintBar->SetText(3, "Back");
         }
+    }
 
-        LOG(LOG_CLASSIC_WARNING, "m_hintBar->GetSize().width %.2f", m_hintBar->GetSize().width);
+    void GuiHorizontalCards::SetMenuBar()
+    {
+        CurrentList currentList = m_gameListManagerRef->GetCurrentList();
+        bool enable = (currentList == CurrentList::GameListSelect);
+
+        // m_guiMenu->EnableButton(enable, 2); // todo enable
+        m_guiMenu->EnableButton(enable, 3);
+        m_guiMenu->EnableButton(enable, 4);
     }
 
     void GuiHorizontalCards::CancelMultiply()
@@ -433,7 +444,8 @@ namespace ClassicLauncher
         SetSpeedCards();
         UpdateInput();
 
-        const float sizeCard = (m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * m_horizontalBox->GetScale().x;
+        const float sizeCard =
+            (m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * m_horizontalBox->GetScale().x;
 
         if (m_isRight)
         {
@@ -496,8 +508,12 @@ namespace ClassicLauncher
         }
 
         UpdateCards();
+
         const float x = (GetSize().width - m_hintBar->GetSize().width) / 2.0f;
         m_hintBar->SetPosition(x, m_hintBar->GetPosition().y);
+
+        const float m = (GetSize().width - m_guiMenu->GetSize().width) / 2.0f;
+        m_guiMenu->SetPosition(m, 33.0f);
     }
 
     void GuiHorizontalCards::UpdateCards()

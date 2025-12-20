@@ -87,6 +87,7 @@ namespace ClassicLauncher
         void ClearCovers();
         void SetSpeedCards();
         void SetTextHintBar();
+        void SetMenuBar();
     };
 
 } // namespace ClassicLauncher

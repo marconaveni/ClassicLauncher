@@ -18,19 +18,24 @@ namespace ClassicLauncher
         void Init();
         void Update() override;
         void SetButtonFocus(int id);
+        void EnableButton(bool isActive, int id);
 
     private:
 
-        struct Buttons
+        struct MenuButtons
         {
             GuiButton* button{nullptr};
+            std::string textName{};
             bool active{true};
         };
         
-        void CreateButton(const Vector2f source);
-        std::vector<Buttons> m_buttons{};
+        void CreateButton(const Vector2f source, const std::string& textName, bool isActive = true);
+        void EnableButton(bool isActive, MenuButtons& menuButton);
+        void UpdateSize();
+        std::vector<MenuButtons> m_menuButtons{};
         GuiBase* m_background{nullptr};
         int m_id{0};
+        bool m_isNeedUpdateSize{false};
         
     };
 

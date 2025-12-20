@@ -37,9 +37,6 @@ namespace ClassicLauncher
     {
         m_background->SetOpacity(255);
         Transform target = m_icon->GetTransform();
-        //target.scale = 1.1f;
-
-
 
         const float scale = 1.1f;
 
@@ -63,6 +60,14 @@ namespace ClassicLauncher
         target.offset.x = 0;
         target.offset.y = 0;
         GetAnimationManager().StartAnimation("focus", 0.15f, m_icon, target, Ease::EaseLinearNone, false);
+    }
+
+    void GuiButton::SizeButton(Sizef size)
+    {
+        SetSize(size);
+        m_background->SetSize(GetSize());
+        m_icon->SetSize(GetSize());
+        m_icon->SetSource(m_icon->GetSource().GetPosition(), GetSize());
     }
 
 } // namespace ClassicLauncher
