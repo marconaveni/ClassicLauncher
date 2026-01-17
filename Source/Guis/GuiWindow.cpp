@@ -98,6 +98,11 @@ namespace ClassicLauncher
         {
             SetScale({GetScale() - 0.01f});
         }
+        if (Keyboard::IsDown(Keyboard::Key::KP_0))
+        {
+            SetScale(1);
+            SetPosition(0);
+        }
 
         if (InputManager::IsRelease(InputName::rightFaceDown, MAIN_CENTER))
         {

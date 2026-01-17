@@ -341,7 +341,7 @@ namespace ClassicLauncher
         {
             m_hintBar->SetText(0, "Select");
             m_hintBar->SetVisibility(1, false);
-            m_hintBar->SetText(2, "Ok");
+            m_hintBar->SetText(2, "Accept");
             m_hintBar->SetText(3, "Exit");
         }
         else

@@ -42,7 +42,7 @@ namespace ClassicLauncher::Platform
                            nullptr,
                            nullptr,
                            TRUE,
-                           0,
+                           CREATE_NEW_CONSOLE,
                            nullptr,
                            dir.empty() ? nullptr : dir.data(),
                            &info,
@@ -50,7 +50,7 @@ namespace ClassicLauncher::Platform
         {
             printf("open:");
 
-            //WaitForSingleObject(processInfo.hProcess, INFINITE);
+            // WaitForSingleObject(processInfo.hProcess, INFINITE);
 
             processId = static_cast<unsigned int>(processInfo.dwProcessId);
 
@@ -68,27 +68,27 @@ namespace ClassicLauncher::Platform
 
     bool IsApplicationRunning(const unsigned int processId)
     {
-        bool bApplicationRunning = true;
+        bool isApplicationRunning = true;
         HANDLE ProcessHandle = OpenProcess(SYNCHRONIZE, false, processId);
         if (ProcessHandle == NULL)
         {
-            bApplicationRunning = false;
+            isApplicationRunning = false;
         }
         else
         {
-            unsigned int WaitResult = WaitForSingleObject(ProcessHandle, 1000);
+            unsigned int WaitResult = WaitForSingleObject(ProcessHandle, 1);
             if (WaitResult != WAIT_TIMEOUT)
             {
-                bApplicationRunning = false;
+                isApplicationRunning = false;
             }
             CloseHandle(ProcessHandle);
         }
-        return bApplicationRunning;
+        return isApplicationRunning;
     }
 
     bool CloseApplicationRunning(const unsigned int processId)
     {
-        bool bApplicationRunning;
+        bool isApplicationRunning;
         HANDLE ProcessHandle = OpenProcess(PROCESS_TERMINATE, false, processId);
         if (ProcessHandle == NULL)
         {
@@ -96,10 +96,10 @@ namespace ClassicLauncher::Platform
         }
         else
         {
-            bApplicationRunning = TerminateProcess(ProcessHandle, 0);
+            isApplicationRunning = TerminateProcess(ProcessHandle, 0);
             CloseHandle(ProcessHandle);
         }
-        return bApplicationRunning;
+        return isApplicationRunning;
     }
 
     std::string GetExecutableDirectory()

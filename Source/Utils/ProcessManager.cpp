@@ -2,12 +2,12 @@
 
 #include <filesystem>
 
-
 #include "Audio/AudioManager.h"
-#include "Input/InputManager.h"
 #include "Data/GameListManager.h"
 #include "Guis/GuiBlackScreen.h"
+#include "Input/InputManager.h"
 #include "Utils/Platform.h"
+#include "Window/RayWindow.h"
 
 
 namespace ClassicLauncher
@@ -37,7 +37,7 @@ namespace ClassicLauncher
 
     ProcessStatus ProcessManager::UpdateRun()
     {
-        const bool isRun = Platform::IsApplicationRunning(m_processId);
+        const bool isRun = IsApplicationRunning();
         if (isRun)
         {
             if (!m_isRunning)
@@ -66,13 +66,21 @@ namespace ClassicLauncher
 
     void ProcessManager::StatusProcessRun(GuiBlackScreen* guiBlackScreen, AudioManager* audioManager)
     {
+        if (GamePad::IsReleased(0, GamePad::Button::MIDDLE_RIGHT))
+        {
+            RayWindow::MinimizeWindow();
+        }
+        
         switch (m_status)
         {
             case ProcessStatus::NONE: break;
             case ProcessStatus::OPEN: break;
-            case ProcessStatus::RUNNING: std::this_thread::sleep_for(std::chrono::seconds(3)); break;
+            case ProcessStatus::RUNNING:
+                //RayWindow::MinimizeWindow();
+                break;
             case ProcessStatus::FAILED:
             case ProcessStatus::CLOSE:
+                RayWindow::RestoreWindow();
                 guiBlackScreen->FadeOut();
                 audioManager->ChangeMusic();
                 InputManager::EnableInput();

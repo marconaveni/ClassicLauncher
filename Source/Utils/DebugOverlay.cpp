@@ -18,13 +18,16 @@ namespace ClassicLauncher::DebugOverlay
 
     static float s_delay = 0.1f;
     static int s_category = 0;
+    static int s_frames = 0;
 
     void DrawStatistics()
     {
         Color color = Color::Green;
+        s_frames += 1;
         PRINT("==============Statistics================", s_delay, "statics-line", color);
         PRINT(TEXT("%d fps", RayWindow::GetFPS()), s_delay, "fps", color);
         PRINT(TEXT("%.6f ms", RayWindow::GetFrameTime()), s_delay, "ms", color);
+        PRINT(TEXT("frames %d", s_frames), s_delay, "frames", color);
         PRINT("========================================", s_delay, "statics-line2", color);
     }
 

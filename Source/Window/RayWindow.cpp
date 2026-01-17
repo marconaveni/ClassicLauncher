@@ -39,7 +39,7 @@ namespace ClassicLauncher
         m_title = title;
         ray::InitWindow(width, height, title.c_str());
         ray::SetWindowSize(width, height);
-        ray::SetWindowState(Flags::Resizable);
+        ray::SetWindowState(Flags::Resizable | Flags::AlwaysRun);
         SetTargetFPS(m_configManager->GetTargetFps());
 
         if (m_configManager->GetFullscreen())
@@ -166,14 +166,29 @@ namespace ClassicLauncher
     }
 
 
-    void RayWindow::ShowCursor(bool bEnable)
+    void RayWindow::ShowCursor(bool isEnable)
     {
-        if (bEnable)
+        if (isEnable)
         {
             ray::ShowCursor();
             return;
         }
         ray::HideCursor();            
+    }
+
+    void RayWindow::MinimizeWindow()
+    {
+        ray::MinimizeWindow();
+    }
+
+    void RayWindow::RestoreWindow()
+    {
+        ray::RestoreWindow();
+    }
+
+    void RayWindow::SetWindowFocused()
+    {
+        ray::SetWindowFocused();
     }
 
     bool RayWindow::ToggleFullscreen()
@@ -248,8 +263,6 @@ namespace ClassicLauncher
 
     void RayWindow::PoolEvents()
     {
-        
-
         if (Keyboard::IsReleased(Keyboard::F11) ||
             (Keyboard::IsDown(Keyboard::LEFT_ALT) && Keyboard::IsReleased(Keyboard::ENTER)))
         {
