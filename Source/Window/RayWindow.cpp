@@ -16,24 +16,20 @@ namespace ClassicLauncher
     static std::vector<ray::Image> icons;
     Vector2f RayWindow::m_virtualMouse = Vector2{0.0f};
 
-    RayWindow::RayWindow(ConfigurationManager& configManager)
-        : m_configManager(&configManager)
-    {
-    }
-
     RayWindow::~RayWindow()
     {
         Close();
     }
 
-    void RayWindow::Init(int width, int height, const std::string& title)
+    void RayWindow::Init(int width, int height, const std::string& title, ConfigurationManager& configManager)
     {
-        CLASSIC_ASSERT(!ray::IsWindowReady(), "You not can create another window");
+        //CLASSIC_ASSERT(!ray::IsWindowReady(), "You not can create another window");
 
+        m_configManager = &configManager;
 
         if (m_configManager->GetVSync())
         {
-            SetConfigFlags(RayWindow::Flags::Vsync); // vsync only enable in fullscreen set before InitWindow
+            SetConfigFlags(Flags::Vsync); // vsync only enable in fullscreen set before InitWindow
         }
 
         m_title = title;
@@ -42,7 +38,7 @@ namespace ClassicLauncher
         ray::SetWindowState(Flags::Resizable | Flags::AlwaysRun);
         SetTargetFPS(m_configManager->GetTargetFps());
 
-        if (m_configManager->GetFullscreen())
+        if (m_isFullScreen == false && m_configManager->GetFullscreen())
         {
             const bool isFullscreen = ToggleFullscreen();
             m_configManager->SetFullscreen(isFullscreen);
@@ -63,9 +59,12 @@ namespace ClassicLauncher
 
     void RayWindow::Close()
     {
+        ClearState(Flags::Undecorated | Flags::Resizable | Flags::AlwaysRun);
         ray::CloseWindow();
         Unload();
         m_isReady = ray::IsWindowReady();
+        m_configManager = nullptr;
+        m_isFullScreen = false;
     }
 
     void RayWindow::SetState(unsigned int flags)

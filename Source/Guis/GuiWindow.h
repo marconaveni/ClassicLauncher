@@ -24,7 +24,8 @@ namespace ClassicLauncher
         void Init();
         void OnClick();
         void OnBack();
-        GuiBlackScreen* GetGuiBlackScreen() const { return m_guiBlackScreen; }
+        void UpdateCovers();
+        void FadeOutScreen();
 
 #ifdef _DEBUG       
         void InitDebug();
@@ -38,10 +39,11 @@ namespace ClassicLauncher
         GuiBase* m_guiBackground{nullptr};
         TimerHandling m_clickTimer{};
         TimerHandling m_inputTimer{};
-
+        
         GameListManager* m_gameListManagerRef{nullptr};
         AudioManager* m_audioManagerRef{nullptr};
         ProcessManager* m_processManagerRef{nullptr};
+        
     };
 
 } // namespace ClassicLauncher

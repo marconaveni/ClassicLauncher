@@ -140,7 +140,8 @@ namespace ClassicLauncher
         if (InputManager::IsRelease(InputName::rightThumb, MAIN_CENTER))
         {
             ChangeMusic();
-            PRINT(TEXT("Changed music"), 5.0f);  // todo add callback function to gui layout in release version
+            PRINT(TEXT("Changed music"), 5.0f);  
+            // todo add callback function to gui layout in release version
         }
 
         if (Keyboard::IsReleased(Keyboard::P) && IsPlayMusic())

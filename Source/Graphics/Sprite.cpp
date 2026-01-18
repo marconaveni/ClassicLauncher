@@ -11,11 +11,6 @@
 namespace ClassicLauncher
 {
 
-    // Sprite::Sprite()
-    //     : m_isKeepRunning(false), m_isImageLoaded(false), m_isTextureLoaded(false), m_image(), m_texture()
-    // {
-    // }
-
     Sprite::~Sprite()
     {
         Stop();
@@ -42,7 +37,7 @@ namespace ClassicLauncher
         {
             Unload();
             newImage.CopyTo(m_image);
-            m_filePath = "[loaded from memory]";
+            //m_filePath = "[loaded from memory]";
             ResizeImage(width, height, aspectRatio);
             m_isImageLoaded = m_image.IsValid();
             LOG(LOG_CLASSIC_TRACE, "Image copied successfully");

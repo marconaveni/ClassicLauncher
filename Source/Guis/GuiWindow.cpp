@@ -166,6 +166,21 @@ namespace ClassicLauncher
         }
     }
 
+    void GuiWindow::UpdateCovers()
+    {
+        m_guiHorizontalCards->UpdateCovers();
+    }
+
+    void GuiWindow::FadeOutScreen()
+    {
+        GetTimerManager()->SetTimer(m_inputTimer, [&]() { 
+            m_guiBlackScreen->FadeOut();
+            m_audioManagerRef->ChangeMusic();
+            InputManager::EnableInput(); 
+        }, this, 1.0f, false);
+
+    }
+
 #ifdef _DEBUG
     void GuiWindow::InitDebug()
     {

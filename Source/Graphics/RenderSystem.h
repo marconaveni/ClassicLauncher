@@ -19,6 +19,7 @@ namespace ClassicLauncher
         void EndFrame();
         void BeginDraw();
         void EndDraw();
+        void Unload();
 
     private:
 

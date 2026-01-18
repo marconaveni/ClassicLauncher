@@ -14,12 +14,19 @@ namespace ClassicLauncher
         ray::Font nativeFont{};
         bool owned{false};
 
-        ~FontImpl()
+        void Unload()
         {
             if (owned && ray::IsFontValid(nativeFont))
             {
+                owned = false;
                 ray::UnloadFont(nativeFont);
+                nativeFont = ray::Font();
             }
+        }
+
+        ~FontImpl()
+        {
+            Unload();
         }
     };
 
@@ -42,10 +49,24 @@ namespace ClassicLauncher
 
     void Font::LoadFromFile(const std::filesystem::path& fileName, int fontSize, int* codepoints, int codepointCount)
     {
-        m_pimpl->nativeFont = ray::LoadFontEx(fileName.string().c_str(), fontSize, codepoints, codepointCount);
-        m_pimpl->owned = true; // Nós criamos, nós somos donos e devemos descarregá-la.
+        m_fileName = fileName; 
+        m_fontSize = fontSize; 
+        m_codepoints = codepoints; 
+        m_codepointCount = codepointCount;
+        Load();
+    }
 
+    void Font::Load()
+    {
+        m_pimpl->nativeFont = ray::LoadFontEx(m_fileName.string().c_str(), m_fontSize, m_codepoints, m_codepointCount);
+        m_pimpl->owned = true; // We created it, we own it, and we must unload it.
         SetSmooth(true);
+    }
+
+    void Font::Unload()
+    {
+        m_pimpl->Unload();
+        m_smooth = false;
     }
 
     Vector2f Font::MeasureTextEx(const std::string& text, float fontSize, float spacing)

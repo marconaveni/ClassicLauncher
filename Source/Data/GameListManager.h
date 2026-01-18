@@ -120,6 +120,7 @@ namespace ClassicLauncher
         CurrentList GetCurrentList() const;
         void GameListSortByName();
         void SystemListSortByName();
+        void ResetTheme();
 
     private:
 

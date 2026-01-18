@@ -35,7 +35,7 @@ namespace ClassicLauncher
     {
 #ifdef _DEBUG
 
-        bool bFound = false;
+        bool isFound = false;
         for (Message& msg : m_messages)
         {
             if (label == msg.label)
@@ -47,12 +47,12 @@ namespace ClassicLauncher
                 {
                     std::cout << "LOG_SCREEN: " << msg.textMessage << "\n";
                 }
-                bFound = true;
+                isFound = true;
                 break;
             }
         }
 
-        if (!bFound)
+        if (!isFound)
         {
             Message message;
             message.SetStart();

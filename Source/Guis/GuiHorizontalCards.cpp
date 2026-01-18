@@ -196,7 +196,7 @@ namespace ClassicLauncher
         SetTextHintBar();
     }
 
-    void GuiHorizontalCards::SetCovers()
+    void GuiHorizontalCards::UpdateCovers()
     {
 
         if (m_gameListManagerRef->GetGameListSize() == 0)
@@ -483,7 +483,7 @@ namespace ClassicLauncher
             m_isRight = false;
             m_isLeft = false;
             m_isNeedUpdate = true;
-            SetCovers();
+            UpdateCovers();
             // todo: add clean textures of vram outside of the screen
         }
 

@@ -11,9 +11,9 @@ namespace ClassicLauncher
     {
     public:
 
-        RayWindow(ConfigurationManager& configManager);
+        RayWindow() = default;
         ~RayWindow();
-        virtual void Init(int width, int height, const std::string& title) override;
+        void Init(int width, int height, const std::string& title, ConfigurationManager& configManager);
         virtual bool ShouldClose() override;
         virtual void Close() override;
 
@@ -74,10 +74,11 @@ namespace ClassicLauncher
         std::string m_title{};
         Vector2i m_size{};
         Vector2i m_position{};
-        bool m_isFullScreen{};
-        bool m_isReady{};
-        ConfigurationManager* m_configManager{};
+        bool m_isFullScreen{false};
+        bool m_isReady{false};
+        ConfigurationManager* m_configManager{nullptr};
 
+        bool isFullScreen() const { return m_isFullScreen; };
         bool ToggleFullscreen();
         void Unload();
     };

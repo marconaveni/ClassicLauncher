@@ -109,7 +109,8 @@ namespace ClassicLauncher
             if (m_texture.m_id > 0)
             {
                 // Color texture attached to FBO is deleted
-                //m_texture.Unload();
+                m_texture.Unload();
+                m_depth.Unload();
             }
             // NOTE: Depth texture/renderbuffer is automatically
             // queried and deleted before deleting framebuffer

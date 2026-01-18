@@ -15,7 +15,7 @@ namespace ClassicLauncher
     public:
 
         RenderScreen() = default;
-        ~RenderScreen() = default;
+        ~RenderScreen();
         void Init(int screenWidth, int screenHeight);
         void Clear();
         void BeginRender();

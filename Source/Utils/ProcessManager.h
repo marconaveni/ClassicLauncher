@@ -34,9 +34,9 @@ namespace ClassicLauncher
         bool m_isReadyRunApp{false};
 
         void CreateProc(GameListManager* gameListManager);
-        ProcessStatus UpdateRun();
+        void UpdateRun();
         [[nodiscard]] bool IsApplicationRunning() const;
-        void StatusProcessRun(GuiBlackScreen* guiBlackScreen, AudioManager* audioManager);
+        [[nodiscard]] ProcessStatus GetStatus() const { return m_status; }
 
     private:
 

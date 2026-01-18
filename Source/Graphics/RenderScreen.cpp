@@ -15,7 +15,7 @@ namespace ClassicLauncher
     {
         //const Vector2f mouse = rlw::GetMousePosition();
         Vector2f mouse = Vector2f{RayWindow::GetMousePosition()};
-        
+
         const auto screenWidth = static_cast<float>(RayWindow::GetScreenWidth());
         const auto screenHeight = static_cast<float>(RayWindow::GetScreenHeight());
         m_newWidth = static_cast<float>(GetWidth());
@@ -37,12 +37,17 @@ namespace ClassicLauncher
 
         RayWindow::m_virtualMouse = m_virtualMouse;
 
-        if ( RayWindow::IsResize())
+        if (RayWindow::IsResize())
         {
             LOG(LOG_CLASSIC_WARNING, "is resized");
         }
-        
+
         //LOG(LOG_CLASSIC_WARNING, "mouse virtual x: %.2f y: %.2f" , mVirtualMouse.x, mVirtualMouse.y);
+    }
+
+    RenderScreen::~RenderScreen()
+    {
+        Unload();
     }
 
     void RenderScreen::Init(const int screenWidth, const int screenHeight)
@@ -84,9 +89,9 @@ namespace ClassicLauncher
 
         m_source = Rectangle{0.0f, 0.0f, textureWidth, -textureHeight};
         m_dest = Rectangle{(screenWidth - (m_newWidth * m_scale)) * 0.5f,
-                          (screenHeight - (m_newHeight * m_scale)) * 0.5f,
-                          m_newWidth * m_scale,
-                          m_newHeight * m_scale};
+                           (screenHeight - (m_newHeight * m_scale)) * 0.5f,
+                           m_newWidth * m_scale,
+                           m_newHeight * m_scale};
 
 #ifdef _DEBUG
         if (Keyboard::IsReleased(Keyboard::Key::K))
@@ -104,7 +109,7 @@ namespace ClassicLauncher
 
     void RenderScreen::Unload()
     {
-        if (m_renderTexture->IsValid())
+        if (m_renderTexture && m_renderTexture->IsValid())
         {
             m_renderTexture->Unload();
         }

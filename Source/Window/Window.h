@@ -22,7 +22,6 @@ namespace ClassicLauncher
     {
     public:
 
-        virtual void Init(int width, int height, const std::string& title) = 0;
         virtual bool ShouldClose() = 0;
         virtual void Close() = 0;
 

@@ -34,28 +34,28 @@ namespace ClassicLauncher
                                    const std::string& fileName,
                                    const int width,
                                    const int height,
-                                   bool bAspectRatio)
+                                   bool aspectRatio)
     {
-        m_spriteMap[name].Load(fileName, width, height, bAspectRatio);
+        m_spriteMap[name].Load(fileName, width, height, aspectRatio);
     }
 
     void SpriteManager::LoadSprite(const std::string& name,
                                    Image& image,
                                    const int width,
                                    const int height,
-                                   bool bAspectRatio)
+                                   bool aspectRatio)
     {
-        m_spriteMap[name].Load(image, width, height, bAspectRatio);
+        m_spriteMap[name].Load(image, width, height, aspectRatio);
     }
 
     void SpriteManager::UpdateSprite(std::string name,
                                      std::string fileName,
                                      const int width,
                                      const int height,
-                                     bool bAspectRatio)
+                                     bool aspectRatio)
     {
         m_spriteMap[name].Unload();
-        m_spriteMap[name].Load(fileName, width, height, bAspectRatio);
+        m_spriteMap[name].Load(fileName, width, height, aspectRatio);
     }
 
     Texture* SpriteManager::GetTexture(const std::string& name)
@@ -109,6 +109,13 @@ namespace ClassicLauncher
     void SpriteManager::Unload()
     {
         m_spriteMap.clear();
+        m_renderTextureMap.clear();
+
+    //         for (auto& [name, sprite] : m_spriteMap)
+    //     sprite.Unload();          // precisa liberar Texture2D e Image interna se tiver
+
+    // for (auto& [name, rt] : m_renderTextureMap)
+    //     rt.Unload();              // seu RenderTexture wrapper precisa ter Unload()
     }
 
 } // namespace ClassicLauncher

@@ -41,4 +41,9 @@ namespace ClassicLauncher
         rlw::EndDrawing();
     }
 
+    void RenderSystem::Unload()
+    {
+        m_renderScreen.Unload();
+    }
+
 } // namespace ClassicLauncher

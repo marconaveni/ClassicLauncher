@@ -271,6 +271,14 @@ namespace ClassicLauncher
                   [](const GameSystemList& a, const GameSystemList& b) { return a.systemLabel < b.systemLabel; });
     }
 
+    void GameListManager::ResetTheme()
+    {
+        for (auto& system : m_gameSystemList)
+        {
+            system.theme.isLoaded = false;
+        }
+    }
+
     void GameListManager::ReplaceCurrentPath(GameList* gameList, const std::string& romPath) const
     {
         std::string dotSlash = "./";

@@ -6,7 +6,9 @@
 #include "Entity/TestEntity.h"
 #include "Graphics/RenderScreen.h"
 #include "Graphics/SpriteManager.h"
+#include "Graphics/FontManager.h"
 #include "Guis/GuiWindow.h"
+#include "Guis/GuiBlackScreen.h"
 #include "Utils/DebugOverlay.h"
 #include "Helper.h"
 #include "Utils/ConfigurationManager.h"
@@ -48,9 +50,9 @@ namespace ClassicLauncher
     {
         m_audioManager->Init();
         m_audioManager->LoadMusics(Resources::GetMusicDirectory(), true);
-        m_themesManager.Init();
-        m_spriteManager->Init();
         m_gameListManager.Initialize();
+        m_spriteManager->Init();
+        m_themesManager.Init();
 
         if (m_gameListManager.GetGameListSize() > 0)
         {
@@ -82,8 +84,25 @@ namespace ClassicLauncher
         m_entityManager.UpdateAll();
         m_focusManager.Update();
         m_timerManager->Update();
-        m_processManager.StatusProcessRun(m_guiWindow->GetGuiBlackScreen(), m_audioManager);
         m_audioManager->Update();
+        ProcessUpdate();
+    }
+    
+    void Application::ProcessUpdate()
+    {
+        m_status = m_processManager.GetStatus();
+        switch (m_status)
+        {
+            case ProcessStatus::NONE: break;
+            case ProcessStatus::OPEN: break;
+            case ProcessStatus::RUNNING: break;
+            case ProcessStatus::FAILED:
+            case ProcessStatus::CLOSE:
+                m_guiWindow->FadeOutScreen();
+                break;
+            default: break;
+        }
+        m_processManager.UpdateRun();
     }
 
     void Application::End()
@@ -91,6 +110,19 @@ namespace ClassicLauncher
         m_audioManager->Unload();
         m_spriteManager->Unload();
         m_entityManager.End();
+    }
+    
+    void Application::OnGraphicsRestore()
+    {
+        m_spriteManager->Init();
+        m_themesManager.Init();
+        m_fontManager->OnGraphicsRestore();
+        m_guiWindow->UpdateCovers();
+    }
+    
+    void Application::OnGraphicsLost()
+    {
+        m_fontManager->OnGraphicsLost();
     }
 
 

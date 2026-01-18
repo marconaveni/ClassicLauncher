@@ -45,7 +45,7 @@ namespace ClassicLauncher
         void Draw() override;
         void End() override;
         void SetFocus(int newId, bool force = false);
-        void SetCovers();
+        void UpdateCovers();
         void ChangeList(CurrentList list);
         void Click();
         bool IsMovement() const;

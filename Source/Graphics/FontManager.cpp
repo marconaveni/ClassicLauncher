@@ -8,11 +8,16 @@ namespace ClassicLauncher
 
     FontManager::~FontManager()
     {
-        m_font.clear();
+        Unload();
     }
 
     void FontManager::Init()
     {
+    }
+
+    void FontManager::Unload()
+    {
+        m_font.clear();
     }
 
     std::string FontManager::Load(const std::filesystem::path& path, int size)
@@ -31,6 +36,22 @@ namespace ClassicLauncher
             return nullptr;
         }
         return m_font[name].get();
+    }
+
+    void FontManager::OnGraphicsRestore()
+    {
+        for(auto& font : m_font)
+        {
+            font.second->Load();
+        }
+    }
+
+    void FontManager::OnGraphicsLost()
+    {
+        for(auto& font : m_font)
+        {
+            font.second->Unload();
+        }
     }
 
     std::string FontManager::GenerateFileName(const std::filesystem::path& path, int size)

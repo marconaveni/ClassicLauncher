@@ -4,10 +4,8 @@
 
 #include "Audio/AudioManager.h"
 #include "Data/GameListManager.h"
-#include "Guis/GuiBlackScreen.h"
-#include "Input/InputManager.h"
 #include "Utils/Platform.h"
-#include "Window/RayWindow.h"
+
 
 
 namespace ClassicLauncher
@@ -35,7 +33,7 @@ namespace ClassicLauncher
 #endif
     }
 
-    ProcessStatus ProcessManager::UpdateRun()
+    void ProcessManager::UpdateRun()
     {
         const bool isRun = IsApplicationRunning();
         if (isRun)
@@ -43,7 +41,8 @@ namespace ClassicLauncher
             if (!m_isRunning)
             {
                 m_isRunning = true;
-                return ProcessStatus::OPEN;
+                m_status = ProcessStatus::OPEN;
+                return;
             }
         }
         else
@@ -52,42 +51,17 @@ namespace ClassicLauncher
             {
                 m_isRunning = false;
                 m_processId = 0;
-                return ProcessStatus::CLOSE;
+                m_status = ProcessStatus::CLOSE;
+                return;
             }
         }
 
-        return isRun ? ProcessStatus::RUNNING : ProcessStatus::NONE;
+        m_status = isRun ? ProcessStatus::RUNNING : ProcessStatus::NONE;
     }
 
     bool ProcessManager::IsApplicationRunning() const
     {
         return Platform::IsApplicationRunning(m_processId);
-    }
-
-    void ProcessManager::StatusProcessRun(GuiBlackScreen* guiBlackScreen, AudioManager* audioManager)
-    {
-        if (GamePad::IsReleased(0, GamePad::Button::MIDDLE_RIGHT))
-        {
-            RayWindow::MinimizeWindow();
-        }
-        
-        switch (m_status)
-        {
-            case ProcessStatus::NONE: break;
-            case ProcessStatus::OPEN: break;
-            case ProcessStatus::RUNNING:
-                //RayWindow::MinimizeWindow();
-                break;
-            case ProcessStatus::FAILED:
-            case ProcessStatus::CLOSE:
-                RayWindow::RestoreWindow();
-                guiBlackScreen->FadeOut();
-                audioManager->ChangeMusic();
-                InputManager::EnableInput();
-                break;
-            default: break;
-        }
-        m_status = UpdateRun();
     }
 
 } // namespace ClassicLauncher
