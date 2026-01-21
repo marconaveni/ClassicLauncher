@@ -6,7 +6,7 @@
 #include "Audio/AudioManager.h"
 #include "Data/GameListManager.h"
 #include "Helper.h"
-#include "Window/RayWindow.h"
+#include "Window/WindowSystem.h"
 #include "Input/InputManager.h"
 
 namespace ClassicLauncher::DebugOverlay
@@ -25,8 +25,8 @@ namespace ClassicLauncher::DebugOverlay
         Color color = Color::Green;
         s_frames += 1;
         PRINT("==============Statistics================", s_delay, "statics-line", color);
-        PRINT(TEXT("%d fps", RayWindow::GetFPS()), s_delay, "fps", color);
-        PRINT(TEXT("%.6f ms", RayWindow::GetFrameTime()), s_delay, "ms", color);
+        PRINT(TEXT("%d fps", WindowSystem::Get().GetFPS()), s_delay, "fps", color);
+        PRINT(TEXT("%.6f ms", WindowSystem::Get().GetFrameTime()), s_delay, "ms", color);
         PRINT(TEXT("frames %d", s_frames), s_delay, "frames", color);
         PRINT("========================================", s_delay, "statics-line2", color);
     }

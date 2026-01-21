@@ -13,38 +13,36 @@ namespace ClassicLauncher
 
         RayWindow() = default;
         ~RayWindow();
-        void Init(int width, int height, const std::string& title, ConfigurationManager& configManager);
-        virtual bool ShouldClose() override;
-        virtual void Close() override;
+        void Init(int width, int height, const std::string& title, ConfigurationManager& configManager) override;
+        bool ShouldClose() override;
+        void Close() override;
 
-        virtual void SetState(unsigned int flags) override;
-        virtual void ClearState(unsigned int flags) override;
-        virtual bool IsState(unsigned int flag) override;
-        virtual void SetSize(int width, int height) override;
-        virtual void SetPosition(int x, int y) override;
-        virtual void SetIcons(const std::vector<std::string>& pathIcons) override;
-        virtual void SetExitKey(int key) override;
-        virtual void SetTargetFPS(int fps) override;
+        void SetState(unsigned int flags) override;
+        void ClearState(unsigned int flags) override;
+        bool IsState(unsigned int flag) override;
+        void SetSize(int width, int height) override;
+        void SetPosition(int x, int y) override;
+        void SetIcons(const std::vector<std::string>& pathIcons) override;
+        void SetExitKey(int key) override;
+        void SetTargetFPS(int fps) override;
+        int GetFPS() const override;
+        float GetFrameTime() const override;
+        int GetScreenWidth() const override;
+        int GetScreenHeight() const override;
+        int GetCurrentMonitor() const override;
+        int GetMonitorWidth(int monitor) const override;
+        int GetMonitorHeight(int monitor) const override;
+        Vector2i GetMonitorPosition(int monitor) const override;
+        Vector2i GetMousePosition() const override;
+        Vector2f GetVirtualMouse() const override;
+        void SetVirtualMouse(const Vector2f& position) override;
+        void ShowCursor(bool isEnable) override;
+        void MinimizeWindow() override;
+        void RestoreWindow() override;
+        void SetWindowFocused() override;
 
-        static int GetFPS();
-        static float GetFrameTime();
-        static int GetScreenWidth();
-        static int GetScreenHeight();
-        static int GetCurrentMonitor();
-        static int GetMonitorWidth(int monitor);
-        static int GetMonitorHeight(int monitor);
-        static Vector2i GetMonitorPosition(int monitor);
-        static Vector2i GetMousePosition();
-        static Vector2f GetVirtualMouse();
-        static void ShowCursor(bool isEnable);
-        static void MinimizeWindow();
-        static void RestoreWindow();
-        static void SetWindowFocused();
-
-        void PoolEvents();
-        static void SetConfigFlags(unsigned int flags);
-
-        [[nodiscard]] static bool IsResize();
+        void PoolEvents() override;
+        bool IsResize() const override;
 
         struct Flags
         {
@@ -68,9 +66,7 @@ namespace ClassicLauncher
 
     private:
 
-        friend class RenderScreen;
-
-        static Vector2f m_virtualMouse;
+        Vector2f m_virtualMouse{};
         std::string m_title{};
         Vector2i m_size{};
         Vector2i m_position{};
@@ -79,6 +75,7 @@ namespace ClassicLauncher
         ConfigurationManager* m_configManager{nullptr};
 
         bool isFullScreen() const { return m_isFullScreen; };
+        void SetConfigFlags(unsigned int flags);
         bool ToggleFullscreen();
         void Unload();
     };

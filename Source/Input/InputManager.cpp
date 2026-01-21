@@ -1,6 +1,6 @@
 #include "InputManager.h"
 
-#include "Window/RayWindow.h"
+#include "Window/WindowSystem.h"
 
 namespace ClassicLauncher
 {
@@ -64,7 +64,7 @@ namespace ClassicLauncher
             if (input.isDown)
             {
                 input.isDown = (input.amoutDown == 0 || input.amoutDown >= maxAmount);
-                input.amoutDown += 0.016f * 60 * RayWindow::GetFrameTime();
+                input.amoutDown += 0.016f * 60 * WindowSystem::Get().GetFrameTime();
             }
             else
             {

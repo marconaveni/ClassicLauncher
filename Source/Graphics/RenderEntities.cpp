@@ -9,7 +9,7 @@
 #include "Input/Mouse.h"
 #include "Themes/ThemesManager.h"
 #include "Utils/Math.h"
-#include "Window/RayWindow.h"
+#include "Window/WindowSystem.h"
 #include "raylib.h" // isso não pode ficar aqui
 #include "rl_wrap.h"
 #include "Utils/ConfigurationManager.h"
@@ -139,7 +139,7 @@ namespace ClassicLauncher
 
 
         ::DrawCircle(entity->m_finalRender.transform.x, entity->m_finalRender.transform.y, 5, ::Color{255,0,0,50});
-        if (Math::CheckCollisionPointRec(RayWindow::GetVirtualMouse(), entity->m_finalRender.transform))
+        if (Math::CheckCollisionPointRec(WindowSystem::Get().GetVirtualMouse(), entity->m_finalRender.transform))
         {
             rlw::DrawRectangleLinesEx(entity->m_finalRender.transform, 1, Color::Red);
             // ::DrawRectangle(entity->m_finalTransformRect.x, 

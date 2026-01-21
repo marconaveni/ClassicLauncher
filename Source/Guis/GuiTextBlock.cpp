@@ -2,7 +2,7 @@
 
 #include "Themes/ThemesManager.h"
 #include "Utils/Math.h"
-#include "Window/RayWindow.h"
+#include "Window/WindowSystem.h"
 #include "Themes/ThemesManager.h"
 #include "Graphics/FontManager.h"
 #include "Helper.h"
@@ -81,12 +81,12 @@ namespace ClassicLauncher
         {
             if (m_delay < m_maxDelay)
             {
-                m_delay += RayWindow::GetFrameTime();
+                m_delay += WindowSystem::Get().GetFrameTime();
                 return;
             }
             LOG(LOG_CLASSIC_TRACE, "positionText %.2f m_offsetText %.2f", positionText, m_offsetText);
             
-            m_speed = 0.50f * 60.0f * RayWindow::GetFrameTime();
+            m_speed = 0.50f * 60.0f * WindowSystem::Get().GetFrameTime();
 
             if (positionText - m_offsetText > 0 || positionText - m_offsetText < positionText)
             {

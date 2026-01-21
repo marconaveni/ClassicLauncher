@@ -5,7 +5,7 @@
 #include "Input/Keyboard.h"
 #include "Themes/ThemesManager.h"
 #include "Utils/Math.h"
-#include "Window/RayWindow.h"
+#include "Window/WindowSystem.h"
 #include "rl_wrap.h"
 
 namespace ClassicLauncher
@@ -14,10 +14,10 @@ namespace ClassicLauncher
     void RenderScreen::UpdateValues()
     {
         //const Vector2f mouse = rlw::GetMousePosition();
-        Vector2f mouse = Vector2f{RayWindow::GetMousePosition()};
+        Vector2f mouse = Vector2f{WindowSystem::Get().GetMousePosition()};
 
-        const auto screenWidth = static_cast<float>(RayWindow::GetScreenWidth());
-        const auto screenHeight = static_cast<float>(RayWindow::GetScreenHeight());
+        const auto screenWidth = static_cast<float>(WindowSystem::Get().GetScreenWidth());
+        const auto screenHeight = static_cast<float>(WindowSystem::Get().GetScreenHeight());
         m_newWidth = static_cast<float>(GetWidth());
         m_newHeight = static_cast<float>(GetHeight());
 
@@ -35,9 +35,9 @@ namespace ClassicLauncher
             m_virtualMouse.y = (mouse.y / screenHeight) * m_height;
         }
 
-        RayWindow::m_virtualMouse = m_virtualMouse;
+        WindowSystem::Get().SetVirtualMouse(m_virtualMouse);
 
-        if (RayWindow::IsResize())
+        if (WindowSystem::Get().IsResize())
         {
             LOG(LOG_CLASSIC_WARNING, "is resized");
         }
@@ -82,8 +82,8 @@ namespace ClassicLauncher
     void RenderScreen::Draw()
     {
 
-        const auto screenWidth = static_cast<float>(RayWindow::GetScreenWidth());
-        const auto screenHeight = static_cast<float>(RayWindow::GetScreenHeight());
+        const auto screenWidth = static_cast<float>(WindowSystem::Get().GetScreenWidth());
+        const auto screenHeight = static_cast<float>(WindowSystem::Get().GetScreenHeight());
         const auto textureWidth = static_cast<float>(m_renderTexture->GetSize().width);
         const auto textureHeight = static_cast<float>(m_renderTexture->GetSize().height);
 
@@ -117,8 +117,8 @@ namespace ClassicLauncher
 
     Vector2f RenderScreen::GetRenderScale() const
     {
-        const float scaleWidth = static_cast<float>(RayWindow::GetScreenWidth()) / m_width;
-        const float scaleHeight = static_cast<float>(RayWindow::GetScreenHeight()) / m_height;
+        const float scaleWidth = static_cast<float>(WindowSystem::Get().GetScreenWidth()) / m_width;
+        const float scaleHeight = static_cast<float>(WindowSystem::Get().GetScreenHeight()) / m_height;
         return Vector2f{scaleWidth, scaleHeight};
     }
 
@@ -129,12 +129,12 @@ namespace ClassicLauncher
 
     int RenderScreen::GetWidth() const
     {
-        return (m_isMaintainAspectRatio) ? static_cast<int>(m_width) : RayWindow::GetScreenWidth();
+        return (m_isMaintainAspectRatio) ? static_cast<int>(m_width) : WindowSystem::Get().GetScreenWidth();
     }
 
     int RenderScreen::GetHeight() const
     {
-        return (m_isMaintainAspectRatio) ? static_cast<int>(m_height) : RayWindow::GetScreenHeight();
+        return (m_isMaintainAspectRatio) ? static_cast<int>(m_height) : WindowSystem::Get().GetScreenHeight();
     }
 
 } // namespace ClassicLauncher

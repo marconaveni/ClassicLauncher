@@ -7,6 +7,7 @@
 #include "Helper.h"
 #include "Utils/Log.h"
 #include "Utils/Resources.h"
+#include "Window/WindowSystem.h"
 
 namespace ClassicLauncher
 {
@@ -16,10 +17,12 @@ namespace ClassicLauncher
         , m_print(m_fontManager)
     {
         RegistryPrint(&m_print);
+        WindowSystem::Get().Bind(&m_window);
     }
 
     Engine::~Engine()
     {
+        WindowSystem::Get().Bind(nullptr);
     }
 
     void Engine::Run()

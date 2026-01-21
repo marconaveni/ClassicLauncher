@@ -6,7 +6,7 @@
 #include "Data/Vector2.h"
 #include "Math.h"
 #include "Utils/Resources.h"
-#include "Window/RayWindow.h"
+#include "Window/WindowSystem.h"
 #include "rl_wrap.h"
 #include "Graphics/FontManager.h"
 
@@ -126,7 +126,7 @@ namespace ClassicLauncher
 
             y += message.size;
 
-            if (y > RayWindow::GetScreenHeight())
+            if (y > WindowSystem::Get().GetScreenHeight())
             {
                 break;
             }

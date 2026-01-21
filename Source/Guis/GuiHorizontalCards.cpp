@@ -21,7 +21,7 @@
 #include "Utils/Math.h"
 #include "Utils/Resources.h"
 #include "Utils/Utils.h"
-#include "Window/RayWindow.h"
+#include "Window/WindowSystem.h"
 
 
 namespace ClassicLauncher
@@ -317,7 +317,7 @@ namespace ClassicLauncher
                 [&]()
                 {
                     PRINT(TEXT("Está acionando"));
-                    const float time = RayWindow::GetFrameTime();
+                    const float time = WindowSystem::Get().GetFrameTime();
                     m_multiply = 88.0f;
                 },
                 this,
@@ -331,7 +331,7 @@ namespace ClassicLauncher
             CancelMultiply();
         }
 
-        m_speed = Math::Clamp(m_multiply * 60.0f * RayWindow::GetFrameTime(), 0.0f, 256.0f);
+        m_speed = Math::Clamp(m_multiply * 60.0f * WindowSystem::Get().GetFrameTime(), 0.0f, 256.0f);
     }
 
     void GuiHorizontalCards::SetTextHintBar()

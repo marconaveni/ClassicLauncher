@@ -14,8 +14,6 @@ namespace ClassicLauncher
 {
 
     static std::vector<ray::Image> icons;
-    Vector2f RayWindow::m_virtualMouse = Vector2{0.0f};
-
     RayWindow::~RayWindow()
     {
         Close();
@@ -112,58 +110,62 @@ namespace ClassicLauncher
         ray::SetTargetFPS(fps);
     }
 
-    int RayWindow::GetFPS()
+    int RayWindow::GetFPS() const
     {
         return ray::GetFPS();
     }
 
-    float RayWindow::GetFrameTime()
+    float RayWindow::GetFrameTime() const
     {
         return ray::GetFrameTime();
     }
 
-    int RayWindow::GetScreenWidth()
+    int RayWindow::GetScreenWidth() const
     {
         return ray::GetScreenWidth();
     }
 
-    int RayWindow::GetScreenHeight()
+    int RayWindow::GetScreenHeight() const
     {
         return ray::GetScreenHeight();
     }
 
-    int RayWindow::GetCurrentMonitor()
+    int RayWindow::GetCurrentMonitor() const
     {
         return ray::GetCurrentMonitor();
     }
 
-    int RayWindow::GetMonitorWidth(int monitor)
+    int RayWindow::GetMonitorWidth(int monitor) const
     {
         return ray::GetMonitorWidth(monitor);
     }
 
-    int RayWindow::GetMonitorHeight(int monitor)
+    int RayWindow::GetMonitorHeight(int monitor) const
     {
         return ray::GetMonitorHeight(monitor);
     }
 
-    Vector2i RayWindow::GetMonitorPosition(int monitor)
+    Vector2i RayWindow::GetMonitorPosition(int monitor) const
     {
         ray::Vector2 pos = ray::GetMonitorPosition(monitor);
         return Vector2i{static_cast<int>(pos.x), static_cast<int>(pos.y)};
     }
 
-    Vector2i RayWindow::GetMousePosition()
+    Vector2i RayWindow::GetMousePosition() const
     {
         ray::Vector2 pos = ray::GetMousePosition();
         return Vector2i{static_cast<int>(pos.x), static_cast<int>(pos.y)};
     }
 
-    Vector2f RayWindow::GetVirtualMouse()
+    Vector2f RayWindow::GetVirtualMouse() const
     {
         return m_virtualMouse;
     }
 
+    void RayWindow::SetVirtualMouse(const Vector2f& position)
+    {
+        m_virtualMouse = position;
+    }
 
     void RayWindow::ShowCursor(bool isEnable)
     {
@@ -246,7 +248,7 @@ namespace ClassicLauncher
         ray::SetConfigFlags(flags);
     }
 
-    bool RayWindow::IsResize()
+    bool RayWindow::IsResize() const
     {
         return ray::IsWindowResized();
     }

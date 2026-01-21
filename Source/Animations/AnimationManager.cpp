@@ -3,7 +3,7 @@
 #include "ClassicAssert.h"
 #include "Entity/Entity.h"
 #include "Helper.h"
-#include "Window/RayWindow.h"
+#include "Window/WindowSystem.h"
 
 
 namespace ClassicLauncher
@@ -20,7 +20,7 @@ namespace ClassicLauncher
 
         for (auto& spriteAnimation : m_spriteAnimations)
         {
-            spriteAnimation.second.spriteAnimator.Update(RayWindow::GetFrameTime());
+            spriteAnimation.second.spriteAnimator.Update(WindowSystem::Get().GetFrameTime());
 
             RectFloat rec = spriteAnimation.second.spriteAnimator.GetCurrentSprite();
             Entity* entity = spriteAnimation.second.entity;

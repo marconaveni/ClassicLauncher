@@ -1,6 +1,6 @@
 #include "Animation.h"
 
-#include "Window/RayWindow.h"
+#include "Window/WindowSystem.h"
 #include "reasings/reasings.h"
 
 namespace ClassicLauncher
@@ -77,7 +77,7 @@ namespace ClassicLauncher
                                                          m_finalTransform.color.a - m_startTransform.color.a,
                                                          m_duration);
 
-                m_currentTime += RayWindow::GetFrameTime();
+                m_currentTime += WindowSystem::Get().GetFrameTime();
                 return;
             }
             m_isRunning = false;

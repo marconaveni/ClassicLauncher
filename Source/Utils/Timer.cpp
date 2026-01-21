@@ -3,7 +3,7 @@
 #include <utility>
 
 #include "Entity/Entity.h"
-#include "Window/RayWindow.h"
+#include "Window/WindowSystem.h"
 
 namespace ClassicLauncher
 {
@@ -27,7 +27,7 @@ namespace ClassicLauncher
         {
             if (m_currentTime <= m_delay)
             {
-                m_currentTime += RayWindow::GetFrameTime();
+                m_currentTime += WindowSystem::Get().GetFrameTime();
                 return;
             }
             m_callback();
@@ -47,7 +47,7 @@ namespace ClassicLauncher
     void Timer::Reset()
     {
         m_currentTime = 0.0;                                                  // Reset current time
-        m_duration = m_delay / static_cast<double>(RayWindow::GetFrameTime()); // Set duration based on frame time
+        m_duration = m_delay / static_cast<double>(WindowSystem::Get().GetFrameTime()); // Set duration based on frame time
         m_isFunctionCalled = false;                                           // Reset the function called state
     }
 
