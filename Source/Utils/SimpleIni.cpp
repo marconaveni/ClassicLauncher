@@ -56,8 +56,9 @@ bool SimpleIni::SetKeyValue(const std::string& str, std::string& key, std::strin
 
 std::string SimpleIni::Trim(const std::string& str)
 {
-    const size_t first = str.find_first_not_of(" \t");
-    const size_t last = str.find_last_not_of(" \t");
+    const char* especialChars = " \t\r\n";
+    const size_t first = str.find_first_not_of(especialChars);
+    const size_t last = str.find_last_not_of(especialChars);
     if (first == std::string::npos || last == std::string::npos)
     {
         return "";

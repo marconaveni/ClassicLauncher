@@ -10,6 +10,7 @@
 #include "Utils/Math.h"
 #include "Input/InputManager.h"
 #include "Helper.h"
+#include "Utils/Log.h"
 
 
 namespace ClassicLauncher
@@ -52,14 +53,20 @@ namespace ClassicLauncher
         m_audioMusics.emplace_back(std::move(music));
     }
 
-    void AudioManager::LoadMusics(const std::string& path, bool bAutoPlay)
+    void AudioManager::LoadMusics(const std::string& path, bool isAutoPlay)
     {
         std::filesystem::path directorypath = path;
+        if (!std::filesystem::exists(directorypath))
+        {
+            LOG(LOG_CLASSIC_ERROR, "%s is not exists", directorypath.c_str());
+            return;
+        }
+        
         for (const auto& entry : std::filesystem::directory_iterator(directorypath))
         {
             LoadMusic(entry.path().string());
         }
-        ChangeMusic(bAutoPlay);
+        ChangeMusic(isAutoPlay);
     }
 
     void AudioManager::LoadSound(const std::filesystem::path& path, const std::string& name)
