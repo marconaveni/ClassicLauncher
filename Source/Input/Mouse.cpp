@@ -1,31 +1,28 @@
 #include "Mouse.h"
 
-namespace ray
-{
-#include "raylib.h"
-} // namespace ray
+#include "rl_wrap.h"
 
 namespace ClassicLauncher::Mouse
 {
 
     bool IsPressed(int button)
     {
-        return ray::IsMouseButtonPressed(button);
+        return rlw::IsMouseButtonPressed(button);
     }
 
     bool IsDown(int button)
     {
-        return ray::IsMouseButtonDown(button);
+        return rlw::IsMouseButtonDown(button);
     }
 
     bool IsReleased(int button)
     {
-        return ray::IsMouseButtonReleased(button);
+        return rlw::IsMouseButtonReleased(button);
     }
 
     bool IsUp(int button)
     {
-        return ray::IsMouseButtonUp(button);
+        return rlw::IsMouseButtonUp(button);
     }
 
 

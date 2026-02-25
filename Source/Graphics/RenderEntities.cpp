@@ -10,7 +10,7 @@
 #include "Themes/ThemesManager.h"
 #include "Utils/Math.h"
 #include "Window/WindowSystem.h"
-#include "raylib.h" // isso não pode ficar aqui
+//#include "raylib.h" // isso não pode ficar aqui
 #include "rl_wrap.h"
 #include "Utils/ConfigurationManager.h"
 #include <iostream>
@@ -138,7 +138,7 @@ namespace ClassicLauncher
         rlw::DrawRectangleLinesEx(entity->m_finalRender.transform, 1, Color::Cyan);
 
 
-        ::DrawCircle(entity->m_finalRender.transform.x, entity->m_finalRender.transform.y, 5, ::Color{255,0,0,50});
+        rlw::DrawCircle(entity->m_finalRender.transform.x, entity->m_finalRender.transform.y, 5, Color{255,0,0,50});
         if (Math::CheckCollisionPointRec(WindowSystem::Get().GetVirtualMouse(), entity->m_finalRender.transform))
         {
             rlw::DrawRectangleLinesEx(entity->m_finalRender.transform, 1, Color::Red);

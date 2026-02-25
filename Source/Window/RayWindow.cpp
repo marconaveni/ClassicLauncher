@@ -3,11 +3,11 @@
 #include "ClassicAssert.h"
 #include "Helper.h"
 #include "Input/InputManager.h"
+#include "RayWindow.h"
 
 namespace ray
 {
 #include "raylib.h"
-#include "RayWindow.h"
 } // namespace ray
 
 namespace ClassicLauncher

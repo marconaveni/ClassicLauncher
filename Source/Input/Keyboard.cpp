@@ -1,31 +1,28 @@
 #include "Keyboard.h"
 
-namespace ray
-{
-#include "raylib.h"
-} // namespace ray
+#include "rl_wrap.h"
 
 
 namespace ClassicLauncher::Keyboard
 {
     bool IsPressed(int key)
     {
-        return ray::IsKeyPressed(key);
+        return rlw::IsKeyPressed(key);
     }
 
     bool IsDown(int key)
     {
-        return ray::IsKeyDown(key);
+        return rlw::IsKeyDown(key);
     }
 
     bool IsReleased(int key)
     {
-        return ray::IsKeyReleased(key);
+        return rlw::IsKeyReleased(key);
     }
 
     bool IsUp(int key)
     {
-        return ray::IsKeyUp(key);
+        return rlw::IsKeyUp(key);
     }
 
 

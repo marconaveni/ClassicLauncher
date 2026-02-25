@@ -1,36 +1,33 @@
 #include "Gamepad.h"
 
-namespace ray
-{
-#include "raylib.h"
-} // namespace ray
+#include "rl_wrap.h"
 
 
 namespace ClassicLauncher::GamePad
 {
     bool IsPressed(int gamepad, int button)
     {
-        return ray::IsGamepadButtonPressed(gamepad, button);
+        return rlw::IsGamepadButtonPressed(gamepad, button);
     }
 
     bool IsDown(int gamepad, int button)
     {
-        return ray::IsGamepadButtonDown(gamepad, button);
+        return rlw::IsGamepadButtonDown(gamepad, button);
     }
 
     bool IsReleased(int gamepad, int button)
     {
-        return ray::IsGamepadButtonReleased(gamepad, button);
+        return rlw::IsGamepadButtonReleased(gamepad, button);
     }
 
     bool IsUp(int gamepad, int button)
     {
-        return ray::IsGamepadButtonUp(gamepad, button);
+        return rlw::IsGamepadButtonUp(gamepad, button);
     }
 
     bool IsAvaliable(int gamepad)
     {
-        return ray::IsGamepadAvailable(gamepad);
+        return rlw::IsGamepadAvailable(gamepad);
     }
 
 

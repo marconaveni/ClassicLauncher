@@ -6,173 +6,179 @@
 #include <cstdio>
 #include <cstring>
 
-#include "raylib.h"
+namespace ray
+{
+    #include "raylib.h"
+} // namespace ray
+
 
 namespace rlw
 {
 
-    // --- Converters entre tipos rlw e raylib ---
-
-    static ::Vector2 to_native_vec(ClassicLauncher::Vector2f v)
+    // --- Converters between classiclauncher and raylib types ---
+    static ray::Vector2 ToNativeVec(ClassicLauncher::Vector2f vector)
     {
-        return ::Vector2{v.x, v.y};
+        return ray::Vector2{vector.x, vector.y};
     }
-    static ClassicLauncher::Vector2f to_wrap_vec(::Vector2 v)
+    static ClassicLauncher::Vector2f ToWrapVec(ray::Vector2 vector)
     {
-        return ClassicLauncher::Vector2f{v.x, v.y};
-    }
-
-    static ::Color to_native_color(ClassicLauncher::Color c)
-    {
-        return ::Color{c.r, c.g, c.b, c.a};
-    }
-    static ClassicLauncher::Color to_wrap_color(::Color c)
-    {
-        return ClassicLauncher::Color{c.r, c.g, c.b, c.a};
+        return ClassicLauncher::Vector2f{vector.x, vector.y};
     }
 
-    static ::Rectangle to_native_rec(ClassicLauncher::RectFloat r)
+    static ray::Color ToNativeColor(ClassicLauncher::Color color)
     {
-        return ::Rectangle{r.x, r.y, r.width, r.height};
+        return ray::Color{color.r, color.g, color.b, color.a};
     }
-    static ClassicLauncher::RectFloat to_wrap_rec(::Rectangle r)
+    static ClassicLauncher::Color ToWrapColor(ray::Color color)
     {
-        return ClassicLauncher::RectFloat{r.x, r.y, r.width, r.height};
+        return ClassicLauncher::Color{color.r, color.g, color.b, color.a};
+    }
+
+    static ray::Rectangle ToNativeRec(ClassicLauncher::RectFloat rectangle)
+    {
+        return ray::Rectangle{rectangle.x, rectangle.y, rectangle.width, rectangle.height};
+    }
+    static ClassicLauncher::RectFloat ToWrapRec(ray::Rectangle rectangle)
+    {
+        return ClassicLauncher::RectFloat{rectangle.x, rectangle.y, rectangle.width, rectangle.height};
     }
 
 
-    // --- Logging / Config / Janela ---
+    // --- Logging / Configurations ---
     void SetTraceLogCallback(void (*callback)(int, const char*, va_list))
     {
-        ::SetTraceLogCallback(callback);
+        ray::SetTraceLogCallback(callback);
     }
     void SetTraceLogLevel(int level)
     {
-        ::SetTraceLogLevel(level);
+        ray::SetTraceLogLevel(level);
     }
 
-
-    // --- Desenho 2D ---
-    void BeginDrawing()
-    {
-        ::BeginDrawing();
-    }
-    void EndDrawing()
-    {
-        ::EndDrawing();
-    }
-    void ClearBackground(ClassicLauncher::Color color)
-    {
-        ::ClearBackground(to_native_color(color));
-    }
-
-    // --- Entrada ---
+    // --- KeyBoard ---
     bool IsKeyPressed(int key)
     {
-        return ::IsKeyPressed(key);
+        return ray::IsKeyPressed(key);
     }
     bool IsKeyDown(int key)
     {
-        return ::IsKeyDown(key);
+        return ray::IsKeyDown(key);
     }
     bool IsKeyReleased(int key)
     {
-        return ::IsKeyReleased(key);
+        return ray::IsKeyReleased(key);
     }
     bool IsKeyUp(int key)
     {
-        return ::IsKeyUp(key);
+        return ray::IsKeyUp(key);
     }
 
+    // --- GamePad ---
     bool IsGamepadButtonPressed(int gamepad, int button)
     {
-        return ::IsGamepadButtonPressed(gamepad, button);
+        return ray::IsGamepadButtonPressed(gamepad, button);
     }
+
     bool IsGamepadButtonDown(int gamepad, int button)
     {
-        return ::IsGamepadButtonDown(gamepad, button);
+        return ray::IsGamepadButtonDown(gamepad, button);
     }
+
     bool IsGamepadButtonReleased(int gamepad, int button)
     {
-        return ::IsGamepadButtonReleased(gamepad, button);
+        return ray::IsGamepadButtonReleased(gamepad, button);
     }
+
     bool IsGamepadButtonUp(int gamepad, int button)
     {
-        return ::IsGamepadButtonUp(gamepad, button);
+        return ray::IsGamepadButtonUp(gamepad, button);
     }
 
-    void BeginScissorMode(int x, int y, int width, int height)
+    bool IsGamepadAvailable(int gamepad)
     {
-        ::BeginScissorMode(x, y, width, height);
-    }
-    void EndScissorMode()
-    {
-        ::EndScissorMode();
-    }
-
-    void DrawRectangle(int x, int y, int width, int height, ClassicLauncher::Color color)
-    {
-        ::DrawRectangle(x, y, width, height, to_native_color(color));
-    }
-    void DrawRectangleLinesEx(ClassicLauncher::RectFloat rec, float lineThick, ClassicLauncher::Color color)
-    {
-        ::DrawRectangleLinesEx(to_native_rec(rec), lineThick, to_native_color(color));
+        return ray::IsGamepadAvailable(gamepad);
     }
 
     // --- Mouse ---
     bool IsMouseButtonPressed(int button)
     {
-        return ::IsMouseButtonPressed(button);
+        return ray::IsMouseButtonPressed(button);
     }
 
-
-    //////////////////////////////////////////////
-
-    void SetWindowIcons(ClassicLauncher::Image* images, int count)
+    bool IsMouseButtonDown(int button)
     {
-        // raylib espera ponteiro para Image nativo
-        ::Image* rayImages = new ::Image[count];
-        for (int i = 0; i < count; ++i)
-        {
-            ::Image rayImage{};
-            rayImage.data = images->data;
-            rayImage.width = images->width;
-            rayImage.height = images->height;
-            rayImage.mipmaps = images->mipmaps;
-            rayImage.format = images->format;
-            rayImages[i] = rayImage;
-        }
+        return ray::IsMouseButtonDown(button);
+    }
 
-        ::SetWindowIcons(rayImages, count);
-        delete[] rayImages;
+    bool IsMouseButtonReleased(int button)
+    {
+        return ray::IsMouseButtonReleased(button);
+    }
+
+    bool IsMouseButtonUp(int button)
+    {
+        return IsMouseButtonUp(button);
+    }
+
+    void BeginScissorMode(int x, int y, int width, int height)
+    {
+        ray::BeginScissorMode(x, y, width, height);
+    }
+    void EndScissorMode()
+    {
+        ray::EndScissorMode();
+    }
+
+    void DrawRectangle(int x, int y, int width, int height, ClassicLauncher::Color color)
+    {
+        ray::DrawRectangle(x, y, width, height, ToNativeColor(color));
+    }
+    
+    void DrawRectangleLinesEx(ClassicLauncher::RectFloat rec, float lineThick, ClassicLauncher::Color color)
+    {
+        ray::DrawRectangleLinesEx(ToNativeRec(rec), lineThick, ToNativeColor(color));
+    }
+
+    // --- Drawing 2D ---
+    void BeginDrawing()
+    {
+        ray::BeginDrawing();
+    }
+    void EndDrawing()
+    {
+        ray::EndDrawing();
+    }
+
+    void ClearBackground(ClassicLauncher::Color color)
+    {
+        ray::ClearBackground(ToNativeColor(color));
     }
 
     void BeginTextureMode(const ClassicLauncher::RenderTexture& target)
     {
-        ::RenderTexture2D rayTarget;
+        ray::RenderTexture2D rayTarget;
         rayTarget.id = target.GetId();
         rayTarget.texture.id = target.GetTextureId();
         rayTarget.texture.width = target.GetSize().width;
         rayTarget.texture.height = target.GetSize().height;
 
-        ::BeginTextureMode(rayTarget);
+        ray::BeginTextureMode(rayTarget);
     }
 
     void EndTextureMode()
     {
-        ::EndTextureMode();
+        ray::EndTextureMode();
     }
 
     void DrawTexture(const ClassicLauncher::Texture& texture, int posX, int posY, ClassicLauncher::Color tint)
     {
-        ::Texture2D rayTex{};
+        ray::Texture2D rayTex{};
         rayTex.id = texture.GetId();
         rayTex.width = texture.GetSize().width;
         rayTex.height = texture.GetSize().height;
         rayTex.mipmaps = texture.GetMipmaps();
         rayTex.format = texture.GetFormat();
 
-        ::DrawTexture(rayTex, posX, posY, to_native_color(tint));
+        ray::DrawTexture(rayTex, posX, posY, ToNativeColor(tint));
     }
 
     void DrawTexturePro(const ClassicLauncher::Texture& texture,
@@ -182,14 +188,14 @@ namespace rlw
                         float rotation,
                         ClassicLauncher::Color tint)
     {
-        ::Texture2D rayTex{};
+        ray::Texture2D rayTex{};
         rayTex.id = texture.GetId();
         rayTex.width = texture.GetSize().width;
         rayTex.height = texture.GetSize().height;
         rayTex.mipmaps = texture.GetMipmaps();
         rayTex.format = texture.GetFormat();
-        ::DrawTexturePro(rayTex, to_native_rec(src), to_native_rec(dst), to_native_vec(origin), rotation,
-                         to_native_color(tint));
+        ray::DrawTexturePro(rayTex, ToNativeRec(src), ToNativeRec(dst), ToNativeVec(origin), rotation,
+                         ToNativeColor(tint));
     }
 
     void DrawTextEx(const ClassicLauncher::Font& font,
@@ -203,8 +209,13 @@ namespace rlw
         {
             return;
         }
-        ::DrawTextEx(*static_cast<::Font*>(font.GetNativeFont()), text, to_native_vec(position), fontSize, spacing,
-                     to_native_color(tint));
+        ray::DrawTextEx(*static_cast<ray::Font*>(font.GetNativeFont()), text, ToNativeVec(position), fontSize, spacing,
+                     ToNativeColor(tint));
+    }
+
+    void DrawCircle(float x, float y, int radius, ClassicLauncher::Color color)
+    {
+        ray::DrawCircle(x, y, radius, ToNativeColor(color));
     }
 
 

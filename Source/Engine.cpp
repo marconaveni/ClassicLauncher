@@ -47,12 +47,12 @@ namespace ClassicLauncher
             m_inputManager.UpdateInputState();
             m_application.Update();
 
-            m_renderSystem.BeginFrame(); // desenha dentro da RenderScreen
+            m_renderSystem.BeginFrame(); // drawing on the renderscreen
             m_application.Draw();
             m_renderSystem.EndFrame();
 
-            m_renderSystem.BeginDraw(); // inicia o desenho a render screen
-            m_print.DrawMessage();      // note: aqui são desenhos fora da render screen
+            m_renderSystem.BeginDraw(); 
+            m_print.DrawMessage();      // note: Here it is drawing outside the renderscreen.
             m_renderSystem.EndDraw();
 
             m_window.PoolEvents();

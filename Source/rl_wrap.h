@@ -19,34 +19,31 @@
 
 namespace rlw
 {
-
-
-    // --- Logging / Config / Janela ---
+    // --- Logging / Config  ---
     void SetTraceLogCallback(void (*callback)(int logLevel, const char* text, va_list args));
     void SetTraceLogLevel(int logLevel);
 
 
-    // --- Desenho 2D ---
+    // --- Drawing 2D Functions ---
     void BeginDrawing();
     void EndDrawing();
     void ClearBackground(ClassicLauncher::Color color);
 
 
-    // Scissor
+    // Scissor Functions
     void BeginScissorMode(int x, int y, int width, int height);
     void EndScissorMode();
 
-    // Retângulos
+    // Rectangles Functions
     void DrawRectangle(int x, int y, int width, int height, ClassicLauncher::Color color);
     void DrawRectangleLinesEx(ClassicLauncher::RectFloat rec, float lineThick, ClassicLauncher::Color color);
 
-    //////////////////ainda em uso
-
+    // TextureMode Functions
     void BeginTextureMode(const ClassicLauncher::RenderTexture& target);
     void EndTextureMode();
 
 
-    // Texturas simples e "pro"
+    // Textures Functions
     void DrawTexture(const ClassicLauncher::Texture& texture, int posX, int posY, ClassicLauncher::Color tint);
     void DrawTexturePro(const ClassicLauncher::Texture& texture,
                         ClassicLauncher::RectFloat src,
@@ -55,7 +52,6 @@ namespace rlw
                         float rotation,
                         ClassicLauncher::Color tint);
 
-
     void DrawTextEx(const ClassicLauncher::Font& font,
                     const char* text,
                     ClassicLauncher::Vector2f position,
@@ -63,6 +59,27 @@ namespace rlw
                     float spacing,
                     ClassicLauncher::Color tint);
 
+    void DrawCircle(float x, float y, int radius, ClassicLauncher::Color color);
+
+    // Inputs
+    // --- Keyboard ---
+    bool IsKeyPressed(int key);
+    bool IsKeyDown(int key);
+    bool IsKeyReleased(int key);
+    bool IsKeyUp(int key);
+
+    // --- Gamepads ---
+    bool IsGamepadButtonPressed(int gamepad, int button);
+    bool IsGamepadButtonDown(int gamepad, int button);
+    bool IsGamepadButtonReleased(int gamepad, int button);
+    bool IsGamepadButtonUp(int gamepad, int button);
+    bool IsGamepadAvailable(int gamepad);
+
+    // --- Mouse ---
+    bool IsMouseButtonPressed(int button);
+    bool IsMouseButtonDown(int button);
+    bool IsMouseButtonReleased(int button);
+    bool IsMouseButtonUp(int button);
 
 } // namespace rlw
 

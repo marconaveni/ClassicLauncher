@@ -114,13 +114,13 @@ namespace ClassicLauncher
 
     void EntityManager::UpdateWorldTransform()
     {
-        bool bIsDeleteEntities = false;
+        bool isDeleteEntities = false;
         for (auto& entity : m_entities)
         {
-            entity->UpdateWorldTransform();
-            bIsDeleteEntities = entity->m_isCanDelete || bIsDeleteEntities;
+            entity->UpdateWorldTransform();          
+            isDeleteEntities = entity->m_isCanDelete || isDeleteEntities;
         }
-        DeleteEntities(bIsDeleteEntities);
+        DeleteEntities(isDeleteEntities);
         SetZOrder();
     }
 
