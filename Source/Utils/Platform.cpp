@@ -177,14 +177,14 @@ namespace ClassicLauncher::Platform
         if (processId == 0)
             return false;
 
-        bool bApplicationRunning = false;
+        bool isApplicationRunning = false;
         int status = 0;
 
         pid_t result = waitpid(processId, &status, WNOHANG); // process is running?
 
         if (result == 0)
         {
-            bApplicationRunning = true;
+            isApplicationRunning = true;
             LOG(LOG_CLASSIC_TRACE, "The child process is running...");
         }
         else if (result == processId)
@@ -197,14 +197,14 @@ namespace ClassicLauncher::Platform
             {
                 LOG(LOG_CLASSIC_ERROR, "The child process terminated with error.");
             }
-            bApplicationRunning = false;
+            isApplicationRunning = false;
         }
         else
         {
-            bApplicationRunning = false;
+            isApplicationRunning = false;
         }
 
-        return bApplicationRunning;
+        return isApplicationRunning;
     }
 
     bool CloseApplicationRunning(const int processId)

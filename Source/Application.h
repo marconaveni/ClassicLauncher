@@ -39,7 +39,8 @@ namespace ClassicLauncher
                     SpriteManager& spriteManager,
                     TimerManager& timerManager,
                     AudioManager& audioManager,
-                    FontManager& fontManager);
+                    FontManager& fontManager,
+                    ProcessManager& processManager);
         ~Application();
 
         void Init();
@@ -55,18 +56,18 @@ namespace ClassicLauncher
 
         RenderEntities m_renderEntities;
         GameListManager m_gameListManager;
-        ProcessManager m_processManager;
         ThemesManager m_themesManager;
         FocusManager m_focusManager;
         EntityManager m_entityManager;
+        
+        ProcessManager* m_processManager{nullptr};
+        ConfigurationManager* m_configManager{nullptr};
+        SpriteManager* m_spriteManager{nullptr};
+        TimerManager* m_timerManager{nullptr};
+        AudioManager* m_audioManager{nullptr};
+        FontManager* m_fontManager{nullptr};
 
-        ConfigurationManager* m_configManager = nullptr;
-        SpriteManager* m_spriteManager = nullptr;
-        TimerManager* m_timerManager = nullptr;
-        AudioManager* m_audioManager = nullptr;
-        FontManager* m_fontManager = nullptr;
-
-        GuiWindow* m_guiWindow = nullptr;
+        GuiWindow* m_guiWindow{nullptr};
 
         ProcessStatus m_status{ProcessStatus::NONE};
     };

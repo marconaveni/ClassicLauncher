@@ -27,7 +27,8 @@ namespace ClassicLauncher
                              SpriteManager& spriteManager,
                              TimerManager& timerManager,
                              AudioManager& audioManager,
-                             FontManager& fontManager)
+                             FontManager& fontManager,
+                             ProcessManager& processManager)
         : m_configManager(&configManager)
         , m_spriteManager(&spriteManager)
         , m_timerManager(&timerManager)
@@ -36,9 +37,10 @@ namespace ClassicLauncher
         , m_entityManager(&spriteManager, &timerManager, &m_focusManager, &fontManager)
         , m_themesManager(&m_gameListManager, &spriteManager, &m_entityManager, &configManager, &audioManager)
         , m_fontManager(&fontManager)
+        , m_processManager(&processManager)
     {
-        LogLevel(m_configManager->GetClassicLogLevel(), m_configManager->GetRaylibLogLevel());
-        rlw::SetTraceLogCallback(TraceLogger);
+        //LogLevel(m_configManager->GetClassicLogLevel(), m_configManager->GetRaylibLogLevel());
+        //rlw::SetTraceLogCallback(TraceLogger);
         Resources::SetClassicLauncherDirectory();
     }
 
@@ -59,7 +61,7 @@ namespace ClassicLauncher
             m_guiWindow = m_entityManager.CreateEntity<GuiWindow>("GuiWindow",
                                                                   &m_gameListManager,
                                                                   *m_audioManager,
-                                                                  m_processManager);
+                                                                  *m_processManager);
             m_guiWindow->Init();
         }
         else
@@ -90,7 +92,7 @@ namespace ClassicLauncher
     
     void Application::ProcessUpdate()
     {
-        m_status = m_processManager.GetStatus();
+        m_status = m_processManager->GetStatus();
         switch (m_status)
         {
             case ProcessStatus::NONE: break;
@@ -102,7 +104,7 @@ namespace ClassicLauncher
                 break;
             default: break;
         }
-        m_processManager.UpdateRun();
+        m_processManager->UpdateRun();
     }
 
     void Application::End()

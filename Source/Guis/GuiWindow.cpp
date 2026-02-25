@@ -12,6 +12,8 @@
 #include "Utils/ProcessManager.h"
 #include "Window/Window.h"
 
+#include "raylib.h"
+
 namespace ClassicLauncher
 {
     GuiWindow::GuiWindow(GameListManager* gameListManagerRef,
@@ -144,6 +146,9 @@ namespace ClassicLauncher
         if (m_gameListManagerRef->GetCurrentList() == GameListSelect)
         {
             m_audioManagerRef->Pause();
+            // CloseAudioDevice();
+            // CloseWindow();
+            //LOG(LOG_CLASSIC_INFO, "janela fechou");
             m_processManagerRef->CreateProc(m_gameListManagerRef);
         }
         else
