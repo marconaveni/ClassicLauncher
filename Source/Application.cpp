@@ -39,8 +39,8 @@ namespace ClassicLauncher
         , m_fontManager(&fontManager)
         , m_processManager(&processManager)
     {
-        //LogLevel(m_configManager->GetClassicLogLevel(), m_configManager->GetRaylibLogLevel());
-        //rlw::SetTraceLogCallback(TraceLogger);
+        LogLevel(m_configManager->GetClassicLogLevel(), m_configManager->GetRaylibLogLevel());
+        rlw::SetTraceLogCallback(TraceLogger);
         Resources::SetClassicLauncherDirectory();
     }
 

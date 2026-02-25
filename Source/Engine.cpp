@@ -92,8 +92,8 @@ namespace ClassicLauncher
                     }
                 }
 
-#endif
             }
+#endif
         }
 
         m_application.End();
