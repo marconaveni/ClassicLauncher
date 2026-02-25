@@ -12,6 +12,7 @@
 #include "Utils/TimerManager.h"
 #include "Window/RayWindow.h"
 #include "Utils/Print.h"
+#include "Utils/ProcessManager.h"
 
 
 namespace ClassicLauncher
@@ -37,6 +38,7 @@ namespace ClassicLauncher
         AudioManager m_audioManager;
         FontManager m_fontManager;
         Print m_print;
+        ProcessManager m_processManager;
     };
 
 

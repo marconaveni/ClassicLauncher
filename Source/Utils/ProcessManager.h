@@ -2,6 +2,7 @@
 #define PROCESS_MANAGER_H
 
 #include <cstdint>
+#include <string>
 
 namespace ClassicLauncher
 {
@@ -35,12 +36,14 @@ namespace ClassicLauncher
 
         void CreateProc(GameListManager* gameListManager);
         void UpdateRun();
+        void Launch();
         [[nodiscard]] bool IsApplicationRunning() const;
         [[nodiscard]] ProcessStatus GetStatus() const { return m_status; }
 
     private:
 
         ProcessStatus m_status{ProcessStatus::NONE};
+        std::string m_fullPath{};
     };
 
 } // namespace ClassicLauncher
