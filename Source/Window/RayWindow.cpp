@@ -35,13 +35,7 @@ namespace ClassicLauncher
         ray::SetWindowSize(width, height);
         ray::SetWindowState(Flags::Resizable | Flags::AlwaysRun);
         SetTargetFPS(m_configManager->GetTargetFps());
-
-        if (m_isFullScreen == false && m_configManager->GetFullscreen())
-        {
-            const bool isFullscreen = ToggleFullscreen();
-            m_configManager->SetFullscreen(isFullscreen);
-            m_configManager->SaveConfiguration();
-        }
+        SetFullscreen(m_configManager->GetFullscreen());
 
 #ifndef _DEBUG
         //SetExitKey(0);
@@ -62,7 +56,6 @@ namespace ClassicLauncher
         Unload();
         m_isReady = ray::IsWindowReady();
         m_configManager = nullptr;
-        m_isFullScreen = false;
     }
 
     void RayWindow::SetState(unsigned int flags)
@@ -194,51 +187,50 @@ namespace ClassicLauncher
 
     bool RayWindow::ToggleFullscreen()
     {
-#ifdef _WIN32
-        const bool isNotFullscreen = !ray::IsWindowState(Flags::Undecorated);
-#else
-        const bool isNotFullscreen = !ray::IsWindowFullscreen();
-#endif
+        return SetFullscreen(!IsFullScreen());
+    }
 
-        if (isNotFullscreen)
+    bool RayWindow::SetFullscreen(bool enableFullscreen)
+    {       
+        bool isFullScreen = IsFullScreen();
+
+        if (enableFullscreen && !isFullScreen)
         {
+#ifdef _WIN32
             m_position.x = static_cast<int>(ray::GetWindowPosition().x);
             m_position.y = static_cast<int>(ray::GetWindowPosition().y);
             m_size.x = GetScreenWidth();
             m_size.y = GetScreenHeight();
-        }
-#ifdef _WIN32
-        if (isNotFullscreen)
-        {
             SetState(Flags::Undecorated);
             SetSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
             const Vector2f positionMonitor(GetMonitorPosition(GetCurrentMonitor()));
             SetPosition((int)positionMonitor.x, (int)positionMonitor.y);
-            m_isFullScreen = true;
+#else
+            ray::ToggleFullscreen();
+            SetSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
+#endif
         }
-        else
+        else if (!enableFullscreen && isFullScreen)
         {
+#ifdef _WIN32
             SetSize(m_size.x, m_size.y);
             SetPosition(m_position.x, m_position.y);
             ClearState(Flags::Undecorated);
-            m_isFullScreen = false;
-        }
-        ShowCursor(!m_isFullScreen);
 #else
-        if (isNotFullscreen)
-        {
             ray::ToggleFullscreen();
-            SetSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
-            m_isFullScreen = true;
-        }
-        else
-        {
-            ray::ToggleFullscreen();
-            m_isFullScreen = false;
-        }
-        ShowCursor(false);
 #endif
-        return m_isFullScreen;
+        }
+        ShowCursor(!IsFullScreen());
+        return IsFullScreen();
+    }
+
+    bool RayWindow::IsFullScreen()
+    {
+#ifdef _WIN32
+        return ray::IsWindowState(Flags::Undecorated);
+#else
+        return ray::IsWindowFullscreen();
+#endif
     }
 
     void RayWindow::SetConfigFlags(unsigned int flags)

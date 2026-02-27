@@ -2,6 +2,8 @@
 
 #include <format>
 #include <string_view>
+#include <thread>
+#include <chrono>
 
 #include "ClassicLauncher.h"
 #include "Helper.h"
@@ -79,6 +81,7 @@ namespace ClassicLauncher
                 while (m_window.ShouldClose())
                 {
                     m_application.ProcessUpdate();
+                    std::this_thread::sleep_for(std::chrono::milliseconds(16)); // wait
                     if (m_application.GetStatus() == ProcessStatus::CLOSE)
                     {
                         m_window.Init(WindowSpecs::Width,

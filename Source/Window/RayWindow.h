@@ -70,13 +70,13 @@ namespace ClassicLauncher
         std::string m_title{};
         Vector2i m_size{};
         Vector2i m_position{};
-        bool m_isFullScreen{false};
         bool m_isReady{false};
         ConfigurationManager* m_configManager{nullptr};
 
-        bool isFullScreen() const { return m_isFullScreen; };
+        bool IsFullScreen();
         void SetConfigFlags(unsigned int flags);
         bool ToggleFullscreen();
+        bool SetFullscreen(bool enable);
         void Unload();
     };
 
