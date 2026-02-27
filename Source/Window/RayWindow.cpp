@@ -223,6 +223,7 @@ namespace ClassicLauncher
             ClearState(Flags::Undecorated);
             m_isFullScreen = false;
         }
+        ShowCursor(!m_isFullScreen);
 #else
         if (isNotFullscreen)
         {
@@ -233,13 +234,10 @@ namespace ClassicLauncher
         else
         {
             ray::ToggleFullscreen();
-            //::SetWindowSize(mSpecification.width, mSpecification.height);
-            //::SetWindowPosition(mSpecification.posWindowX, mSpecification.posWindowY);
-            //::SetWindowSize(mSpecification.width, mSpecification.height);
             m_isFullScreen = false;
         }
+        ShowCursor(false);
 #endif
-        ShowCursor(!m_isFullScreen);
         return m_isFullScreen;
     }
 

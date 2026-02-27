@@ -7,19 +7,34 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 
 # cache options default values
 option(CLASSIC_LAUNCHER_FSANITIZE "Enable address sanitizer" OFF)
 option(CLASSIC_LAUNCHER_FLAGS "Enable warning/error flags" OFF)
 option(CLASSIC_RASPBERRY_PI "Enable Raspberry pi configuration" OFF)
-option(CLASSIC_FORCE_THEME_1X "Force Theme 1x" OFF)
 
-if(CLASSIC_FORCE_THEME_1X)
-    message(STATUS "[Classic Launcher] FORCE_THEME_1X is enabled")
-    set(forcetheme "FORCE_THEME_1X")
-else()
-    message(STATUS "[Classic Launcher] FORCE_THEME_1X is disabled")
+
+# Setting parameters for raylib
+set(BUILD_EXAMPLES     OFF CACHE BOOL "" FORCE) # don't build the supplied examples
+set(BUILD_GAMES        OFF CACHE BOOL "" FORCE) # or games
+set(PLATFORM           SDL CACHE STRING "" FORCE) # use SDL backend instead of GLFW    
+#set(OPENGL_VERSION     4.3 CACHE STRING "" FORCE) # change OpenGL version    
+set(GLFW_BUILD_WAYLAND ON  CACHE BOOL "" FORCE)
+set(GLFW_BUILD_X11     OFF CACHE BOOL "" FORCE)
+
+
+
+# SDL3 setup
+if ("${PLATFORM}" MATCHES "SDL")
+    set(SDL_SHARED OFF CACHE BOOL "" FORCE)
+    set(SDL_STATIC ON  CACHE BOOL "" FORCE)
+
+    set(SDL_TESTS OFF CACHE BOOL "" FORCE)
+    set(SDL_DISABLE_INSTALL ON CACHE BOOL "" FORCE)
+    add_subdirectory(extern/SDL EXCLUDE_FROM_ALL)
 endif()
+
 
 if(CLASSIC_LAUNCHER_FLAGS)
     if(MSVC)
@@ -131,11 +146,6 @@ include(${CMAKE_SOURCE_DIR}/CMake/ListSources.cmake) # Add Source Files
 
 if(WIN32)
 
-
-    # Setting parameters for raylib
-    set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE) # don't build the supplied examples
-    set(BUILD_GAMES    OFF CACHE BOOL "" FORCE) # or games
-
     # Submodule Raylib 
     add_subdirectory(extern/raylib)
 
@@ -145,7 +155,6 @@ if(WIN32)
         _CONSOLE
         ssize_t=intptr_t   #necessary for vlc
         ${debug}
-        ${forcetheme}
     )
 
     # Windows
@@ -155,7 +164,7 @@ if(WIN32)
     )
 
 
-    # Regra para copiar as DLLs da libvlc para o diretório de build
+    # Rule for copying libvlc DLLs to the build directory.
     foreach(DLL ${VLC_DLLS})
     add_custom_command(TARGET ClassicLauncher POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
@@ -164,7 +173,7 @@ if(WIN32)
     )
     endforeach()
 
-    # Regra para copiar a pasta de plugins da libvlc para o diretório de build
+    # Rule for copying the libvlc plugins folder to the build directory.
     add_custom_command(TARGET ClassicLauncher POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${VLC_PLUGINS_DIR}
@@ -174,7 +183,6 @@ if(WIN32)
 elseif (CLASSIC_RASPBERRY_PI)
     message(STATUS "[Classic Launcher] Raspberry pi native activated")
 
-    set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
     set(PLATFORM "DRM" CACHE STRING "Define Raylib platform as DRM")
     add_definitions(-DPLATFORM_DRM)
 
@@ -182,12 +190,10 @@ elseif (CLASSIC_RASPBERRY_PI)
     add_subdirectory(extern/raylib)
 
     # Preprocessors definitions
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        target_compile_definitions(ClassicLauncher PRIVATE 
-            ${debug}
-            ${forcetheme}
-        )
-    endif()
+    target_compile_definitions(ClassicLauncher PRIVATE 
+        ${debug}
+    )
+
 
     # -lraylib -lm -lpthread -lGLESv2 -lEGL -lvcos -lvchiq_arm -lgbm -ldrm
     # Link for Raspberry Pi
@@ -206,20 +212,12 @@ elseif (CLASSIC_RASPBERRY_PI)
 
 else() # Linux
 
-    set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-    set(GLFW_BUILD_WAYLAND ON  CACHE BOOL "" FORCE)
-    set(GLFW_BUILD_X11    OFF CACHE BOOL "" FORCE)
-
     # Submodule Raylib
     add_subdirectory(extern/raylib)
 
-    # Add `_DEBUG` only Debug build
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        target_compile_definitions(ClassicLauncher PRIVATE     
-            ${debug}
-            ${forcetheme}
-        )
-    endif()
+    target_compile_definitions(ClassicLauncher PRIVATE     
+        ${debug}
+    )
 
     # Linux
     target_link_libraries(${PROJECT_NAME} 
@@ -233,6 +231,11 @@ else() # Linux
     )
 endif()
 
+
+
+# extras post command post build
+
+# Rule for copying the resources folder to the build directory.
 add_custom_command(TARGET ClassicLauncher POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_SOURCE_DIR}/Resources
@@ -254,8 +257,6 @@ add_custom_target(copy_compile_commands ALL
 
 
 
-
-
 # mkdir build
 # cd build
 # cmake -DCMAKE_BUILD_TYPE=Debug ..
@@ -266,7 +267,3 @@ add_custom_target(copy_compile_commands ALL
 # cmake -DCMAKE_BUILD_TYPE=Release ..
 # cmake --build .
 
-######################################################
-
-# cmake --preset=linux-debug-theme1x
-# cmake --build --preset=linux-debug-theme1x
