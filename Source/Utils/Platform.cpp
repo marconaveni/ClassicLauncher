@@ -175,8 +175,10 @@ namespace ClassicLauncher::Platform
     bool IsApplicationRunning(const int processId)
     {
         if (processId == 0)
+        { 
             return false;
-
+        }
+        
         bool isApplicationRunning = false;
         int status = 0;
 

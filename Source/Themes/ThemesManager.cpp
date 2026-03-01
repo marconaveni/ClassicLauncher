@@ -32,6 +32,7 @@ namespace ClassicLauncher
         if (s_instanceThemes == nullptr)
         {
             s_instanceThemes = this;
+            m_scaleTexture = Math::Clamp(m_configManagerRef->GetInternalScale(), 1, 2);
         }
     }
 
@@ -43,7 +44,6 @@ namespace ClassicLauncher
     void ThemesManager::Init()
     {
         m_gameListManager->ResetTheme();
-        m_scaleTexture = Math::Clamp(m_configManagerRef->GetInternalScale(), 1, 2);
         m_spriteManager->LoadSprite("sprite", Resources::GetSpriteFile());
         UpdateTheme();
     }

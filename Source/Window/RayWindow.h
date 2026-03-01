@@ -44,6 +44,8 @@ namespace ClassicLauncher
         void PoolEvents() override;
         bool IsResize() const override;
 
+        [[nodiscard]] bool IsReady();
+
         struct Flags
         {
             inline static constexpr unsigned int Vsync = 0x00000040;      // Set to try enabling V-Sync on GPU

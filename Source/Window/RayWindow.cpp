@@ -243,6 +243,11 @@ namespace ClassicLauncher
         return ray::IsWindowResized();
     }
 
+    bool RayWindow::IsReady()
+    {
+        return ray::IsWindowReady();
+    }
+
     void RayWindow::Unload()
     {
         for (auto icon : icons)

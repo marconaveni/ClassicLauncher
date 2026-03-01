@@ -63,6 +63,7 @@ namespace ClassicLauncher
         }
 #else
         Platform::CreateProc(m_processId, m_fullPath);
+        // todo criar uma checagem quando o processo falhar igual no windows
 #endif
     }
 

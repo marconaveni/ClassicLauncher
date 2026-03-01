@@ -50,7 +50,6 @@ namespace ClassicLauncher
         void End();
         void OnGraphicsRestore();
         void OnGraphicsLost();
-        [[nodiscard]] ProcessStatus GetStatus() const { return m_status; }
 
     private:
 
@@ -68,8 +67,6 @@ namespace ClassicLauncher
         FontManager* m_fontManager{nullptr};
 
         GuiWindow* m_guiWindow{nullptr};
-
-        ProcessStatus m_status{ProcessStatus::NONE};
     };
 
 } // namespace ClassicLauncher

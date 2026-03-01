@@ -110,12 +110,6 @@ namespace ClassicLauncher
     {
         m_spriteMap.clear();
         m_renderTextureMap.clear();
-
-    //         for (auto& [name, sprite] : m_spriteMap)
-    //     sprite.Unload();          // precisa liberar Texture2D e Image interna se tiver
-
-    // for (auto& [name, rt] : m_renderTextureMap)
-    //     rt.Unload();              // seu RenderTexture wrapper precisa ter Unload()
     }
 
 } // namespace ClassicLauncher

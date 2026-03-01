@@ -87,13 +87,13 @@ namespace ClassicLauncher
         m_focusManager.Update();
         m_timerManager->Update();
         m_audioManager->Update();
-        ProcessUpdate();
+        // ProcessUpdate();
     }
     
     void Application::ProcessUpdate()
     {
-        m_status = m_processManager->GetStatus();
-        switch (m_status)
+        const ProcessStatus status = m_processManager->GetStatus();
+        switch (status)
         {
             case ProcessStatus::NONE: break;
             case ProcessStatus::OPEN: break;
@@ -126,6 +126,7 @@ namespace ClassicLauncher
     {
         m_fontManager->OnGraphicsLost();
     }
+
 
 
 } // namespace ClassicLauncher
