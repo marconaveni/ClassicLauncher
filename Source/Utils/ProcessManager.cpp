@@ -23,15 +23,9 @@ namespace ClassicLauncher
         fullPath.append(arguments);
         fullPath.append(path);
         m_fullPath = fullPath;
-#if _WIN32
         std::filesystem::path pathExec(executable);
-        const std::string optionalWorkingDirectory = pathExec.parent_path().string();
-        int status = -1;
-        Platform::CreateProc(m_processId, m_fullPath, optionalWorkingDirectory, status);
-        m_status = (status == 1) ? ProcessStatus::OPEN : ProcessStatus::FAILED;
-#else
+        m_optionalWorkingDirectory = pathExec.parent_path().string();
         m_status = ProcessStatus::OPEN;
-#endif
     }
 
     void ProcessManager::UpdateRun()
@@ -42,9 +36,8 @@ namespace ClassicLauncher
             if (!m_isRunning)
             {
                 m_isRunning = true;
-                m_status = ProcessStatus::OPEN;
-                return;
             }
+            m_status = ProcessStatus::RUNNING;
         }
         else
         {
@@ -55,15 +48,19 @@ namespace ClassicLauncher
                 m_status = ProcessStatus::CLOSE;
                 return;
             }
+            m_status = ProcessStatus::NONE;
         }
-
-        m_status = isRun ? ProcessStatus::RUNNING : ProcessStatus::NONE;
     }
 
     void ProcessManager::Launch()
     {
 #if _WIN32
-        // todo move 
+        int status = -1;
+        Platform::CreateProc(m_processId, m_fullPath, m_optionalWorkingDirectory, status);
+        if (status != 1) 
+        { 
+            m_status = ProcessStatus::FAILED;
+        }
 #else
         Platform::CreateProc(m_processId, m_fullPath);
 #endif

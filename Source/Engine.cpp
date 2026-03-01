@@ -11,6 +11,8 @@
 #include "Utils/Resources.h"
 #include "Window/WindowSystem.h"
 
+#include "raylib.h"
+
 namespace ClassicLauncher
 {
 
@@ -64,10 +66,22 @@ namespace ClassicLauncher
 
             m_window.PoolEvents();
 
-#if _WIN32
-            if (m_application.GetStatus() != ProcessStatus::NONE)
+#ifdef _WIN32
+            if (m_application.GetStatus() == ProcessStatus::OPEN)
             {
-                m_application.ProcessUpdate();
+                m_processManager.Launch();
+            }
+            else if (m_application.GetStatus() != ProcessStatus::NONE)
+            {
+                SetTargetFPS(3);
+                while (m_application.GetStatus() == ProcessStatus::RUNNING)
+                {
+                    m_application.ProcessUpdate();
+                    BeginDrawing();
+                    EndDrawing();
+                    std::this_thread::sleep_for(std::chrono::milliseconds(50)); // wait
+                }
+                SetTargetFPS(60);
             }
 #else
 

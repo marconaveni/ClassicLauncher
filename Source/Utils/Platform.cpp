@@ -69,19 +69,19 @@ namespace ClassicLauncher::Platform
     bool IsApplicationRunning(const unsigned int processId)
     {
         bool isApplicationRunning = true;
-        HANDLE ProcessHandle = OpenProcess(SYNCHRONIZE, false, processId);
-        if (ProcessHandle == NULL)
+        HANDLE processHandle = OpenProcess(SYNCHRONIZE, false, processId);
+        if (processHandle == NULL)
         {
             isApplicationRunning = false;
         }
         else
         {
-            unsigned int WaitResult = WaitForSingleObject(ProcessHandle, 1);
-            if (WaitResult != WAIT_TIMEOUT)
+            unsigned int waitResult = WaitForSingleObject(processHandle, 0);
+            if (waitResult != WAIT_TIMEOUT)
             {
                 isApplicationRunning = false;
             }
-            CloseHandle(ProcessHandle);
+            CloseHandle(processHandle);
         }
         return isApplicationRunning;
     }

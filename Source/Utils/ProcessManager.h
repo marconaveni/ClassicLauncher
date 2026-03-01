@@ -44,6 +44,7 @@ namespace ClassicLauncher
 
         ProcessStatus m_status{ProcessStatus::NONE};
         std::string m_fullPath{};
+        std::string m_optionalWorkingDirectory{};
     };
 
 } // namespace ClassicLauncher
