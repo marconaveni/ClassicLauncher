@@ -28,6 +28,7 @@ namespace ClassicLauncher
         [[nodiscard]] bool GetFullscreen() const { return m_fullscreen; }
         [[nodiscard]] bool GetThemeReferenceOverlay() const { return m_themeReferenceOverlay; }
         [[nodiscard]] std::string GetThemeReferenceImage() const { return m_themeReferenceImage; }
+        [[nodiscard]] bool GetSuspendWindow() const { return m_suspendWindow; }
 
         // Setters
         void SetInternalScale(int internalscale) { m_internalScale = internalscale; }
@@ -54,6 +55,7 @@ namespace ClassicLauncher
         bool m_fullscreen{true};
         bool m_themeReferenceOverlay{false};
         std::string m_themeReferenceImage{};
+        bool m_suspendWindow{false};
     };
 
 } // namespace ClassicLauncher

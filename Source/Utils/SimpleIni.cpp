@@ -86,10 +86,10 @@ std::string SimpleIni::RemoveBrackets(const std::string& str)
 
 bool SimpleIni::Open(const char* file)
 {
-    std::ifstream fInput;
-    fInput.open(file);
+    std::ifstream fileInput;
+    fileInput.open(file);
 
-    if (!fInput.is_open())
+    if (!fileInput.is_open())
     {
         std::cout << "open is failed!!\n";
         return false;
@@ -98,7 +98,7 @@ bool SimpleIni::Open(const char* file)
     m_data.clear();
     char text[MAX_LINE_TEXT];
 
-    while (fInput.getline(text, MAX_LINE_TEXT))
+    while (fileInput.getline(text, MAX_LINE_TEXT))
     {
         std::string key;
         std::string value;
@@ -113,7 +113,7 @@ bool SimpleIni::Open(const char* file)
             SetValue(m_currentSection, key, value);
         }
     }
-    fInput.close();
+    fileInput.close();
 
 
     return true;
@@ -127,10 +127,10 @@ bool SimpleIni::Save(const char* file)
         return false;
     }
 
-    std::ofstream fOut;
-    fOut.open(file);
+    std::ofstream fileOut;
+    fileOut.open(file);
 
-    if (!fOut.is_open())
+    if (!fileOut.is_open())
     {
         std::cout << "Error to open file: " << file << "\n";
         return false;
@@ -143,13 +143,13 @@ bool SimpleIni::Save(const char* file)
             continue;
         }
 
-        fOut << "\n[" << section.first << "]\n";
+        fileOut << "\n[" << section.first << "]\n";
         for (const auto& key : section.second)
         {
-            fOut << key.first << " = " << key.second << "\n";
+            fileOut << key.first << " = " << key.second << "\n";
         }
     }
-    fOut.close();
+    fileOut.close();
     return true;
 }
 

@@ -1,16 +1,15 @@
 #include "Engine.h"
 
+#include <chrono>
 #include <format>
 #include <string_view>
 #include <thread>
-#include <chrono>
 
 #include "ClassicLauncher.h"
 #include "Helper.h"
 #include "Utils/Log.h"
 #include "Utils/Resources.h"
 #include "Window/WindowSystem.h"
-
 #include "raylib.h"
 
 namespace ClassicLauncher
@@ -60,57 +59,59 @@ namespace ClassicLauncher
             m_application.Draw();
             m_renderSystem.EndFrame();
 
-            m_renderSystem.BeginDraw(); 
-            m_print.DrawMessage();      // note: Here it is drawing outside the renderscreen.
+            m_renderSystem.BeginDraw();
+            m_renderSystem.DrawRender();
+            m_print.DrawMessage(); // note: Here it is drawing outside the renderscreen.
             m_renderSystem.EndDraw();
 
             m_window.PoolEvents();
 
-#ifdef _WIN32
-            if (m_application.GetStatus() == ProcessStatus::OPEN)
+            if (m_configurationManager.GetSuspendWindow())
             {
-                m_processManager.Launch();
-            }
-            else if (m_application.GetStatus() != ProcessStatus::NONE)
-            {
-                SetTargetFPS(3);
-                while (m_application.GetStatus() == ProcessStatus::RUNNING)
+                if (m_application.GetStatus() == ProcessStatus::OPEN)
                 {
-                    m_application.ProcessUpdate();
-                    BeginDrawing();
-                    EndDrawing();
-                    std::this_thread::sleep_for(std::chrono::milliseconds(50)); // wait
-                }
-                SetTargetFPS(60);
-            }
-#else
-
-            if (m_application.GetStatus() == ProcessStatus::OPEN)
-            {
-                m_renderSystem.Unload();
-                m_spriteManager.Unload();
-                m_application.OnGraphicsLost();
-                m_window.Close();
-                m_processManager.Launch();
-                while (m_window.ShouldClose())
-                {
-                    m_application.ProcessUpdate();
-                    std::this_thread::sleep_for(std::chrono::milliseconds(16)); // wait
-                    if (m_application.GetStatus() == ProcessStatus::CLOSE)
+                    m_renderSystem.Unload();
+                    m_spriteManager.Unload();
+                    m_application.OnGraphicsLost();
+                    m_window.Close();
+                    m_processManager.Launch();
+                    while (m_window.ShouldClose())
                     {
-                        m_window.Init(WindowSpecs::Width,
-                                      WindowSpecs::Height,
-                                      WindowSpecs::Title.data(),
-                                      m_configurationManager);
-                        m_window.SetIcons(imgs);
-                        m_renderSystem.Init(WindowSpecs::Width, WindowSpecs::Height);
-                        m_print.Init();
-                        m_application.OnGraphicsRestore();
+                        m_application.ProcessUpdate();
+                        std::this_thread::sleep_for(std::chrono::milliseconds(50)); // wait
+                        if (m_application.GetStatus() == ProcessStatus::CLOSE)
+                        {
+                            m_window.Init(WindowSpecs::Width,
+                                          WindowSpecs::Height,
+                                          WindowSpecs::Title.data(),
+                                          m_configurationManager);
+                            m_window.SetIcons(imgs);
+                            m_renderSystem.Init(WindowSpecs::Width, WindowSpecs::Height);
+                            m_print.Init();
+                            m_application.OnGraphicsRestore();
+                        }
                     }
                 }
-
             }
-#endif
+            else
+            {
+                if (m_application.GetStatus() == ProcessStatus::OPEN)
+                {
+                    m_processManager.Launch();
+                }
+                else if (m_application.GetStatus() != ProcessStatus::NONE)
+                {
+                    SetTargetFPS(3);
+                    while (m_application.GetStatus() == ProcessStatus::RUNNING)
+                    {
+                        m_application.ProcessUpdate();
+                        m_renderSystem.BeginDraw();
+                        m_renderSystem.EndDraw();
+                        std::this_thread::sleep_for(std::chrono::milliseconds(50)); // wait
+                    }
+                    m_window.SetTargetFPS(m_configurationManager.GetTargetFps());
+                }
+            }
         }
 
         m_application.End();

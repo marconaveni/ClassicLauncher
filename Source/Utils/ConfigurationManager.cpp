@@ -15,7 +15,13 @@ namespace ClassicLauncher
 #define CLASSIC_LOG_LEVEL 13
 #define RAYLIB_LOG_LEVEL 5
 #define FULLSCREEN true
-#endif
+#endif // _DEBUG
+
+#ifdef _WIN32
+#define SUSPEND_WINDOW false 
+#else
+#define SUSPEND_WINDOW true 
+#endif // _WIN32
 
 
     ConfigurationManager::ConfigurationManager()
@@ -42,6 +48,7 @@ namespace ClassicLauncher
         config.SetBoolean("configuration", "Fullscreen", m_fullscreen);
         config.SetBoolean("themes", "themeReferenceOverlay", m_themeReferenceOverlay);
         config.SetString("themes", "themeReferenceImage", m_themeReferenceImage);
+        config.SetBoolean("window", "suspendWindow", m_suspendWindow);
     }
 
     void ConfigurationManager::GetValues(SimpleIni& config)
@@ -55,6 +62,7 @@ namespace ClassicLauncher
         m_fullscreen = config.GetBoolean("configuration", "Fullscreen", FULLSCREEN);
         m_themeReferenceOverlay = config.GetBoolean("themes", "themeReferenceOverlay", false);
         m_themeReferenceImage = config.GetString("themes", "themeReferenceImage", "none");
+        m_suspendWindow = config.GetBoolean("window", "suspendWindow", SUSPEND_WINDOW);
     }
 
     void ConfigurationManager::LoadConfiguration()
@@ -83,5 +91,6 @@ namespace ClassicLauncher
 #undef CLASSIC_LOG_LEVEL
 #undef RAYLIB_LOG_LEVEL
 #undef FULLSCREEN
+#undef SUSPEND_WINDOW
 
 } // namespace ClassicLauncher

@@ -31,8 +31,12 @@ namespace ClassicLauncher
 
     void RenderSystem::BeginDraw()
     {
-        rlw::BeginDrawing(); // esse trecho é o endframe rendersystem
+        rlw::BeginDrawing();
         rlw::ClearBackground(Color::Black);
+    }
+
+    void RenderSystem::DrawRender()
+    {
         m_renderScreen.Draw();
     }
 

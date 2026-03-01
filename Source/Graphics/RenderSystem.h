@@ -18,6 +18,7 @@ namespace ClassicLauncher
         void BeginFrame();
         void EndFrame();
         void BeginDraw();
+        void DrawRender();
         void EndDraw();
         void Unload();
 
