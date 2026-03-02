@@ -96,8 +96,8 @@ namespace ClassicLauncher
 
     void Engine::ProcessUpdate(int delayMs)
     {
-        m_application.ProcessUpdate();
         std::this_thread::sleep_for(std::chrono::milliseconds(delayMs)); // wait
+        m_application.ProcessUpdate();
     }
 
     void Engine::CheckProcessIsOpen()

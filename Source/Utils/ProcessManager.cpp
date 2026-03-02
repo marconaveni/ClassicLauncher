@@ -2,10 +2,13 @@
 
 #include <filesystem>
 
+#ifndef _WIN32
+#include <sys/wait.h>
+#endif
+
 #include "Audio/AudioManager.h"
 #include "Data/GameListManager.h"
 #include "Utils/Platform.h"
-
 
 
 namespace ClassicLauncher
@@ -54,17 +57,16 @@ namespace ClassicLauncher
 
     void ProcessManager::Launch()
     {
-#if _WIN32
         int status = -1;
+#if _WIN32
         Platform::CreateProc(m_processId, m_fullPath, m_optionalWorkingDirectory, status);
+#else
+        Platform::CreateProc(m_processId, m_fullPath, status);
+#endif
         if (status != 1) 
         { 
             m_status = ProcessStatus::FAILED;
-        }
-#else
-        Platform::CreateProc(m_processId, m_fullPath);
-        // todo criar uma checagem quando o processo falhar igual no windows
-#endif
+        }   
     }
 
     bool ProcessManager::IsApplicationRunning() const

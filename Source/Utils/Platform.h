@@ -21,7 +21,7 @@ namespace ClassicLauncher::Platform
     bool IsApplicationRunning(unsigned int processId);
     bool CloseApplicationRunning(unsigned int processId);
 #else
-    void CreateProc(int& processId, const std::string& fullPath);
+    void CreateProc(int& processId, const std::string& fullPath, int& status);
     bool IsApplicationRunning(int processId);
     bool CloseApplicationRunning(int processId);
 #endif

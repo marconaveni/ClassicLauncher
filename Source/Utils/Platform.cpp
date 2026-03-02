@@ -2,8 +2,8 @@
 
 #ifdef _WIN32
 
-#include <windows.h>
 #include <filesystem>
+#include <windows.h>
 
 namespace ClassicLauncher::Platform
 {
@@ -120,11 +120,12 @@ namespace ClassicLauncher::Platform
 #else
 
 #include <cstring>
+#include <fcntl.h>
+#include <filesystem>
 #include <iostream>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include <filesystem>
 #include <vector>
 
 #include "Log.h"
@@ -132,53 +133,83 @@ namespace ClassicLauncher::Platform
 
 namespace ClassicLauncher::Platform
 {
-
-    void CreateProc(int& processId, const std::string& fullPath)
+ 
+    std::vector<char*> BuildArgvFromPath(const std::string& fullPath, std::vector<std::string>& paths)
     {
-        std::vector<std::string> paths = String::SplitString(fullPath);
+        paths = String::SplitString(fullPath);
 
         for (auto& path : paths)
         {
             String::ReplaceString(path, "\"", "");
         }
+        std::vector<char*> args;
+        args.reserve(paths.size() + 1);
+
+        for (const auto& arg : paths)
+        {
+            args.push_back(const_cast<char*>(arg.c_str()));
+        }
+        args.push_back(nullptr);
+        return args;
+    }
+
+    void CreateProc(int& processId, const std::string& fullPath, int& status)
+    {
+        std::vector<std::string> paths;
+        std::vector<char*> args = BuildArgvFromPath(fullPath, paths);
+
+        int pipefd[2];
+        pipe(pipefd);
+
+        // closes pipe automatically when executing
+        fcntl(pipefd[1], F_SETFD, FD_CLOEXEC);
 
         pid_t pid = fork();
+
         if (pid == -1)
         {
-            LOG(LOG_CLASSIC_ERROR, "Failed to created child process.");
             return;
         }
 
-        if (pid == 0) // Child Process
+        if (pid == 0)
         {
-            std::vector<char*> args;
-            for (const auto& arg : paths)
-            {
-                args.push_back(const_cast<char*>(arg.c_str()));
-            }
-            args.push_back(nullptr);
+            close(pipefd[0]); // son writes
 
-            if (execvp(args[0], args.data()) == -1)
-            {
-                LOG(LOG_CLASSIC_ERROR, "Failed to execute program.");
-                _exit(1); // execvp failed
-            }
-            LOG(LOG_CLASSIC_ERROR, "process child. %d", pid);
-            _exit(0); // exit the child process
+            execvp(args[0], args.data());
+
+            // It only gets here if exec fails.
+            int err = errno;
+            write(pipefd[1], &err, sizeof(err));
+            _exit(1);
         }
         else
         {
+            close(pipefd[1]); // dad reads
+
+            int err;
+            ssize_t n = read(pipefd[0], &err, sizeof(err)); // Commenting out fcntl causes the thread to get stuck here.
+            close(pipefd[0]);
+
+            if (n > 0)
+            {
+                LOG(LOG_CLASSIC_ERROR, "exec failed: %s", strerror(err));
+                status = -1;
+                processId = 0;
+                return;
+            }
+
             processId = pid;
+            status = 1; // exec its works !!!!
         }
     }
 
     bool IsApplicationRunning(const int processId)
     {
         if (processId == 0)
-        { 
+        {
             return false;
         }
-        
+
         bool isApplicationRunning = false;
         int status = 0;
 
@@ -217,7 +248,7 @@ namespace ClassicLauncher::Platform
     std::string GetExecutableDirectory()
     {
         char buffer[1024];
-        ssize_t len = readlink("/proc/self/exe", buffer, sizeof(buffer)-1);
+        ssize_t len = readlink("/proc/self/exe", buffer, sizeof(buffer) - 1);
         buffer[len] = '\0';
         std::filesystem::path exePath(buffer);
         return exePath.parent_path().string();
