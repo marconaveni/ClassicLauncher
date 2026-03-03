@@ -181,10 +181,10 @@ if(WIN32)
     )
 
 elseif (CLASSIC_RASPBERRY_PI)
-    message(STATUS "[Classic Launcher] Raspberry pi native activated")
+    #message(STATUS "[Classic Launcher] Raspberry pi native activated")
 
-    set(PLATFORM "DRM" CACHE STRING "Define Raylib platform as DRM")
-    add_definitions(-DPLATFORM_DRM)
+    #set(PLATFORM "DRM" CACHE STRING "Define Raylib platform as DRM")
+    #add_definitions(-DPLATFORM_DRM)
 
     # Submodule Raylib
     add_subdirectory(extern/raylib)

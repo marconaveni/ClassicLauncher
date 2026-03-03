@@ -1,6 +1,5 @@
 #include "RenderEntities.h"
 
-#include <format>
 
 #include "Components/FocusComponent.h"
 #include "Graphics/SpriteManager.h"
@@ -10,7 +9,6 @@
 #include "Themes/ThemesManager.h"
 #include "Utils/Math.h"
 #include "Window/WindowSystem.h"
-//#include "raylib.h" // isso não pode ficar aqui
 #include "rl_wrap.h"
 #include "Utils/ConfigurationManager.h"
 #include <iostream>
@@ -158,51 +156,7 @@ namespace ClassicLauncher
 
     void RenderEntities::DrawStatistics(Entity* entity)
     {
-        const std::string text = R"(
-nameID: {}
-parent NameID: {}
-texture Name: {}
-m_childEntities Size: {}
-ZOrder id: {}
-ZOrder insertionIndex: {}
-m_transform position x: {}
-m_transform position y: {}
-m_transform position width: {}
-m_transform position height: {}
-m_worldTransform position x: {}
-m_worldTransform position y: {}
-m_worldTransform position width: {}
-m_worldTransform position height: {}
-m_finalRender position x: {}
-m_finalRender position y: {}
-m_finalRender position width: {}
-m_finalRender position height: {}
-)";
-
-        std::string parent = entity->m_parent ? entity->m_parent->m_nameId : "null";
-        int size = static_cast<int>(entity->m_childEntities.size());
-        std::string textFinal =  std::vformat(text, std::make_format_args(
-            entity->m_nameId, 
-            parent, 
-            entity->m_textureName, 
-            size, 
-            entity->m_zOrder.id,
-            entity->m_zOrder.insertionIndex,
-            entity->m_transform.position.x,
-            entity->m_transform.position.y,
-            entity->m_transform.position.width,
-            entity->m_transform.position.height,
-            entity->m_worldTransform.position.x,
-            entity->m_worldTransform.position.y,
-            entity->m_worldTransform.position.width,
-            entity->m_worldTransform.position.height, 
-            entity->m_finalRender.transform.x,
-            entity->m_finalRender.transform.y,
-            entity->m_finalRender.transform.width,
-            entity->m_finalRender.transform.height
-        ));
-        
-        LOG(LOG_CLASSIC_DEBUG, "%s", textFinal.c_str());
+        // todo refactor statistics
     }
 
     void RenderEntities::DrawThemeReference()

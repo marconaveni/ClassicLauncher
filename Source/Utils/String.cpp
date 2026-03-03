@@ -161,7 +161,6 @@ namespace ClassicLauncher
     const char* String::TextFormat(const char* text, ...)
     {
         const int maxTextFormatBuffers = 4; // Maximum number of static buffers for text formatting
-
         const int maxTextBufferLen = 1024;
 
         static char buffers[maxTextFormatBuffers][maxTextBufferLen] = {0};
@@ -183,7 +182,10 @@ namespace ClassicLauncher
 
         index += 1; // Move to next buffer for next function call
         if (index >= maxTextFormatBuffers)
+        {
             index = 0;
+        } 
+            
 
         return currentBuffer;
     }

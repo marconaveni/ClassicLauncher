@@ -1,11 +1,11 @@
 #include "Log.h"
 
 #include <filesystem>
-#include <format>
 #include <string>
 
 #include "Utils/Print.h"
 #include "Utils/Resources.h"
+#include "Utils/String.h"
 #include "rl_wrap.h"
 #include "Input/InputManager.h"
 
@@ -64,7 +64,7 @@ namespace ClassicLauncher
 
         std::filesystem::path fileName = file;
 
-        std::string textFmt = std::format("[line:{} file:{}] {}", line, fileName.filename().string(), text);
+        std::string textFmt = String::TextFormat("[line:%d file:%s] %s", line, fileName.filename().string().c_str(), text);
 
         va_list args;
         va_start(args, text);

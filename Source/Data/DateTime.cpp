@@ -1,6 +1,7 @@
 #include "DateTime.h"
 
 #include <sstream>
+#include <clocale>
 
 namespace ClassicLauncher
 {
@@ -117,7 +118,7 @@ namespace ClassicLauncher
 
         static bool localeSet = []
         {
-            std::setlocale(LC_TIME, "");
+            setlocale(LC_TIME, "");
             return true;
         }();
 

@@ -1,7 +1,6 @@
 #include "EntityManager.h"
 
 #include <algorithm> // std::sort
-#include <format>
 
 #include "Graphics/SpriteManager.h"
 #include "Utils/TimerManager.h"
@@ -60,7 +59,7 @@ namespace ClassicLauncher
             }
         }
 
-        entity->m_nameId = std::format("{}_{}", counter, name);
+        entity->m_nameId = String::TextFormat("%d_%s" , counter, name.c_str());
         entity->m_zOrder.insertionIndex = m_counter;
         m_counter++;
     }
