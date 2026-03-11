@@ -23,6 +23,9 @@ set(PLATFORM           SDL CACHE STRING "" FORCE) # use SDL backend instead of G
 set(GLFW_BUILD_WAYLAND ON  CACHE BOOL "" FORCE)
 set(GLFW_BUILD_X11     OFF CACHE BOOL "" FORCE)
 
+if (CLASSIC_RASPBERRY_PI)
+    set(GRAPHICS GRAPHICS_API_OPENGL_ES2 CACHE STRING "" FORCE)
+endif()
 
 
 # SDL3 setup
@@ -110,7 +113,7 @@ if(WIN32)
     ${CMAKE_CURRENT_SOURCE_DIR}/CMake/modules
     )
 
-    # Tente encontrar a biblioteca VLC
+    # Try to find the VLC library
     find_package(VLC REQUIRED)
 
     if(VLC_FOUND)
@@ -121,10 +124,10 @@ if(WIN32)
         message(FATAL_ERROR "[Classic Launcher] VLC not founded!")
     endif()
 
-    # Inclui os diretórios encontrados
+    # Includes the directories found.
     include_directories(${VLC_INCLUDE_DIR})
 
-    # Caminho para os arquivos necessários
+    # Path to the necessary files
     set(VLC_DLLS
     ${EXTERN_LIBDIR}/libvlc/x64/libvlc.dll
     ${EXTERN_LIBDIR}/libvlc/x64/libvlccore.dll
@@ -142,12 +145,10 @@ include_directories(   # Add header files
 add_executable(ClassicLauncher) # start ClassicLauncher 
 include(${CMAKE_SOURCE_DIR}/CMake/ListSources.cmake) # Add Source Files
 
-
+# Submodule Raylib
+add_subdirectory(extern/raylib)
 
 if(WIN32)
-
-    # Submodule Raylib 
-    add_subdirectory(extern/raylib)
 
     # Preprocessors definitions
     target_compile_definitions(ClassicLauncher PRIVATE
@@ -164,36 +165,13 @@ if(WIN32)
     )
 
 
-    # Rule for copying libvlc DLLs to the build directory.
-    foreach(DLL ${VLC_DLLS})
-    add_custom_command(TARGET ClassicLauncher POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${DLL}
-        $<TARGET_FILE_DIR:ClassicLauncher>
-    )
-    endforeach()
-
-    # Rule for copying the libvlc plugins folder to the build directory.
-    add_custom_command(TARGET ClassicLauncher POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${VLC_PLUGINS_DIR}
-        $<TARGET_FILE_DIR:ClassicLauncher>/plugins
-    )
-
 elseif (CLASSIC_RASPBERRY_PI)
-    #message(STATUS "[Classic Launcher] Raspberry pi native activated")
-
-    #set(PLATFORM "DRM" CACHE STRING "Define Raylib platform as DRM")
-    #add_definitions(-DPLATFORM_DRM)
-
-    # Submodule Raylib
-    add_subdirectory(extern/raylib)
+    message(STATUS "[Classic Launcher] Raspberry pi native activated")
 
     # Preprocessors definitions
     target_compile_definitions(ClassicLauncher PRIVATE 
         ${debug}
     )
-
 
     # -lraylib -lm -lpthread -lGLESv2 -lEGL -lvcos -lvchiq_arm -lgbm -ldrm
     # Link for Raspberry Pi
@@ -212,9 +190,6 @@ elseif (CLASSIC_RASPBERRY_PI)
 
 else() # Linux
 
-    # Submodule Raylib
-    add_subdirectory(extern/raylib)
-
     target_compile_definitions(ClassicLauncher PRIVATE     
         ${debug}
     )
@@ -222,9 +197,9 @@ else() # Linux
     # Linux
     target_link_libraries(${PROJECT_NAME} 
         raylib 
-        GL 
         m 
         pthread 
+        GL 
         dl 
         rt 
         vlc
@@ -234,6 +209,26 @@ endif()
 
 
 # extras post command post build
+
+if(WIN32)
+
+    # Rule for copying libvlc DLLs to the build directory.
+    foreach(DLL ${VLC_DLLS})
+    add_custom_command(TARGET ClassicLauncher POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${DLL}
+        $<TARGET_FILE_DIR:ClassicLauncher>
+    )
+    endforeach()
+
+    # Rule for copying the libvlc plugins folder to the build directory.
+    add_custom_command(TARGET ClassicLauncher POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${VLC_PLUGINS_DIR}
+        $<TARGET_FILE_DIR:ClassicLauncher>/plugins
+    )
+
+endif()
 
 # Rule for copying the resources folder to the build directory.
 add_custom_command(TARGET ClassicLauncher POST_BUILD

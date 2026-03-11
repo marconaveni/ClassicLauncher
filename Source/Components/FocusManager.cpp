@@ -1,5 +1,7 @@
 #include "FocusManager.h"
 
+#include <algorithm>
+
 #include "Components/FocusComponent.h"
 #include "Helper.h"
 
@@ -14,7 +16,6 @@ namespace ClassicLauncher
 
     void FocusManager::SetNewFocusComponent(FocusComponent* focusComponent)
     {
-        // m_currentFocusComponent = nullptr;
         FocusComponent* newFocusComponent = nullptr;
         FocusComponent* previousFocusComponent = nullptr;
         PRINT(TEXT("focus count %d", m_focusComponents.size()), 5.0f, "focusComp");
@@ -42,7 +43,6 @@ namespace ClassicLauncher
         {
             previousFocusComponent->OnLostFocus(newFocusComponent->GetFocusCategory());
         }
-        
     }
 
     void FocusManager::Update()
@@ -51,7 +51,7 @@ namespace ClassicLauncher
         {
             if (focus->m_isFocus)
             {
-                focus->UpdateFocus();   
+                focus->UpdateFocus();
             }
         }
     }
@@ -59,12 +59,12 @@ namespace ClassicLauncher
     void FocusManager::RemoveFocus(FocusComponent* focusComponent)
     {
         m_focusComponents.erase(std::remove_if(m_focusComponents.begin(),
-                                              m_focusComponents.end(),
-                                              [focusComponent](const FocusComponent* focus)
-                                              {
-                                                  return focus == focusComponent; // Return true element
-                                              }),
-                               m_focusComponents.end());
+                                               m_focusComponents.end(),
+                                               [focusComponent](const FocusComponent* focus)
+                                               {
+                                                   return focus == focusComponent; // Return true element
+                                               }),
+                                m_focusComponents.end());
     }
 
 
