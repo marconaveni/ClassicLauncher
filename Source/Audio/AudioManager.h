@@ -9,11 +9,12 @@
 #include <thread>
 #include <vector>
 
+#include "Audio/Music.h"
+#include "Audio/Sound.h"
+
 namespace ClassicLauncher
 {
 
-    class Music;
-    class Sound;
 
     class AudioManager
     {
@@ -23,7 +24,7 @@ namespace ClassicLauncher
         ~AudioManager();
 
         void Init();
-        void LoadMusics(const std::string& path, bool bAutoPlay = true);
+        void LoadMusics(const std::string& path, bool isAutoPlay = true);
         void LoadSound(const std::filesystem::path& path, const std::string& name);
         void PlaySound(const std::string& name);
         void PlayMusic();

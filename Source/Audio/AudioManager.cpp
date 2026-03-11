@@ -4,8 +4,6 @@
 #include <filesystem>
 
 #include "Audio/AudioDevice.h"
-#include "Audio/Music.h"
-#include "Audio/Sound.h"
 #include "Utils/Math.h"
 #include "Input/InputManager.h"
 #include "Helper.h"
@@ -75,11 +73,11 @@ namespace ClassicLauncher
             return;
         }
         
-        if (name.compare("click"))
+        if (name == "click")
         {
             m_clickSound->LoadFromFile(path);
         }
-        if (name.compare("cursor"))
+        if (name == "cursor")
         {
             m_cursorSound->LoadFromFile(path);
         }
@@ -87,8 +85,8 @@ namespace ClassicLauncher
 
     void AudioManager::PlaySound(const std::string& name)
     {
-        m_isPlayClick = (name.compare("click"));
-        m_isPlayCursor = (name.compare("cursor"));
+        m_isPlayClick = (name == "click");
+        m_isPlayCursor = (name == "cursor");
     }
 
     void AudioManager::PlayMusic()
