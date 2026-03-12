@@ -90,6 +90,7 @@ namespace ClassicLauncher
             m_isTextureLoaded = m_texture->IsValid();
             LOG(LOG_CLASSIC_TRACE, "Texture loaded [ID %d] from Image - \"%s\"", m_texture->GetId(), m_filePath.c_str());
             UnloadImage();
+            Join();
         }
         if (m_isTextureLoaded)
         {
