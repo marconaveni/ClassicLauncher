@@ -206,8 +206,7 @@ namespace ClassicLauncher
 
         for (int i = 0; i < 10; i++)
         {
-            int indexFinal = Utils::SetIndexArray(m_gameListManagerRef->GetGameId() + i - m_idFocus,
-                                                  m_gameListManagerRef->GetGameListSize());
+            int indexFinal = Utils::SetIndexArray(m_gameListManagerRef->GetGameId() + i - m_idFocus, m_gameListManagerRef->GetGameListSize());
             indexFinal = Utils::SetIndexArray(indexFinal, m_gameListManagerRef->GetGameListSize());
             indexFinal = Math::Clamp(indexFinal, 0, m_gameListManagerRef->GetGameListSize() - 1);
 
@@ -230,6 +229,54 @@ namespace ClassicLauncher
         SetPositionHorizontalBox();
 
         LOG(LOG_CLASSIC_DEBUG, "Num Sprites Loaded after SetCovers %d", GetSpriteManager()->NumSpritesLoaded());
+    }
+
+    void GuiHorizontalCards::RemoveCoversFromScreen()
+    {
+        if (Texture::GetTextureSizeBytes() < 209715200)  // 200MB note: The value will vary depending on the configuration.
+        {
+            return;
+        }
+        
+        const int gameListSize = m_gameListManagerRef->GetGameListSize();
+        if (gameListSize == 0)
+        {
+            return;
+        }
+        std::vector<bool> keepCover(static_cast<size_t>(gameListSize), false);
+        std::vector<bool> keepMiniCover(static_cast<size_t>(gameListSize), false);
+        
+        for (int i = 0; i < 10; i++)
+        {
+            int index = m_gameListManagerRef->GetGameId() + i - m_idFocus;
+            index = Utils::SetIndexArray(index, gameListSize);
+            index = Math::Clamp(index, 0, gameListSize - 1);
+            keepCover[static_cast<size_t>(index)] = true;
+        }
+        
+        const int themesNumCovers = ThemesManager::GetConfigurationThemes().numCovers;
+        const int numMiniCovers = gameListSize < themesNumCovers ? gameListSize + 1 : themesNumCovers;
+        
+        for (int i = 0; i < numMiniCovers; i++)
+        {
+            int index = m_gameListManagerRef->GetGameId() + i - (numMiniCovers / 2);
+            index = Utils::SetIndexArray(index, gameListSize);
+            index = Math::Clamp(index, 0, gameListSize - 1);
+            keepMiniCover[static_cast<size_t>(index)] = true;
+        }
+        
+        for (int i = 0; i < gameListSize; i++)
+        {
+            if (!keepCover[i])
+            {
+                GetSpriteManager()->DeleteSprite(std::to_string(i) + "_CV");
+            }
+            if (!keepMiniCover[i])
+            {
+                GetSpriteManager()->DeleteSprite(std::to_string(i) + "_MCV");
+            }
+        }
+        
     }
 
     void GuiHorizontalCards::ChangeList(const CurrentList list)
@@ -484,7 +531,7 @@ namespace ClassicLauncher
             m_isLeft = false;
             m_isNeedUpdate = true;
             UpdateCovers();
-            // todo: add clean textures of vram outside of the screen
+            RemoveCoversFromScreen();
         }
 
         if (m_idFocus < 3 || m_idFocus > 6)
