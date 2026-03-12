@@ -4,10 +4,10 @@
 #include <filesystem>
 
 #include "Audio/AudioDevice.h"
-#include "Utils/Math.h"
-#include "Input/InputManager.h"
 #include "Helper.h"
+#include "Input/InputManager.h"
 #include "Utils/Log.h"
+#include "Utils/Math.h"
 
 
 namespace ClassicLauncher
@@ -21,8 +21,11 @@ namespace ClassicLauncher
 
     void AudioManager::Init()
     {
-        Unload();
-        AudioDevice::GetInstance().Init();
+        const bool isReady = AudioDevice::GetInstance().IsReady();
+        if (!isReady)
+        {
+            AudioDevice::GetInstance().Init();
+        }
 
         if (!m_isRunning)
         {
@@ -58,7 +61,7 @@ namespace ClassicLauncher
             LOG(LOG_CLASSIC_ERROR, "%s is not exists", directorypath.c_str());
             return;
         }
-        
+
         for (const auto& entry : std::filesystem::directory_iterator(directorypath))
         {
             LoadMusic(entry.path().string());
@@ -72,7 +75,7 @@ namespace ClassicLauncher
         {
             return;
         }
-        
+
         if (name == "click")
         {
             m_clickSound->LoadFromFile(path);
@@ -144,7 +147,7 @@ namespace ClassicLauncher
         if (InputManager::IsRelease(InputName::rightThumb, MAIN_CENTER))
         {
             ChangeMusic();
-            PRINT(TEXT("Changed music"), 5.0f);  
+            PRINT(TEXT("Changed music"), 5.0f);
             // todo add callback function to gui layout in release version
         }
 
@@ -242,16 +245,14 @@ namespace ClassicLauncher
                 m_workerThread.join(); // Espera a thread finalizar
             }
         }
-    }
-
-    AudioManager::~AudioManager()
-    {
-        Unload();
         const bool isReady = AudioDevice::GetInstance().IsReady();
         if (isReady)
         {
             AudioDevice::GetInstance().Shutdown();
         }
     }
+
+    AudioManager::~AudioManager()
+    { Unload(); }
 
 } // namespace ClassicLauncher

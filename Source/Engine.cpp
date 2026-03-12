@@ -24,6 +24,7 @@ namespace ClassicLauncher
     {
         RegistryPrint(&m_print);
         WindowSystem::Get().Bind(&m_window);
+        Resources::SetClassicLauncherDirectory();
     }
 
     Engine::~Engine()
@@ -57,6 +58,7 @@ namespace ClassicLauncher
                          Resources::GetIconFile(128).c_str()};
 
         InitWindow();
+        m_audioManager.ChangeMusic();
         m_application.Init();
     }
 
@@ -66,6 +68,8 @@ namespace ClassicLauncher
         m_window.SetIcons(m_windowIcons);
         m_renderSystem.Init(WindowSpecs::Width, WindowSpecs::Height);
         m_print.Init();
+        m_audioManager.Init();
+        m_audioManager.LoadMusics(Resources::GetMusicDirectory(), false);
     }
 
     void Engine::ShutdownWindow()
@@ -74,6 +78,7 @@ namespace ClassicLauncher
         m_spriteManager.Unload();
         m_application.OnGraphicsLost();
         m_window.Close();
+        m_audioManager.Unload();
     }
 
     void Engine::TickUi()

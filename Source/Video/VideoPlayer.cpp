@@ -51,7 +51,7 @@ namespace ClassicLauncher
             "--quiet",                // suppress logs
             "--no-video-title-show",  // remove title
             //"--verbose=2",
-            "--avcodec-fast",  // Reduz uso de memória ao decodificar
+            // "--avcodec-fast",  // Reduz uso de memória ao decodificar
             // "--no-stats"              // Evita coleta de estatísticas
 
         };

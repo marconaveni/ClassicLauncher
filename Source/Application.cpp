@@ -41,7 +41,7 @@ namespace ClassicLauncher
     {
         LogLevel(m_configManager->GetClassicLogLevel(), m_configManager->GetRaylibLogLevel());
         rlw::SetTraceLogCallback(TraceLogger);
-        Resources::SetClassicLauncherDirectory();
+        
     }
 
     Application::~Application()
@@ -50,8 +50,6 @@ namespace ClassicLauncher
 
     void Application::Init()
     {
-        m_audioManager->Init();
-        m_audioManager->LoadMusics(Resources::GetMusicDirectory(), true);
         m_gameListManager.Initialize();
         m_spriteManager->Init();
         m_themesManager.Init();
