@@ -10,6 +10,29 @@ namespace ray
 
 namespace ClassicLauncher
 {
+    static unsigned int s_textureSizeBytes = 0;
+
+    static unsigned int GetBytesPerPixel(int format)
+    {
+        switch (format)
+        {
+        case PIXELFORMAT_UNCOMPRESSED_GRAYSCALE: return 1;
+        case PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA: return 2;
+        case PIXELFORMAT_UNCOMPRESSED_R5G6B5: return 2;
+        case PIXELFORMAT_UNCOMPRESSED_R8G8B8: return 3;
+        case PIXELFORMAT_UNCOMPRESSED_R5G5B5A1: return 2;
+        case PIXELFORMAT_UNCOMPRESSED_R4G4B4A4: return 2;
+        case PIXELFORMAT_UNCOMPRESSED_R8G8B8A8: return 4;
+        case PIXELFORMAT_UNCOMPRESSED_R32: return 4;
+        case PIXELFORMAT_UNCOMPRESSED_R32G32B32: return 12;
+        case PIXELFORMAT_UNCOMPRESSED_R32G32B32A32: return 16;
+        case PIXELFORMAT_UNCOMPRESSED_R16: return 2;
+        case PIXELFORMAT_UNCOMPRESSED_R16G16B16: return 6;
+        case PIXELFORMAT_UNCOMPRESSED_R16G16B16A16: return 8;
+        default: return 0;
+        }
+    }
+
     Texture::Texture(const std::filesystem::path& fileName)
     {
         LoadFromFile(fileName);
@@ -48,6 +71,9 @@ namespace ClassicLauncher
         m_mipmaps = image->mipmaps;
         m_format = image->format;
 
+        const int size = GetBytesPerPixel(m_format);
+        s_textureSizeBytes += m_width * m_height * size;
+
         return IsValid();
     }
 
@@ -59,6 +85,8 @@ namespace ClassicLauncher
         m_mipmaps = mipmaps;
         m_format = format;
         m_id = ray::rlLoadTexture(data, width, height, format, mipmaps);
+
+        s_textureSizeBytes += m_width * m_height * 4;
         return true;
     }
 
@@ -112,6 +140,9 @@ namespace ClassicLauncher
     {
         if (m_id != 0)
         {
+            const int size = GetBytesPerPixel(m_format);
+            s_textureSizeBytes -= m_width * m_height * size;
+
             ray::rlUnloadTexture(m_id);
             m_id = 0;
             m_width = 0;
@@ -119,6 +150,11 @@ namespace ClassicLauncher
             m_format = 0;
             m_mipmaps = 0;
         }
+    }
+
+    unsigned int Texture::GetTextureSizeBytes()
+    { 
+        return s_textureSizeBytes; 
     }
 
 } // namespace ClassicLauncher

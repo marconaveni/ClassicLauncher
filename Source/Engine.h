@@ -35,6 +35,7 @@ namespace ClassicLauncher
         Engine();
         ~Engine();
         void Run();
+        static int GetTotalFrames();
 
     private:
 
@@ -52,6 +53,7 @@ namespace ClassicLauncher
         void StateProcessRunning();
         void StateSuspended();
         void StateRestoring();
+
 
         ConfigurationManager m_configurationManager;
         RayWindow m_window;

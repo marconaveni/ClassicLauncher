@@ -7,7 +7,10 @@
 #include "Data/GameListManager.h"
 #include "Helper.h"
 #include "Window/WindowSystem.h"
+#include "Graphics/Texture.h"
 #include "Input/InputManager.h"
+#include "Utils/Math.h"
+#include "Engine.h"
 
 namespace ClassicLauncher::DebugOverlay
 {
@@ -18,16 +21,15 @@ namespace ClassicLauncher::DebugOverlay
 
     static float s_delay = 0.1f;
     static int s_category = 0;
-    static int s_frames = 0;
 
     void DrawStatistics()
     {
         Color color = Color::Green;
-        s_frames += 1;
         PRINT("==============Statistics================", s_delay, "statics-line", color);
         PRINT(TEXT("%d fps", WindowSystem::Get().GetFPS()), s_delay, "fps", color);
         PRINT(TEXT("%.6f ms", WindowSystem::Get().GetFrameTime()), s_delay, "ms", color);
-        PRINT(TEXT("frames %d", s_frames), s_delay, "frames", color);
+        PRINT(TEXT("Vram %.2fMB", Math::BytesToMegabytes(Texture::GetTextureSizeBytes())), s_delay, "vram", color);
+        PRINT(TEXT("Total frames %d", Engine::GetTotalFrames()), s_delay, "frames", color);
         PRINT("========================================", s_delay, "statics-line2", color);
     }
 

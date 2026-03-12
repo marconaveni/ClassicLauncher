@@ -13,6 +13,8 @@
 namespace ClassicLauncher
 {
 
+    static int s_frames = 0;
+
     Engine::Engine()
         : m_application(m_configurationManager,
                         m_spriteManager,
@@ -96,6 +98,7 @@ namespace ClassicLauncher
         m_renderSystem.EndDraw();
 
         m_window.PoolEvents();
+        s_frames++; // records total number of frames rendered.
     }
 
     void Engine::ProcessUpdate(int delayMs)
@@ -190,6 +193,11 @@ namespace ClassicLauncher
         m_application.OnGraphicsRestore();
         m_window.SetTargetFPS(m_configurationManager.GetTargetFps());
         ChangeState(EngineState::UI_ACTIVE);
+    }
+
+    int Engine::GetTotalFrames()
+    { 
+        return s_frames; 
     }
 
 } // namespace ClassicLauncher

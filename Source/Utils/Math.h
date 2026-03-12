@@ -57,6 +57,21 @@ namespace ClassicLauncher::Math
         return static_cast<int>(value >= 0.0f ? value + 0.5f : value - 0.5f);
     }
 
+    inline constexpr float BytesToTerabytes(int value)
+    {
+        return value / (1024.0f * 1024.0f * 1024.0f * 1024.0f);
+    }
+
+    inline constexpr float BytesToGigabytes(int value)
+    {
+        return value / (1024.0f * 1024.0f * 1024.0f);
+    }
+
+    inline constexpr float BytesToMegabytes(int value)
+    {
+        return value / (1024.0f * 1024.0f);
+    }
+
     template <typename T>
     static Vector2<T> VecClamp(Vector2<T> value, Vector2<T> min, Vector2<T> max)
     {

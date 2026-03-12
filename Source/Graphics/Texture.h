@@ -66,6 +66,7 @@ namespace ClassicLauncher
         [[nodiscard]] int GetMipmaps() const { return m_mipmaps; }
         [[nodiscard]] int GetFormat() const { return m_format; }
         [[nodiscard]] Sizef GetSize() const { return Sizei(m_width, m_height).ToFloat(); }
+        static unsigned int GetTextureSizeBytes();
 
     private:
 
