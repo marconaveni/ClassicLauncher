@@ -76,6 +76,7 @@ namespace ClassicLauncher
         bool m_isPress{false};
         TimerHandling m_timerInputSpeed{};
         bool m_topBarAnimation{false};
+        int m_loadTexturesCards{0};
 
         GameListManager* m_gameListManagerRef{nullptr};
         AudioManager* m_audioManagerRef{nullptr};

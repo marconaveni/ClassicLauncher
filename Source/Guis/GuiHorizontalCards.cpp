@@ -26,7 +26,6 @@
 
 namespace ClassicLauncher
 {
-    int s_loadTexturesCards = 0;
 
     GuiHorizontalCards::GuiHorizontalCards(GameListManager* gameListManagerRef, AudioManager* audioManagerRef)
         : m_gameListManagerRef(gameListManagerRef), m_audioManagerRef(audioManagerRef)
@@ -235,7 +234,7 @@ namespace ClassicLauncher
     
     void GuiHorizontalCards::RemoveCoversFromScreen()
     {
-        if (s_loadTexturesCards < 20) 
+        if (m_loadTexturesCards < 20 && Texture::GetTextureSizeBytes() < 209715200) 
         {
             return;
         }
@@ -278,7 +277,7 @@ namespace ClassicLauncher
                 GetSpriteManager()->DeleteSprite(std::to_string(i) + "_MCV");
             }
         }
-        s_loadTexturesCards = 0;
+        m_loadTexturesCards = 0;
     }
 
     void GuiHorizontalCards::ChangeList(const CurrentList list)
@@ -534,7 +533,7 @@ namespace ClassicLauncher
             m_isNeedUpdate = true;
             UpdateCovers();
             RemoveCoversFromScreen();
-            s_loadTexturesCards++;
+            m_loadTexturesCards++;
         }
 
         if (m_idFocus < 3 || m_idFocus > 6)
