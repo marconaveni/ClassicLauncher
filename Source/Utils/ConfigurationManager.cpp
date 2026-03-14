@@ -39,36 +39,39 @@ namespace ClassicLauncher
 
     void ConfigurationManager::SetValues(SimpleIni& config)
     {
-        config.SetInt("configuration", "InternalScale", m_internalScale);
-        config.SetInt("configuration", "Volume", m_volume);
-        config.SetInt("configuration", "TargetFps", m_targetFps);
-        config.SetBoolean("configuration", "VSync", m_vsync);
-        config.SetInt(LOG_SECTION_NAME, "ClassicLogLevel", m_classicLogLevel);
-        config.SetInt(LOG_SECTION_NAME, "RaylibLogLevel", m_raylibLogLevel);
-        config.SetBoolean("configuration", "Fullscreen", m_fullscreen);
-        config.SetBoolean("themes", "themeReferenceOverlay", m_themeReferenceOverlay);
-        config.SetString("themes", "themeReferenceImage", m_themeReferenceImage);
-        config.SetBoolean("window", "suspendWindow", m_suspendWindow);
+        config.SetInt("configuration", "internal_scale", m_internalScale);
+        config.SetInt("configuration", "volume", m_volume);
+        config.SetInt("configuration", "target_fps", m_targetFps);
+        config.SetBoolean("configuration", "fullscreen", m_fullscreen, "# whats");
+        config.SetBoolean("configuration", "vsync", m_vsync);
+        config.SetInt(LOG_SECTION_NAME, "classic_log_level", m_classicLogLevel);
+        config.SetInt(LOG_SECTION_NAME, "raylib_log_level", m_raylibLogLevel);
+        config.SetBoolean("themes", "theme_reference_overlay", m_themeReferenceOverlay);
+        config.SetString("themes", "theme_reference_image", m_themeReferenceImage);
+        config.SetBoolean("window", "suspend_window", m_suspendWindow);
+        config.SetInt("window", "width_window", m_widthWindow);
+        config.SetInt("window", "height_window", m_heightWindow);
     }
 
     void ConfigurationManager::GetValues(SimpleIni& config)
     {
-        m_internalScale = config.GetInt("configuration", "InternalScale", 2);
-        m_volume = config.GetInt("configuration", "Volume", 100);
-        m_targetFps = config.GetInt("configuration", "TargetFps", 60);
-        m_vsync = config.GetBoolean("configuration", "VSync", true);
-        m_classicLogLevel = config.GetInt(LOG_SECTION_NAME, "ClassicLogLevel", CLASSIC_LOG_LEVEL);
-        m_raylibLogLevel = config.GetInt(LOG_SECTION_NAME, "RaylibLogLevel", RAYLIB_LOG_LEVEL);
-        m_fullscreen = config.GetBoolean("configuration", "Fullscreen", FULLSCREEN);
-        m_themeReferenceOverlay = config.GetBoolean("themes", "themeReferenceOverlay", false);
-        m_themeReferenceImage = config.GetString("themes", "themeReferenceImage", "none");
-        m_suspendWindow = config.GetBoolean("window", "suspendWindow", SUSPEND_WINDOW);
+        m_internalScale = config.GetInt("configuration", "internal_scale", 2);
+        m_volume = config.GetInt("configuration", "volume", 100);
+        m_targetFps = config.GetInt("configuration", "target_fps", 60);
+        m_fullscreen = config.GetBoolean("configuration", "fullscreen", FULLSCREEN);
+        m_vsync = config.GetBoolean("configuration", "vsync", true);
+        m_classicLogLevel = config.GetInt(LOG_SECTION_NAME, "classic_log_level", CLASSIC_LOG_LEVEL);
+        m_raylibLogLevel = config.GetInt(LOG_SECTION_NAME, "raylib_log_level", RAYLIB_LOG_LEVEL);
+        m_themeReferenceOverlay = config.GetBoolean("themes", "theme_reference_overlay", false);
+        m_themeReferenceImage = config.GetString("themes", "theme_reference_image", "none");
+        m_suspendWindow = config.GetBoolean("window", "suspend_window", SUSPEND_WINDOW);
+        m_widthWindow = config.GetInt("window", "width_window", 1280);
+        m_heightWindow = config.GetInt("window", "height_window", 720);
     }
 
     void ConfigurationManager::LoadConfiguration()
     {
         const std::string path = Resources::GetConfigurationFile();
-        SimpleIni config;
 
         if (!config.Open(path.c_str()))
         {
@@ -81,8 +84,7 @@ namespace ClassicLauncher
     }
 
     bool ConfigurationManager::SaveConfiguration()
-    {
-        SimpleIni config;
+    {      
         SetValues(config);
         return config.Save(Resources::GetConfigurationFile().c_str());
     }

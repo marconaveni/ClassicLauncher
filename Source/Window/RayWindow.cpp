@@ -31,8 +31,8 @@ namespace ClassicLauncher
         }
 
         m_title = title;
-        ray::InitWindow(width, height, title.c_str());
-        ray::SetWindowSize(width, height);
+        ray::InitWindow(m_configManager->GetWidthWindow(), m_configManager->GetHeightWindow(), title.c_str());
+       // ray::SetWindowSize(width, height);
         ray::SetWindowState(Flags::Resizable | Flags::AlwaysRun);
         SetTargetFPS(m_configManager->GetTargetFps());
         SetFullscreen(m_configManager->GetFullscreen());
@@ -203,8 +203,8 @@ namespace ClassicLauncher
             m_size.y = GetScreenHeight();
             SetState(Flags::Undecorated);
             SetSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
-            const Vector2f positionMonitor(GetMonitorPosition(GetCurrentMonitor()));
-            SetPosition((int)positionMonitor.x, (int)positionMonitor.y);
+            const Vector2i positionMonitor(GetMonitorPosition(GetCurrentMonitor()));
+            SetPosition(positionMonitor.x, positionMonitor.y);
 #else
             ray::ToggleFullscreen();
             SetSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
@@ -221,6 +221,11 @@ namespace ClassicLauncher
 #endif
         }
         ShowCursor(!IsFullScreen());
+
+        m_configManager->SetFullscreen(IsFullScreen());
+        m_configManager->SaveConfiguration();
+        LOG(LOG_CLASSIC_DEBUG, TEXT("Saved is fullscreen config.ini with value %s", TEXTBOOL(m_configManager->GetFullscreen())));
+
         return IsFullScreen();
     }
 
@@ -262,10 +267,7 @@ namespace ClassicLauncher
         if (Keyboard::IsReleased(Keyboard::F11) ||
             (Keyboard::IsDown(Keyboard::LEFT_ALT) && Keyboard::IsReleased(Keyboard::ENTER)))
         {
-            const bool isFullscreen = ToggleFullscreen();
-            m_configManager->SetFullscreen(isFullscreen);
-            m_configManager->SaveConfiguration();
-            LOG(LOG_CLASSIC_DEBUG, TEXT("Saved is fullscreen config.ini with value %s", TEXTBOOL(isFullscreen)));
+            ToggleFullscreen();
         }
     }
 

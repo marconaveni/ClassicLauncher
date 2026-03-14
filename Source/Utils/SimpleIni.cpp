@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <cmath>
 
 SimpleIni::SimpleIni()
 {
@@ -14,25 +15,37 @@ SimpleIni::~SimpleIni()
     m_data.clear();
 }
 
-void SimpleIni::RemoveComments(std::string& str)
+void SimpleIni::SepareComments(std::string& value, std::string& comments)
 {
-    const std::string strWithComments = str;
-    str = "";
+    const std::string strWithComments = value;
+    value = "";
+    comments = "";
+    bool isComments = false;
     for (const char c : strWithComments)
     {
         if (c == '#' || c == ';')
         {
-            break;
+            isComments = true;
         }
-        str += c;
+        if (!isComments)
+        {
+            value += c;
+        }
+        else
+        {
+            comments += c;
+        }
+        
+        
     }
 }
 
 bool SimpleIni::SetSection(std::string& str)
 {
+    std::string comments; 
     if (str[0] == '[')
     {
-        RemoveComments(str);
+        SepareComments(str, comments);
         str = Trim(RemoveBrackets(str));
         m_currentSection = str;
         return true;
@@ -102,15 +115,16 @@ bool SimpleIni::Open(const char* file)
     {
         std::string key;
         std::string value;
+        std::string comments;
         std::string str = text;
         if (str.empty() || SetSection(str))
         {
             continue;
         }
-        RemoveComments(str);
+        SepareComments(str, comments);
         if (SetKeyValue(str, key, value))
         {
-            SetValue(m_currentSection, key, value);
+            SetValue(m_currentSection, key, value, comments);
         }
     }
     fileInput.close();
@@ -146,7 +160,16 @@ bool SimpleIni::Save(const char* file)
         fileOut << "\n[" << section.first << "]\n";
         for (const auto& key : section.second)
         {
-            fileOut << key.first << " = " << key.second << "\n";
+            std::string buffer{};
+            buffer.append(key.first + " = " + key.second.value);
+            const int len = 40 - buffer.size();
+            for (size_t i = 0; i < std::abs(len); i++)
+            {
+                buffer.append(" ");
+            }
+            buffer.append(key.second.comments);
+            
+            fileOut << buffer << "\n";
         }
     }
     fileOut.close();
@@ -155,14 +178,17 @@ bool SimpleIni::Save(const char* file)
 
 std::string SimpleIni::GetValue(const std::string& section, const std::string& key, const std::string& defaultValue)
 {
-    if (m_data.count(section) && m_data[section].count(key))
+
+    auto it = m_data.find(section);
+    if (it != m_data.end())
     {
-        return m_data[section][key];
+        auto itk = m_data[section].find(key);
+        return m_data[section][key].value;     
     }
     return defaultValue;
 }
 
-void SimpleIni::SetValue(const std::string& section, const std::string& key, const std::string& value)
+void SimpleIni::SetValue(const std::string& section, const std::string& key, const std::string& value, const std::string& comments)
 {
     if (key.empty() || section.empty())
     {
@@ -174,7 +200,14 @@ void SimpleIni::SetValue(const std::string& section, const std::string& key, con
         RemoveValue(section, key, value);
         return;
     }
-    m_data[section][key] = value;
+
+    m_data[section][key].value = value;
+
+    if (!comments.empty())
+    {
+        m_data[section][key].comments = comments;
+    }
+    
 }
 
 std::string SimpleIni::GetString(const std::string& section, const std::string& key, const std::string& defaultValue)
@@ -212,24 +245,24 @@ float SimpleIni::GetFloat(const std::string& section, const std::string& key, co
     return (*end != '\0') ? defaultValue : num;
 }
 
-void SimpleIni::SetString(const std::string& section, const std::string& key, const std::string& value)
+void SimpleIni::SetString(const std::string& section, const std::string& key, const std::string& value, const std::string& comments)
 {
-    SetValue(section, key, value);
+    SetValue(section, key, value, comments);
 }
 
-void SimpleIni::SetBoolean(const std::string& section, const std::string& key, bool value)
+void SimpleIni::SetBoolean(const std::string& section, const std::string& key, bool value, const std::string& comments)
 {
-    SetValue(section, key, value ? "true" : "false");
+    SetValue(section, key, value ? "true" : "false", comments);
 }
 
-void SimpleIni::SetInt(const std::string& section, const std::string& key, int value)
+void SimpleIni::SetInt(const std::string& section, const std::string& key, int value, const std::string& comments)
 {
-    SetValue(section, key, std::to_string(value));
+    SetValue(section, key, std::to_string(value), comments);
 }
 
-void SimpleIni::SetFloat(const std::string& section, const std::string& key, float value)
+void SimpleIni::SetFloat(const std::string& section, const std::string& key, float value, const std::string& comments)
 {
-    SetValue(section, key, std::to_string(value));
+    SetValue(section, key, std::to_string(value), comments);
 }
 
 bool SimpleIni::RemoveValue(const std::string& section, const std::string& key, const std::string& value)
