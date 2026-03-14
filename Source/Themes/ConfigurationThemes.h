@@ -3,6 +3,7 @@
 
 
 #include <string>
+#include <filesystem>
 
 #include "Data/Color.h"
 
@@ -48,7 +49,7 @@ namespace ClassicLauncher
         //gui title
         Color titleColor{Color::White};
 
-        void LoadConfigurations(const std::string& path);
+        void LoadConfigurations(const std::filesystem::path file);
     };
 
 

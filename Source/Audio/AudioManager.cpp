@@ -253,6 +253,8 @@ namespace ClassicLauncher
     }
 
     AudioManager::~AudioManager()
-    { Unload(); }
+    { 
+        Unload(); 
+    }
 
 } // namespace ClassicLauncher

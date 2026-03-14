@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "Utils/SimpleIni.h"
+#include "Utils/Ini.h"
 
 namespace ClassicLauncher
 {
@@ -47,8 +47,8 @@ namespace ClassicLauncher
 
     private:
 
-        void SetValues(SimpleIni& config);
-        void GetValues(SimpleIni& config);
+        void SetValues(Ini& config);
+        void GetValues(Ini& config);
 
         int m_internalScale{2};
         int m_volume{100};
@@ -63,7 +63,8 @@ namespace ClassicLauncher
         int m_widthWindow{1280};
         int m_heightWindow{720};
 
-        SimpleIni config;
+        Ini config;
+        
     };
 
 } // namespace ClassicLauncher

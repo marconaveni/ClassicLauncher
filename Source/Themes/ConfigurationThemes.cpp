@@ -1,14 +1,14 @@
 #include "ConfigurationThemes.h"
 
-#include "Utils/SimpleIni.h"
+#include "Utils/Ini.h"
 #include "Utils/Utils.h"
 
 namespace ClassicLauncher
 {
-    void ConfigurationThemes::LoadConfigurations(const std::string& path)
+    void ConfigurationThemes::LoadConfigurations(const std::filesystem::path file)
     {
-        SimpleIni ini;
-        ini.Open(path.c_str());
+        Ini ini;
+        ini.Open(file);
 
         // horizontalcards
         horizontalCardsSpace = ini.GetFloat("horizontalcards", "horizontalCardsSpace", 0);              // 0

@@ -159,6 +159,8 @@ if(CLASSIC_LAUNCHER_FLAGS)
 endif()
 
 if(WIN32)
+    message(STATUS "[Classic Launcher] Windows activated")
+
     target_compile_definitions(${PROJECT_NAME} PRIVATE
         _CRT_SECURE_NO_WARNINGS
         _CONSOLE
@@ -192,6 +194,7 @@ elseif(CLASSIC_RASPBERRY_PI)
     )
 
 else() # Linux
+    message(STATUS "[Classic Launcher] Linux activated")
     target_compile_definitions(${PROJECT_NAME} PRIVATE
         ${debug}
     )

@@ -1,22 +1,22 @@
-#ifndef SIMPLE_INI_H
-#define SIMPLE_INI_H
+#ifndef INI_H
+#define INI_H
 
-
-#include <map>
-#include <unordered_map>
+#include <memory>
 #include <string>
+#include <filesystem>
 
-#define MAX_LINE_TEXT 200
+struct IniData;
 
-class SimpleIni
+class Ini
 {
+
 public:
 
-    SimpleIni();
-    ~SimpleIni();
+    Ini();
+    ~Ini();
 
-    bool Open(const char* file);
-    bool Save(const char* file);
+    bool Open(const std::filesystem::path file);
+    bool Save(const std::filesystem::path file);
 
     std::string GetString(const std::string& section, const std::string& key, const std::string& defaultValue = "");
     bool GetBoolean(const std::string& section, const std::string& key, bool defaultValue = false);
@@ -32,22 +32,10 @@ public:
 
 private:
 
-    void SepareComments(std::string& value, std::string& comments);
-    bool SetSection(std::string& str);
-    bool SetKeyValue(const std::string& str, std::string& key, std::string& value);
-    std::string Trim(const std::string& str);
-    std::string RemoveBrackets(const std::string& str);
     std::string GetValue(const std::string& section, const std::string& key, const std::string& defaultValue = "");
     void SetValue(const std::string& section, const std::string& key, const std::string& value, const std::string& comments = "");
 
-    struct IniData
-    {
-        std::string value{};
-        std::string comments{};
-    };
-    
-    std::map<std::string, std::map<std::string, IniData>> m_data{};
-    std::string m_currentSection{"default"};
+    std::unique_ptr<IniData> m_data{};
 };
 
 #endif
