@@ -12,11 +12,8 @@ namespace ClassicLauncher
     public:
 
         static WindowSystem& Get();
-
         void Bind(Window* window);
-
         Window& GetWindow() const;
-
         int GetFPS() const;
         float GetFrameTime() const;
         int GetScreenWidth() const;
@@ -33,6 +30,8 @@ namespace ClassicLauncher
         void RestoreWindow() const;
         void SetWindowFocused() const;
         bool IsResize() const;
+        void ToggleFullscreen();
+        void Close();
 
     private:
 

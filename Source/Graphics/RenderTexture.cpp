@@ -5,7 +5,7 @@ namespace ray
 #include "rlgl.h"
 } // namespace ray
 
-#include "Window/RayWindow.h"
+#include "Window/Window.h"
 
 typedef enum
 {

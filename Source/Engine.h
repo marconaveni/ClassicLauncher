@@ -13,7 +13,7 @@
 #include "Utils/Print.h"
 #include "Utils/ProcessManager.h"
 #include "Utils/TimerManager.h"
-#include "Window/RayWindow.h"
+#include "Window/Window.h"
 
 
 namespace ClassicLauncher
@@ -56,7 +56,7 @@ namespace ClassicLauncher
 
 
         ConfigurationManager m_configurationManager;
-        RayWindow m_window;
+        Window m_window;
         RenderSystem m_renderSystem;
         InputManager m_inputManager;
         Application m_application;

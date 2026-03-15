@@ -29,7 +29,6 @@ namespace ClassicLauncher::DebugOverlay
         PRINT(TEXT("%d fps", WindowSystem::Get().GetFPS()), s_delay, "fps", color);
         PRINT(TEXT("%.6f ms", WindowSystem::Get().GetFrameTime()), s_delay, "ms", color);
         PRINT(TEXT("Vram %.2fMB", Math::BytesToMegabytes(Texture::GetTextureSizeBytes())), s_delay, "vram", color);
-        PRINT(TEXT("Total frames %d", Engine::GetTotalFrames()), s_delay, "frames", color);
         PRINT("========================================", s_delay, "statics-line2", color);
     }
 

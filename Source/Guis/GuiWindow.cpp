@@ -11,8 +11,8 @@
 #include "Utils/Log.h"
 #include "Utils/ProcessManager.h"
 #include "Window/Window.h"
+#include "Window/WindowSystem.h"
 
-#include "raylib.h"
 
 namespace ClassicLauncher
 {
@@ -106,6 +106,16 @@ namespace ClassicLauncher
             SetPosition(0);
         }
 
+        if (Keyboard::IsReleased(Keyboard::F11) ||
+            (Keyboard::IsDown(Keyboard::LEFT_ALT) && Keyboard::IsReleased(Keyboard::ENTER)))
+        {
+            WindowSystem::Get().ToggleFullscreen();
+        }
+        
+        if (InputManager::IsRelease(InputName::middleFaceLeft, MAIN_CENTER))
+        {
+            WindowSystem::Get().Close();
+        }
         if (InputManager::IsRelease(InputName::rightFaceDown, MAIN_CENTER))
         {
             if (!m_guiHorizontalCards->IsMovement())

@@ -25,6 +25,12 @@ namespace ClassicLauncher
 #define SUSPEND_WINDOW true 
 #endif // _WIN32
 
+#ifdef PLATFORM_RPI
+#define INTERNAL_SCALE 1 
+#else
+#define INTERNAL_SCALE 2
+#endif // PLATFORM_RPI
+
 
     struct Comments
     {
@@ -73,7 +79,7 @@ namespace ClassicLauncher
 
     void ConfigurationManager::GetValues(Ini& config)
     {
-        m_internalScale = config.GetInt("configuration", "internal_scale", 2);
+        m_internalScale = config.GetInt("configuration", "internal_scale", INTERNAL_SCALE);
         m_volume = config.GetInt("configuration", "volume", 100);
         m_targetFps = config.GetInt("configuration", "target_fps", 60);
         m_fullscreen = config.GetBoolean("configuration", "fullscreen", FULLSCREEN);
@@ -111,5 +117,6 @@ namespace ClassicLauncher
 #undef RAYLIB_LOG_LEVEL
 #undef FULLSCREEN
 #undef SUSPEND_WINDOW
+#undef INTERNAL_SCALE
 
 } // namespace ClassicLauncher

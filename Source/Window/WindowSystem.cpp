@@ -1,4 +1,5 @@
 #include "Window/WindowSystem.h"
+#include "WindowSystem.h"
 
 namespace ClassicLauncher
 {
@@ -98,6 +99,16 @@ namespace ClassicLauncher
     bool WindowSystem::IsResize() const
     {
         return GetWindow().IsResize();
+    }
+
+    void WindowSystem::ToggleFullscreen()
+    {
+        GetWindow().m_status.toggleFullscreen = true;
+    }
+
+    void WindowSystem::Close()
+    {
+        GetWindow().m_status.close = true;
     }
 
 } // namespace ClassicLauncher

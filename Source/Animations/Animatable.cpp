@@ -1,7 +1,6 @@
 #include "Animatable.h"
 
 #include "Graphics/SpriteAnimator.h"
-#include "Window/RayWindow.h"
 
 namespace ClassicLauncher
 {

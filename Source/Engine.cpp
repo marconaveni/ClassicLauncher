@@ -13,8 +13,6 @@
 namespace ClassicLauncher
 {
 
-    static int s_frames = 0;
-
     Engine::Engine()
         : m_application(m_configurationManager,
                         m_spriteManager,
@@ -66,7 +64,7 @@ namespace ClassicLauncher
 
     void Engine::InitWindow()
     {
-        m_window.Init(WindowSpecs::Width, WindowSpecs::Height, WindowSpecs::Title.data(), m_configurationManager);
+        m_window.Init(WindowSpecs::Title.data(), m_configurationManager);
         m_window.SetIcons(m_windowIcons);
         m_renderSystem.Init(WindowSpecs::Width, WindowSpecs::Height);
         m_print.Init();
@@ -96,9 +94,8 @@ namespace ClassicLauncher
         m_renderSystem.DrawRender();
         m_print.DrawMessage(); // note: Here it is drawing outside the renderscreen.
         m_renderSystem.EndDraw();
-
-        m_window.PoolEvents();
-        s_frames++; // records total number of frames rendered.
+        
+        m_window.Update();
     }
 
     void Engine::ProcessUpdate(int delayMs)
@@ -195,9 +192,5 @@ namespace ClassicLauncher
         ChangeState(EngineState::UI_ACTIVE);
     }
 
-    int Engine::GetTotalFrames()
-    { 
-        return s_frames; 
-    }
 
 } // namespace ClassicLauncher

@@ -16,8 +16,6 @@
 #include "Utils/String.h"
 #include "Utils/TimerManager.h"
 #include "Utils/Utils.h"
-#include "Window/RayWindow.h"
-#include "rl_wrap.h"
 
 namespace ClassicLauncher
 {
@@ -85,7 +83,6 @@ namespace ClassicLauncher
         m_focusManager.Update();
         m_timerManager->Update();
         m_audioManager->Update();
-        // ProcessUpdate();
     }
     
     void Application::ProcessUpdate()
@@ -98,8 +95,10 @@ namespace ClassicLauncher
             case ProcessStatus::RUNNING: break;
             case ProcessStatus::FAILED:
             case ProcessStatus::CLOSE:
+            {
                 m_guiWindow->FadeOutScreen();
                 break;
+            }
             default: break;
         }
         m_processManager->UpdateRun();

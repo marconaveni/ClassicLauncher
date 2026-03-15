@@ -24,7 +24,7 @@ namespace ClassicLauncher
     class ThemesManager;
     class TimerManager;
     class FocusManager;
-    class RayWindow;
+    class Window;
     class ConfigurationManager;
     class SpriteManager;
     class TimerManager;

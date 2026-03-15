@@ -1,9 +1,9 @@
-#include "Window/RayWindow.h"
+#include "Window/Window.h"
 
 #include "ClassicAssert.h"
 #include "Helper.h"
 #include "Input/InputManager.h"
-#include "RayWindow.h"
+
 
 namespace ray
 {
@@ -14,15 +14,13 @@ namespace ClassicLauncher
 {
 
     static std::vector<ray::Image> icons;
-    RayWindow::~RayWindow()
+    Window::~Window()
     {
         Close();
     }
 
-    void RayWindow::Init(int width, int height, const std::string& title, ConfigurationManager& configManager)
+    void Window::Init(const std::string& title, ConfigurationManager& configManager)
     {
-        //CLASSIC_ASSERT(!ray::IsWindowReady(), "You not can create another window");
-
         m_configManager = &configManager;
 
         if (m_configManager->GetVSync())
@@ -32,58 +30,57 @@ namespace ClassicLauncher
 
         m_title = title;
         ray::InitWindow(m_configManager->GetWidthWindow(), m_configManager->GetHeightWindow(), title.c_str());
-       // ray::SetWindowSize(width, height);
-        ray::SetWindowState(Flags::Resizable | Flags::AlwaysRun);
+        SetState(Flags::Resizable | Flags::AlwaysRun);
         SetTargetFPS(m_configManager->GetTargetFps());
         SetFullscreen(m_configManager->GetFullscreen());
-
-#ifndef _DEBUG
-        //SetExitKey(0);
-#endif
+        SetExitKey(0);
 
         m_isReady = ray::IsWindowReady();
     }
 
-    bool RayWindow::ShouldClose()
+    bool Window::ShouldClose()
     {
         return ray::WindowShouldClose();
     }
 
-    void RayWindow::Close()
+    void Window::Close()
     {
-        ClearState(Flags::Undecorated | Flags::Resizable | Flags::AlwaysRun);
-        ray::CloseWindow();
-        Unload();
-        m_isReady = ray::IsWindowReady();
-        m_configManager = nullptr;
+        if (ray::IsWindowReady())
+        {
+            ClearState(Flags::Undecorated | Flags::Resizable | Flags::AlwaysRun);
+            ray::CloseWindow();
+            Unload();
+            m_isReady = ray::IsWindowReady();
+            m_configManager = nullptr;
+        }
     }
 
-    void RayWindow::SetState(unsigned int flags)
+    void Window::SetState(unsigned int flags)
     {
         ray::SetWindowState(flags);
     }
 
-    void RayWindow::ClearState(unsigned int flags)
+    void Window::ClearState(unsigned int flags)
     {
         ray::ClearWindowState(flags);
     }
 
-    bool RayWindow::IsState(unsigned int flag)
+    bool Window::IsState(unsigned int flag)
     {
         return ray::IsWindowState(flag);
     }
 
-    void RayWindow::SetSize(int width, int height)
+    void Window::SetSize(int width, int height)
     {
         ray::SetWindowSize(width, height);
     }
 
-    void RayWindow::SetPosition(int x, int y)
+    void Window::SetPosition(int x, int y)
     {
         ray::SetWindowPosition(x, y);
     }
 
-    void RayWindow::SetIcons(const std::vector<std::string>& pathIcons)
+    void Window::SetIcons(const std::vector<std::string>& pathIcons)
     {
         icons.reserve(pathIcons.size());
         for (const auto& path : pathIcons)
@@ -93,74 +90,74 @@ namespace ClassicLauncher
         ray::SetWindowIcons(icons.data(), icons.size());
     }
 
-    void RayWindow::SetExitKey(int key)
+    void Window::SetExitKey(int key)
     {
         ray::SetExitKey(key);
     }
 
-    void RayWindow::SetTargetFPS(int fps)
+    void Window::SetTargetFPS(int fps)
     {
         ray::SetTargetFPS(fps);
     }
 
-    int RayWindow::GetFPS() const
+    int Window::GetFPS() const
     {
         return ray::GetFPS();
     }
 
-    float RayWindow::GetFrameTime() const
+    float Window::GetFrameTime() const
     {
         return ray::GetFrameTime();
     }
 
-    int RayWindow::GetScreenWidth() const
+    int Window::GetScreenWidth() const
     {
         return ray::GetScreenWidth();
     }
 
-    int RayWindow::GetScreenHeight() const
+    int Window::GetScreenHeight() const
     {
         return ray::GetScreenHeight();
     }
 
-    int RayWindow::GetCurrentMonitor() const
+    int Window::GetCurrentMonitor() const
     {
         return ray::GetCurrentMonitor();
     }
 
-    int RayWindow::GetMonitorWidth(int monitor) const
+    int Window::GetMonitorWidth(int monitor) const
     {
         return ray::GetMonitorWidth(monitor);
     }
 
-    int RayWindow::GetMonitorHeight(int monitor) const
+    int Window::GetMonitorHeight(int monitor) const
     {
         return ray::GetMonitorHeight(monitor);
     }
 
-    Vector2i RayWindow::GetMonitorPosition(int monitor) const
+    Vector2i Window::GetMonitorPosition(int monitor) const
     {
         ray::Vector2 pos = ray::GetMonitorPosition(monitor);
         return Vector2i{static_cast<int>(pos.x), static_cast<int>(pos.y)};
     }
 
-    Vector2i RayWindow::GetMousePosition() const
+    Vector2i Window::GetMousePosition() const
     {
         ray::Vector2 pos = ray::GetMousePosition();
         return Vector2i{static_cast<int>(pos.x), static_cast<int>(pos.y)};
     }
 
-    Vector2f RayWindow::GetVirtualMouse() const
+    Vector2f Window::GetVirtualMouse() const
     {
         return m_virtualMouse;
     }
 
-    void RayWindow::SetVirtualMouse(const Vector2f& position)
+    void Window::SetVirtualMouse(const Vector2f& position)
     {
         m_virtualMouse = position;
     }
 
-    void RayWindow::ShowCursor(bool isEnable)
+    void Window::ShowCursor(bool isEnable)
     {
         if (isEnable)
         {
@@ -170,28 +167,33 @@ namespace ClassicLauncher
         ray::HideCursor();            
     }
 
-    void RayWindow::MinimizeWindow()
+    void Window::MinimizeWindow()
     {
         ray::MinimizeWindow();
     }
 
-    void RayWindow::RestoreWindow()
+    void Window::RestoreWindow()
     {
         ray::RestoreWindow();
     }
 
-    void RayWindow::SetWindowFocused()
+    void Window::SetWindowFocused()
     {
         ray::SetWindowFocused();
     }
 
-    bool RayWindow::ToggleFullscreen()
+    bool Window::ToggleFullscreen()
     {
         return SetFullscreen(!IsFullScreen());
     }
 
-    bool RayWindow::SetFullscreen(bool enableFullscreen)
-    {       
+    bool Window::SetFullscreen(bool enableFullscreen)
+    {  
+#ifdef PLATFORM_RPI
+        ShowCursor(false);
+        return true;
+#else
+
         bool isFullScreen = IsFullScreen();
 
         if (enableFullscreen && !isFullScreen)
@@ -227,9 +229,10 @@ namespace ClassicLauncher
         LOG(LOG_CLASSIC_DEBUG, TEXT("Saved is fullscreen config.ini with value %s", TEXTBOOL(m_configManager->GetFullscreen())));
 
         return IsFullScreen();
+#endif // PLATFORM_RPI
     }
 
-    bool RayWindow::IsFullScreen()
+    bool Window::IsFullScreen()
     {
 #ifdef _WIN32
         return ray::IsWindowState(Flags::Undecorated);
@@ -238,22 +241,22 @@ namespace ClassicLauncher
 #endif
     }
 
-    void RayWindow::SetConfigFlags(unsigned int flags)
+    void Window::SetConfigFlags(unsigned int flags)
     {
         ray::SetConfigFlags(flags);
     }
 
-    bool RayWindow::IsResize() const
+    bool Window::IsResize() const
     {
         return ray::IsWindowResized();
     }
 
-    bool RayWindow::IsReady()
+    bool Window::IsReady()
     {
         return ray::IsWindowReady();
     }
 
-    void RayWindow::Unload()
+    void Window::Unload()
     {
         for (auto icon : icons)
         {
@@ -262,13 +265,18 @@ namespace ClassicLauncher
         icons.clear();
     }
 
-    void RayWindow::PoolEvents()
+    void Window::Update()
     {
-        if (Keyboard::IsReleased(Keyboard::F11) ||
-            (Keyboard::IsDown(Keyboard::LEFT_ALT) && Keyboard::IsReleased(Keyboard::ENTER)))
+        if (m_status.close)
         {
-            ToggleFullscreen();
+            m_status.close = false;
+            Close();
         }
+        else if (m_status.toggleFullscreen)
+        {
+            m_status.toggleFullscreen = false;
+            ToggleFullscreen();
+        } 
     }
 
 } // namespace ClassicLauncher
