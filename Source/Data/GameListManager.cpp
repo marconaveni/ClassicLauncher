@@ -3,13 +3,14 @@
 #include <algorithm>
 #include <filesystem>
 
+#include "ClassicAssert.h"
+#include "Helper.h"
+#include "Themes/ThemesManager.h"
 #include "Utils/Math.h"
 #include "Utils/Resources.h"
 #include "Utils/String.h"
 #include "Utils/Utils.h"
-#include "Themes/ThemesManager.h"
-#include "Helper.h"
-#include "ClassicAssert.h"
+
 
 namespace ClassicLauncher
 {
@@ -235,7 +236,7 @@ namespace ClassicLauncher
         {
             return nullptr;
         }
-        
+
         CLASSIC_ASSERT(m_idSystemList >= 0, "must be greater than zero");
         return &m_gameSystemList[m_idSystemList];
     }
@@ -259,9 +260,7 @@ namespace ClassicLauncher
 
     void GameListManager::GameListSortByName()
     {
-        std::sort(m_gameList.begin(),
-                  m_gameList.end(),
-                  [](const GameList& a, const GameList& b) { return a.name < b.name; });
+        std::sort(m_gameList.begin(), m_gameList.end(), [](const GameList& a, const GameList& b) { return a.name < b.name; });
     }
 
     void GameListManager::SystemListSortByName()

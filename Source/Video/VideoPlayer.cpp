@@ -1,15 +1,18 @@
 #include "VideoPlayer.h"
+
 #include <vlc/vlc.h>
+
 #include "Utils/Log.h"
 #include "Utils/Math.h"
 #include "Utils/Utils.h"
 #include "Window/Window.h"
 
+
 namespace ClassicLauncher
 {
     libvlc_instance_t* VideoPlayer::m_VLC = nullptr;
 
-    // VLC prepara para renderizar um frame de vídeo.
+    // VLC prepares to render a video frame.
     void* lock(void* data, void** p_pixels)
     {
         struct VideoContext* c = (struct VideoContext*)data;
@@ -18,11 +21,11 @@ namespace ClassicLauncher
 
         c->frameMutex[frame].lock();
         c->frameLock[frame] = false;
-        *p_pixels = c->image[frame].data;  // Aloca o ponteiro para os pixels da imagem.
-        return NULL;                       // Picture identifier, not needed here.
+        *p_pixels = c->image[frame].data; // Allocates the pointer to the pixels of the image.
+        return NULL;                      // Picture identifier, not needed here.
     }
 
-    // VLC acabou de renderizar um frame de vídeo.
+    // VLC has just rendered a video frame.
     void unlock(void* data, void* id, void* const* p_pixels)
     {
         struct VideoContext* c = (struct VideoContext*)data;
@@ -36,11 +39,13 @@ namespace ClassicLauncher
         c->frameMutex[frame].unlock();
     }
 
-    // VLC quer exibir um frame de vídeo.
+    // VLC wants to display a video frame.
     void display(void* data, void* id)
     {
-        if (data == NULL) return;
-
+        if (data == NULL)
+        {
+            return;
+        }
         // struct VideoContext* c = (struct VideoContext*)data;
     }
 
@@ -48,18 +53,18 @@ namespace ClassicLauncher
     {
         char const* vlc_argv[] = {
             "--no-xlib",
-            "--quiet",                // suppress logs
-            "--no-video-title-show",  // remove title
-            //"--verbose=2",
-            // "--avcodec-fast",  // Reduz uso de memória ao decodificar
-            // "--no-stats"              // Evita coleta de estatísticas
+            "--quiet",               // suppress logs
+            "--no-video-title-show", // remove title
+            // "--avcodec-fast",     // Reduces memory usage when decoding.
+            // "--verbose=2",
+            // "--no-stats"          // Avoid collecting statistics.
 
         };
         int vlc_argc = sizeof(vlc_argv) / sizeof(*vlc_argv);
 
         if (!m_VLC)
         {
-            m_VLC = libvlc_new(vlc_argc, vlc_argv);  // LibVLC initialization instance
+            m_VLC = libvlc_new(vlc_argc, vlc_argv); // LibVLC initialization instance
             if (!m_VLC)
             {
                 LOG(LOG_CLASSIC_FATAL, "LibVLC initialization failure.");
@@ -68,7 +73,6 @@ namespace ClassicLauncher
     }
 
     VideoPlayer::VideoPlayer()
-        : m_context{}, m_isEnabledVlC(false), m_width(0), m_height(0), m_isLoop(true)
     {
         LOG(LOG_CLASSIC_TRACE, "Initializing VideoPlayer...");
         StartVLCInstance();
@@ -99,13 +103,14 @@ namespace ClassicLauncher
         m_media = libvlc_media_new_path(m_VLC, path.c_str());
         if (!m_media)
         {
-            LOG(LOG_CLASSIC_ERROR, "mMedia initialization failure.");
+            LOG(LOG_CLASSIC_ERROR, "m_media initialization failure.");
             return false;
         }
+
         m_mediaPlayer = libvlc_media_player_new_from_media(m_media);
         if (!m_mediaPlayer)
         {
-            LOG(LOG_CLASSIC_ERROR, "mMediaPlayer initialization failure.\n");
+            LOG(LOG_CLASSIC_ERROR, "m_mediaPlayer initialization failure.\n");
             return false;
         }
 
@@ -114,7 +119,7 @@ namespace ClassicLauncher
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-        libvlc_media_parse(m_media);  // libvlc_media_parse_with_options() is async function
+        libvlc_media_parse(m_media); // libvlc_media_parse_with_options() is async function
 #pragma GCC diagnostic pop
 
         // Get the media metadata so we can find the aspect ratio
@@ -135,9 +140,7 @@ namespace ClassicLauncher
                 m_widthVideo = tracks[track]->video->i_width;
                 m_heightVideo = tracks[track]->video->i_height;
             }
-            else if (tracks[track]->i_type == libvlc_track_audio)
-            {
-            }
+            else if (tracks[track]->i_type == libvlc_track_audio) {}
         }
         libvlc_media_tracks_release(tracks, track_count);
 
@@ -146,15 +149,15 @@ namespace ClassicLauncher
         m_widthVideo = (int)textureSize.x;
         m_heightVideo = (int)textureSize.y;
 
-        m_context.image[0] = { calloc(m_widthVideo * m_heightVideo * 4, 1),  // 4 bytes pixel (RGBA)
+        m_context.image[0] = {calloc(m_widthVideo * m_heightVideo * 4, 1), // 4 bytes pixel (RGBA)
                               m_widthVideo,
                               m_heightVideo,
                               1,
-                              PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 };
+                              PIXELFORMAT_UNCOMPRESSED_R8G8B8A8};
 
         m_context.image[0].CopyTo(m_context.image[1]);
 
-        m_texture.LoadFromImage(&m_context.image[0]); 
+        m_texture.LoadFromImage(&m_context.image[0]);
 
         libvlc_video_set_format(m_mediaPlayer, "RGBA", m_widthVideo, m_heightVideo, m_widthVideo * 4);
         libvlc_video_set_callbacks(m_mediaPlayer, lock, unlock, display, &m_context);
@@ -165,7 +168,10 @@ namespace ClassicLauncher
 
     void VideoPlayer::Play()
     {
-        if (!m_isEnabledVlC) return;
+        if (!m_isEnabledVlC)
+        {
+            return;
+        }
 
         libvlc_media_player_stop(m_mediaPlayer);
         libvlc_media_player_play(m_mediaPlayer);
@@ -173,28 +179,40 @@ namespace ClassicLauncher
 
     void VideoPlayer::Pause()
     {
-        if (!m_isEnabledVlC) return;
+        if (!m_isEnabledVlC)
+        {
+            return;
+        }
 
         libvlc_media_player_pause(m_mediaPlayer);
     }
 
     void VideoPlayer::Resume()
     {
-        if (!m_isEnabledVlC) return;
+        if (!m_isEnabledVlC)
+        {
+            return;
+        }
 
         libvlc_media_player_play(m_mediaPlayer);
     }
 
     void VideoPlayer::Stop()
     {
-        if (!m_isEnabledVlC) return;
+        if (!m_isEnabledVlC)
+        {
+            return;
+        }
 
         libvlc_media_player_stop(m_mediaPlayer);
     }
 
     void VideoPlayer::Update()
     {
-        if (!m_isEnabledVlC) return;
+        if (!m_isEnabledVlC)
+        {
+            return;
+        }
 
         int frame = m_context.frameId;
 
@@ -265,7 +283,10 @@ namespace ClassicLauncher
 
     bool VideoPlayer::IsVideoFinished()
     {
-        if (!m_isEnabledVlC) return false;
+        if (!m_isEnabledVlC)
+        {
+            return false;
+        }
 
         const libvlc_state_t state = libvlc_media_player_get_state(m_mediaPlayer);
         return state == libvlc_Ended || state == libvlc_Error;
@@ -273,7 +294,10 @@ namespace ClassicLauncher
 
     bool VideoPlayer::IsVideoPlaying()
     {
-        if (!m_isEnabledVlC) return false;
+        if (!m_isEnabledVlC)
+        {
+            return false;
+        }
 
         const libvlc_state_t state = libvlc_media_player_get_state(m_mediaPlayer);
         return state == libvlc_Playing;
@@ -281,7 +305,10 @@ namespace ClassicLauncher
 
     bool VideoPlayer::IsVideoStopped()
     {
-        if (!m_isEnabledVlC) return false;
+        if (!m_isEnabledVlC)
+        {
+            return false;
+        }
 
         const libvlc_state_t state = libvlc_media_player_get_state(m_mediaPlayer);
         return state == libvlc_Stopped;
@@ -289,9 +316,12 @@ namespace ClassicLauncher
 
     void VideoPlayer::SetVolume(int volume)
     {
-        if (!m_isEnabledVlC) return;
+        if (!m_isEnabledVlC)
+        {
+            return;
+        }
 
         libvlc_audio_set_volume(m_mediaPlayer, volume);
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

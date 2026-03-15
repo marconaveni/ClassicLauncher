@@ -2,13 +2,14 @@
 #define GAME_LIST_MANAGER_H
 
 
-#include <string>
 #include <filesystem>
+#include <string>
 #include <vector>
 
 #include "Data/DateTime.h"
 #include "Themes/ConfigurationThemes.h"
 #include "tinyxml2/tinyxml2.h"
+
 
 namespace ClassicLauncher
 {
@@ -72,7 +73,7 @@ namespace ClassicLauncher
             bool isDirectoryExist{false};
             bool isLoaded{false};
         };
-        
+
 
         int mapIndex{-1};
         std::string executable{};
@@ -97,7 +98,6 @@ namespace ClassicLauncher
 
     class GameListManager
     {
-
     public:
 
         void Initialize();

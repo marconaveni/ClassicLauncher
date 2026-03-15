@@ -1,15 +1,9 @@
 #include "GuiSizeBox.h"
 
 #include "Helper.h"
-#include "Utils/Utils.h"
-#include "Utils/Math.h"
 
 namespace ClassicLauncher
 {
-    GuiSizeBox::GuiSizeBox()
-        : m_entity(nullptr)
-    {
-    }
 
     void GuiSizeBox::AddChild(Entity* child)
     {
@@ -38,7 +32,6 @@ namespace ClassicLauncher
         if (m_aspectRatio)
         {
             Vector2f newSize = m_entity->GetSize();
-            //Utils::SetSizeWithProportionFit(newSize, GetSize().width, GetSize().height);
             m_entity->SetSize(newSize);
         }
         else
@@ -51,8 +44,7 @@ namespace ClassicLauncher
     void GuiSizeBox::UpdateMargin()
     {
 
-        Sizef offset{(GetSize().width - m_entity->GetSize().width) / 2,
-                     (GetSize().height - m_entity->GetSize().height) / 2};
+        Sizef offset{(GetSize().width - m_entity->GetSize().width) / 2, (GetSize().height - m_entity->GetSize().height) / 2};
 
         if (m_margin == Margin::LEFT_ONLY)
         {

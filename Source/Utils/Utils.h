@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "Data/Vector2.h"
 #include "Data/Color.h"
+#include "Data/Vector2.h"
 #include "Graphics/Image.h"
 
 

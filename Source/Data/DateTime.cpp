@@ -2,6 +2,7 @@
 
 #include <sstream>
 #include <clocale>
+#include <array>
 
 namespace ClassicLauncher
 {
@@ -116,17 +117,17 @@ namespace ClassicLauncher
         timeinfo.tm_min = minute;
         timeinfo.tm_sec = second;
 
-        static bool localeSet = []
+        const static bool localeSet = []
         {
             setlocale(LC_TIME, "");
             return true;
         }();
 
-        char formatedDate[64];
+        std::array<char, 64> formattedDate{};
 
-        std::strftime(formatedDate, sizeof(formatedDate), "%x %X", &timeinfo);
+        std::strftime(formattedDate.data(), formattedDate.size(), "%x %X", &timeinfo);
 
-        return std::string(formatedDate);
+        return std::string(formattedDate.data());
     }
 
     std::string DateTime::ZeroDigits(const int value)

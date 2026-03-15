@@ -16,9 +16,7 @@
 
 namespace ClassicLauncher
 {
-    GuiWindow::GuiWindow(GameListManager* gameListManagerRef,
-                         AudioManager& audioManagerRef,
-                         ProcessManager& processManagerRef)
+    GuiWindow::GuiWindow(GameListManager* gameListManagerRef, AudioManager& audioManagerRef, ProcessManager& processManagerRef)
         : m_guiHorizontalCards(nullptr)
         , m_guiBlackScreen(nullptr)
         , m_guiVideoPlayer(nullptr)
@@ -32,7 +30,7 @@ namespace ClassicLauncher
     void GuiWindow::Init()
     {
 
-        const Sizei size{WindowSpecs::Width, WindowSpecs::Height };
+        const Sizei size{WindowSpecs::Width, WindowSpecs::Height};
         SetSize(size.ToFloat());
 
         m_guiBackground = GetEntityManager()->CreateEntity<GuiBase>("GuiBackground");
@@ -45,9 +43,7 @@ namespace ClassicLauncher
         m_guiBackground->m_textureName = "sprite";
         AddChild(m_guiBackground);
 
-        m_guiHorizontalCards = GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalCards",
-                                                                                    m_gameListManagerRef,
-                                                                                    m_audioManagerRef);
+        m_guiHorizontalCards = GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalCards", m_gameListManagerRef, m_audioManagerRef);
         m_guiHorizontalCards->Init();
         AddChild(m_guiHorizontalCards);
 
@@ -106,12 +102,11 @@ namespace ClassicLauncher
             SetPosition(0);
         }
 
-        if (Keyboard::IsReleased(Keyboard::F11) ||
-            (Keyboard::IsDown(Keyboard::LEFT_ALT) && Keyboard::IsReleased(Keyboard::ENTER)))
+        if (Keyboard::IsReleased(Keyboard::F11) || (Keyboard::IsDown(Keyboard::LEFT_ALT) && Keyboard::IsReleased(Keyboard::ENTER)))
         {
             WindowSystem::Get().ToggleFullscreen();
         }
-        
+
         if (InputManager::IsRelease(InputName::middleFaceLeft, MAIN_CENTER))
         {
             WindowSystem::Get().Close();
@@ -135,12 +130,10 @@ namespace ClassicLauncher
             }
         }
         if (InputManager::IsRelease(InputName::rightFaceDown, MAIN_TOP))
-        {    
+        {
             m_audioManagerRef->PlaySound("click");
-
         }
-        if (InputManager::IsRelease(InputName::rightFaceRight, MAIN_CENTER | MAIN_TOP) &&
-            m_gameListManagerRef->GetCurrentList() == GameListSelect) // back
+        if (InputManager::IsRelease(InputName::rightFaceRight, MAIN_CENTER | MAIN_TOP) && m_gameListManagerRef->GetCurrentList() == GameListSelect) // back
         {
             InputManager::RemoveCategory(MAIN_TOP);
             InputManager::SetCategory(MAIN_CENTER);
@@ -185,12 +178,17 @@ namespace ClassicLauncher
 
     void GuiWindow::FadeOutScreen()
     {
-        GetTimerManager()->SetTimer(m_inputTimer, [&]() { 
-            m_guiBlackScreen->FadeOut();
-            m_audioManagerRef->ChangeMusic();
-            InputManager::EnableInput(); 
-        }, this, 1.0f, false);
-
+        GetTimerManager()->SetTimer(
+            m_inputTimer,
+            [&]()
+            {
+                m_guiBlackScreen->FadeOut();
+                m_audioManagerRef->ChangeMusic();
+                InputManager::EnableInput();
+            },
+            this,
+            1.0f,
+            false);
     }
 
 #ifdef _DEBUG

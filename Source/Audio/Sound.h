@@ -6,6 +6,7 @@
 
 namespace ClassicLauncher
 {
+
     class Sound
     {
     public:

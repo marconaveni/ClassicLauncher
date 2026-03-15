@@ -86,23 +86,23 @@ namespace ClassicLauncher
         unsigned int m_category{0};
 
         InputMapper m_inputs[18]{InputMapper(unknown, 0, Keyboard::Key::KEYNULL),
-                                InputMapper(leftFaceUp, 1, Keyboard::Key::UP),
-                                InputMapper(leftFaceRight, 2, Keyboard::Key::RIGHT),
-                                InputMapper(leftFaceDown, 3, Keyboard::Key::DOWN),
-                                InputMapper(leftFaceLeft, 4, Keyboard::Key::LEFT),
-                                InputMapper(rightFaceUp, 5, Keyboard::Key::F),
-                                InputMapper(rightFaceRight, 6, Keyboard::Key::BACKSPACE),
-                                InputMapper(rightFaceDown, 7, Keyboard::Key::ENTER),
-                                InputMapper(rightFaceLeft, 8, Keyboard::Key::A),
-                                InputMapper(leftTriggerFront, 9, Keyboard::Key::Q),
-                                InputMapper(leftTriggerBack, 10, Keyboard::Key::Z),
-                                InputMapper(rightTriggerFront, 11, Keyboard::Key::E),
-                                InputMapper(rightTriggerBack, 12, Keyboard::Key::C),
-                                InputMapper(middleFaceLeft, 13, Keyboard::Key::ESCAPE),
-                                InputMapper(middleFaceCenter, 14, Keyboard::Key::F1),
-                                InputMapper(middleFaceRight, 15, Keyboard::Key::S),
-                                InputMapper(leftThumb, 16, Keyboard::Key::N),
-                                InputMapper(rightThumb, 17, Keyboard::Key::M)};
+                                 InputMapper(leftFaceUp, 1, Keyboard::Key::UP),
+                                 InputMapper(leftFaceRight, 2, Keyboard::Key::RIGHT),
+                                 InputMapper(leftFaceDown, 3, Keyboard::Key::DOWN),
+                                 InputMapper(leftFaceLeft, 4, Keyboard::Key::LEFT),
+                                 InputMapper(rightFaceUp, 5, Keyboard::Key::F),
+                                 InputMapper(rightFaceRight, 6, Keyboard::Key::BACKSPACE),
+                                 InputMapper(rightFaceDown, 7, Keyboard::Key::ENTER),
+                                 InputMapper(rightFaceLeft, 8, Keyboard::Key::A),
+                                 InputMapper(leftTriggerFront, 9, Keyboard::Key::Q),
+                                 InputMapper(leftTriggerBack, 10, Keyboard::Key::Z),
+                                 InputMapper(rightTriggerFront, 11, Keyboard::Key::E),
+                                 InputMapper(rightTriggerBack, 12, Keyboard::Key::C),
+                                 InputMapper(middleFaceLeft, 13, Keyboard::Key::ESCAPE),
+                                 InputMapper(middleFaceCenter, 14, Keyboard::Key::F1),
+                                 InputMapper(middleFaceRight, 15, Keyboard::Key::S),
+                                 InputMapper(leftThumb, 16, Keyboard::Key::N),
+                                 InputMapper(rightThumb, 17, Keyboard::Key::M)};
 
 
     public:

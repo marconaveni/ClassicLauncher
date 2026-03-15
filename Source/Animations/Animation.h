@@ -59,7 +59,6 @@ namespace ClassicLauncher
         Transform m_currentTransform{};
         Transform m_finalTransform{};
 
-        
 
         void StartAnimation(float durationAnimation,
                             const Transform& startAnimation,

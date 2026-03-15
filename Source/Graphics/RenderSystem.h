@@ -6,7 +6,6 @@
 namespace ClassicLauncher
 {
 
-
     class RenderSystem
     {
     public:

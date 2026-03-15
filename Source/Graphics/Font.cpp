@@ -23,11 +23,7 @@ namespace ClassicLauncher
                 nativeFont = ray::Font();
             }
         }
-
-        ~FontImpl()
-        {
-            Unload();
-        }
+        ~FontImpl() { Unload(); }
     };
 
 
@@ -49,9 +45,9 @@ namespace ClassicLauncher
 
     void Font::LoadFromFile(const std::filesystem::path& fileName, int fontSize, int* codepoints, int codepointCount)
     {
-        m_fileName = fileName; 
-        m_fontSize = fontSize; 
-        m_codepoints = codepoints; 
+        m_fileName = fileName;
+        m_fontSize = fontSize;
+        m_codepoints = codepoints;
         m_codepointCount = codepointCount;
         Load();
     }
@@ -101,7 +97,7 @@ namespace ClassicLauncher
         {
             return;
         }
-        
+
         m_smooth = status;
 
         if (ray::IsFontValid(m_pimpl->nativeFont))

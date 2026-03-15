@@ -8,7 +8,7 @@
 
 namespace ray
 {
-    #include "raylib.h"
+#include "raylib.h"
 } // namespace ray
 
 
@@ -38,10 +38,10 @@ namespace rlw
     {
         return ray::Rectangle{rectangle.x, rectangle.y, rectangle.width, rectangle.height};
     }
-    static ClassicLauncher::RectFloat ToWrapRec(ray::Rectangle rectangle)
-    {
-        return ClassicLauncher::RectFloat{rectangle.x, rectangle.y, rectangle.width, rectangle.height};
-    }
+    // static ClassicLauncher::RectFloat ToWrapRec(ray::Rectangle rectangle)
+    // {
+    //     return ClassicLauncher::RectFloat{rectangle.x, rectangle.y, rectangle.width, rectangle.height};
+    // }
 
 
     // --- Logging / Configurations ---
@@ -116,7 +116,7 @@ namespace rlw
 
     bool IsMouseButtonUp(int button)
     {
-        return IsMouseButtonUp(button);
+        return ray::IsMouseButtonUp(button);
     }
 
     void BeginScissorMode(int x, int y, int width, int height)
@@ -132,7 +132,7 @@ namespace rlw
     {
         ray::DrawRectangle(x, y, width, height, ToNativeColor(color));
     }
-    
+
     void DrawRectangleLinesEx(ClassicLauncher::RectFloat rec, float lineThick, ClassicLauncher::Color color)
     {
         ray::DrawRectangleLinesEx(ToNativeRec(rec), lineThick, ToNativeColor(color));
@@ -194,8 +194,7 @@ namespace rlw
         rayTex.height = texture.GetSize().height;
         rayTex.mipmaps = texture.GetMipmaps();
         rayTex.format = texture.GetFormat();
-        ray::DrawTexturePro(rayTex, ToNativeRec(src), ToNativeRec(dst), ToNativeVec(origin), rotation,
-                         ToNativeColor(tint));
+        ray::DrawTexturePro(rayTex, ToNativeRec(src), ToNativeRec(dst), ToNativeVec(origin), rotation, ToNativeColor(tint));
     }
 
     void DrawTextEx(const ClassicLauncher::Font& font,
@@ -209,8 +208,7 @@ namespace rlw
         {
             return;
         }
-        ray::DrawTextEx(*static_cast<ray::Font*>(font.GetNativeFont()), text, ToNativeVec(position), fontSize, spacing,
-                     ToNativeColor(tint));
+        ray::DrawTextEx(*static_cast<ray::Font*>(font.GetNativeFont()), text, ToNativeVec(position), fontSize, spacing, ToNativeColor(tint));
     }
 
     void DrawCircle(float x, float y, int radius, ClassicLauncher::Color color)

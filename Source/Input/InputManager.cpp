@@ -23,8 +23,7 @@ namespace ClassicLauncher
     bool IsModifierKey()
     {
         return Keyboard::IsDown(Keyboard::Key::LEFT_ALT) || // check if keys modifiers is pressed
-               Keyboard::IsDown(Keyboard::Key::RIGHT_ALT) || Keyboard::IsDown(Keyboard::Key::LEFT_CONTROL) ||
-               Keyboard::IsDown(Keyboard::Key::RIGHT_CONTROL);
+               Keyboard::IsDown(Keyboard::Key::RIGHT_ALT) || Keyboard::IsDown(Keyboard::Key::LEFT_CONTROL) || Keyboard::IsDown(Keyboard::Key::RIGHT_CONTROL);
     }
 
     void InputManager::UpdateInputState()

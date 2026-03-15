@@ -4,11 +4,12 @@
 
 #include <string>
 
+#include "Animations/Animatable.h"
 #include "Components/FocusComponent.h"
 #include "Entity/Entity.h"
-#include "Animations/Animatable.h"
 #include "Guis/Components/GuiCanvas.h"
 #include "Utils/TimerManager.h"
+
 
 namespace ClassicLauncher
 {
@@ -64,14 +65,9 @@ namespace ClassicLauncher
         GameListManager* m_gameListManagerRef{nullptr};
         AudioManager* m_audioManagerRef{nullptr};
 
-        void CreateCard(GuiBase*& card,
-                        float sourceX,
-                        float sourceY,
-                        unsigned char alpha,
-                        const char* title,
-                        bool bAddChild = true);
+        void CreateCard(GuiBase*& card, float sourceX, float sourceY, unsigned char alpha, const char* title, bool addChild = true);
         void StartVideo();
-        void FocusAnimation(bool bForce, const int alphaA, const int alphaB, const std::string& nameAnimation);
+        void FocusAnimation(bool force, const int alphaA, const int alphaB, const std::string& nameAnimation);
     };
 
 } // namespace ClassicLauncher

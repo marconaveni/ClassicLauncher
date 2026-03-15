@@ -164,7 +164,7 @@ namespace ClassicLauncher
             ray::ShowCursor();
             return;
         }
-        ray::HideCursor();            
+        ray::HideCursor();
     }
 
     void Window::MinimizeWindow()
@@ -188,7 +188,7 @@ namespace ClassicLauncher
     }
 
     bool Window::SetFullscreen(bool enableFullscreen)
-    {  
+    {
 #ifdef PLATFORM_RPI
         ShowCursor(false);
         return true;
@@ -198,7 +198,7 @@ namespace ClassicLauncher
 
         if (enableFullscreen && !isFullScreen)
         {
-#ifdef _WIN32
+    #ifdef _WIN32
             m_position.x = static_cast<int>(ray::GetWindowPosition().x);
             m_position.y = static_cast<int>(ray::GetWindowPosition().y);
             m_size.x = GetScreenWidth();
@@ -207,20 +207,20 @@ namespace ClassicLauncher
             SetSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
             const Vector2i positionMonitor(GetMonitorPosition(GetCurrentMonitor()));
             SetPosition(positionMonitor.x, positionMonitor.y);
-#else
+    #else
             ray::ToggleFullscreen();
             SetSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
-#endif
+    #endif
         }
         else if (!enableFullscreen && isFullScreen)
         {
-#ifdef _WIN32
+    #ifdef _WIN32
             SetSize(m_size.x, m_size.y);
             SetPosition(m_position.x, m_position.y);
             ClearState(Flags::Undecorated);
-#else
+    #else
             ray::ToggleFullscreen();
-#endif
+    #endif //_WIN32
         }
         ShowCursor(!IsFullScreen());
 
@@ -229,7 +229,7 @@ namespace ClassicLauncher
         LOG(LOG_CLASSIC_DEBUG, TEXT("Saved is fullscreen config.ini with value %s", TEXTBOOL(m_configManager->GetFullscreen())));
 
         return IsFullScreen();
-#endif // PLATFORM_RPI
+#endif     // PLATFORM_RPI
     }
 
     bool Window::IsFullScreen()
@@ -276,7 +276,7 @@ namespace ClassicLauncher
         {
             m_status.toggleFullscreen = false;
             ToggleFullscreen();
-        } 
+        }
     }
 
 } // namespace ClassicLauncher

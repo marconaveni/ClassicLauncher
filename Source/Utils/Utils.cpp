@@ -51,12 +51,12 @@ namespace ClassicLauncher
 
     void Utils::SetSizeWithProportionFit(Vector2f& vector, const int widthResize, const int heightResize)
     {
-        // Define a nova largura e altura desejadas
-        float newWidth = static_cast<float>(widthResize);   // Largura desejada
-        float newHeight = static_cast<float>(heightResize); // Altura desejada
-        const float aspectRatio = vector.x / vector.y;      // Calcula a proporção da imagem original
+        // Define the new desired width and height.
+        float newWidth = static_cast<float>(widthResize);   // desired width
+        float newHeight = static_cast<float>(heightResize); // desired height
+        const float aspectRatio = vector.x / vector.y;      // Calculates the aspect ratio of the original image.
 
-        if (newWidth / aspectRatio > newHeight) // Ajusta as dimensões para manter a proporção
+        if (newWidth / aspectRatio > newHeight) // Adjust the dimensions to maintain the proportions.
         {
             newWidth = newHeight * aspectRatio;
         }
@@ -70,22 +70,23 @@ namespace ClassicLauncher
     void Utils::SetSizeWithProportionFill(Vector2f& vector, const int widthResize, const int heightResize)
     {
 
-        if (vector.x == 0.0f || vector.y == 0.0f) // check evita cair numa divisão por 0
+        if (vector.x == 0.0f || vector.y == 0.0f) // Prevent division by zero when calculating the aspect ratio.
         {
             return;
         }
 
         float newWidth = static_cast<float>(widthResize);
         float newHeight = static_cast<float>(heightResize);
-        const float aspectRatio = vector.x / vector.y;
 
-        if (newWidth / aspectRatio < newHeight) // Ajusta para preencher completamente a área desejada (Fill)
+        const float aspectRatio = vector.x / vector.y; // Original aspect ratio (width / height).
+
+        if (newWidth / aspectRatio < newHeight) // Ensure the resized area is completely filled while preserving aspect ratio.
         {
-            newWidth = newHeight * aspectRatio; // Se a altura está pequena demais, ajusta a largura primeiro
+            newWidth = newHeight * aspectRatio; // Scale based on height.
         }
         else
         {
-            newHeight = newWidth / aspectRatio; // Se a largura está pequena demais, ajusta a altura primeiro
+            newHeight = newWidth / aspectRatio; // Scale based on width.
         }
         vector = Vector2f{newWidth, newHeight};
     }

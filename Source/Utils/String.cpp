@@ -184,8 +184,7 @@ namespace ClassicLauncher
         if (index >= maxTextFormatBuffers)
         {
             index = 0;
-        } 
-            
+        }
 
         return currentBuffer;
     }

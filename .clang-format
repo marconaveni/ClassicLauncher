@@ -1,6 +1,6 @@
 # Project
 Standard: c++20
-ColumnLimit: 120
+ColumnLimit: 160
 
 # Indentation
 AccessModifierOffset: -4
@@ -9,9 +9,9 @@ ContinuationIndentWidth: 4
 IndentCaseLabels: true
 IndentCaseBlocks: true
 IndentExternBlock: Indent
-IndentPPDirectives: None
+IndentPPDirectives: BeforeHash
 IndentRequires: true
-IndentWidth: 4  #mudar 4
+IndentWidth: 4  
 IndentWrappedFunctionNames: true
 TabWidth: 4
 UseTab: Never
@@ -22,9 +22,9 @@ EmptyLineAfterAccessModifier: Always
 KeepEmptyLinesAtTheStartOfBlocks: true
 MaxEmptyLinesToKeep: 2
 
-
 # Braces
 BreakBeforeBraces: Custom
+InsertBraces: true
 BraceWrapping:
     AfterCaseLabel: false
     AfterClass: true
@@ -52,10 +52,8 @@ AllowAllParametersOfDeclarationOnNextLine: false
 BinPackArguments: false
 AllowAllArgumentsOnNextLine: false
 
-
 # case
 AllowShortCaseLabelsOnASingleLine: true
-AllowShortStatementsOnASingleLine: true     
 AllowShortBlocksOnASingleLine: true         
 AllowShortFunctionsOnASingleLine: InlineOnly 
 
@@ -72,7 +70,7 @@ FixNamespaceComments: true
 NamespaceIndentation: All
 
 # Initializers & arguments
-PackConstructorInitializers: NextLineOnly    
+PackConstructorInitializers: Never    
 ConstructorInitializerIndentWidth: 4
 BreakConstructorInitializers: BeforeComma 
 Cpp11BracedListStyle: true
@@ -80,12 +78,8 @@ Cpp11BracedListStyle: true
 #templates
 BreakTemplateDeclarations: Yes
 
-
 # Pointer alignment
 PointerAlignment: Left
-
-# Comments
-ReflowComments: Never
 
 # lambdas
 AllowShortLambdasOnASingleLine: Inline
@@ -95,7 +89,9 @@ SortIncludes: true
 IncludeBlocks: Regroup
 
 # macros
-AlignEscapedNewlines: LeftWithLastLine
+AlignEscapedNewlines: Left
+StatementMacros:
+  - CLASSIC_ASSERT
 
 IncludeCategories:
   - Regex: '^<.*>'

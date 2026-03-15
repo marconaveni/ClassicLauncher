@@ -21,24 +21,21 @@ namespace ClassicLauncher
     {
     public:
 
-        EntityManager(SpriteManager* spriteManagerReference,
-                      TimerManager* timerManagerReference,
-                      FocusManager* focusManagerRef,
-                      FontManager* fontManagerRef);
+        EntityManager(SpriteManager* spriteManagerRef, TimerManager* timerManagerRef, FocusManager* focusManagerRef, FontManager* fontManagerRef);
         ~EntityManager();
 
         template <typename T, typename... Args>
         T* CreateEntity(const std::string& name, Args&&... args)
         {
             auto entity = std::make_unique<T>(std::forward<Args>(args)...);
-            entity->m_entityManagerReference = this;
+            entity->m_entityManagerRef = this;
             entity->m_timerManagerRef = m_timerManagerReference;
-            entity->m_spriteManagerReference = m_spriteManagerReference;
+            entity->m_spriteManagerRef = m_spriteManagerReference;
             entity->m_focusManagerRef = m_focusManagerReference;
             entity->m_fontManagerRef = m_fontManagerReference;
             SetNameId(entity.get(), name);
             m_tempEntities.push_back(std::move(entity));
-            return static_cast<T*>(m_tempEntities.back().get());  // .back last element vector
+            return static_cast<T*>(m_tempEntities.back().get()); // .back last element vector
         }
 
         template <typename T>

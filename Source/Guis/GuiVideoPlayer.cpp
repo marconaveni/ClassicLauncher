@@ -61,8 +61,7 @@ namespace ClassicLauncher
         const float scale = ThemesManager::GetScaleRenderer();
         const int monitor = WindowSystem::Get().GetCurrentMonitor();
 
-        Sizei monitorSize{WindowSystem::Get().GetMonitorWidth(monitor),
-                          WindowSystem::Get().GetMonitorHeight(monitor)};
+        Sizei monitorSize{WindowSystem::Get().GetMonitorWidth(monitor), WindowSystem::Get().GetMonitorHeight(monitor)};
         m_playerFullScreen->Init(m_filePath, monitorSize.width, monitorSize.height, scale);
         m_playerFullScreen->Play();
         m_playerFullScreen->SetLoop(false);
@@ -141,8 +140,8 @@ namespace ClassicLauncher
         const Sizef sizeVideo = textureVideo->GetSize();
 
         RectFloat sourceRect{0, 0, sizeVideo.width, sizeVideo.height};
-        RectFloat videoTransformRect{(GetSource().width - sizeVideo.width) / 2,   // aqui não é escala
-                                     (GetSource().height - sizeVideo.height) / 2, //aqui não é escala
+        RectFloat videoTransformRect{(GetSource().width - sizeVideo.width) / 2,   // This is not a scale.
+                                     (GetSource().height - sizeVideo.height) / 2, // This is not a scale.
                                      sizeVideo.width,
                                      sizeVideo.height};
 
@@ -165,10 +164,7 @@ namespace ClassicLauncher
             return;
         }
 
-        RectFloat sourceRect{0,
-                             0,
-                             (GetSource().width / m_renderScale) * m_renderScale,
-                             (-GetSource().height / m_renderScale) * m_renderScale};
+        RectFloat sourceRect{0, 0, (GetSource().width / m_renderScale) * m_renderScale, (-GetSource().height / m_renderScale) * m_renderScale};
 
         rlw::DrawTexturePro(*m_renderTexture->GetTexture(),
                             sourceRect,              /* RectFloat{0, 562, 21, 720}, position spritesheet */
@@ -204,14 +200,13 @@ namespace ClassicLauncher
 
             Utils::SetSizeWithProportionFit(sizeVideo, WindowSpecs::Width * scale, WindowSpecs::Height * scale);
             const float x = ((WindowSpecs::Width * scale) - sizeVideo.x) / 2;
-            rlw::DrawTexturePro(
-                *textureFullScreen,
-                RectFloat{0.0f, 0.0f, textureFullScreen->GetSize().width, textureFullScreen->GetSize().height},
-                RectFloat{x, 0.0f, sizeVideo.x, sizeVideo.y},
-                Vector2f{0.0f, 0.0f},
-                0.0f,
-                color);
-            //rlw::DrawTexture(*textureFullScreen, x, 0, color);
+            rlw::DrawTexturePro(*textureFullScreen,
+                                RectFloat{0.0f, 0.0f, textureFullScreen->GetSize().width, textureFullScreen->GetSize().height},
+                                RectFloat{x, 0.0f, sizeVideo.x, sizeVideo.y},
+                                Vector2f{0.0f, 0.0f},
+                                0.0f,
+                                color);
+            // rlw::DrawTexture(*textureFullScreen, x, 0, color);
         }
     }
 

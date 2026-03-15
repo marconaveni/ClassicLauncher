@@ -3,11 +3,12 @@
 #include <filesystem>
 
 #include "Helper.h"
-#include "Utils/String.h"
-#include "Utils/Utils.h"
+#include "Themes/ThemesManager.h"
 #include "Utils/Math.h"
 #include "Utils/Platform.h"
-#include "Themes/ThemesManager.h"
+#include "Utils/String.h"
+#include "Utils/Utils.h"
+
 
 
 namespace ClassicLauncher::Resources
@@ -31,7 +32,7 @@ namespace ClassicLauncher::Resources
             s_classicLauncherPath = String::NormalizePath(s_classicLauncherPath);
             if (!std::filesystem::exists(s_classicLauncherPath))
             {
-                std::filesystem::create_directory(s_classicLauncherPath); // todo fazer testes
+                std::filesystem::create_directory(s_classicLauncherPath); // Todo Do tests
             }
         }
     }
@@ -94,7 +95,7 @@ namespace ClassicLauncher::Resources
     {
         return GetExecutableDirectory("Resources/textures/logo.png");
     }
-    
+
     std::string GetMusicDirectory()
     {
         return GetClassicLauncherDirectory("musics");

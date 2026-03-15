@@ -42,9 +42,9 @@ namespace ClassicLauncher
 
         std::unique_ptr<FontImpl> m_pimpl{};
         bool m_smooth{false};
-        std::filesystem::path m_fileName{}; 
-        int m_fontSize{}; 
-        int* m_codepoints{nullptr}; 
+        std::filesystem::path m_fileName{};
+        int m_fontSize{};
+        int* m_codepoints{nullptr};
         int m_codepointCount{};
     };
 

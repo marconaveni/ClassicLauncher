@@ -28,7 +28,7 @@ namespace ClassicLauncher
             std::string textName{};
             bool active{true};
         };
-        
+
         void CreateButton(const Vector2f source, const std::string& textName, bool isActive = true);
         void EnableButton(bool isActive, MenuButtons& menuButton);
         void UpdateSize();
@@ -36,7 +36,6 @@ namespace ClassicLauncher
         GuiBase* m_background{nullptr};
         int m_id{0};
         bool m_isNeedUpdateSize{false};
-        
     };
 
 } // namespace ClassicLauncher

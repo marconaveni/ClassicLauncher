@@ -61,5 +61,6 @@ Source/*.py
 
 # others
 compile_commands.json
+checks.json
 
 

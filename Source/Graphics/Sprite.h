@@ -2,14 +2,15 @@
 #define SPRITE_H
 
 #include <atomic>
+#include <filesystem>
+#include <memory>
 #include <mutex>
 #include <string>
 #include <thread>
-#include <memory>
-#include <filesystem>
 
 #include "Graphics/Image.h"
 #include "Graphics/Texture.h"
+
 
 namespace ClassicLauncher
 {

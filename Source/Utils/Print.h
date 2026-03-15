@@ -8,7 +8,6 @@
 #include "Data/Color.h"
 
 
-
 namespace ClassicLauncher
 {
 
@@ -44,21 +43,12 @@ namespace ClassicLauncher
 
         Print(FontManager& fontManager);
         void Init();
-        void PrintOnScreen(const char* text,
-                           float duration = 2.0f,
-                           const char* label = "",
-                           const Color& textColor = Color::Cyan,
-                           bool enableLog = false);
+        void PrintOnScreen(const char* text, float duration = 2.0f, const char* label = "", const Color& textColor = Color::Cyan, bool enableLog = false);
         void DrawMessage();
 
     private:
 
-        void InternalPrintOnScreen(const std::string& text,
-                                   float duration,
-                                   const std::string& label,
-                                   const Color& textColor,
-                                   bool enableLog,
-                                   int sizeY);
+        void InternalPrintOnScreen(const std::string& text, float duration, const std::string& label, const Color& textColor, bool enableLog, int sizeY);
         int m_size{16};
         float m_spacing{0};
         std::string m_fontName{};

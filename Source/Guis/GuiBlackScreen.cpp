@@ -1,7 +1,6 @@
 #include "GuiBlackScreen.h"
 
 
-
 namespace ClassicLauncher
 {
 

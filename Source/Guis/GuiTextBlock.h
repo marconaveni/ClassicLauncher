@@ -8,17 +8,18 @@
 namespace ClassicLauncher
 {
 
-    enum TextOverflowPolicy : std::uint8_t
-    {
-        NONE = 0,
-        CLIP = 1
-    };
-
-
+    
+    
     class GuiTextBlock : public Entity
     {
-    public:
-
+        public:
+        
+        enum TextOverflowPolicy : std::uint8_t
+        {
+            NONE = 0,
+            CLIP = 1
+        };
+        
         GuiTextBlock();
         ~GuiTextBlock();
         void Init(const std::string& path, int size = 16, int spacing = 0);
@@ -36,7 +37,6 @@ namespace ClassicLauncher
         const std::string& GetText() { return m_text; }
         void SetTextOverflowPolicy(TextOverflowPolicy textOverflowPolicy);
         void SetOffSetMoveText(float speed, float maxDelay);
-        void UnloadText();
 
         inline void SetTextCenter(bool enable) { m_centerText = enable; }
 

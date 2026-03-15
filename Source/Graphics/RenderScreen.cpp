@@ -13,8 +13,7 @@ namespace ClassicLauncher
 
     void RenderScreen::UpdateValues()
     {
-        //const Vector2f mouse = rlw::GetMousePosition();
-        Vector2f mouse = Vector2f{WindowSystem::Get().GetMousePosition()};
+        const Vector2f mouse = Vector2f{WindowSystem::Get().GetMousePosition()};
 
         const auto screenWidth = static_cast<float>(WindowSystem::Get().GetScreenWidth());
         const auto screenHeight = static_cast<float>(WindowSystem::Get().GetScreenHeight());
@@ -41,8 +40,6 @@ namespace ClassicLauncher
         {
             LOG(LOG_CLASSIC_WARNING, "is resized");
         }
-
-        //LOG(LOG_CLASSIC_WARNING, "mouse virtual x: %.2f y: %.2f" , mVirtualMouse.x, mVirtualMouse.y);
     }
 
     RenderScreen::~RenderScreen()

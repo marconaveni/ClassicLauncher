@@ -7,10 +7,11 @@
 #include "Guis/Components/GuiSizeBox.h"
 #include "Guis/GuiBase.h"
 #include "Helper.h"
+#include "Input/InputManager.h"
 #include "Themes/ThemesManager.h"
 #include "Utils/Math.h"
 #include "Utils/Utils.h"
-#include "Input/InputManager.h"
+
 
 namespace ClassicLauncher
 {
@@ -26,14 +27,14 @@ namespace ClassicLauncher
 
         CreateMiniCovers();
 
-        std::vector<RectFloat> recs = {RectFloat{1236.0f, 0.0f, 30.0f, 18.0f},
-                                       RectFloat{1267.0f, 0.0f, 30.0f, 18.0f},
-                                       RectFloat{1298.0f, 0.0f, 30.0f, 18.0f}};
+        std::vector<RectFloat> recs = {RectFloat{1236.0f, 0.0f, 30.0f, 18.0f},  // frame 1
+                                       RectFloat{1267.0f, 0.0f, 30.0f, 18.0f},  // frame 2
+                                       RectFloat{1298.0f, 0.0f, 30.0f, 18.0f}}; // frame 3
 
         m_arrow = GetEntityManager()->CreateEntity<GuiBase>("arrow");
         m_arrow->SetPosition(GetSize().width / 2, 0);
         m_arrow->m_textureName = "sprite";
-        GetAnimationManager().AddAnimationFrame("frame",  0.2f, m_arrow, recs);
+        GetAnimationManager().AddAnimationFrame("frame", 0.2f, m_arrow, recs);
         AddChild(m_arrow);
     }
 
@@ -42,11 +43,11 @@ namespace ClassicLauncher
 
         if (m_guiMiniCovers.size() > 0)
         {
-             m_guiHorizontalBox->SelfDelete();
-             RemoveChild(m_guiHorizontalBox);
-             m_guiMiniCovers.clear();
+            m_guiHorizontalBox->SelfDelete();
+            RemoveChild(m_guiHorizontalBox);
+            m_guiMiniCovers.clear();
         }
-        //LOG(LOG_CLASSIC_WARNING, "children %d" , GetChildren().size());
+        // LOG(LOG_CLASSIC_WARNING, "children %d" , GetChildren().size());
 
         m_guiHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
         m_guiHorizontalBox->SetPosition({0, 20.0f});
@@ -89,23 +90,21 @@ namespace ClassicLauncher
                 miniCover.gui->SetSize(textureSize / scale);
                 miniCover.gui->SetSource({0, 0}, textureSize / scale);
             }
- 
+
             if (miniCover.focus)
             {
                 const float position = miniCover.sizeBox->GetPosition().x + m_guiHorizontalBox->GetPosition().x;
                 const float offset = (miniCover.sizeBox->GetSize().width - m_arrow->GetSize().width) / 2;
                 m_arrow->SetPosition(position + offset, m_arrow->GetPosition().y);
-            }        
-            
+            }
         }
 
         if (Keyboard::IsReleased(Keyboard::V))
         {
-            m_numCovers = 23; 
+            m_numCovers = 23;
             m_sizeCover = Vector2f(40.0f, 58.0f);
             CreateMiniCovers();
         }
-        
     }
 
     void GuiMiniCover::End()
@@ -124,7 +123,7 @@ namespace ClassicLauncher
 
         if (sizeX != m_sizeCover.x || sizeY != m_sizeCover.y || numCovers != m_numCovers)
         {
-            m_numCovers = numCovers; 
+            m_numCovers = numCovers;
             m_sizeCover = Vector2f(sizeX, sizeY);
             CreateMiniCovers();
         }
@@ -135,7 +134,7 @@ namespace ClassicLauncher
     void GuiMiniCover::SetPositionCovers(int numCovers)
     {
         const float x = (GetSize().width - ((m_sizeCover.x + 1) * numCovers)) / 2.0f;
-        m_guiHorizontalBox->SetPosition(x , m_guiHorizontalBox->GetPosition().y);
+        m_guiHorizontalBox->SetPosition(x, m_guiHorizontalBox->GetPosition().y);
     }
 
     void GuiMiniCover::SetCovers()
@@ -166,7 +165,7 @@ namespace ClassicLauncher
                 name = std::to_string(indexFinal) + "_MCV";
                 GetSpriteManager()->LoadSprite(name, fileName, m_sizeCover.x * scaleRender, m_sizeCover.y * scaleRender);
             }
-            
+
             m_guiMiniCovers.at(i).focus = (indexFinal == m_gameListManagerRef->GetGameId());
 
             if (i - 1 >= 0 && i <= static_cast<int>(m_guiMiniCovers.size()) - 2)
@@ -181,7 +180,7 @@ namespace ClassicLauncher
 
     void GuiMiniCover::SetCover(const std::string& name, GuiBase* miniCover)
     {
-        
+
         miniCover->m_textureName = name;
         if (name == "sprite")
         {

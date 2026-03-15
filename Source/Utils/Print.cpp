@@ -4,18 +4,16 @@
 #include <iostream>
 
 #include "Data/Vector2.h"
+#include "Graphics/FontManager.h"
 #include "Math.h"
 #include "Utils/Resources.h"
 #include "Window/WindowSystem.h"
 #include "rl_wrap.h"
-#include "Graphics/FontManager.h"
+
 
 namespace ClassicLauncher
 {
 
-
-
-    
     Print::Print(FontManager& fontManager)
         : m_fontManagerRef(&fontManager)
     {
@@ -26,12 +24,7 @@ namespace ClassicLauncher
         m_fontName = m_fontManagerRef->Load(Resources::GetFontFile(), m_size);
     }
 
-    void Print::InternalPrintOnScreen(const std::string& text,
-                                      float duration,
-                                      const std::string& label,
-                                      const Color& textColor,
-                                      bool enableLog,
-                                      int sizeY)
+    void Print::InternalPrintOnScreen(const std::string& text, float duration, const std::string& label, const Color& textColor, bool enableLog, int sizeY)
     {
 #ifdef _DEBUG
 
@@ -66,11 +59,7 @@ namespace ClassicLauncher
 #endif
     }
 
-    void Print::PrintOnScreen(const char* text,
-                              const float duration,
-                              const char* label,
-                              const Color& textColor,
-                              const bool enableLog)
+    void Print::PrintOnScreen(const char* text, const float duration, const char* label, const Color& textColor, const bool enableLog)
     {
 
 #ifdef _DEBUG
@@ -109,10 +98,7 @@ namespace ClassicLauncher
             return;
         }
 
-        m_messages.erase(std::remove_if(m_messages.begin(),
-                                       m_messages.end(),
-                                       [](Message& message) { return !message.IsTimeElapsed(); }),
-                        m_messages.end());
+        m_messages.erase(std::remove_if(m_messages.begin(), m_messages.end(), [](Message& message) { return !message.IsTimeElapsed(); }), m_messages.end());
 
         float y = 16;
 

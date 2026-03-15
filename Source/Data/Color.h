@@ -5,6 +5,7 @@
 
 namespace ClassicLauncher
 {
+    
     class Color
     {
     public:
@@ -17,14 +18,14 @@ namespace ClassicLauncher
         constexpr Color() = default;
 
         constexpr explicit Color(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha = 255)
-            : r(red), g(green), b(blue), a(alpha)
+            : r(red)
+            , g(green)
+            , b(blue)
+            , a(alpha)
         {
         }
 
-        constexpr bool operator==(const Color& other) const
-        {
-            return r == other.r && g == other.g && b == other.b && a == other.a;
-        }
+        constexpr bool operator==(const Color& other) const { return r == other.r && g == other.g && b == other.b && a == other.a; }
         constexpr bool operator!=(const Color& other) const { return !(*this == other); }
 
         constexpr void SetRed(int color, bool clamp = true) { r = (clamp) ? Clamp(color) : color; }
@@ -32,14 +33,8 @@ namespace ClassicLauncher
         constexpr void SetBlue(int color, bool clamp = true) { b = (clamp) ? Clamp(color) : color; }
         constexpr void SetOpacity(int alpha, bool clamp = true) { a = (clamp) ? Clamp(alpha) : alpha; }
 
-        constexpr std::uint32_t ToInteger() const
-        {
-            return static_cast<std::uint32_t>((r << 24) | (g << 16) | (b << 8) | a);
-        }
-        static Color FromInt(std::uint32_t rgba)
-        {
-            return Color((rgba >> 24) & 0xFF, (rgba >> 16) & 0xFF, (rgba >> 8) & 0xFF, rgba & 0xFF);
-        }
+        constexpr std::uint32_t ToInteger() const { return static_cast<std::uint32_t>((r << 24) | (g << 16) | (b << 8) | a); }
+        static Color FromInt(std::uint32_t rgba) { return Color((rgba >> 24) & 0xFF, (rgba >> 16) & 0xFF, (rgba >> 8) & 0xFF, rgba & 0xFF); }
 
         static Color WhiteGray;   // Gray (Almost White)
         static Color LightGray;   // Light Gray

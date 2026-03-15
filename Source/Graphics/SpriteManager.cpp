@@ -25,34 +25,22 @@ namespace ClassicLauncher
     {
         auto it = m_renderTextureMap.find(name);
         if (it == m_renderTextureMap.end())
-        {     
+        {
             m_renderTextureMap[name].Load(width, height);
         }
     }
 
-    void SpriteManager::LoadSprite(const std::string& name,
-                                   const std::string& fileName,
-                                   const int width,
-                                   const int height,
-                                   bool aspectRatio)
+    void SpriteManager::LoadSprite(const std::string& name, const std::string& fileName, const int width, const int height, bool aspectRatio)
     {
         m_spriteMap[name].Load(fileName, width, height, aspectRatio);
     }
 
-    void SpriteManager::LoadSprite(const std::string& name,
-                                   Image& image,
-                                   const int width,
-                                   const int height,
-                                   bool aspectRatio)
+    void SpriteManager::LoadSprite(const std::string& name, Image& image, const int width, const int height, bool aspectRatio)
     {
         m_spriteMap[name].Load(image, width, height, aspectRatio);
     }
 
-    void SpriteManager::UpdateSprite(std::string name,
-                                     std::string fileName,
-                                     const int width,
-                                     const int height,
-                                     bool aspectRatio)
+    void SpriteManager::UpdateSprite(std::string name, std::string fileName, const int width, const int height, bool aspectRatio)
     {
         m_spriteMap[name].Unload();
         m_spriteMap[name].Load(fileName, width, height, aspectRatio);
@@ -65,10 +53,10 @@ namespace ClassicLauncher
         {
             find = ThemesManager::Get().GetSpriteTheme();
         }
-        
+
         auto it = m_spriteMap.find(find);
         if (it == m_spriteMap.end())
-        {     
+        {
             return m_spriteMap["transparent"].GetTexture();
         }
         return m_spriteMap[find].GetTexture();

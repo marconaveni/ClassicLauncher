@@ -39,8 +39,7 @@ namespace ClassicLauncher
 
                 // Propaga a opacidade (alpha) do pai para o filho
                 unsigned char parentAlpha = m_parent->m_worldTransform.color.a;
-                m_worldTransform.color.a = static_cast<unsigned char>(
-                    (static_cast<int>(m_transform.color.a) * static_cast<int>(parentAlpha)) / 255);
+                m_worldTransform.color.a = static_cast<unsigned char>((static_cast<int>(m_transform.color.a) * static_cast<int>(parentAlpha)) / 255);
             }
             else
             {
@@ -122,45 +121,35 @@ namespace ClassicLauncher
         }
     }
 
-    // Manager Getters 
+    // Manager Getters
 
     TimerManager* Entity::GetTimerManager()
     {
-        CLASSIC_ASSERT(
-            m_timerManagerRef,
-            "is still null don't call it in the constructor! EntityManager will take care of the assignment");
+        CLASSIC_ASSERT(m_timerManagerRef, "is still null don't call it in the constructor! EntityManager will take care of the assignment");
         return m_timerManagerRef;
     }
 
     SpriteManager* Entity::GetSpriteManager()
     {
-        CLASSIC_ASSERT(
-            m_spriteManagerReference,
-            "is still null don't call it in the constructor! EntityManager will take care of the assignment");
-        return m_spriteManagerReference;
+        CLASSIC_ASSERT(m_spriteManagerRef, "is still null don't call it in the constructor! EntityManager will take care of the assignment");
+        return m_spriteManagerRef;
     }
 
     EntityManager* Entity::GetEntityManager()
     {
-        CLASSIC_ASSERT(
-            m_entityManagerReference,
-            "is still null don't call it in the constructor! EntityManager will take care of the assignment");
-        return m_entityManagerReference;
+        CLASSIC_ASSERT(m_entityManagerRef, "is still null don't call it in the constructor! EntityManager will take care of the assignment");
+        return m_entityManagerRef;
     }
 
     FocusManager* Entity::GetFocusManager()
     {
-        CLASSIC_ASSERT(
-            m_focusManagerRef,
-            "is still null don't call it in the constructor! EntityManager will take care of the assignment");
+        CLASSIC_ASSERT(m_focusManagerRef, "is still null don't call it in the constructor! EntityManager will take care of the assignment");
         return m_focusManagerRef;
     }
 
     FontManager* Entity::GetFontManager()
     {
-        CLASSIC_ASSERT(
-            m_fontManagerRef,
-            "is still null don't call it in the constructor! EntityManager will take care of the assignment");
+        CLASSIC_ASSERT(m_fontManagerRef, "is still null don't call it in the constructor! EntityManager will take care of the assignment");
         return m_fontManagerRef;
     }
 
@@ -219,8 +208,7 @@ namespace ClassicLauncher
 
     void Entity::SetSource(float x, float y, float width, float height)
     {
-        if (m_transform.source.x != x || m_transform.source.x != y || m_transform.source.width != width ||
-            m_transform.source.height != height)
+        if (m_transform.source.x != x || m_transform.source.x != y || m_transform.source.width != width || m_transform.source.height != height)
         {
             m_transform.source.x = x;
             m_transform.source.y = y;
@@ -301,8 +289,7 @@ namespace ClassicLauncher
 
     void Entity::SetColor(float r, float g, float b, float a)
     {
-        if (m_transform.color.r != r || m_transform.color.g != g || m_transform.color.b != b ||
-            m_transform.color.a != a)
+        if (m_transform.color.r != r || m_transform.color.g != g || m_transform.color.b != b || m_transform.color.a != a)
         {
             MarkTransformAsDirty();
             m_transform.color.r = r;

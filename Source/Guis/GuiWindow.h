@@ -14,6 +14,7 @@ namespace ClassicLauncher
     class GameListManager;
     class AudioManager;
     class ProcessManager;
+    
     class GuiWindow : public GuiCanvas
     {
     public:
@@ -27,7 +28,7 @@ namespace ClassicLauncher
         void UpdateCovers();
         void FadeOutScreen();
 
-#ifdef _DEBUG       
+#ifdef _DEBUG
         void InitDebug();
 #endif
 
@@ -39,11 +40,10 @@ namespace ClassicLauncher
         GuiBase* m_guiBackground{nullptr};
         TimerHandling m_clickTimer{};
         TimerHandling m_inputTimer{};
-        
+
         GameListManager* m_gameListManagerRef{nullptr};
         AudioManager* m_audioManagerRef{nullptr};
         ProcessManager* m_processManagerRef{nullptr};
-        
     };
 
 } // namespace ClassicLauncher

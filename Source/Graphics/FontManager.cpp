@@ -1,10 +1,9 @@
 #include "FontManager.h"
-#include "Graphics/Font.h"
 
+#include "Graphics/Font.h"
 
 namespace ClassicLauncher
 {
-
 
     FontManager::~FontManager()
     {
@@ -32,7 +31,7 @@ namespace ClassicLauncher
     {
         auto it = m_font.find(name);
         if (it == m_font.end())
-        {     
+        {
             return nullptr;
         }
         return m_font[name].get();
@@ -40,7 +39,7 @@ namespace ClassicLauncher
 
     void FontManager::OnGraphicsRestore()
     {
-        for(auto& font : m_font)
+        for (auto& font : m_font)
         {
             font.second->Load();
         }
@@ -48,7 +47,7 @@ namespace ClassicLauncher
 
     void FontManager::OnGraphicsLost()
     {
-        for(auto& font : m_font)
+        for (auto& font : m_font)
         {
             font.second->Unload();
         }

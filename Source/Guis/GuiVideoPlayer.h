@@ -4,13 +4,14 @@
 #include <memory>
 #include <string>
 
+#include "Animations/Animatable.h"
 #include "Guis/GuiBase.h"
 #include "Video/VideoPlayer.h"
-#include "Animations/Animatable.h"
+
 
 namespace ClassicLauncher
 {
-    
+
     class RenderTexture;
 
     class GuiVideoPlayer : public Entity, public Animatable
@@ -29,9 +30,9 @@ namespace ClassicLauncher
         void End() override;
         bool IsPlaying();
         bool IsPlayingFullscreen();
-        
+
     private:
-        
+
         RenderTexture* m_renderTexture{nullptr};
         GuiBase m_gui{};
         std::unique_ptr<VideoPlayer> m_player{nullptr};

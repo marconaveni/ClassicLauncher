@@ -3,11 +3,12 @@
 #include <filesystem>
 #include <string>
 
+#include "Input/InputManager.h"
 #include "Utils/Print.h"
 #include "Utils/Resources.h"
 #include "Utils/String.h"
 #include "rl_wrap.h"
-#include "Input/InputManager.h"
+
 
 namespace ClassicLauncher
 {
@@ -78,7 +79,7 @@ namespace ClassicLauncher
         {
             return;
         }
-        
+
         if (Keyboard::IsReleased(Keyboard::F1))
         {
             LogLevel(LOG_CLASSIC_DEBUG, LOG_WARNING);

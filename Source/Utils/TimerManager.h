@@ -28,11 +28,7 @@ namespace ClassicLauncher
 
         TimerManager() = default;
         ~TimerManager() = default;
-        void SetTimer(TimerHandling& timerHandling,
-                      std::function<void()> callbackFunction,
-                      Entity* targetEntity,
-                      float delay,
-                      bool isLooped = false);
+        void SetTimer(TimerHandling& timerHandling, std::function<void()> callbackFunction, Entity* targetEntity, float delay, bool isLooped = false);
         void ClearTimer(TimerHandling& timerHandling);
         void ClearAllTimers();
 
@@ -42,7 +38,7 @@ namespace ClassicLauncher
 
         void ValidTimerHandling(TimerHandling& timerHandling) const;
         void Update() const;
-        
+
         std::unordered_map<TimerHandling*, std::unique_ptr<Timer>> m_timers{};
         int m_counter{0};
     };

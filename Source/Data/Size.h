@@ -17,22 +17,26 @@ namespace ClassicLauncher
         T height{}; // Vector height component
 
         constexpr Size(T width, T height)
-            : width(width), height(height)
+            : width(width)
+            , height(height)
         {
         }
 
         constexpr Size(T x)
-            : width(x), height(x)
+            : width(x)
+            , height(x)
         {
         }
 
         constexpr Size(const Vector2<T>& v)
-            : width(v.x), height(v.y)
+            : width(v.x)
+            , height(v.y)
         {
         }
 
         constexpr Size()
-            : width(0), height(0)
+            : width(0)
+            , height(0)
         {
         }
 

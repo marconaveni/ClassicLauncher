@@ -31,7 +31,7 @@ namespace ClassicLauncher
         [[nodiscard]] bool GetSuspendWindow() const { return m_suspendWindow; }
         [[nodiscard]] int GetWidthWindow() const { return m_widthWindow; }
         [[nodiscard]] int GetHeightWindow() const { return m_heightWindow; }
-        
+
         // Setters
         void SetInternalScale(int internalscale) { m_internalScale = internalscale; }
         void SetVolume(int volume) { m_volume = volume; }
@@ -43,7 +43,7 @@ namespace ClassicLauncher
         void SetThemeReferenceOverlay(bool themeReferenceOverlay) { m_themeReferenceOverlay = themeReferenceOverlay; }
         void SetThemeReferenceImage(const std::string& themeReferenceImage) { m_themeReferenceImage = themeReferenceImage; }
         void SetWidthWindow(int width) { m_widthWindow = width; }
-        void SetHeightWindow(int height)  { m_heightWindow = height; }
+        void SetHeightWindow(int height) { m_heightWindow = height; }
 
     private:
 
@@ -64,7 +64,6 @@ namespace ClassicLauncher
         int m_heightWindow{720};
 
         Ini config;
-        
     };
 
 } // namespace ClassicLauncher

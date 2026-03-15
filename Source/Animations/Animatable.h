@@ -8,7 +8,6 @@
 namespace ClassicLauncher
 {
 
-
     class Animatable
     {
     public:

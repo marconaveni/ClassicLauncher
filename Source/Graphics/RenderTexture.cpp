@@ -70,11 +70,7 @@ namespace ClassicLauncher
             m_depth.m_mipmaps = 1;
 
             // Attach color texture and depth renderbuffer/texture to FBO
-            ray::rlFramebufferAttach(m_id,
-                                     m_texture.m_id,
-                                     ray::RL_ATTACHMENT_COLOR_CHANNEL0,
-                                     ray::RL_ATTACHMENT_TEXTURE2D,
-                                     0);
+            ray::rlFramebufferAttach(m_id, m_texture.m_id, ray::RL_ATTACHMENT_COLOR_CHANNEL0, ray::RL_ATTACHMENT_TEXTURE2D, 0);
             ray::rlFramebufferAttach(m_id, m_depth.m_id, ray::RL_ATTACHMENT_DEPTH, ray::RL_ATTACHMENT_RENDERBUFFER, 0);
 
             // Check if fbo is complete with attachments (valid)
@@ -102,7 +98,6 @@ namespace ClassicLauncher
 
     void RenderTexture::Unload()
     {
-
 
         if (m_id > 0)
         {

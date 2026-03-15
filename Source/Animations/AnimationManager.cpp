@@ -85,11 +85,7 @@ namespace ClassicLauncher
     {
         AnimationTransform& animationTransform = m_animationsTransform[name];
         animationTransform.entity = targetEntity;
-        animationTransform.animation.StartAnimation(durationAnimation,
-                                                    targetEntity->GetTransform(),
-                                                    targetTransform,
-                                                    typeAnimation,
-                                                    forceReset);
+        animationTransform.animation.StartAnimation(durationAnimation, targetEntity->GetTransform(), targetTransform, typeAnimation, forceReset);
     }
 
     void AnimationManager::AddAnimationFrame(const std::string& name,

@@ -25,7 +25,7 @@ namespace ClassicLauncher
         {
             Join();
             m_isKeepRunning = true;
-            //m_filePath = file;
+            // m_filePath = file;
             LOG(LOG_CLASSIC_TRACE, "Sprite - starting thread");
             m_workerThread = std::thread(&Sprite::LoadImage, this, file, width, height, aspectRatio);
         }
@@ -37,7 +37,7 @@ namespace ClassicLauncher
         {
             Unload();
             newImage.CopyTo(m_image);
-            //m_filePath = "[loaded from memory]";
+            // m_filePath = "[loaded from memory]";
             ResizeImage(width, height, aspectRatio);
             m_isImageLoaded = m_image.IsValid();
             LOG(LOG_CLASSIC_TRACE, "Image copied successfully");
@@ -57,7 +57,7 @@ namespace ClassicLauncher
         }
     }
 
-    void Sprite::LoadImage(const std::filesystem::path& file,const int width, const int height, bool aspectRatio)
+    void Sprite::LoadImage(const std::filesystem::path& file, const int width, const int height, bool aspectRatio)
     {
         // std::this_thread::sleep_for(std::chrono::seconds(1)); //for test
         if (m_isKeepRunning)
@@ -83,10 +83,9 @@ namespace ClassicLauncher
     {
         if (!m_isTextureLoaded && m_isImageLoaded)
         {
-            // mTexture = rlw::LoadTextureFromImage(mImage);
             m_texture = std::make_unique<Texture>();
             m_texture->LoadFromImage(&m_image);
-            m_texture->SetSmooth(false); 
+            m_texture->SetSmooth(false);
             m_isTextureLoaded = m_texture->IsValid();
             LOG(LOG_CLASSIC_TRACE, "Texture loaded [ID %d] from Image - \"%s\"", m_texture->GetId(), m_filePath.c_str());
             UnloadImage();
@@ -119,7 +118,6 @@ namespace ClassicLauncher
             }
             else
             {
-                //rlw::ImageResize(&mImage, width, height);
                 m_image.Resize(width, height);
             }
             if (m_isTextureLoaded)

@@ -7,7 +7,6 @@
 namespace ClassicLauncher
 {
 
-
     struct Music::MusicData
     {
         ::Music musicStream{};

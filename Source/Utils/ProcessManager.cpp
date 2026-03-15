@@ -2,10 +2,6 @@
 
 #include <filesystem>
 
-#ifndef _WIN32
-#include <sys/wait.h>
-#endif
-
 #include "Audio/AudioManager.h"
 #include "Data/GameListManager.h"
 #include "Utils/Platform.h"
@@ -63,10 +59,10 @@ namespace ClassicLauncher
 #else
         Platform::CreateProc(m_processId, m_fullPath, status);
 #endif
-        if (status != 1) 
-        { 
+        if (status != 1)
+        {
             m_status = ProcessStatus::FAILED;
-        }   
+        }
     }
 
     bool ProcessManager::IsApplicationRunning() const

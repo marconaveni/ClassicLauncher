@@ -16,11 +16,7 @@ namespace ClassicLauncher
         }
     }
 
-    void TimerManager::SetTimer(TimerHandling& timerHandling,
-                                std::function<void()> callbackFunction,
-                                Entity* targetEntity,
-                                float delay,
-                                bool isLooped)
+    void TimerManager::SetTimer(TimerHandling& timerHandling, std::function<void()> callbackFunction, Entity* targetEntity, float delay, bool isLooped)
     {
         ValidTimerHandling(timerHandling);
 
@@ -59,8 +55,8 @@ namespace ClassicLauncher
     {
         for (auto it = m_timers.begin(); it != m_timers.end();)
         {
-            auto& pTimer = it->second;
-            if (!pTimer->IsActive())
+            auto& timer = it->second;
+            if (!timer->IsActive())
             {
                 it->first->id = -1;
                 it = m_timers.erase(it); // erase return the next iterator

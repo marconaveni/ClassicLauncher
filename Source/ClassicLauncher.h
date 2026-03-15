@@ -16,9 +16,9 @@
 #define APP_BUILT_DATE_STRING __DATE__ " - " __TIME__
 
 #if _DEBUG
-#define TITLE  "Classic Launcher [DEVMODE] " 
+    #define TITLE "Classic Launcher [DEVMODE] "
 #else
-#define TITLE  "Classic Launcher " 
+    #define TITLE "Classic Launcher "
 #endif
 
 #endif // CLASSIC_LAUNCHER_H

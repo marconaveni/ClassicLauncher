@@ -17,22 +17,34 @@ namespace ClassicLauncher
         T height{}; // height rectangle
 
         constexpr Rectangle()
-            : x(0), y(0), width(0), height(0)
+            : x(0)
+            , y(0)
+            , width(0)
+            , height(0)
         {
         }
 
         constexpr Rectangle(const T& rect)
-            : x(rect.x), y(rect.y), width(rect.width), height(rect.height)
+            : x(rect.x)
+            , y(rect.y)
+            , width(rect.width)
+            , height(rect.height)
         {
         }
 
         constexpr Rectangle(const Vector2<T>& position, const Vector2<T>& size)
-            : x(position.x), y(position.y), width(size.x), height(size.y)
+            : x(position.x)
+            , y(position.y)
+            , width(size.x)
+            , height(size.y)
         {
         }
 
         constexpr Rectangle(T x, T y, T width, T height)
-            : x(x), y(y), width(width), height(height)
+            : x(x)
+            , y(y)
+            , width(width)
+            , height(height)
         {
         }
 
@@ -42,14 +54,11 @@ namespace ClassicLauncher
             return Rectangle<U>(static_cast<U>(x), static_cast<U>(y), static_cast<U>(width), static_cast<U>(height));
         }
 
-        constexpr bool operator==(const Rectangle& other) const
-        {
-            return x == other.x && y == other.y && width == other.width && height == other.height;
-        }
+        constexpr bool operator==(const Rectangle& other) const { return x == other.x && y == other.y && width == other.width && height == other.height; }
 
         constexpr void operator=(const Vector2<T>& other) const
         {
-            x = other.x; 
+            x = other.x;
             y = other.y;
         }
 

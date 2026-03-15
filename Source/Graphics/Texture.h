@@ -9,7 +9,6 @@
 namespace ClassicLauncher
 {
 
-
     enum PixelFormat
     {
         PIXELFORMAT_UNCOMPRESSED_GRAYSCALE = 1, // 8 bit per pixel (no alpha)
@@ -38,8 +37,8 @@ namespace ClassicLauncher
         PIXELFORMAT_COMPRESSED_ASTC_8x8_RGBA    // 2 bpp
     };
 
-
     class Image;
+    class RenderTexture;
 
     class Texture
     {

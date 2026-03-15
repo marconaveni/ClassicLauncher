@@ -1,15 +1,16 @@
 #include "GuiCard.h"
 
+#include "Audio/AudioManager.h"
 #include "Data/GameListManager.h"
 #include "Entity/EntityManager.h"
 #include "Graphics/SpriteManager.h"
 #include "Graphics/Texture.h"
 #include "Guis/Components/GuiSizeBox.h"
-#include "Guis/GuiVideoPlayer.h"
-#include "Themes/ThemesManager.h"
-#include "Audio/AudioManager.h"
-#include "Input/InputManager.h"
 #include "Guis/GuiBase.h"
+#include "Guis/GuiVideoPlayer.h"
+#include "Input/InputManager.h"
+#include "Themes/ThemesManager.h"
+
 
 namespace ClassicLauncher
 {
@@ -20,7 +21,6 @@ namespace ClassicLauncher
         , m_gameListManagerRef(gameListManagerRef)
         , m_audioManagerRef(audioManagerRef)
     {
-        // aqui os ponteiros m_entityManagerReference ainda está nulo como documento isso melhor para evitar de chamar o Getters
     }
 
     void GuiCard::CreateCards(int x, int y)
@@ -46,24 +46,14 @@ namespace ClassicLauncher
 
 
         m_coverDefault->SetOffset(24.0f, 13.0f);
-        m_coverDefault->SetSize(204.0f, 202.0f);  
+        m_coverDefault->SetSize(204.0f, 202.0f);
         m_coverDefault->SetSource(771.0f, 283.0f, 204.0f, 202.0f);
         m_coverDefault->m_textureName = "sprite";
 
         SetCover();
-
-
-
-        // mCardSelected->SetOffset(Vector2f{-280, -30 });
-        // mCardMain->SetOffset(Vector2f{0, 30 });
     }
 
-    void GuiCard::CreateCard(GuiBase*& card,
-                             const float sourceX,
-                             const float sourceY,
-                             unsigned char alpha,
-                             const char* title,
-                             bool bAddChild)
+    void GuiCard::CreateCard(GuiBase*& card, const float sourceX, const float sourceY, unsigned char alpha, const char* title, bool addChild)
     {
         card = GetEntityManager()->CreateEntity<GuiBase>(title);
 
@@ -72,7 +62,7 @@ namespace ClassicLauncher
         card->SetSource(RectFloat{sourceX, sourceY, GetSize().width, GetSize().height});
         card->SetOpacity(alpha);
         card->m_textureName = "sprite";
-        if (bAddChild)
+        if (addChild)
         {
             AddChild(card);
         }
@@ -83,13 +73,13 @@ namespace ClassicLauncher
 
         m_coverDefault->SetOpacity(255);
         m_cover->m_textureName = "transparent";
-        m_cover->SetSize(Sizef{});  
+        m_cover->SetSize(Sizef{});
 
         if (!name.empty())
         {
             m_coverDefault->SetOpacity(0);
             m_cover->SetOffset(Vector2f{12.0f});
-            m_cover->SetSize(Sizef{228.0f, 204.0f});    
+            m_cover->SetSize(Sizef{228.0f, 204.0f});
             m_cover->SetSource(RectFloat{0.0f, 0.0f, 228.0f, 204.0f});
             m_cover->SetSize(Sizef{228.0f, 204.0f});
             m_cover->m_textureName = name;
@@ -108,15 +98,15 @@ namespace ClassicLauncher
             textureReference->SetSmooth(true);
 
             const float renderScale = ThemesManager::GetScaleRenderer();
-            ConfigurationThemes theme = ThemesManager::GetConfigurationThemes(); 
+            ConfigurationThemes theme = ThemesManager::GetConfigurationThemes();
 
             const float widthTex = textureReference->GetSize().width / renderScale;
             const float HeightTex = textureReference->GetSize().height / renderScale;
             const float xCoverPos = ((228.0f - widthTex) / 2.0f) + theme.offsetImageX;
             const float yCoverPos = ((204.0f - HeightTex) / 2.0f) + theme.offsetImageY;
 
-            m_cover->SetOffset(Vector2f{xCoverPos, yCoverPos}); 
-            m_cover->SetSize(Vector2f{widthTex, HeightTex}); 
+            m_cover->SetOffset(Vector2f{xCoverPos, yCoverPos});
+            m_cover->SetSize(Vector2f{widthTex, HeightTex});
             m_cover->SetSource(RectFloat{0.0f, 0.0f, widthTex, HeightTex});
             m_isChangeTexture = false;
         }
@@ -127,15 +117,14 @@ namespace ClassicLauncher
             m_guiVideoPlayer->InitFullscreen();
         }
         if (IsFocus() && InputManager::IsRelease(InputName::rightFaceRight, InputCategory::VIDEO_FULLSCREEN))
-        {   
+        {
             m_guiVideoPlayer->StopFullscreen();
         }
-        
     }
 
-    void GuiCard::FocusAnimation(bool bForce, const int alphaA, const int alphaB, const std::string& nameAnimation)
+    void GuiCard::FocusAnimation(bool force, const int alphaA, const int alphaB, const std::string& nameAnimation)
     {
-        // if (bForce)
+        // if (force)
         // {
         //     mCardSelected->m_transform.color.SetOpacity(alphaA);
         //     mCardBackgroundSelected->m_transform.color.SetOpacity(alphaA);
@@ -160,20 +149,20 @@ namespace ClassicLauncher
 
     void GuiCard::SetCardFocus()
     {
-        GetTimerManager()->SetTimer(m_timerVideo, CALLFUNCTION(StartVideo, this), this, 5.0f);     
+        GetTimerManager()->SetTimer(m_timerVideo, CALLFUNCTION(StartVideo, this), this, 5.0f);
         SetFocus();
     }
 
     void GuiCard::OnFocus()
     {
-         Transform targetA = m_cardSelected->GetTransform();
-         targetA.color.a = 255;
-         Transform targetB = m_cardBackgroundSelected->GetTransform();
-         targetB.color.a = 255;
-         Transform targetC = m_cardMain->GetTransform();
-         targetC.color.a = 0;
-         GetAnimationManager().StartAnimation("focus-card-a" , 0.2f, m_cardSelected, targetA, Ease::EaseLinearNone, false);
-         GetAnimationManager().StartAnimation("focus-card-b" , 0.2f, m_cardBackgroundSelected, targetB, Ease::EaseLinearNone, false);
+        Transform targetA = m_cardSelected->GetTransform();
+        targetA.color.a = 255;
+        Transform targetB = m_cardBackgroundSelected->GetTransform();
+        targetB.color.a = 255;
+        Transform targetC = m_cardMain->GetTransform();
+        targetC.color.a = 0;
+        GetAnimationManager().StartAnimation("focus-card-a", 0.2f, m_cardSelected, targetA, Ease::EaseLinearNone, false);
+        GetAnimationManager().StartAnimation("focus-card-b", 0.2f, m_cardBackgroundSelected, targetB, Ease::EaseLinearNone, false);
     }
 
     void GuiCard::OnLostFocus(FocusCategory previousFocusCategory)
@@ -182,9 +171,9 @@ namespace ClassicLauncher
         {
             return;
         }
-        
+
         CloseVideo();
-        
+
         if (previousFocusCategory != FocusCategory::CARD)
         {
             return;
@@ -194,8 +183,8 @@ namespace ClassicLauncher
         targetA.color.a = 0;
         Transform targetB = m_cardBackgroundSelected->GetTransform();
         targetB.color.a = 0;
-        GetAnimationManager().StartAnimation("remove-focus-card-a" , 0.2f, m_cardSelected, targetA, Ease::EaseLinearNone, false);
-        GetAnimationManager().StartAnimation("remove-focus-card-b" , 0.2f, m_cardBackgroundSelected, targetB, Ease::EaseLinearNone, false);
+        GetAnimationManager().StartAnimation("remove-focus-card-a", 0.2f, m_cardSelected, targetA, Ease::EaseLinearNone, false);
+        GetAnimationManager().StartAnimation("remove-focus-card-b", 0.2f, m_cardBackgroundSelected, targetB, Ease::EaseLinearNone, false);
     }
 
     void GuiCard::Reset()
@@ -205,7 +194,7 @@ namespace ClassicLauncher
         SetOpacity(255);
 
         m_cardBackgroundFavorite->SetOpacity(0); // todo create logic is favorite
-        m_cardFavorite->SetOpacity(0);           // todo create logic is favorite   
+        m_cardFavorite->SetOpacity(0);           // todo create logic is favorite
     }
 
     void GuiCard::Click()
@@ -258,10 +247,10 @@ namespace ClassicLauncher
 
     void GuiCard::SetThemeValue()
     {
-        ConfigurationThemes theme = ThemesManager::GetConfigurationThemes(); 
-        m_cover->SetOffset(theme.offsetImageX ,theme.offsetImageY);
-        m_coverDefault->SetOffset(theme.offsetDefaultImageX ,theme.offsetDefaultImageY);
-        m_guiVideoPlayer->SetOffset(theme.offsetVideoX ,theme.offsetVideoY);
+        ConfigurationThemes theme = ThemesManager::GetConfigurationThemes();
+        m_cover->SetOffset(theme.offsetImageX, theme.offsetImageY);
+        m_coverDefault->SetOffset(theme.offsetDefaultImageX, theme.offsetDefaultImageY);
+        m_guiVideoPlayer->SetOffset(theme.offsetVideoX, theme.offsetVideoY);
     }
 
 } // namespace ClassicLauncher

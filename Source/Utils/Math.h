@@ -36,15 +36,13 @@ namespace ClassicLauncher::Math
     template <typename T>
     inline constexpr bool CheckCollisionPointRec(Vector2<T> point, Rectangle<T> rec)
     {
-        return ((point.x >= rec.x) && (point.x < (rec.x + rec.width)) && (point.y >= rec.y) &&
-                (point.y < (rec.y + rec.height)));
+        return ((point.x >= rec.x) && (point.x < (rec.x + rec.width)) && (point.y >= rec.y) && (point.y < (rec.y + rec.height)));
     }
 
     template <typename T>
     inline constexpr bool CheckCollisionRecs(Rectangle<T> rec1, Rectangle<T> rec2)
     {
-        return ((rec1.x < (rec2.x + rec2.width) && (rec1.x + rec1.width) > rec2.x) &&
-                (rec1.y < (rec2.y + rec2.height) && (rec1.y + rec1.height) > rec2.y));
+        return ((rec1.x < (rec2.x + rec2.width) && (rec1.x + rec1.width) > rec2.x) && (rec1.y < (rec2.y + rec2.height) && (rec1.y + rec1.height) > rec2.y));
     }
 
     inline constexpr int ToInt(float value)

@@ -14,12 +14,7 @@ namespace ClassicLauncher
 {
 
     Engine::Engine()
-        : m_application(m_configurationManager,
-                        m_spriteManager,
-                        m_timerManager,
-                        m_audioManager,
-                        m_fontManager,
-                        m_processManager)
+        : m_application(m_configurationManager, m_spriteManager, m_timerManager, m_audioManager, m_fontManager, m_processManager)
         , m_print(m_fontManager)
     {
         RegistryPrint(&m_print);
@@ -94,7 +89,7 @@ namespace ClassicLauncher
         m_renderSystem.DrawRender();
         m_print.DrawMessage(); // note: Here it is drawing outside the renderscreen.
         m_renderSystem.EndDraw();
-        
+
         m_window.Update();
     }
 

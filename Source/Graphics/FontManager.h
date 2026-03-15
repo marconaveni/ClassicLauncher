@@ -1,16 +1,16 @@
 #ifndef FONT_MANAGER_H
 #define FONT_MANAGER_H
 
-#include <unordered_map>
-#include <string>
 #include <filesystem>
-#include "Graphics/Font.h"
 #include <memory>
+#include <string>
+#include <unordered_map>
+
+#include "Graphics/Font.h"
 
 
 namespace ClassicLauncher
 {
-
 
     class FontManager
     {
@@ -25,16 +25,14 @@ namespace ClassicLauncher
         Font* GetFont(const std::string& name);
         void OnGraphicsRestore();
         void OnGraphicsLost();
-        
+
         std::unordered_map<std::string, std::unique_ptr<Font>> m_font{};
 
     private:
 
         std::string GenerateFileName(const std::filesystem::path& path, int size);
-
     };
 
-   
 } // namespace ClassicLauncher
 
 

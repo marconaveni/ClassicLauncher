@@ -20,11 +20,11 @@ namespace ClassicLauncher
 
     struct VideoContext
     {
-        Image image[2]; // Imagem que será atualizada
+        Image image[2]; // Imagem which will be updated.
         std::mutex frameMutex[2];
         bool frameLock[2];
-        int frameId;
-        int countFrame;
+        int frameId{0};
+        int countFrame{0};
 
         VideoContext()
         {
@@ -32,8 +32,6 @@ namespace ClassicLauncher
             image[1] = Image();
             frameLock[0] = false;
             frameLock[1] = false;
-            frameId = 0;
-            countFrame = 0;
         }
     };
 
@@ -42,23 +40,21 @@ namespace ClassicLauncher
     private:
 
         static libvlc_instance_t* m_VLC;
-        libvlc_media_t* m_media = nullptr;
-        libvlc_media_player_t* m_mediaPlayer = nullptr;
-        int m_widthVideo = 1;
-        int m_heightVideo = 1;
+        libvlc_media_t* m_media{nullptr};
+        libvlc_media_player_t* m_mediaPlayer{nullptr};
+        int m_widthVideo{1};
+        int m_heightVideo{1};
 
-        VideoContext m_context;
-        Texture m_texture; // Textura da imagem para renderizar na tela
-        bool m_isEnabledVlC;
-        unsigned int m_width;
-        unsigned int m_height;
-        bool m_isLoop = true;
+        VideoContext m_context{};
+        Texture m_texture{}; // Texture for rendering on screen.
+        bool m_isEnabledVlC{false};
+        unsigned int m_width{0};
+        unsigned int m_height{0};
+        bool m_isLoop{true};
 
         static void StartVLCInstance();
 
     public:
-
-        //bool m_isPlaying = false;
 
         VideoPlayer();
         ~VideoPlayer();

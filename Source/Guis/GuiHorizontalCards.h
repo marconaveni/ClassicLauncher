@@ -3,12 +3,11 @@
 
 #include <vector>
 
+#include "Animations/Animatable.h"
 #include "Data/GameListManager.h"
 #include "Guis/Components/GuiCanvas.h"
-#include "Animations/Animatable.h"
-#include "Utils/TimerManager.h"
 #include "Input/InputManager.h"
-
+#include "Utils/TimerManager.h"
 
 
 namespace ClassicLauncher
@@ -27,16 +26,17 @@ namespace ClassicLauncher
     class GuiMenu;
     class GuiBase;
 
-    enum Direction : std::uint8_t
-    {
-        None,
-        Left,
-        Right
-    };
 
-    class GuiHorizontalCards : public Entity , public Animatable
+    class GuiHorizontalCards : public Entity, public Animatable
     {
     public:
+
+        enum class Direction : std::uint8_t
+        {
+            NONE,
+            LEFT,
+            RIGHT
+        };
 
         GuiHorizontalCards(GameListManager* gameListManagerRef, AudioManager* audioManagerRef);
         EntityType GetType() const override { return EntityType::GuiHorizontalCardsClass; }
@@ -68,7 +68,7 @@ namespace ClassicLauncher
         bool m_isLeft{false};
         bool m_isRight{false};
         bool m_isNeedUpdate{false};
-        Direction m_lastDirection{Direction::None};
+        Direction m_lastDirection{Direction::NONE};
         int m_idFocus{0};
         int m_idLastFocusSystem{3};
         float m_speed{22.0f};

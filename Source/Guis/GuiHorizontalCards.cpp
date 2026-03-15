@@ -50,7 +50,7 @@ namespace ClassicLauncher
         m_guiTitle->SetSize(1010.0f, 32.0f);
 
         m_guiTitle->SetText("Title");
-        m_guiTitle->SetTextOverflowPolicy(TextOverflowPolicy::CLIP);
+        m_guiTitle->SetTextOverflowPolicy(GuiTextBlock::TextOverflowPolicy::CLIP);
         m_guiTitle->SetTextCenter(true);
         AddChild(m_guiTitle);
 
@@ -512,7 +512,7 @@ namespace ClassicLauncher
                 const float y = m_horizontalBox->GetPosition().y;
                 m_horizontalBox->SetPosition(x, y);
             }
-            m_lastDirection = Left;
+            m_lastDirection = Direction::LEFT;
         }
         else if (m_positionX > 0 && m_isLeft)
         {
@@ -522,7 +522,7 @@ namespace ClassicLauncher
                 const float y = m_horizontalBox->GetPosition().y;
                 m_horizontalBox->SetPosition(x, y);
             }
-            m_lastDirection = Right;
+            m_lastDirection = Direction::RIGHT;
         }
 
         if (m_positionX <= -sizeCard || m_positionX >= sizeCard)
@@ -538,16 +538,16 @@ namespace ClassicLauncher
 
         if (m_idFocus < 3 || m_idFocus > 6)
         {
-            if (m_lastDirection == Left && m_positionX == 0)
+            if (m_lastDirection == Direction::LEFT && m_positionX == 0)
             {
                 std::rotate(m_guiCards.begin(), m_guiCards.begin() + 1, m_guiCards.end());
-                m_lastDirection = None;
+                m_lastDirection = Direction::NONE;
                 m_idFocus = Math::Clamp(m_idFocus, 3, 6);
             }
-            else if (m_lastDirection == Right && m_positionX == 0)
+            else if (m_lastDirection == Direction::RIGHT && m_positionX == 0)
             {
                 std::rotate(m_guiCards.rbegin(), m_guiCards.rbegin() + 1, m_guiCards.rend());
-                m_lastDirection = None;
+                m_lastDirection = Direction::NONE;
                 m_idFocus = Math::Clamp(m_idFocus, 3, 6);
             }
         }

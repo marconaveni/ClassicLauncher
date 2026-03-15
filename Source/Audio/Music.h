@@ -7,6 +7,7 @@
 
 namespace ClassicLauncher
 {
+    
     class Music
     {
     public:
@@ -23,7 +24,7 @@ namespace ClassicLauncher
         void Stop();
         void Pause();
         void Resume();
-        void UpdateStream(); 
+        void UpdateStream();
 
         void SetVolume(float volume);
         bool IsPlaying() const;

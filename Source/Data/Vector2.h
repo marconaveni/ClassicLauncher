@@ -5,6 +5,7 @@
 
 namespace ClassicLauncher
 {
+    
     template <typename T>
     class Vector2
     {
@@ -14,22 +15,26 @@ namespace ClassicLauncher
         T y{}; // Vector y component
 
         constexpr Vector2(T x, T y)
-            : x(x), y(y)
+            : x(x)
+            , y(y)
         {
         }
 
         constexpr Vector2(T x)
-            : x(x), y(x)
+            : x(x)
+            , y(x)
         {
         }
 
         constexpr Vector2(const Size<T>& s)
-            : x(s.width), y(s.height)
+            : x(s.width)
+            , y(s.height)
         {
         }
 
         constexpr Vector2()
-            : x(0), y(0)
+            : x(0)
+            , y(0)
         {
         }
 

@@ -58,7 +58,7 @@ namespace ClassicLauncher
         ThemesManager m_themesManager;
         FocusManager m_focusManager;
         EntityManager m_entityManager;
-        
+
         ProcessManager* m_processManager{nullptr};
         ConfigurationManager* m_configManager{nullptr};
         SpriteManager* m_spriteManager{nullptr};

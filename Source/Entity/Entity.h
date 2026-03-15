@@ -1,15 +1,17 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#include <cstdint> // Required for uint8_t
 #include <string>
 #include <vector>
 
 #include "Data/Transform.h"
 
+
 namespace ClassicLauncher
 {
 
-    enum class EntityType
+    enum class EntityType : std::uint8_t
     {
         GuiBaseClass = 1,
         GuiWindowClass,
@@ -64,7 +66,6 @@ namespace ClassicLauncher
         [[nodiscard]] bool IsVisible() const { return m_isVisible; }
         [[nodiscard]] bool GetTransformIsDirty() const { return m_isTransformDirty; }
         void MarkTransformAsDirty();
-        
 
         // clang-format off
         // Gettter and Setters Transforms
@@ -114,7 +115,6 @@ namespace ClassicLauncher
         // End Getters and Setters
         // clang-format on
 
-        
         RectFloat m_scissorArea;
         std::string m_textureName{"transparent"};
 
@@ -132,11 +132,11 @@ namespace ClassicLauncher
             Vector2f origin{};
         };
 
-        
+
     protected:
-        
-        Entity* m_parent{nullptr};    
-        std::vector<Entity*> m_childEntities{};  
+
+        Entity* m_parent{nullptr};
+        std::vector<Entity*> m_childEntities{};
         FinalRenderTransform m_finalRender{};
 
         TimerManager* GetTimerManager();
@@ -163,9 +163,9 @@ namespace ClassicLauncher
         ZOrder m_zOrder{};
         std::string m_nameId{};
 
-        SpriteManager* m_spriteManagerReference{nullptr};
+        SpriteManager* m_spriteManagerRef{nullptr};
         TimerManager* m_timerManagerRef{nullptr};
-        EntityManager* m_entityManagerReference{nullptr};
+        EntityManager* m_entityManagerRef{nullptr};
         FocusManager* m_focusManagerRef{nullptr};
         FontManager* m_fontManagerRef{nullptr};
 

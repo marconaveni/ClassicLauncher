@@ -1,18 +1,21 @@
 #ifndef TEST_ENTITY_H
 #define TEST_ENTITY_H
 
-#include "Guis/GuiBase.h"
-#include "Animations/Animation.h"
-#include "Window/Window.h"
-#include "rl_wrap.h"
-#include "raylib.h"
 #include <memory>
+
+#include "Animations/Animation.h"
+#include "Guis/GuiBase.h"
+#include "Window/Window.h"
+#include "raylib.h"
+#include "rl_wrap.h"
+
 
 namespace ClassicLauncher
 {
     class TestEntity : public Entity
     {
     public:
+
         TestEntity()
         {
             // cria filho já na lista de entidades filhos
@@ -65,9 +68,10 @@ namespace ClassicLauncher
         }
 
     private:
+
         std::unique_ptr<GuiBase> m_child;
         Animation m_anim;
     };
-}
+} // namespace ClassicLauncher
 
 #endif // TEST_ENTITY_H

@@ -3,18 +3,19 @@
 #include <algorithm> // std::sort
 
 #include "Graphics/SpriteManager.h"
-#include "Utils/TimerManager.h"
 #include "Helper.h"
+#include "Utils/TimerManager.h"
+
 
 namespace ClassicLauncher
 {
 
-    EntityManager::EntityManager(SpriteManager* spriteManagerReference,
-                                 TimerManager* timerManagerReference,
+    EntityManager::EntityManager(SpriteManager* spriteManagerRef,
+                                 TimerManager* timerManagerRef,
                                  FocusManager* focusManagerRef,
                                  FontManager* fontManagerRef)
-        : m_spriteManagerReference(spriteManagerReference)
-        , m_timerManagerReference(timerManagerReference)
+        : m_spriteManagerReference(spriteManagerRef)
+        , m_timerManagerReference(timerManagerRef)
         , m_focusManagerReference(focusManagerRef)
         , m_fontManagerReference(fontManagerRef)
 
@@ -59,7 +60,7 @@ namespace ClassicLauncher
             }
         }
 
-        entity->m_nameId = String::TextFormat("%d_%s" , counter, name.c_str());
+        entity->m_nameId = String::TextFormat("%d_%s", counter, name.c_str());
         entity->m_zOrder.insertionIndex = m_counter;
         m_counter++;
     }
@@ -90,7 +91,6 @@ namespace ClassicLauncher
                       return a->GetZOrder().insertionIndex < b->GetZOrder().insertionIndex;
                   });
         m_markOrder = false;
-
     }
 
     void EntityManager::SetZOrder(Entity* entity, int zOrder)
@@ -116,7 +116,7 @@ namespace ClassicLauncher
         bool isDeleteEntities = false;
         for (auto& entity : m_entities)
         {
-            entity->UpdateWorldTransform();          
+            entity->UpdateWorldTransform();
             isDeleteEntities = entity->m_isCanDelete || isDeleteEntities;
         }
         DeleteEntities(isDeleteEntities);
@@ -178,14 +178,14 @@ namespace ClassicLauncher
         }
 
         m_entities.erase(std::remove_if(m_entities.begin(),
-                                       m_entities.end(),
-                                       [](const std::unique_ptr<Entity>& entity)
-                                       {
-                                           return !entity; // Return true element
-                                       }),
-                        m_entities.end());
+                                        m_entities.end(),
+                                        [](const std::unique_ptr<Entity>& entity)
+                                        {
+                                            return !entity; // Return true element
+                                        }),
+                         m_entities.end());
 
-        m_timerManagerReference->ClearAllTimers(); 
+        m_timerManagerReference->ClearAllTimers();
         m_markOrder = true;
     }
 

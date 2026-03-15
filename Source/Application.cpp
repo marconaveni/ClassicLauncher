@@ -4,18 +4,19 @@
 
 #include "Audio/AudioManager.h"
 #include "Entity/TestEntity.h"
+#include "Graphics/FontManager.h"
 #include "Graphics/RenderScreen.h"
 #include "Graphics/SpriteManager.h"
-#include "Graphics/FontManager.h"
-#include "Guis/GuiWindow.h"
 #include "Guis/GuiBlackScreen.h"
-#include "Utils/DebugOverlay.h"
+#include "Guis/GuiWindow.h"
 #include "Helper.h"
 #include "Utils/ConfigurationManager.h"
+#include "Utils/DebugOverlay.h"
 #include "Utils/Resources.h"
 #include "Utils/String.h"
 #include "Utils/TimerManager.h"
 #include "Utils/Utils.h"
+
 
 namespace ClassicLauncher
 {
@@ -39,7 +40,6 @@ namespace ClassicLauncher
     {
         LogLevel(m_configManager->GetClassicLogLevel(), m_configManager->GetRaylibLogLevel());
         rlw::SetTraceLogCallback(TraceLogger);
-        
     }
 
     Application::~Application()
@@ -54,10 +54,7 @@ namespace ClassicLauncher
 
         if (m_gameListManager.GetGameListSize() > 0)
         {
-            m_guiWindow = m_entityManager.CreateEntity<GuiWindow>("GuiWindow",
-                                                                  &m_gameListManager,
-                                                                  *m_audioManager,
-                                                                  *m_processManager);
+            m_guiWindow = m_entityManager.CreateEntity<GuiWindow>("GuiWindow", &m_gameListManager, *m_audioManager, *m_processManager);
             m_guiWindow->Init();
         }
         else
@@ -84,7 +81,7 @@ namespace ClassicLauncher
         m_timerManager->Update();
         m_audioManager->Update();
     }
-    
+
     void Application::ProcessUpdate()
     {
         const ProcessStatus status = m_processManager->GetStatus();
@@ -94,11 +91,7 @@ namespace ClassicLauncher
             case ProcessStatus::OPEN: break;
             case ProcessStatus::RUNNING: break;
             case ProcessStatus::FAILED:
-            case ProcessStatus::CLOSE:
-            {
-                m_guiWindow->FadeOutScreen();
-                break;
-            }
+            case ProcessStatus::CLOSE: m_guiWindow->FadeOutScreen(); break;
             default: break;
         }
         m_processManager->UpdateRun();
@@ -110,7 +103,7 @@ namespace ClassicLauncher
         m_spriteManager->Unload();
         m_entityManager.End();
     }
-    
+
     void Application::OnGraphicsRestore()
     {
         m_spriteManager->Init();
@@ -118,12 +111,11 @@ namespace ClassicLauncher
         m_fontManager->OnGraphicsRestore();
         m_guiWindow->UpdateCovers();
     }
-    
+
     void Application::OnGraphicsLost()
     {
         m_fontManager->OnGraphicsLost();
     }
-
 
 
 } // namespace ClassicLauncher

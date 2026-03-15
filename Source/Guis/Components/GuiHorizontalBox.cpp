@@ -49,7 +49,7 @@ namespace ClassicLauncher
             {
                 continue;
             }
-            
+
             Transform& transform = guiElement->GetTransformRef();
             Transform& worldTransform = guiElement->GetWorldTransformRef();
 
@@ -68,7 +68,7 @@ namespace ClassicLauncher
         {
             spacer = 0;
         }
-        
+
         const float width = canvasWidth + spacer;
         const float height = canvasHeight;
         SetSize(width, height);

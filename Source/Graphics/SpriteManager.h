@@ -5,13 +5,15 @@
 #include <unordered_map>
 
 #include "Graphics/Image.h"
-#include "Graphics/Texture.h"
 #include "Graphics/RenderTexture.h"
+#include "Graphics/Texture.h"
 #include "Sprite.h"
+
 
 
 namespace ClassicLauncher
 {
+    
     class SpriteManager
     {
 
@@ -21,16 +23,8 @@ namespace ClassicLauncher
         void Init();
         void LoadRenderTexture(const std::string& name, int width, int height);
         void LoadSprite(const std::string& name, Image& image, int width = 0, int height = 0, bool aspectRatio = true);
-        void LoadSprite(const std::string& name,
-                        const std::string& fileName,
-                        int width = 0,
-                        int height = 0,
-                        bool aspectRatio = true);
-        void UpdateSprite(std::string name,
-                          std::string fileName,
-                          int width = 0,
-                          int height = 0,
-                          bool aspectRatio = true);
+        void LoadSprite(const std::string& name, const std::string& fileName, int width = 0, int height = 0, bool aspectRatio = true);
+        void UpdateSprite(std::string name, std::string fileName, int width = 0, int height = 0, bool aspectRatio = true);
         Texture* GetTexture(const std::string& name);
         RenderTexture* GetRenderTexture(const std::string& name);
         Image* GetImage(std::string name);

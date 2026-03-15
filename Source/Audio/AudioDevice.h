@@ -3,13 +3,13 @@
 
 namespace ClassicLauncher
 {
+
     class AudioDevice
     {
     public:
 
         AudioDevice(const AudioDevice&) = delete;
         AudioDevice& operator=(const AudioDevice&) = delete;
-
 
         void Init();
         void Shutdown();

@@ -1,41 +1,47 @@
 #ifndef INI_H
 #define INI_H
 
+#include <filesystem>
 #include <memory>
 #include <string>
-#include <filesystem>
 
-struct IniData;
 
-class Ini
+namespace ClassicLauncher
 {
+    
+    struct IniData;
 
-public:
+    class Ini
+    {
 
-    Ini();
-    ~Ini();
+    public:
 
-    bool Open(const std::filesystem::path file);
-    bool Save(const std::filesystem::path file);
+        Ini();
+        ~Ini();
 
-    std::string GetString(const std::string& section, const std::string& key, const std::string& defaultValue = "");
-    bool GetBoolean(const std::string& section, const std::string& key, bool defaultValue = false);
-    int GetInt(const std::string& section, const std::string& key, int defaultValue = 0);
-    float GetFloat(const std::string& section, const std::string& key, float defaultValue = 0.0f);
+        bool Open(const std::filesystem::path file);
+        bool Save(const std::filesystem::path file);
 
-    void SetString(const std::string& section, const std::string& key, const std::string& value, const std::string& comments = "");
-    void SetBoolean(const std::string& section, const std::string& key, bool value, const std::string& comments = "");
-    void SetInt(const std::string& section, const std::string& key, int value, const std::string& comments = "");
-    void SetFloat(const std::string& section, const std::string& key, float value, const std::string& comments = "");
+        std::string GetString(const std::string& section, const std::string& key, const std::string& defaultValue = "");
+        bool GetBoolean(const std::string& section, const std::string& key, bool defaultValue = false);
+        int GetInt(const std::string& section, const std::string& key, int defaultValue = 0);
+        float GetFloat(const std::string& section, const std::string& key, float defaultValue = 0.0f);
 
-    bool RemoveValue(const std::string& section, const std::string& key, const std::string& value);
+        void SetString(const std::string& section, const std::string& key, const std::string& value, const std::string& comments = "");
+        void SetBoolean(const std::string& section, const std::string& key, bool value, const std::string& comments = "");
+        void SetInt(const std::string& section, const std::string& key, int value, const std::string& comments = "");
+        void SetFloat(const std::string& section, const std::string& key, float value, const std::string& comments = "");
 
-private:
+        bool RemoveValue(const std::string& section, const std::string& key, const std::string& value);
 
-    std::string GetValue(const std::string& section, const std::string& key, const std::string& defaultValue = "");
-    void SetValue(const std::string& section, const std::string& key, const std::string& value, const std::string& comments = "");
+    private:
 
-    std::unique_ptr<IniData> m_data{};
-};
+        std::string GetValue(const std::string& section, const std::string& key, const std::string& defaultValue = "");
+        void SetValue(const std::string& section, const std::string& key, const std::string& value, const std::string& comments = "");
+
+        std::unique_ptr<IniData> m_data{};
+    };
+
+} // namespace ClassicLauncher
 
 #endif

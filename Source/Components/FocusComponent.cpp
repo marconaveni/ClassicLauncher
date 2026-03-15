@@ -7,7 +7,8 @@
 namespace ClassicLauncher
 {
     FocusComponent::FocusComponent(FocusManager* focusManagerRef, FocusCategory focusCategory)
-        : m_focusManagerReference(focusManagerRef), m_focusCategory(focusCategory)
+        : m_focusManagerReference(focusManagerRef)
+        , m_focusCategory(focusCategory)
     {
         m_focusManagerReference->AddFocus(this);
     }

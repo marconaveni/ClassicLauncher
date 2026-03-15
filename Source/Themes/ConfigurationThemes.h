@@ -2,10 +2,11 @@
 #define CONFIGURATION_THEMES_H
 
 
-#include <string>
 #include <filesystem>
+#include <string>
 
 #include "Data/Color.h"
+
 
 namespace ClassicLauncher
 {
@@ -27,7 +28,7 @@ namespace ClassicLauncher
         float offsetVideoY{12};
 
         // gui frame values
-        float offsetLeftFrame{0.0f}; 
+        float offsetLeftFrame{0.0f};
         float offsetRightFrame{0.0f};
         float offsetTopFrame{0.0f};
         float offsetBottomFrame{720.0f};
@@ -36,17 +37,17 @@ namespace ClassicLauncher
         bool topBarAnimation{false};
 
         // gui minicover values
-        int numCovers{32}; 
+        int numCovers{32};
         float sizeX{28.0f};
         float sizeY{40.0f};
         float offsetTopArrow{0.0f};
         float offsetTopCover{0.0f};
-        float offsetLeftCover{0.0f}; 
+        float offsetLeftCover{0.0f};
 
-        //gui hint bar
+        // gui hint bar
         Color hintBarFooterColor{Color::White};
 
-        //gui title
+        // gui title
         Color titleColor{Color::White};
 
         void LoadConfigurations(const std::filesystem::path file);

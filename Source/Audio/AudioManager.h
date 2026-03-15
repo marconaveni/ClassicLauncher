@@ -15,7 +15,6 @@
 namespace ClassicLauncher
 {
 
-
     class AudioManager
     {
     public:
@@ -58,7 +57,7 @@ namespace ClassicLauncher
 
         std::vector<std::unique_ptr<Music>> m_audioMusics{}; // Array Struct Audio musics
         int m_idAudioMusic{0};                               // id music
-        float m_musicVolume{1.0f};                           // music volume 
+        float m_musicVolume{1.0f};                           // music volume
 
         void LoadMusic(const std::string& path);
         void UpdateStream();

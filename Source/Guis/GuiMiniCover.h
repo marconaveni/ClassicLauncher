@@ -5,8 +5,9 @@
 #include <string>
 #include <vector>
 
-#include "Entity/Entity.h"
 #include "Animations/Animatable.h"
+#include "Entity/Entity.h"
+
 
 namespace ClassicLauncher
 {
@@ -39,7 +40,7 @@ namespace ClassicLauncher
             GuiBase* gui{nullptr};
             bool focus{false};
         };
-        
+
 
         std::vector<MiniCover> m_guiMiniCovers{};
         GuiHorizontalBox* m_guiHorizontalBox{nullptr};

@@ -16,20 +16,20 @@ namespace ClassicLauncher
     {
         switch (format)
         {
-        case PIXELFORMAT_UNCOMPRESSED_GRAYSCALE: return 1;
-        case PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA: return 2;
-        case PIXELFORMAT_UNCOMPRESSED_R5G6B5: return 2;
-        case PIXELFORMAT_UNCOMPRESSED_R8G8B8: return 3;
-        case PIXELFORMAT_UNCOMPRESSED_R5G5B5A1: return 2;
-        case PIXELFORMAT_UNCOMPRESSED_R4G4B4A4: return 2;
-        case PIXELFORMAT_UNCOMPRESSED_R8G8B8A8: return 4;
-        case PIXELFORMAT_UNCOMPRESSED_R32: return 4;
-        case PIXELFORMAT_UNCOMPRESSED_R32G32B32: return 12;
-        case PIXELFORMAT_UNCOMPRESSED_R32G32B32A32: return 16;
-        case PIXELFORMAT_UNCOMPRESSED_R16: return 2;
-        case PIXELFORMAT_UNCOMPRESSED_R16G16B16: return 6;
-        case PIXELFORMAT_UNCOMPRESSED_R16G16B16A16: return 8;
-        default: return 0;
+            case PIXELFORMAT_UNCOMPRESSED_GRAYSCALE: return 1;
+            case PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA: return 2;
+            case PIXELFORMAT_UNCOMPRESSED_R5G6B5: return 2;
+            case PIXELFORMAT_UNCOMPRESSED_R8G8B8: return 3;
+            case PIXELFORMAT_UNCOMPRESSED_R5G5B5A1: return 2;
+            case PIXELFORMAT_UNCOMPRESSED_R4G4B4A4: return 2;
+            case PIXELFORMAT_UNCOMPRESSED_R8G8B8A8: return 4;
+            case PIXELFORMAT_UNCOMPRESSED_R32: return 4;
+            case PIXELFORMAT_UNCOMPRESSED_R32G32B32: return 12;
+            case PIXELFORMAT_UNCOMPRESSED_R32G32B32A32: return 16;
+            case PIXELFORMAT_UNCOMPRESSED_R16: return 2;
+            case PIXELFORMAT_UNCOMPRESSED_R16G16B16: return 6;
+            case PIXELFORMAT_UNCOMPRESSED_R16G16B16A16: return 8;
+            default: return 0;
         }
     }
 
@@ -39,7 +39,10 @@ namespace ClassicLauncher
     }
 
     Texture::Texture(int width, int height, int mipmaps, int format)
-        : m_width(width), m_height(height), m_mipmaps(mipmaps), m_format(format)
+        : m_width(width)
+        , m_height(height)
+        , m_mipmaps(mipmaps)
+        , m_format(format)
     {
     }
 
@@ -94,7 +97,7 @@ namespace ClassicLauncher
     {
         if (status == m_smooth)
         {
-            return; 
+            return;
         }
 
         m_smooth = status;
@@ -105,12 +108,8 @@ namespace ClassicLauncher
             return;
         }
 
-        ray::rlTextureParameters(m_id,
-                                 RL_TEXTURE_MIN_FILTER,
-                                 (status) ? RL_TEXTURE_FILTER_LINEAR : RL_TEXTURE_FILTER_NEAREST);
-        ray::rlTextureParameters(m_id,
-                                 RL_TEXTURE_MAG_FILTER,
-                                 (status) ? RL_TEXTURE_FILTER_LINEAR : RL_TEXTURE_FILTER_NEAREST);
+        ray::rlTextureParameters(m_id, RL_TEXTURE_MIN_FILTER, (status) ? RL_TEXTURE_FILTER_LINEAR : RL_TEXTURE_FILTER_NEAREST);
+        ray::rlTextureParameters(m_id, RL_TEXTURE_MAG_FILTER, (status) ? RL_TEXTURE_FILTER_LINEAR : RL_TEXTURE_FILTER_NEAREST);
     }
 
     void Texture::SetWrap(int wrap)
@@ -153,8 +152,8 @@ namespace ClassicLauncher
     }
 
     unsigned int Texture::GetTextureSizeBytes()
-    { 
-        return s_textureSizeBytes; 
+    {
+        return s_textureSizeBytes;
     }
 
 } // namespace ClassicLauncher

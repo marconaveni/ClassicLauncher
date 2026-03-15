@@ -17,8 +17,8 @@ namespace ClassicLauncher
         int hour{0};
         int minute{0};
         int second{0};
-    
-        DateTime() = default;    
+
+        DateTime() = default;
         DateTime& operator=(const std::string& value);
         DateTime& operator=(const char* value) { return *this = std::string{value}; };
         bool operator<(const DateTime& a) const { return CompareDates(a); };
@@ -28,10 +28,9 @@ namespace ClassicLauncher
         bool operator<=(const DateTime& a) const { return !(*this > a); };
         bool operator==(const DateTime& a) const
         {
-            return (year == a.year) && (month == a.month) && (day == a.day) && (hour == a.hour) &&
-            (minute == a.minute) && (second == a.second);
+            return (year == a.year) && (month == a.month) && (day == a.day) && (hour == a.hour) && (minute == a.minute) && (second == a.second);
         };
-        
+
         void SetCurrentTimeAndDate();
         std::string ToXmlString() const;
         std::string ToLocaleString() const;

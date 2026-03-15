@@ -62,7 +62,6 @@ namespace ClassicLauncher
 
         target.color.a = 0;
         GetAnimationManager().StartAnimation("card-zoom", time, this, target, Ease::EaseQuadInOut, true);
-        //GetTimerManager()->SetTimer(mTimer, [this]() { m_transform.color.a = 255; }, this, time * 1);
     }
 
     void GuiFrame::SetLimitArea(RectFloat area)

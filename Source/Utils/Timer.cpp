@@ -8,10 +8,7 @@
 namespace ClassicLauncher
 {
 
-    void Timer::SetTimer(std::function<void()> callbackFunction,
-                         Entity* targetEntity,
-                         const float delay,
-                         const bool isLoop)
+    void Timer::SetTimer(std::function<void()> callbackFunction, Entity* targetEntity, const float delay, const bool isLoop)
     {
         m_callback = std::move(callbackFunction);
         m_targetEntity = targetEntity;
@@ -46,9 +43,9 @@ namespace ClassicLauncher
 
     void Timer::Reset()
     {
-        m_currentTime = 0.0;                                                  // Reset current time
-        m_duration = m_delay / static_cast<double>(WindowSystem::Get().GetFrameTime()); // Set duration based on frame time
-        m_isFunctionCalled = false;                                           // Reset the function called state
+        m_currentTime = 0.0;                                                            // Reset current time
+        m_duration = m_delay / static_cast<double>(WindowSystem::Get().GetFrameTime()); // Duration based on frame time
+        m_isFunctionCalled = false;                                                     // Reset the function called
     }
 
 } // namespace ClassicLauncher

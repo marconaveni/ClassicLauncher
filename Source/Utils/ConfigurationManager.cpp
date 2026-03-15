@@ -1,39 +1,41 @@
 #include "ConfigurationManager.h"
 
-#include "Utils/Resources.h"
 #include <filesystem>
 #include <string_view>
+
+#include "Utils/Resources.h"
+
 
 namespace ClassicLauncher
 {
 
 #ifdef _DEBUG
-#define LOG_SECTION_NAME "debug"
-#define CLASSIC_LOG_LEVEL 10
-#define RAYLIB_LOG_LEVEL 4
-#define FULLSCREEN false
+    #define LOG_SECTION_NAME "debug"
+    #define CLASSIC_LOG_LEVEL 10
+    #define RAYLIB_LOG_LEVEL 4
+    #define FULLSCREEN false
 #else
-#define LOG_SECTION_NAME "log"
-#define CLASSIC_LOG_LEVEL 13
-#define RAYLIB_LOG_LEVEL 5
-#define FULLSCREEN true
+    #define LOG_SECTION_NAME "log"
+    #define CLASSIC_LOG_LEVEL 13
+    #define RAYLIB_LOG_LEVEL 5
+    #define FULLSCREEN true
 #endif // _DEBUG
 
 #ifdef _WIN32
-#define SUSPEND_WINDOW false 
+    #define SUSPEND_WINDOW false
 #else
-#define SUSPEND_WINDOW true 
+    #define SUSPEND_WINDOW true
 #endif // _WIN32
 
 #ifdef PLATFORM_RPI
-#define INTERNAL_SCALE 1 
+    #define INTERNAL_SCALE 1
 #else
-#define INTERNAL_SCALE 2
+    #define INTERNAL_SCALE 2
 #endif // PLATFORM_RPI
-
 
     struct Comments
     {
+        // clang-format off
         inline static constexpr std::string_view InternalScale = "# Set internal resolution scale [1 = 1280x720, 2 = 2560x1440] \n# Note: Raspberry Pi 3 uses only 1.";  
         inline static constexpr std::string_view Volume = "# Set audio volume [min = 0, max = 100].";  
         inline static constexpr std::string_view TargetFps = "# Set Framerate limit [0 is unlocked].";  
@@ -46,8 +48,8 @@ namespace ClassicLauncher
         inline static constexpr std::string_view SuspendWindow = "# The window should be closed when the launcher starts the emulator [true or false].\n# Note: on Linux in KMS/DRM mode, always leave as true.";  
         inline static constexpr std::string_view WidthWindow = "# Initial window width.";  
         inline static constexpr std::string_view HeightWindow = "# Initial window height.";  
+        // clang-format off
     };
-
     ConfigurationManager::ConfigurationManager()
         : m_classicLogLevel(CLASSIC_LOG_LEVEL)
         , m_raylibLogLevel(RAYLIB_LOG_LEVEL)

@@ -7,21 +7,16 @@
 
 namespace ClassicLauncher
 {
+    
     class SpriteAnimator
     {
     public:
 
         SpriteAnimator() = default;
-        //     : m_timeAnimation(0.0f), m_currentTime(0.0f), m_alpha(0.0f), m_currentSpriteIndex(0)
-        // {
-        // }
 
         SpriteAnimator(const float timeAnimation, const std::vector<RectFloat>& spriteIndices)
             : m_timeAnimation(timeAnimation)
-            , m_currentTime(0.0f)
-            , m_alpha(0.0f)
             , m_spriteIndices(spriteIndices)
-            , m_currentSpriteIndex(0)
         {
         }
 
@@ -47,16 +42,16 @@ namespace ClassicLauncher
             }
         }
 
-        // Retorna o índice atual do sprite
+        // Returns the current sprite index.
         [[nodiscard]] RectFloat GetCurrentSprite() const { return m_spriteIndices[m_currentSpriteIndex]; }
 
     private:
 
-        float m_timeAnimation{0.0f};                  // Total duration to advance to the next sprite
-        float m_currentTime{0.0f};                    // Total elapsed time
-        float m_alpha{0.0f};                          // Interpolating factor between 0 and 1
-        std::vector<RectFloat> m_spriteIndices{};     // Vector with the indices or IDs of the sprites
-        size_t m_currentSpriteIndex{0};               // Current sprite index
+        float m_timeAnimation{0.0f};              // Total duration to advance to the next sprite
+        float m_currentTime{0.0f};                // Total elapsed time
+        float m_alpha{0.0f};                      // Interpolating factor between 0 and 1
+        std::vector<RectFloat> m_spriteIndices{}; // Vector with the indices or IDs of the sprites
+        size_t m_currentSpriteIndex{0};           // Current sprite index
     };
 } // namespace ClassicLauncher
 

@@ -9,7 +9,11 @@ namespace ClassicLauncher
 {
 
     Image::Image(void* data, int width, int height, int mipmaps, int format)
-        : data(data), width(width), height(height), mipmaps(mipmaps), format(format)
+        : data(data)
+        , width(width)
+        , height(height)
+        , mipmaps(mipmaps)
+        , format(format)
     {
     }
 

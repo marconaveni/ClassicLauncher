@@ -55,14 +55,11 @@ namespace ClassicLauncher
 
         AttachGui(menuButton.button);
         AddChild(menuButton.button);
-        // const float x = menuButton.button->GetSize().width * m_menuButtons.size();
-        // const float y = menuButton.button->GetSize().height;
-        // SetSize(x, y);
 
         m_menuButtons.push_back(menuButton);
     }
 
-    
+
     void GuiMenu::EnableButton(bool isActive, int id)
     {
         EnableButton(isActive, m_menuButtons.at(id));

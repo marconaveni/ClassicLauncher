@@ -2,8 +2,8 @@
 
 #ifdef _WIN32
 
-#include <filesystem>
-#include <windows.h>
+    #include <filesystem>
+    #include <windows.h>
 
 namespace ClassicLauncher::Platform
 {
@@ -26,17 +26,14 @@ namespace ClassicLauncher::Platform
         return strTo;
     }
 
-    void CreateProc(unsigned int& processId,
-                    const std::string& fullPath,
-                    const std::string& optionalWorkingDirectory,
-                    int& status)
+    void CreateProc(unsigned int& processId, const std::string& fullPath, const std::string& optionalWorkingDirectory, int& status)
     {
         std::wstring path = utf8_to_wstring(fullPath);
         std::wstring dir = utf8_to_wstring(optionalWorkingDirectory);
 
         STARTUPINFOW info = {sizeof(info)};
         PROCESS_INFORMATION processInfo;
-
+        // clang-format off
         if (CreateProcessW(nullptr,
                            path.data(),
                            nullptr,
@@ -47,6 +44,7 @@ namespace ClassicLauncher::Platform
                            dir.empty() ? nullptr : dir.data(),
                            &info,
                            &processInfo))
+        // clang-format on                        
         {
             printf("open:");
 

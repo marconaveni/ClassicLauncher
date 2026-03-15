@@ -27,11 +27,12 @@ namespace ClassicLauncher
 
     void Animation::UpdateAnimation()
     {
-       // mIsFinish = false;
+
         if (m_isRunning)
         {
             if (m_currentTime <= m_duration)
             {
+                // clang-format off
                 m_currentTransform.position.x = GetAnimation(m_currentTime,
                                                             m_startTransform.position.x,
                                                             m_finalTransform.position.x - m_startTransform.position.x,
@@ -76,7 +77,7 @@ namespace ClassicLauncher
                                                          m_startTransform.color.a,
                                                          m_finalTransform.color.a - m_startTransform.color.a,
                                                          m_duration);
-
+                // clang-format on
                 m_currentTime += WindowSystem::Get().GetFrameTime();
                 return;
             }

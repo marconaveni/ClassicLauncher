@@ -8,12 +8,12 @@ namespace ClassicLauncher::Platform
 
 #ifdef _WIN32
     #ifndef HOME_DIR
-    #define HOME_DIR "USERPROFILE" // account dir windows ex: "C:\Users\User"
-    #endif // HOME_DIR
+        #define HOME_DIR "USERPROFILE" // account dir windows ex: "C:\Users\User"
+    #endif                             // HOME_DIR
 #else
     #ifndef HOME_DIR
-    #define HOME_DIR "HOME" // home dir linux ex: "/home/user"
-    #endif // HOME_DIR
+        #define HOME_DIR "HOME" // home dir linux ex: "/home/user"
+    #endif                      // HOME_DIR
 #endif
 
 #ifdef _WIN32
@@ -28,7 +28,7 @@ namespace ClassicLauncher::Platform
 
     std::string GetExecutableDirectory();
     std::string GetWorkingDirectory();
-    
-}  // namespace ClassicLauncher::Platform
 
-#endif  // PLATFORM_H
+} // namespace ClassicLauncher::Platform
+
+#endif // PLATFORM_H

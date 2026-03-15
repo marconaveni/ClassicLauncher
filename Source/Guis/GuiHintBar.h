@@ -29,9 +29,8 @@ namespace ClassicLauncher
             GuiTextBlock* text{nullptr};
             GuiBase* spacer{nullptr};
         };
-        
-        std::vector<HintBar> m_hints{};
 
+        std::vector<HintBar> m_hints{};
     };
 
 } // namespace ClassicLauncher

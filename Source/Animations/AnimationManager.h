@@ -14,7 +14,6 @@
 namespace ClassicLauncher
 {
 
-
     class Entity;
 
     class AnimationManager
@@ -34,23 +33,11 @@ namespace ClassicLauncher
                             Ease typeAnimation = Ease::EaseLinearNone,
                             bool forceReset = true);
 
-        void AddAnimationFrame(const std::string& name,
-                               const float timeAnimation,
-                               Entity* targetEntity,
-                               const std::vector<RectFloat>& spriteIndices);
+        void AddAnimationFrame(const std::string& name, const float timeAnimation, Entity* targetEntity, const std::vector<RectFloat>& spriteIndices);
 
-        void SetStartCallback(std::function<void(const std::string&)> callback)
-        {
-            m_startCallback = std::move(callback);
-        }
-        void SetRunningCallback(std::function<void(const std::string&)> callback)
-        {
-            m_runningCallback = std::move(callback);
-        }
-        void SetFinishCallback(std::function<void(const std::string&)> callback)
-        {
-            m_finishCallback = std::move(callback);
-        }
+        void SetStartCallback(std::function<void(const std::string&)> callback) { m_startCallback = std::move(callback); }
+        void SetRunningCallback(std::function<void(const std::string&)> callback) { m_runningCallback = std::move(callback); }
+        void SetFinishCallback(std::function<void(const std::string&)> callback) { m_finishCallback = std::move(callback); }
 
     private:
 

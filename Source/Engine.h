@@ -1,6 +1,7 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
+#include <cstdint> // Required for uint8_t
 #include <vector>
 
 #include "Application.h"
@@ -53,7 +54,6 @@ namespace ClassicLauncher
         void StateProcessRunning();
         void StateSuspended();
         void StateRestoring();
-
 
         ConfigurationManager m_configurationManager;
         Window m_window;
