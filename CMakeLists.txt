@@ -129,10 +129,6 @@ elseif(UNIX)
     set(VLC_LINK_LIBS ${VLC_LIBRARIES})
 endif()
 
-include_directories(
-    "${CMAKE_SOURCE_DIR}/Source"
-    "${CMAKE_SOURCE_DIR}/Source/Extern"
-)
 
 add_executable(ClassicLauncher)
 include(${CMAKE_SOURCE_DIR}/CMake/ListSources.cmake)
@@ -240,6 +236,25 @@ add_custom_target(copy_compile_commands ALL
     BYPRODUCTS ${CMAKE_SOURCE_DIR}/compile_commands.json
     COMMENT "Update compile_commands.json in \"${CMAKE_SOURCE_DIR}\""
 )
+
+
+# Tests
+
+add_executable(classiclauncher_tests
+    Test/main.cpp
+    Test/test.cpp
+    Source/Guis/GuiBase.cpp
+    Source/Entity/Entity.cpp
+)
+target_include_directories(classiclauncher_tests PRIVATE Source)
+target_compile_features(classiclauncher_tests PRIVATE cxx_std_20)
+
+enable_testing()
+
+add_test(NAME classiclauncher_tests COMMAND $<TARGET_FILE:classiclauncher_tests>)
+
+
+
 
 # Build examples:
 # mkdir build

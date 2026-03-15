@@ -65,11 +65,11 @@ namespace ClassicLauncher
         m_counter++;
     }
 
-    void EntityManager::SetVisibleAll(Entity* entity, bool bVisible)
+    void EntityManager::SetVisibleAll(Entity* entity, bool isVisible)
     {
         for (auto& entity : entity->GetChildren())
         {
-            entity->m_isVisible = bVisible;
+            entity->m_isVisible = isVisible;
         }
     }
 

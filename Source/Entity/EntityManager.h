@@ -54,7 +54,7 @@ namespace ClassicLauncher
 
         std::vector<std::unique_ptr<Entity>>& GetEntities() { return m_entities; }
         int GetEntitySize() { return static_cast<int>(m_entities.size() + m_tempEntities.size()); }
-        static void SetVisibleAll(Entity* entity, bool bVisible);
+        static void SetVisibleAll(Entity* entity, bool isVisible);
         void SetZOrder(Entity* entity, int zOrder);
         void UpdateAll();
         void UpdateWorldTransform();
