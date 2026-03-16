@@ -1,8 +1,7 @@
 #include "Audio/Sound.h"
 
 #include "Sound.h"
-#include "raylib.h"
-
+#include "Ray.h"
 
 namespace ClassicLauncher
 {
@@ -10,7 +9,7 @@ namespace ClassicLauncher
 
     struct Sound::SoundData
     {
-        ::Sound sound{};
+        ray::Sound sound{};
         bool isReady = false;
     };
 
@@ -28,39 +27,39 @@ namespace ClassicLauncher
     bool Sound::LoadFromFile(const std::filesystem::path& path)
     {
         Unload();
-        m_data->sound = ::LoadSound(path.string().c_str());
-        m_data->isReady = ::IsSoundValid(m_data->sound);
+        m_data->sound = ray::LoadSound(path.string().c_str());
+        m_data->isReady = ray::IsSoundValid(m_data->sound);
         return m_data->isReady;
     }
 
     void Sound::Play()
     {
-        ::PlaySound(m_data->sound);
+        ray::PlaySound(m_data->sound);
     }
 
     void Sound::Stop()
     {
-        ::StopSound(m_data->sound);
+        ray::StopSound(m_data->sound);
     }
 
     void Sound::Pause()
     {
-        ::PauseSound(m_data->sound);
+        ray::PauseSound(m_data->sound);
     }
 
     void Sound::Resume()
     {
-        ::ResumeSound(m_data->sound);
+        ray::ResumeSound(m_data->sound);
     }
 
     void Sound::SetVolume(float volume)
     {
-        ::SetSoundVolume(m_data->sound, volume);
+        ray::SetSoundVolume(m_data->sound, volume);
     }
 
     bool Sound::IsPlaying() const
     {
-        return ::IsSoundPlaying(m_data->sound);
+        return ray::IsSoundPlaying(m_data->sound);
     }
 
     bool Sound::IsValid() const
@@ -72,7 +71,7 @@ namespace ClassicLauncher
     {
         if (m_data->isReady)
         {
-            ::UnloadSound(m_data->sound);
+            ray::UnloadSound(m_data->sound);
         }
     }
 

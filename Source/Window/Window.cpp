@@ -4,11 +4,8 @@
 #include "Helper.h"
 #include "Input/InputManager.h"
 
+#include "Ray.h"
 
-namespace ray
-{
-#include "raylib.h"
-} // namespace ray
 
 namespace ClassicLauncher
 {

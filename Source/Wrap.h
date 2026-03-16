@@ -1,11 +1,10 @@
 #ifndef RL_WRAP_H
 #define RL_WRAP_H
 
-// Wrapper minimalista para isolar a raylib.
-// Incluir este header no projeto no lugar de <raylib.h>.
-// A implementação (rl_wrap.cpp) inclui <raylib.h> e chama as funções nativas.
-//
-// Escopo: apenas funções observadas em uso no projeto.
+// Minimalist wrapper to isolate the raylib.
+// Include this header in the project in place of <raylib.h>.
+// The implementation (Wrap.cpp) includes <raylib.h> and calls the native functions.
+// Scope: only functions observed in use in the project.
 // Namespace: rlw
 
 
@@ -74,7 +73,7 @@ namespace rlw
     bool IsGamepadButtonReleased(int gamepad, int button);
     bool IsGamepadButtonUp(int gamepad, int button);
     bool IsGamepadAvailable(int gamepad);
-    float GetGamepadAxisMovement(int gamepad, int axis); 
+    float GetGamepadAxisMovement(int gamepad, int axis);
 
     // --- Mouse ---
     bool IsMouseButtonPressed(int button);

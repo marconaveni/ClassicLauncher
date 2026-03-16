@@ -7,7 +7,7 @@
 #include "Utils/Print.h"
 #include "Utils/Resources.h"
 #include "Utils/String.h"
-#include "rl_wrap.h"
+#include "Wrap.h"
 
 
 namespace ClassicLauncher

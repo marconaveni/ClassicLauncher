@@ -11,8 +11,7 @@
 #include "Utils/ConfigurationManager.h"
 #include "Utils/Math.h"
 #include "Window/Window.h"
-#include "rl_wrap.h"
-
+#include "Wrap.h"
 
 
 namespace ClassicLauncher

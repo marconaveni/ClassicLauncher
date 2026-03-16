@@ -3,7 +3,6 @@
 #include <string_view>
 
 #include "Audio/AudioManager.h"
-#include "Entity/TestEntity.h"
 #include "Graphics/FontManager.h"
 #include "Graphics/RenderScreen.h"
 #include "Graphics/SpriteManager.h"
@@ -17,6 +16,7 @@
 #include "Utils/TimerManager.h"
 #include "Utils/Utils.h"
 #include "Window/Window.h"
+#include "Wrap.h"
 
 
 namespace ClassicLauncher
@@ -42,7 +42,7 @@ namespace ClassicLauncher
         , m_windowRef(&window)
     {
         LogLevel(m_configManagerRef->GetClassicLogLevel(), m_configManagerRef->GetRaylibLogLevel());
-        rlw::SetTraceLogCallback(TraceLogger);       
+        rlw::SetTraceLogCallback(TraceLogger);
     }
 
     Application::~Application()

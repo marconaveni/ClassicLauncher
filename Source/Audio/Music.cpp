@@ -1,7 +1,7 @@
 #include "Audio/Music.h"
 
 #include "Music.h"
-#include "raylib.h"
+#include "Ray.h"
 
 
 namespace ClassicLauncher
@@ -9,7 +9,7 @@ namespace ClassicLauncher
 
     struct Music::MusicData
     {
-        ::Music musicStream{};
+        ray::Music musicStream{};
         bool isReady = false;
     };
 
@@ -27,59 +27,59 @@ namespace ClassicLauncher
     bool Music::LoadFromFile(const std::filesystem::path& path)
     {
         Unload();
-        m_data->musicStream = ::LoadMusicStream(path.string().c_str());
-        m_data->isReady = ::IsMusicValid(m_data->musicStream);
+        m_data->musicStream = ray::LoadMusicStream(path.string().c_str());
+        m_data->isReady = ray::IsMusicValid(m_data->musicStream);
         return m_data->isReady;
     }
 
     void Music::Play()
     {
-        ::PlayMusicStream(m_data->musicStream);
+        ray::PlayMusicStream(m_data->musicStream);
     }
 
     void Music::Stop()
     {
-        ::StopMusicStream(m_data->musicStream);
+        ray::StopMusicStream(m_data->musicStream);
     }
 
     void Music::Pause()
     {
-        ::PauseMusicStream(m_data->musicStream);
+        ray::PauseMusicStream(m_data->musicStream);
     }
 
     void Music::Resume()
     {
-        ::ResumeMusicStream(m_data->musicStream);
+        ray::ResumeMusicStream(m_data->musicStream);
     }
 
     void Music::UpdateStream()
     {
-        ::UpdateMusicStream(m_data->musicStream);
+        ray::UpdateMusicStream(m_data->musicStream);
     }
 
     void Music::SetVolume(float volume)
     {
-        ::SetMusicVolume(m_data->musicStream, volume);
+        ray::SetMusicVolume(m_data->musicStream, volume);
     }
 
     bool Music::IsPlaying() const
     {
-        return ::IsMusicStreamPlaying(m_data->musicStream);
+        return ray::IsMusicStreamPlaying(m_data->musicStream);
     }
 
     bool Music::IsValid() const
     {
-        return ::IsMusicValid(m_data->musicStream);
+        return ray::IsMusicValid(m_data->musicStream);
     }
 
     float Music::GetDuration() const
     {
-        return ::GetMusicTimeLength(m_data->musicStream);
+        return ray::GetMusicTimeLength(m_data->musicStream);
     }
 
     float Music::GetTimePlayed() const
     {
-        return ::GetMusicTimePlayed(m_data->musicStream);
+        return ray::GetMusicTimePlayed(m_data->musicStream);
     }
 
     void Music::SetLoop(bool enable)
@@ -89,14 +89,14 @@ namespace ClassicLauncher
 
     void Music::Seek(float time)
     {
-        ::SeekMusicStream(m_data->musicStream, time);
+        ray::SeekMusicStream(m_data->musicStream, time);
     }
 
     void Music::Unload()
     {
         if (m_data->isReady)
         {
-            ::UnloadMusicStream(m_data->musicStream);
+            ray::UnloadMusicStream(m_data->musicStream);
         }
     }
 

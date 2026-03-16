@@ -1,15 +1,11 @@
-// rl_wrap.cpp: implementação do wrapper chamando raylib nativa.
-// Este arquivo é o ÚNICO que inclui <raylib.h>.
-#include "rl_wrap.h"
+
+#include "Wrap.h"
 
 #include <cstdarg>
 #include <cstdio>
 #include <cstring>
 
-namespace ray
-{
-#include "raylib.h"
-} // namespace ray
+#include "Ray.h"
 
 
 namespace rlw
@@ -38,10 +34,10 @@ namespace rlw
     {
         return ray::Rectangle{rectangle.x, rectangle.y, rectangle.width, rectangle.height};
     }
-    // static ClassicLauncher::RectFloat ToWrapRec(ray::Rectangle rectangle)
-    // {
-    //     return ClassicLauncher::RectFloat{rectangle.x, rectangle.y, rectangle.width, rectangle.height};
-    // }
+    static ClassicLauncher::RectFloat ToWrapRec(ray::Rectangle rectangle)
+    {
+        return ClassicLauncher::RectFloat{rectangle.x, rectangle.y, rectangle.width, rectangle.height};
+    }
 
 
     // --- Logging / Configurations ---

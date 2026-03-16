@@ -1,7 +1,7 @@
 #include "Audio/AudioDevice.h"
 
 #include "AudioDevice.h"
-#include "raylib.h"
+#include "Ray.h"
 
 namespace ClassicLauncher
 {
@@ -9,11 +9,11 @@ namespace ClassicLauncher
 
     void AudioDevice::Init()
     {
-        m_isInitialized = ::IsAudioDeviceReady();
+        m_isInitialized = ray::IsAudioDeviceReady();
         if (!m_isInitialized)
         {
-            ::InitAudioDevice();
-            m_isInitialized = ::IsAudioDeviceReady();
+            ray::InitAudioDevice();
+            m_isInitialized = ray::IsAudioDeviceReady();
         }
     }
 
@@ -21,8 +21,8 @@ namespace ClassicLauncher
     {
         if (m_isInitialized)
         {
-            ::CloseAudioDevice();
-            m_isInitialized = ::IsAudioDeviceReady();
+            ray::CloseAudioDevice();
+            m_isInitialized = ray::IsAudioDeviceReady();
         }
     }
 
@@ -33,7 +33,7 @@ namespace ClassicLauncher
 
     void AudioDevice::SetMasterVolume(float volume)
     {
-        ::SetMasterVolume(volume);
+        ray::SetMasterVolume(volume);
     }
 
     AudioDevice& AudioDevice::GetInstance()

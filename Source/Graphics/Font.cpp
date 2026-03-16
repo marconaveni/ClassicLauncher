@@ -1,9 +1,6 @@
 #include "Font.h"
 
-namespace ray
-{
-#include "raylib.h"
-} // namespace ray
+#include "Ray.h"
 
 namespace ClassicLauncher
 {
