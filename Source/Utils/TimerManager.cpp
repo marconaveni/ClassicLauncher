@@ -4,9 +4,16 @@
 #include <utility>
 
 #include "Helper.h"
+#include "Window/Window.h"
 
 namespace ClassicLauncher
 {
+    
+    TimerManager::TimerManager(Window* window)
+        : m_windowRef(window)
+    {
+    }
+
     void TimerManager::ValidTimerHandling(TimerHandling& timerHandling) const
     {
         const int size = static_cast<int>(m_timers.size() - 1);
@@ -22,7 +29,7 @@ namespace ClassicLauncher
 
         if (timerHandling.id < 0)
         {
-            std::unique_ptr<Timer> newTimer = std::make_unique<Timer>();
+            std::unique_ptr<Timer> newTimer = std::make_unique<Timer>(m_windowRef);
             timerHandling.id = static_cast<int>(m_timers.size());
             m_timers.insert(std::make_pair(&timerHandling, std::move(newTimer)));
         }
@@ -35,7 +42,7 @@ namespace ClassicLauncher
 
         if (timerHandling.id < 0)
         {
-            std::unique_ptr<Timer> newTimer = std::make_unique<Timer>();
+            std::unique_ptr<Timer> newTimer = std::make_unique<Timer>(m_windowRef);
             timerHandling.id = static_cast<int>(m_timers.size());
             m_timers.insert(std::make_pair(&timerHandling, std::move(newTimer)));
         }

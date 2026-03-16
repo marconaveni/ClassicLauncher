@@ -11,7 +11,7 @@
 #include "Utils/Log.h"
 #include "Utils/ProcessManager.h"
 #include "Window/Window.h"
-#include "Window/WindowSystem.h"
+
 
 
 namespace ClassicLauncher
@@ -43,11 +43,11 @@ namespace ClassicLauncher
         m_guiBackground->m_textureName = "sprite";
         AddChild(m_guiBackground);
 
-        m_guiHorizontalCards = GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalCards", m_gameListManagerRef, m_audioManagerRef);
+        m_guiHorizontalCards = GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalCards", m_gameListManagerRef, m_audioManagerRef, GetWindow());
         m_guiHorizontalCards->Init();
         AddChild(m_guiHorizontalCards);
 
-        m_guiBlackScreen = GetEntityManager()->CreateEntity<GuiBlackScreen>("GuiBlackScreen");
+        m_guiBlackScreen = GetEntityManager()->CreateEntity<GuiBlackScreen>("GuiBlackScreen", GetWindow());
         GetEntityManager()->SetZOrder(m_guiBlackScreen, 99);
 
 
@@ -104,12 +104,12 @@ namespace ClassicLauncher
 
         if (Keyboard::IsReleased(Keyboard::F11) || (Keyboard::IsDown(Keyboard::LEFT_ALT) && Keyboard::IsReleased(Keyboard::ENTER)))
         {
-            WindowSystem::Get().ToggleFullscreen();
+            GetWindow()->ToggleFullscreen();
         }
 
-        if (InputManager::IsRelease(InputName::middleFaceLeft, MAIN_CENTER))
+        if (InputManager::IsRelease(InputName::middleFaceLeft, MAIN_CENTER | MAIN_TOP))
         {
-            WindowSystem::Get().Close();
+            GetWindow()->CloseScheduledWindow();
         }
         if (InputManager::IsRelease(InputName::rightFaceDown, MAIN_CENTER))
         {

@@ -1,6 +1,6 @@
 #include "InputManager.h"
 
-#include "Window/WindowSystem.h"
+#include "Window/Window.h"
 
 namespace ClassicLauncher
 {
@@ -26,7 +26,7 @@ namespace ClassicLauncher
                Keyboard::IsDown(Keyboard::Key::RIGHT_ALT) || Keyboard::IsDown(Keyboard::Key::LEFT_CONTROL) || Keyboard::IsDown(Keyboard::Key::RIGHT_CONTROL);
     }
 
-    void InputManager::UpdateInputState()
+    void InputManager::UpdateInputState(float frameTime)
     {
         for (auto& input : m_inputs)
         {
@@ -35,7 +35,7 @@ namespace ClassicLauncher
                 input.CancelInput();
                 continue;
             }
-            const bool bKeyModifier = IsModifierKey();
+            const bool isKeyModifier = IsModifierKey();
             const float maxAmount = 0.4f;
             const int key = input.keyPad;
             const int gamePad = input.gamePad;
@@ -44,26 +44,26 @@ namespace ClassicLauncher
 
             input.isPress = (Keyboard::IsPressed(key) || 
                             GamePad::IsPressed(m_gamePadIdSelected, gamePad)) &&
-                            !bKeyModifier && 
+                            !isKeyModifier && 
                             !m_disableInput;
             input.isDown = (Keyboard::IsDown(key) || 
                             GamePad::IsDown(m_gamePadIdSelected, gamePad)) && 
-                            !bKeyModifier &&
+                            !isKeyModifier &&
                             !m_disableInput;
             input.isRelease = (Keyboard::IsReleased(key) || 
                             GamePad::IsReleased(m_gamePadIdSelected, gamePad)) &&
-                            !bKeyModifier && 
+                            !isKeyModifier && 
                             !m_disableInput;
             input.isUp = (Keyboard::IsUp(key) || 
                             GamePad::IsUp(m_gamePadIdSelected, gamePad)) && 
-                            !bKeyModifier && 
+                            !isKeyModifier && 
                             !m_disableInput;
 
             // clang-format on
             if (input.isDown)
             {
                 input.isDown = (input.amoutDown == 0 || input.amoutDown >= maxAmount);
-                input.amoutDown += 0.016f * 60 * WindowSystem::Get().GetFrameTime();
+                input.amoutDown += 0.016f * 60 * frameTime;
             }
             else
             {

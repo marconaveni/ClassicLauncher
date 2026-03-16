@@ -8,12 +8,14 @@
 namespace ClassicLauncher
 {
 
+    class Window;
+
     class GuiBlackScreen : public Entity, public Animatable
     {
 
     public:
 
-        GuiBlackScreen();
+        GuiBlackScreen(Window* window);
         virtual EntityType GetType() const override { return EntityType::GuiBlackScreenClass; }
         void FadeIn();
         void FadeOut();

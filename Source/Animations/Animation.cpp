@@ -1,6 +1,6 @@
 #include "Animation.h"
 
-#include "Window/WindowSystem.h"
+#include "Window/Window.h"
 #include "reasings/reasings.h"
 
 namespace ClassicLauncher
@@ -78,7 +78,7 @@ namespace ClassicLauncher
                                                          m_finalTransform.color.a - m_startTransform.color.a,
                                                          m_duration);
                 // clang-format on
-                m_currentTime += WindowSystem::Get().GetFrameTime();
+                m_currentTime += m_windowRef->GetFrameTime();
                 return;
             }
             m_isRunning = false;

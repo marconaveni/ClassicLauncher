@@ -5,14 +5,17 @@
 #include "Animations/AnimationManager.h"
 #include "Graphics/SpriteAnimator.h"
 
+
 namespace ClassicLauncher
 {
+
+    class Window;
 
     class Animatable
     {
     public:
 
-        Animatable();
+        Animatable(Window* window);
         void UpdateAnimation();
         virtual void AnimationStarted(const std::string& name) {}
         virtual void AnimationUpdate(const std::string& name) {}
@@ -23,7 +26,7 @@ namespace ClassicLauncher
 
     private:
 
-        AnimationManager m_animationManager{};
+        AnimationManager m_animationManager;
     };
 
 } // namespace ClassicLauncher

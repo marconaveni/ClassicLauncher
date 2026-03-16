@@ -7,14 +7,15 @@
 class GameList;
 class AudioManager;
 class GameListManager;
+class Window;
 
 
 namespace ClassicLauncher::DebugOverlay
 {
-    
-    void Update(AudioManager* audio, GameListManager* gameListManager);
 
-} // namespace ClassicLauncher
+    void Update(AudioManager* audio, GameListManager* gameListManager, Window* window);
+
+} // namespace ClassicLauncher::DebugOverlay
 
 #endif
 

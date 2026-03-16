@@ -3,12 +3,14 @@
 #include "ClassicAssert.h"
 #include "Entity/Entity.h"
 #include "Helper.h"
-#include "Window/WindowSystem.h"
+#include "Window/Window.h"
 
 
 namespace ClassicLauncher
 {
-    AnimationManager::AnimationManager()
+
+    AnimationManager::AnimationManager(Window* window)
+        : m_windowRef(window)
     {
     }
 
@@ -20,7 +22,7 @@ namespace ClassicLauncher
 
         for (auto& spriteAnimation : m_spriteAnimations)
         {
-            spriteAnimation.second.spriteAnimator.Update(WindowSystem::Get().GetFrameTime());
+            spriteAnimation.second.spriteAnimator.Update(m_windowRef->GetFrameTime());
 
             RectFloat rec = spriteAnimation.second.spriteAnimator.GetCurrentSprite();
             Entity* entity = spriteAnimation.second.entity;
@@ -85,6 +87,7 @@ namespace ClassicLauncher
     {
         AnimationTransform& animationTransform = m_animationsTransform[name];
         animationTransform.entity = targetEntity;
+        animationTransform.animation.SetWindow(m_windowRef);
         animationTransform.animation.StartAnimation(durationAnimation, targetEntity->GetTransform(), targetTransform, typeAnimation, forceReset);
     }
 

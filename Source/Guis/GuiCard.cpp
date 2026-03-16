@@ -15,11 +15,12 @@
 namespace ClassicLauncher
 {
 
-    GuiCard::GuiCard(GameListManager* gameListManagerRef, FocusManager* focusManagerRef, AudioManager* audioManagerRef)
+    GuiCard::GuiCard(GameListManager* gameListManagerRef, FocusManager* focusManagerRef, AudioManager* audioManagerRef, Window* window)
         : FocusComponent(focusManagerRef, FocusCategory::CARD)
         , m_timerVideo()
         , m_gameListManagerRef(gameListManagerRef)
         , m_audioManagerRef(audioManagerRef)
+        , Animatable(window)
     {
     }
 
@@ -36,7 +37,7 @@ namespace ClassicLauncher
         CreateCard(m_cover, 0, 0, 255, "GuiCover", false);
         AddChild(m_cover);
 
-        m_guiVideoPlayer = GetEntityManager()->CreateEntity<GuiVideoPlayer>("GuiVideoPlayer");
+        m_guiVideoPlayer = GetEntityManager()->CreateEntity<GuiVideoPlayer>("GuiVideoPlayer", GetWindow());
         m_guiVideoPlayer->SetOffset(12.0f, 12.0f);
         AddChild(m_guiVideoPlayer);
 

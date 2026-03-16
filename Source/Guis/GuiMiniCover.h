@@ -17,12 +17,13 @@ namespace ClassicLauncher
     class GuiHorizontalBox;
     class EntityManager;
     class GameListManager;
+    class Window;
 
     class GuiMiniCover : public Entity, public Animatable
     {
     public:
 
-        GuiMiniCover(GameListManager* gameListManagerRef);
+        GuiMiniCover(GameListManager* gameListManagerRef, Window* window);
         EntityType GetType() const override { return EntityType::GuiMiniCoverClass; }
         void Init();
         void Update() override;

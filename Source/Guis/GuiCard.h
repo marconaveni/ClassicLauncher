@@ -21,13 +21,14 @@ namespace ClassicLauncher
     class EntityManager;
     class GameListManager;
     class AudioManager;
+    class Window;
 
     class GuiCard : public GuiCanvas, public FocusComponent, public Animatable
     {
 
     public:
 
-        GuiCard(GameListManager* gameListManagerRef, FocusManager* focusManagerRef, AudioManager* audioManagerRef);
+        GuiCard(GameListManager* gameListManagerRef, FocusManager* focusManagerRef, AudioManager* audioManagerRef, Window* window);
         void CreateCards(int x, int y);
 
 

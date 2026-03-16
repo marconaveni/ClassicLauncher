@@ -15,13 +15,13 @@ namespace ClassicLauncher
 {
 
     class Entity;
+    class Window;
 
     class AnimationManager
     {
     public:
 
-
-        AnimationManager();
+        AnimationManager(Window* window);
         ~AnimationManager() = default;
         void Update();
         Animation& GetAnimation(const std::string& name) { return m_animationsTransform[name].animation; }
@@ -62,6 +62,8 @@ namespace ClassicLauncher
 
         std::map<std::string, AnimationSpriteSource> m_spriteAnimations;
         std::map<std::string, AnimationTransform> m_animationsTransform;
+
+        Window* m_windowRef{nullptr};
     };
 } // namespace ClassicLauncher
 

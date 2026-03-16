@@ -152,6 +152,12 @@ namespace ClassicLauncher
         CLASSIC_ASSERT(m_fontManagerRef, "is still null don't call it in the constructor! EntityManager will take care of the assignment");
         return m_fontManagerRef;
     }
+    
+    Window* Entity::GetWindow()
+    {
+        CLASSIC_ASSERT(m_windowRef, "is still null don't call it in the constructor! EntityManager will take care of the assignment");
+        return m_windowRef;
+    }
 
     void Entity::SetZOrder(int zOrder)
     {

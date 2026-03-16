@@ -5,6 +5,7 @@
 
 namespace ClassicLauncher
 {
+    class Window;
 
     enum class Ease : std::uint8_t
     {
@@ -70,10 +71,12 @@ namespace ClassicLauncher
         bool ResetAnimation();
         bool GetAnimationIsRun() const;
         bool GetAnimationFinish() const;
+        void SetWindow(Window* window) { m_windowRef = window; }
 
-    protected:
+    private:
 
-        float GetAnimation(float t, float b, float c, float d) const;
+        float GetAnimation(float t, float b, float c, float d) const;            
+        Window* m_windowRef{nullptr};
     };
 
 } // namespace ClassicLauncher

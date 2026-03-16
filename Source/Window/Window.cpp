@@ -16,7 +16,7 @@ namespace ClassicLauncher
     static std::vector<ray::Image> icons;
     Window::~Window()
     {
-        Close();
+        CloseWindow();
     }
 
     void Window::Init(const std::string& title, ConfigurationManager& configManager)
@@ -43,7 +43,7 @@ namespace ClassicLauncher
         return ray::WindowShouldClose();
     }
 
-    void Window::Close()
+    void Window::CloseWindow()
     {
         if (ray::IsWindowReady())
         {
@@ -53,6 +53,11 @@ namespace ClassicLauncher
             m_isReady = ray::IsWindowReady();
             m_configManager = nullptr;
         }
+    }
+
+    void Window::CloseScheduledWindow()
+    {
+        m_status.close = true;
     }
 
     void Window::SetState(unsigned int flags)
@@ -182,9 +187,9 @@ namespace ClassicLauncher
         ray::SetWindowFocused();
     }
 
-    bool Window::ToggleFullscreen()
+    void Window::ToggleFullscreen()
     {
-        return SetFullscreen(!IsFullScreen());
+        m_status.toggleFullscreen = true;
     }
 
     bool Window::SetFullscreen(bool enableFullscreen)
@@ -270,12 +275,12 @@ namespace ClassicLauncher
         if (m_status.close)
         {
             m_status.close = false;
-            Close();
+            CloseWindow();
         }
         else if (m_status.toggleFullscreen)
         {
             m_status.toggleFullscreen = false;
-            ToggleFullscreen();
+            SetFullscreen(!IsFullScreen());
         }
     }
 

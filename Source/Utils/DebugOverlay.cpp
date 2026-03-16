@@ -2,32 +2,33 @@
 
 #ifdef _DEBUG
 
-#include "Application.h"
-#include "Audio/AudioManager.h"
-#include "Data/GameListManager.h"
-#include "Helper.h"
-#include "Window/WindowSystem.h"
-#include "Graphics/Texture.h"
-#include "Input/InputManager.h"
-#include "Utils/Math.h"
-#include "Engine.h"
+    #include "Application.h"
+    #include "Audio/AudioManager.h"
+    #include "Data/GameListManager.h"
+    #include "Engine.h"
+    #include "Graphics/Texture.h"
+    #include "Helper.h"
+    #include "Input/InputManager.h"
+    #include "Utils/Math.h"
+    #include "Window/Window.h"
+
 
 namespace ClassicLauncher::DebugOverlay
 {
 
-    void DrawStatistics();
+    void DrawStatistics(Window* window);
     void DrawAudioManagerStatus(AudioManager* audio);
     void DrawGameListStatus(GameListManager* gameListManager);
 
     static float s_delay = 0.1f;
     static int s_category = 0;
 
-    void DrawStatistics()
+    void DrawStatistics(Window* window)
     {
         Color color = Color::Green;
         PRINT("==============Statistics================", s_delay, "statics-line", color);
-        PRINT(TEXT("%d fps", WindowSystem::Get().GetFPS()), s_delay, "fps", color);
-        PRINT(TEXT("%.6f ms", WindowSystem::Get().GetFrameTime()), s_delay, "ms", color);
+        PRINT(TEXT("%d fps", window->GetFPS()), s_delay, "fps", color);
+        PRINT(TEXT("%.6f ms", window->GetFrameTime()), s_delay, "ms", color);
         PRINT(TEXT("Vram %.2fMB", Math::BytesToMegabytes(Texture::GetTextureSizeBytes())), s_delay, "vram", color);
         PRINT("========================================", s_delay, "statics-line2", color);
     }
@@ -58,7 +59,7 @@ namespace ClassicLauncher::DebugOverlay
     }
 
 
-    void Update(AudioManager* audio, GameListManager* gameListManager)
+    void Update(AudioManager* audio, GameListManager* gameListManager, Window* window)
     {
 
         if (Keyboard::IsReleased(Keyboard::KP_2))
@@ -75,13 +76,13 @@ namespace ClassicLauncher::DebugOverlay
             if (s_category < 0)
             {
                 s_category = 3;
-            }      
+            }
         }
-        
+
         switch (s_category)
         {
             default: break;
-            case 1: DrawStatistics(); break;
+            case 1: DrawStatistics(window); break;
             case 2: DrawAudioManagerStatus(audio); break;
             case 3: DrawGameListStatus(gameListManager); break;
         }

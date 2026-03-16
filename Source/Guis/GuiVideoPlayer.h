@@ -13,12 +13,13 @@ namespace ClassicLauncher
 {
 
     class RenderTexture;
+    class Window;
 
     class GuiVideoPlayer : public Entity, public Animatable
     {
     public:
 
-        GuiVideoPlayer();
+        GuiVideoPlayer(Window* window);
         EntityType GetType() const override { return EntityType::GuiVideoPlayerClass; }
         bool Init(const std::string& path, int width, int height);
         void InitFullscreen();

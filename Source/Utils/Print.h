@@ -12,6 +12,7 @@ namespace ClassicLauncher
 {
 
     class FontManager;
+    class Window;
 
     struct Message
     {
@@ -41,7 +42,7 @@ namespace ClassicLauncher
     {
     public:
 
-        Print(FontManager& fontManager);
+        Print(FontManager& fontManager, Window* window);
         void Init();
         void PrintOnScreen(const char* text, float duration = 2.0f, const char* label = "", const Color& textColor = Color::Cyan, bool enableLog = false);
         void DrawMessage();
@@ -54,6 +55,7 @@ namespace ClassicLauncher
         std::string m_fontName{};
         std::vector<Message> m_messages{};
         FontManager* m_fontManagerRef{nullptr};
+        Window* m_windowRef{nullptr};
     };
 
 } // namespace ClassicLauncher

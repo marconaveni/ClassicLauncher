@@ -6,12 +6,13 @@
 #include "Input/InputManager.h"
 #include "Themes/ThemesManager.h"
 #include "Utils/Utils.h"
-#include "Window/WindowSystem.h"
+#include "Window/Window.h"
 #include "rl_wrap.h"
 
 namespace ClassicLauncher
 {
-    GuiVideoPlayer::GuiVideoPlayer()
+    GuiVideoPlayer::GuiVideoPlayer(Window* window)
+        : Animatable(window)
     {
         SetOpacity(0);
         m_gui.SetOpacity(0);
@@ -59,9 +60,9 @@ namespace ClassicLauncher
         m_playerFullScreen = nullptr;
         m_playerFullScreen = std::make_unique<VideoPlayer>();
         const float scale = ThemesManager::GetScaleRenderer();
-        const int monitor = WindowSystem::Get().GetCurrentMonitor();
+        const int monitor = GetWindow()->GetCurrentMonitor();
 
-        Sizei monitorSize{WindowSystem::Get().GetMonitorWidth(monitor), WindowSystem::Get().GetMonitorHeight(monitor)};
+        Sizei monitorSize{GetWindow()->GetMonitorWidth(monitor), GetWindow()->GetMonitorHeight(monitor)};
         m_playerFullScreen->Init(m_filePath, monitorSize.width, monitorSize.height, scale);
         m_playerFullScreen->Play();
         m_playerFullScreen->SetLoop(false);

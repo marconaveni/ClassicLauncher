@@ -76,7 +76,7 @@ namespace ClassicLauncher
 
         InputManager();
         ~InputManager();
-        void UpdateInputState();
+        void UpdateInputState(float frameTime);
 
     protected:
 

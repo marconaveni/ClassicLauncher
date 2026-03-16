@@ -16,6 +16,7 @@
 #include "Utils/String.h"
 #include "Utils/TimerManager.h"
 #include "Utils/Utils.h"
+#include "Window/Window.h"
 
 
 namespace ClassicLauncher
@@ -27,19 +28,21 @@ namespace ClassicLauncher
                              TimerManager& timerManager,
                              AudioManager& audioManager,
                              FontManager& fontManager,
-                             ProcessManager& processManager)
-        : m_configManager(&configManager)
-        , m_spriteManager(&spriteManager)
-        , m_timerManager(&timerManager)
-        , m_audioManager(&audioManager)
-        , m_renderEntities(&spriteManager, &configManager)
-        , m_entityManager(&spriteManager, &timerManager, &m_focusManager, &fontManager)
+                             ProcessManager& processManager,
+                             Window& window)
+        : m_configManagerRef(&configManager)
+        , m_spriteManagerRef(&spriteManager)
+        , m_timerManagerRef(&timerManager)
+        , m_audioManagerRef(&audioManager)
+        , m_renderEntities(&spriteManager, &configManager, &window)
+        , m_entityManager(&spriteManager, &timerManager, &m_focusManager, &fontManager, &window)
         , m_themesManager(&m_gameListManager, &spriteManager, &m_entityManager, &configManager, &audioManager)
-        , m_fontManager(&fontManager)
-        , m_processManager(&processManager)
+        , m_fontManagerRef(&fontManager)
+        , m_processManagerRef(&processManager)
+        , m_windowRef(&window)
     {
-        LogLevel(m_configManager->GetClassicLogLevel(), m_configManager->GetRaylibLogLevel());
-        rlw::SetTraceLogCallback(TraceLogger);
+        LogLevel(m_configManagerRef->GetClassicLogLevel(), m_configManagerRef->GetRaylibLogLevel());
+        rlw::SetTraceLogCallback(TraceLogger);       
     }
 
     Application::~Application()
@@ -49,12 +52,12 @@ namespace ClassicLauncher
     void Application::Init()
     {
         m_gameListManager.Initialize();
-        m_spriteManager->Init();
+        m_spriteManagerRef->Init();
         m_themesManager.Init();
 
         if (m_gameListManager.GetGameListSize() > 0)
         {
-            m_guiWindow = m_entityManager.CreateEntity<GuiWindow>("GuiWindow", &m_gameListManager, *m_audioManager, *m_processManager);
+            m_guiWindow = m_entityManager.CreateEntity<GuiWindow>("GuiWindow", &m_gameListManager, *m_audioManagerRef, *m_processManagerRef);
             m_guiWindow->Init();
         }
         else
@@ -72,19 +75,19 @@ namespace ClassicLauncher
     void Application::Update()
     {
 #ifdef _DEBUG
-        DebugOverlay::Update(m_audioManager, &m_gameListManager);
+        DebugOverlay::Update(m_audioManagerRef, &m_gameListManager, m_windowRef);
         UpdateLogLevel();
 #endif
 
         m_entityManager.UpdateAll();
         m_focusManager.Update();
-        m_timerManager->Update();
-        m_audioManager->Update();
+        m_timerManagerRef->Update();
+        m_audioManagerRef->Update();
     }
 
     void Application::ProcessUpdate()
     {
-        const ProcessStatus status = m_processManager->GetStatus();
+        const ProcessStatus status = m_processManagerRef->GetStatus();
         switch (status)
         {
             case ProcessStatus::NONE: break;
@@ -94,27 +97,27 @@ namespace ClassicLauncher
             case ProcessStatus::CLOSE: m_guiWindow->FadeOutScreen(); break;
             default: break;
         }
-        m_processManager->UpdateRun();
+        m_processManagerRef->UpdateRun();
     }
 
     void Application::End()
     {
-        m_audioManager->Unload();
-        m_spriteManager->Unload();
+        m_audioManagerRef->Unload();
+        m_spriteManagerRef->Unload();
         m_entityManager.End();
     }
 
     void Application::OnGraphicsRestore()
     {
-        m_spriteManager->Init();
+        m_spriteManagerRef->Init();
         m_themesManager.Init();
-        m_fontManager->OnGraphicsRestore();
+        m_fontManagerRef->OnGraphicsRestore();
         m_guiWindow->UpdateCovers();
     }
 
     void Application::OnGraphicsLost()
     {
-        m_fontManager->OnGraphicsLost();
+        m_fontManagerRef->OnGraphicsLost();
     }
 
 

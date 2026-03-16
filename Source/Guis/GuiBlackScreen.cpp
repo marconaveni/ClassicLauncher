@@ -4,7 +4,8 @@
 namespace ClassicLauncher
 {
 
-    GuiBlackScreen::GuiBlackScreen()
+    GuiBlackScreen::GuiBlackScreen(Window* window)
+        : Animatable(window)
     {
         SetOpacity(0);
         SetSize(Sizef{1280.0f, 720.0f});

@@ -10,12 +10,13 @@ namespace ClassicLauncher
 
     class SpriteManager;
     class ConfigurationManager;
+    class Window;
 
     class RenderEntities
     {
     public:
 
-        explicit RenderEntities(SpriteManager* spriteManagerReference, ConfigurationManager* configManager);
+        explicit RenderEntities(SpriteManager* spriteManagerReference, ConfigurationManager* configManager, Window* window);
         void DrawEntities(const std::vector<std::unique_ptr<Entity>>& entities);
 
     private:
@@ -26,6 +27,7 @@ namespace ClassicLauncher
         void DrawThemeReference();
         ConfigurationManager* m_configManagerReference{nullptr};
         SpriteManager* m_spriteManagerReference{nullptr};
+        Window* m_windowReference{nullptr};
         float m_renderScale{1};
     };
 

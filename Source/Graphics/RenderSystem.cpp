@@ -1,12 +1,14 @@
 #include "RenderSystem.h"
 
 #include "Graphics/RenderEntities.h"
+#include "Window/Window.h"
 #include "rl_wrap.h"
 
 namespace ClassicLauncher
 {
 
-    RenderSystem::RenderSystem()
+    RenderSystem::RenderSystem(Window* window)
+        : m_renderScreen(window)
     {
     }
 

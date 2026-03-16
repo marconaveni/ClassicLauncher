@@ -21,14 +21,16 @@
 #include "Utils/Math.h"
 #include "Utils/Resources.h"
 #include "Utils/Utils.h"
-#include "Window/WindowSystem.h"
+#include "Window/Window.h"
 
 
 namespace ClassicLauncher
 {
 
-    GuiHorizontalCards::GuiHorizontalCards(GameListManager* gameListManagerRef, AudioManager* audioManagerRef)
-        : m_gameListManagerRef(gameListManagerRef), m_audioManagerRef(audioManagerRef)
+    GuiHorizontalCards::GuiHorizontalCards(GameListManager* gameListManagerRef, AudioManager* audioManagerRef, Window* window)
+        : m_gameListManagerRef(gameListManagerRef)
+        , m_audioManagerRef(audioManagerRef)
+        , Animatable(window)
     {
         SetSize(Sizef{1280.0f, 720.0f});
     }
@@ -60,17 +62,14 @@ namespace ClassicLauncher
 
         for (int i = 0; i < 10; i++)
         {
-            auto* card = GetEntityManager()->CreateEntity<GuiCard>("GuiCard",
-                                                                   m_gameListManagerRef,
-                                                                   GetFocusManager(),
-                                                                   m_audioManagerRef);
+            auto* card = GetEntityManager()->CreateEntity<GuiCard>("GuiCard", m_gameListManagerRef, GetFocusManager(), m_audioManagerRef, GetWindow());
             card->CreateCards(0, 0);
             m_horizontalBox->AttachGui(card);
             m_horizontalBox->AddChild(card);
             m_guiCards.emplace_back(card);
         }
 
-        m_miniCover = GetEntityManager()->CreateEntity<GuiMiniCover>("MiniCover", m_gameListManagerRef);
+        m_miniCover = GetEntityManager()->CreateEntity<GuiMiniCover>("MiniCover", m_gameListManagerRef, GetWindow());
         m_miniCover->Init();
         AddChild(m_miniCover);
 
@@ -102,7 +101,7 @@ namespace ClassicLauncher
         m_guiTopBar->AddChild(m_guiMenu);
 
 
-        m_frame = GetEntityManager()->CreateEntity<GuiFrame>("Frame");
+        m_frame = GetEntityManager()->CreateEntity<GuiFrame>("Frame", GetWindow());
         GetEntityManager()->SetZOrder(m_frame, 1);
         SetFocus(3, true);
     }
@@ -144,13 +143,10 @@ namespace ClassicLauncher
         m_horizontalBox->SetSpace(space);
         SetPositionHorizontalBox();
 
-        const float cardWidth =
-            ((m_horizontalBox->GetSize().width / 10) * m_horizontalBox->GetScale().x + m_horizontalBox->GetSpace());
+        const float cardWidth = ((m_horizontalBox->GetSize().width / 10) * m_horizontalBox->GetScale().x + m_horizontalBox->GetSpace());
 
-        const float minX =
-            ((m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * 3 + m_horizontalBox->GetPosition().x);
-        const float maxX =
-            ((m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * 6 + m_horizontalBox->GetPosition().x);
+        const float minX = ((m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * 3 + m_horizontalBox->GetPosition().x);
+        const float maxX = ((m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * 6 + m_horizontalBox->GetPosition().x);
         const float minY = ThemesManager::GetConfigurationThemes().offsetTopFrame;
         const float maxY = ThemesManager::GetConfigurationThemes().offsetBottomFrame;
         m_frame->SetLimitArea(RectFloat{minX, minY + 27.0f, maxX, maxY + 720.0f});
@@ -231,14 +227,14 @@ namespace ClassicLauncher
         LOG(LOG_CLASSIC_DEBUG, "Num Sprites Loaded after SetCovers %d", GetSpriteManager()->NumSpritesLoaded());
     }
 
-    
+
     void GuiHorizontalCards::RemoveCoversFromScreen()
     {
-        if (m_loadTexturesCards < 20 && Texture::GetTextureSizeBytes() < 209715200) 
+        if (m_loadTexturesCards < 20 && Texture::GetTextureSizeBytes() < 209715200)
         {
             return;
         }
-        
+
         const int gameListSize = m_gameListManagerRef->GetGameListSize();
         if (gameListSize == 0)
         {
@@ -246,7 +242,7 @@ namespace ClassicLauncher
         }
         std::vector<bool> keepCover(static_cast<size_t>(gameListSize), false);
         std::vector<bool> keepMiniCover(static_cast<size_t>(gameListSize), false);
-        
+
         for (int i = 0; i < 10; i++)
         {
             int index = m_gameListManagerRef->GetGameId() + i - m_idFocus;
@@ -254,10 +250,10 @@ namespace ClassicLauncher
             index = Math::Clamp(index, 0, gameListSize - 1);
             keepCover[static_cast<size_t>(index)] = true;
         }
-        
+
         const int themesNumCovers = ThemesManager::GetConfigurationThemes().numCovers;
         const int numMiniCovers = gameListSize < themesNumCovers ? gameListSize + 1 : themesNumCovers;
-        
+
         for (int i = 0; i < numMiniCovers; i++)
         {
             int index = m_gameListManagerRef->GetGameId() + i - (numMiniCovers / 2);
@@ -265,7 +261,7 @@ namespace ClassicLauncher
             index = Math::Clamp(index, 0, gameListSize - 1);
             keepMiniCover[static_cast<size_t>(index)] = true;
         }
-        
+
         for (int i = 0; i < gameListSize; i++)
         {
             if (!keepCover[i])
@@ -331,11 +327,7 @@ namespace ClassicLauncher
 
             if (resultCover && resultMiniCover)
             {
-                LOG(LOG_CLASSIC_TRACE,
-                    "Sprite deleted index: %d\n  > Cover: %s\n  > Mini Cover: %s ",
-                    i,
-                    coverName.c_str(),
-                    miniCoverName.c_str());
+                LOG(LOG_CLASSIC_TRACE, "Sprite deleted index: %d\n  > Cover: %s\n  > Mini Cover: %s ", i, coverName.c_str(), miniCoverName.c_str());
             }
         }
 
@@ -353,9 +345,7 @@ namespace ClassicLauncher
         {
             m_multiply = 256.0f;
         }
-        else if ((InputManager::IsDown(InputName::leftFaceLeft, MAIN_CENTER) ||
-                  InputManager::IsDown(InputName::leftFaceRight, MAIN_CENTER)) &&
-                 !m_isPress)
+        else if ((InputManager::IsDown(InputName::leftFaceLeft, MAIN_CENTER) || InputManager::IsDown(InputName::leftFaceRight, MAIN_CENTER)) && !m_isPress)
         {
             PRINT(TEXT("IsPress"));
             CancelMultiply();
@@ -365,21 +355,20 @@ namespace ClassicLauncher
                 [&]()
                 {
                     PRINT(TEXT("Está acionando"));
-                    const float time = WindowSystem::Get().GetFrameTime();
+                    const float time = GetWindow()->GetFrameTime();
                     m_multiply = 88.0f;
                 },
                 this,
                 2.5f,
                 false);
         }
-        else if (InputManager::IsRelease(InputName::leftFaceLeft, MAIN_CENTER) ||
-                 InputManager::IsRelease(InputName::leftFaceRight, MAIN_CENTER))
+        else if (InputManager::IsRelease(InputName::leftFaceLeft, MAIN_CENTER) || InputManager::IsRelease(InputName::leftFaceRight, MAIN_CENTER))
         {
             PRINT(TEXT("IsRelease"));
             CancelMultiply();
         }
 
-        m_speed = Math::Clamp(m_multiply * 60.0f * WindowSystem::Get().GetFrameTime(), 0.0f, 256.0f);
+        m_speed = Math::Clamp(m_multiply * 60.0f * GetWindow()->GetFrameTime(), 0.0f, 256.0f);
     }
 
     void GuiHorizontalCards::SetTextHintBar()
@@ -492,8 +481,7 @@ namespace ClassicLauncher
         SetSpeedCards();
         UpdateInput();
 
-        const float sizeCard =
-            (m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * m_horizontalBox->GetScale().x;
+        const float sizeCard = (m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * m_horizontalBox->GetScale().x;
 
         if (m_isRight)
         {

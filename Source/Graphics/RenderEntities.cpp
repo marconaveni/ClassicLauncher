@@ -10,8 +10,9 @@
 #include "Themes/ThemesManager.h"
 #include "Utils/ConfigurationManager.h"
 #include "Utils/Math.h"
-#include "Window/WindowSystem.h"
+#include "Window/Window.h"
 #include "rl_wrap.h"
+
 
 
 namespace ClassicLauncher
@@ -24,9 +25,10 @@ namespace ClassicLauncher
     static Texture s_texture;
 #endif
 
-    RenderEntities::RenderEntities(SpriteManager* spriteManagerReference, ConfigurationManager* configManager)
+    RenderEntities::RenderEntities(SpriteManager* spriteManagerReference, ConfigurationManager* configManager, Window* window)
         : m_spriteManagerReference(spriteManagerReference)
         , m_configManagerReference(configManager)
+        , m_windowReference(window)
     {
 #ifdef _DEBUG
         s_isThemeEnable = m_configManagerReference->GetThemeReferenceOverlay();
@@ -133,7 +135,7 @@ namespace ClassicLauncher
 
 
         rlw::DrawCircle(entity->m_finalRender.transform.x, entity->m_finalRender.transform.y, 5, Color{255, 0, 0, 50});
-        if (Math::CheckCollisionPointRec(WindowSystem::Get().GetVirtualMouse(), entity->m_finalRender.transform))
+        if (Math::CheckCollisionPointRec(m_windowReference->GetVirtualMouse(), entity->m_finalRender.transform))
         {
             rlw::DrawRectangleLinesEx(entity->m_finalRender.transform, 1, Color::Red);
             // ::DrawRectangle(entity->m_finalTransformRect.x,

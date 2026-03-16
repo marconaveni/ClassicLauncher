@@ -36,7 +36,6 @@ namespace ClassicLauncher
         Engine();
         ~Engine();
         void Run();
-        static int GetTotalFrames();
 
     private:
 

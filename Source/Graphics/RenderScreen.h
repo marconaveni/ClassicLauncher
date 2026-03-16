@@ -9,12 +9,13 @@
 namespace ClassicLauncher
 {
     class RenderTexture;
+    class Window;
 
     class RenderScreen
     {
     public:
 
-        RenderScreen() = default;
+        RenderScreen(Window* window);
         ~RenderScreen();
         void Init(int screenWidth, int screenHeight);
         void Clear();
@@ -43,6 +44,7 @@ namespace ClassicLauncher
         float m_scale{1};
         bool m_isMaintainAspectRatio{true};
         Vector2f m_virtualMouse{};
+        Window* m_windowRef;
     };
 
 } // namespace ClassicLauncher

@@ -30,7 +30,8 @@ namespace ClassicLauncher
         ~Window();
         void Init(const std::string& title, ConfigurationManager& configManager);
         bool ShouldClose();
-        void Close();
+        void CloseWindow();
+        void CloseScheduledWindow();
 
         void SetState(unsigned int flags);
         void ClearState(unsigned int flags);
@@ -56,6 +57,7 @@ namespace ClassicLauncher
         void RestoreWindow();
         void SetWindowFocused();
         bool IsResize() const;
+        void ToggleFullscreen();
         void Update();
         [[nodiscard]] bool IsReady();
 
@@ -96,7 +98,6 @@ namespace ClassicLauncher
         ConfigurationManager* m_configManager{nullptr};
 
         bool IsFullScreen();
-        bool ToggleFullscreen();
         void SetConfigFlags(unsigned int flags);
         bool SetFullscreen(bool enable);
         void Unload();

@@ -8,23 +8,22 @@
 #include "Helper.h"
 #include "Utils/Log.h"
 #include "Utils/Resources.h"
-#include "Window/WindowSystem.h"
 
 namespace ClassicLauncher
 {
 
     Engine::Engine()
-        : m_application(m_configurationManager, m_spriteManager, m_timerManager, m_audioManager, m_fontManager, m_processManager)
-        , m_print(m_fontManager)
+        : m_application(m_configurationManager, m_spriteManager, m_timerManager, m_audioManager, m_fontManager, m_processManager, m_window)
+        , m_print(m_fontManager, &m_window)
+        , m_timerManager(&m_window)
+        , m_renderSystem(&m_window)
     {
         RegistryPrint(&m_print);
-        WindowSystem::Get().Bind(&m_window);
         Resources::SetClassicLauncherDirectory();
     }
 
     Engine::~Engine()
     {
-        WindowSystem::Get().Bind(nullptr);
     }
 
     void Engine::Run()
@@ -72,13 +71,13 @@ namespace ClassicLauncher
         m_renderSystem.Unload();
         m_spriteManager.Unload();
         m_application.OnGraphicsLost();
-        m_window.Close();
+        m_window.CloseWindow();
         m_audioManager.Unload();
     }
 
     void Engine::TickUi()
     {
-        m_inputManager.UpdateInputState();
+        m_inputManager.UpdateInputState(m_window.GetFrameTime());
         m_application.Update();
 
         m_renderSystem.BeginFrame(); // drawing on the renderscreen

@@ -9,14 +9,15 @@
 namespace ClassicLauncher
 {
     class GuiBase;
+    class Window;
 
     class GuiFrame : public Entity, public Animatable
     {
     public:
 
-        GuiFrame();
+        GuiFrame(Window* window);
         ~GuiFrame() = default;
-        void SetFrame(bool bForce = false);
+        void SetFrame(bool force = false);
         void Click();
         virtual void AnimationFinished(const std::string& name) override;
         virtual EntityType GetType() const override { return EntityType::GuiFrameClass; }

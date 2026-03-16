@@ -11,12 +11,13 @@ namespace ClassicLauncher
 
     class GuiCanvas;
     class GuiBase;
+    class Window;
 
     class GuiButton : public GuiCanvas, public FocusComponent, public Animatable
     {
     public:
 
-        GuiButton(FocusManager* focusManagerRef);
+        GuiButton(FocusManager* focusManagerRef, Window* window);
         ~GuiButton() = default;
         void Init(const Vector2f sourceIcon);
         virtual EntityType GetType() const override { return EntityType::GuiButtonClass; }

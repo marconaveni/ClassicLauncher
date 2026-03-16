@@ -12,6 +12,7 @@ namespace ClassicLauncher
     class Timer;
     class Entity;
     class Application;
+    class Window;
 
     struct TimerHandling
     {
@@ -26,7 +27,7 @@ namespace ClassicLauncher
     {
     public:
 
-        TimerManager() = default;
+        TimerManager(Window* window);
         ~TimerManager() = default;
         void SetTimer(TimerHandling& timerHandling, std::function<void()> callbackFunction, Entity* targetEntity, float delay, bool isLooped = false);
         void ClearTimer(TimerHandling& timerHandling);
@@ -41,6 +42,7 @@ namespace ClassicLauncher
 
         std::unordered_map<TimerHandling*, std::unique_ptr<Timer>> m_timers{};
         int m_counter{0};
+        Window* m_windowRef{nullptr};
     };
 
 } // namespace ClassicLauncher

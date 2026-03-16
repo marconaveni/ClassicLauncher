@@ -3,10 +3,15 @@
 #include <utility>
 
 #include "Entity/Entity.h"
-#include "Window/WindowSystem.h"
+#include "Window/Window.h"
 
 namespace ClassicLauncher
 {
+
+    Timer::Timer(Window* window)
+        : m_windowRef(window)
+    {
+    }
 
     void Timer::SetTimer(std::function<void()> callbackFunction, Entity* targetEntity, const float delay, const bool isLoop)
     {
@@ -24,7 +29,7 @@ namespace ClassicLauncher
         {
             if (m_currentTime <= m_delay)
             {
-                m_currentTime += WindowSystem::Get().GetFrameTime();
+                m_currentTime += m_windowRef->GetFrameTime();
                 return;
             }
             m_callback();
@@ -43,9 +48,9 @@ namespace ClassicLauncher
 
     void Timer::Reset()
     {
-        m_currentTime = 0.0;                                                            // Reset current time
-        m_duration = m_delay / static_cast<double>(WindowSystem::Get().GetFrameTime()); // Duration based on frame time
-        m_isFunctionCalled = false;                                                     // Reset the function called
+        m_currentTime = 0.0;                                                     // Reset current time
+        m_duration = m_delay / static_cast<double>(m_windowRef->GetFrameTime()); // Duration based on frame time
+        m_isFunctionCalled = false;                                              // Reset the function called
     }
 
 } // namespace ClassicLauncher

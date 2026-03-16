@@ -6,11 +6,13 @@
 namespace ClassicLauncher
 {
 
+    class Window;
+
     class RenderSystem
     {
     public:
 
-        RenderSystem();
+        RenderSystem(Window* window);
         ~RenderSystem();
 
         void Init(int width, int height);
@@ -23,7 +25,7 @@ namespace ClassicLauncher
 
     private:
 
-        RenderScreen m_renderScreen{};
+        RenderScreen m_renderScreen;
     };
 
 } // namespace ClassicLauncher

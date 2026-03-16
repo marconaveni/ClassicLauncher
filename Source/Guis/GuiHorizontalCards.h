@@ -25,6 +25,7 @@ namespace ClassicLauncher
     class AudioManager;
     class GuiMenu;
     class GuiBase;
+    class Window;
 
 
     class GuiHorizontalCards : public Entity, public Animatable
@@ -38,7 +39,7 @@ namespace ClassicLauncher
             RIGHT
         };
 
-        GuiHorizontalCards(GameListManager* gameListManagerRef, AudioManager* audioManagerRef);
+        GuiHorizontalCards(GameListManager* gameListManagerRef, AudioManager* audioManagerRef, Window* window);
         EntityType GetType() const override { return EntityType::GuiHorizontalCardsClass; }
         void Init();
         void Update() override;

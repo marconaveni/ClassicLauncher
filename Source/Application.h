@@ -40,7 +40,8 @@ namespace ClassicLauncher
                     TimerManager& timerManager,
                     AudioManager& audioManager,
                     FontManager& fontManager,
-                    ProcessManager& processManager);
+                    ProcessManager& processManager,
+                    Window& window);
         ~Application();
 
         void Init();
@@ -59,12 +60,13 @@ namespace ClassicLauncher
         FocusManager m_focusManager;
         EntityManager m_entityManager;
 
-        ProcessManager* m_processManager{nullptr};
-        ConfigurationManager* m_configManager{nullptr};
-        SpriteManager* m_spriteManager{nullptr};
-        TimerManager* m_timerManager{nullptr};
-        AudioManager* m_audioManager{nullptr};
-        FontManager* m_fontManager{nullptr};
+        ProcessManager* m_processManagerRef{nullptr};
+        ConfigurationManager* m_configManagerRef{nullptr};
+        SpriteManager* m_spriteManagerRef{nullptr};
+        TimerManager* m_timerManagerRef{nullptr};
+        AudioManager* m_audioManagerRef{nullptr};
+        FontManager* m_fontManagerRef{nullptr};
+        Window* m_windowRef{nullptr};
 
         GuiWindow* m_guiWindow{nullptr};
     };

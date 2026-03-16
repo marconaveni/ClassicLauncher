@@ -7,15 +7,16 @@
 #include "Graphics/FontManager.h"
 #include "Math.h"
 #include "Utils/Resources.h"
-#include "Window/WindowSystem.h"
+#include "Window/Window.h"
 #include "rl_wrap.h"
 
 
 namespace ClassicLauncher
 {
 
-    Print::Print(FontManager& fontManager)
+    Print::Print(FontManager& fontManager, Window* window)
         : m_fontManagerRef(&fontManager)
+        , m_windowRef(window)
     {
     }
 
@@ -112,7 +113,7 @@ namespace ClassicLauncher
 
             y += message.size;
 
-            if (y > WindowSystem::Get().GetScreenHeight())
+            if (y > m_windowRef->GetScreenHeight())
             {
                 break;
             }

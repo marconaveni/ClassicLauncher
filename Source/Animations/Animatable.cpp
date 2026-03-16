@@ -5,7 +5,8 @@
 namespace ClassicLauncher
 {
 
-    Animatable::Animatable()
+    Animatable::Animatable(Window* window)
+        : m_animationManager(window)
     {
         m_animationManager.SetStartCallback(std::bind(&Animatable::AnimationStarted, this, std::placeholders::_1));
         m_animationManager.SetRunningCallback(std::bind(&Animatable::AnimationUpdate, this, std::placeholders::_1));

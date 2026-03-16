@@ -35,6 +35,7 @@ namespace ClassicLauncher
     class TimerManager;
     class EntityManager;
     class FocusManager;
+    class Window;
 
     class Entity
     {
@@ -144,6 +145,7 @@ namespace ClassicLauncher
         EntityManager* GetEntityManager();
         FocusManager* GetFocusManager();
         FontManager* GetFontManager();
+        Window* GetWindow();
 
     private:
 
@@ -168,6 +170,7 @@ namespace ClassicLauncher
         EntityManager* m_entityManagerRef{nullptr};
         FocusManager* m_focusManagerRef{nullptr};
         FontManager* m_fontManagerRef{nullptr};
+        Window* m_windowRef{nullptr};
 
         // note: this should not be called directly use entity manager
         void SetZOrder(int zOrder);

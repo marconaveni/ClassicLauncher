@@ -49,7 +49,7 @@ namespace ClassicLauncher
     void GuiMenu::CreateButton(const Vector2f source, const std::string& textName, bool isActive)
     {
         MenuButtons menuButton;
-        menuButton.button = GetEntityManager()->CreateEntity<GuiButton>("GuiButton", GetFocusManager());
+        menuButton.button = GetEntityManager()->CreateEntity<GuiButton>("GuiButton", GetFocusManager(), GetWindow());
         menuButton.button->Init(source);
         EnableButton(isActive, menuButton);
 

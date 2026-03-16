@@ -4,7 +4,7 @@
 #include "Helper.h"
 #include "Themes/ThemesManager.h"
 #include "Utils/Math.h"
-#include "Window/WindowSystem.h"
+#include "Window/Window.h"
 #include "rl_wrap.h"
 
 
@@ -64,12 +64,12 @@ namespace ClassicLauncher
         {
             if (m_delay < m_maxDelay)
             {
-                m_delay += WindowSystem::Get().GetFrameTime();
+                m_delay += GetWindow()->GetFrameTime();
                 return;
             }
             LOG(LOG_CLASSIC_TRACE, "positionText %.2f m_offsetText %.2f", positionText, m_offsetText);
 
-            m_speed = 0.50f * 60.0f * WindowSystem::Get().GetFrameTime();
+            m_speed = 0.50f * 60.0f * GetWindow()->GetFrameTime();
 
             if (positionText - m_offsetText > 0 || positionText - m_offsetText < positionText)
             {
