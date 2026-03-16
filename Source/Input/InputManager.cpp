@@ -1,6 +1,7 @@
 #include "InputManager.h"
 
 #include "Window/Window.h"
+#include "Helper.h"
 
 namespace ClassicLauncher
 {
@@ -41,18 +42,44 @@ namespace ClassicLauncher
             const float maxAmount = 0.4f;
             const int key = input.keyPad;
             const int gamePad = input.gamePad;
-
+            
+            bool isAxisRelease = false;
+            bool isAxisPress = false;
+            
+            if (input.directionAxis == InputMapper::Direction::Positive)
+            {
+                input.lastAxisValue = GamePad::GetAxisMovement(m_gamePadIdSelected, input.axis); 
+                isAxisRelease = (input.lastAxisValue < 0.5f) && (input.isAxisDown);
+                isAxisPress = (input.lastAxisValue > 0.5f) && (!input.isAxisDown);
+                input.isAxisDown = (input.lastAxisValue > 0.5f);
+            }
+            else if (input.directionAxis == InputMapper::Direction::Negative)
+            {
+                input.lastAxisValue = GamePad::GetAxisMovement(m_gamePadIdSelected, input.axis); 
+                isAxisRelease = (input.lastAxisValue > -0.5f) && (input.isAxisDown);
+                isAxisPress = (input.lastAxisValue < -0.5f) && (!input.isAxisDown);
+                input.isAxisDown = (input.lastAxisValue < -0.5f);
+            }
+            if (isAxisRelease)
+            {
+                LOG(LogClassicWarning, "isAxisRelease");
+            }
+            if (isAxisPress)
+            {
+                LOG(LogClassicWarning, "isAxisPress");
+            }
+            
+            
             // clang-format off
-
-            input.isPress = (Keyboard::IsPressed(key) || 
+            input.isPress = (Keyboard::IsPressed(key) || isAxisPress ||
                             GamePad::IsPressed(m_gamePadIdSelected, gamePad)) &&
                             !isKeyModifier && 
                             !m_disableInput;
-            input.isDown = (Keyboard::IsDown(key) || 
+            input.isDown = (Keyboard::IsDown(key) || input.isAxisDown ||
                             GamePad::IsDown(m_gamePadIdSelected, gamePad)) && 
                             !isKeyModifier &&
                             !m_disableInput;
-            input.isRelease = (Keyboard::IsReleased(key) || 
+            input.isRelease = (Keyboard::IsReleased(key) || isAxisRelease ||
                             GamePad::IsReleased(m_gamePadIdSelected, gamePad)) &&
                             !isKeyModifier && 
                             !m_disableInput;
@@ -69,7 +96,7 @@ namespace ClassicLauncher
             }
             else
             {
-                input.amoutDown = 0;
+                input.amoutDown = 0.0f;
             }
         }
     }

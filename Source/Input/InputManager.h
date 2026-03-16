@@ -9,16 +9,16 @@
 
 namespace ClassicLauncher
 {
-    // clang-format off
     enum InputCategory
     {    
+        // clang-format off
         MainBottom =        0x00000001,       
         MainCenter =        0x00000010,       
         MainTop =           0x00000100,       
         VideoFullscreen =   0x00001000,       
         Debug =             0x10000000       
+        // clang-format on
     };
-    // clang-format on
 
     enum InputName : std::uint8_t
     {
@@ -44,19 +44,33 @@ namespace ClassicLauncher
 
     struct InputMapper
     {
+        enum class Direction : std::int8_t
+        {
+            Negative = -1,
+            Zero = 0,
+            Positive = 1
+        };
+
         int gamePad{0};
         int keyPad{0};
+        int axis{0};
+        Direction directionAxis{Direction::Zero};
+        float lastAxisValue{0.0f};
         float amoutDown{0.0f};
         InputName name{};
         bool isPress{false};
         bool isDown{false};
         bool isRelease{false};
         bool isUp{false};
+        bool isAxisDown{false};
 
-        InputMapper(InputName name, int gamePad, int keyPad)
-            : gamePad(gamePad)
+
+        InputMapper(InputName name, int gamePad, int keyPad, int axis = -1, Direction directionAxis = Direction::Zero)
+            : name(name)
+            , gamePad(gamePad)
             , keyPad(keyPad)
-            , name(name)
+            , axis(axis)
+            , directionAxis(directionAxis)
         {
         }
 
@@ -66,7 +80,10 @@ namespace ClassicLauncher
             isDown = false;
             isRelease = false;
             isUp = false;
+            isAxisDown = false;
             amoutDown = 0;
+            axis = 0;
+            lastAxisValue = 0;
         }
     };
 
@@ -76,6 +93,7 @@ namespace ClassicLauncher
 
         InputManager();
         ~InputManager();
+
         void UpdateInputState(float frameTime);
 
         static bool IsPress(InputName name, unsigned int category);
@@ -97,10 +115,10 @@ namespace ClassicLauncher
         unsigned int m_category{0};
 
         InputMapper m_inputs[18]{InputMapper(Unknown, GamePad::Button::Unknown, Keyboard::Key::KeyNull),
-                                 InputMapper(DPadUp, GamePad::Button::LeftFaceUp, Keyboard::Key::Up),
-                                 InputMapper(DPadRight, GamePad::Button::LeftFaceRight, Keyboard::Key::Right),
-                                 InputMapper(DPadDown, GamePad::Button::LeftFaceDown, Keyboard::Key::Down),
-                                 InputMapper(DPadLeft, GamePad::Button::LeftFaceLeft, Keyboard::Key::Left),
+                                 InputMapper(DPadUp, GamePad::Button::LeftFaceUp, Keyboard::Key::Up, GamePad::Axis::LeftY, InputMapper::Direction::Negative),
+                                 InputMapper(DPadRight, GamePad::Button::LeftFaceRight, Keyboard::Key::Right, GamePad::Axis::LeftX, InputMapper::Direction::Positive),
+                                 InputMapper(DPadDown, GamePad::Button::LeftFaceDown, Keyboard::Key::Down, GamePad::Axis::LeftY, InputMapper::Direction::Positive),
+                                 InputMapper(DPadLeft, GamePad::Button::LeftFaceLeft, Keyboard::Key::Left, GamePad::Axis::LeftX, InputMapper::Direction::Negative),
                                  InputMapper(Triangle, GamePad::Button::RightFaceUp, Keyboard::Key::F),
                                  InputMapper(Circle, GamePad::Button::RightFaceRight, Keyboard::Key::Backspace),
                                  InputMapper(Cross, GamePad::Button::RightFaceDown, Keyboard::Key::Enter),

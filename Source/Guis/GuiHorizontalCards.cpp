@@ -355,14 +355,15 @@ namespace ClassicLauncher
                 [&]()
                 {
                     PRINT(TEXT("Está acionando"));
-                    const float time = GetWindow()->GetFrameTime();
+                    // const float time = GetWindow()->GetFrameTime();
                     m_multiply = 88.0f;
                 },
                 this,
                 2.5f,
                 false);
         }
-        else if (InputManager::IsRelease(InputName::DPadLeft, MainCenter) || InputManager::IsRelease(InputName::DPadRight, MainCenter))
+        else if (InputManager::IsRelease(InputName::DPadLeft, MainCenter) || InputManager::IsRelease(InputName::DPadRight, MainCenter) ||
+                 InputManager::IsRelease(InputName::R1, MainCenter))
         {
             PRINT(TEXT("IsRelease"));
             CancelMultiply();

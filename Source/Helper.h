@@ -9,7 +9,7 @@
 #define TEXTBOOL(a) String::TextFormat("%s", (a) == true ? "true" : "false")
 
 #ifdef _DEBUG
-    // const char* text, float duration , const char* label , const Color& textColor, bool bLog = false
+    // const char* text, float duration , const char* label , const Color& textColor, bool log = false
     #define PRINT(...) GetPrint()->PrintOnScreen(__VA_ARGS__)
 #else
     #define PRINT(...)
