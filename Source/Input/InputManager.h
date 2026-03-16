@@ -10,13 +10,13 @@
 namespace ClassicLauncher
 {
     enum InputCategory
-    {    
+    {
         // clang-format off
         MainBottom =        0x00000001,       
         MainCenter =        0x00000010,       
         MainTop =           0x00000100,       
         VideoFullscreen =   0x00001000,       
-        Debug =             0x10000000       
+        Debug =             0x10000000
         // clang-format on
     };
 
@@ -114,24 +114,25 @@ namespace ClassicLauncher
         bool m_disableInput{false};
         unsigned int m_category{0};
 
-        InputMapper m_inputs[18]{InputMapper(Unknown, GamePad::Button::Unknown, Keyboard::Key::KeyNull),
-                                 InputMapper(DPadUp, GamePad::Button::LeftFaceUp, Keyboard::Key::Up, GamePad::Axis::LeftY, InputMapper::Direction::Negative),
-                                 InputMapper(DPadRight, GamePad::Button::LeftFaceRight, Keyboard::Key::Right, GamePad::Axis::LeftX, InputMapper::Direction::Positive),
-                                 InputMapper(DPadDown, GamePad::Button::LeftFaceDown, Keyboard::Key::Down, GamePad::Axis::LeftY, InputMapper::Direction::Positive),
-                                 InputMapper(DPadLeft, GamePad::Button::LeftFaceLeft, Keyboard::Key::Left, GamePad::Axis::LeftX, InputMapper::Direction::Negative),
-                                 InputMapper(Triangle, GamePad::Button::RightFaceUp, Keyboard::Key::F),
-                                 InputMapper(Circle, GamePad::Button::RightFaceRight, Keyboard::Key::Backspace),
-                                 InputMapper(Cross, GamePad::Button::RightFaceDown, Keyboard::Key::Enter),
-                                 InputMapper(Square, GamePad::Button::RightFaceLeft, Keyboard::Key::A),
-                                 InputMapper(L1, GamePad::Button::LeftTrigger1, Keyboard::Key::Q),
-                                 InputMapper(L2, GamePad::Button::LeftTrigger2, Keyboard::Key::Z),
-                                 InputMapper(R1, GamePad::Button::RightTrigger1, Keyboard::Key::E),
-                                 InputMapper(R2, GamePad::Button::RightTrigger2, Keyboard::Key::C),
-                                 InputMapper(Select, GamePad::Button::MiddleLeft, Keyboard::Key::Escape),
-                                 InputMapper(PS, GamePad::Button::Middle, Keyboard::Key::F1),
-                                 InputMapper(Start, GamePad::Button::MiddleRight, Keyboard::Key::S),
-                                 InputMapper(L3, GamePad::Button::LeftThumb, Keyboard::Key::N),
-                                 InputMapper(R3, GamePad::Button::RightThumb, Keyboard::Key::M)};
+        InputMapper m_inputs[18]{
+            InputMapper(Unknown, GamePad::Button::Unknown, Keyboard::Key::KeyNull),
+            InputMapper(DPadUp, GamePad::Button::LeftFaceUp, Keyboard::Key::Up, GamePad::Axis::LeftY, InputMapper::Direction::Negative),
+            InputMapper(DPadRight, GamePad::Button::LeftFaceRight, Keyboard::Key::Right, GamePad::Axis::LeftX, InputMapper::Direction::Positive),
+            InputMapper(DPadDown, GamePad::Button::LeftFaceDown, Keyboard::Key::Down, GamePad::Axis::LeftY, InputMapper::Direction::Positive),
+            InputMapper(DPadLeft, GamePad::Button::LeftFaceLeft, Keyboard::Key::Left, GamePad::Axis::LeftX, InputMapper::Direction::Negative),
+            InputMapper(Triangle, GamePad::Button::RightFaceUp, Keyboard::Key::F),
+            InputMapper(Circle, GamePad::Button::RightFaceRight, Keyboard::Key::Backspace),
+            InputMapper(Cross, GamePad::Button::RightFaceDown, Keyboard::Key::Enter),
+            InputMapper(Square, GamePad::Button::RightFaceLeft, Keyboard::Key::A),
+            InputMapper(L1, GamePad::Button::LeftTrigger1, Keyboard::Key::Q),
+            InputMapper(L2, GamePad::Button::LeftTrigger2, Keyboard::Key::Z),
+            InputMapper(R1, GamePad::Button::RightTrigger1, Keyboard::Key::E),
+            InputMapper(R2, GamePad::Button::RightTrigger2, Keyboard::Key::C),
+            InputMapper(Select, GamePad::Button::MiddleLeft, Keyboard::Key::Escape),
+            InputMapper(PS, GamePad::Button::Middle, Keyboard::Key::F1),
+            InputMapper(Start, GamePad::Button::MiddleRight, Keyboard::Key::S),
+            InputMapper(L3, GamePad::Button::LeftThumb, Keyboard::Key::N),
+            InputMapper(R3, GamePad::Button::RightThumb, Keyboard::Key::M)};
     };
 
 } // namespace ClassicLauncher
