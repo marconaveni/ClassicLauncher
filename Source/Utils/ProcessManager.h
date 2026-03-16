@@ -13,11 +13,11 @@ namespace ClassicLauncher
 
     enum class ProcessStatus : std::int8_t
     {
-        FAILED = -1,
-        NONE = 0,
-        OPEN = 1,
-        RUNNING = 2,
-        CLOSE = 3
+        Failed = -1,
+        None = 0,
+        Open = 1,
+        Running = 2,
+        Close = 3
     };
 
     class ProcessManager
@@ -42,7 +42,7 @@ namespace ClassicLauncher
 
     private:
 
-        ProcessStatus m_status{ProcessStatus::NONE};
+        ProcessStatus m_status{ProcessStatus::None};
         std::string m_fullPath{};
         std::string m_optionalWorkingDirectory{};
     };

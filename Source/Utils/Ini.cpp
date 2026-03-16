@@ -71,7 +71,8 @@ namespace ClassicLauncher
 
     std::string Ini::GetString(const std::string& section, const std::string& key, const std::string& defaultValue)
     {
-        return GetValue(section, key, defaultValue);
+        const std::string str = GetValue(section, key, defaultValue); 
+        return str.empty() ? defaultValue : key;
     }
 
     bool Ini::GetBoolean(const std::string& section, const std::string& key, const bool defaultValue)

@@ -52,7 +52,7 @@ namespace ClassicLauncher
 
 
 #ifdef _DEBUG
-        InputManager::SetCategory(MAIN_CENTER | DEBUG);
+        InputManager::SetCategory(MainCenter | Debug);
         InitDebug();
 #else
         InputManager::SetCategory(MAIN_CENTER);
@@ -88,37 +88,37 @@ namespace ClassicLauncher
             SetPosition(pos);
         }
 
-        if (Keyboard::IsDown(Keyboard::Key::KP_ADD))
+        if (Keyboard::IsDown(Keyboard::Key::KeyPadAdd))
         {
             SetScale({GetScale() + 0.01f});
         }
-        if (Keyboard::IsDown(Keyboard::Key::KP_SUBTRACT))
+        if (Keyboard::IsDown(Keyboard::Key::KeyPadSubtract))
         {
             SetScale({GetScale() - 0.01f});
         }
-        if (Keyboard::IsDown(Keyboard::Key::KP_0))
+        if (Keyboard::IsDown(Keyboard::Key::KeyPad0))
         {
             SetScale(1);
             SetPosition(0);
         }
 
-        if (Keyboard::IsReleased(Keyboard::F11) || (Keyboard::IsDown(Keyboard::LEFT_ALT) && Keyboard::IsReleased(Keyboard::ENTER)))
+        if (Keyboard::IsReleased(Keyboard::F11) || (Keyboard::IsDown(Keyboard::LeftAlt) && Keyboard::IsReleased(Keyboard::Enter)))
         {
             GetWindow()->ToggleFullscreen();
         }
 
-        if (InputManager::IsRelease(InputName::middleFaceLeft, MAIN_CENTER | MAIN_TOP))
+        if (InputManager::IsRelease(InputName::Select, MainCenter | MainTop))
         {
             GetWindow()->CloseScheduledWindow();
         }
-        if (InputManager::IsRelease(InputName::rightFaceDown, MAIN_CENTER))
+        if (InputManager::IsRelease(InputName::Cross, MainCenter))
         {
             if (!m_guiHorizontalCards->IsMovement())
             {
                 InputManager::DisableInput();
                 m_audioManagerRef->PlaySound("click");
                 m_guiHorizontalCards->Click();
-                if (m_gameListManagerRef->GetCurrentList() == GameListSelect)
+                if (m_gameListManagerRef->GetCurrentList() == CurrentList::GameListSelect)
                 {
                     m_guiBlackScreen->FadeIn();
                 }
@@ -129,14 +129,14 @@ namespace ClassicLauncher
                 GetTimerManager()->SetTimer(m_clickTimer, CALLFUNCTION(OnClick, this), this, 0.5f, false);
             }
         }
-        if (InputManager::IsRelease(InputName::rightFaceDown, MAIN_TOP))
+        if (InputManager::IsRelease(InputName::Cross, MainTop))
         {
             m_audioManagerRef->PlaySound("click");
         }
-        if (InputManager::IsRelease(InputName::rightFaceRight, MAIN_CENTER | MAIN_TOP) && m_gameListManagerRef->GetCurrentList() == GameListSelect) // back
+        if (InputManager::IsRelease(InputName::Circle, MainCenter | MainTop) && m_gameListManagerRef->GetCurrentList() == CurrentList::GameListSelect) // back
         {
-            InputManager::RemoveCategory(MAIN_TOP);
-            InputManager::SetCategory(MAIN_CENTER);
+            InputManager::RemoveCategory(MainTop);
+            InputManager::SetCategory(MainCenter);
             InputManager::DisableInput();
             m_guiBlackScreen->FadeInFadeOut();
             GetTimerManager()->SetTimer(m_clickTimer, CALLFUNCTION(OnBack, this), this, 0.5f, false);
@@ -145,15 +145,15 @@ namespace ClassicLauncher
 
     void GuiWindow::OnClick()
     {
-        LOG(LOG_CLASSIC_INFO, "Called OnClick");
-        if (m_gameListManagerRef->GetCurrentList() == GameListSelect)
+        LOG(LogClassicInfo, "Called OnClick");
+        if (m_gameListManagerRef->GetCurrentList() == CurrentList::GameListSelect)
         {
             m_audioManagerRef->Pause();
             m_processManagerRef->CreateProc(m_gameListManagerRef);
         }
         else
         {
-            m_guiHorizontalCards->ChangeList(GameListSelect);
+            m_guiHorizontalCards->ChangeList(CurrentList::GameListSelect);
             ThemesManager::Get().UpdateTheme();
             GetTimerManager()->SetTimer(m_inputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }
@@ -161,11 +161,11 @@ namespace ClassicLauncher
 
     void GuiWindow::OnBack()
     {
-        LOG(LOG_CLASSIC_INFO, "Called OnBack");
+        LOG(LogClassicInfo, "Called OnBack");
 
-        if (m_gameListManagerRef->GetCurrentList() == GameListSelect)
+        if (m_gameListManagerRef->GetCurrentList() == CurrentList::GameListSelect)
         {
-            m_guiHorizontalCards->ChangeList(SystemListSelect);
+            m_guiHorizontalCards->ChangeList(CurrentList::SystemListSelect);
             ThemesManager::Get().UpdateTheme();
             GetTimerManager()->SetTimer(m_inputTimer, []() { InputManager::EnableInput(); }, this, 1.0f, false);
         }

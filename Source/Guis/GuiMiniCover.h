@@ -1,8 +1,6 @@
 #ifndef GUI_MINI_COVER_H
 #define GUI_MINI_COVER_H
 
-
-#include <string>
 #include <vector>
 
 #include "Animations/Animatable.h"

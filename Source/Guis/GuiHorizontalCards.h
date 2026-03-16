@@ -9,7 +9,6 @@
 #include "Input/InputManager.h"
 #include "Utils/TimerManager.h"
 
-
 namespace ClassicLauncher
 {
 
@@ -34,9 +33,9 @@ namespace ClassicLauncher
 
         enum class Direction : std::uint8_t
         {
-            NONE,
-            LEFT,
-            RIGHT
+            None,
+            Left,
+            Right
         };
 
         GuiHorizontalCards(GameListManager* gameListManagerRef, AudioManager* audioManagerRef, Window* window);
@@ -69,7 +68,7 @@ namespace ClassicLauncher
         bool m_isLeft{false};
         bool m_isRight{false};
         bool m_isNeedUpdate{false};
-        Direction m_lastDirection{Direction::NONE};
+        Direction m_lastDirection{Direction::None};
         int m_idFocus{0};
         int m_idLastFocusSystem{3};
         float m_speed{22.0f};

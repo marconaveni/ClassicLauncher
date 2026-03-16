@@ -74,6 +74,7 @@ namespace rlw
     bool IsGamepadButtonReleased(int gamepad, int button);
     bool IsGamepadButtonUp(int gamepad, int button);
     bool IsGamepadAvailable(int gamepad);
+    float GetGamepadAxisMovement(int gamepad, int axis); 
 
     // --- Mouse ---
     bool IsMouseButtonPressed(int button);

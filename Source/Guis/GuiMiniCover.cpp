@@ -68,7 +68,7 @@ namespace ClassicLauncher
             miniCover.gui->m_textureName = "sprite";
 
             miniCover.sizeBox->AddChild(miniCover.gui);
-            miniCover.sizeBox->SetMargin(Margin::LEFT_ONLY);
+            miniCover.sizeBox->SetMargin(Margin::LeftOnly);
 
             m_guiHorizontalBox->AttachGui(miniCover.sizeBox);
             m_guiHorizontalBox->AddChild(miniCover.sizeBox);

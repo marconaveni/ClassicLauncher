@@ -5,6 +5,9 @@
     #include <filesystem>
     #include <windows.h>
 
+    #include "Log.h"
+
+
 namespace ClassicLauncher::Platform
 {
 
@@ -46,19 +49,21 @@ namespace ClassicLauncher::Platform
                            &processInfo))
         // clang-format on                        
         {
-            printf("open:");
-
+            
             // WaitForSingleObject(processInfo.hProcess, INFINITE);
-
+            
             processId = static_cast<unsigned int>(processInfo.dwProcessId);
-
+            
+            LOG(LogClassicInfo, "\nOpen>  Process: %d\n       Path: %s\n       WorkingDirectory: %s", processId, fullPath.c_str(), optionalWorkingDirectory.c_str());
+            
             CloseHandle(processInfo.hProcess);
             CloseHandle(processInfo.hThread);
             status = 1;
         }
         else
         {
-            printf("Error on create a process: %lu\n", GetLastError());
+            LOG(LogClassicInfo, "\nOpen>  Path: %s\n       WorkingDirectory: %s", processId, fullPath.c_str(), optionalWorkingDirectory.c_str());
+            LOG(LogClassicError, "Error on create a process: %lu\n", GetLastError());
             processId = 0;
             status = -1;
         }
@@ -190,7 +195,7 @@ namespace ClassicLauncher::Platform
 
             if (n > 0)
             {
-                LOG(LOG_CLASSIC_ERROR, "exec failed: %s", strerror(err));
+                LOG(LogClassicError, "exec failed: %s", strerror(err));
                 status = -1;
                 processId = 0;
                 return;
@@ -198,6 +203,7 @@ namespace ClassicLauncher::Platform
 
             processId = pid;
             status = 1; // exec its works !!!!
+            LOG(LogClassicInfo, "\nOpen>  Path: %s", processId, fullPath.c_str());
         }
     }
 
@@ -222,11 +228,11 @@ namespace ClassicLauncher::Platform
         {
             if (WIFEXITED(status))
             {
-                LOG(LOG_CLASSIC_DEBUG, "The child process terminated with status: %d ", WEXITSTATUS(status));
+                LOG(LogClassicDebug, "The child process terminated with status: %d ", WEXITSTATUS(status));
             }
             else
             {
-                LOG(LOG_CLASSIC_ERROR, "The child process terminated with error.");
+                LOG(LogClassicError, "The child process terminated with error.");
             }
             isApplicationRunning = false;
         }

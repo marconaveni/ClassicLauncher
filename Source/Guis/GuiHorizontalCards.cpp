@@ -52,7 +52,7 @@ namespace ClassicLauncher
         m_guiTitle->SetSize(1010.0f, 32.0f);
 
         m_guiTitle->SetText("Title");
-        m_guiTitle->SetTextOverflowPolicy(GuiTextBlock::TextOverflowPolicy::CLIP);
+        m_guiTitle->SetTextOverflowPolicy(GuiTextBlock::TextOverflowPolicy::Clip);
         m_guiTitle->SetTextCenter(true);
         AddChild(m_guiTitle);
 
@@ -126,11 +126,11 @@ namespace ClassicLauncher
         }
 
         Transform target = m_guiTopBar->GetTransform();
-        if (category == MAIN_TOP)
+        if (category == MainTop)
         {
             target.position.y = 0;
         }
-        if (category == MAIN_CENTER)
+        if (category == MainCenter)
         {
             target.position.y = -6;
         }
@@ -224,7 +224,7 @@ namespace ClassicLauncher
         m_miniCover->SetCovers();
         SetPositionHorizontalBox();
 
-        LOG(LOG_CLASSIC_DEBUG, "Num Sprites Loaded after SetCovers %d", GetSpriteManager()->NumSpritesLoaded());
+        LOG(LogClassicDebug, "Num Sprites Loaded after SetCovers %d", GetSpriteManager()->NumSpritesLoaded());
     }
 
 
@@ -280,7 +280,7 @@ namespace ClassicLauncher
     {
         ClearCovers();
         CancelMultiply();
-        if (list == SystemListSelect)
+        if (list == CurrentList::SystemListSelect)
         {
             m_gameListManagerRef->GetCurrentSystemList()->history.indexCardFocus = m_idFocus;
             m_gameListManagerRef->ChangeGameToSystemList();
@@ -327,11 +327,11 @@ namespace ClassicLauncher
 
             if (resultCover && resultMiniCover)
             {
-                LOG(LOG_CLASSIC_TRACE, "Sprite deleted index: %d\n  > Cover: %s\n  > Mini Cover: %s ", i, coverName.c_str(), miniCoverName.c_str());
+                LOG(LogClassicTrace, "Sprite deleted index: %d\n  > Cover: %s\n  > Mini Cover: %s ", i, coverName.c_str(), miniCoverName.c_str());
             }
         }
 
-        LOG(LOG_CLASSIC_DEBUG, "Num Sprites Loaded after ClearCovers %d", GetSpriteManager()->NumSpritesLoaded());
+        LOG(LogClassicDebug, "Num Sprites Loaded after ClearCovers %d", GetSpriteManager()->NumSpritesLoaded());
     }
 
     bool GuiHorizontalCards::IsMovement() const
@@ -341,11 +341,11 @@ namespace ClassicLauncher
 
     void GuiHorizontalCards::SetSpeedCards()
     {
-        if (InputManager::IsDown(InputName::rightTriggerFront, MAIN_CENTER))
+        if (InputManager::IsDown(InputName::R1, MainCenter))
         {
             m_multiply = 256.0f;
         }
-        else if ((InputManager::IsDown(InputName::leftFaceLeft, MAIN_CENTER) || InputManager::IsDown(InputName::leftFaceRight, MAIN_CENTER)) && !m_isPress)
+        else if ((InputManager::IsDown(InputName::DPadLeft, MainCenter) || InputManager::IsDown(InputName::DPadRight, MainCenter)) && !m_isPress)
         {
             PRINT(TEXT("IsPress"));
             CancelMultiply();
@@ -362,7 +362,7 @@ namespace ClassicLauncher
                 2.5f,
                 false);
         }
-        else if (InputManager::IsRelease(InputName::leftFaceLeft, MAIN_CENTER) || InputManager::IsRelease(InputName::leftFaceRight, MAIN_CENTER))
+        else if (InputManager::IsRelease(InputName::DPadLeft, MainCenter) || InputManager::IsRelease(InputName::DPadRight, MainCenter))
         {
             PRINT(TEXT("IsRelease"));
             CancelMultiply();
@@ -406,12 +406,12 @@ namespace ClassicLauncher
         m_isPress = false;
         m_multiply = 22.0f;
         GetTimerManager()->ClearTimer(m_timerInputSpeed);
-        FocusAnimationBar(MAIN_CENTER);
+        FocusAnimationBar(MainCenter);
     }
 
     void GuiHorizontalCards::UpdateInput()
     {
-        if (InputManager::IsDown(InputName::leftFaceLeft, MAIN_CENTER) && !m_isRight)
+        if (InputManager::IsDown(InputName::DPadLeft, MainCenter) && !m_isRight)
         {
             if (!m_isLeft)
             {
@@ -422,7 +422,7 @@ namespace ClassicLauncher
             m_isLeft = true;
             m_isNeedUpdate = true;
         }
-        else if (InputManager::IsDown(InputName::leftFaceLeft, MAIN_TOP))
+        else if (InputManager::IsDown(InputName::DPadLeft, MainTop))
         {
             if (!m_frame->IsFrameMove())
             {
@@ -430,7 +430,7 @@ namespace ClassicLauncher
                 m_guiMenu->SetButtonFocus(-1);
             }
         }
-        else if (InputManager::IsDown(InputName::leftFaceRight, MAIN_CENTER) && !m_isLeft)
+        else if (InputManager::IsDown(InputName::DPadRight, MainCenter) && !m_isLeft)
         {
             if (!m_isRight)
             {
@@ -441,7 +441,7 @@ namespace ClassicLauncher
             m_isRight = true;
             m_isNeedUpdate = true;
         }
-        else if (InputManager::IsDown(InputName::leftFaceRight, MAIN_TOP))
+        else if (InputManager::IsDown(InputName::DPadRight, MainTop))
         {
             if (!m_frame->IsFrameMove())
             {
@@ -449,26 +449,26 @@ namespace ClassicLauncher
                 m_guiMenu->SetButtonFocus(1);
             }
         }
-        else if (InputManager::IsDown(InputName::leftFaceUp, MAIN_CENTER))
+        else if (InputManager::IsDown(InputName::DPadUp, MainCenter))
         {
             if (!m_frame->IsFrameMove())
             {
                 m_audioManagerRef->PlaySound("cursor");
                 m_guiMenu->SetButtonFocus(0);
-                InputManager::RemoveCategory(MAIN_CENTER);
-                InputManager::SetCategory(MAIN_TOP);
-                FocusAnimationBar(MAIN_TOP);
+                InputManager::RemoveCategory(MainCenter);
+                InputManager::SetCategory(MainTop);
+                FocusAnimationBar(MainTop);
             }
         }
-        else if (InputManager::IsDown(InputName::leftFaceDown, MAIN_TOP))
+        else if (InputManager::IsDown(InputName::DPadDown, MainTop))
         {
             if (!m_frame->IsFrameMove())
             {
                 m_audioManagerRef->PlaySound("cursor");
                 SetFocus(m_idFocus);
-                InputManager::RemoveCategory(MAIN_TOP);
-                InputManager::SetCategory(MAIN_CENTER);
-                FocusAnimationBar(MAIN_CENTER);
+                InputManager::RemoveCategory(MainTop);
+                InputManager::SetCategory(MainCenter);
+                FocusAnimationBar(MainCenter);
             }
         }
     }
@@ -500,7 +500,7 @@ namespace ClassicLauncher
                 const float y = m_horizontalBox->GetPosition().y;
                 m_horizontalBox->SetPosition(x, y);
             }
-            m_lastDirection = Direction::LEFT;
+            m_lastDirection = Direction::Left;
         }
         else if (m_positionX > 0 && m_isLeft)
         {
@@ -510,7 +510,7 @@ namespace ClassicLauncher
                 const float y = m_horizontalBox->GetPosition().y;
                 m_horizontalBox->SetPosition(x, y);
             }
-            m_lastDirection = Direction::RIGHT;
+            m_lastDirection = Direction::Right;
         }
 
         if (m_positionX <= -sizeCard || m_positionX >= sizeCard)
@@ -526,16 +526,16 @@ namespace ClassicLauncher
 
         if (m_idFocus < 3 || m_idFocus > 6)
         {
-            if (m_lastDirection == Direction::LEFT && m_positionX == 0)
+            if (m_lastDirection == Direction::Left && m_positionX == 0)
             {
                 std::rotate(m_guiCards.begin(), m_guiCards.begin() + 1, m_guiCards.end());
-                m_lastDirection = Direction::NONE;
+                m_lastDirection = Direction::None;
                 m_idFocus = Math::Clamp(m_idFocus, 3, 6);
             }
-            else if (m_lastDirection == Direction::RIGHT && m_positionX == 0)
+            else if (m_lastDirection == Direction::Right && m_positionX == 0)
             {
                 std::rotate(m_guiCards.rbegin(), m_guiCards.rbegin() + 1, m_guiCards.rend());
-                m_lastDirection = Direction::NONE;
+                m_lastDirection = Direction::None;
                 m_idFocus = Math::Clamp(m_idFocus, 3, 6);
             }
         }

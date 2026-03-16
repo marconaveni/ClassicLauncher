@@ -231,7 +231,7 @@ namespace ClassicLauncher
 
         m_configManager->SetFullscreen(IsFullScreen());
         m_configManager->SaveConfiguration();
-        LOG(LOG_CLASSIC_DEBUG, TEXT("Saved is fullscreen config.ini with value %s", TEXTBOOL(m_configManager->GetFullscreen())));
+        LOG(LogClassicDebug, TEXT("Saved is fullscreen config.ini with value %s", TEXTBOOL(m_configManager->GetFullscreen())));
 
         return IsFullScreen();
 #endif     // PLATFORM_RPI

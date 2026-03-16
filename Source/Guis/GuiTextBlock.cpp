@@ -60,14 +60,14 @@ namespace ClassicLauncher
         }
 
         const float positionText = (GetSize().width - m_mensuredText.x) * m_renderScale;
-        if (m_textOverflowPolicy == TextOverflowPolicy::CLIP && positionText < 0)
+        if (m_textOverflowPolicy == TextOverflowPolicy::Clip && positionText < 0)
         {
             if (m_delay < m_maxDelay)
             {
                 m_delay += GetWindow()->GetFrameTime();
                 return;
             }
-            LOG(LOG_CLASSIC_TRACE, "positionText %.2f m_offsetText %.2f", positionText, m_offsetText);
+            LOG(LogClassicTrace, "positionText %.2f m_offsetText %.2f", positionText, m_offsetText);
 
             m_speed = 0.50f * 60.0f * GetWindow()->GetFrameTime();
 
@@ -93,7 +93,7 @@ namespace ClassicLauncher
 
         RectFloat finalTransformRect = m_finalRender.transform;
 
-        if (m_textOverflowPolicy == TextOverflowPolicy::CLIP)
+        if (m_textOverflowPolicy == TextOverflowPolicy::Clip)
         {
             rlw::BeginScissorMode(finalTransformRect.x, finalTransformRect.y, finalTransformRect.width, finalTransformRect.height);
         }
@@ -103,7 +103,7 @@ namespace ClassicLauncher
                         m_sizeText * GetWorldTransform().scale.y * m_renderScale,
                         m_spacing * m_renderScale,
                         GetColor());
-        if (m_textOverflowPolicy == TextOverflowPolicy::CLIP)
+        if (m_textOverflowPolicy == TextOverflowPolicy::Clip)
         {
             rlw::EndScissorMode();
         }

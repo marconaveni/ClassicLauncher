@@ -30,5 +30,10 @@ namespace ClassicLauncher::GamePad
         return rlw::IsGamepadAvailable(gamepad);
     }
 
+    float GetAxisMovement(int gamepad, int axis)
+    {
+        return rlw::GetGamepadAxisMovement(gamepad, axis);
+    }
+
 
 } // namespace ClassicLauncher::GamePad

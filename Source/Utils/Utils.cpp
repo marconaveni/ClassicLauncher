@@ -22,7 +22,7 @@ namespace ClassicLauncher
                 case 4: hexNewColor += "00FF"; break;
                 case 6: hexNewColor += "FF"; break;
                 default:
-                    LOG(LOG_CLASSIC_ERROR, "Invalid color value in .ini");
+                    LOG(LogClassicError, "Invalid color value in .ini");
                     return Color::White;
                     break;
             }
@@ -35,12 +35,12 @@ namespace ClassicLauncher
 
         if (*endPtr != '\0')
         {
-            LOG(LOG_CLASSIC_ERROR, "Invalid color value in .ini. Character %c is not hexadecimal.", *endPtr);
+            LOG(LogClassicError, "Invalid color value in .ini. Character %c is not hexadecimal.", *endPtr);
             return Color::White;
         }
         else if (errno == ERANGE || tempVal > 0xFFFFFFFF)
         {
-            LOG(LOG_CLASSIC_ERROR, "Color value out of range (overflow)");
+            LOG(LogClassicError, "Color value out of range (overflow)");
             return Color::White;
         }
 

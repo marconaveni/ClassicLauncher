@@ -16,19 +16,19 @@ namespace ClassicLauncher
     {
         switch (format)
         {
-            case PIXELFORMAT_UNCOMPRESSED_GRAYSCALE: return 1;
-            case PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA: return 2;
-            case PIXELFORMAT_UNCOMPRESSED_R5G6B5: return 2;
-            case PIXELFORMAT_UNCOMPRESSED_R8G8B8: return 3;
-            case PIXELFORMAT_UNCOMPRESSED_R5G5B5A1: return 2;
-            case PIXELFORMAT_UNCOMPRESSED_R4G4B4A4: return 2;
-            case PIXELFORMAT_UNCOMPRESSED_R8G8B8A8: return 4;
-            case PIXELFORMAT_UNCOMPRESSED_R32: return 4;
-            case PIXELFORMAT_UNCOMPRESSED_R32G32B32: return 12;
-            case PIXELFORMAT_UNCOMPRESSED_R32G32B32A32: return 16;
-            case PIXELFORMAT_UNCOMPRESSED_R16: return 2;
-            case PIXELFORMAT_UNCOMPRESSED_R16G16B16: return 6;
-            case PIXELFORMAT_UNCOMPRESSED_R16G16B16A16: return 8;
+            case ray::RL_PIXELFORMAT_UNCOMPRESSED_GRAYSCALE: return 1;
+            case ray::RL_PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA: return 2;
+            case ray::RL_PIXELFORMAT_UNCOMPRESSED_R5G6B5: return 2;
+            case ray::RL_PIXELFORMAT_UNCOMPRESSED_R8G8B8: return 3;
+            case ray::RL_PIXELFORMAT_UNCOMPRESSED_R5G5B5A1: return 2;
+            case ray::RL_PIXELFORMAT_UNCOMPRESSED_R4G4B4A4: return 2;
+            case ray::RL_PIXELFORMAT_UNCOMPRESSED_R8G8B8A8: return 4;
+            case ray::RL_PIXELFORMAT_UNCOMPRESSED_R32: return 4;
+            case ray::RL_PIXELFORMAT_UNCOMPRESSED_R32G32B32: return 12;
+            case ray::RL_PIXELFORMAT_UNCOMPRESSED_R32G32B32A32: return 16;
+            case ray::RL_PIXELFORMAT_UNCOMPRESSED_R16: return 2;
+            case ray::RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16: return 6;
+            case ray::RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16A16: return 8;
             default: return 0;
         }
     }
@@ -101,7 +101,6 @@ namespace ClassicLauncher
         }
 
         m_smooth = status;
-
 
         if (!IsValid())
         {

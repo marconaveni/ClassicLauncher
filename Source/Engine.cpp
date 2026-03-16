@@ -100,7 +100,7 @@ namespace ClassicLauncher
 
     void Engine::CheckProcessIsOpen()
     {
-        if (m_processManager.GetStatus() == ProcessStatus::OPEN)
+        if (m_processManager.GetStatus() == ProcessStatus::Open)
         {
             ChangeState(EngineState::LAUNCH_REQUESTED);
         }
@@ -140,7 +140,7 @@ namespace ClassicLauncher
     void Engine::StateLaunchRequested()
     {
         m_processManager.Launch();
-        if (m_processManager.GetStatus() == ProcessStatus::FAILED)
+        if (m_processManager.GetStatus() == ProcessStatus::Failed)
         {
             ProcessUpdate(0);
             ChangeState(EngineState::UI_ACTIVE);
@@ -162,7 +162,7 @@ namespace ClassicLauncher
         ProcessUpdate(80);
         m_renderSystem.BeginDraw();
         m_renderSystem.EndDraw();
-        if (m_processManager.GetStatus() != ProcessStatus::RUNNING)
+        if (m_processManager.GetStatus() != ProcessStatus::Running)
         {
             m_window.SetTargetFPS(m_configurationManager.GetTargetFps());
             ChangeState(EngineState::UI_ACTIVE);
@@ -172,7 +172,7 @@ namespace ClassicLauncher
     void Engine::StateSuspended()
     {
         ProcessUpdate(80);
-        if (m_processManager.GetStatus() != ProcessStatus::RUNNING)
+        if (m_processManager.GetStatus() != ProcessStatus::Running)
         {
             ChangeState(EngineState::RESTORING);
         }

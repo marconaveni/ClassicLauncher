@@ -46,11 +46,11 @@ namespace ClassicLauncher
 
         Sizef offset{(GetSize().width - m_entity->GetSize().width) / 2, (GetSize().height - m_entity->GetSize().height) / 2};
 
-        if (m_margin == Margin::LEFT_ONLY)
+        if (m_margin == Margin::LeftOnly)
         {
             offset.height = 0;
         }
-        else if (m_margin == Margin::TOP_ONLY)
+        else if (m_margin == Margin::TopOnly)
         {
             offset.width = 0;
         }

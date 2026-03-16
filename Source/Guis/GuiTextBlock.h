@@ -1,23 +1,19 @@
 #ifndef GUI_TEXT_BLOCK_H
 #define GUI_TEXT_BLOCK_H
 
-#include <string>
-
 #include "Entity/Entity.h"
 
 namespace ClassicLauncher
 {
 
-    
-    
     class GuiTextBlock : public Entity
     {
         public:
         
-        enum TextOverflowPolicy : std::uint8_t
+        enum class TextOverflowPolicy : std::uint8_t
         {
-            NONE = 0,
-            CLIP = 1
+            None = 0,
+            Clip = 1
         };
         
         GuiTextBlock();
@@ -53,7 +49,7 @@ namespace ClassicLauncher
         Vector2f m_mensuredText{};
         float m_speed{0.5f};
         float m_maxDelay{3.0f};
-        TextOverflowPolicy m_textOverflowPolicy{TextOverflowPolicy::NONE};
+        TextOverflowPolicy m_textOverflowPolicy{TextOverflowPolicy::None};
         bool m_centerText{false};
         bool m_autoSize{false};
         float m_positionText{0.0f};

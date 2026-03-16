@@ -24,7 +24,7 @@ namespace ClassicLauncher
         m_fullPath = fullPath;
         std::filesystem::path pathExec(executable);
         m_optionalWorkingDirectory = pathExec.parent_path().string();
-        m_status = ProcessStatus::OPEN;
+        m_status = ProcessStatus::Open;
     }
 
     void ProcessManager::UpdateRun()
@@ -36,7 +36,7 @@ namespace ClassicLauncher
             {
                 m_isRunning = true;
             }
-            m_status = ProcessStatus::RUNNING;
+            m_status = ProcessStatus::Running;
         }
         else
         {
@@ -44,10 +44,10 @@ namespace ClassicLauncher
             {
                 m_isRunning = false;
                 m_processId = 0;
-                m_status = ProcessStatus::CLOSE;
+                m_status = ProcessStatus::Close;
                 return;
             }
-            m_status = ProcessStatus::NONE;
+            m_status = ProcessStatus::None;
         }
     }
 
@@ -61,7 +61,7 @@ namespace ClassicLauncher
 #endif
         if (status != 1)
         {
-            m_status = ProcessStatus::FAILED;
+            m_status = ProcessStatus::Failed;
         }
     }
 

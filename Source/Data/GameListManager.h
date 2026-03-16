@@ -1,7 +1,7 @@
 #ifndef GAME_LIST_MANAGER_H
 #define GAME_LIST_MANAGER_H
 
-
+#include <cstdint>
 #include <filesystem>
 #include <string>
 #include <vector>
@@ -14,13 +14,7 @@
 namespace ClassicLauncher
 {
 
-    enum LoadXmlError
-    {
-        Success = 0,
-        FileNotFound,
-    };
-
-    enum CurrentList
+    enum class CurrentList : std::uint8_t
     {
         SystemListSelect,
         GameListSelect,

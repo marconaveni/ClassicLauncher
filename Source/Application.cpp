@@ -62,7 +62,7 @@ namespace ClassicLauncher
         }
         else
         {
-            LOG(LOG_CLASSIC_ERROR, "system list is empty");
+            LOG(LogClassicError, "system list is empty");
             // todo create screen not found system list
         }
     }
@@ -90,11 +90,11 @@ namespace ClassicLauncher
         const ProcessStatus status = m_processManagerRef->GetStatus();
         switch (status)
         {
-            case ProcessStatus::NONE: break;
-            case ProcessStatus::OPEN: break;
-            case ProcessStatus::RUNNING: break;
-            case ProcessStatus::FAILED:
-            case ProcessStatus::CLOSE: m_guiWindow->FadeOutScreen(); break;
+            case ProcessStatus::None: break;
+            case ProcessStatus::Open: break;
+            case ProcessStatus::Running: break;
+            case ProcessStatus::Failed:
+            case ProcessStatus::Close: m_guiWindow->FadeOutScreen(); break;
             default: break;
         }
         m_processManagerRef->UpdateRun();

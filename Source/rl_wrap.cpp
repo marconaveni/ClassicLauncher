@@ -98,6 +98,11 @@ namespace rlw
         return ray::IsGamepadAvailable(gamepad);
     }
 
+    float GetGamepadAxisMovement(int gamepad, int axis)
+    {
+        return ray::GetGamepadAxisMovement(gamepad, axis);
+    }
+
     // --- Mouse ---
     bool IsMouseButtonPressed(int button)
     {

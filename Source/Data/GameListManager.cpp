@@ -90,7 +90,7 @@ namespace ClassicLauncher
     void GameListManager::ChangeSystemToGameList()
     {
         m_idSystemList = m_idGameList;
-        m_currentList = GameListSelect;
+        m_currentList = CurrentList::GameListSelect;
         ClearGameList();
         LoadList();
         m_idGameList = GetCurrentSystemList()->history.id;
@@ -100,7 +100,7 @@ namespace ClassicLauncher
     {
         m_idGameList = m_idSystemList;
         m_idSystemList = -1;
-        m_currentList = SystemListSelect;
+        m_currentList = CurrentList::SystemListSelect;
         ClearGameList();
         LoadList();
     }
@@ -114,8 +114,8 @@ namespace ClassicLauncher
 
         switch (m_currentList)
         {
-            case SystemListSelect: LoadSystemToGameList(); break;
-            case GameListSelect: LoadGameList(); break;
+            case CurrentList::SystemListSelect: LoadSystemToGameList(); break;
+            case CurrentList::GameListSelect: LoadGameList(); break;
             default: break;
         }
     }

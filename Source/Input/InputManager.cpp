@@ -22,8 +22,10 @@ namespace ClassicLauncher
 
     bool IsModifierKey()
     {
-        return Keyboard::IsDown(Keyboard::Key::LEFT_ALT) || // check if keys modifiers is pressed
-               Keyboard::IsDown(Keyboard::Key::RIGHT_ALT) || Keyboard::IsDown(Keyboard::Key::LEFT_CONTROL) || Keyboard::IsDown(Keyboard::Key::RIGHT_CONTROL);
+        return Keyboard::IsDown(Keyboard::IsDown(Keyboard::Key::LeftAlt) || //
+                                Keyboard::IsDown(Keyboard::Key::RightAlt) ||
+                                Keyboard::IsDown(Keyboard::Key::LeftControl) || // check if keys modifiers is pressed
+                                Keyboard::IsDown(Keyboard::Key::RightControl));
     }
 
     void InputManager::UpdateInputState(float frameTime)
@@ -141,25 +143,25 @@ namespace ClassicLauncher
 
         unsigned int value = 0;
 
-        if ((m_category & MAIN_TOP) == (category & MAIN_TOP) && (category & MAIN_TOP) > 0)
+        if ((m_category & MainTop) == (category & MainTop) && (category & MainTop) > 0)
         {
-            value |= MAIN_TOP;
+            value |= MainTop;
         }
-        if ((m_category & MAIN_CENTER) == (category & MAIN_CENTER) && (category & MAIN_CENTER) > 0)
+        if ((m_category & MainCenter) == (category & MainCenter) && (category & MainCenter) > 0)
         {
-            value |= MAIN_CENTER;
+            value |= MainCenter;
         }
-        if ((m_category & MAIN_BOTTOM) == (category & MAIN_BOTTOM) && (category & MAIN_BOTTOM) > 0)
+        if ((m_category & MainBottom) == (category & MainBottom) && (category & MainBottom) > 0)
         {
-            value |= MAIN_BOTTOM;
+            value |= MainBottom;
         }
-        if ((m_category & VIDEO_FULLSCREEN) == (category & VIDEO_FULLSCREEN) && (category & VIDEO_FULLSCREEN) > 0)
+        if ((m_category & VideoFullscreen) == (category & VideoFullscreen) && (category & VideoFullscreen) > 0)
         {
-            value |= VIDEO_FULLSCREEN;
+            value |= VideoFullscreen;
         }
-        if ((m_category & DEBUG) == (category & DEBUG) && (category & DEBUG) > 0)
+        if ((m_category & Debug) == (category & Debug) && (category & Debug) > 0)
         {
-            value |= DEBUG;
+            value |= Debug;
         }
 
         return value != 0;
@@ -174,25 +176,25 @@ namespace ClassicLauncher
 
         unsigned int& inputCategory = s_instanceInputManager->m_category;
 
-        if ((inputCategory & MAIN_TOP) != (category & MAIN_TOP) && (category & MAIN_TOP) > 0)
+        if ((inputCategory & MainTop) != (category & MainTop) && (category & MainTop) > 0)
         {
-            inputCategory |= MAIN_TOP;
+            inputCategory |= MainTop;
         }
-        if ((inputCategory & MAIN_CENTER) != (category & MAIN_CENTER) && (category & MAIN_CENTER) > 0)
+        if ((inputCategory & MainCenter) != (category & MainCenter) && (category & MainCenter) > 0)
         {
-            inputCategory |= MAIN_CENTER;
+            inputCategory |= MainCenter;
         }
-        if ((inputCategory & MAIN_BOTTOM) != (category & MAIN_BOTTOM) && (category & MAIN_BOTTOM) > 0)
+        if ((inputCategory & MainBottom) != (category & MainBottom) && (category & MainBottom) > 0)
         {
-            inputCategory |= MAIN_BOTTOM;
+            inputCategory |= MainBottom;
         }
-        if ((inputCategory & VIDEO_FULLSCREEN) != (category & VIDEO_FULLSCREEN) && (category & VIDEO_FULLSCREEN) > 0)
+        if ((inputCategory & VideoFullscreen) != (category & VideoFullscreen) && (category & VideoFullscreen) > 0)
         {
-            inputCategory |= VIDEO_FULLSCREEN;
+            inputCategory |= VideoFullscreen;
         }
-        if ((inputCategory & DEBUG) != (category & DEBUG) && (category & DEBUG) > 0)
+        if ((inputCategory & Debug) != (category & Debug) && (category & Debug) > 0)
         {
-            inputCategory |= DEBUG;
+            inputCategory |= Debug;
         }
     }
 
@@ -205,25 +207,25 @@ namespace ClassicLauncher
 
         unsigned int& inputCategory = s_instanceInputManager->m_category;
 
-        if ((inputCategory & MAIN_TOP) > 0 && (category & MAIN_TOP) > 0)
+        if ((inputCategory & MainTop) > 0 && (category & MainTop) > 0)
         {
-            inputCategory &= ~MAIN_TOP;
+            inputCategory &= ~MainTop;
         }
-        if ((inputCategory & MAIN_CENTER) > 0 && (category & MAIN_CENTER) > 0)
+        if ((inputCategory & MainCenter) > 0 && (category & MainCenter) > 0)
         {
-            inputCategory &= ~MAIN_CENTER;
+            inputCategory &= ~MainCenter;
         }
-        if ((inputCategory & MAIN_BOTTOM) > 0 && (category & MAIN_BOTTOM) > 0)
+        if ((inputCategory & MainBottom) > 0 && (category & MainBottom) > 0)
         {
-            inputCategory &= ~MAIN_BOTTOM;
+            inputCategory &= ~MainBottom;
         }
-        if ((inputCategory & VIDEO_FULLSCREEN) > 0 && (category & VIDEO_FULLSCREEN) > 0)
+        if ((inputCategory & VideoFullscreen) > 0 && (category & VideoFullscreen) > 0)
         {
-            inputCategory &= ~VIDEO_FULLSCREEN;
+            inputCategory &= ~VideoFullscreen;
         }
-        if ((inputCategory & DEBUG) > 0 && (category & DEBUG) > 0)
+        if ((inputCategory & Debug) > 0 && (category & Debug) > 0)
         {
-            inputCategory &= ~DEBUG;
+            inputCategory &= ~Debug;
         }
     }
 

@@ -62,7 +62,7 @@ namespace ClassicLauncher::DebugOverlay
     void Update(AudioManager* audio, GameListManager* gameListManager, Window* window)
     {
 
-        if (Keyboard::IsReleased(Keyboard::KP_2))
+        if (Keyboard::IsReleased(Keyboard::KeyPad6)) // right
         {
             s_category++;
             if (s_category > 3)
@@ -70,7 +70,7 @@ namespace ClassicLauncher::DebugOverlay
                 s_category = 0;
             }
         }
-        else if (Keyboard::IsReleased(Keyboard::KP_1))
+        else if (Keyboard::IsReleased(Keyboard::KeyPad4)) // left
         {
             s_category--;
             if (s_category < 0)

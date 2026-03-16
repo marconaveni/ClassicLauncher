@@ -7,25 +7,25 @@ namespace ClassicLauncher::Keyboard
 
     enum Key
     {
-        KEYNULL = 0, // Key: NULL, used for no key pressed
+        KeyNull = 0, // Key: NULL, used for no key pressed
         // Alphanumeric keys
-        APOSTROPHE = 39,    // Key: '
-        COMMA = 44,         // Key: ,
-        MINUS = 45,         // Key: -
-        PERIOD = 46,        // Key: .
-        SLASH = 47,         // Key: /
-        ZERO = 48,          // Key: 0
-        ONE = 49,           // Key: 1
-        TWO = 50,           // Key: 2
-        THREE = 51,         // Key: 3
-        FOUR = 52,          // Key: 4
-        FIVE = 53,          // Key: 5
-        SIX = 54,           // Key: 6
-        SEVEN = 55,         // Key: 7
-        EIGHT = 56,         // Key: 8
-        NINE = 57,          // Key: 9
-        SEMICOLON = 59,     // Key: ;
-        EQUAL = 61,         // Key: =
+        Apostrophe = 39,    // Key: '
+        Comma = 44,         // Key: ,
+        Minus = 45,         // Key: -
+        Period = 46,        // Key: .
+        Slash = 47,         // Key: /
+        Zero = 48,          // Key: 0
+        One = 49,           // Key: 1
+        Two = 50,           // Key: 2
+        Three = 51,         // Key: 3
+        Four = 52,          // Key: 4
+        Five = 53,          // Key: 5
+        Six = 54,           // Key: 6
+        Seven = 55,         // Key: 7
+        Eight = 56,         // Key: 8
+        Nine = 57,          // Key: 9
+        SemiColon = 59,     // Key: ;
+        Equal = 61,         // Key: =
         A = 65,             // Key: A | a
         B = 66,             // Key: B | b
         C = 67,             // Key: C | c
@@ -52,31 +52,31 @@ namespace ClassicLauncher::Keyboard
         X = 88,             // Key: X | x
         Y = 89,             // Key: Y | y
         Z = 90,             // Key: Z | z
-        LEFT_BRACKET = 91,  // Key: [
-        BACKSLASH = 92,     // Key: '\'
-        RIGHT_BRACKET = 93, // Key: ]
-        GRAVE = 96,         // Key: `
+        LeftBracket = 91,  // Key: [
+        Backslash = 92,     // Key: '\'
+        RightBracket = 93, // Key: ]
+        Grave = 96,         // Key: `
         // Function keys
-        SPACE = 32,          // Key: Space
-        ESCAPE = 256,        // Key: Esc
-        ENTER = 257,         // Key: Enter
-        TAB = 258,           // Key: Tab
-        BACKSPACE = 259,     // Key: Backspace
-        INSERT = 260,        // Key: Ins
-        DELETE = 261,        // Key: Del
-        RIGHT = 262,         // Key: Cursor right
-        LEFT = 263,          // Key: Cursor left
-        DOWN = 264,          // Key: Cursor down
-        UP = 265,            // Key: Cursor up
-        PAGE_UP = 266,       // Key: Page up
-        PAGE_DOWN = 267,     // Key: Page down
-        HOME = 268,          // Key: Home
-        END = 269,           // Key: End
-        CAPS_LOCK = 280,     // Key: Caps lock
-        SCROLL_LOCK = 281,   // Key: Scroll down
-        NUM_LOCK = 282,      // Key: Num lock
-        PRINT_SCREEN = 283,  // Key: Print screen
-        PAUSE = 284,         // Key: Pause
+        Space = 32,          // Key: Space
+        Escape = 256,        // Key: Esc
+        Enter = 257,         // Key: Enter
+        Tab = 258,           // Key: Tab
+        Backspace = 259,     // Key: Backspace
+        Insert = 260,        // Key: Ins
+        Delete = 261,        // Key: Del
+        Right = 262,         // Key: Cursor right
+        Left = 263,          // Key: Cursor left
+        Down = 264,          // Key: Cursor down
+        Up = 265,            // Key: Cursor up
+        PageUp = 266,       // Key: Page up
+        PageDown = 267,     // Key: Page down
+        Home = 268,          // Key: Home
+        End = 269,           // Key: End
+        CapsLock = 280,     // Key: Caps lock
+        ScrollLock = 281,   // Key: Scroll down
+        NumLock = 282,      // Key: Num lock
+        PrintScreen = 283,  // Key: Print screen
+        Pause = 284,         // Key: Pause
         F1 = 290,            // Key: F1
         F2 = 291,            // Key: F2
         F3 = 292,            // Key: F3
@@ -89,33 +89,33 @@ namespace ClassicLauncher::Keyboard
         F10 = 299,           // Key: F10
         F11 = 300,           // Key: F11
         F12 = 301,           // Key: F12
-        LEFT_SHIFT = 340,    // Key: Shift left
-        LEFT_CONTROL = 341,  // Key: Control left
-        LEFT_ALT = 342,      // Key: Alt left
-        LEFT_SUPER = 343,    // Key: Super left
-        RIGHT_SHIFT = 344,   // Key: Shift right
-        RIGHT_CONTROL = 345, // Key: Control right
-        RIGHT_ALT = 346,     // Key: Alt right
-        RIGHT_SUPER = 347,   // Key: Super right
-        KB_MENU = 348,       // Key: KB menu
+        LeftShift = 340,    // Key: Shift left
+        LeftControl = 341,  // Key: Control left
+        LeftAlt = 342,      // Key: Alt left
+        LeftSuper = 343,    // Key: Super left
+        RightShift = 344,   // Key: Shift right
+        RightControl = 345, // Key: Control right
+        RightAlt = 346,     // Key: Alt right
+        RightSuper = 347,   // Key: Super right
+        KbMenu = 348,       // Key: KB menu
         // Keypad keys
-        KP_0 = 320,        // Key: Keypad 0
-        KP_1 = 321,        // Key: Keypad 1
-        KP_2 = 322,        // Key: Keypad 2
-        KP_3 = 323,        // Key: Keypad 3
-        KP_4 = 324,        // Key: Keypad 4
-        KP_5 = 325,        // Key: Keypad 5
-        KP_6 = 326,        // Key: Keypad 6
-        KP_7 = 327,        // Key: Keypad 7
-        KP_8 = 328,        // Key: Keypad 8
-        KP_9 = 329,        // Key: Keypad 9
-        KP_DECIMAL = 330,  // Key: Keypad .
-        KP_DIVIDE = 331,   // Key: Keypad /
-        KP_MULTIPLY = 332, // Key: Keypad *
-        KP_SUBTRACT = 333, // Key: Keypad -
-        KP_ADD = 334,      // Key: Keypad +
-        KP_ENTER = 335,    // Key: Keypad Enter
-        KP_EQUAL = 336,    // Key: Keypad =
+        KeyPad0 = 320,        // Key: Keypad 0
+        KeyPad1 = 321,        // Key: Keypad 1
+        KeyPad2 = 322,        // Key: Keypad 2
+        KeyPad3 = 323,        // Key: Keypad 3
+        KeyPad4 = 324,        // Key: Keypad 4
+        KeyPad5 = 325,        // Key: Keypad 5
+        KeyPad6 = 326,        // Key: Keypad 6
+        KeyPad7 = 327,        // Key: Keypad 7
+        KeyPad8 = 328,        // Key: Keypad 8
+        KeyPad9 = 329,        // Key: Keypad 9
+        KeyPadDecimal = 330,  // Key: Keypad .
+        KeyPadDivide = 331,   // Key: Keypad /
+        KeyPadMultiply = 332, // Key: Keypad *
+        KeyPadSubtract = 333, // Key: Keypad -
+        KeyPadAdd = 334,      // Key: Keypad +
+        KeyPadEnter = 335,    // Key: Keypad Enter
+        KeyPadEqual = 336,    // Key: Keypad =
     };
 
     bool IsPressed(int key);

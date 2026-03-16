@@ -3,14 +3,15 @@
 
 #include "Guis/Components/GuiCanvas.h"
 
+
 namespace ClassicLauncher
 {
-    enum class Margin
+    enum class Margin : std::uint8_t
     {
-        NONE,
-        AUTO,
-        TOP_ONLY,
-        LEFT_ONLY
+        None,
+        Auto,
+        TopOnly,
+        LeftOnly
     };
 
     class GuiSizeBox : public GuiCanvas
@@ -29,7 +30,7 @@ namespace ClassicLauncher
     private:
 
         void UpdateMargin();
-        Margin m_margin{Margin::AUTO};
+        Margin m_margin{Margin::Auto};
         Entity* m_entity{nullptr};
         bool m_aspectRatio{true};
     };

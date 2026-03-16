@@ -46,11 +46,11 @@ namespace ClassicLauncher
 
 #ifdef _DEBUG
 
-        if (Keyboard::IsReleased(Keyboard::Key::FIVE))
+        if (Keyboard::IsReleased(Keyboard::Key::Five))
         {
             s_enableDebug = !s_enableDebug;
         }
-        if (Keyboard::IsReleased(Keyboard::Key::SIX))
+        if (Keyboard::IsReleased(Keyboard::Key::Six))
         {
             s_disableCache = !s_disableCache;
         }
@@ -143,7 +143,7 @@ namespace ClassicLauncher
             //                 entity->m_finalTransformRect.width,
             //                 entity->m_finalTransformRect.height,
             //                 ::Color{255,0,0,50});
-            if (Mouse::IsReleased(Mouse::LEFT))
+            if (Mouse::IsReleased(Mouse::Left))
             {
                 DrawStatistics(entity);
             }

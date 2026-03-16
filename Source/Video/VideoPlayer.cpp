@@ -35,7 +35,7 @@ namespace ClassicLauncher
         c->frameId = frame;
         c->frameLock[frame] = true;
         c->countFrame++;
-        LOG(LOG_CLASSIC_TRACE, "frame %d is ready \"c->frameLock[%d]\" is unlock", c->countFrame, c->frameLock[frame]);
+        LOG(LogClassicTrace, "frame %d is ready \"c->frameLock[%d]\" is unlock", c->countFrame, c->frameLock[frame]);
         c->frameMutex[frame].unlock();
     }
 
@@ -67,50 +67,50 @@ namespace ClassicLauncher
             m_VLC = libvlc_new(vlc_argc, vlc_argv); // LibVLC initialization instance
             if (!m_VLC)
             {
-                LOG(LOG_CLASSIC_FATAL, "LibVLC initialization failure.");
+                LOG(LogClassicFatal, "LibVLC initialization failure.");
             }
         }
     }
 
     VideoPlayer::VideoPlayer()
     {
-        LOG(LOG_CLASSIC_TRACE, "Initializing VideoPlayer...");
+        LOG(LogClassicTrace, "Initializing VideoPlayer...");
         StartVLCInstance();
-        LOG(LOG_CLASSIC_TRACE, "VideoPlayer initialized.");
+        LOG(LogClassicTrace, "VideoPlayer initialized.");
     }
 
     VideoPlayer::~VideoPlayer()
     {
-        LOG(LOG_CLASSIC_TRACE, "Destroying VideoPlayer...");
+        LOG(LogClassicTrace, "Destroying VideoPlayer...");
         Unload();
-        LOG(LOG_CLASSIC_TRACE, "VideoPlayer destroyed.");
+        LOG(LogClassicTrace, "VideoPlayer destroyed.");
     }
 
     bool VideoPlayer::Init(std::string path, int width, int height, float scale, bool fill)
     {
-        LOG(LOG_CLASSIC_INFO, "Initializing video with path: %s", path.c_str());
+        LOG(LogClassicInfo, "Initializing video with path: %s", path.c_str());
         if (path.empty())
         {
-            LOG(LOG_CLASSIC_WARNING, "path is empty.");
+            LOG(LogClassicWarning, "path is empty.");
             return false;
         }
         if (!m_VLC)
         {
-            LOG(LOG_CLASSIC_ERROR, "LibVLC not initializate.");
+            LOG(LogClassicError, "LibVLC not initializate.");
             return false;
         }
 
         m_media = libvlc_media_new_path(m_VLC, path.c_str());
         if (!m_media)
         {
-            LOG(LOG_CLASSIC_ERROR, "m_media initialization failure.");
+            LOG(LogClassicError, "m_media initialization failure.");
             return false;
         }
 
         m_mediaPlayer = libvlc_media_player_new_from_media(m_media);
         if (!m_mediaPlayer)
         {
-            LOG(LOG_CLASSIC_ERROR, "m_mediaPlayer initialization failure.\n");
+            LOG(LogClassicError, "m_mediaPlayer initialization failure.\n");
             return false;
         }
 
@@ -153,7 +153,7 @@ namespace ClassicLauncher
                               m_widthVideo,
                               m_heightVideo,
                               1,
-                              PIXELFORMAT_UNCOMPRESSED_R8G8B8A8};
+                              PixelFormat::UncompressedR8G8B8A8};
 
         m_context.image[0].CopyTo(m_context.image[1]);
 
@@ -221,12 +221,12 @@ namespace ClassicLauncher
             m_context.frameMutex[frame].lock();
             m_texture.Update(m_context.image[frame].data);
             m_context.frameLock[frame] = false;
-            LOG(LOG_CLASSIC_TRACE, "video texture updated %d", m_context.countFrame);
+            LOG(LogClassicTrace, "video texture updated %d", m_context.countFrame);
             m_context.frameMutex[frame].unlock();
         }
         else
         {
-            LOG(LOG_CLASSIC_TRACE, "video texture not updated \"mContext.frameLock[%d]\" is locked", m_context.frameLock[frame]);
+            LOG(LogClassicTrace, "video texture not updated \"mContext.frameLock[%d]\" is locked", m_context.frameLock[frame]);
         }
 
         if (IsVideoFinished() && m_isLoop)

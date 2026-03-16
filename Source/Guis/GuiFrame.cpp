@@ -37,11 +37,11 @@ namespace ClassicLauncher
                 m_frameMenu->SetOpacity(255);
                 SetOpacity(0);
             }
-            LOG(LOG_CLASSIC_DEBUG, "finish animation frame");
+            LOG(LogClassicDebug, "finish animation frame");
         }
         else
         {
-            LOG(LOG_CLASSIC_DEBUG, "finish other animation frame");
+            LOG(LogClassicDebug, "finish other animation frame");
         }
     }
 

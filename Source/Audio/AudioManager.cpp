@@ -58,7 +58,7 @@ namespace ClassicLauncher
         std::filesystem::path directorypath = path;
         if (!std::filesystem::exists(directorypath))
         {
-            LOG(LOG_CLASSIC_ERROR, "%s is not exists", directorypath.c_str());
+            LOG(LogClassicError, "%s is not exists", directorypath.c_str());
             return;
         }
 
@@ -144,7 +144,7 @@ namespace ClassicLauncher
 
     void AudioManager::Update()
     {
-        if (InputManager::IsRelease(InputName::rightThumb, MAIN_CENTER))
+        if (InputManager::IsRelease(InputName::R3, MainCenter))
         {
             ChangeMusic();
             PRINT(TEXT("Changed music"), 5.0f);

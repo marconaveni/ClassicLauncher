@@ -24,8 +24,6 @@ namespace ClassicLauncher
     {
     public:
 
-        friend class WindowSystem;
-
         Window() = default;
         ~Window();
         void Init(const std::string& title, ConfigurationManager& configManager);
