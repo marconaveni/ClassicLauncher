@@ -4,6 +4,11 @@
 namespace ClassicLauncher
 {
 
+    GuiCanvas::GuiCanvas(const EntityContext& entityContext)
+        : Entity(entityContext)
+    {
+    }
+
     void GuiCanvas::AddChild(Entity* entity)
     {
         Entity::AddChild(entity);
@@ -23,6 +28,5 @@ namespace ClassicLauncher
         }
         Entity::UpdateWorldTransform();
     }
-
 
 } // namespace ClassicLauncher

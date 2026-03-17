@@ -4,8 +4,9 @@
 namespace ClassicLauncher
 {
 
-    GuiBlackScreen::GuiBlackScreen(Window* window)
-        : Animatable(window)
+    GuiBlackScreen::GuiBlackScreen(const EntityContext& entityContext, Window* window)
+        : Entity(entityContext)
+        , Animatable(window)
     {
         SetOpacity(0);
         SetSize(Sizef{1280.0f, 720.0f});

@@ -15,9 +15,11 @@
 
 namespace ClassicLauncher
 {
-    GuiMiniCover::GuiMiniCover(GameListManager* gameListManagerRef, Window* window)
-        : m_gameListManagerRef(gameListManagerRef)
+
+    GuiMiniCover::GuiMiniCover(const EntityContext& entityContext, GameListManager* gameListManagerRef, Window* window)
+        : Entity(entityContext)
         , Animatable(window)
+        , m_gameListManagerRef(gameListManagerRef)
     {
     }
 

@@ -38,7 +38,7 @@ namespace ClassicLauncher
             Right
         };
 
-        GuiHorizontalCards(GameListManager* gameListManagerRef, AudioManager* audioManagerRef, Window* window);
+        explicit GuiHorizontalCards(const EntityContext& entityContext, GameListManager* gameListManagerRef, AudioManager* audioManagerRef, Window* window);
         EntityType GetType() const override { return EntityType::GuiHorizontalCardsClass; }
         void Init();
         void Update() override;

@@ -14,12 +14,12 @@ namespace ClassicLauncher
     class GameListManager;
     class AudioManager;
     class ProcessManager;
-    
+
     class GuiWindow : public GuiCanvas
     {
     public:
 
-        GuiWindow(GameListManager* gameListManagerRef, AudioManager& audioManagerRef, ProcessManager& processManagerRef);
+        explicit GuiWindow(EntityContext& entityContext, GameListManager* gameListManagerRef, AudioManager& audioManagerRef, ProcessManager& processManagerRef);
         virtual EntityType GetType() const override { return EntityType::GuiWindowClass; }
         virtual void Update() override;
         void Init();
@@ -27,10 +27,6 @@ namespace ClassicLauncher
         void OnBack();
         void UpdateCovers();
         void FadeOutScreen();
-
-#ifdef _DEBUG
-        void InitDebug();
-#endif
 
     private:
 
@@ -44,6 +40,10 @@ namespace ClassicLauncher
         GameListManager* m_gameListManagerRef{nullptr};
         AudioManager* m_audioManagerRef{nullptr};
         ProcessManager* m_processManagerRef{nullptr};
+
+#ifdef _DEBUG
+        void InitDebug();
+#endif
     };
 
 } // namespace ClassicLauncher

@@ -10,7 +10,7 @@
 
 namespace ClassicLauncher
 {
-    
+
     struct IniData
     {
         CSimpleIniA ini;
@@ -71,8 +71,8 @@ namespace ClassicLauncher
 
     std::string Ini::GetString(const std::string& section, const std::string& key, const std::string& defaultValue)
     {
-        const std::string str = GetValue(section, key, defaultValue); 
-        return str.empty() ? defaultValue : key;
+        const std::string str = GetValue(section, key, defaultValue);
+        return str.empty() ? defaultValue : str;
     }
 
     bool Ini::GetBoolean(const std::string& section, const std::string& key, const bool defaultValue)

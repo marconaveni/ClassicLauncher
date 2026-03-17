@@ -10,7 +10,7 @@ namespace ClassicLauncher
     {
     public:
 
-        GuiBase();
+        explicit GuiBase(const EntityContext& entityContext);
         virtual EntityType GetType() const override { return EntityType::GuiBaseClass; }
     };
 

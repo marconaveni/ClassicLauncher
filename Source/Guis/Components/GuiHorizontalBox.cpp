@@ -5,7 +5,8 @@
 namespace ClassicLauncher
 {
 
-    GuiHorizontalBox::GuiHorizontalBox()
+    GuiHorizontalBox::GuiHorizontalBox(const EntityContext& entityContext)
+        : GuiCanvas(entityContext)
     {
         SetSize(10.0f, 10.0f);
     }

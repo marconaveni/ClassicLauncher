@@ -19,7 +19,7 @@ namespace ClassicLauncher
     {
     public:
 
-        GuiVideoPlayer(Window* window);
+        explicit GuiVideoPlayer(const EntityContext& entityContext, Window* window);
         EntityType GetType() const override { return EntityType::GuiVideoPlayerClass; }
         bool Init(const std::string& path, int width, int height);
         void InitFullscreen();
@@ -35,7 +35,7 @@ namespace ClassicLauncher
     private:
 
         RenderTexture* m_renderTexture{nullptr};
-        GuiBase m_gui{};
+        GuiBase m_gui;
         std::unique_ptr<VideoPlayer> m_player{nullptr};
         std::unique_ptr<VideoPlayer> m_playerFullScreen{nullptr};
         std::string m_filePath{};

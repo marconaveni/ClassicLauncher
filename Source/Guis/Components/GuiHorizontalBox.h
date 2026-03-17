@@ -12,7 +12,7 @@ namespace ClassicLauncher
     {
     public:
 
-        GuiHorizontalBox();
+        explicit GuiHorizontalBox(const EntityContext& entityContext);
         ~GuiHorizontalBox() = default;
         virtual EntityType GetType() const override { return EntityType::GuiHorizontalBoxClass; }
         virtual void UpdateWorldTransform() override;

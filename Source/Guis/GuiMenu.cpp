@@ -7,6 +7,10 @@
 
 namespace ClassicLauncher
 {
+    GuiMenu::GuiMenu(const EntityContext& entityContext)
+        : GuiHorizontalBox(entityContext)
+    {
+    }
 
     void GuiMenu::Init()
     {

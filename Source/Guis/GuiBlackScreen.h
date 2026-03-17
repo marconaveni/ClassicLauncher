@@ -15,7 +15,7 @@ namespace ClassicLauncher
 
     public:
 
-        GuiBlackScreen(Window* window);
+        explicit GuiBlackScreen(const EntityContext& entityContext, Window* window);
         virtual EntityType GetType() const override { return EntityType::GuiBlackScreenClass; }
         void FadeIn();
         void FadeOut();

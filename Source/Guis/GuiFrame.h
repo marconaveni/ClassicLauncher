@@ -15,7 +15,7 @@ namespace ClassicLauncher
     {
     public:
 
-        GuiFrame(Window* window);
+        explicit GuiFrame(const EntityContext& entityContext, Window* window);
         ~GuiFrame() = default;
         void SetFrame(bool force = false);
         void Click();

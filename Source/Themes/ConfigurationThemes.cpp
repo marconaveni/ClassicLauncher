@@ -41,7 +41,8 @@ namespace ClassicLauncher
         offsetLeftCover = ini.GetFloat("minicover", "offsetLeftCover", 0.0f); // 0.0f
 
         // hintbar
-        hintBarFooterColor = Utils::HexToColor(ini.GetString("hintBarFooter", "hintBarFooterColor", "FFFFFFFF"));
+        const std::string color = ini.GetString("hintBarFooter", "hintBarFooterColor", "FFFFFFFF");
+        hintBarFooterColor = Utils::HexToColor(color);
 
         // title
         titleColor = Utils::HexToColor(ini.GetString("title", "titleColor", "FFFFFFFF"));

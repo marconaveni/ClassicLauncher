@@ -24,7 +24,8 @@ namespace ClassicLauncher
         m_nameFont = GetFontManager()->Load(path, m_sizeText * m_renderScale);
     }
 
-    GuiTextBlock::GuiTextBlock()
+    GuiTextBlock::GuiTextBlock(const EntityContext& entityContext)
+        : Entity(entityContext)
     {
     }
 

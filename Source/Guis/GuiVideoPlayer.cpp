@@ -11,8 +11,10 @@
 
 namespace ClassicLauncher
 {
-    GuiVideoPlayer::GuiVideoPlayer(Window* window)
-        : Animatable(window)
+    GuiVideoPlayer::GuiVideoPlayer(const EntityContext& entityContext, Window* window)
+        : Entity(entityContext)
+        , Animatable(window)
+        , m_gui(entityContext)
     {
         SetOpacity(0);
         m_gui.SetOpacity(0);

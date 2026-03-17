@@ -27,10 +27,14 @@
 namespace ClassicLauncher
 {
 
-    GuiHorizontalCards::GuiHorizontalCards(GameListManager* gameListManagerRef, AudioManager* audioManagerRef, Window* window)
-        : m_gameListManagerRef(gameListManagerRef)
-        , m_audioManagerRef(audioManagerRef)
+    GuiHorizontalCards::GuiHorizontalCards(const EntityContext& entityContext,
+                                           GameListManager* gameListManagerRef,
+                                           AudioManager* audioManagerRef,
+                                           Window* window)
+        : Entity(entityContext)
         , Animatable(window)
+        , m_gameListManagerRef(gameListManagerRef)
+        , m_audioManagerRef(audioManagerRef)
     {
         SetSize(Sizef{1280.0f, 720.0f});
     }

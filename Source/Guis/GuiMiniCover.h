@@ -21,7 +21,7 @@ namespace ClassicLauncher
     {
     public:
 
-        GuiMiniCover(GameListManager* gameListManagerRef, Window* window);
+        explicit GuiMiniCover(const EntityContext& entityContext, GameListManager* gameListManagerRef, Window* window);
         EntityType GetType() const override { return EntityType::GuiMiniCoverClass; }
         void Init();
         void Update() override;

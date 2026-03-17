@@ -18,7 +18,7 @@ namespace ClassicLauncher
     {
     public:
 
-        GuiSizeBox() = default;
+        explicit GuiSizeBox(const EntityContext& entityContext);
         ~GuiSizeBox() = default;
         virtual EntityType GetType() const override { return EntityType::GuiSizeBoxClass; }
         virtual void AddChild(Entity* child) override;

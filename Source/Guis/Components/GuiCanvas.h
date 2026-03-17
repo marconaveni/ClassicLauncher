@@ -13,6 +13,7 @@ namespace ClassicLauncher
     {
     public:
 
+        explicit GuiCanvas(const EntityContext& entityContext);
         ~GuiCanvas() = default;
         virtual EntityType GetType() const override { return EntityType::GuiCanvasClass; }
         virtual void AddChild(Entity* entity) override;

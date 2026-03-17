@@ -28,7 +28,11 @@ namespace ClassicLauncher
 
     public:
 
-        GuiCard(GameListManager* gameListManagerRef, FocusManager* focusManagerRef, AudioManager* audioManagerRef, Window* window);
+        explicit GuiCard(const EntityContext& entityContext,
+                         GameListManager* gameListManagerRef,
+                         FocusManager* focusManagerRef,
+                         AudioManager* audioManagerRef,
+                         Window* window);
         void CreateCards(int x, int y);
 
 

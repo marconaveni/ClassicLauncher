@@ -11,8 +11,9 @@
 namespace ClassicLauncher
 {
 
-    GuiFrame::GuiFrame(Window* window)
-        : Animatable(window)
+    GuiFrame::GuiFrame(const EntityContext& entityContext, Window* window)
+        : Entity(entityContext)
+        , Animatable(window)
     {
         m_textureName = "sprite";
 

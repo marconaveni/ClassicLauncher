@@ -9,6 +9,11 @@
 namespace ClassicLauncher
 {
 
+    GuiHintBar::GuiHintBar(const EntityContext& entityContext)
+        : GuiHorizontalBox(entityContext)
+    {
+    }
+
     void GuiHintBar::AddHint(RectFloat source, const std::string& name, Color textColor, float spacer)
     {
         HintBar bar;

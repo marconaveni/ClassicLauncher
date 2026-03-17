@@ -15,8 +15,13 @@
 namespace ClassicLauncher
 {
 
-    GuiCard::GuiCard(GameListManager* gameListManagerRef, FocusManager* focusManagerRef, AudioManager* audioManagerRef, Window* window)
-        : FocusComponent(focusManagerRef, FocusCategory::CARD)
+    GuiCard::GuiCard(const EntityContext& entityContext,
+                     GameListManager* gameListManagerRef,
+                     FocusManager* focusManagerRef,
+                     AudioManager* audioManagerRef,
+                     Window* window)
+        : GuiCanvas(entityContext)
+        , FocusComponent(focusManagerRef, FocusCategory::CARD)
         , m_timerVideo()
         , m_gameListManagerRef(gameListManagerRef)
         , m_audioManagerRef(audioManagerRef)

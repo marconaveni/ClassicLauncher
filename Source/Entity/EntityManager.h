@@ -22,19 +22,20 @@ namespace ClassicLauncher
     {
     public:
 
-        EntityManager(SpriteManager* spriteManagerRef, TimerManager* timerManagerRef, FocusManager* focusManagerRef, FontManager* fontManagerRef, Window* windowRef);
+        explicit EntityManager(SpriteManager* spriteManager, TimerManager* timerManager, FocusManager* focusManager, FontManager* fontManager, Window* window);
         ~EntityManager();
 
         template <typename T, typename... Args>
         T* CreateEntity(const std::string& name, Args&&... args)
         {
-            auto entity = std::make_unique<T>(std::forward<Args>(args)...);
-            entity->m_entityManagerRef = this;
-            entity->m_timerManagerRef = m_timerManagerReference;
-            entity->m_spriteManagerRef = m_spriteManagerReference;
-            entity->m_focusManagerRef = m_focusManagerReference;
-            entity->m_fontManagerRef = m_fontManagerReference;
-            entity->m_windowRef = m_windowReference;
+            EntityContext context{.entityManager = this,
+                                  .timerManager = m_timerManagerReference,
+                                  .spriteManager = m_spriteManagerReference,
+                                  .focusManager = m_focusManagerReference,
+                                  .fontManager = m_fontManagerReference,
+                                  .window = m_windowReference};
+
+            auto entity = std::make_unique<T>(context, std::forward<Args>(args)...);
             SetNameId(entity.get(), name);
             m_tempEntities.push_back(std::move(entity));
             return static_cast<T*>(m_tempEntities.back().get()); // .back last element vector
@@ -74,11 +75,13 @@ namespace ClassicLauncher
         std::vector<std::unique_ptr<Entity>> m_entities{};
         std::vector<std::unique_ptr<Entity>> m_tempEntities{};
         std::vector<EntityType> m_typeCount{};
+
         SpriteManager* m_spriteManagerReference{nullptr};
         TimerManager* m_timerManagerReference{nullptr};
         FocusManager* m_focusManagerReference{nullptr};
         FontManager* m_fontManagerReference{nullptr};
         Window* m_windowReference{nullptr};
+
         bool m_markOrder{false};
         bool m_hasNewEntity{false};
         int m_counter{0};

@@ -8,15 +8,15 @@ namespace ClassicLauncher
 
     class GuiTextBlock : public Entity
     {
-        public:
-        
+    public:
+
         enum class TextOverflowPolicy : std::uint8_t
         {
             None = 0,
             Clip = 1
         };
-        
-        GuiTextBlock();
+
+        explicit GuiTextBlock(const EntityContext& entityContext);
         ~GuiTextBlock();
         void Init(const std::string& path, int size = 16, int spacing = 0);
         virtual EntityType GetType() const override { return EntityType::GuiTextBlockClass; }

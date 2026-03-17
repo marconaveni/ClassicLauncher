@@ -7,6 +7,10 @@
 namespace ClassicLauncher
 {
 
+    Entity::Entity(const EntityContext& entityContext)
+        : m_entityContext(entityContext)
+    {
+    }
 
     void Entity::UpdateWorldTransform()
     {
@@ -37,7 +41,7 @@ namespace ClassicLauncher
 
                 m_worldTransform.rotation = m_parent->m_worldTransform.rotation + m_transform.rotation;
 
-                // Propaga a opacidade (alpha) do pai para o filho
+                // It transmits the opacity (alpha) from the father to the son.
                 unsigned char parentAlpha = m_parent->m_worldTransform.color.a;
                 m_worldTransform.color.a = static_cast<unsigned char>((static_cast<int>(m_transform.color.a) * static_cast<int>(parentAlpha)) / 255);
             }
@@ -125,38 +129,38 @@ namespace ClassicLauncher
 
     TimerManager* Entity::GetTimerManager()
     {
-        CLASSIC_ASSERT(m_timerManagerRef, "is still null don't call it in the constructor! EntityManager will take care of the assignment");
-        return m_timerManagerRef;
+        CLASSIC_ASSERT(m_entityContext.timerManager, "This pointer is null. Verify m_entityContext has valid pointers");
+        return m_entityContext.timerManager;
     }
 
     SpriteManager* Entity::GetSpriteManager()
     {
-        CLASSIC_ASSERT(m_spriteManagerRef, "is still null don't call it in the constructor! EntityManager will take care of the assignment");
-        return m_spriteManagerRef;
+        CLASSIC_ASSERT(m_entityContext.spriteManager, "This pointer is null. Verify m_entityContext has valid pointers");
+        return m_entityContext.spriteManager;
     }
 
     EntityManager* Entity::GetEntityManager()
     {
-        CLASSIC_ASSERT(m_entityManagerRef, "is still null don't call it in the constructor! EntityManager will take care of the assignment");
-        return m_entityManagerRef;
+        CLASSIC_ASSERT(m_entityContext.entityManager, "This pointer is null. Verify m_entityContext has valid pointers");
+        return m_entityContext.entityManager;
     }
 
     FocusManager* Entity::GetFocusManager()
     {
-        CLASSIC_ASSERT(m_focusManagerRef, "is still null don't call it in the constructor! EntityManager will take care of the assignment");
-        return m_focusManagerRef;
+        CLASSIC_ASSERT(m_entityContext.focusManager, "This pointer is null. Verify m_entityContext has valid pointers");
+        return m_entityContext.focusManager;
     }
 
     FontManager* Entity::GetFontManager()
     {
-        CLASSIC_ASSERT(m_fontManagerRef, "is still null don't call it in the constructor! EntityManager will take care of the assignment");
-        return m_fontManagerRef;
+        CLASSIC_ASSERT(m_entityContext.fontManager, "This pointer is null. Verify m_entityContext has valid pointers");
+        return m_entityContext.fontManager;
     }
-    
+
     Window* Entity::GetWindow()
     {
-        CLASSIC_ASSERT(m_windowRef, "is still null don't call it in the constructor! EntityManager will take care of the assignment");
-        return m_windowRef;
+        CLASSIC_ASSERT(m_entityContext.window, "This pointer is null. Verify m_entityContext has valid pointers");
+        return m_entityContext.window;
     }
 
     void Entity::SetZOrder(int zOrder)

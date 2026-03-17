@@ -13,14 +13,11 @@
 #include "Window/Window.h"
 
 
-
 namespace ClassicLauncher
 {
-    GuiWindow::GuiWindow(GameListManager* gameListManagerRef, AudioManager& audioManagerRef, ProcessManager& processManagerRef)
-        : m_guiHorizontalCards(nullptr)
-        , m_guiBlackScreen(nullptr)
-        , m_guiVideoPlayer(nullptr)
-        , m_guiBackground(nullptr)
+
+    GuiWindow::GuiWindow(EntityContext& entityContext, GameListManager* gameListManagerRef, AudioManager& audioManagerRef, ProcessManager& processManagerRef)
+        : GuiCanvas(entityContext)
         , m_gameListManagerRef(gameListManagerRef)
         , m_audioManagerRef(&audioManagerRef)
         , m_processManagerRef(&processManagerRef)

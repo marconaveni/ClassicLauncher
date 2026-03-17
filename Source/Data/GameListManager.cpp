@@ -137,7 +137,6 @@ namespace ClassicLauncher
 
         while (systemElement)
         {
-            // clang-format off
             GameSystemList systems;
             systems.mapIndex = index;
             systems.executable = IsValidElement(systemElement, "executable") ? NormalizePath(systemElement->FirstChildElement("executable")->GetText()) : "";
@@ -156,12 +155,11 @@ namespace ClassicLauncher
                 systems.theme.path = path;
                 systems.theme.isDirectoryExist = true;
             }
-            
+
             m_gameSystemList.push_back(systems);
 
             systemElement = systemElement->NextSiblingElement("system");
             index++;
-            // clang-format on
         }
         m_gameSystemList.shrink_to_fit();
         SystemListSortByName();

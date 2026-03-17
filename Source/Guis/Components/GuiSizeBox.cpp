@@ -5,6 +5,11 @@
 namespace ClassicLauncher
 {
 
+    GuiSizeBox::GuiSizeBox(const EntityContext& entityContext)
+        : GuiCanvas(entityContext)
+    {
+    }
+
     void GuiSizeBox::AddChild(Entity* child)
     {
         if (!m_entity)

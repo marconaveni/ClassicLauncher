@@ -14,7 +14,7 @@ namespace ClassicLauncher
     {
     public:
 
-        GuiHintBar() = default;
+        explicit GuiHintBar(const EntityContext& entityContext);
         virtual EntityType GetType() const override { return EntityType::GuiHintBarClass; }
         void AddHint(RectFloat source, const std::string& name, Color textColor = Color::White, float spacer = 12.0f);
         void SetText(int position, const std::string& text);

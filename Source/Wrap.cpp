@@ -7,7 +7,6 @@
 
 #include "Ray.h"
 
-
 namespace rlw
 {
 

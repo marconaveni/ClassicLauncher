@@ -68,7 +68,8 @@ void run_entity_setters_getters()
 {
     using namespace ClassicLauncher;
 
-    GuiBase entity;
+    EntityContext constext;
+    GuiBase entity{constext};
 
     std::cout << "Starting GuiBase position and size tests...\n";
     std::cout << "---------------------------------------\n";
@@ -183,7 +184,8 @@ void run_entity_extra_setters_getters()
 {
     using namespace ClassicLauncher;
 
-    GuiBase entity;
+    EntityContext constext;
+    GuiBase entity{constext};
 
     std::cout << "Starting GuiBase transform and color tests...\n";
     std::cout << "---------------------------------------\n";
@@ -206,7 +208,7 @@ void run_entity_extra_setters_getters()
 
     // --- Color ---
     entity.SetColor(100, 150, 200, 255);
-    run_test("GuiBase::SetColor stores RGBA {100, 150, 200, 255}", entity.GetColor() == Color{100,150,200,255});
+    run_test("GuiBase::SetColor stores RGBA {100, 150, 200, 255}", entity.GetColor() == Color{100, 150, 200, 255});
     entity.SetColorRed(10);
     run_test("GuiBase::SetColorRed updates the red channel to 10", entity.GetColor().r == 10);
     entity.SetColorGreen(20);
@@ -220,5 +222,3 @@ void run_entity_extra_setters_getters()
     std::cout << "---------------------------------------\n";
     std::cout << "GuiBase transform and color tests finished.\n";
 }
-
-

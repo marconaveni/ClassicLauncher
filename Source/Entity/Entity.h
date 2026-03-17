@@ -37,13 +37,23 @@ namespace ClassicLauncher
     class FocusManager;
     class Window;
 
+    struct EntityContext
+    {
+        EntityManager* entityManager{nullptr};
+        TimerManager* timerManager{nullptr};
+        SpriteManager* spriteManager{nullptr};
+        FocusManager* focusManager{nullptr};
+        FontManager* fontManager{nullptr};
+        Window* window{nullptr};
+    };
+
     class Entity
     {
     public:
 
         struct ZOrder;
 
-        Entity() = default;
+        explicit Entity(const EntityContext& entityContext);
         virtual ~Entity() = default;
         [[nodiscard]] virtual EntityType GetType() const = 0;
         virtual void Update() {}
@@ -119,7 +129,6 @@ namespace ClassicLauncher
         RectFloat m_scissorArea;
         std::string m_textureName{"transparent"};
 
-
         struct ZOrder
         {
             int id{0};
@@ -165,12 +174,7 @@ namespace ClassicLauncher
         ZOrder m_zOrder{};
         std::string m_nameId{};
 
-        SpriteManager* m_spriteManagerRef{nullptr};
-        TimerManager* m_timerManagerRef{nullptr};
-        EntityManager* m_entityManagerRef{nullptr};
-        FocusManager* m_focusManagerRef{nullptr};
-        FontManager* m_fontManagerRef{nullptr};
-        Window* m_windowRef{nullptr};
+        EntityContext m_entityContext{};
 
         // note: this should not be called directly use entity manager
         void SetZOrder(int zOrder);

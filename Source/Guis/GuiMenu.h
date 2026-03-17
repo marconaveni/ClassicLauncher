@@ -13,7 +13,7 @@ namespace ClassicLauncher
     {
     public:
 
-        GuiMenu() = default;
+        explicit GuiMenu(const EntityContext& entityContext);
         virtual EntityType GetType() const override { return EntityType::GuiMenuClass; }
         void Init();
         void Update() override;
