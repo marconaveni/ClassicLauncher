@@ -101,7 +101,7 @@ namespace ClassicLauncher
         const std::filesystem::path file = Resources::GetConfigurationFile();
         if (!config.Open(file))
         {
-            SetValues(config);
+            GetValues(config);
             config.Save(file);
             return;
         }

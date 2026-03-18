@@ -62,7 +62,7 @@ namespace ClassicLauncher::Platform
         }
         else
         {
-            LOG(LogClassicInfo, "\nOpen>  Path: %s\n       WorkingDirectory: %s", processId, fullPath.c_str(), optionalWorkingDirectory.c_str());
+            LOG(LogClassicInfo, "\nOpen>  processID: %d\n       Path: %s\n       WorkingDirectory: %s", processId, fullPath.c_str(), optionalWorkingDirectory.c_str());
             LOG(LogClassicError, "Error on create a process: %lu\n", GetLastError());
             processId = 0;
             status = -1;
@@ -155,31 +155,31 @@ namespace ClassicLauncher::Platform
         args.push_back(nullptr);
         return args;
     }
-
+    
     void CreateProc(int& processId, const std::string& fullPath, int& status)
     {
         std::vector<std::string> paths;
         std::vector<char*> args = BuildArgvFromPath(fullPath, paths);
-
+        
         int pipefd[2];
         pipe(pipefd);
-
+        
         // closes pipe automatically when executing
         fcntl(pipefd[1], F_SETFD, FD_CLOEXEC);
-
+        
         pid_t pid = fork();
-
+        
         if (pid == -1)
         {
             return;
         }
-
+        
         if (pid == 0)
         {
             close(pipefd[0]); // son writes
-
+            
             execvp(args[0], args.data());
-
+            
             // It only gets here if exec fails.
             int err = errno;
             write(pipefd[1], &err, sizeof(err));
@@ -188,11 +188,11 @@ namespace ClassicLauncher::Platform
         else
         {
             close(pipefd[1]); // dad reads
-
+            
             int err;
             ssize_t n = read(pipefd[0], &err, sizeof(err)); // Commenting out fcntl causes the thread to get stuck here.
             close(pipefd[0]);
-
+            
             if (n > 0)
             {
                 LOG(LogClassicError, "exec failed: %s", strerror(err));
@@ -200,10 +200,10 @@ namespace ClassicLauncher::Platform
                 processId = 0;
                 return;
             }
-
+            
+            LOG(LogClassicInfo, "\nOpen>  processID: %d\n       Path: %s\n", processId, fullPath.c_str());
             processId = pid;
             status = 1; // exec its works !!!!
-            LOG(LogClassicInfo, "\nOpen>  Path: %s", processId, fullPath.c_str());
         }
     }
 
@@ -222,7 +222,7 @@ namespace ClassicLauncher::Platform
         if (result == 0)
         {
             isApplicationRunning = true;
-            LOG(LOG_CLASSIC_TRACE, "The child process is running...");
+            LOG(LogClassicTrace, "The child process is running...");
         }
         else if (result == processId)
         {
