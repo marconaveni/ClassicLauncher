@@ -58,13 +58,14 @@ namespace ClassicLauncher
         Window m_window;
         RenderSystem m_renderSystem;
         InputManager m_inputManager;
-        Application m_application;
+        // Application m_application;
         SpriteManager m_spriteManager;
         TimerManager m_timerManager;
         AudioManager m_audioManager;
         FontManager m_fontManager;
         Print m_print;
         ProcessManager m_processManager;
+        Application m_application;
         std::vector<std::string> m_windowIcons{};
         EngineState m_state{EngineState::EXITING};
     };

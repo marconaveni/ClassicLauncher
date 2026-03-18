@@ -37,17 +37,19 @@ namespace ClassicLauncher
 
     bool Window::ShouldClose()
     {
-        return ray::WindowShouldClose();
+        return ray::WindowShouldClose() || m_status.close;
     }
 
     void Window::CloseWindow()
     {
+        LOG(LogClassicDebug, "Closing Window");
         if (ray::IsWindowReady())
         {
             ClearState(Flags::Undecorated | Flags::Resizable | Flags::AlwaysRun);
             ray::CloseWindow();
             Unload();
             m_isReady = ray::IsWindowReady();
+            LOG(LogClassicDebug, "Window is Closed %s", TEXTBOOL(!m_isReady));
             m_configManager = nullptr;
         }
     }
@@ -269,12 +271,7 @@ namespace ClassicLauncher
 
     void Window::Update()
     {
-        if (m_status.close)
-        {
-            m_status.close = false;
-            CloseWindow();
-        }
-        else if (m_status.toggleFullscreen)
+        if (m_status.toggleFullscreen)
         {
             m_status.toggleFullscreen = false;
             SetFullscreen(!IsFullScreen());

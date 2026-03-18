@@ -22,7 +22,6 @@
 namespace ClassicLauncher
 {
 
-
     Application::Application(ConfigurationManager& configManager,
                              SpriteManager& spriteManager,
                              TimerManager& timerManager,
@@ -47,6 +46,9 @@ namespace ClassicLauncher
 
     Application::~Application()
     {
+        m_spriteManagerRef->Unload();
+        m_audioManagerRef->Unload();
+        m_entityManager.End();
     }
 
     void Application::Init()
@@ -102,9 +104,9 @@ namespace ClassicLauncher
 
     void Application::End()
     {
-        m_audioManagerRef->Unload();
-        m_spriteManagerRef->Unload();
-        m_entityManager.End();
+        // m_spriteManagerRef->Unload();
+        // m_audioManagerRef->Unload();
+        // m_entityManager.End();
     }
 
     void Application::OnGraphicsRestore()
