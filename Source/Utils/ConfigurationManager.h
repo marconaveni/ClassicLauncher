@@ -22,6 +22,7 @@ namespace ClassicLauncher
         [[nodiscard]] int GetInternalScale() const { return m_internalScale; }
         [[nodiscard]] int GetVolume() const { return m_volume; }
         [[nodiscard]] int GetTargetFps() const { return m_targetFps; }
+        [[nodiscard]] int GetEnableLog() const { return m_enableLog; }
         [[nodiscard]] int GetClassicLogLevel() const { return m_classicLogLevel; }
         [[nodiscard]] int GetRaylibLogLevel() const { return m_raylibLogLevel; }
         [[nodiscard]] bool GetVSync() const { return m_vsync; }
@@ -36,6 +37,7 @@ namespace ClassicLauncher
         void SetInternalScale(int internalscale) { m_internalScale = internalscale; }
         void SetVolume(int volume) { m_volume = volume; }
         void SetTargetFps(int targetFps) { m_targetFps = targetFps; }
+        void SetEnableLog(bool enableLog) { m_enableLog = enableLog; }
         void SetClassicLogLevel(int classicLogLevel) { m_classicLogLevel = classicLogLevel; }
         void SetRaylibLogLevel(int raylibLogLevel) { m_raylibLogLevel = raylibLogLevel; }
         void SetVSync(bool vSync) { m_vsync = vSync; }
@@ -53,8 +55,9 @@ namespace ClassicLauncher
         int m_internalScale{2};
         int m_volume{100};
         int m_targetFps{60};
-        int m_classicLogLevel{13};
-        int m_raylibLogLevel{5};
+        int m_raylibLogLevel{6};
+        int m_classicLogLevel{6};
+        bool m_enableLog{false};
         bool m_vsync{true};
         bool m_fullscreen{true};
         bool m_themeReferenceOverlay{false};
@@ -63,7 +66,7 @@ namespace ClassicLauncher
         int m_widthWindow{1280};
         int m_heightWindow{720};
 
-        Ini config;
+        Ini m_config{};
     };
 
 } // namespace ClassicLauncher

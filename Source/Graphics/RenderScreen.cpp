@@ -49,7 +49,7 @@ namespace ClassicLauncher
 
         if (m_windowRef->IsResize())
         {
-            LOG(LogClassicWarning, "is resized");
+            LOG(LogInfo, "is resized");
         }
     }
 

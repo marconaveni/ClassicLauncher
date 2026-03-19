@@ -42,14 +42,14 @@ namespace ClassicLauncher
 
     void Window::CloseWindow()
     {
-        LOG(LogClassicDebug, "Closing Window");
+        LOG(LogDebug, "Closing Window");
         if (ray::IsWindowReady())
         {
             ClearState(Flags::Undecorated | Flags::Resizable | Flags::AlwaysRun);
             ray::CloseWindow();
             Unload();
             m_isReady = ray::IsWindowReady();
-            LOG(LogClassicDebug, "Window is Closed %s", TEXTBOOL(!m_isReady));
+            LOG(LogDebug, "Window is Closed %s", TEXTBOOL(!m_isReady));
             m_configManager = nullptr;
         }
     }
@@ -230,7 +230,7 @@ namespace ClassicLauncher
 
         m_configManager->SetFullscreen(IsFullScreen());
         m_configManager->SaveConfiguration();
-        LOG(LogClassicDebug, TEXT("Saved is fullscreen config.ini with value %s", TEXTBOOL(m_configManager->GetFullscreen())));
+        LOG(LogDebug, TEXT("Saved is fullscreen config.ini with value %s", TEXTBOOL(m_configManager->GetFullscreen())));
 
         return IsFullScreen();
 #endif     // PLATFORM_RPI

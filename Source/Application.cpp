@@ -16,8 +16,6 @@
 #include "Utils/TimerManager.h"
 #include "Utils/Utils.h"
 #include "Window/Window.h"
-#include "Wrap.h"
-
 
 namespace ClassicLauncher
 {
@@ -40,8 +38,6 @@ namespace ClassicLauncher
         , m_processManagerRef(&processManager)
         , m_windowRef(&window)
     {
-        LogLevel(m_configManagerRef->GetClassicLogLevel(), m_configManagerRef->GetRaylibLogLevel());
-        rlw::SetTraceLogCallback(TraceLogger);
     }
 
     Application::~Application()
@@ -64,7 +60,7 @@ namespace ClassicLauncher
         }
         else
         {
-            LOG(LogClassicError, "system list is empty");
+            LOG(LogError, "system list is empty");
             // todo create screen not found system list
         }
     }
@@ -78,7 +74,6 @@ namespace ClassicLauncher
     {
 #ifdef _DEBUG
         DebugOverlay::Update(m_audioManagerRef, &m_gameListManager, m_windowRef);
-        UpdateLogLevel();
 #endif
 
         m_entityManager.UpdateAll();

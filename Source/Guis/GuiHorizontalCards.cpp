@@ -228,7 +228,7 @@ namespace ClassicLauncher
         m_miniCover->SetCovers();
         SetPositionHorizontalBox();
 
-        LOG(LogClassicDebug, "Num Sprites Loaded after SetCovers %d", GetSpriteManager()->NumSpritesLoaded());
+        LOG(LogDebug, "Num Sprites Loaded after SetCovers %d", GetSpriteManager()->NumSpritesLoaded());
     }
 
 
@@ -331,11 +331,11 @@ namespace ClassicLauncher
 
             if (resultCover && resultMiniCover)
             {
-                LOG(LogClassicTrace, "Sprite deleted index: %d\n  > Cover: %s\n  > Mini Cover: %s ", i, coverName.c_str(), miniCoverName.c_str());
+                LOG(LogTrace, "Sprite deleted index: %d\n  > Cover: %s\n  > Mini Cover: %s ", i, coverName.c_str(), miniCoverName.c_str());
             }
         }
 
-        LOG(LogClassicDebug, "Num Sprites Loaded after ClearCovers %d", GetSpriteManager()->NumSpritesLoaded());
+        LOG(LogDebug, "Num Sprites Loaded after ClearCovers %d", GetSpriteManager()->NumSpritesLoaded());
     }
 
     bool GuiHorizontalCards::IsMovement() const

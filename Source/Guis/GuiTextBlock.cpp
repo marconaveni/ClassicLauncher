@@ -68,7 +68,7 @@ namespace ClassicLauncher
                 m_delay += GetWindow()->GetFrameTime();
                 return;
             }
-            LOG(LogClassicTrace, "positionText %.2f m_offsetText %.2f", positionText, m_offsetText);
+            LOG(LogTrace, "positionText %.2f m_offsetText %.2f", positionText, m_offsetText);
 
             m_speed = 0.50f * 60.0f * GetWindow()->GetFrameTime();
 

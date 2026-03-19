@@ -10,7 +10,7 @@
 
 #ifdef _DEBUG
     // const char* text, float duration , const char* label , const Color& textColor, bool log = false
-    #define PRINT(...) GetPrint()->PrintOnScreen(__VA_ARGS__)
+    #define PRINT(...) Log::Get()->GetPrint()->PrintOnScreen(__VA_ARGS__)
 #else
     #define PRINT(...)
 #endif

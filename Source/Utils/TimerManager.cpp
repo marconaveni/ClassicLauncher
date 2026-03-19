@@ -55,7 +55,7 @@ namespace ClassicLauncher
         {
             timer.second->Update();
         }
-        LOG(LogClassicTrace, "num m_timers in TimerManager %d", m_timers.size());
+        LOG(LogTrace, "num m_timers in TimerManager %d", m_timers.size());
     }
 
     void TimerManager::ClearAllTimers()
@@ -65,7 +65,7 @@ namespace ClassicLauncher
             auto& timer = it->second;
             if (!timer->IsActive())
             {
-                LOG(LogClassicTrace, "m_timers[%d] deleted", it->first->id);
+                LOG(LogTrace, "m_timers[%d] deleted", it->first->id);
                 it->first->id = -1;
                 it = m_timers.erase(it); // erase return the next iterator
             }

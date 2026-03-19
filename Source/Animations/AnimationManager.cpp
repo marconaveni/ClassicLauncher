@@ -48,7 +48,7 @@ namespace ClassicLauncher
                 animation.UpdateAnimation();
                 UpdateTransformAnimation(anim);
                 m_runningCallback(name);
-                LOG(LogClassicTrace, "%s", name.c_str());
+                LOG(LogTrace, "%s", name.c_str());
             }
             if (animation.m_isFinish)
             {

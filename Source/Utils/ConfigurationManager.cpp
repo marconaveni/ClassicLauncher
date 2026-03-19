@@ -11,14 +11,12 @@ namespace ClassicLauncher
 {
 
 #ifdef _DEBUG
-    #define LOG_SECTION_NAME "debug"
     #define RAYLIB_LOG_LEVEL LogInfo
-    #define CLASSIC_LOG_LEVEL LogClassicDebug
+    #define CLASSIC_LOG_LEVEL LogDebug
     #define FULLSCREEN false
 #else
-    #define LOG_SECTION_NAME "log"
-    #define RAYLIB_LOG_LEVEL LogNone
-    #define CLASSIC_LOG_LEVEL LogClassicFatal
+    #define RAYLIB_LOG_LEVEL LogFatal
+    #define CLASSIC_LOG_LEVEL LogFatal
     #define FULLSCREEN true
 #endif // _DEBUG
 
@@ -42,8 +40,9 @@ namespace ClassicLauncher
         inline static constexpr std::string_view TargetFps = "# Set Framerate limit [0 is unlocked].";  
         inline static constexpr std::string_view Fullscreen = "# Whether to launch the  launcher in fullscreen.";  
         inline static constexpr std::string_view Vsync = "# Enable VSYNC";  
+        inline static constexpr std::string_view EnableLog = "# Enable Savelog cs_log.txt";
         inline static constexpr std::string_view RaylibLogLevel = "# Raylib Logs\n# 0 Display all logs\n# 1 Trace logging\n# 2 Debug logging\n# 3  Info logging\n# 4 Warning logging\n# 5 Error logging\n# 6 Fatal logging,\n# 7  Disable logging";  
-        inline static constexpr std::string_view ClassicLogLevel = "# Classic Logs\n# 8 Display all logs\n# 9 Trace logging\n# 10 Debug logging\n# 11 Info logging\n# 12 Warning logging\n# 13 Error logging\n# 14 Fatal logging\n# 15 Disable logging";  
+        inline static constexpr std::string_view ClassicLogLevel = "# Classic Logs\n# 0 Display all logs\n# 1 Trace logging\n# 2 Debug logging\n# 3  Info logging\n# 4 Warning logging\n# 5 Error logging\n# 6 Fatal logging,\n# 7  Disable logging";
         inline static constexpr std::string_view ThemeReferenceOverlay = "# Enables a semi-transparent image used only for reference in theme creation. [true or false].";  
         inline static constexpr std::string_view ThemeReferenceImage = "# Reference image path.";  
         inline static constexpr std::string_view SuspendWindow = "# The window should be closed when the launcher starts the emulator [true or false].\n# Note: on Linux in KMS/DRM mode, always leave as true.";  
@@ -71,8 +70,9 @@ namespace ClassicLauncher
         config.SetInt("configuration", "target_fps", m_targetFps, Comments::TargetFps.data());
         config.SetBoolean("configuration", "fullscreen", m_fullscreen, Comments::Fullscreen.data());
         config.SetBoolean("configuration", "vsync", m_vsync, Comments::Vsync.data());
-        config.SetInt(LOG_SECTION_NAME, "raylib_log_level", m_raylibLogLevel, Comments::RaylibLogLevel.data());
-        config.SetInt(LOG_SECTION_NAME, "classic_log_level", m_classicLogLevel, Comments::ClassicLogLevel.data());
+        config.SetBoolean("log", "enable_log", m_enableLog, Comments::EnableLog.data());
+        config.SetInt("log", "raylib_log_level", m_raylibLogLevel, Comments::RaylibLogLevel.data());
+        config.SetInt("log", "classic_log_level", m_classicLogLevel, Comments::ClassicLogLevel.data());
         config.SetBoolean("themes", "theme_reference_overlay", m_themeReferenceOverlay, Comments::ThemeReferenceOverlay.data());
         config.SetString("themes", "theme_reference_image", m_themeReferenceImage, Comments::ThemeReferenceImage.data());
         config.SetBoolean("window", "suspend_window", m_suspendWindow, Comments::SuspendWindow.data());
@@ -87,8 +87,9 @@ namespace ClassicLauncher
         m_targetFps = config.GetInt("configuration", "target_fps", 60);
         m_fullscreen = config.GetBoolean("configuration", "fullscreen", FULLSCREEN);
         m_vsync = config.GetBoolean("configuration", "vsync", true);
-        m_raylibLogLevel = config.GetInt(LOG_SECTION_NAME, "raylib_log_level", RAYLIB_LOG_LEVEL);
-        m_classicLogLevel = config.GetInt(LOG_SECTION_NAME, "classic_log_level", CLASSIC_LOG_LEVEL);
+        m_enableLog = config.GetBoolean("log", "enable_log", false);
+        m_raylibLogLevel = config.GetInt("log", "raylib_log_level", RAYLIB_LOG_LEVEL);
+        m_classicLogLevel = config.GetInt("log", "classic_log_level", CLASSIC_LOG_LEVEL);
         m_themeReferenceOverlay = config.GetBoolean("themes", "theme_reference_overlay", false);
         m_themeReferenceImage = config.GetString("themes", "theme_reference_image", "none");
         m_suspendWindow = config.GetBoolean("window", "suspend_window", SUSPEND_WINDOW);
@@ -99,20 +100,20 @@ namespace ClassicLauncher
     void ConfigurationManager::LoadConfiguration()
     {
         const std::filesystem::path file = Resources::GetConfigurationFile();
-        if (!config.Open(file))
+        if (!m_config.Open(file))
         {
-            GetValues(config);
-            config.Save(file);
+            GetValues(m_config);
+            m_config.Save(file);
             return;
         }
 
-        GetValues(config);
+        GetValues(m_config);
     }
 
     bool ConfigurationManager::SaveConfiguration()
     {     
-        SetValues(config);
-        return config.Save(Resources::GetConfigurationFile());
+        SetValues(m_config);
+        return m_config.Save(Resources::GetConfigurationFile());
     }
 
 #undef LOG_SECTION_NAME

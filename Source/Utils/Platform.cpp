@@ -54,7 +54,7 @@ namespace ClassicLauncher::Platform
             
             processId = static_cast<unsigned int>(processInfo.dwProcessId);
             
-            LOG(LogClassicInfo, "\nOpen>  Process: %d\n       Path: %s\n       WorkingDirectory: %s", processId, fullPath.c_str(), optionalWorkingDirectory.c_str());
+            LOG(LogInfo, "\nOpen>  processID: %d\n       Path: %s\n       WorkingDirectory: %s", processId, fullPath.c_str(), optionalWorkingDirectory.c_str());
             
             CloseHandle(processInfo.hProcess);
             CloseHandle(processInfo.hThread);
@@ -62,8 +62,8 @@ namespace ClassicLauncher::Platform
         }
         else
         {
-            LOG(LogClassicInfo, "\nOpen>  processID: %d\n       Path: %s\n       WorkingDirectory: %s", processId, fullPath.c_str(), optionalWorkingDirectory.c_str());
-            LOG(LogClassicError, "Error on create a process: %lu\n", GetLastError());
+            LOG(LogInfo, "\nOpen>  processID: %d\n       Path: %s\n       WorkingDirectory: %s", processId, fullPath.c_str(), optionalWorkingDirectory.c_str());
+            LOG(LogError, "Error on create a process: %lu\n", GetLastError());
             processId = 0;
             status = -1;
         }
@@ -195,13 +195,13 @@ namespace ClassicLauncher::Platform
             
             if (n > 0)
             {
-                LOG(LogClassicError, "exec failed: %s", strerror(err));
+                LOG(LogError, "exec failed: %s", strerror(err));
                 status = -1;
                 processId = 0;
                 return;
             }
             
-            LOG(LogClassicInfo, "\nOpen>  processID: %d\n       Path: %s\n", processId, fullPath.c_str());
+            LOG(LogInfo, "\nOpen>  processID: %d\n       Path: %s\n", processId, fullPath.c_str());
             processId = pid;
             status = 1; // exec its works !!!!
         }
@@ -222,17 +222,17 @@ namespace ClassicLauncher::Platform
         if (result == 0)
         {
             isApplicationRunning = true;
-            LOG(LogClassicTrace, "The child process is running...");
+            LOG(LogTrace, "The child process is running...");
         }
         else if (result == processId)
         {
             if (WIFEXITED(status))
             {
-                LOG(LogClassicDebug, "The child process terminated with status: %d ", WEXITSTATUS(status));
+                LOG(LogDebug, "The child process terminated with status: %d ", WEXITSTATUS(status));
             }
             else
             {
-                LOG(LogClassicError, "The child process terminated with error.");
+                LOG(LogError, "The child process terminated with error.");
             }
             isApplicationRunning = false;
         }

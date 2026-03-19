@@ -6,19 +6,20 @@
 
 #include "ClassicLauncher.h"
 #include "Helper.h"
-#include "Utils/Log.h"
 #include "Utils/Resources.h"
 
 namespace ClassicLauncher
 {
 
     Engine::Engine()
-        : m_application(m_configurationManager, m_spriteManager, m_timerManager, m_audioManager, m_fontManager, m_processManager, m_window)
+        : m_log(&m_print)
+        , m_application(m_configurationManager, m_spriteManager, m_timerManager, m_audioManager, m_fontManager, m_processManager, m_window)
         , m_print(m_fontManager, &m_window)
         , m_timerManager(&m_window)
         , m_renderSystem(&m_window)
     {
-        RegistryPrint(&m_print);
+        m_log.EnableLogFile(m_configurationManager.GetEnableLog());
+        m_log.SetLevel(m_configurationManager.GetClassicLogLevel(), m_configurationManager.GetRaylibLogLevel());
         Resources::SetClassicLauncherDirectory();
         m_windowIcons = {Resources::GetIconFile(16).c_str(),
                          Resources::GetIconFile(32).c_str(),
@@ -45,6 +46,7 @@ namespace ClassicLauncher
         while (m_state != EngineState::Exiting)
         {
             HandleState();
+            m_log.UpdateLog();
         }
 
         m_application.End();

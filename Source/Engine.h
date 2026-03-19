@@ -11,10 +11,12 @@
 #include "Graphics/SpriteManager.h"
 #include "Input/InputManager.h"
 #include "Utils/ConfigurationManager.h"
+#include "Utils/Log.h"
 #include "Utils/Print.h"
 #include "Utils/ProcessManager.h"
 #include "Utils/TimerManager.h"
 #include "Window/Window.h"
+
 
 
 namespace ClassicLauncher
@@ -54,6 +56,7 @@ namespace ClassicLauncher
         void StateRestoring();
 
         ConfigurationManager m_configurationManager;
+        Log m_log; 
         Window m_window;
         RenderSystem m_renderSystem;
         InputManager m_inputManager;

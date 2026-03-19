@@ -142,7 +142,7 @@ namespace ClassicLauncher
 
     void GuiWindow::OnClick()
     {
-        LOG(LogClassicInfo, "Called OnClick");
+        LOG(LogDebug, "Called OnClick");
         if (m_gameListManagerRef->GetCurrentList() == CurrentList::GameListSelect)
         {
             m_audioManagerRef->Pause();
@@ -158,7 +158,7 @@ namespace ClassicLauncher
 
     void GuiWindow::OnBack()
     {
-        LOG(LogClassicInfo, "Called OnBack");
+        LOG(LogDebug, "Called OnBack");
 
         if (m_gameListManagerRef->GetCurrentList() == CurrentList::GameListSelect)
         {

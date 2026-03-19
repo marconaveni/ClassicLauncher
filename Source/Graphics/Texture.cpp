@@ -1,6 +1,7 @@
 #include "Texture.h"
 
 #include "Graphics/Image.h"
+#include "Utils/Log.h"
 
 namespace ray
 {
@@ -142,6 +143,9 @@ namespace ClassicLauncher
             s_textureSizeBytes -= m_width * m_height * size;
 
             ray::rlUnloadTexture(m_id);
+
+            LOG(LogInfo, "TEXTURE: [ID %i] Unloaded texture data from VRAM (GPU)", m_id);
+            
             m_id = 0;
             m_width = 0;
             m_height = 0;

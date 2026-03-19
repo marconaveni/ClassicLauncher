@@ -58,7 +58,7 @@ namespace ClassicLauncher
         std::filesystem::path directorypath = path;
         if (!std::filesystem::exists(directorypath))
         {
-            LOG(LogClassicError, "%s is not exists", directorypath.c_str());
+            LOG(LogError, "%s is not exists", directorypath.c_str());
             return;
         }
 

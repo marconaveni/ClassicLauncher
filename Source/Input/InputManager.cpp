@@ -62,11 +62,11 @@ namespace ClassicLauncher
             }
             if (isAxisRelease)
             {
-                LOG(LogClassicTrace, "isAxisRelease");
+                LOG(LogTrace, "isAxisRelease");
             }
             if (isAxisPress)
             {
-                LOG(LogClassicTrace, "isAxisPress");
+                LOG(LogTrace, "isAxisPress");
             }
             
             
