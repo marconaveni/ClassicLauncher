@@ -109,17 +109,15 @@ namespace ClassicLauncher
         // m_entityManager.End();
     }
 
-    void Application::OnGraphicsRestore()
+    void Application::Restore()
     {
-        m_spriteManagerRef->Init();
         m_themesManager.Init();
-        m_fontManagerRef->OnGraphicsRestore();
         m_guiWindow->UpdateCovers();
     }
 
-    void Application::OnGraphicsLost()
+    void Application::Suspend()
     {
-        m_fontManagerRef->OnGraphicsLost();
+        m_fontManagerRef->Suspend();
     }
 
 

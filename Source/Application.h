@@ -49,8 +49,8 @@ namespace ClassicLauncher
         void ProcessUpdate();
         void Draw();
         void End();
-        void OnGraphicsRestore();
-        void OnGraphicsLost();
+        void Restore();
+        void Suspend();
 
     private:
 

@@ -20,6 +20,11 @@ namespace ClassicLauncher
     {
         RegistryPrint(&m_print);
         Resources::SetClassicLauncherDirectory();
+        m_windowIcons = {Resources::GetIconFile(16).c_str(),
+                         Resources::GetIconFile(32).c_str(),
+                         Resources::GetIconFile(48).c_str(),
+                         Resources::GetIconFile(64).c_str(),
+                         Resources::GetIconFile(128).c_str()};
     }
 
     Engine::~Engine()
@@ -28,14 +33,16 @@ namespace ClassicLauncher
 
     void Engine::Run()
     {
-        Init();
+        InitRuntime();
+        m_application.Init();
+        m_audioManager.ChangeMusic();
 
         if (m_window.IsReady())
         {
-            ChangeState(EngineState::UI_ACTIVE);
+            ChangeState(EngineState::UiActive);
         }
 
-        while (m_state != EngineState::EXITING)
+        while (m_state != EngineState::Exiting)
         {
             HandleState();
         }
@@ -43,20 +50,7 @@ namespace ClassicLauncher
         m_application.End();
     }
 
-    void Engine::Init()
-    {
-        m_windowIcons = {Resources::GetIconFile(16).c_str(),
-                         Resources::GetIconFile(32).c_str(),
-                         Resources::GetIconFile(48).c_str(),
-                         Resources::GetIconFile(64).c_str(),
-                         Resources::GetIconFile(128).c_str()};
-
-        InitWindow();
-        m_audioManager.ChangeMusic();
-        m_application.Init();
-    }
-
-    void Engine::InitWindow()
+    void Engine::InitRuntime()
     {
         m_window.Init(WindowSpecs::Title.data(), m_configurationManager);
         m_window.SetIcons(m_windowIcons);
@@ -66,11 +60,11 @@ namespace ClassicLauncher
         m_audioManager.LoadMusics(Resources::GetMusicDirectory(), false);
     }
 
-    void Engine::ShutdownWindow()
+    void Engine::ShutdownRuntime()
     {
         m_renderSystem.Unload();
         m_spriteManager.Unload();
-        m_application.OnGraphicsLost();
+        m_fontManager.Suspend();
         m_window.CloseWindow();
         m_audioManager.Unload();
     }
@@ -102,25 +96,20 @@ namespace ClassicLauncher
     {
         if (m_processManager.GetStatus() == ProcessStatus::Open)
         {
-            ChangeState(EngineState::LAUNCH_REQUESTED);
+            ChangeState(EngineState::LaunchRequested);
         }
-    }
-
-    void Engine::ChangeState(const EngineState newState)
-    {
-        m_state = newState;
     }
 
     void Engine::HandleState()
     {
         switch (m_state)
         {
-            case EngineState::UI_ACTIVE: StateUiActive(); break;
-            case EngineState::LAUNCH_REQUESTED: StateLaunchRequested(); break;
-            case EngineState::PROCESS_RUNNING: StateProcessRunning(); break;
-            case EngineState::SUSPENDED: StateSuspended(); break;
-            case EngineState::RESTORING: StateRestoring(); break;
-            case EngineState::EXITING: break;
+            case EngineState::UiActive: StateUiActive(); break;
+            case EngineState::LaunchRequested: StateLaunchRequested(); break;
+            case EngineState::ProcessRunning: StateProcessRunning(); break;
+            case EngineState::Suspended: StateSuspended(); break;
+            case EngineState::Restoring: StateRestoring(); break;
+            case EngineState::Exiting: break;
             default: break;
         }
     }
@@ -129,7 +118,7 @@ namespace ClassicLauncher
     {
         if (m_window.ShouldClose())
         {
-            ChangeState(EngineState::EXITING);
+            ChangeState(EngineState::Exiting);
             return;
         }
         TickUi();
@@ -143,18 +132,18 @@ namespace ClassicLauncher
         if (m_processManager.GetStatus() == ProcessStatus::Failed)
         {
             ProcessUpdate(0);
-            ChangeState(EngineState::UI_ACTIVE);
+            ChangeState(EngineState::UiActive);
             return;
         }
         ProcessUpdate(0);
         if (m_configurationManager.GetSuspendWindow())
         {
-            ShutdownWindow();
-            ChangeState(EngineState::SUSPENDED);
+            ShutdownRuntime();
+            ChangeState(EngineState::Suspended);
             return;
         }
         m_window.SetTargetFPS(3);
-        ChangeState(EngineState::PROCESS_RUNNING);
+        ChangeState(EngineState::ProcessRunning);
     }
 
     void Engine::StateProcessRunning()
@@ -165,7 +154,7 @@ namespace ClassicLauncher
         if (m_processManager.GetStatus() != ProcessStatus::Running)
         {
             m_window.SetTargetFPS(m_configurationManager.GetTargetFps());
-            ChangeState(EngineState::UI_ACTIVE);
+            ChangeState(EngineState::UiActive);
         }
     }
 
@@ -174,16 +163,18 @@ namespace ClassicLauncher
         ProcessUpdate(80);
         if (m_processManager.GetStatus() != ProcessStatus::Running)
         {
-            ChangeState(EngineState::RESTORING);
+            ChangeState(EngineState::Restoring);
         }
     }
 
     void Engine::StateRestoring()
     {
-        InitWindow();
-        m_application.OnGraphicsRestore();
+        InitRuntime();
+        m_spriteManager.Init();
+        m_application.Restore();
+        m_fontManager.Restore();
         m_window.SetTargetFPS(m_configurationManager.GetTargetFps());
-        ChangeState(EngineState::UI_ACTIVE);
+        ChangeState(EngineState::UiActive);
     }
 
 

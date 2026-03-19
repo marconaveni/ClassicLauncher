@@ -37,7 +37,7 @@ namespace ClassicLauncher
         return m_font[name].get();
     }
 
-    void FontManager::OnGraphicsRestore()
+    void FontManager::Restore()
     {
         for (auto& font : m_font)
         {
@@ -45,7 +45,7 @@ namespace ClassicLauncher
         }
     }
 
-    void FontManager::OnGraphicsLost()
+    void FontManager::Suspend()
     {
         for (auto& font : m_font)
         {

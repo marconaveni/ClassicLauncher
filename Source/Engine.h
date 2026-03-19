@@ -21,12 +21,12 @@ namespace ClassicLauncher
 {
     enum class EngineState : std::uint8_t
     {
-        UI_ACTIVE,
-        LAUNCH_REQUESTED,
-        PROCESS_RUNNING,
-        SUSPENDED,
-        RESTORING,
-        EXITING
+        UiActive,
+        LaunchRequested,
+        ProcessRunning,
+        Suspended,
+        Restoring,
+        Exiting
     };
 
     class Engine
@@ -39,14 +39,13 @@ namespace ClassicLauncher
 
     private:
 
-        void Init();
-        void InitWindow();
-        void ShutdownWindow();
+        void InitRuntime();
+        void ShutdownRuntime();
         void TickUi();
         void ProcessUpdate(int delayMs);
         void CheckProcessIsOpen();
         void HandleState();
-        void ChangeState(const EngineState newState);
+        void ChangeState(const EngineState newState) { m_state = newState; }
 
         void StateUiActive();
         void StateLaunchRequested();
@@ -58,7 +57,6 @@ namespace ClassicLauncher
         Window m_window;
         RenderSystem m_renderSystem;
         InputManager m_inputManager;
-        // Application m_application;
         SpriteManager m_spriteManager;
         TimerManager m_timerManager;
         AudioManager m_audioManager;
@@ -67,7 +65,7 @@ namespace ClassicLauncher
         ProcessManager m_processManager;
         Application m_application;
         std::vector<std::string> m_windowIcons{};
-        EngineState m_state{EngineState::EXITING};
+        EngineState m_state{EngineState::Exiting};
     };
 
 

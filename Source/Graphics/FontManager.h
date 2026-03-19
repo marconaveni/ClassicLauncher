@@ -23,8 +23,8 @@ namespace ClassicLauncher
         void Unload();
         std::string Load(const std::filesystem::path& path, int size);
         Font* GetFont(const std::string& name);
-        void OnGraphicsRestore();
-        void OnGraphicsLost();
+        void Restore();
+        void Suspend();
 
         std::unordered_map<std::string, std::unique_ptr<Font>> m_font{};
 
