@@ -52,7 +52,7 @@ namespace ClassicLauncher
         InputManager::SetCategory(MainCenter | Debug);
         InitDebug();
 #else
-        InputManager::SetCategory(MAIN_CENTER);
+        InputManager::SetCategory(MainCenter);
 #endif
     }
 
