@@ -229,14 +229,15 @@ add_custom_command(TARGET ClassicLauncher POST_BUILD
     $<TARGET_FILE_DIR:ClassicLauncher>/Resources
 )
 
-add_custom_target(copy_compile_commands ALL
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            ${CMAKE_BINARY_DIR}/compile_commands.json
-            ${CMAKE_SOURCE_DIR}/compile_commands.json
-    BYPRODUCTS ${CMAKE_SOURCE_DIR}/compile_commands.json
-    COMMENT "Update compile_commands.json in \"${CMAKE_SOURCE_DIR}\""
-)
-
+if(NOT MSVC)
+    add_custom_target(copy_compile_commands ALL
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                ${CMAKE_BINARY_DIR}/compile_commands.json
+                ${CMAKE_SOURCE_DIR}/compile_commands.json
+        BYPRODUCTS ${CMAKE_SOURCE_DIR}/compile_commands.json
+        COMMENT "Update compile_commands.json in \"${CMAKE_SOURCE_DIR}\""
+    )
+endif()
 
 # Tests
 
