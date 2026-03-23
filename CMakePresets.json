@@ -7,148 +7,125 @@
     },
     "configurePresets": [
         {
-            "name": "linux-debug",
-            "displayName": "Linux Debug",
-            "description": "Default build",
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/debug",
+            "name": "base",
+            "hidden": true,
+            "displayName": "Base",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "generator": "Ninja Multi-Config",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_CONFIGURATION_TYPES": "Debug;Release"
+            }
+        },
+        {
+            "name": "gcc",
+            "inherits": "base",
+            "displayName": "GCC",
+            "cacheVariables": {
                 "CMAKE_C_COMPILER": "gcc",
                 "CMAKE_CXX_COMPILER": "g++"
             }
         },
         {
-            "name": "linux-release",
-            "displayName": "Linux Release",
-            "description": "optimized build for distribution",
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/release",
+            "name": "clang",
+            "inherits": "base",
+            "displayName": "CLANG",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-                "CMAKE_C_COMPILER": "gcc",
-                "CMAKE_CXX_COMPILER": "g++"
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++"
             }
         },
         {
-            "name": "windows-vs-debug",
-            "displayName": "Windows Debug Visual Studio 2022",
-            "description": "Build with Visual Studio (MSVC) in Debug Mode",
+            "name": "vs",
+            "displayName": "Windows Visual Studio 2022",
             "generator": "Visual Studio 17 2022",
             "architecture": "x64",
-            "binaryDir": "${sourceDir}/build/windows-vs",
+            "binaryDir": "${sourceDir}/build/${presetName}"
+        },
+        {
+            "name": "pi-debug",
+            "inherits": "gcc",
+            "displayName": "Raspberry pi Debug",
+            "generator": "Unix Makefiles",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+                "CLASSIC_RASPBERRY_PI": true
             }
         },
         {
-            "name": "windows-vs-release",
-            "displayName": "Windows Release Visual Studio 2022",
-            "description": "Build with Visual Studio (MSVC)",
-            "generator": "Visual Studio 17 2022",
-            "architecture": "x64",
-            "binaryDir": "${sourceDir}/build/windows-vs",
-            "cacheVariables": {
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
-            }
-        },
-        {
-            "name": "windows-mingw-debug",
-            "displayName": "Windows MinGW Debug",
-            "description": "Build with MinGW (GCC) in Debug Mode",
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/windows-mingw-debug",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-                "CMAKE_C_COMPILER": "gcc.exe",
-                "CMAKE_CXX_COMPILER": "g++.exe"
-            }
-        },
-        {
-            "name": "windows-mingw-release",
-            "displayName": "Windows MinGW Release",
-            "description": "Build with MinGW (GCC) in Release Mode",
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/windows-mingw-release",
+            "name": "pi-release",
+            "inherits": "gcc",
+            "displayName": "Raspberry pi Release",
+            "generator": "Unix Makefiles",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-                "CMAKE_C_COMPILER": "gcc.exe",
-                "CMAKE_CXX_COMPILER": "g++.exe"
+                "CLASSIC_RASPBERRY_PI": true
+            }
+        },
+        {
+            "name": "gcc-flags",
+            "inherits": "gcc",
+            "displayName": "GCC with flags Warnings",
+            "cacheVariables": {
+                "CLASSIC_LAUNCHER_FLAGS": true
             }
         },
                 {
-            "name": "windows-clang-debug",
-            "displayName": "Windows Clang Debug",
-            "description": "Build with Clang in Debug Mode",
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/windows-clang-debug",
+            "name": "clang-flags",
+            "inherits": "clang",
+            "displayName": "CLANG with flags Warnings",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-                "CMAKE_C_COMPILER": "clang.exe",
-                "CMAKE_CXX_COMPILER": "clang++.exe"
-            }
-        },
-        {
-            "name": "windows-clang-release",
-            "displayName": "Windows Clang Release",
-            "description": "Build with Clang in Release Mode",
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/windows-clang-release",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-                "CMAKE_C_COMPILER": "clang.exe",
-                "CMAKE_CXX_COMPILER": "clang++.exe"
+                "CLASSIC_LAUNCHER_FLAGS": true
             }
         }
     ],
     "buildPresets": [
         {
-            "name": "linux-debug-build",
+            "name": "vs-debug",
             "displayName": "Debug",
-            "configurePreset": "linux-debug"
+            "configurePreset": "vs",
+            "configuration": "Debug"
         },
         {
-            "name": "linux-release-build",
+            "name": "vs-release",
             "displayName": "Release",
-            "configurePreset": "linux-release"
+            "configurePreset": "vs",
+            "configuration": "Release"
         },
         {
-            "name": "windows-vs-debug-build",
+            "name": "gcc-debug",
             "displayName": "Debug",
-            "configurePreset": "windows-vs-debug"
+            "configurePreset": "gcc",
+            "configuration": "Debug"
         },
         {
-            "name": "windows-vs-release-build",
-            "displayName": "Release",
-            "configurePreset": "windows-vs-release"
-            
-        },
-        {
-            "name": "windows-mingw-debug-build",
+            "name": "gcc-debug-flags",
             "displayName": "Debug",
-            "configurePreset": "windows-mingw-debug"
+            "configurePreset": "gcc-flags",
+            "configuration": "Debug"
         },
         {
-            "name": "windows-mingw-release-build",
+            "name": "gcc-release",
             "displayName": "Release",
-            "configurePreset": "windows-mingw-release"
+            "configurePreset": "gcc",
+            "configuration": "Release"
         },
         {
-            "name": "windows-clang-debug-build",
+            "name": "clang-debug",
             "displayName": "Debug",
-            "configurePreset": "windows-clang-debug"
+            "configurePreset": "clang",
+            "configuration": "Debug"
         },
         {
-            "name": "windows-clang-release-build",
+            "name": "clang-debug-flags",
+            "displayName": "Debug",
+            "configurePreset": "clang-flags",
+            "configuration": "Debug"
+        },
+        {
+            "name": "clang-release",
             "displayName": "Release",
-            "configurePreset": "windows-clang-release"
+            "configurePreset": "clang",
+            "configuration": "Release"
         }
     ]
 }

@@ -8,7 +8,7 @@ namespace ClassicLauncher
 
     GuiButton::GuiButton(const EntityContext& entityContext, FocusManager* focusManagerRef, Window* window)
         : GuiCanvas(entityContext)
-        , FocusComponent(focusManagerRef, FocusCategory::BUTTON_ICON)
+        , FocusComponent(focusManagerRef, FocusCategory::ButtonIcon)
         , Animatable(window)
     {
     }

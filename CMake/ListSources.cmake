@@ -80,7 +80,6 @@ source_group("Headers\\Window"           FILES ${window_headers})
 source_group("Headers\\Extern"           FILES ${extern_headers}) 
 source_group("Headers"                   FILES ${src_headers})
 
-message(STATUS ${extern_headers})
 
 # Add all *.cpp files
 set(srcs
@@ -128,7 +127,7 @@ if(WIN32)
 endif()
 
 # Adiciona ao alvo
-target_sources(ClassicLauncher PRIVATE ${srcs} ${headers} ${rc})
+target_sources(${PROJECT_NAME} PRIVATE ${srcs} ${headers} ${rc})
 
 
 

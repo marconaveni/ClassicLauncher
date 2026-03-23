@@ -21,7 +21,7 @@ namespace ClassicLauncher
                      AudioManager* audioManagerRef,
                      Window* window)
         : GuiCanvas(entityContext)
-        , FocusComponent(focusManagerRef, FocusCategory::CARD)
+        , FocusComponent(focusManagerRef, FocusCategory::Card)
         , m_timerVideo()
         , m_gameListManagerRef(gameListManagerRef)
         , m_audioManagerRef(audioManagerRef)
@@ -180,7 +180,7 @@ namespace ClassicLauncher
 
         CloseVideo();
 
-        if (previousFocusCategory != FocusCategory::CARD)
+        if (previousFocusCategory != FocusCategory::Card)
         {
             return;
         }

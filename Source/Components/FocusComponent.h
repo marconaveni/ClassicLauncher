@@ -5,13 +5,13 @@
 
 namespace ClassicLauncher
 {
-    class Transform;
+    struct Transform;
     class FocusManager;
 
     enum class FocusCategory
     {
-        CARD,
-        BUTTON_ICON
+        Card,
+        ButtonIcon
     };
 
     class FocusComponent

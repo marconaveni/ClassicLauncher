@@ -33,7 +33,7 @@ namespace ClassicLauncher
         {
             m_isMove = false;
             FocusComponent* focus = GetFocusManager()->GetFocusComponent();
-            if (focus && focus->GetFocusCategory() == FocusCategory::BUTTON_ICON)
+            if (focus && focus->GetFocusCategory() == FocusCategory::ButtonIcon)
             {
                 m_frameMenu->SetOpacity(255);
                 SetOpacity(0);
@@ -113,7 +113,7 @@ namespace ClassicLauncher
 
             target.position.x = x;
             target.position.y = y;
-            if (focusComponent->GetFocusCategory() == FocusCategory::CARD)
+            if (focusComponent->GetFocusCategory() == FocusCategory::Card)
             {
                 target.scale = 1.0f;
                 target.color.a = 255.0f;

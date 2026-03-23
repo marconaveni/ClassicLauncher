@@ -55,9 +55,9 @@ namespace ClassicLauncher
             "--no-xlib",
             "--quiet",               // suppress logs
             "--no-video-title-show", // remove title
-            // "--avcodec-fast",     // Reduces memory usage when decoding.
+            "--avcodec-fast",        // Reduces memory usage when decoding.
             // "--verbose=2",
-            // "--no-stats"          // Avoid collecting statistics.
+            "--no-stats" // Avoid collecting statistics.
 
         };
         int vlc_argc = sizeof(vlc_argv) / sizeof(*vlc_argv);

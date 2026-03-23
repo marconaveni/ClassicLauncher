@@ -8,6 +8,9 @@
 #include "Graphics/Image.h"
 #include "Graphics/Texture.h"
 
+#ifdef _WIN32
+using ssize_t = intptr_t;
+#endif
 
 struct libvlc_instance_t;
 struct libvlc_media_t;
