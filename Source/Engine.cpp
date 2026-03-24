@@ -30,13 +30,12 @@ namespace ClassicLauncher
                          Resources::GetIconFile(128).c_str()};
     }
 
-    Engine::~Engine()
-    {
-    }
+    Engine::~Engine() = default;
 
     void Engine::Run()
     {
         InitRuntime();
+
         m_application.Init();
         m_audioManager.ChangeMusic();
 
@@ -52,7 +51,7 @@ namespace ClassicLauncher
             m_log.UpdateLog();
         }
 
-        m_application.End();
+        ShutdownRuntime();
     }
 
     void Engine::InitRuntime()
