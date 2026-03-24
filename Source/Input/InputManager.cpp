@@ -60,6 +60,7 @@ namespace ClassicLauncher
                 isAxisPress = (input.lastAxisValue < -0.5f) && (!input.isAxisDown);
                 input.isAxisDown = (input.lastAxisValue < -0.5f);
             }
+            LOG(LogTrace, "isAxisRelease");
             if (isAxisRelease)
             {
                 LOG(LogTrace, "isAxisRelease");

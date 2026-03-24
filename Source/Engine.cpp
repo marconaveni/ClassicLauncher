@@ -6,7 +6,9 @@
 
 #include "ClassicLauncher.h"
 #include "Helper.h"
+#include "Input/Gamepad.h"
 #include "Utils/Resources.h"
+
 
 namespace ClassicLauncher
 {
@@ -45,6 +47,7 @@ namespace ClassicLauncher
 
         while (m_state != EngineState::Exiting)
         {
+            GamePad::Update();
             HandleState();
             m_log.UpdateLog();
         }
@@ -54,6 +57,11 @@ namespace ClassicLauncher
 
     void Engine::InitRuntime()
     {
+#ifdef SDL_GAMEPAD
+        GamePad::Init(GamePad::BackendType::SDL);
+#else
+        GamePad::Init(GamePad::BackendType::Raylib);
+#endif // SDL_GAMEPAD
         m_window.Init(WindowSpecs::Title.data(), m_configurationManager);
         m_window.SetIcons(m_windowIcons);
         m_renderSystem.Init(WindowSpecs::Width, WindowSpecs::Height);
@@ -64,6 +72,7 @@ namespace ClassicLauncher
 
     void Engine::ShutdownRuntime()
     {
+        GamePad::Shutdown();
         m_renderSystem.Unload();
         m_spriteManager.Unload();
         m_fontManager.Suspend();

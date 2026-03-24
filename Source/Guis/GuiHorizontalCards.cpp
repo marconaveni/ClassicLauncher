@@ -454,7 +454,7 @@ namespace ClassicLauncher
                 m_guiMenu->SetButtonFocus(1);
             }
         }
-        else if (InputManager::IsDown(InputName::DPadUp, MainCenter))
+        else if (InputManager::IsPress(InputName::DPadUp, MainCenter))
         {
             if (!m_frame->IsFrameMove())
             {
@@ -465,7 +465,7 @@ namespace ClassicLauncher
                 FocusAnimationBar(MainTop);
             }
         }
-        else if (InputManager::IsDown(InputName::DPadDown, MainTop))
+        else if (InputManager::IsPress(InputName::DPadDown, MainTop))
         {
             if (!m_frame->IsFrameMove())
             {

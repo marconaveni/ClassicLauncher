@@ -4,6 +4,14 @@
 
 namespace ClassicLauncher::GamePad
 {
+
+    enum class BackendType
+    {
+        SDL,
+        Raylib
+    };
+
+
     // Gamepad buttons
     enum Button
     {
@@ -39,12 +47,17 @@ namespace ClassicLauncher::GamePad
         RightTrigger = 5 // Gamepad back trigger right, pressure level: [1..-1]
     };
 
+
+    void Init(BackendType backend);
+    void Shutdown();
+    void Update();
+
     bool IsPressed(int gamepad, int button);
     bool IsDown(int gamepad, int button);
     bool IsReleased(int gamepad, int button);
     bool IsUp(int gamepad, int button);
     bool IsAvaliable(int gamepad);
-    float GetAxisMovement(int gamepad, int axis); 
+    float GetAxisMovement(int gamepad, int axis);
 
 } // namespace ClassicLauncher::GamePad
 

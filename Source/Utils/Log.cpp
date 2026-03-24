@@ -192,12 +192,12 @@ namespace ClassicLauncher
                 log->m_logCache.append(" (" + std::to_string(log->m_count) + ")");
             }
 
+            log->m_count = 0;
             log->m_previousMessage = textFinalColored;
             std::printf("\n%s", textFinalColored.c_str());
             
             if (log->m_enableLogFile)
             {
-                log->m_count = 0;
                 log->m_logCache.append("\n" + textFinal);
                 log->m_isDirty = true;
             }     

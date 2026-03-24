@@ -51,13 +51,14 @@ namespace ClassicLauncher
             Positive = 1
         };
 
+        InputName name{};
         int gamePad{0};
         int keyPad{0};
         int axis{0};
         Direction directionAxis{Direction::Zero};
+        
         float lastAxisValue{0.0f};
         float amoutDown{0.0f};
-        InputName name{};
         bool isPress{false};
         bool isDown{false};
         bool isRelease{false};
@@ -76,14 +77,13 @@ namespace ClassicLauncher
 
         void CancelInput()
         {
+            lastAxisValue = 0.0f;
+            amoutDown = 0.0f;
             isPress = false;
             isDown = false;
             isRelease = false;
             isUp = false;
             isAxisDown = false;
-            amoutDown = 0;
-            axis = 0;
-            lastAxisValue = 0;
         }
     };
 

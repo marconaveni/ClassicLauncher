@@ -10,18 +10,20 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 
+
 # Cache options default values
 option(CLASSIC_LAUNCHER_FLAGS "Enable warning flags" OFF)
 option(CLASSIC_RASPBERRY_PI "Enable Raspberry Pi configuration" OFF)
+option(CLASSIC_SDL_INPUT "Enable SDL input only" ON)
+option(CLASSIC_SDL_RAYLIB "Enables SDL backend controlled by Raylib." OFF)
 
 
 # Setting parameters for raylib
 set(BUILD_EXAMPLES     OFF CACHE BOOL "" FORCE)
 set(BUILD_GAMES        OFF CACHE BOOL "" FORCE)
-set(PLATFORM           SDL CACHE STRING "" FORCE)
-#set(OPENGL_VERSION     4.3 CACHE STRING "" FORCE)
 set(GLFW_BUILD_WAYLAND ON  CACHE BOOL "" FORCE)
 set(GLFW_BUILD_X11     OFF CACHE BOOL "" FORCE)
+#set(OPENGL_VERSION     4.3 CACHE STRING "" FORCE)
 
 if(CLASSIC_RASPBERRY_PI)
     set(GRAPHICS GRAPHICS_API_OPENGL_ES2 CACHE STRING "" FORCE)
@@ -37,12 +39,27 @@ else()
 endif()
 
 # SDL2 setup
-if("${PLATFORM}" MATCHES "SDL")
+set(CLASSIC_SDL_LIB "") # Clear the cache just to be safe.
+set(SDL_GAMEPAD "")
+if(CLASSIC_SDL_INPUT OR CLASSIC_SDL_RAYLIB OR NOT WIN32) # Note: In Linux, we always use SDL.
+
     set(SDL_SHARED ON CACHE BOOL "" FORCE)
     set(SDL_STATIC OFF CACHE BOOL "" FORCE)
     set(SDL_TESTS OFF CACHE BOOL "" FORCE)
     set(SDL_DISABLE_INSTALL ON CACHE BOOL "" FORCE)
     add_subdirectory(extern/SDL EXCLUDE_FROM_ALL)
+
+    if(CLASSIC_SDL_RAYLIB OR NOT WIN32)
+        set(PLATFORM   SDL CACHE STRING "" FORCE) 
+        message(STATUS "[Classic Launcher] Using SDL Backend.")
+    else()
+        set(CLASSIC_SDL_LIB  SDL2::SDL2)
+        set(SDL_GAMEPAD "SDL_GAMEPAD")
+        message(STATUS "[Classic Launcher] Using SDL Input only.")
+    endif()
+
+else()
+    message(STATUS "[Classic Launcher] SDL is Disabled.")
 endif()
 
 
@@ -127,8 +144,7 @@ if(CLASSIC_RASPBERRY_PI)
         PLATFORM_RPI
     )
 
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-        raylib
+    set(UNCOMMON_LIBS 
         m
         atomic
         pthread
@@ -136,7 +152,6 @@ if(CLASSIC_RASPBERRY_PI)
         EGL
         gbm
         drm
-        ${VLC_LINK_LIBS}
     )
 
 elseif(WIN32)
@@ -155,29 +170,33 @@ elseif(WIN32)
     
     target_compile_definitions(${PROJECT_NAME} PRIVATE
         _CRT_SECURE_NO_WARNINGS
+        ${SDL_GAMEPAD}
     )
     target_compile_definitions(raylib PRIVATE 
         _CRT_SECURE_NO_WARNINGS
     )
-    
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-        raylib
-        ${VLC_LINK_LIBS}
-    )
 
-else() # Linux
+    set(UNCOMMON_LIBS "")
+
+else()
     message(STATUS "[Classic Launcher] Linux activated")
-    
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-        raylib
+
+    set(UNCOMMON_LIBS 
         m
         pthread
         GL
         dl
         rt
-        ${VLC_LINK_LIBS}
     )
+
 endif()
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    raylib
+    ${UNCOMMON_LIBS}
+    ${CLASSIC_SDL_LIB}
+    ${VLC_LINK_LIBS}
+)
 
 # extras post command post build
 if(WIN32)
