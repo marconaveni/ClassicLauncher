@@ -12,6 +12,10 @@
 namespace ClassicLauncher::GamePad
 {
 
+    inline static constexpr int MaxGamePads = 4;
+    inline static constexpr int MaxButtons = 18;
+    inline static constexpr int MaxAxis = 6;
+
     struct ButtonState
     {
         bool isPressed{false};
@@ -31,11 +35,11 @@ namespace ClassicLauncher::GamePad
         SDL_GameController* controller{nullptr}; // opace pointer
         std::string name{"noname"};
         bool isReady{false};
-        ButtonState button[18]{};
-        AxisState axi[6]{};
+        ButtonState button[MaxButtons]{};
+        AxisState axi[MaxAxis]{};
     };
 
-    inline static constexpr int MaxGamePads = 4;
+    
     static SDLGamePad s_gamepad[MaxGamePads];
 
     int ClassicToSDLButton(uint8_t id)
@@ -140,11 +144,11 @@ namespace ClassicLauncher::GamePad
                 continue;
             }
 
-            for (int j = 0; j < 18; j++)
+            for (int j = 0; j < MaxButtons; j++)
             {
                 s_gamepad[i].button[j].isRelease = false;
             }
-            for (int j = 0; j < 6; j++)
+            for (int j = 0; j < MaxAxis; j++)
             {
                 s_gamepad[i].axi[j].isRelease = false;
             }
@@ -290,27 +294,47 @@ namespace ClassicLauncher::GamePad
 
     bool GamePad::GamepadBackendSDL::IsPressed(int gamepad, int button) const
     {
-        return s_gamepad[gamepad].button[button].isPressed;
+        if (gamepad < MaxGamePads)
+        {
+            return s_gamepad[gamepad].button[button].isPressed;
+        }
+        return false;
     }
-
+    
     bool GamePad::GamepadBackendSDL::IsDown(int gamepad, int button) const
     {
-        return s_gamepad[gamepad].button[button].isPressed;
+        if (gamepad < MaxGamePads)
+        {
+            return s_gamepad[gamepad].button[button].isPressed;
+        }
+        return false;
     }
-
+    
     bool GamePad::GamepadBackendSDL::IsReleased(int gamepad, int button) const
     {
-        return s_gamepad[gamepad].button[button].isRelease;
+        if (gamepad < MaxGamePads)
+        {
+            return s_gamepad[gamepad].button[button].isRelease;
+        }
+        return false;
     }
-
+    
     bool GamePad::GamepadBackendSDL::IsUp(int gamepad, int button) const
     {
-        return !s_gamepad[gamepad].button[button].isPressed;
+        if (gamepad < MaxGamePads)
+        {
+            return !s_gamepad[gamepad].button[button].isPressed;
+        }
+        return false;
     }
-
+    
     float GamePad::GamepadBackendSDL::GetAxisMovement(int gamepad, int axis) const
     {
-        return s_gamepad[gamepad].axi[axis].axis;
+        if (gamepad < MaxGamePads && axis < MaxAxis)
+        {
+            return s_gamepad[gamepad].axi[axis].axis;
+        }
+        return false;
     }
 
 } // namespace ClassicLauncher::GamePad
