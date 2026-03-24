@@ -135,6 +135,35 @@ namespace ClassicLauncher::GamePad
             const int buttonId = ClassicToSDLButton(event.jbutton.button);
             const int axisId = ClassicToSDLAxis(event.jaxis.axis);
 
+            if (event.type == SDL_JOYDEVICEADDED)
+            {
+                s_gamepad.numJoysticks = SDL_NumJoysticks();
+                LOG(LogDebug, "Input devices detected: %d", s_gamepad.numJoysticks);
+
+                for (int i = 0; i < s_gamepad.numJoysticks; i++)
+                {
+                    if (!SDL_IsGameController(i))
+                    {
+                        LOG(LogError, "Device %d was not recognized as a Game Controller.: %s", i, SDL_JoystickNameForIndex(i));
+                        continue;
+                    }
+
+                    s_gamepad.controller = SDL_GameControllerOpen(i);
+                    if (!s_gamepad.controller)
+                    {
+                        LOG(LogError, "Error opening controller %d: %s", i, SDL_GetError());
+                        continue;
+                    }
+
+                    LOG(LogDebug, "Open Controller: %s", SDL_GameControllerName(s_gamepad.controller));
+                    break;
+                }
+            }
+            if (event.type == SDL_JOYDEVICEREMOVED)
+            {
+                SDL_GameControllerClose(s_gamepad.controller);
+                s_gamepad = {};
+            }
             if (event.type == SDL_CONTROLLERBUTTONDOWN)
             {
                 if (buttonId >= 0)
@@ -174,8 +203,8 @@ namespace ClassicLauncher::GamePad
         }
 
         LOG(LogDebug, "A pressed %.1f", GetAxisMovement(0, Axis::LeftY));
-        //LOG(LogDebug, "A pressed %s", TEXTBOOL( IsPressed(0, RightTrigger2) ));
-        // LOG(LogDebug, "A release %s", TEXTBOOL(s_gamepad.button[SDL_CONTROLLER_BUTTON_A].isRelease) );
+        // LOG(LogDebug, "A pressed %s", TEXTBOOL( IsPressed(0, RightTrigger2) ));
+        //  LOG(LogDebug, "A release %s", TEXTBOOL(s_gamepad.button[SDL_CONTROLLER_BUTTON_A].isRelease) );
     }
 
     bool GamePad::GamepadBackendSDL::IsAvailable(int gamepad) const
