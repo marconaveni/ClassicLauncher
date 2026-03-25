@@ -56,7 +56,7 @@ namespace ClassicLauncher
         int keyPad{0};
         int axis{0};
         Direction directionAxis{Direction::Zero};
-        
+
         float lastAxisValue{0.0f};
         float amoutDown{0.0f};
         bool isPress{false};
@@ -109,7 +109,6 @@ namespace ClassicLauncher
 
         [[nodiscard]] bool CheckCategory(unsigned int category) const;
 
-        int m_gamePadIdSelected{0};
         int m_amoutDown{0};
         bool m_disableInput{false};
         unsigned int m_category{0};

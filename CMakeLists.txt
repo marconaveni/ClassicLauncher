@@ -15,7 +15,7 @@ set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 option(CLASSIC_LAUNCHER_FLAGS "Enable warning flags" OFF)
 option(CLASSIC_RASPBERRY_PI "Enable Raspberry Pi configuration" OFF)
 option(CLASSIC_SDL_INPUT "Enable SDL input only" ON)
-option(CLASSIC_SDL_RAYLIB "Enables SDL backend controlled by Raylib." OFF)
+option(CLASSIC_SDL_RAYLIB "Enables SDL backend controlled by Raylib." ON)
 
 
 # Setting parameters for raylib

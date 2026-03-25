@@ -5,12 +5,13 @@
 namespace ClassicLauncher::GamePad
 {
 
-    enum class BackendType
-    {
-        SDL,
-        Raylib
-    };
 
+    struct GamePadSpecs
+    {
+        inline static constexpr int MaxGamePads = 4;
+        inline static constexpr int MaxButtons = 18;
+        inline static constexpr int MaxAxis = 6;
+    };
 
     // Gamepad buttons
     enum Button
@@ -48,7 +49,7 @@ namespace ClassicLauncher::GamePad
     };
 
 
-    void Init(BackendType backend);
+    void Init();
     void Shutdown();
     void Update();
 

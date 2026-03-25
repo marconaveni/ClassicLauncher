@@ -1,20 +1,19 @@
 #include "GamePadBackendSDL.h"
 
-#define SDL_MAIN_HANDLED
-#include <SDL2/SDL.h>
-#include <string>
+#ifdef SDL_GAMEPAD
 
-#include "Helper.h"
-#include "Input/Gamepad.h"
-#include "Utils/Math.h"
+    #define SDL_MAIN_HANDLED
+    #include <SDL2/SDL.h>
+    #include <string>
+
+    #include "Helper.h"
+    #include "Input/Gamepad.h"
+    #include "Utils/Math.h"
 
 
 namespace ClassicLauncher::GamePad
 {
 
-    inline static constexpr int MaxGamePads = 4;
-    inline static constexpr int MaxButtons = 18;
-    inline static constexpr int MaxAxis = 6;
 
     struct ButtonState
     {
@@ -35,12 +34,12 @@ namespace ClassicLauncher::GamePad
         SDL_GameController* controller{nullptr}; // opace pointer
         std::string name{"noname"};
         bool isReady{false};
-        ButtonState button[MaxButtons]{};
-        AxisState axi[MaxAxis]{};
+        ButtonState button[GamePadSpecs::MaxButtons]{};
+        AxisState axi[GamePadSpecs::MaxAxis]{};
     };
 
-    
-    static SDLGamePad s_gamepad[MaxGamePads];
+
+    static SDLGamePad s_gamepad[GamePadSpecs::MaxGamePads];
 
     int ClassicToSDLButton(uint8_t id)
     {
@@ -92,7 +91,7 @@ namespace ClassicLauncher::GamePad
 
         SDL_GameControllerEventState(SDL_ENABLE);
 
-        const int numJoysticks = Math::Clamp(SDL_NumJoysticks(), 0, MaxGamePads - 1);
+        const int numJoysticks = Math::Clamp(SDL_NumJoysticks(), 0, GamePadSpecs::MaxGamePads - 1);
         LOG(LogDebug, "Input devices detected: %d", numJoysticks);
 
         for (int i = 0; i < numJoysticks; i++)
@@ -123,7 +122,7 @@ namespace ClassicLauncher::GamePad
 
     void GamePad::GamepadBackendSDL::Shutdown()
     {
-        for (int i = 0; i < MaxGamePads; i++)
+        for (int i = 0; i < GamePadSpecs::MaxGamePads; i++)
         {
             if (s_gamepad[i].controller && s_gamepad[i].isReady)
             {
@@ -137,18 +136,18 @@ namespace ClassicLauncher::GamePad
 
     void GamePad::GamepadBackendSDL::Update()
     {
-        for (int i = 0; i < MaxGamePads; i++)
+        for (int i = 0; i < GamePadSpecs::MaxGamePads; i++)
         {
             if (!s_gamepad[i].isReady)
             {
                 continue;
             }
 
-            for (int j = 0; j < MaxButtons; j++)
+            for (int j = 0; j < GamePadSpecs::MaxButtons; j++)
             {
                 s_gamepad[i].button[j].isRelease = false;
             }
-            for (int j = 0; j < MaxAxis; j++)
+            for (int j = 0; j < GamePadSpecs::MaxAxis; j++)
             {
                 s_gamepad[i].axi[j].isRelease = false;
             }
@@ -161,12 +160,13 @@ namespace ClassicLauncher::GamePad
             const int buttonId = ClassicToSDLButton(event.jbutton.button);
             const int axisId = ClassicToSDLAxis(event.jaxis.axis);
 
+
             if (event.type == SDL_JOYDEVICEADDED)
             {
 
                 const int jdeviceId = event.jdevice.which; // Joystick device index
 
-                for (int i = 0; i < MaxGamePads; i++)
+                for (int i = 0; i < GamePadSpecs::MaxGamePads; i++)
                 {
                     if (jdeviceId == s_gamepad[i].id)
                     {
@@ -175,12 +175,11 @@ namespace ClassicLauncher::GamePad
                 }
 
                 int gamePadAvaliableSlots = -1;
-                for (int i = 0; i < MaxGamePads; i++)
+                for (int i = 0; i < GamePadSpecs::MaxGamePads; i++)
                 {
-                    if (!s_gamepad[i].isReady)
+                    if (!s_gamepad[i].isReady && gamePadAvaliableSlots == -1)
                     {
                         gamePadAvaliableSlots = i;
-                        break;
                     }
                 }
 
@@ -188,9 +187,10 @@ namespace ClassicLauncher::GamePad
                 {
                     return;
                 }
+
                 if (!s_gamepad[gamePadAvaliableSlots].isReady)
                 {
-                    s_gamepad[gamePadAvaliableSlots].controller = SDL_GameControllerOpen(gamePadAvaliableSlots);
+                    s_gamepad[gamePadAvaliableSlots].controller = SDL_GameControllerOpen(jdeviceId);
                     s_gamepad[gamePadAvaliableSlots].id = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(s_gamepad[gamePadAvaliableSlots].controller));
 
                     if (s_gamepad[gamePadAvaliableSlots].controller)
@@ -206,12 +206,12 @@ namespace ClassicLauncher::GamePad
                     }
                 }
             }
-            if (event.type == SDL_JOYDEVICEREMOVED)
+            else if (event.type == SDL_JOYDEVICEREMOVED)
             {
 
                 const int jdeviceId = event.jdevice.which; // Joystick device index
 
-                for (int i = 0; i < MaxGamePads; i++)
+                for (int i = 0; i < GamePadSpecs::MaxGamePads; i++)
                 {
                     if (jdeviceId == s_gamepad[i].id)
                     {
@@ -222,9 +222,9 @@ namespace ClassicLauncher::GamePad
                     }
                 }
             }
-            if (event.type == SDL_CONTROLLERBUTTONDOWN)
+            else if (event.type == SDL_CONTROLLERBUTTONDOWN)
             {
-                for (int i = 0; i < MaxGamePads; i++)
+                for (int i = 0; i < GamePadSpecs::MaxGamePads; i++)
                 {
                     if (s_gamepad[i].id == event.jbutton.which)
                     {
@@ -236,9 +236,9 @@ namespace ClassicLauncher::GamePad
                     }
                 }
             }
-            if (event.type == SDL_CONTROLLERBUTTONUP)
+            else if (event.type == SDL_CONTROLLERBUTTONUP)
             {
-                for (int i = 0; i < MaxGamePads; i++)
+                for (int i = 0; i < GamePadSpecs::MaxGamePads; i++)
                 {
                     if (s_gamepad[i].id == event.jbutton.which)
                     {
@@ -251,10 +251,10 @@ namespace ClassicLauncher::GamePad
                     }
                 }
             }
-            if (event.type == SDL_CONTROLLERAXISMOTION)
+            else if (event.type == SDL_CONTROLLERAXISMOTION)
             {
 
-                for (int i = 0; i < MaxGamePads; i++)
+                for (int i = 0; i < GamePadSpecs::MaxGamePads; i++)
                 {
                     if (s_gamepad[i].id == event.jbutton.which)
                     {
@@ -289,48 +289,52 @@ namespace ClassicLauncher::GamePad
 
     bool GamePad::GamepadBackendSDL::IsAvailable(int gamepad) const
     {
+        if (gamepad < GamePadSpecs::MaxGamePads)
+        {
+            return s_gamepad[gamepad].isReady;
+        }
         return false;
     }
 
     bool GamePad::GamepadBackendSDL::IsPressed(int gamepad, int button) const
     {
-        if (gamepad < MaxGamePads)
+        if (gamepad < GamePadSpecs::MaxGamePads)
         {
             return s_gamepad[gamepad].button[button].isPressed;
         }
         return false;
     }
-    
+
     bool GamePad::GamepadBackendSDL::IsDown(int gamepad, int button) const
     {
-        if (gamepad < MaxGamePads)
+        if (gamepad < GamePadSpecs::MaxGamePads)
         {
             return s_gamepad[gamepad].button[button].isPressed;
         }
         return false;
     }
-    
+
     bool GamePad::GamepadBackendSDL::IsReleased(int gamepad, int button) const
     {
-        if (gamepad < MaxGamePads)
+        if (gamepad < GamePadSpecs::MaxGamePads)
         {
             return s_gamepad[gamepad].button[button].isRelease;
         }
         return false;
     }
-    
+
     bool GamePad::GamepadBackendSDL::IsUp(int gamepad, int button) const
     {
-        if (gamepad < MaxGamePads)
+        if (gamepad < GamePadSpecs::MaxGamePads)
         {
             return !s_gamepad[gamepad].button[button].isPressed;
         }
         return false;
     }
-    
+
     float GamePad::GamepadBackendSDL::GetAxisMovement(int gamepad, int axis) const
     {
-        if (gamepad < MaxGamePads && axis < MaxAxis)
+        if (gamepad < GamePadSpecs::MaxGamePads && axis < GamePadSpecs::MaxAxis)
         {
             return s_gamepad[gamepad].axi[axis].axis;
         }
@@ -338,3 +342,6 @@ namespace ClassicLauncher::GamePad
     }
 
 } // namespace ClassicLauncher::GamePad
+
+
+#endif // SDL_GAMEPAD

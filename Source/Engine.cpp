@@ -56,11 +56,7 @@ namespace ClassicLauncher
 
     void Engine::InitRuntime()
     {
-#ifdef SDL_GAMEPAD
-        GamePad::Init(GamePad::BackendType::SDL);
-#else
-        GamePad::Init(GamePad::BackendType::Raylib);
-#endif // SDL_GAMEPAD
+        GamePad::Init();
         m_window.Init(WindowSpecs::Title.data(), m_configurationManager);
         m_window.SetIcons(m_windowIcons);
         m_renderSystem.Init(WindowSpecs::Width, WindowSpecs::Height);

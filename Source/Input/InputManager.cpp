@@ -48,14 +48,14 @@ namespace ClassicLauncher
             
             if (input.directionAxis == InputMapper::Direction::Positive)
             {
-                input.lastAxisValue = GamePad::GetAxisMovement(m_gamePadIdSelected, input.axis); 
+                input.lastAxisValue = GamePad::GetAxisMovement(0, input.axis); 
                 isAxisRelease = (input.lastAxisValue < 0.5f) && (input.isAxisDown);
                 isAxisPress = (input.lastAxisValue > 0.5f) && (!input.isAxisDown);
                 input.isAxisDown = (input.lastAxisValue > 0.5f);
             }
             else if (input.directionAxis == InputMapper::Direction::Negative)
             {
-                input.lastAxisValue = GamePad::GetAxisMovement(m_gamePadIdSelected, input.axis); 
+                input.lastAxisValue = GamePad::GetAxisMovement(0, input.axis); 
                 isAxisRelease = (input.lastAxisValue > -0.5f) && (input.isAxisDown);
                 isAxisPress = (input.lastAxisValue < -0.5f) && (!input.isAxisDown);
                 input.isAxisDown = (input.lastAxisValue < -0.5f);
@@ -73,19 +73,19 @@ namespace ClassicLauncher
             
             // clang-format off
             input.isPress = (Keyboard::IsPressed(key) || isAxisPress ||
-                            GamePad::IsPressed(m_gamePadIdSelected, gamePad)) &&
+                            GamePad::IsPressed(0, gamePad)) &&
                             !isKeyModifier && 
                             !m_disableInput;
             input.isDown = (Keyboard::IsDown(key) || input.isAxisDown ||
-                            GamePad::IsDown(m_gamePadIdSelected, gamePad)) && 
+                            GamePad::IsDown(0, gamePad)) && 
                             !isKeyModifier &&
                             !m_disableInput;
             input.isRelease = (Keyboard::IsReleased(key) || isAxisRelease ||
-                            GamePad::IsReleased(m_gamePadIdSelected, gamePad)) &&
+                            GamePad::IsReleased(0, gamePad)) &&
                             !isKeyModifier && 
                             !m_disableInput;
             input.isUp = (Keyboard::IsUp(key) || 
-                            GamePad::IsUp(m_gamePadIdSelected, gamePad)) && 
+                            GamePad::IsUp(0, gamePad)) && 
                             !isKeyModifier && 
                             !m_disableInput;
 

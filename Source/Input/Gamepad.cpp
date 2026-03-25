@@ -8,20 +8,18 @@
 #include "Utils/Math.h"
 #include "Wrap.h"
 
-
-
 namespace ClassicLauncher::GamePad
 {
     static std::unique_ptr<IGamepadBackend> s_backend;
 
-    void Init(BackendType backend)
+    void Init()
     {
-        switch (backend)
-        {
-            case BackendType::SDL: s_backend = std::make_unique<GamepadBackendSDL>(); break;
-            case BackendType::Raylib: s_backend = std::make_unique<GamepadBackendRaylib>(); break;
-            default: break;
-        }
+#ifdef SDL_GAMEPAD
+        s_backend = std::make_unique<GamepadBackendSDL>();
+#else
+        s_backend = std::make_unique<GamepadBackendRaylib>();
+#endif // SDL_GAMEPAD
+
         if (s_backend)
         {
             s_backend->Init();
@@ -46,22 +44,70 @@ namespace ClassicLauncher::GamePad
 
     bool IsPressed(int gamepad, int button)
     {
-        return s_backend ? s_backend->IsPressed(gamepad, button) : false;
+        if (!s_backend)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < GamePadSpecs::MaxGamePads; i++)
+        {
+            if (s_backend->IsPressed(i, button))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     bool IsDown(int gamepad, int button)
     {
-        return s_backend ? s_backend->IsDown(gamepad, button) : false;
+        if (!s_backend)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < GamePadSpecs::MaxGamePads; i++)
+        {
+            if (s_backend->IsDown(i, button))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     bool IsReleased(int gamepad, int button)
     {
-        return s_backend ? s_backend->IsReleased(gamepad, button) : false;
+        if (!s_backend)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < GamePadSpecs::MaxGamePads; i++)
+        {
+            if (s_backend->IsReleased(i, button))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     bool IsUp(int gamepad, int button)
     {
+        if (!s_backend)
+        {
+            return false;
+        }
         return s_backend ? s_backend->IsUp(gamepad, button) : false;
+        for (int i = 0; i < GamePadSpecs::MaxGamePads; i++)
+        {
+            if (s_backend->IsUp(i, button))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     bool IsAvaliable(int gamepad)
@@ -71,8 +117,19 @@ namespace ClassicLauncher::GamePad
 
     float GetAxisMovement(int gamepad, int axis)
     {
-        const float value = s_backend ? s_backend->GetAxisMovement(gamepad, axis) : 0.0f;
-        return Math::Clamp(value, -1.0f, 1.0f);
+        if (!s_backend)
+        {
+            return 0.0f;
+        }
+        for (int i = 0; i < GamePadSpecs::MaxGamePads; i++)
+        {
+            const float axisValue = s_backend ? s_backend->GetAxisMovement(i, axis) : 0.0f;
+            if (axisValue > 0.0f || axisValue < 0.0f)
+            {
+                return axisValue;
+            }
+        }
+        return 0.0f;
     }
 
 
