@@ -2,6 +2,7 @@
 #define MATH_H
 
 #include <algorithm> // std::clamp
+#include <cmath>
 #include <random>
 
 #include "ClassicAssert.h"
@@ -77,6 +78,16 @@ namespace ClassicLauncher::Math
         result.x = std::clamp(value.x, min.x, max.x);
         result.y = std::clamp(value.y, min.y, max.y);
         return result;
+    }
+
+    static float FloatAbs(float value)
+    {
+        return std::fabs(value);
+    }
+
+    static int IntAbs(int value)
+    {
+        return std::abs(value);
     }
 
     class RandomGenerator

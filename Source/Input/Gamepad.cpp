@@ -124,7 +124,7 @@ namespace ClassicLauncher::GamePad
         for (int i = 0; i < GamePadSpecs::MaxGamePads; i++)
         {
             const float axisValue = s_backend ? s_backend->GetAxisMovement(i, axis) : 0.0f;
-            if (axisValue > 0.0f || axisValue < 0.0f)
+            if (Math::FloatAbs(axisValue) > 0.1f && s_backend->IsAvailable(i))
             {
                 return axisValue;
             }

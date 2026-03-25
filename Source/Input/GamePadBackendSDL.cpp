@@ -38,8 +38,9 @@ namespace ClassicLauncher::GamePad
         AxisState axi[GamePadSpecs::MaxAxis]{};
     };
 
-
+    
     static SDLGamePad s_gamepad[GamePadSpecs::MaxGamePads];
+    static int s_lastButtonPressed = 0; 
 
     int ClassicToSDLButton(uint8_t id)
     {
@@ -126,7 +127,7 @@ namespace ClassicLauncher::GamePad
         {
             if (s_gamepad[i].controller && s_gamepad[i].isReady)
             {
-                LOG(LogDebug, "Close Controller: %s", s_gamepad[i].name.c_str());
+                LOG(LogDebug, "Close Controller[%d]: %s", s_gamepad[i].id, s_gamepad[i].name.c_str());
                 SDL_GameControllerClose(s_gamepad[i].controller);
             }
             s_gamepad[i] = {};
@@ -231,6 +232,7 @@ namespace ClassicLauncher::GamePad
                         if (buttonId >= 0)
                         {
                             s_gamepad[i].button[buttonId].isPressed = true;
+                            s_lastButtonPressed = buttonId;
                             break;
                         }
                     }

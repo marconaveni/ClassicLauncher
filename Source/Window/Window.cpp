@@ -27,6 +27,7 @@ namespace ClassicLauncher
 
         m_title = title;
         ray::InitWindow(m_configManager->GetWidthWindow(), m_configManager->GetHeightWindow(), title.c_str());
+        ray::SetWindowSize(m_configManager->GetWidthWindow(), m_configManager->GetHeightWindow());
         SetState(Flags::Resizable | Flags::AlwaysRun);
         SetTargetFPS(m_configManager->GetTargetFps());
         SetFullscreen(m_configManager->GetFullscreen());
