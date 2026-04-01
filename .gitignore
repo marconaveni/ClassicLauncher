@@ -63,4 +63,6 @@ Source/*.py
 compile_commands.json
 checks.json
 
+Testing/*
+
 
