@@ -15,7 +15,7 @@ set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 option(CLASSIC_LAUNCHER_FLAGS "Enable warning flags" OFF)
 option(CLASSIC_RASPBERRY_PI "Enable Raspberry Pi configuration" OFF)
 option(CLASSIC_SDL_INPUT "Enable SDL input only" ON)
-option(CLASSIC_SDL_RAYLIB "Enables SDL backend controlled by Raylib." OFF)
+option(CLASSIC_SDL_RAYLIB "Enables SDL backend controlled by Raylib." ON)
 
 
 # Setting parameters for raylib
@@ -47,13 +47,13 @@ if(CLASSIC_SDL_INPUT OR CLASSIC_SDL_RAYLIB OR NOT WIN32) # Note: In Linux, we al
     set(SDL_STATIC OFF CACHE BOOL "" FORCE)
     set(SDL_TESTS OFF CACHE BOOL "" FORCE)
     set(SDL_DISABLE_INSTALL ON CACHE BOOL "" FORCE)
-    add_subdirectory(extern/SDL EXCLUDE_FROM_ALL)
+    add_subdirectory(extern/SDL EXCLUDE_FROM_ALL)  # here added SDL submodule folder
 
-    if(CLASSIC_SDL_RAYLIB OR NOT WIN32)
+    if(CLASSIC_SDL_RAYLIB)
         set(PLATFORM   SDL CACHE STRING "" FORCE) 
         message(STATUS "[Classic Launcher] Using SDL Backend.")
     else()
-        set(CLASSIC_SDL_LIB  SDL2::SDL2)
+        set(CLASSIC_SDL_LIB  SDL3::SDL3)
         set(SDL_GAMEPAD "SDL_GAMEPAD")
         message(STATUS "[Classic Launcher] Using SDL Input only.")
     endif()

@@ -2,14 +2,17 @@
 
 #ifdef SDL_GAMEPAD
 
+    #ifndef SDL_ENABLE_OLD_NAMES
+        //#define SDL_ENABLE_OLD_NAMES // In case on SDL3, some in-between compatibily is needed
+    #endif
+
     #define SDL_MAIN_HANDLED
-    #include <SDL2/SDL.h>
+    #include <SDL3/SDL.h>
     #include <string>
 
     #include "Helper.h"
     #include "Input/Gamepad.h"
     #include "Utils/Math.h"
-
 
 namespace ClassicLauncher::GamePad
 {
@@ -30,37 +33,37 @@ namespace ClassicLauncher::GamePad
 
     struct SDLGamePad
     {
-        SDL_JoystickID id{-1};                   // typedef int32
-        SDL_GameController* controller{nullptr}; // opace pointer
+        SDL_JoystickID id{0};             // typedef int32
+        SDL_Gamepad* controller{nullptr}; // opace pointer
         std::string name{"noname"};
         bool isReady{false};
         ButtonState button[GamePadSpecs::MaxButtons]{};
         AxisState axi[GamePadSpecs::MaxAxis]{};
     };
 
-    
+
     static SDLGamePad s_gamepad[GamePadSpecs::MaxGamePads];
-    static int s_lastButtonPressed = 0; 
+    static int s_lastButtonPressed = 0;
 
     int ClassicToSDLButton(uint8_t id)
     {
         switch (id)
         {
-            case SDL_CONTROLLER_BUTTON_DPAD_UP: return LeftFaceUp;
-            case SDL_CONTROLLER_BUTTON_DPAD_RIGHT: return LeftFaceRight;
-            case SDL_CONTROLLER_BUTTON_DPAD_DOWN: return LeftFaceDown;
-            case SDL_CONTROLLER_BUTTON_DPAD_LEFT: return LeftFaceLeft;
-            case SDL_CONTROLLER_BUTTON_Y: return RightFaceUp;
-            case SDL_CONTROLLER_BUTTON_B: return RightFaceRight;
-            case SDL_CONTROLLER_BUTTON_A: return RightFaceDown;
-            case SDL_CONTROLLER_BUTTON_X: return RightFaceLeft;
-            case SDL_CONTROLLER_BUTTON_LEFTSHOULDER: return LeftTrigger1;
-            case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER: return RightTrigger1;
-            case SDL_CONTROLLER_BUTTON_BACK: return MiddleLeft;
-            case SDL_CONTROLLER_BUTTON_GUIDE: return Middle;
-            case SDL_CONTROLLER_BUTTON_START: return MiddleRight;
-            case SDL_CONTROLLER_BUTTON_LEFTSTICK: return LeftThumb;
-            case SDL_CONTROLLER_BUTTON_RIGHTSTICK: return RightThumb;
+            case SDL_GAMEPAD_BUTTON_DPAD_UP: return LeftFaceUp;
+            case SDL_GAMEPAD_BUTTON_DPAD_RIGHT: return LeftFaceRight;
+            case SDL_GAMEPAD_BUTTON_DPAD_DOWN: return LeftFaceDown;
+            case SDL_GAMEPAD_BUTTON_DPAD_LEFT: return LeftFaceLeft;
+            case SDL_GAMEPAD_BUTTON_NORTH: return RightFaceUp;
+            case SDL_GAMEPAD_BUTTON_EAST: return RightFaceRight;
+            case SDL_GAMEPAD_BUTTON_SOUTH: return RightFaceDown;
+            case SDL_GAMEPAD_BUTTON_WEST: return RightFaceLeft;
+            case SDL_GAMEPAD_BUTTON_LEFT_SHOULDER: return LeftTrigger1;
+            case SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER: return RightTrigger1;
+            case SDL_GAMEPAD_BUTTON_BACK: return MiddleLeft;
+            case SDL_GAMEPAD_BUTTON_GUIDE: return Middle;
+            case SDL_GAMEPAD_BUTTON_START: return MiddleRight;
+            case SDL_GAMEPAD_BUTTON_LEFT_STICK: return LeftThumb;
+            case SDL_GAMEPAD_BUTTON_RIGHT_STICK: return RightThumb;
             default: break;
         }
         return -1;
@@ -70,12 +73,12 @@ namespace ClassicLauncher::GamePad
     {
         switch (axis)
         {
-            case SDL_CONTROLLER_AXIS_LEFTX: return LeftX; break;
-            case SDL_CONTROLLER_AXIS_LEFTY: return LeftY; break;
-            case SDL_CONTROLLER_AXIS_RIGHTX: return RightX; break;
-            case SDL_CONTROLLER_AXIS_RIGHTY: return RightY; break;
-            case SDL_CONTROLLER_AXIS_TRIGGERLEFT: return LeftTrigger; break;
-            case SDL_CONTROLLER_AXIS_TRIGGERRIGHT: return RightTrigger; break;
+            case SDL_GAMEPAD_AXIS_LEFTX: return LeftX; break;
+            case SDL_GAMEPAD_AXIS_LEFTY: return LeftY; break;
+            case SDL_GAMEPAD_AXIS_RIGHTX: return RightX; break;
+            case SDL_GAMEPAD_AXIS_RIGHTY: return RightY; break;
+            case SDL_GAMEPAD_AXIS_LEFT_TRIGGER: return LeftTrigger; break;
+            case SDL_GAMEPAD_AXIS_RIGHT_TRIGGER: return RightTrigger; break;
             default: break;
         }
         return -1;
@@ -84,29 +87,36 @@ namespace ClassicLauncher::GamePad
     bool GamepadBackendSDL::Init()
     {
 
-        if (SDL_Init(SDL_INIT_GAMECONTROLLER) != 0)
+        if (SDL_Init(SDL_INIT_GAMEPAD) != 0)
         {
             LOG(LogError, "Error starting up SDL: %s\n", SDL_GetError());
             return false;
         }
 
-        SDL_GameControllerEventState(SDL_ENABLE);
+        SDL_SetGamepadEventsEnabled(true);
 
-        const int numJoysticks = Math::Clamp(SDL_NumJoysticks(), 0, GamePadSpecs::MaxGamePads - 1);
+        int numJoysticks = 0;
+        SDL_JoystickID* joysticks = SDL_GetJoysticks(&numJoysticks);
+        
+        if (!joysticks)
+        {
+            return false;
+        }
+        
         LOG(LogDebug, "Input devices detected: %d", numJoysticks);
 
         for (int i = 0; i < numJoysticks; i++)
         {
-            if (!SDL_IsGameController(i))
+            if (!SDL_IsGamepad(i))
             {
-                LOG(LogError, "Device %d was not recognized as a Game Controller.: %s", i, SDL_JoystickNameForIndex(i));
+                LOG(LogError, "Device %d was not recognized as a Game Controller.: %s", i, SDL_GetJoystickNameForID(i));
                 continue;
             }
 
-            s_gamepad[i].controller = SDL_GameControllerOpen(i);
-            s_gamepad[i].id = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(s_gamepad[i].controller));
+            s_gamepad[i].controller = SDL_OpenGamepad(i);
+            s_gamepad[i].id = SDL_GetJoystickID(SDL_GetGamepadJoystick(s_gamepad[i].controller));
             s_gamepad[i].isReady = true;
-            s_gamepad[i].name = SDL_GameControllerName(s_gamepad[i].controller);
+            s_gamepad[i].name = SDL_GetGamepadName(s_gamepad[i].controller);
 
             if (!s_gamepad[i].controller)
             {
@@ -128,7 +138,7 @@ namespace ClassicLauncher::GamePad
             if (s_gamepad[i].controller && s_gamepad[i].isReady)
             {
                 LOG(LogDebug, "Close Controller[%d]: %s", s_gamepad[i].id, s_gamepad[i].name.c_str());
-                SDL_GameControllerClose(s_gamepad[i].controller);
+                SDL_CloseGamepad(s_gamepad[i].controller);
             }
             s_gamepad[i] = {};
         }
@@ -162,7 +172,7 @@ namespace ClassicLauncher::GamePad
             const int axisId = ClassicToSDLAxis(event.jaxis.axis);
 
 
-            if (event.type == SDL_JOYDEVICEADDED)
+            if (event.type == SDL_EVENT_JOYSTICK_ADDED)
             {
 
                 const int jdeviceId = event.jdevice.which; // Joystick device index
@@ -191,13 +201,13 @@ namespace ClassicLauncher::GamePad
 
                 if (!s_gamepad[gamePadAvaliableSlots].isReady)
                 {
-                    s_gamepad[gamePadAvaliableSlots].controller = SDL_GameControllerOpen(jdeviceId);
-                    s_gamepad[gamePadAvaliableSlots].id = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(s_gamepad[gamePadAvaliableSlots].controller));
+                    s_gamepad[gamePadAvaliableSlots].controller = SDL_OpenGamepad(jdeviceId);
+                    s_gamepad[gamePadAvaliableSlots].id = SDL_GetJoystickID(SDL_GetGamepadJoystick(s_gamepad[gamePadAvaliableSlots].controller));
 
                     if (s_gamepad[gamePadAvaliableSlots].controller)
                     {
                         s_gamepad[gamePadAvaliableSlots].isReady = true;
-                        s_gamepad[gamePadAvaliableSlots].name = SDL_GameControllerName(s_gamepad[gamePadAvaliableSlots].controller);
+                        s_gamepad[gamePadAvaliableSlots].name = SDL_GetGamepadName(s_gamepad[gamePadAvaliableSlots].controller);
                         LOG(LogDebug, "Open Controller[%d]: %s", s_gamepad[gamePadAvaliableSlots].id, s_gamepad[gamePadAvaliableSlots].name.c_str());
                     }
                     else
@@ -207,7 +217,7 @@ namespace ClassicLauncher::GamePad
                     }
                 }
             }
-            else if (event.type == SDL_JOYDEVICEREMOVED)
+            else if (event.type == SDL_EVENT_JOYSTICK_REMOVED)
             {
 
                 const int jdeviceId = event.jdevice.which; // Joystick device index
@@ -216,14 +226,14 @@ namespace ClassicLauncher::GamePad
                 {
                     if (jdeviceId == s_gamepad[i].id)
                     {
-                        SDL_GameControllerClose(s_gamepad[i].controller);
+                        SDL_CloseGamepad(s_gamepad[i].controller);
                         LOG(LogDebug, "Removed Controller[%d]: %s", s_gamepad[i].id, s_gamepad[i].name.c_str());
                         s_gamepad[i] = {};
                         break;
                     }
                 }
             }
-            else if (event.type == SDL_CONTROLLERBUTTONDOWN)
+            else if (event.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN)
             {
                 for (int i = 0; i < GamePadSpecs::MaxGamePads; i++)
                 {
@@ -238,7 +248,7 @@ namespace ClassicLauncher::GamePad
                     }
                 }
             }
-            else if (event.type == SDL_CONTROLLERBUTTONUP)
+            else if (event.type == SDL_EVENT_GAMEPAD_BUTTON_UP)
             {
                 for (int i = 0; i < GamePadSpecs::MaxGamePads; i++)
                 {
@@ -253,7 +263,7 @@ namespace ClassicLauncher::GamePad
                     }
                 }
             }
-            else if (event.type == SDL_CONTROLLERAXISMOTION)
+            else if (event.type == SDL_EVENT_GAMEPAD_AXIS_MOTION)
             {
 
                 for (int i = 0; i < GamePadSpecs::MaxGamePads; i++)
