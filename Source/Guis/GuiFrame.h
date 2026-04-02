@@ -17,7 +17,7 @@ namespace ClassicLauncher
 
         explicit GuiFrame(const EntityContext& entityContext, Window* window);
         ~GuiFrame() = default;
-        void SetFrame(bool force = false);
+        void SetFrame(/* bool force = false */);
         void Click();
         virtual void AnimationFinished(const std::string& name) override;
         virtual EntityType GetType() const override { return EntityType::GuiFrameClass; }

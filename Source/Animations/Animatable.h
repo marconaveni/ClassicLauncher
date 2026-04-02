@@ -17,9 +17,9 @@ namespace ClassicLauncher
 
         Animatable(Window* window);
         void UpdateAnimation();
-        virtual void AnimationStarted(const std::string& name) {}
-        virtual void AnimationUpdate(const std::string& name) {}
-        virtual void AnimationFinished(const std::string& name) {}
+        virtual void AnimationStarted(const std::string& /*name*/) {}
+        virtual void AnimationUpdate(const std::string& /*name*/) {}
+        virtual void AnimationFinished(const std::string& /*name*/) {}
 
         Animation& GetAnimation(const std::string& name) { return m_animationManager.GetAnimation(name); }
         AnimationManager& GetAnimationManager() { return m_animationManager; }

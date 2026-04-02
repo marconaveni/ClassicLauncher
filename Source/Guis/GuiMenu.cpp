@@ -34,7 +34,7 @@ namespace ClassicLauncher
         {
             m_id = m_menuButtons.size() - 1;
         }
-        else if (m_id > m_menuButtons.size() - 1)
+        else if (m_id > (int)m_menuButtons.size() - 1)
         {
             m_id = 0;
         }
@@ -53,7 +53,7 @@ namespace ClassicLauncher
     void GuiMenu::CreateButton(const Vector2f source, const std::string& textName, bool isActive)
     {
         MenuButtons menuButton;
-        menuButton.button = GetEntityManager()->CreateEntity<GuiButton>("GuiButton", GetFocusManager(), GetWindow());
+        menuButton.button = GetEntityManager()->CreateEntity<GuiButton>("GuiButton" + textName, GetFocusManager(), GetWindow());
         menuButton.button->Init(source);
         EnableButton(isActive, menuButton);
 

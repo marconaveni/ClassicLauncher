@@ -80,12 +80,12 @@ namespace ClassicLauncher::Math
         return result;
     }
 
-    static float FloatAbs(float value)
+    inline float FloatAbs(float value)
     {
         return std::fabs(value);
     }
 
-    static int IntAbs(int value)
+    inline int IntAbs(int value)
     {
         return std::abs(value);
     }
@@ -111,13 +111,13 @@ namespace ClassicLauncher::Math
         std::default_random_engine eng;
     };
 
-    static double Random(const double min, const double max)
+    inline double Random(const double min, const double max)
     {
         static RandomGenerator generator;
         return generator.Generate(min, max);
     }
 
-    static float GetAngle(float v1X, float v1Y, float v2X, float v2Y)
+    inline float GetAngle(float v1X, float v1Y, float v2X, float v2Y)
     {
         float deltaY = v2Y - v1Y;
         float deltaX = v2X - v1X;
@@ -126,7 +126,7 @@ namespace ClassicLauncher::Math
         // return angleInDegrees ;
     }
 
-    static float GetAngle360(float v1X, float v1Y, float v2X, float v2Y)
+    inline float GetAngle360(float v1X, float v1Y, float v2X, float v2Y)
     {
         float angleInDegrees = GetAngle(v1X, v1Y, v2X, v2Y);
         return (angleInDegrees < 0) ? (angleInDegrees + 360) : angleInDegrees;

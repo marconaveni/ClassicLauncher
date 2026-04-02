@@ -52,7 +52,7 @@ namespace ClassicLauncher
             }
 
             Transform& transform = guiElement->GetTransformRef();
-            Transform& worldTransform = guiElement->GetWorldTransformRef();
+            // Transform& worldTransform = guiElement->GetWorldTransformRef();
 
             spacer += m_spacer;
             transform.position.x = x;

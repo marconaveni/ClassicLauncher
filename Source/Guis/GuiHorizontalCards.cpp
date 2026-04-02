@@ -147,7 +147,7 @@ namespace ClassicLauncher
         m_horizontalBox->SetSpace(space);
         SetPositionHorizontalBox();
 
-        const float cardWidth = ((m_horizontalBox->GetSize().width / 10) * m_horizontalBox->GetScale().x + m_horizontalBox->GetSpace());
+        //const float cardWidth = ((m_horizontalBox->GetSize().width / 10) * m_horizontalBox->GetScale().x + m_horizontalBox->GetSpace());
 
         const float minX = ((m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * 3 + m_horizontalBox->GetPosition().x);
         const float maxX = ((m_guiCards[0]->GetSize().width + m_horizontalBox->GetSpace()) * 6 + m_horizontalBox->GetPosition().x);

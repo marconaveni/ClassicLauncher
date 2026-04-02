@@ -127,9 +127,11 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 if(CLASSIC_LAUNCHER_FLAGS)
 
     target_compile_options(${PROJECT_NAME} PRIVATE
-        $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:-Wall -Wextra -Wpedantic>
-        $<$<CXX_COMPILER_ID:MSVC>:/W4> /EHsc)
-    
+        $<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra -Wpedantic>
+        $<$<CXX_COMPILER_ID:Clang>:-Wall -Wextra -Wpedantic>
+        $<$<CXX_COMPILER_ID:MSVC>:/W4>
+        $<$<CXX_COMPILER_ID:MSVC>:/EHsc>
+    )
 endif()
 
 

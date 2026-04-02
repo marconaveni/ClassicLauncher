@@ -22,7 +22,7 @@ namespace ClassicLauncher
         SetLimitArea(RectFloat{130.0f, 0.0f, 898.0f, 720.0f});
     }
 
-    void GuiFrame::SetFrame(bool force)
+    void GuiFrame::SetFrame(/* bool force */)
     {
         m_isMove = true;
     }
