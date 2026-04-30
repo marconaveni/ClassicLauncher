@@ -32,7 +32,7 @@ namespace ClassicLauncher
         , m_timerManagerRef(&timerManager)
         , m_audioManagerRef(&audioManager)
         , m_renderEntities(&spriteManager, &configManager, &window)
-        , m_entityManager(&spriteManager, &timerManager, &m_focusManager, &fontManager, &window)
+        , m_entityManager(&spriteManager, &timerManager, &m_focusManager, &fontManager, &window, &audioManager)
         , m_themesManager(&m_gameListManager, &spriteManager, &m_entityManager, &configManager, &audioManager)
         , m_fontManagerRef(&fontManager)
         , m_processManagerRef(&processManager)
@@ -55,7 +55,7 @@ namespace ClassicLauncher
 
         if (m_gameListManager.GetGameListSize() > 0)
         {
-            m_guiWindow = m_entityManager.CreateEntity<GuiWindow>("GuiWindow", &m_gameListManager, *m_audioManagerRef, *m_processManagerRef);
+            m_guiWindow = m_entityManager.CreateEntity<GuiWindow>("GuiWindow", &m_gameListManager, *m_processManagerRef);
             m_guiWindow->Init();
         }
         else
@@ -91,7 +91,11 @@ namespace ClassicLauncher
             case ProcessStatus::Open: break;
             case ProcessStatus::Running: break;
             case ProcessStatus::Failed:
-            case ProcessStatus::Close: m_guiWindow->FadeOutScreen(); break;
+            case ProcessStatus::Close:
+                m_guiWindow->FadeOutScreen();
+                m_audioManagerRef->MusicVolume(1.0f);
+                m_guiWindow->Focus();
+                break;
             default: break;
         }
         m_processManagerRef->UpdateRun();

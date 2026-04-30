@@ -19,13 +19,14 @@ namespace ClassicLauncher
     {
     public:
 
-        explicit GuiWindow(EntityContext& entityContext, GameListManager* gameListManagerRef, AudioManager& audioManagerRef, ProcessManager& processManagerRef);
+        explicit GuiWindow(EntityContext& entityContext, GameListManager* gameListManagerRef, ProcessManager& processManagerRef);
         virtual EntityType GetType() const override { return EntityType::GuiWindowClass; }
         virtual void Update() override;
         void Init();
         void OnClick();
         void OnBack();
         void UpdateCovers();
+        void Focus();
         void FadeOutScreen();
 
     private:
@@ -38,7 +39,6 @@ namespace ClassicLauncher
         TimerHandling m_inputTimer{};
 
         GameListManager* m_gameListManagerRef{nullptr};
-        AudioManager* m_audioManagerRef{nullptr};
         ProcessManager* m_processManagerRef{nullptr};
 
 #ifdef _DEBUG

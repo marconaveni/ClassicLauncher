@@ -36,6 +36,7 @@ namespace ClassicLauncher
     class EntityManager;
     class FocusManager;
     class Window;
+    class AudioManager;
 
     struct EntityContext
     {
@@ -45,6 +46,7 @@ namespace ClassicLauncher
         FocusManager* focusManager{nullptr};
         FontManager* fontManager{nullptr};
         Window* window{nullptr};
+        AudioManager* audioManager{nullptr};
     };
 
     class Entity
@@ -155,6 +157,7 @@ namespace ClassicLauncher
         FocusManager* GetFocusManager();
         FontManager* GetFontManager();
         Window* GetWindow();
+        AudioManager* GetAudioManager();
 
     private:
 

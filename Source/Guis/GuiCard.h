@@ -31,7 +31,6 @@ namespace ClassicLauncher
         explicit GuiCard(const EntityContext& entityContext,
                          GameListManager* gameListManagerRef,
                          FocusManager* focusManagerRef,
-                         AudioManager* audioManagerRef,
                          Window* window);
         void CreateCards(int x, int y);
 
@@ -68,7 +67,6 @@ namespace ClassicLauncher
         bool m_isChangeTexture{false};
 
         GameListManager* m_gameListManagerRef{nullptr};
-        AudioManager* m_audioManagerRef{nullptr};
 
         void CreateCard(GuiBase*& card, float sourceX, float sourceY, unsigned char alpha, const char* title, bool addChild = true);
         void StartVideo();

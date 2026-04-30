@@ -177,7 +177,7 @@ namespace ClassicLauncher
         if (!m_audioMusics.empty())
         {
             Stop();
-            m_idAudioMusic = (m_audioMusics.size() > 1) ? GenerateId() : 0;
+            m_idAudioMusic = GenerateId();
             Music* currentMusic = m_audioMusics[m_idAudioMusic].get();
             currentMusic->Seek(0);
             if (autoPlay)
@@ -189,12 +189,19 @@ namespace ClassicLauncher
 
     int AudioManager::GenerateId()
     {
-        int newId = m_idAudioMusic;
-        while (newId == m_idAudioMusic)
+        if (m_audioMusics.size() <= 0)
         {
-            newId = static_cast<int>(Math::Random(0.0f, static_cast<float>(m_audioMusics.size())));
+            return 0;
         }
 
+        const int size = Math::ToInt(m_audioMusics.size() - 1);
+        int newId = 0;
+        LOG(LogDebug, "Generating new id");
+        do
+        {
+            newId = Math::Random(0, size);
+            LOG(LogDebug, "newid = %d and m_idAudioMusic = %d", newId, m_idAudioMusic);
+        } while (newId == m_idAudioMusic);
         return newId;
     }
 

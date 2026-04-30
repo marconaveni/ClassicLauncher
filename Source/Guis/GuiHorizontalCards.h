@@ -38,13 +38,14 @@ namespace ClassicLauncher
             Right
         };
 
-        explicit GuiHorizontalCards(const EntityContext& entityContext, GameListManager* gameListManagerRef, AudioManager* audioManagerRef, Window* window);
+        explicit GuiHorizontalCards(const EntityContext& entityContext, GameListManager* gameListManagerRef, Window* window);
         EntityType GetType() const override { return EntityType::GuiHorizontalCardsClass; }
         void Init();
         void Update() override;
         void Draw() override;
         void End() override;
         void SetFocus(int newId, bool force = false);
+        void Focus();
         void UpdateCovers();
         void RemoveCoversFromScreen();
         void ChangeList(CurrentList list);
@@ -79,7 +80,6 @@ namespace ClassicLauncher
         int m_loadTexturesCards{0};
 
         GameListManager* m_gameListManagerRef{nullptr};
-        AudioManager* m_audioManagerRef{nullptr};
 
         void CancelMultiply();
         void UpdateCards();

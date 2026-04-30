@@ -16,10 +16,9 @@
 namespace ClassicLauncher
 {
 
-    GuiWindow::GuiWindow(EntityContext& entityContext, GameListManager* gameListManagerRef, AudioManager& audioManagerRef, ProcessManager& processManagerRef)
+    GuiWindow::GuiWindow(EntityContext& entityContext, GameListManager* gameListManagerRef, ProcessManager& processManagerRef)
         : GuiCanvas(entityContext)
         , m_gameListManagerRef(gameListManagerRef)
-        , m_audioManagerRef(&audioManagerRef)
         , m_processManagerRef(&processManagerRef)
     {
     }
@@ -40,7 +39,7 @@ namespace ClassicLauncher
         m_guiBackground->m_textureName = "sprite";
         AddChild(m_guiBackground);
 
-        m_guiHorizontalCards = GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalCards", m_gameListManagerRef, m_audioManagerRef, GetWindow());
+        m_guiHorizontalCards = GetEntityManager()->CreateEntity<GuiHorizontalCards>("GuiHorizontalCards", m_gameListManagerRef, GetWindow());
         m_guiHorizontalCards->Init();
         AddChild(m_guiHorizontalCards);
 
@@ -102,6 +101,7 @@ namespace ClassicLauncher
         if (Keyboard::IsReleased(Keyboard::F11) || (Keyboard::IsDown(Keyboard::LeftAlt) && Keyboard::IsReleased(Keyboard::Enter)))
         {
             GetWindow()->ToggleFullscreen();
+            return;
         }
 
         if (InputManager::IsRelease(InputName::Select, MainCenter | MainTop))
@@ -113,7 +113,7 @@ namespace ClassicLauncher
             if (!m_guiHorizontalCards->IsMovement())
             {
                 InputManager::DisableInput();
-                m_audioManagerRef->PlaySound("click");
+                GetAudioManager()->PlaySound("click");
                 m_guiHorizontalCards->Click();
                 if (m_gameListManagerRef->GetCurrentList() == CurrentList::GameListSelect)
                 {
@@ -128,7 +128,7 @@ namespace ClassicLauncher
         }
         if (InputManager::IsRelease(InputName::Cross, MainTop))
         {
-            m_audioManagerRef->PlaySound("click");
+            GetAudioManager()->PlaySound("click");
         }
         if (InputManager::IsRelease(InputName::Circle, MainCenter | MainTop) && m_gameListManagerRef->GetCurrentList() == CurrentList::GameListSelect) // back
         {
@@ -145,7 +145,7 @@ namespace ClassicLauncher
         LOG(LogDebug, "Called OnClick");
         if (m_gameListManagerRef->GetCurrentList() == CurrentList::GameListSelect)
         {
-            m_audioManagerRef->Pause();
+            GetAudioManager()->Pause();
             m_processManagerRef->CreateProc(m_gameListManagerRef);
         }
         else
@@ -173,6 +173,11 @@ namespace ClassicLauncher
         m_guiHorizontalCards->UpdateCovers();
     }
 
+    void GuiWindow::Focus()
+    {
+        m_guiHorizontalCards->Focus();
+    }
+
     void GuiWindow::FadeOutScreen()
     {
         GetTimerManager()->SetTimer(
@@ -180,7 +185,7 @@ namespace ClassicLauncher
             [&]()
             {
                 m_guiBlackScreen->FadeOut();
-                m_audioManagerRef->ChangeMusic();
+                GetAudioManager()->ChangeMusic();
                 InputManager::EnableInput();
             },
             this,

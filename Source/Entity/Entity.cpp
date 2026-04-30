@@ -162,6 +162,12 @@ namespace ClassicLauncher
         CLASSIC_ASSERT(m_entityContext.window, "This pointer is null. Verify m_entityContext has valid pointers");
         return m_entityContext.window;
     }
+    
+    AudioManager* Entity::GetAudioManager()
+    {
+        CLASSIC_ASSERT(m_entityContext.window, "This pointer is null. Verify m_entityContext has valid pointers");
+        return m_entityContext.audioManager;
+    }
 
     void Entity::SetZOrder(int zOrder)
     {

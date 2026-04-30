@@ -1,6 +1,5 @@
 #include "GuiCard.h"
 
-#include "Audio/AudioManager.h"
 #include "Data/GameListManager.h"
 #include "Entity/EntityManager.h"
 #include "Graphics/SpriteManager.h"
@@ -18,13 +17,11 @@ namespace ClassicLauncher
     GuiCard::GuiCard(const EntityContext& entityContext,
                      GameListManager* gameListManagerRef,
                      FocusManager* focusManagerRef,
-                     AudioManager* audioManagerRef,
                      Window* window)
         : GuiCanvas(entityContext)
         , FocusComponent(focusManagerRef, FocusCategory::Card)
         , m_timerVideo()
         , m_gameListManagerRef(gameListManagerRef)
-        , m_audioManagerRef(audioManagerRef)
         , Animatable(window)
     {
     }
@@ -98,10 +95,6 @@ namespace ClassicLauncher
         GuiCanvas::Update();
         Animatable::UpdateAnimation();
 
-        if (IsFocus() && m_guiVideoPlayer->IsPlaying())
-        {
-            m_audioManagerRef->MusicVolume(0.1f); // todo is need refactor is function if called frame is not good 
-        }
 
         Texture* textureReference = GetSpriteManager()->GetTexture(m_cover->m_textureName);
         if (textureReference != nullptr && m_isChangeTexture)
@@ -252,7 +245,6 @@ namespace ClassicLauncher
     void GuiCard::CloseVideo()
     {
         m_guiVideoPlayer->Stop();
-        m_audioManagerRef->MusicVolume(1.0f);
     }
 
     void GuiCard::SetThemeValue()

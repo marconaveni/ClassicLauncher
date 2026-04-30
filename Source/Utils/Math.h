@@ -90,31 +90,12 @@ namespace ClassicLauncher::Math
         return std::abs(value);
     }
 
-    class RandomGenerator
+    inline int Random(const int min, const int max)
     {
-    public:
-
-        RandomGenerator()
-            : eng(rd())
-        {
-        }
-
-        double Generate(double min, double max)
-        {
-            std::uniform_real_distribution distribution(min, max);
-            return distribution(eng);
-        }
-
-    private:
-
-        std::random_device rd;
-        std::default_random_engine eng;
-    };
-
-    inline double Random(const double min, const double max)
-    {
-        static RandomGenerator generator;
-        return generator.Generate(min, max);
+        std::random_device dev;
+        std::mt19937 rng(dev());
+        std::uniform_int_distribution<std::mt19937::result_type> dist(min, max);
+        return dist(rng);
     }
 
     inline float GetAngle(float v1X, float v1Y, float v2X, float v2Y)

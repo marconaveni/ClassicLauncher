@@ -29,12 +29,10 @@ namespace ClassicLauncher
 
     GuiHorizontalCards::GuiHorizontalCards(const EntityContext& entityContext,
                                            GameListManager* gameListManagerRef,
-                                           AudioManager* audioManagerRef,
                                            Window* window)
         : Entity(entityContext)
         , Animatable(window)
         , m_gameListManagerRef(gameListManagerRef)
-        , m_audioManagerRef(audioManagerRef)
     {
         SetSize(Sizef{1280.0f, 720.0f});
     }
@@ -66,7 +64,7 @@ namespace ClassicLauncher
 
         for (int i = 0; i < 10; i++)
         {
-            auto* card = GetEntityManager()->CreateEntity<GuiCard>("GuiCard", m_gameListManagerRef, GetFocusManager(), m_audioManagerRef, GetWindow());
+            auto* card = GetEntityManager()->CreateEntity<GuiCard>("GuiCard", m_gameListManagerRef, GetFocusManager(), GetWindow());
             card->CreateCards(0, 0);
             m_horizontalBox->AttachGui(card);
             m_horizontalBox->AddChild(card);
@@ -194,6 +192,11 @@ namespace ClassicLauncher
         m_guiTitle->SetText((gameList) ? gameList->name : "");
         m_frame->SetFrame();
         SetTextHintBar();
+    }
+
+    void GuiHorizontalCards::Focus()
+    {
+        m_guiCards[m_idFocus]->SetCardFocus();
     }
 
     void GuiHorizontalCards::UpdateCovers()
@@ -420,7 +423,7 @@ namespace ClassicLauncher
         {
             if (!m_isLeft)
             {
-                m_audioManagerRef->PlaySound("cursor");
+                GetAudioManager()->PlaySound("cursor");
                 m_gameListManagerRef->AddId(-1);
                 SetFocus(m_idFocus - 1);
             }
@@ -431,7 +434,7 @@ namespace ClassicLauncher
         {
             if (!m_frame->IsFrameMove())
             {
-                m_audioManagerRef->PlaySound("cursor");
+                GetAudioManager()->PlaySound("cursor");
                 m_guiMenu->SetButtonFocus(-1);
             }
         }
@@ -439,7 +442,7 @@ namespace ClassicLauncher
         {
             if (!m_isRight)
             {
-                m_audioManagerRef->PlaySound("cursor");
+                GetAudioManager()->PlaySound("cursor");
                 m_gameListManagerRef->AddId(1);
                 SetFocus(m_idFocus + 1);
             }
@@ -450,7 +453,7 @@ namespace ClassicLauncher
         {
             if (!m_frame->IsFrameMove())
             {
-                m_audioManagerRef->PlaySound("cursor");
+                GetAudioManager()->PlaySound("cursor");
                 m_guiMenu->SetButtonFocus(1);
             }
         }
@@ -458,7 +461,7 @@ namespace ClassicLauncher
         {
             if (!m_frame->IsFrameMove())
             {
-                m_audioManagerRef->PlaySound("cursor");
+                GetAudioManager()->PlaySound("cursor");
                 m_guiMenu->SetButtonFocus(0);
                 InputManager::RemoveCategory(MainCenter);
                 InputManager::SetCategory(MainTop);
@@ -469,7 +472,7 @@ namespace ClassicLauncher
         {
             if (!m_frame->IsFrameMove())
             {
-                m_audioManagerRef->PlaySound("cursor");
+                GetAudioManager()->PlaySound("cursor");
                 SetFocus(m_idFocus);
                 InputManager::RemoveCategory(MainTop);
                 InputManager::SetCategory(MainCenter);

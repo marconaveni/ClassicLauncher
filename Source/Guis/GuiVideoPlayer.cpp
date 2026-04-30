@@ -1,5 +1,6 @@
 #include "GuiVideoPlayer.h"
 
+#include "Audio/AudioManager.h"
 #include "Entity/EntityManager.h"
 #include "Graphics/RenderTexture.h"
 #include "Graphics/SpriteManager.h"
@@ -8,6 +9,7 @@
 #include "Utils/Utils.h"
 #include "Window/Window.h"
 #include "Wrap.h"
+
 
 namespace ClassicLauncher
 {
@@ -49,6 +51,7 @@ namespace ClassicLauncher
             {
                 m_player->Play();
                 VideoFadeinAnimate(1.0f, this);
+                GetAudioManager()->MusicVolume(0.05f); // todo: parameter theme 
             });
 
     }
@@ -86,6 +89,7 @@ namespace ClassicLauncher
         m_player = nullptr;
         m_playerFullScreen = nullptr;
         SetSize(Sizef{});
+        GetAudioManager()->MusicVolume(1.0f);
     }
 
     void GuiVideoPlayer::StopFullscreen()

@@ -17,12 +17,13 @@ namespace ClassicLauncher
     class FocusManager;
     class FontManager;
     class Window;
+    class AudioManager;
 
     class EntityManager
     {
     public:
 
-        explicit EntityManager(SpriteManager* spriteManager, TimerManager* timerManager, FocusManager* focusManager, FontManager* fontManager, Window* window);
+        explicit EntityManager(SpriteManager* spriteManager, TimerManager* timerManager, FocusManager* focusManager, FontManager* fontManager, Window* window, AudioManager* audioManager);
         ~EntityManager();
 
         template <typename T, typename... Args>
@@ -33,7 +34,8 @@ namespace ClassicLauncher
                                   .spriteManager = m_spriteManagerReference,
                                   .focusManager = m_focusManagerReference,
                                   .fontManager = m_fontManagerReference,
-                                  .window = m_windowReference};
+                                  .window = m_windowReference,
+                                  .audioManager = m_audioManager};
 
             auto entity = std::make_unique<T>(context, std::forward<Args>(args)...);
             SetNameId(entity.get(), name);
@@ -81,6 +83,7 @@ namespace ClassicLauncher
         FocusManager* m_focusManagerReference{nullptr};
         FontManager* m_fontManagerReference{nullptr};
         Window* m_windowReference{nullptr};
+        AudioManager* m_audioManager{nullptr};
 
         bool m_markOrder{false};
         bool m_hasNewEntity{false};
