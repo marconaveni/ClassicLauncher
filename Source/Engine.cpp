@@ -8,6 +8,7 @@
 #include "Helper.h"
 #include "Input/Gamepad.h"
 #include "Utils/Resources.h"
+#include "Video/VideoPlayer.h"
 
 
 namespace ClassicLauncher
@@ -28,6 +29,7 @@ namespace ClassicLauncher
                          Resources::GetIconFile(48).c_str(),
                          Resources::GetIconFile(64).c_str(),
                          Resources::GetIconFile(128).c_str()};
+        VideoPlayer::StartVLCInstance();
     }
 
     Engine::~Engine() = default;

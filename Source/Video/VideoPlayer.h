@@ -1,12 +1,17 @@
 #ifndef VIDEO_PLAYER_H
 #define VIDEO_PLAYER_H
 
+#include <atomic>
+#include <filesystem>
+#include <functional>
 #include <mutex>
 #include <string>
+#include <thread>
 
 #include "Data/Vector2.h"
 #include "Graphics/Image.h"
 #include "Graphics/Texture.h"
+
 
 #ifdef _WIN32
 using ssize_t = intptr_t;
@@ -40,28 +45,12 @@ namespace ClassicLauncher
 
     class VideoPlayer
     {
-    private:
-
-        static libvlc_instance_t* m_VLC;
-        libvlc_media_t* m_media{nullptr};
-        libvlc_media_player_t* m_mediaPlayer{nullptr};
-        int m_widthVideo{1};
-        int m_heightVideo{1};
-
-        VideoContext m_context{};
-        Texture m_texture{}; // Texture for rendering on screen.
-        bool m_isEnabledVlC{false};
-        unsigned int m_width{0};
-        unsigned int m_height{0};
-        bool m_isLoop{true};
-
-        static void StartVLCInstance();
-
     public:
 
+        static void StartVLCInstance();
         VideoPlayer();
         ~VideoPlayer();
-        bool Init(std::string path, int width, int height, float scale = 1, bool fill = false);
+        bool Init(const std::filesystem::path& path, int width, int height, float scale = 1, bool fill = false);
         void Play();
         void Pause();
         void Resume();
@@ -75,6 +64,32 @@ namespace ClassicLauncher
         bool IsVideoStopped();
         void SetLoop(bool loop) { m_isLoop = loop; }
         void SetVolume(int volume);
+        [[nodiscard]] bool IsReady() { return m_isReadyVlC; }
+        void PlayerReadyState(std::function<void()> callbackReady);
+
+    private:
+
+        static libvlc_instance_t* m_VLC;
+        std::function<void()> m_callbackReady{nullptr};
+        libvlc_media_t* m_media{nullptr};
+        libvlc_media_player_t* m_mediaPlayer{nullptr};
+        int m_widthVideo{1};
+        int m_heightVideo{1};
+
+        VideoContext m_context{};
+        Texture m_texture{}; // Texture for rendering on screen.
+        unsigned int m_width{0};
+        unsigned int m_height{0};
+        bool m_isLoop{true};
+        bool m_fill{false};
+
+        std::thread m_parserThread{};
+        std::atomic<bool> m_parsePending{false};
+
+        bool m_isReadyVlC{false};
+        bool m_isCanPlay{false};
+
+        bool VideoParser();
     };
 
 } // namespace ClassicLauncher

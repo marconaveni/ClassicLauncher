@@ -1,6 +1,7 @@
 #ifndef GUI_VIDEO_PLAYER_H
 #define GUI_VIDEO_PLAYER_H
 
+#include <filesystem>
 #include <memory>
 #include <string>
 
@@ -21,7 +22,7 @@ namespace ClassicLauncher
 
         explicit GuiVideoPlayer(const EntityContext& entityContext, Window* window);
         EntityType GetType() const override { return EntityType::GuiVideoPlayerClass; }
-        bool Init(const std::string& path, int width, int height);
+        void Init(const std::filesystem::path& path, int width, int height);
         void InitFullscreen();
         void Stop();
         void StopFullscreen();
@@ -38,7 +39,7 @@ namespace ClassicLauncher
         GuiBase m_gui;
         std::unique_ptr<VideoPlayer> m_player{nullptr};
         std::unique_ptr<VideoPlayer> m_playerFullScreen{nullptr};
-        std::string m_filePath{};
+        std::filesystem::path m_filePath{};
         float m_renderScale{1};
         void VideoFadeinAnimate(float time, Entity* entity);
     };

@@ -13,7 +13,7 @@ namespace ClassicLauncher
     libvlc_instance_t* VideoPlayer::m_VLC = nullptr;
 
     // VLC prepares to render a video frame.
-    void* lock(void* data, void** p_pixels)
+    void* LockPlayer(void* data, void** p_pixels)
     {
         struct VideoContext* c = (struct VideoContext*)data;
 
@@ -26,7 +26,7 @@ namespace ClassicLauncher
     }
 
     // VLC has just rendered a video frame.
-    void unlock(void* data, void* id, void* const* p_pixels)
+    void UnlockPlayer(void* data, void* id, void* const* p_pixels)
     {
         struct VideoContext* c = (struct VideoContext*)data;
 
@@ -51,32 +51,34 @@ namespace ClassicLauncher
 
     void VideoPlayer::StartVLCInstance()
     {
-        char const* vlc_argv[] = {
-            "--no-xlib",
-            "--quiet",               // suppress logs
-            "--no-video-title-show", // remove title
-            "--avcodec-fast",        // Reduces memory usage when decoding.
-            // "--verbose=2",
-            "--no-stats" // Avoid collecting statistics.
-
-        };
-        int vlc_argc = sizeof(vlc_argv) / sizeof(*vlc_argv);
-
         if (!m_VLC)
         {
+            LOG(LogTrace, "Initializing VideoPlayer...");
+            char const* vlc_argv[] = {
+                "--no-xlib",             // Linux (avoid X11)
+                "--quiet",               // suppress logs
+                "--no-video-title-show", // remove title
+                "--avcodec-fast",        // Reduces memory usage when decoding.
+                "--no-stats"             // Avoid collecting statistics.
+                // "--verbose=2",        // log level
+
+            };
+
+            int vlc_argc = sizeof(vlc_argv) / sizeof(*vlc_argv);
+
             m_VLC = libvlc_new(vlc_argc, vlc_argv); // LibVLC initialization instance
             if (!m_VLC)
             {
                 LOG(LogFatal, "LibVLC initialization failure.");
+                return;
             }
+            LOG(LogTrace, "VideoPlayer initialized.");
         }
     }
 
     VideoPlayer::VideoPlayer()
     {
-        LOG(LogTrace, "Initializing VideoPlayer...");
-        StartVLCInstance();
-        LOG(LogTrace, "VideoPlayer initialized.");
+        StartVLCInstance(); // guarantee that the instance was created
     }
 
     VideoPlayer::~VideoPlayer()
@@ -86,100 +88,133 @@ namespace ClassicLauncher
         LOG(LogTrace, "VideoPlayer destroyed.");
     }
 
-    bool VideoPlayer::Init(std::string path, int width, int height, float scale, bool fill)
+    bool VideoPlayer::Init(const std::filesystem::path& path, int width, int height, float scale, bool fill)
     {
-        LOG(LogInfo, "Initializing video with path: %s", path.c_str());
-        if (path.empty())
+
+        LOG(LogInfo, "Initializing video with path: %s", path.string().c_str());
+        if (!std::filesystem::exists(path))
         {
-            LOG(LogWarning, "path is empty.");
+            LOG(LogWarning, "path is not exists.");
             return false;
         }
+
+        LOG(LogTrace, "Trying Parsed video");
+
+        if (m_media || m_mediaPlayer || m_parserThread.joinable())
+        {
+            Unload();
+        }
+
         if (!m_VLC)
         {
             LOG(LogError, "LibVLC not initializate.");
             return false;
         }
 
-        m_media = libvlc_media_new_path(m_VLC, path.c_str());
+        m_media = libvlc_media_new_path(m_VLC, path.string().c_str());
         if (!m_media)
         {
             LOG(LogError, "m_media initialization failure.");
             return false;
         }
 
-        m_mediaPlayer = libvlc_media_player_new_from_media(m_media);
-        if (!m_mediaPlayer)
-        {
-            LOG(LogError, "m_mediaPlayer initialization failure.\n");
-            return false;
-        }
+        libvlc_media_add_option(m_media, ":start-time=0.7");
 
         m_width = Math::Clamp(width, 0, WindowSpecs::Width * scale);
         m_height = Math::Clamp(height, 0, WindowSpecs::Height * scale);
+        m_fill = fill;
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-        libvlc_media_parse(m_media); // libvlc_media_parse_with_options() is async function
-#pragma GCC diagnostic pop
+        m_parsePending = true;
+        m_isReadyVlC = false;
 
-        // Get the media metadata so we can find the aspect ratio
-        unsigned track_count;
-        libvlc_media_track_t** tracks;
-        track_count = libvlc_media_tracks_get(m_media, &tracks);
-
-        if (track_count == 0)
-        {
-            return false;
-        }
-
-        for (unsigned track = 0; track < track_count; ++track)
-        {
-            // libvlc_media_track_t* tr = tracks[track];
-            if (tracks[track]->i_type == libvlc_track_video)
+        m_parserThread = std::thread(
+            [this]()
             {
-                m_widthVideo = tracks[track]->video->i_width;
-                m_heightVideo = tracks[track]->video->i_height;
+                libvlc_media_parse_with_options(m_media, libvlc_media_parse_local, 0);
+                while (libvlc_media_get_parsed_status(m_media) != libvlc_media_parsed_status_done)
+                {
+                    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+                }
+                m_parsePending = false;
+            });
+
+
+        return true;
+    }
+
+    bool VideoPlayer::VideoParser()
+    {
+        LOG(LogTrace, "here");
+
+        if (!m_parsePending && !m_isReadyVlC)
+        {
+
+            m_mediaPlayer = libvlc_media_player_new_from_media(m_media);
+            if (!m_mediaPlayer)
+            {
+                LOG(LogError, "m_mediaPlayer initialization failure.\n");
+                return false;
             }
-            else if (tracks[track]->i_type == libvlc_track_audio) {}
+            // Get the media metadata so we can find the aspect ratio
+            unsigned track_count;
+            libvlc_media_track_t** tracks;
+            track_count = libvlc_media_tracks_get(m_media, &tracks);
+
+            if (track_count == 0)
+            {
+                return false;
+            }
+
+            for (unsigned track = 0; track < track_count; ++track)
+            {
+                // libvlc_media_track_t* tr = tracks[track];
+                if (tracks[track]->i_type == libvlc_track_video)
+                {
+                    m_widthVideo = tracks[track]->video->i_width;
+                    m_heightVideo = tracks[track]->video->i_height;
+                }
+                else if (tracks[track]->i_type == libvlc_track_audio) {}
+            }
+            libvlc_media_tracks_release(tracks, track_count);
+
+            Vector2f textureSize((float)m_widthVideo, (float)m_heightVideo);
+            Utils::SetSizeWithProportion(textureSize, m_width, m_height, m_fill);
+            m_widthVideo = (int)textureSize.x;
+            m_heightVideo = (int)textureSize.y;
+
+            m_context.image[0] = {calloc(m_widthVideo * m_heightVideo * 4, 1), // 4 bytes pixel (RGBA)
+                                  m_widthVideo,
+                                  m_heightVideo,
+                                  1,
+                                  PixelFormat::UncompressedR8G8B8A8};
+
+            m_context.image[0].CopyTo(m_context.image[1]);
+
+            m_texture.LoadFromImage(&m_context.image[0]);
+
+            libvlc_video_set_format(m_mediaPlayer, "RGBA", m_widthVideo, m_heightVideo, m_widthVideo * 4);
+            libvlc_video_set_callbacks(m_mediaPlayer, LockPlayer, UnlockPlayer, display, &m_context);
+
+            m_isReadyVlC = true;
+            m_parsePending = false;
+            if (m_callbackReady)
+            {
+                m_callbackReady(); // Let them know the video is ready.
+            }
+
+            LOG(LogTrace, "Parsed video");
         }
-        libvlc_media_tracks_release(tracks, track_count);
-
-        Vector2f textureSize((float)m_widthVideo, (float)m_heightVideo);
-        Utils::SetSizeWithProportion(textureSize, m_width, m_height, fill);
-        m_widthVideo = (int)textureSize.x;
-        m_heightVideo = (int)textureSize.y;
-
-        m_context.image[0] = {calloc(m_widthVideo * m_heightVideo * 4, 1), // 4 bytes pixel (RGBA)
-                              m_widthVideo,
-                              m_heightVideo,
-                              1,
-                              PixelFormat::UncompressedR8G8B8A8};
-
-        m_context.image[0].CopyTo(m_context.image[1]);
-
-        m_texture.LoadFromImage(&m_context.image[0]);
-
-        libvlc_video_set_format(m_mediaPlayer, "RGBA", m_widthVideo, m_heightVideo, m_widthVideo * 4);
-        libvlc_video_set_callbacks(m_mediaPlayer, lock, unlock, display, &m_context);
-
-        m_isEnabledVlC = m_VLC && m_media && m_mediaPlayer;
-        return m_isEnabledVlC;
+        return m_isReadyVlC;
     }
 
     void VideoPlayer::Play()
     {
-        if (!m_isEnabledVlC)
-        {
-            return;
-        }
-
-        libvlc_media_player_stop(m_mediaPlayer);
-        libvlc_media_player_play(m_mediaPlayer);
+        m_isCanPlay = true;
     }
 
     void VideoPlayer::Pause()
     {
-        if (!m_isEnabledVlC)
+        if (!m_isReadyVlC)
         {
             return;
         }
@@ -189,7 +224,7 @@ namespace ClassicLauncher
 
     void VideoPlayer::Resume()
     {
-        if (!m_isEnabledVlC)
+        if (!m_isReadyVlC)
         {
             return;
         }
@@ -199,7 +234,7 @@ namespace ClassicLauncher
 
     void VideoPlayer::Stop()
     {
-        if (!m_isEnabledVlC)
+        if (!m_isReadyVlC)
         {
             return;
         }
@@ -209,10 +244,21 @@ namespace ClassicLauncher
 
     void VideoPlayer::Update()
     {
-        if (!m_isEnabledVlC)
+        VideoParser();
+
+
+        if (!m_isReadyVlC)
         {
             return;
         }
+
+        if (m_isCanPlay)
+        {
+            m_isCanPlay = false;
+            libvlc_media_player_stop(m_mediaPlayer);
+            libvlc_media_player_play(m_mediaPlayer);
+        }
+
 
         int frame = m_context.frameId;
 
@@ -226,7 +272,7 @@ namespace ClassicLauncher
         }
         else
         {
-            LOG(LogTrace, "video texture not updated \"mContext.frameLock[%d]\" is locked", m_context.frameLock[frame]);
+            LOG(LogTrace, "video texture not updated \"m_context.frameLock[%d]\" is locked", m_context.frameLock[frame]);
         }
 
         if (IsVideoFinished() && m_isLoop)
@@ -237,7 +283,14 @@ namespace ClassicLauncher
 
     void VideoPlayer::Unload()
     {
-        m_isEnabledVlC = false;
+
+        if (m_parserThread.joinable())
+        {
+            m_parserThread.join(); // Wait for the thread to finish.
+        }
+
+        m_isReadyVlC = false;
+        m_parsePending = false;
 
         // Release the media player
         if (m_mediaPlayer)
@@ -283,7 +336,7 @@ namespace ClassicLauncher
 
     bool VideoPlayer::IsVideoFinished()
     {
-        if (!m_isEnabledVlC)
+        if (!m_isReadyVlC)
         {
             return false;
         }
@@ -294,7 +347,7 @@ namespace ClassicLauncher
 
     bool VideoPlayer::IsVideoPlaying()
     {
-        if (!m_isEnabledVlC)
+        if (!m_isReadyVlC)
         {
             return false;
         }
@@ -305,7 +358,7 @@ namespace ClassicLauncher
 
     bool VideoPlayer::IsVideoStopped()
     {
-        if (!m_isEnabledVlC)
+        if (!m_isReadyVlC)
         {
             return false;
         }
@@ -316,12 +369,17 @@ namespace ClassicLauncher
 
     void VideoPlayer::SetVolume(int volume)
     {
-        if (!m_isEnabledVlC)
+        if (!m_isReadyVlC)
         {
             return;
         }
 
         libvlc_audio_set_volume(m_mediaPlayer, volume);
+    }
+
+    void VideoPlayer::PlayerReadyState(std::function<void()> callbackReady)
+    {
+        m_callbackReady = std::move(callbackReady);
     }
 
 } // namespace ClassicLauncher

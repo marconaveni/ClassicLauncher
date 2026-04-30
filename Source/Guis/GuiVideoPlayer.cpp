@@ -20,11 +20,11 @@ namespace ClassicLauncher
         m_gui.SetOpacity(0);
     }
 
-    bool GuiVideoPlayer::Init(const std::string& path, int width, int height)
+    void GuiVideoPlayer::Init(const std::filesystem::path& path, int width, int height)
     {
-        if (path.empty())
+        if (!std::filesystem::exists(path))
         {
-            return false;
+            return;
         }
 
         m_renderScale = ThemesManager::GetScaleRenderer();
@@ -36,6 +36,7 @@ namespace ClassicLauncher
         const int heightScale = static_cast<int>(height * m_renderScale);
         const bool isPlay = m_player->Init(path, widthScale, heightScale, m_renderScale, true);
 
+
         m_renderTexture = GetSpriteManager()->GetRenderTexture("videoPlayer");
         if (!m_renderTexture)
         {
@@ -43,12 +44,13 @@ namespace ClassicLauncher
             m_renderTexture = GetSpriteManager()->GetRenderTexture("videoPlayer");
             m_renderTexture->SetSmooth(true);
         }
+        m_player->PlayerReadyState(
+            [this]()
+            {
+                m_player->Play();
+                VideoFadeinAnimate(1.0f, this);
+            });
 
-        m_player->Play();
-        VideoFadeinAnimate(1.0f, this);
-
-
-        return isPlay;
     }
 
     void GuiVideoPlayer::InitFullscreen()
@@ -68,11 +70,15 @@ namespace ClassicLauncher
         m_playerFullScreen->Init(m_filePath, monitorSize.width, monitorSize.height, scale);
         m_playerFullScreen->Play();
         m_playerFullScreen->SetLoop(false);
-        GetEntityManager()->SetZOrder(this, 99); // todo temp
-        VideoFadeinAnimate(0.5f, &m_gui);
 
-        InputManager::SetCategory(VideoFullscreen);
-        InputManager::RemoveCategory(MainCenter);
+        m_playerFullScreen->PlayerReadyState(
+            [this]()
+            {
+                GetEntityManager()->SetZOrder(this, 99); // todo temp
+                VideoFadeinAnimate(0.5f, &m_gui);
+                InputManager::SetCategory(VideoFullscreen);
+                InputManager::RemoveCategory(MainCenter);
+            });
     }
 
     void GuiVideoPlayer::Stop()
@@ -110,6 +116,11 @@ namespace ClassicLauncher
 
         m_player->Update();
 
+        if (!m_player->IsReady())
+        {
+            return;
+        }
+
         const Sizef textureSize = m_renderTexture->GetTexture()->GetSize();
         SetSource(textureSize.width, textureSize.height);
         SetSize(textureSize.width / m_renderScale, textureSize.height / m_renderScale);
@@ -122,6 +133,11 @@ namespace ClassicLauncher
         }
 
         m_playerFullScreen->Update();
+
+        if (!m_playerFullScreen->IsReady())
+        {
+            return;
+        }
         if (m_playerFullScreen->IsVideoFinished())
         {
             StopFullscreen();

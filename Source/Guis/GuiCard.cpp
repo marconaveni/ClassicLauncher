@@ -98,6 +98,11 @@ namespace ClassicLauncher
         GuiCanvas::Update();
         Animatable::UpdateAnimation();
 
+        if (IsFocus() && m_guiVideoPlayer->IsPlaying())
+        {
+            m_audioManagerRef->MusicVolume(0.1f); // todo is need refactor is function if called frame is not good 
+        }
+
         Texture* textureReference = GetSpriteManager()->GetTexture(m_cover->m_textureName);
         if (textureReference != nullptr && m_isChangeTexture)
         {
@@ -148,14 +153,13 @@ namespace ClassicLauncher
     {
         if (IsFocus())
         {
-            const bool isPlay = m_guiVideoPlayer->Init(m_gameListManagerRef->GetCurrentGameList()->video, 228, 204);
-            m_audioManagerRef->MusicVolume(isPlay ? 0.1f : 1.0f);
+            m_guiVideoPlayer->Init(m_gameListManagerRef->GetCurrentGameList()->video, 228, 204);
         }
     }
 
     void GuiCard::SetCardFocus()
     {
-        GetTimerManager()->SetTimer(m_timerVideo, CALLFUNCTION(StartVideo, this), this, 5.0f);
+        GetTimerManager()->SetTimer(m_timerVideo, CALLFUNCTION(StartVideo, this), this, 2.5f);
         SetFocus();
     }
 

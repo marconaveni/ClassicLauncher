@@ -30,13 +30,13 @@ if(CLASSIC_RASPBERRY_PI)
 endif()
 
 # optimize
-if(MSVC)
-    string(APPEND CMAKE_C_FLAGS_RELEASE " /O2")
-    string(APPEND CMAKE_CXX_FLAGS_RELEASE " /O2")
-else()
-    string(APPEND CMAKE_C_FLAGS_RELEASE " -O3")
-    string(APPEND CMAKE_CXX_FLAGS_RELEASE " -O3")
-endif()
+#if(MSVC)
+#    string(APPEND CMAKE_C_FLAGS_RELEASE " /O2")
+#    string(APPEND CMAKE_CXX_FLAGS_RELEASE " /O2")
+#else()
+#    string(APPEND CMAKE_C_FLAGS_RELEASE " -O3")
+#    string(APPEND CMAKE_CXX_FLAGS_RELEASE " -O3")
+#endif()
 
 # SDL2 setup
 set(CLASSIC_SDL_LIB "") # Clear the cache just to be safe.
