@@ -1,50 +1,71 @@
 #include "FocusManager.h"
-#include "Application.h"
+
+#include <algorithm>
+
+#include "Components/FocusComponent.h"
+#include "Helper.h"
+
 
 namespace ClassicLauncher
 {
 
-    FocusManager::FocusManager()
-    {
-    }
-
-    FocusManager::~FocusManager()
-    {
-    }
-
     void FocusManager::AddFocus(FocusComponent* focusComponent)
     {
-        mFocusComponents.push_back(focusComponent);
+        m_focusComponents.push_back(focusComponent);
     }
 
-    void FocusManager::UpdateFocus(FocusComponent* focusComponent)
+    void FocusManager::SetNewFocusComponent(FocusComponent* focusComponent)
     {
-        PRINT(TEXT("focus count %d", mFocusComponents.size()), 5.0f, "focusComp");
-        for (auto& focus : mFocusComponents)
+        FocusComponent* newFocusComponent = nullptr;
+        FocusComponent* previousFocusComponent = nullptr;
+        PRINT(TEXT("focus count %d", m_focusComponents.size()), 5.0f, "focusComp");
+        for (auto& focus : m_focusComponents)
         {
-            if (focus == focusComponent && !focus->mIsFocus)
+            if (focus == focusComponent)
             {
-                focus->mIsFocus = true;
-                focus->OnFocus();
+                focus->m_isFocus = true;
+                newFocusComponent = focus;
             }
-            else if (focus->mIsFocus)
+            else if (focus->m_isFocus)
             {
-                focus->mIsFocus = false;
-                focus->OnLostFocus();
+                focus->m_isFocus = false;
+                previousFocusComponent = focus;
             }
             focus->OnChangeFocus();
+        }
+
+        if (newFocusComponent)
+        {
+            newFocusComponent->OnFocus();
+            m_currentFocusComponent = newFocusComponent;
+        }
+        if (previousFocusComponent)
+        {
+            previousFocusComponent->OnLostFocus(newFocusComponent->GetFocusCategory());
+        }
+    }
+
+    void FocusManager::Update()
+    {
+        for (auto& focus : m_focusComponents)
+        {
+            if (focus->m_isFocus)
+            {
+                focus->UpdateFocus();
+            }
         }
     }
 
     void FocusManager::RemoveFocus(FocusComponent* focusComponent)
     {
-        mFocusComponents.erase(std::remove_if(mFocusComponents.begin(),
-                                              mFocusComponents.end(),
-                                              [focusComponent](const FocusComponent* focus)
-                                              {
-                                                  return focus == focusComponent;  // Return true element
-                                              }),
-                               mFocusComponents.end());
+        m_focusComponents.erase(std::remove_if(m_focusComponents.begin(),
+                                               m_focusComponents.end(),
+                                               [focusComponent](const FocusComponent* focus)
+                                               {
+                                                   return focus == focusComponent; // Return true element
+                                               }),
+                                m_focusComponents.end());
     }
 
-}  // namespace ClassicLauncher
+
+} // namespace ClassicLauncher

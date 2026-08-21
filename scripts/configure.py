@@ -11,7 +11,6 @@ OPTIONS:
   -asan, --fsanitize        Tool to detect memory access error such as use-after-free and memory leaks (arg CMake -DCLASSIC_LAUNCHER_FSANITIZE=TRUE)  
   -pi, --raspberrypi        defines specific settings for raspberrypi (arg CMake -DCLASSIC_RASPBERRY_PI=TRUE)  
   -f, --flags               Enable warning/error flags (arg CMake -DCLASSIC_LAUNCHER_FLAGS=TRUE)  
-  -t, --theme1x             Force Theme 1x (arg CMake -DCLASSIC_FORCE_THEME_1X=TRUE)  
 '''
 
 if os.name == 'nt':
@@ -23,7 +22,6 @@ build_type = "Release"
 fsanitize = "-DCLASSIC_LAUNCHER_FSANITIZE=FALSE"
 raspberrypi = "-DCLASSIC_RASPBERRY_PI=FALSE"
 flags = "-DCLASSIC_LAUNCHER_FLAGS=FALSE"
-theme = "-DCLASSIC_FORCE_THEME_1X=FALSE"
 
  
 for arg in sys.argv:
@@ -38,8 +36,6 @@ for arg in sys.argv:
         raspberrypi = "-DCLASSIC_RASPBERRY_PI=TRUE"
     elif argl == "--flags" or argl == "-f":
         flags = "-DCLASSIC_LAUNCHER_FLAGS=TRUE"
-    elif argl == "--theme1x" or argl == "-t":
-        theme = "-DCLASSIC_FORCE_THEME_1X=TRUE"
     elif argl == "--help" or argl == "-h":
         print(help)
         exit(0)

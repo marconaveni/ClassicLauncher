@@ -1,100 +1,87 @@
 #ifndef RECTANGLE_H
 #define RECTANGLE_H
 
-#include <string>
-#include "raylib.h"
+#include "Data/Vector2.h"
 
 namespace ClassicLauncher
 {
-    class Rectangle : public ::Rectangle
+
+    template <typename T>
+    class Rectangle
     {
     public:
 
-        Rectangle(const ::Rectangle& rect)
-            : ::Rectangle{ rect.x, rect.y, rect.width, rect.height } {};
+        T x{};      // position left rectangle
+        T y{};      // position top rectangle
+        T width{};  // width rectangle
+        T height{}; // height rectangle
 
-        Rectangle(float x, float y, float width, float height)
-            : ::Rectangle{ x, y, width, height } {};
-
-        Rectangle(float x, float y, float width)
-            : ::Rectangle{ x, y, width, 0 } {};
-
-        Rectangle(float x, float y)
-            : ::Rectangle{ x, y, 0, 0 } {};
-
-        Rectangle(float x)
-            : ::Rectangle{ x, 0, 0, 0 } {};
-
-        Rectangle()
-            : ::Rectangle{ 0, 0, 0, 0 } {};
-
-        Rectangle(::Vector2 position, ::Vector2 size)
-            : ::Rectangle{ position.x, position.y, size.x, size.y } {};
-
-        Rectangle(::Vector2 size)
-            : ::Rectangle{ 0, 0, size.x, size.y } {};
-
-        Rectangle(::Vector4 rect)
-            : ::Rectangle{ rect.x, rect.y, rect.z, rect.w } {};
-            
-        void SetX(float x) { this->x = x; }
-        void SetY(float y) { this->y = y; }
-        void SetWidth(float width) { this->width = width; }
-        void SetHeight(float height) { this->height = height; }
-
-        Rectangle& operator=(const ::Rectangle& rect)
+        constexpr Rectangle()
+            : x(0)
+            , y(0)
+            , width(0)
+            , height(0)
         {
-            Set(rect);
-            return *this;
         }
 
-        void Set(::Rectangle rect)
+        constexpr Rectangle(const T& rect)
+            : x(rect.x)
+            , y(rect.y)
+            , width(rect.width)
+            , height(rect.height)
         {
-            this->x = rect.x;
-            this->y = rect.y;
-            this->width = rect.width;
-            this->height = rect.height;
-        }
-        void Set(float x, float y, float width, float height)
-        {
-            this->x = x;
-            this->y = y;
-            this->width = width;
-            this->height = height;
         }
 
-        void SetPosition(float x, float y)
+        constexpr Rectangle(const Vector2<T>& position, const Vector2<T>& size)
+            : x(position.x)
+            , y(position.y)
+            , width(size.x)
+            , height(size.y)
         {
-            this->x = x;
-            this->y = y;
-        }
-        void SetPosition(const ::Vector2& vec)
-        {
-            this->x = vec.x;
-            this->y = vec.y;
-        }
-        void SetSize(float width, float height)
-        {
-            this->width = width;
-            this->height = height;
-        }
-        void SetSize(const ::Vector2& vec)
-        {
-            this->width = vec.x;
-            this->height = vec.y;
         }
 
-        std::string ToString() const
+        constexpr Rectangle(T x, T y, T width, T height)
+            : x(x)
+            , y(y)
+            , width(width)
+            , height(height)
         {
-            return "Rectangle( x: " + std::to_string(x) + ", y: " + std::to_string(y) + ", width: " + std::to_string(width) + ", height: " + std::to_string(height) + ")";
         }
-        int GetIntX() const { return static_cast<int>(x); }
-        int GetIntY() const { return static_cast<int>(y); }
-        int GetIntWidth() const { return static_cast<int>(width); }
-        int GetIntHeight() const { return static_cast<int>(height); }
-        Vector2 GetPosition() const { return { x, y }; }
+
+        template <typename U>
+        constexpr operator Rectangle<U>() const
+        {
+            return Rectangle<U>(static_cast<U>(x), static_cast<U>(y), static_cast<U>(width), static_cast<U>(height));
+        }
+
+        constexpr bool operator==(const Rectangle& other) const { return x == other.x && y == other.y && width == other.width && height == other.height; }
+
+        constexpr void operator=(const Vector2<T>& other) const
+        {
+            x = other.x;
+            y = other.y;
+        }
+
+        constexpr bool operator!=(const Rectangle& other) const { return !(*this == other); }
+
+        void SetPosition(const Vector2<T>& position)
+        {
+            x = position.x;
+            y = position.y;
+        }
+        void SetSize(const Vector2<T>& size)
+        {
+            width = size.x;
+            height = size.y;
+        }
+
+        [[nodiscard]] Vector2<T> GetPosition() const { return {x, y}; }
+        [[nodiscard]] Vector2<T> GetSize() const { return {width, height}; }
     };
 
-}  // namespace ClassicLauncher
+    using RectFloat = Rectangle<float>;
+    using RectInt = Rectangle<int>;
 
-#endif  // RECTANGLE_H
+} // namespace ClassicLauncher
+
+#endif // RECTANGLE_H

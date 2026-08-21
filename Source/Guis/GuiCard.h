@@ -1,60 +1,78 @@
 #ifndef GUI_CARD_H
 #define GUI_CARD_H
 
-#include <memory>
+
 #include <string>
-#include "GuiComponent.h"
+
+#include "Animations/Animatable.h"
 #include "Components/FocusComponent.h"
+#include "Entity/Entity.h"
+#include "Guis/Components/GuiCanvas.h"
+#include "Utils/TimerManager.h"
+
 
 namespace ClassicLauncher
 {
-    class EntityGui;
-    class GuiComponent;
+    class Animatable;
+    class GuiBase;
     class GuiSizeBox;
     class GuiVideoPlayer;
     class FocusComponent;
+    class EntityManager;
+    class GameListManager;
+    class AudioManager;
+    class Window;
 
-    class GuiCard : public EntityGui, FocusComponent
+    class GuiCard : public GuiCanvas, public FocusComponent, public Animatable
     {
-    private:
-
-        TimerHandling mTimer;
-        TimerHandling mTimerVideo;
-
-        GuiComponent* mCardMain;
-        GuiComponent* mCardSelected;
-        GuiComponent* mCardFavorite;
-        GuiComponent* mCardBackgroundMain;
-        GuiComponent* mCardBackgroundSelected;
-        GuiComponent* mCardBackgroundFavorite;
-        GuiSizeBox* mSizeBoxImage;
-        GuiSizeBox* mSizeBoxVideoPlayer;
-        GuiVideoPlayer* mGuiVideoPlayer;
-        GuiComponent* mCover;
-        bool mIsFocus = false;
-        bool mIsFront = false;
-        void CreateCard(GuiComponent*& card, float sourceX, float sourceY, unsigned char alpha, const char* title, bool bAddChild = true);
-        void CreateSizeBox();
-        void StartVideo();
-        void FocusAnimation(bool bForce, int a, const int b, const char* nameAnimation);
 
     public:
 
-        GuiCard(float x, float y);
-        virtual ~GuiCard() override = default;
+        explicit GuiCard(const EntityContext& entityContext,
+                         GameListManager* gameListManagerRef,
+                         FocusManager* focusManagerRef,
+                         Window* window);
+        void CreateCards(int x, int y);
+
+
         virtual EntityType GetType() const override { return EntityType::GuiCardClass; }
-        void Update() override;
-        void SetCardFocus(bool bForce = false);
-        void RemoveCardFocus(bool bForce = false);
+        virtual void Update() override;
+        void SetCardFocus();
         virtual void OnFocus() override;
-        virtual void OnLostFocus() override;
-        void SetCover(std::string name = "");
-        bool IsFocus();
+        virtual void OnLostFocus(FocusCategory previousFocusCategory) override;
+        virtual const Transform& OwnerWorldTransform() const override { return GetWorldTransform(); };
+        void SetCover(const std::string& name = "");
         void Reset();
         void Click();
         void SetFrontCard();
+        void CloseVideo();
+        virtual void SetThemeValue() override;
+
+
+    private:
+
+        TimerHandling m_timerVideo{};
+        TimerHandling m_timerAnimationReset{};
+
+        GuiBase* m_cardMain{nullptr};
+        GuiBase* m_cardSelected{nullptr};
+        GuiBase* m_cardFavorite{nullptr};
+        GuiBase* m_cardBackgroundMain{nullptr};
+        GuiBase* m_cardBackgroundSelected{nullptr};
+        GuiBase* m_cardBackgroundFavorite{nullptr};
+        GuiBase* m_coverDefault{nullptr};
+        GuiBase* m_cover{nullptr};
+        GuiVideoPlayer* m_guiVideoPlayer{nullptr};
+
+        bool m_isChangeTexture{false};
+
+        GameListManager* m_gameListManagerRef{nullptr};
+
+        void CreateCard(GuiBase*& card, float sourceX, float sourceY, unsigned char alpha, const char* title, bool addChild = true);
+        void StartVideo();
+        void FocusAnimation(bool force, const int alphaA, const int alphaB, const std::string& nameAnimation);
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // GUI_CARD_H
+#endif // GUI_CARD_H

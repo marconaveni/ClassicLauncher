@@ -1,20 +1,17 @@
 #include "ProcessManager.h"
-#include "Application.h"
-#include "Core.h"
+
+#include <filesystem>
+
+#include "Audio/AudioManager.h"
 #include "Data/GameListManager.h"
-#include "Process.h"
+#include "Utils/Platform.h"
+
 
 namespace ClassicLauncher
 {
 
-    ProcessManager::ProcessManager()
-        : mStatus(ProcessStatus::None), mProcessId(0), mIsRunning(false)
+    void ProcessManager::CreateProc(GameListManager* gameListManager)
     {
-    }
-
-    void ProcessManager::CreateProc(Application* pApplication)
-    {
-        GameListManager* gameListManager = pApplication->GetGameListManager();
         GameSystemList* system = gameListManager->GetCurrentSystemList();
         GameList* game = gameListManager->GetCurrentGameList();
         const std::string executable = (game->executable.empty()) ? system->executable : game->executable;
@@ -24,66 +21,53 @@ namespace ClassicLauncher
         fullPath.append(" ");
         fullPath.append(arguments);
         fullPath.append(path);
-        const std::string optionalWorkingDirectory = GetDirectoryPath(executable.c_str());
-#if _WIN32
-        int status = -1;
-        Process::CreateProc(mProcessId, fullPath, optionalWorkingDirectory, status);
-        mStatus = (status == 1) ? ProcessStatus::Open : ProcessStatus::Failed;
-        StatusProcessRun(pApplication);
-#else
-        Process::CreateProc(mProcessId, fullPath);
-#endif
+        m_fullPath = fullPath;
+        std::filesystem::path pathExec(executable);
+        m_optionalWorkingDirectory = pathExec.parent_path().string();
+        m_status = ProcessStatus::Open;
     }
 
-    ProcessStatus ProcessManager::UpdateRun()
+    void ProcessManager::UpdateRun()
     {
-        const bool bIsRun = Process::IsApplicationRunning(mProcessId);
-        if (bIsRun)
+        const bool isRun = IsApplicationRunning();
+        if (isRun)
         {
-            if (!mIsRunning)
+            if (!m_isRunning)
             {
-                mIsRunning = true;
-                return ProcessStatus::Open;
+                m_isRunning = true;
             }
+            m_status = ProcessStatus::Running;
         }
         else
         {
-            if (mIsRunning)
+            if (m_isRunning)
             {
-                mIsRunning = false;
-                mProcessId = 0;
-                return ProcessStatus::Close;
+                m_isRunning = false;
+                m_processId = 0;
+                m_status = ProcessStatus::Close;
+                return;
             }
+            m_status = ProcessStatus::None;
         }
-
-        return bIsRun ? ProcessStatus::Running : ProcessStatus::None;
     }
 
-    bool ProcessManager::IsApplicationRunning()
+    void ProcessManager::Launch()
     {
-        return Process::IsApplicationRunning(mProcessId);
-    }
-
-    void ProcessManager::StatusProcessRun(Application* pApplication)
-    {
-        switch (mStatus)
+        int status = -1;
+#if _WIN32
+        Platform::CreateProc(m_processId, m_fullPath, m_optionalWorkingDirectory, status);
+#else
+        Platform::CreateProc(m_processId, m_fullPath, status);
+#endif
+        if (status != 1)
         {
-            case ProcessStatus::None:
-            case ProcessStatus::Open:
-                break;
-            case ProcessStatus::Running:
-                WaitTime(2.5);
-                break;
-            case ProcessStatus::Failed:
-            case ProcessStatus::Close:
-                pApplication->GetGuiBlackScreen()->KeepBlack();
-                pApplication->GetAudioManager()->ChangeMusic();
-                InputManager::EnableInput();
-                break;
-            default:
-                break; 
+            m_status = ProcessStatus::Failed;
         }
-        mStatus = UpdateRun();
     }
 
-}  // namespace ClassicLauncher
+    bool ProcessManager::IsApplicationRunning() const
+    {
+        return Platform::IsApplicationRunning(m_processId);
+    }
+
+} // namespace ClassicLauncher

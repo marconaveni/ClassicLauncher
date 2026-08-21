@@ -1,17 +1,19 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#include <cstdint> // Required for uint8_t
 #include <string>
 #include <vector>
-#include "Core.h"
+
 #include "Data/Transform.h"
+
 
 namespace ClassicLauncher
 {
 
-    enum class EntityType
+    enum class EntityType : std::uint8_t
     {
-        GuiComponentClass = 1,
+        GuiBaseClass = 1,
         GuiWindowClass,
         GuiCardClass,
         GuiHorizontalCardsClass,
@@ -22,64 +24,165 @@ namespace ClassicLauncher
         GuiHorizontalBoxClass,
         GuiBlackScreenClass,
         GuiFrameClass,
+        GuiCanvasClass,
+        GuiHintBarClass,
+        GuiButtonClass,
+        GuiMenuClass,
+    };
+
+    class SpriteManager;
+    class FontManager;
+    class TimerManager;
+    class EntityManager;
+    class FocusManager;
+    class Window;
+    class AudioManager;
+
+    struct EntityContext
+    {
+        EntityManager* entityManager{nullptr};
+        TimerManager* timerManager{nullptr};
+        SpriteManager* spriteManager{nullptr};
+        FocusManager* focusManager{nullptr};
+        FontManager* fontManager{nullptr};
+        Window* window{nullptr};
+        AudioManager* audioManager{nullptr};
     };
 
     class Entity
     {
-    private:
-
-        friend class EntityManager;
-        friend class RenderSystem;
-
-        bool mToDelete;
-        bool mToDraw;
-        bool mScissorMode;
-        bool mVisible;
-        int mZOrder;
-        int mIdZOrder;
-        int mId;
-        std::vector<Entity*> mChildEntities;
-        std::string mNameId;
-
-    protected:
-
-        Entity* mParent = nullptr;
-
     public:
 
-        Entity();
+        struct ZOrder;
+
+        explicit Entity(const EntityContext& entityContext);
         virtual ~Entity() = default;
-        bool operator<(const Entity& entity) const { return entity.mId < mId; }
-        bool operator>(const Entity& entity) const { return mZOrder > entity.mZOrder; }
-        virtual EntityType GetType() const = 0;
+        [[nodiscard]] virtual EntityType GetType() const = 0;
         virtual void Update() {}
         virtual void Draw() {}
         virtual void End() {}
-        virtual void UpdatePosition();                  // Update the position of the entity
-        virtual void SelfDelete();                      // Delete the entity and all its children
-        virtual void AddChild(Entity* childEntity);     // Add a child to the entity
-        virtual void RemoveChild(Entity* childEntity);  // Remove a child from the entity
-        virtual void RemoveAllChilds();
+        virtual void UpdateWorldTransform();           // Update the position of the entity
+        virtual void SelfDelete();                     // Delete the entity and all its children
+        virtual void AddChild(Entity* childEntity);    // Add a child to the entity
+        virtual void RemoveChild(Entity* childEntity); // Remove a child from the entity
+        virtual void RemoveAllChildren();
         virtual void RemoveRootChild();
-        std::vector<Entity*>& GetChilds();
+        virtual void SetThemeValue() {};
+        std::vector<Entity*>& GetChildren();
         Entity* GetRootEntity();
-        Entity* GetParent() { return mParent; }
-        void RemoveParent() { mParent = nullptr; }
+        [[nodiscard]] Entity* GetParent() const { return m_parent; }
+        void RemoveParent() { m_parent = nullptr; }
         void EnableScissorMode(float x, float y, float width, float height);
-        void DisableScissorMode() { mScissorMode = false; }
-        void SetVisible(bool bEnable) { mVisible = bEnable; }
-        int GetZOrder() const { return mZOrder; }
-        int GetIdZOrder() const { return mIdZOrder; }
+        void DisableScissorMode() { m_isScissorMode = false; }
+        void SetVisible(const bool enable) { m_isVisible = enable; }
+        [[nodiscard]] ZOrder GetZOrder() const { return m_zOrder; }
+        [[nodiscard]] bool IsVisible() const { return m_isVisible; }
+        [[nodiscard]] bool GetTransformIsDirty() const { return m_isTransformDirty; }
+        void MarkTransformAsDirty();
 
-        Transform mTransform;
-        std::string mTextureName = "transparent";
-        Rectangle mScissorArea;
+        // clang-format off
+        // Gettter and Setters Transforms
+
+        void SetPosition(float x, float y);
+        inline void SetPosition(Vector2f position) { SetPosition(position.x, position.y); };
+        Vector2f GetPosition() const;
+
+        void SetSize(float width, float height);  // note: Size is m_transform.position.width and height 
+        inline void SetSize(Vector2f size) { SetSize(size.x, size.y); };
+        Sizef GetSize() const;
+       
+        void SetSource(float x, float y, float width, float height);
+        inline void SetSource(Vector2f position, Sizef size) { SetSource(position.x, position.y, size.width, size.height); };
+        inline void SetSource(RectFloat source) { SetSource(source.x, source.y, source.width, source.height); };
+        RectFloat GetSource() const;
+
+        void SetOffset(float x, float y);
+        inline void SetOffset(Vector2f offset) { SetOffset(offset.x, offset.y); };
+        Vector2f GetOffset() const;
+        
+        void SetOrigin(float x, float y);
+        inline void SetOrigin(Vector2f origin) { SetOrigin(origin.x, origin.y); };
+        Vector2f GetOrigin() const;
+        
+        void SetScale(float x, float y);
+        inline void SetScale(Vector2f scale) { SetScale(scale.x, scale.y); };
+        Vector2f GetScale() const;
+
+        void SetRotation(float rotation);
+        float GetRotation() const;
+            
+        void SetColor(float r, float g, float b);
+        void SetColor(float r, float g, float b, float a);
+        void SetColor(Color color);
+        void SetColorRed(float r);
+        void SetColorGreen(float g);
+        void SetColorBlue(float b);
+        void SetOpacity(float a);
+        Color GetColor() const;
+
+        Transform& GetTransformRef();
+        Transform& GetWorldTransformRef();
+        const Transform& GetTransform() const { return m_transform; }
+        const Transform& GetWorldTransform() const { return m_worldTransform; }
+
+        // End Getters and Setters
+        // clang-format on
+
+        RectFloat m_scissorArea;
+        std::string m_textureName{"transparent"};
+
+        struct ZOrder
+        {
+            int id{0};
+            int insertionIndex{0};
+        };
+
+        struct FinalRenderTransform
+        {
+            RectFloat transform{};
+            RectFloat source{};
+            Vector2f origin{};
+        };
+
+
+    protected:
+
+        Entity* m_parent{nullptr};
+        std::vector<Entity*> m_childEntities{};
+        FinalRenderTransform m_finalRender{};
+
+        TimerManager* GetTimerManager();
+        SpriteManager* GetSpriteManager();
+        EntityManager* GetEntityManager();
+        FocusManager* GetFocusManager();
+        FontManager* GetFontManager();
+        Window* GetWindow();
+        AudioManager* GetAudioManager();
 
     private:
 
+        friend class EntityManager;
+        friend class RenderEntities;
+        friend class FocusComponent;
+
+        Transform m_transform{};
+        Transform m_worldTransform{};
+
+        bool m_isCanDelete{false};
+        bool m_isCanDraw{true};
+        bool m_isScissorMode{false};
+        bool m_isVisible{true};
+        bool m_isTransformDirty{true};
+
+        ZOrder m_zOrder{};
+        std::string m_nameId{};
+
+        EntityContext m_entityContext{};
+
+        // note: this should not be called directly use entity manager
         void SetZOrder(int zOrder);
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // ENTITY_H
+#endif // ENTITY_H

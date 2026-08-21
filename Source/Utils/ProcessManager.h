@@ -1,14 +1,17 @@
 #ifndef PROCESS_MANAGER_H
 #define PROCESS_MANAGER_H
 
-#include "Core.h"
+#include <cstdint>
+#include <string>
 
 namespace ClassicLauncher
 {
     class GameListManager;
-    class Application;
+    class GuiBlackScreen;
+    class AudioManager;
 
-    enum class ProcessStatus
+
+    enum class ProcessStatus : std::int8_t
     {
         Failed = -1,
         None = 0,
@@ -19,25 +22,31 @@ namespace ClassicLauncher
 
     class ProcessManager
     {
-        ProcessStatus mStatus;
-
     public:
 
-#if _WIN32
-        unsigned int mProcessId;
-#else
-        int mProcessId;
-#endif
-        bool mIsRunning;
-        bool mIsReadyRunApp = false;
+        ProcessManager() = default;
 
-        ProcessManager();
-        void CreateProc(Application* pApplication);
-        ProcessStatus UpdateRun();
-        bool IsApplicationRunning();
-        void StatusProcessRun(Application* pApplication);
+#if _WIN32
+        unsigned int m_processId{0};
+#else
+        int m_processId{0};
+#endif
+        bool m_isRunning{false};
+        bool m_isReadyRunApp{false};
+
+        void CreateProc(GameListManager* gameListManager);
+        void UpdateRun();
+        void Launch();
+        [[nodiscard]] bool IsApplicationRunning() const;
+        [[nodiscard]] ProcessStatus GetStatus() const { return m_status; }
+
+    private:
+
+        ProcessStatus m_status{ProcessStatus::None};
+        std::string m_fullPath{};
+        std::string m_optionalWorkingDirectory{};
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // PROCESS_MANAGER_H
+#endif // PROCESS_MANAGER_H

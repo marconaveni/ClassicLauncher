@@ -1,43 +1,52 @@
 ﻿#include "Print.h"
+
 #include <algorithm>
 #include <iostream>
+
+#include "Data/Vector2.h"
+#include "Graphics/FontManager.h"
 #include "Math.h"
+#include "Utils/Resources.h"
+#include "Window/Window.h"
+#include "Wrap.h"
 
 
 namespace ClassicLauncher
 {
-    Print::Print()
-        : mSize(20), mSpacing(1), mFont()
+
+    Print::Print(FontManager& fontManager, Window* window)
+        : m_fontManagerRef(&fontManager)
+        , m_windowRef(window)
     {
     }
 
-    void Print::InternalPrintOnScreen(const std::string& text, float duration, const std::string& label, const Color& textColor, bool bLog, int sizeY)
+    void Print::Init()
+    {
+        m_fontName = m_fontManagerRef->Load(Resources::GetFontFile(), m_size);
+    }
+
+    void Print::InternalPrintOnScreen(const std::string& text, float duration, const std::string& label, const Color& textColor, bool enableLog, int sizeY)
     {
 #ifdef _DEBUG
 
-        if (!IsFontValid(mFont))
-        {
-            mFont = GetFontDefault();
-        }
-
-        bool bFound = false;
-        for (Message& msg : mMessages)
+        bool isFound = false;
+        for (Message& msg : m_messages)
         {
             if (label == msg.label)
             {
                 msg.SetStart();
                 msg.textMessage = text;
                 msg.textColor = textColor;
-                if (bLog)
+                if (enableLog)
                 {
                     std::cout << "LOG_SCREEN: " << msg.textMessage << "\n";
                 }
-                bFound = true;
+                isFound = true;
                 break;
             }
         }
 
-        if (!bFound)
+        if (!isFound)
         {
             Message message;
             message.SetStart();
@@ -46,12 +55,12 @@ namespace ClassicLauncher
             message.label = label;
             message.textColor = textColor;
             message.size = sizeY;
-            mMessages.emplace_back(message);
+            m_messages.emplace_back(message);
         }
 #endif
     }
 
-    void Print::PrintOnScreen(const char* text, const float duration, const char* label, const Color& textColor, const bool bLog)
+    void Print::PrintOnScreen(const char* text, const float duration, const char* label, const Color& textColor, const bool enableLog)
     {
 
 #ifdef _DEBUG
@@ -67,7 +76,7 @@ namespace ClassicLauncher
                 std::string labelCount;
                 labelCount.append((!labelCompare.empty()) ? labelCompare : std::to_string(Math::Random(1, 3000)));
                 labelCount.append(std::to_string(count));
-                InternalPrintOnScreen(splitMessage, duration, labelCount.c_str(), textColor, bLog, mSize - 3);
+                InternalPrintOnScreen(splitMessage, duration, labelCount.c_str(), textColor, enableLog, m_size - 3);
                 splitMessage = "";
                 count++;
                 continue;
@@ -76,39 +85,35 @@ namespace ClassicLauncher
         }
 
         labelCompare = (!labelCompare.empty()) ? labelCompare : std::to_string(Math::Random(1, 3000));
-        InternalPrintOnScreen(splitMessage, duration, labelCompare, textColor, bLog, mSize);
+        InternalPrintOnScreen(splitMessage, duration, labelCompare, textColor, enableLog, m_size);
 #endif
     }
 
     void Print::DrawMessage()
     {
 #ifdef _DEBUG
-        if (!IsFontValid(mFont))
+
+        Font* font = m_fontManagerRef->GetFont(m_fontName);
+        if (!font)
         {
             return;
         }
 
-        mMessages.erase(std::remove_if(mMessages.begin(),
-                                      mMessages.end(),
-                                      [](Message& message)
-                                      {
-                                          return !message.IsTimeElapsed();
-                                      }),
-                       mMessages.end());
+        m_messages.erase(std::remove_if(m_messages.begin(), m_messages.end(), [](Message& message) { return !message.IsTimeElapsed(); }), m_messages.end());
 
         float y = 16;
 
-        for (const auto& message : mMessages)
+        for (const auto& message : m_messages)
         {
-            const Vector2 positionRender = { 30, y };
-            const Vector2 positionRenderShadow = { 31, y + 1 };
+            const Vector2f positionRender = Vector2f{30, y};
+            const Vector2f positionRenderShadow = Vector2f{31, (y + 1)};
 
-            DrawTextEx(mFont, message.textMessage.data(), positionRenderShadow, mSize, mSpacing, BLACK);
-            DrawTextEx(mFont, message.textMessage.data(), positionRender, mSize, mSpacing, message.textColor);
+            rlw::DrawTextEx(*font, message.textMessage.data(), positionRenderShadow, m_size, m_spacing, Color::Black);
+            rlw::DrawTextEx(*font, message.textMessage.data(), positionRender, m_size, m_spacing, message.textColor);
 
             y += message.size;
 
-            if (y > GetScreenHeight())
+            if (y > m_windowRef->GetScreenHeight())
             {
                 break;
             }
@@ -116,24 +121,5 @@ namespace ClassicLauncher
 #endif
     }
 
-    void Print::LoadFont(const std::string& path, int size, float spacing)
-    {
-#ifdef _DEBUG
-        this->mSize = size;
-        this->mSpacing = spacing;
-        mFont = LoadFontEx(path.c_str(), size, nullptr, 250);
-        if (!IsFontValid(mFont))
-        {
-            mFont = GetFontDefault();
-        }
-#endif
-    }
 
-    void Print::Unload()
-    {
-#ifdef _DEBUG
-        UnloadFont(mFont);
-#endif
-    }
-
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

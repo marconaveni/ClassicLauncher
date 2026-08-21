@@ -1,28 +1,32 @@
 #ifndef GUI_BLACK_SCREEN_H
 #define GUI_BLACK_SCREEN_H
 
-
-#include "Entity/EntityGui.h"
+#include "Animations/Animatable.h"
+#include "Entity/Entity.h"
+#include "Utils/TimerManager.h"
 
 namespace ClassicLauncher
 {
-    class EntityGui;
 
-    class GuiBlackScreen : public EntityGui
+    class Window;
+
+    class GuiBlackScreen : public Entity, public Animatable
     {
+
     public:
 
-        GuiBlackScreen();
+        explicit GuiBlackScreen(const EntityContext& entityContext, Window* window);
         virtual EntityType GetType() const override { return EntityType::GuiBlackScreenClass; }
         void FadeIn();
         void FadeOut();
         void FadeInFadeOut();
-        void KeepBlack();
-        void SetOpacity(int opacity);
         virtual void Update() override;
-        virtual void AnimationFinished(std::string name) override;
+
+    private:
+
+        TimerHandling m_timer{};
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // GUI_BLACK_SCREEN_H
+#endif // GUI_BLACK_SCREEN_H

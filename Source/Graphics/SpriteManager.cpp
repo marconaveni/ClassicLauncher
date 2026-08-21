@@ -1,5 +1,7 @@
 #include "SpriteManager.h"
 
+#include "Data/Color.h"
+#include "Themes/ThemesManager.h"
 
 namespace ClassicLauncher
 {
@@ -9,52 +11,79 @@ namespace ClassicLauncher
 
     void SpriteManager::Init()
     {
-        Image transparentImage = GenImageColor(1, 1, Color::Blank());
-        Image blackImage = GenImageColor(1, 1, Color::Black());
+        Image transparentImage;
+        transparentImage.GenerateColor(1, 1, Color::Transparent);
+        Image blackImage;
+        blackImage.GenerateColor(1, 1, Color::Black);
         LoadSprite("transparent", transparentImage);
         LoadSprite("black", blackImage);
-        UnloadImage(transparentImage);
-        UnloadImage(blackImage);
+        transparentImage.Unload();
+        blackImage.Unload();
     }
 
-    void SpriteManager::LoadSprite(const std::string& name, const std::string& fileName, const int width, const int height, bool bAspectRatio)
+    void SpriteManager::LoadRenderTexture(const std::string& name, int width, int height)
     {
-        mSpriteMap[name].Load(fileName, width, height, bAspectRatio);
-    }
-
-    void SpriteManager::LoadSprite(const std::string& name, const Image& image, const int width, const int height, bool bAspectRatio)
-    {
-        mSpriteMap[name].Load(image, width, height, bAspectRatio);
-    }
-
-    void SpriteManager::UpdateSprite(std::string name, std::string fileName, const int width, const int height, bool bAspectRatio)
-    {
-        mSpriteMap[name].Unload();
-        mSpriteMap[name].Load(fileName, width, height, bAspectRatio);
-    }
-
-    Texture2D* SpriteManager::GetTexture(const std::string& name)
-    {
-        auto it = mSpriteMap.find(name);
-        if (it == mSpriteMap.end())
+        auto it = m_renderTextureMap.find(name);
+        if (it == m_renderTextureMap.end())
         {
-            return mSpriteMap["transparent"].GetTexture();
+            m_renderTextureMap[name].Load(width, height);
         }
-        return mSpriteMap[name].GetTexture();
+    }
+
+    void SpriteManager::LoadSprite(const std::string& name, const std::string& fileName, const int width, const int height, bool aspectRatio)
+    {
+        m_spriteMap[name].Load(fileName, width, height, aspectRatio);
+    }
+
+    void SpriteManager::LoadSprite(const std::string& name, Image& image, const int width, const int height, bool aspectRatio)
+    {
+        m_spriteMap[name].Load(image, width, height, aspectRatio);
+    }
+
+    void SpriteManager::UpdateSprite(std::string name, std::string fileName, const int width, const int height, bool aspectRatio)
+    {
+        m_spriteMap[name].Unload();
+        m_spriteMap[name].Load(fileName, width, height, aspectRatio);
+    }
+
+    Texture* SpriteManager::GetTexture(const std::string& name)
+    {
+        std::string find = name;
+        if (name == "sprite")
+        {
+            find = ThemesManager::Get().GetSpriteTheme();
+        }
+
+        auto it = m_spriteMap.find(find);
+        if (it == m_spriteMap.end())
+        {
+            return m_spriteMap["transparent"].GetTexture();
+        }
+        return m_spriteMap[find].GetTexture();
+    }
+
+    RenderTexture* SpriteManager::GetRenderTexture(const std::string& name)
+    {
+        auto it = m_renderTextureMap.find(name);
+        if (it == m_renderTextureMap.end())
+        {
+            return nullptr;
+        }
+        return &m_renderTextureMap[name];
     }
 
     Image* SpriteManager::GetImage(std::string name)
     {
-        return mSpriteMap[name].GetImage();
+        return m_spriteMap[name].GetImage();
     }
 
     bool SpriteManager::DeleteSprite(std::string name)
     {
-        auto it = mSpriteMap.find(name);
-        if (it != mSpriteMap.end())
+        auto it = m_spriteMap.find(name);
+        if (it != m_spriteMap.end())
         {
             it->second.Unload();
-            mSpriteMap.erase(it); 
+            m_spriteMap.erase(it);
             return true;
         }
         return false;
@@ -62,12 +91,13 @@ namespace ClassicLauncher
 
     int SpriteManager::NumSpritesLoaded()
     {
-        return static_cast<int>(mSpriteMap.size()) ;
+        return static_cast<int>(m_spriteMap.size());
     }
 
-    void SpriteManager::UnloadSprites()
+    void SpriteManager::Unload()
     {
-        mSpriteMap.clear();
+        m_spriteMap.clear();
+        m_renderTextureMap.clear();
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

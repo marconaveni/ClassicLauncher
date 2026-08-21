@@ -1,51 +1,53 @@
 #ifndef ENTITY_MANAGER_H
 #define ENTITY_MANAGER_H
 
+#include <algorithm>
 #include <memory>
 #include <string>
 #include <vector>
+
 #include "Entity.h"
-#include "Graphics/SpriteManager.h"
+
 
 namespace ClassicLauncher
 {
-    class Entity;
+
     class TimerManager;
+    class SpriteManager;
+    class FocusManager;
+    class FontManager;
+    class Window;
+    class AudioManager;
 
     class EntityManager
     {
-    private:
-
-        std::vector<std::unique_ptr<Entity>> mEntities;
-        std::vector<std::unique_ptr<Entity>> mTempEntities;
-        std::vector<EntityType> mTypeCount;
-        SpriteManager* mSpriteManagerReference;
-        TimerManager* mTimerManagerReference;
-        bool mPrepareNewOrdination = false;
-        bool mHasNewEntity = false;
-        void SetZOrder();
-        void SetNewEntities();
-        void SetNameId(Entity* entity, const std::string& name);
-
     public:
 
-        EntityManager(SpriteManager* spriteManagerReference, TimerManager* timerManagerReference);
+        explicit EntityManager(SpriteManager* spriteManager, TimerManager* timerManager, FocusManager* focusManager, FontManager* fontManager, Window* window, AudioManager* audioManager);
         ~EntityManager();
 
         template <typename T, typename... Args>
         T* CreateEntity(const std::string& name, Args&&... args)
         {
-            auto entity = std::make_unique<T>(std::forward<Args>(args)...);
+            EntityContext context{.entityManager = this,
+                                  .timerManager = m_timerManagerReference,
+                                  .spriteManager = m_spriteManagerReference,
+                                  .focusManager = m_focusManagerReference,
+                                  .fontManager = m_fontManagerReference,
+                                  .window = m_windowReference,
+                                  .audioManager = m_audioManager};
+
+            auto entity = std::make_unique<T>(context, std::forward<Args>(args)...);
             SetNameId(entity.get(), name);
-            mTempEntities.push_back(std::move(entity));
-            return static_cast<T*>(mTempEntities.back().get());
+            m_tempEntities.push_back(std::move(entity));
+            return static_cast<T*>(m_tempEntities.back().get()); // .back last element vector
         }
 
         template <typename T>
         std::vector<T*> GetEntitiesType(EntityType type)
         {
             std::vector<T*> entities;
-            for (const auto& entity : mEntities)
+            for (const auto& entity : m_entities)
             {
                 if (entity->GetType() == type)
                 {
@@ -55,20 +57,39 @@ namespace ClassicLauncher
             return entities;
         }
 
-        std::vector<std::unique_ptr<Entity>>& GetEntities() { return mEntities; }
-        inline int GetEntitySize() { return static_cast<int>(mEntities.size() + mTempEntities.size()); }
-        void SetVisibleAll(Entity* entity, bool bVisible);
+        std::vector<std::unique_ptr<Entity>>& GetEntities() { return m_entities; }
+        int GetEntitySize() { return static_cast<int>(m_entities.size() + m_tempEntities.size()); }
+        static void SetVisibleAll(Entity* entity, bool isVisible);
         void SetZOrder(Entity* entity, int zOrder);
         void UpdateAll();
-        void UpdatePositionAll();
+        void UpdateWorldTransform();
         void End();
-        void ClearAllEntitys();
+        void ClearAllEntities();
+        void SetThemeValue();
 
     private:
 
-        void DeleteEntitys(bool bIsDeleteEntities);
+        void SetZOrder();
+        void SetNewEntities();
+        void SetNameId(Entity* entity, const std::string& name);
+        void DeleteEntities(bool isDeleteEntities);
+
+        std::vector<std::unique_ptr<Entity>> m_entities{};
+        std::vector<std::unique_ptr<Entity>> m_tempEntities{};
+        std::vector<EntityType> m_typeCount{};
+
+        SpriteManager* m_spriteManagerReference{nullptr};
+        TimerManager* m_timerManagerReference{nullptr};
+        FocusManager* m_focusManagerReference{nullptr};
+        FontManager* m_fontManagerReference{nullptr};
+        Window* m_windowReference{nullptr};
+        AudioManager* m_audioManager{nullptr};
+
+        bool m_markOrder{false};
+        bool m_hasNewEntity{false};
+        int m_counter{0};
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // ENTITYMANAGER_H
+#endif // ENTITY_MANAGER_H

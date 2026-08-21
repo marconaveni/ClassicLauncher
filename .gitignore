@@ -3,6 +3,7 @@
 
 # Visual Studio Code user specific files
 .vscode/
+.cache/
 
 # Rider user specific files
 .idea/
@@ -52,4 +53,16 @@ build/
 extern/libvlc
 ClassicLauncherWinDependencies
 __pycache__
+
+# Internal use
+Source/*.txt
+Source/*.ini
+Source/*.py
+
+# others
+compile_commands.json
+checks.json
+
+Testing/*
+
 

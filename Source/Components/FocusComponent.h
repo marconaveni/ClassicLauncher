@@ -1,36 +1,50 @@
 #ifndef FOCUS_COMPONENT_H
 #define FOCUS_COMPONENT_H
 
-#include "Components/FocusManager.h"
-#include "Entity/Entity.h"
+#include "Data/Vector2.h"
 
 namespace ClassicLauncher
 {
-    class Application;
-    class Entity;
+    struct Transform;
+    class FocusManager;
+
+    enum class FocusCategory
+    {
+        Card,
+        ButtonIcon
+    };
 
     class FocusComponent
     {
+    public:
+
+        explicit FocusComponent(FocusManager* focusManagerRef, FocusCategory focusCategory);
+        virtual ~FocusComponent();
+        void SetFocus();
+        void RemoveFocus();
+        [[nodiscard]] bool IsFocus() const { return m_isFocus; }
+        virtual void OnFocus() = 0;
+        virtual void OnLostFocus(FocusCategory previousFocusCategory) = 0;
+        virtual void OnChangeFocus() {}
+        void UpdateFocus();
+        Vector2f GetPositionFocus() const { return m_positionWorld; }
+        FocusCategory GetFocusCategory() const { return m_focusCategory; }
+
+    protected:
+
+        virtual const Transform& OwnerWorldTransform() const = 0;
+
     private:
 
         friend class FocusManager;
+        friend class RenderEntities;
 
-        bool mIsFocus;
-        Application* mApplication;
-        Entity* mEntity;
-
-    public:
-
-        FocusComponent(Application* application, Entity* entity);
-        ~FocusComponent();
-        void SetFocus();
-        bool GetFocus() { return mIsFocus; }
-        Entity* GetEntity() { return mEntity; }
-        virtual void OnFocus() = 0;
-        virtual void OnLostFocus() = 0;
-        virtual void OnChangeFocus() {}
+        bool m_isFocus{false};
+        FocusManager* m_focusManagerReference{nullptr};
+        Vector2f m_positionWorld{};
+        FocusCategory m_focusCategory{};
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

@@ -1,26 +1,45 @@
 #include "FocusComponent.h"
-#include "FocusManager.h"
-#include "Application.h"
-#include "Entity/Entity.h"
+
+#include "Components/FocusManager.h"
+#include "Data/Transform.h"
+#include "Themes/ThemesManager.h"
 
 namespace ClassicLauncher
 {
-    FocusComponent::FocusComponent(Application* application, Entity* entity)
-    : mApplication(application), mEntity(entity)
-    {  
-        mApplication->GetFocusManager()->AddFocus(this);
+    FocusComponent::FocusComponent(FocusManager* focusManagerRef, FocusCategory focusCategory)
+        : m_focusManagerReference(focusManagerRef)
+        , m_focusCategory(focusCategory)
+    {
+        m_focusManagerReference->AddFocus(this);
     }
-    
+
     FocusComponent::~FocusComponent()
     {
-        mApplication->GetFocusManager()->RemoveFocus(this);
+        m_focusManagerReference->RemoveFocus(this);
     }
 
     void FocusComponent::SetFocus()
     {
-        mApplication->GetFocusManager()->UpdateFocus(this);
-        mIsFocus = true;
+        m_focusManagerReference->SetNewFocusComponent(this);
+        m_isFocus = true;
+        UpdateFocus();
+    }
+
+    void FocusComponent::RemoveFocus()
+    {
+        m_focusManagerReference->SetNewFocusComponent(nullptr);
+        m_isFocus = false;
+    }
+
+    void FocusComponent::UpdateFocus()
+    {
+        const Transform& transform = OwnerWorldTransform();
+
+        m_positionWorld = {
+            (transform.position.x + (transform.offset.x * transform.scale.x)),
+            (transform.position.y + (transform.offset.y * transform.scale.y)),
+        };
     }
 
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

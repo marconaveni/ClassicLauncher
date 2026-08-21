@@ -3,33 +3,41 @@
 
 #include <string>
 #include <unordered_map>
-#include <vector>
-#include "Core.h"
+
+#include "Graphics/Image.h"
+#include "Graphics/RenderTexture.h"
+#include "Graphics/Texture.h"
 #include "Sprite.h"
+
 
 
 namespace ClassicLauncher
 {
+    
     class SpriteManager
     {
-    private:
-
-        std::unordered_map<std::string, Sprite> mSpriteMap;
 
     public:
 
         SpriteManager();
         void Init();
-        void LoadSprite(const std::string& name, const std::string& fileName, const int width = 0, const int height = 0, bool bAspectRatio = true);
-        void LoadSprite(const std::string& name, const Image& image, const int width = 0, const int height = 0, bool bAspectRatio = true);
-        void UpdateSprite(std::string name, std::string fileName, const int width = 0, const int height = 0, bool bAspectRatio = true);
-        Texture2D* GetTexture(const std::string& name);
+        void LoadRenderTexture(const std::string& name, int width, int height);
+        void LoadSprite(const std::string& name, Image& image, int width = 0, int height = 0, bool aspectRatio = true);
+        void LoadSprite(const std::string& name, const std::string& fileName, int width = 0, int height = 0, bool aspectRatio = true);
+        void UpdateSprite(std::string name, std::string fileName, int width = 0, int height = 0, bool aspectRatio = true);
+        Texture* GetTexture(const std::string& name);
+        RenderTexture* GetRenderTexture(const std::string& name);
         Image* GetImage(std::string name);
         bool DeleteSprite(std::string name);
         int NumSpritesLoaded();
-        void UnloadSprites();
+        void Unload();
+
+    private:
+
+        std::unordered_map<std::string, Sprite> m_spriteMap{};
+        std::unordered_map<std::string, RenderTexture> m_renderTextureMap{};
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // SPRITE_MANAGER_H
+#endif // SPRITE_MANAGER_H

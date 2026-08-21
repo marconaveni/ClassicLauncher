@@ -1,24 +1,20 @@
 #ifndef GAME_LIST_MANAGER_H
 #define GAME_LIST_MANAGER_H
 
-#include <memory>
+#include <cstdint>
+#include <filesystem>
 #include <string>
-#include <utility>
 #include <vector>
+
 #include "Data/DateTime.h"
-#include "Utils/Print.h"
+#include "Themes/ConfigurationThemes.h"
 #include "tinyxml2/tinyxml2.h"
+
 
 namespace ClassicLauncher
 {
 
-    enum LoadXmlError
-    {
-        Success = 0,
-        FileNotFound,
-    };
-
-    enum CurrentList
+    enum class CurrentList : std::uint8_t
     {
         SystemListSelect,
         GameListSelect,
@@ -26,68 +22,66 @@ namespace ClassicLauncher
 
     struct GameList
     {
-        int mapIndex;
-        std::string path;
-        std::string name;
-        std::string desc;
-        std::string rating;
-        std::string developer;
-        std::string publisher;
-        std::string genre;
-        std::string players;
-        std::string hash;
-        std::string image;
-        std::string thumbnail;
-        std::string video;
-        std::string genreId;
-        bool bFavorite;
-        int playCount;
-        std::string executable;
-        std::string arguments;
-        DateTime releaseDate;
-        DateTime lastPlayed;
+        int mapIndex{-1};
+        std::string path{};
+        std::string name{};
+        std::string description{};
+        std::string rating{};
+        std::string developer{};
+        std::string publisher{};
+        std::string genre{};
+        std::string players{};
+        std::string hash{};
+        std::string image{};     // cover
+        std::string thumbnail{}; // screenshot
+        std::string video{};
+        std::string genreId{};
+        bool isFavorite{false};
+        int playCount{0};
+        std::string executable{};
+        std::string arguments{};
+        DateTime releaseDate{};
+        DateTime lastPlayed{};
 
-        GameList()
-            : mapIndex(-1), bFavorite(false), playCount(0) {};
-        ~GameList() = default;
+        GameList() = default;
 
         bool operator==(const GameList& a) const { return (mapIndex == a.mapIndex); }
         bool operator>(const GameList& a) const { return (mapIndex > a.mapIndex); }
         bool operator<(const GameList& a) const { return (mapIndex < a.mapIndex); }
     };
 
-    struct HistoryPosition
-    {
-        int id;
-        int indexCardFocus;
-
-        HistoryPosition()
-            : id(0), indexCardFocus(3)
-        {
-        }
-    };
-
     struct GameSystemList
     {
-    public:
-        int mapIndex = -1;
-        std::string executable;
-        std::string arguments;
-        std::string romPath;
-        std::string systemName;
-        std::string systemLabel;
-        std::string image;
-        std::string screenshot;
-        std::string video;
-        std::string desc;
-        HistoryPosition history;
-        std::string pathTheme;
-        float scale = 1;
+        struct HistoryPosition
+        {
+            int id{0};
+            int indexCardFocus{3};
 
-        // SystemList()
-        //     : mapIndex(-1), scale(1.0f), history()
-        // {
-        // };
+            HistoryPosition() = default;
+        };
+
+        struct Theme
+        {
+            std::filesystem::path path{};
+            std::string sprite{"sprite"};
+            bool isDirectoryExist{false};
+            bool isLoaded{false};
+        };
+
+
+        int mapIndex{-1};
+        std::string executable{};
+        std::string arguments{};
+        std::string romPath{};
+        std::string systemName{};
+        std::string systemLabel{};
+        std::string image{};     // cover
+        std::string thumbnail{}; // screenshot
+        std::string video{};
+        std::string desc{};
+        HistoryPosition history{};
+        Theme theme{};
+        ConfigurationThemes configThemes{};
 
         ~GameSystemList() = default;
 
@@ -98,23 +92,6 @@ namespace ClassicLauncher
 
     class GameListManager
     {
-    public:
-
-        GameListManager()
-            : mCurrentList(SystemListSelect), mIdSystemList(0), mIdGameList(0) {};
-
-    private:
-
-        CurrentList mCurrentList;
-        int mIdSystemList;
-        int mIdGameList;
-        tinyxml2::XMLDocument mDocumentGameListXml;
-        tinyxml2::XMLDocument mDocumentSystemListXml;
-        std::vector<GameList> mGameList;
-        std::vector<GameSystemList> mSystemList;
-        void LoadGameList();
-        void LoadSystemToGameList();
-
     public:
 
         void Initialize();
@@ -137,13 +114,24 @@ namespace ClassicLauncher
         CurrentList GetCurrentList() const;
         void GameListSortByName();
         void SystemListSortByName();
+        void ResetTheme();
 
     private:
 
-        void ReplaceCurrentPath(GameList* pGame) const;
-        static bool IsValidElement(const tinyxml2::XMLElement* pElement, const char* name = "");
+        void LoadGameList();
+        void LoadSystemToGameList();
+        void ReplaceCurrentPath(GameList* gameList, const std::string& romPath) const;
+        static bool IsValidElement(const tinyxml2::XMLElement* element, const char* name = "");
+
+        CurrentList m_currentList{CurrentList::SystemListSelect};
+        int m_idSystemList{-1};
+        int m_idGameList{0};
+        tinyxml2::XMLDocument m_documentGameListXml{};
+        tinyxml2::XMLDocument m_documentSystemListXml{};
+        std::vector<GameList> m_gameList{};
+        std::vector<GameSystemList> m_gameSystemList{};
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // GAMELISTMANAGER_H
+#endif // GAMELISTMANAGER_H

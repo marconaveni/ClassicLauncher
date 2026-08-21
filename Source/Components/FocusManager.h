@@ -2,29 +2,30 @@
 #define FOCUS_MANAGER_H
 
 #include <vector>
-#include "Components/FocusComponent.h"
 
 namespace ClassicLauncher
 {
     class FocusComponent;
-    class Entity;
 
     class FocusManager
     {
-    private:
-
-        std::vector<FocusComponent*> mFocusComponents;
-
     public:
 
-        FocusManager();
-        ~FocusManager();
+        FocusManager() = default;
+        ~FocusManager() = default;
         void AddFocus(FocusComponent* focusComponent);
-        void UpdateFocus(FocusComponent* focusComponent);
+        void SetNewFocusComponent(FocusComponent* focusComponent);
+        void Update();
         void RemoveFocus(FocusComponent* focusComponent);
-        std::vector<FocusComponent*>& GetAllFocusComponents() { return mFocusComponents; }
+        std::vector<FocusComponent*>& GetAllFocusComponents() { return m_focusComponents; }
+        FocusComponent* GetFocusComponent() const { return m_currentFocusComponent; };
+
+    private:
+
+        std::vector<FocusComponent*> m_focusComponents{};
+        FocusComponent* m_currentFocusComponent{nullptr};
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

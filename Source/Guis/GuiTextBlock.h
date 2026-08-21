@@ -1,46 +1,24 @@
 #ifndef GUI_TEXT_BLOCK_H
 #define GUI_TEXT_BLOCK_H
 
-#include <string>
-#include "Entity/EntityGui.h"
+#include "Entity/Entity.h"
 
 namespace ClassicLauncher
 {
 
-    enum TextOverflowPolicy
+    class GuiTextBlock : public Entity
     {
-        none = 0x0,
-        clip = 0x1
-    };
-
-    class EntityGui;
-
-    class GuiTextBlock : public EntityGui
-    {
-    private:
-
-        Font mFont;
-        std::string mText;
-        std::string mPathFont;
-        int mSize;
-        int mSpacing;
-        Color mColor;
-        bool mTextMovement;
-        int mDesiredWidth;
-        float mOffset;
-        bool mToLeft;
-        float mDelay;
-        Vector2 mMensuredText;
-        float mSpeed;
-        float mMaxDelay;
-        TextOverflowPolicy mTextOverflowPolicy;
-
-        Vector2 MeasureTextBox();
-
     public:
 
-        GuiTextBlock(const std::string& path, int size = 16, int spacing = 0);
-        virtual ~GuiTextBlock() override;
+        enum class TextOverflowPolicy : std::uint8_t
+        {
+            None = 0,
+            Clip = 1
+        };
+
+        explicit GuiTextBlock(const EntityContext& entityContext);
+        ~GuiTextBlock();
+        void Init(const std::string& path, int size = 16, int spacing = 0);
         virtual EntityType GetType() const override { return EntityType::GuiTextBlockClass; }
         void LoadNewFont(const std::string& path, int size = 16, int spacing = 0);
         void UpdateFont(const std::string& path);
@@ -48,17 +26,38 @@ namespace ClassicLauncher
         virtual void Draw() override;
         virtual void End() override;
         void SetText(const std::string& text);
-        void SetSize(int size);
+        void SetAutoSize(bool enable);
+        void SetSizeFont(int size);
         void SetSpacing(int spacing);
-        void SetColor(Color tint);
-        Vector2 GetMeasureTextBox();
-        const std::string& GetText() { return mText; }
+        Vector2f GetMeasureTextBox();
+        const std::string& GetText() { return m_text; }
         void SetTextOverflowPolicy(TextOverflowPolicy textOverflowPolicy);
-        void SetDesiredWidth(int newWidth);
         void SetOffSetMoveText(float speed, float maxDelay);
-        void UnloadText();
+
+        inline void SetTextCenter(bool enable) { m_centerText = enable; }
+
+    private:
+
+        std::string m_text{};
+        std::string m_pathFont{};
+        std::string m_nameFont{};
+        int m_sizeText{0};
+        int m_spacing{0};
+        float m_offsetText{0};
+        bool m_isLeft{false};
+        float m_delay{0.0f};
+        Vector2f m_mensuredText{};
+        float m_speed{0.5f};
+        float m_maxDelay{3.0f};
+        TextOverflowPolicy m_textOverflowPolicy{TextOverflowPolicy::None};
+        bool m_centerText{false};
+        bool m_autoSize{false};
+        float m_positionText{0.0f};
+        float m_renderScale{1};
+
+        Vector2f MeasureTextBox();
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

@@ -2,10 +2,15 @@
 #define SPRITE_H
 
 #include <atomic>
+#include <filesystem>
+#include <memory>
 #include <mutex>
 #include <string>
 #include <thread>
-#include "Core.h"
+
+#include "Graphics/Image.h"
+#include "Graphics/Texture.h"
+
 
 namespace ClassicLauncher
 {
@@ -14,37 +19,34 @@ namespace ClassicLauncher
     {
     public:
 
-        Sprite();
+        Sprite() = default;
         Sprite(const Sprite&) = delete;
         Sprite& operator=(const Sprite&) = delete;
         ~Sprite();
-        void Load(const std::string& file, const int width = 0, const int height = 0, bool bAspectRatio = true);
-        void Load(const Image& newImage, const int width = 0, const int height = 0, bool bAspectRatio = true);
+        void Load(const std::filesystem::path& file, int width = 0, int height = 0, bool aspectRatio = true);
+        void Load(Image& newImage, int width = 0, int height = 0, bool aspectRatio = true);
         void Stop();
         void Join();
-
-    private:
-
-        std::mutex mMutexSprite;
-        std::atomic<bool> mIsKeepRunning;
-        std::atomic<bool> mIsImageLoaded;
-        std::atomic<bool> mIsTextureLoaded;
-        std::thread mWorkerThread;
-        Image mImage;
-        Texture2D mTexture;
-        std::string mFilePath;
-        void LoadImage(const int width, const int height, bool bAspectRatio);
-
-    public:
-
-        Texture2D* GetTexture();
+        Texture* GetTexture();
         Image* GetImage();
-        void ResizeImage(const int width, const int height, bool bAspectRatio);
+        void ResizeImage(int width, int height, bool aspectRatio);
         void Unload();
         void UnloadTexture();
         void UnloadImage();
+
+    private:
+
+        std::mutex m_mutexSprite{};
+        std::atomic<bool> m_isKeepRunning{false};
+        std::atomic<bool> m_isImageLoaded{false};
+        std::atomic<bool> m_isTextureLoaded{false};
+        std::thread m_workerThread{};
+        Image m_image{};
+        std::unique_ptr<Texture> m_texture{};
+        std::string m_filePath{};
+        void LoadImage(const std::filesystem::path& file, int width, int height, bool aspectRatio);
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

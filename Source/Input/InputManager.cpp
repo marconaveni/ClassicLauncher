@@ -1,120 +1,195 @@
 #include "InputManager.h"
 
+#include "Window/Window.h"
+#include "Helper.h"
+
 namespace ClassicLauncher
 {
 
-    static InputManager* sInstanceInputManager = nullptr;
+    static InputManager* s_instanceInputManager = nullptr;
 
     InputManager::InputManager()
-        : mGamePadIdSelected(0), mAmoutDown(0), mDisableInput(false), mCategory(0)
     {
-        if (sInstanceInputManager == nullptr)
+        if (s_instanceInputManager == nullptr)
         {
-            sInstanceInputManager = this;
+            s_instanceInputManager = this;
         }
     }
 
     InputManager::~InputManager()
     {
-        sInstanceInputManager = nullptr;
+        s_instanceInputManager = nullptr;
     }
 
     bool IsModifierKey()
     {
-        return IsKeyDown(KEY_LEFT_ALT) || IsKeyDown(KEY_RIGHT_ALT) || IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL);
+        return Keyboard::IsDown(Keyboard::IsDown(Keyboard::Key::LeftAlt) || //
+                                Keyboard::IsDown(Keyboard::Key::RightAlt) ||
+                                Keyboard::IsDown(Keyboard::Key::LeftControl) || // check if keys modifiers is pressed
+                                Keyboard::IsDown(Keyboard::Key::RightControl));
     }
 
-    void InputManager::UpdateInputState()
+    void InputManager::UpdateInputState(float frameTime)
     {
-        for (auto& input : mInputs)
+        for (auto& input : m_inputs)
         {
-            if (mDisableInput)
+            if (m_disableInput)
             {
                 input.CancelInput();
                 continue;
             }
-            const bool bKeyModifier = IsModifierKey();
+            const bool isKeyModifier = IsModifierKey();
             const float maxAmount = 0.4f;
             const int key = input.keyPad;
             const int gamePad = input.gamePad;
-            input.bPress = (IsKeyPressed(key) || IsGamepadButtonPressed(mGamePadIdSelected, gamePad)) && !bKeyModifier && !mDisableInput;
-            input.bDown = (IsKeyDown(key) || IsGamepadButtonDown(mGamePadIdSelected, gamePad)) && !bKeyModifier && !mDisableInput;
-            input.bRelease = (IsKeyReleased(key) || IsGamepadButtonReleased(mGamePadIdSelected, gamePad)) && !bKeyModifier && !mDisableInput;
-            input.bUp = (IsKeyUp(key) || IsGamepadButtonUp(mGamePadIdSelected, gamePad)) && !bKeyModifier && !mDisableInput;
-            const bool bDown = input.bDown;
-
-            if (input.bDown)
+            
+            bool isAxisRelease = false;
+            bool isAxisPress = false;
+            
+            if (input.directionAxis == InputMapper::Direction::Positive)
             {
-                input.bDown = (input.amoutDown == 0 || input.amoutDown >= maxAmount);
-                input.amoutDown += GetFrameTime();
+                input.lastAxisValue = GamePad::GetAxisMovement(0, input.axis); 
+                isAxisRelease = (input.lastAxisValue < 0.5f) && (input.isAxisDown);
+                isAxisPress = (input.lastAxisValue > 0.5f) && (!input.isAxisDown);
+                input.isAxisDown = (input.lastAxisValue > 0.5f);
+            }
+            else if (input.directionAxis == InputMapper::Direction::Negative)
+            {
+                input.lastAxisValue = GamePad::GetAxisMovement(0, input.axis); 
+                isAxisRelease = (input.lastAxisValue > -0.5f) && (input.isAxisDown);
+                isAxisPress = (input.lastAxisValue < -0.5f) && (!input.isAxisDown);
+                input.isAxisDown = (input.lastAxisValue < -0.5f);
+            }
+            LOG(LogTrace, "isAxisRelease");
+            if (isAxisRelease)
+            {
+                LOG(LogTrace, "isAxisRelease");
+            }
+            if (isAxisPress)
+            {
+                LOG(LogTrace, "isAxisPress");
+            }
+            
+            
+            // clang-format off
+            input.isPress = (Keyboard::IsPressed(key) || isAxisPress ||
+                            GamePad::IsPressed(0, gamePad)) &&
+                            !isKeyModifier && 
+                            !m_disableInput;
+            input.isDown = (Keyboard::IsDown(key) || input.isAxisDown ||
+                            GamePad::IsDown(0, gamePad)) && 
+                            !isKeyModifier &&
+                            !m_disableInput;
+            input.isRelease = (Keyboard::IsReleased(key) || isAxisRelease ||
+                            GamePad::IsReleased(0, gamePad)) &&
+                            !isKeyModifier && 
+                            !m_disableInput;
+            input.isUp = (Keyboard::IsUp(key) || 
+                            GamePad::IsUp(0, gamePad)) && 
+                            !isKeyModifier && 
+                            !m_disableInput;
+
+            // clang-format on
+            if (input.isDown)
+            {
+                input.isDown = (input.amoutDown == 0 || input.amoutDown >= maxAmount);
+                input.amoutDown += 0.016f * 60 * frameTime;
             }
             else
             {
-                input.amoutDown = 0;
+                input.amoutDown = 0.0f;
             }
         }
     }
 
     bool InputManager::IsPress(InputName name, unsigned int category)
     {
-        if (!sInstanceInputManager) return false;
-        return sInstanceInputManager->mInputs[name].bPress && sInstanceInputManager->CheckCategory(category);
+        if (!s_instanceInputManager)
+        {
+            return false;
+        }
+        return s_instanceInputManager->m_inputs[name].isPress && s_instanceInputManager->CheckCategory(category);
     }
 
     bool InputManager::IsDown(InputName name, unsigned int category)
     {
-        if (!sInstanceInputManager) return false;
-        return sInstanceInputManager->mInputs[name].bDown && sInstanceInputManager->CheckCategory(category);
+        if (!s_instanceInputManager)
+        {
+            return false;
+        }
+        return s_instanceInputManager->m_inputs[name].isDown && s_instanceInputManager->CheckCategory(category);
     }
 
     bool InputManager::IsRelease(InputName name, unsigned int category)
     {
-        if (!sInstanceInputManager) return false;
-        return sInstanceInputManager->mInputs[name].bRelease && sInstanceInputManager->CheckCategory(category);
+        if (!s_instanceInputManager)
+        {
+            return false;
+        }
+        return s_instanceInputManager->m_inputs[name].isRelease && s_instanceInputManager->CheckCategory(category);
     }
 
     bool InputManager::IsUp(InputName name, unsigned int category)
     {
-        if (!sInstanceInputManager) return false;
-        return sInstanceInputManager->mInputs[name].bUp && sInstanceInputManager->CheckCategory(category);
+        if (!s_instanceInputManager)
+        {
+            return false;
+        }
+        return s_instanceInputManager->m_inputs[name].isUp && s_instanceInputManager->CheckCategory(category);
     }
 
     void InputManager::EnableInput()
     {
-        if (!sInstanceInputManager) return;
+        if (!s_instanceInputManager)
+        {
+            return;
+        }
 
-        sInstanceInputManager->mDisableInput = false;
+        s_instanceInputManager->m_disableInput = false;
     }
 
     void InputManager::DisableInput()
     {
-        if (!sInstanceInputManager) return;
+        if (!s_instanceInputManager)
+        {
+            return;
+        }
 
-        sInstanceInputManager->mDisableInput = true;
-        for (auto& input : sInstanceInputManager->mInputs)
+        s_instanceInputManager->m_disableInput = true;
+        for (auto& input : s_instanceInputManager->m_inputs)
         {
             input.CancelInput();
-            continue;
         }
     }
 
-    bool InputManager::CheckCategory(unsigned int category)
+    bool InputManager::CheckCategory(unsigned int category) const
     {
-        if (!sInstanceInputManager) return false;
+        if (!s_instanceInputManager)
+        {
+            return false;
+        }
 
         unsigned int value = 0;
 
-        if ((mCategory & main) == (category & main) && (category & main) > 0)
+        if ((m_category & MainTop) == (category & MainTop) && (category & MainTop) > 0)
         {
-            value |= main;
+            value |= MainTop;
         }
-        if ((mCategory & videoFullscreen) == (category & videoFullscreen) && (category & videoFullscreen) > 0)
+        if ((m_category & MainCenter) == (category & MainCenter) && (category & MainCenter) > 0)
         {
-            value |= videoFullscreen;
+            value |= MainCenter;
         }
-        if ((mCategory & debug) == (category & debug) && (category & debug) > 0)
+        if ((m_category & MainBottom) == (category & MainBottom) && (category & MainBottom) > 0)
         {
-            value |= debug;
+            value |= MainBottom;
+        }
+        if ((m_category & VideoFullscreen) == (category & VideoFullscreen) && (category & VideoFullscreen) > 0)
+        {
+            value |= VideoFullscreen;
+        }
+        if ((m_category & Debug) == (category & Debug) && (category & Debug) > 0)
+        {
+            value |= Debug;
         }
 
         return value != 0;
@@ -122,42 +197,64 @@ namespace ClassicLauncher
 
     void InputManager::SetCategory(unsigned int category)
     {
-        if (!sInstanceInputManager) return;
-
-        unsigned int& pCategory = sInstanceInputManager->mCategory;
-
-        if ((pCategory & main) != (category & main) && (category & main) > 0)
+        if (!s_instanceInputManager)
         {
-            pCategory |= main;
+            return;
         }
-        if ((pCategory & videoFullscreen) != (category & videoFullscreen) && (category & videoFullscreen) > 0)
+
+        unsigned int& inputCategory = s_instanceInputManager->m_category;
+
+        if ((inputCategory & MainTop) != (category & MainTop) && (category & MainTop) > 0)
         {
-            pCategory |= videoFullscreen;
+            inputCategory |= MainTop;
         }
-        if ((pCategory & debug) != (category & debug) && (category & debug) > 0)
+        if ((inputCategory & MainCenter) != (category & MainCenter) && (category & MainCenter) > 0)
         {
-            pCategory |= debug;
+            inputCategory |= MainCenter;
+        }
+        if ((inputCategory & MainBottom) != (category & MainBottom) && (category & MainBottom) > 0)
+        {
+            inputCategory |= MainBottom;
+        }
+        if ((inputCategory & VideoFullscreen) != (category & VideoFullscreen) && (category & VideoFullscreen) > 0)
+        {
+            inputCategory |= VideoFullscreen;
+        }
+        if ((inputCategory & Debug) != (category & Debug) && (category & Debug) > 0)
+        {
+            inputCategory |= Debug;
         }
     }
 
     void InputManager::RemoveCategory(unsigned int category)
     {
-        if (!sInstanceInputManager) return;
-
-        unsigned int& pCategory = sInstanceInputManager->mCategory;
-
-        if ((pCategory & main) > 0 && (category & main) > 0)
+        if (!s_instanceInputManager)
         {
-            pCategory &= ~main;
+            return;
         }
-        if ((pCategory & videoFullscreen) > 0 && (category & videoFullscreen) > 0)
+
+        unsigned int& inputCategory = s_instanceInputManager->m_category;
+
+        if ((inputCategory & MainTop) > 0 && (category & MainTop) > 0)
         {
-            pCategory &= ~videoFullscreen;
+            inputCategory &= ~MainTop;
         }
-        if ((pCategory & debug) > 0 && (category & debug) > 0)
+        if ((inputCategory & MainCenter) > 0 && (category & MainCenter) > 0)
         {
-            pCategory &= ~debug;
+            inputCategory &= ~MainCenter;
+        }
+        if ((inputCategory & MainBottom) > 0 && (category & MainBottom) > 0)
+        {
+            inputCategory &= ~MainBottom;
+        }
+        if ((inputCategory & VideoFullscreen) > 0 && (category & VideoFullscreen) > 0)
+        {
+            inputCategory &= ~VideoFullscreen;
+        }
+        if ((inputCategory & Debug) > 0 && (category & Debug) > 0)
+        {
+            inputCategory &= ~Debug;
         }
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

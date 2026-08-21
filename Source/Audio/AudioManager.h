@@ -2,73 +2,68 @@
 #define AUDIO_MANAGER_H
 
 #include <atomic>
+#include <filesystem>
+#include <memory>
 #include <mutex>
 #include <string>
 #include <thread>
 #include <vector>
-#include "raylib.h"
+
+#include "Audio/Music.h"
+#include "Audio/Sound.h"
 
 namespace ClassicLauncher
 {
 
-    enum StatusAudioMusic
-    {
-        Stop,
-        Playing,
-        Paused
-    };
-
-    struct AudioMusic
-    {
-        Music music;
-        std::string name;
-    };
-
     class AudioManager
     {
-    private:
-
-        std::mutex mMusicMutex;
-        std::thread mWorkerThread;                   // Thread work
-        std::atomic<bool> mIsRunning;                // Thread is Running
-        std::atomic<bool> mIsPlayClick;              // Sinalize thread to play mClickSound
-        std::atomic<bool> mIsPlayCursor;             // Sinalize thread to play mCursorSound
-        std::atomic<StatusAudioMusic> mStatusAudio;  // Status Current Audio Music
-        Sound mClickSound;                           // Struct Sound
-        Sound mCursorSound;                          // Struct Sound
-        std::vector<AudioMusic> mAudioMusics;        // Array Struct Audio musics
-        int mIdAudioMusic;                           // id music
-
     public:
 
         AudioManager();
         ~AudioManager();
 
         void Init();
-        void LoadMusics(const std::string& path, bool bAutoPlay = true);
-        void LoadCursor(const std::string& path);
-        void LoadCLick(const std::string& path);
-        void Play();
-        void PlayClick();
-        void PlayCursor();
+        void LoadMusics(const std::string& path, bool isAutoPlay = true);
+        void LoadSound(const std::filesystem::path& path, const std::string& name);
+        void PlaySound(const std::string& name);
+        void PlayMusic();
+        void MusicVolume(float volume);
         void Pause();
         void Stop();
+        void Update();
         std::string GetMusicName();
-        void ChangeMusic(bool bAutoPlay = true);
-        StatusAudioMusic GetStatusAudioMusic() { return mStatusAudio; }
+        void ChangeMusic(bool autoPlay = true);
+        void Unload();
+        [[nodiscard]] bool IsPlayMusic() const { return (m_statusAudio == 1); }
 
     private:
 
+        struct Status
+        {
+            inline static constexpr unsigned int Stop = 0;
+            inline static constexpr unsigned int Playing = 1;
+            inline static constexpr unsigned int Paused = 2;
+        };
+
+        std::mutex m_musicMutex{};
+        std::thread m_workerThread{};                 // Thread work
+        std::atomic<bool> m_isRunning{false};         // Thread is Running
+        std::atomic<bool> m_isPlayClick{false};       // Sinalize thread to play m_clickSound
+        std::atomic<bool> m_isPlayCursor{false};      // Sinalize thread to play m_cursorSound
+        std::atomic<int> m_statusAudio{Status::Stop}; // Status Current Audio Music
+
+        std::unique_ptr<Sound> m_clickSound{nullptr};  //
+        std::unique_ptr<Sound> m_cursorSound{nullptr}; //
+
+        std::vector<std::unique_ptr<Music>> m_audioMusics{}; // Array Struct Audio musics
+        int m_idAudioMusic{0};                               // id music
+        float m_musicVolume{1.0f};                           // music volume
+
         void LoadMusic(const std::string& path);
-        void Stream(const Music& music);
-        void Update();
+        void UpdateStream();
         int GenerateId();
-
-    public:
-
-        void Unload();
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

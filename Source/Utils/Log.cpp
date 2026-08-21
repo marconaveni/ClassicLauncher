@@ -1,83 +1,215 @@
 #include "Log.h"
+
+#include <filesystem>
+#include <fstream>
 #include <iostream>
-#include <string>
-#include "raylib.h"
+#include <string_view>
+
+#include "ClassicAssert.h"
+#include "Input/InputManager.h"
+#include "Utils/Print.h"
+#include "Utils/Resources.h"
+#include "Utils/String.h"
+#include "Wrap.h"
+
 
 namespace ClassicLauncher
 {
 
-    static int sLogClassicLevel = 10;
-
-    void LogLevel(int classicLogType, int raylibLogType)
+    struct AnsiColor
     {
-#ifdef _DEBUG
-        sLogClassicLevel = classicLogType;
-        SetTraceLogLevel(raylibLogType);
-#else
-        sLogClassicLevel = 12;
-        SetTraceLogLevel(5);
-#endif
+        inline static constexpr std::string_view Clear = "\x1b[0m";
+        inline static constexpr std::string_view Cyan = "\x1b[36m";
+        inline static constexpr std::string_view Blue = "\x1b[34m";
+        inline static constexpr std::string_view White = "\x1b[37m";
+        inline static constexpr std::string_view Yellow = "\x1b[33m";
+        inline static constexpr std::string_view Red = "\x1b[31m";
+        inline static constexpr std::string_view RedBackground = "\x1b[41m";
+    };
+
+    inline static constexpr int ClassicLogEnum = 7;
+    static Log* s_instance = nullptr;
+
+    Log::Log(Print* print)
+    {
+        if (!s_instance)
+        {
+            m_print = print;
+            s_instance = this;
+            rlw::SetTraceLogCallback(TraceLogger);
+            std::printf("\033[?25l"); // hide cursor
+            Flush();
+        }
+    }
+
+    Log::~Log()
+    {
+        Flush();
+        std::printf("\033[?25h"); // show cursor
+    }
+
+    Log* Log::Get()
+    {
+        return s_instance;
+    }
+
+    void Log::SetLevel(int classicLogType, int raylibLogType)
+    {
+        m_logClassicLevel = classicLogType;
+        rlw::SetTraceLogLevel(raylibLogType);
+    }
+
+    void Log::UpdateLog()
+    {
+        Flush();
+    }
+
+    Print* Log::GetPrint()
+    {
+        CLASSIC_ASSERT(m_print, "m_print is null! Do bind before calling this function.");
+        return m_print;
+    }
+
+    void Log::Flush()
+    {
+        if (!m_isDirty)
+        {
+            return;
+        }
+
+        const std::filesystem::path path = Resources::GetExecutableDirectory("cs_log.txt");
+        if (path.empty())
+        {
+            std::printf("No settings to save.\n");
+            return;
+        }
+
+        std::ofstream outStream;
+        outStream.open(path, m_truncFile ? std::ios::trunc : std::ios::app);
+        m_truncFile = false; // NOTE: the first time we use trunc to ensure a new file.
+
+        if (!outStream.is_open())
+        {
+            std::printf("Error to open file: %s\n", path.string().c_str());
+            return;
+        }
+
+        outStream << Log::m_logCache;
+        outStream.close();
+
+        m_logCache.clear(); // clean cache log
+        m_isDirty = false;
+    }
+
+    void Log::LogClassic(int logType, int line, const char* file, const char* text, ...)
+    {
+
+        if (logType < m_logClassicLevel)
+        {
+            return;
+        }
+
+        std::filesystem::path fileName = file;
+
+        std::string textFmt = String::TextFormat("[line:%d file:%s] %s", line, fileName.filename().string().c_str(), text);
+
+        va_list args;
+        va_start(args, text);
+        TraceLogger(logType + ClassicLogEnum, textFmt.c_str(), args);
+        va_end(args);
     }
 
     void TraceLogger(int messageType, const char* text, va_list args)
     {
-        if (messageType > 7 && messageType < sLogClassicLevel) return;
 
-        std::string textFinal;
+        std::string prefixType{};
+        std::string prefixPlain{};
+        std::string prefixColored{};
+
+        if (messageType > ClassicLogEnum)
+        {
+            prefixType = "[";
+            messageType -= ClassicLogEnum;
+        }
+        else
+        {
+            prefixType = "[RAYLIB ";
+        }
 
         switch (messageType)
         {
-            case LOG_TRACE:
-                textFinal.append("\x1b[36m[RAYLIB TRACE] ");
+            case LogTrace:
+                prefixColored = AnsiColor::Cyan;
+                prefixPlain = prefixType + "TRACE] ";
                 break;
-            case LOG_DEBUG:
-                textFinal.append("\x1b[34m[RAYLIB DEBUG] ");
+            case LogDebug:
+                prefixColored = AnsiColor::Blue;
+                prefixPlain = prefixType + "DEBUG] ";
                 break;
-            case LOG_INFO:
-                textFinal.append("\x1b[37m[RAYLIB INFO] ");
+            case LogInfo:
+                prefixColored = AnsiColor::White;
+                prefixPlain = prefixType + "INFO] ";
                 break;
-            case LOG_WARNING:
-                textFinal.append("\x1B[33m[RAYLIB WARNING] ");
+            case LogWarning:
+                prefixColored = AnsiColor::Yellow;
+                prefixPlain = prefixType + "WARNING] ";
                 break;
-            case LOG_ERROR:
-                textFinal.append("\x1B[31m[RAYLIB ERROR] ");
+            case LogError:
+                prefixColored = AnsiColor::Red;
+                prefixPlain = prefixType + "ERROR] ";
                 break;
-            case LOG_FATAL:
-                textFinal.append("\x1B[41m[RAYLIB FATAL] ");
-                break;
-            case LOG_CLASSIC_TRACE:
-                textFinal.append("\x1b[36m[TRACE] ");
-                break;
-            case LOG_CLASSIC_DEBUG:
-                textFinal.append("\x1b[34m[DEBUG] ");
-                break;
-            case LOG_CLASSIC_INFO:
-                textFinal.append("\x1b[37m[INFO] ");
-                break;
-            case LOG_CLASSIC_WARNING:
-                textFinal.append("\x1B[33m[WARNING] ");
-                break;
-            case LOG_CLASSIC_ERROR:
-                textFinal.append("\x1B[31m[ERROR] ");
-                break;
-            case LOG_CLASSIC_FATAL:
-                textFinal.append("\x1B[41m[FATAL] ");
+            case LogFatal:
+                prefixColored = AnsiColor::RedBackground;
+                prefixPlain = prefixType + "FATAL] ";
                 break;
         }
-        textFinal.append(text);
-        textFinal.append("\x1B[0m\n");
 
-        vprintf(textFinal.c_str(), args);
+        std::va_list argsCopy;
+        va_copy(argsCopy, args);
+
+        int size = std::vsnprintf(nullptr, 0, text, argsCopy);
+        va_end(argsCopy);
+
+        if (size < 0)
+        {
+            return;
+        }
+        
+        std::string message(size, '\0');
+        std::vsnprintf(message.data(), message.size() + 1, text, args);
+
+        const std::string textFinalColored = prefixColored + prefixPlain + message + AnsiColor::Clear.data();
+        const std::string textFinal = prefixPlain + message;
+
+        Log* log = Log::Get();
+
+        CLASSIC_ASSERT(log, "log is null!");
+        
+        if (log->m_previousMessage != textFinalColored)
+        {
+            if (log->m_count > 0 && log->m_enableLogFile)
+            {
+                log->m_logCache.append(" (" + std::to_string(log->m_count) + ")");
+            }
+
+            log->m_count = 0;
+            log->m_previousMessage = textFinalColored;
+            std::printf("\n%s", textFinalColored.c_str());
+            
+            if (log->m_enableLogFile)
+            {
+                log->m_logCache.append("\n" + textFinal);
+                log->m_isDirty = true;
+            }     
+        }
+        else
+        {
+            log->m_count++;
+
+            std::printf("\r%s (%d)", textFinalColored.c_str(), log->m_count);
+            std::fflush(stdout);
+        }
     }
 
-    void LogClassic(int logType, const char* text, ...)
-    {
-        if (logType > 7 && logType < sLogClassicLevel) return;
 
-        va_list args;
-        va_start(args, text);
-        TraceLogger(logType, text, args);
-        va_end(args);
-    }
-
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

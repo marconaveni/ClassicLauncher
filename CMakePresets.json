@@ -1,0 +1,131 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 25,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "base",
+            "hidden": true,
+            "displayName": "Base",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "generator": "Ninja Multi-Config",
+            "cacheVariables": {
+                "CMAKE_CONFIGURATION_TYPES": "Debug;Release"
+            }
+        },
+        {
+            "name": "gcc",
+            "inherits": "base",
+            "displayName": "GCC",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++"
+            }
+        },
+        {
+            "name": "clang",
+            "inherits": "base",
+            "displayName": "CLANG",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++"
+            }
+        },
+        {
+            "name": "vs",
+            "displayName": "Windows Visual Studio 2022",
+            "generator": "Visual Studio 17 2022",
+            "architecture": "x64",
+            "binaryDir": "${sourceDir}/build/${presetName}"
+        },
+        {
+            "name": "pi-debug",
+            "inherits": "gcc",
+            "displayName": "Raspberry pi Debug",
+            "generator": "Unix Makefiles",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CLASSIC_RASPBERRY_PI": true
+            }
+        },
+        {
+            "name": "pi-release",
+            "inherits": "gcc",
+            "displayName": "Raspberry pi Release",
+            "generator": "Unix Makefiles",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CLASSIC_RASPBERRY_PI": true
+            }
+        },
+        {
+            "name": "gcc-flags",
+            "inherits": "gcc",
+            "displayName": "GCC with flags Warnings",
+            "cacheVariables": {
+                "CLASSIC_LAUNCHER_FLAGS": true
+            }
+        },
+                {
+            "name": "clang-flags",
+            "inherits": "clang",
+            "displayName": "CLANG with flags Warnings",
+            "cacheVariables": {
+                "CLASSIC_LAUNCHER_FLAGS": true
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "vs-debug",
+            "displayName": "Debug",
+            "configurePreset": "vs",
+            "configuration": "Debug"
+        },
+        {
+            "name": "vs-release",
+            "displayName": "Release",
+            "configurePreset": "vs",
+            "configuration": "Release"
+        },
+        {
+            "name": "gcc-debug",
+            "displayName": "Debug",
+            "configurePreset": "gcc",
+            "configuration": "Debug"
+        },
+        {
+            "name": "gcc-debug-flags",
+            "displayName": "Debug",
+            "configurePreset": "gcc-flags",
+            "configuration": "Debug"
+        },
+        {
+            "name": "gcc-release",
+            "displayName": "Release",
+            "configurePreset": "gcc",
+            "configuration": "Release"
+        },
+        {
+            "name": "clang-debug",
+            "displayName": "Debug",
+            "configurePreset": "clang",
+            "configuration": "Debug"
+        },
+        {
+            "name": "clang-debug-flags",
+            "displayName": "Debug",
+            "configurePreset": "clang-flags",
+            "configuration": "Debug"
+        },
+        {
+            "name": "clang-release",
+            "displayName": "Release",
+            "configurePreset": "clang",
+            "configuration": "Release"
+        }
+    ]
+}

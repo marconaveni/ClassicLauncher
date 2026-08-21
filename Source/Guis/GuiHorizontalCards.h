@@ -1,70 +1,97 @@
 #ifndef GUI_HORIZONTAL_CARDS_H
 #define GUI_HORIZONTAL_CARDS_H
 
-#include <memory>
 #include <vector>
-#include <string>
-#include "Guis/GuiCard.h"
+
+#include "Animations/Animatable.h"
 #include "Data/GameListManager.h"
-#include "Entity/EntityGui.h"
-#include "Guis/GuiHorizontalBox.h"
+#include "Guis/Components/GuiCanvas.h"
+#include "Input/InputManager.h"
+#include "Utils/TimerManager.h"
 
 namespace ClassicLauncher
 {
 
-    class EntityGui;
+    class Animatable;
     class GuiMiniCover;
     class GuiCard;
     class GuiTextBlock;
     class GuiHorizontalBox;
     class GuiFrame;
+    class GuiHintBar;
+    class EntityManager;
+    class GameListManager;
+    class AudioManager;
+    class GuiMenu;
+    class GuiBase;
+    class Window;
 
-    enum Direction
+
+    class GuiHorizontalCards : public Entity, public Animatable
     {
-        None,
-        Left,
-        Right
-    };
-
-
-    class GuiHorizontalCards : public EntityGui
-    {
-        GuiTextBlock* mGuiTitle;
-        GuiMiniCover* mMiniCover;
-        GuiHorizontalBox* mHorizontalBox;
-        GuiFrame* mFrame;
-        std::vector<GuiCard*> mGuiCards;
-        // float mCardPositions[10]{ -632 - 6, -376 - 6, -120 - 6, 136 - 6, 392 - 6, 648 - 6, 904 - 6, 1160 - 6, 1416 - 6, 1672 - 6 };
-        float mPositionX;
-        bool mIsLeft;
-        bool mIsRight;
-        bool mIsNeedUpdate;
-        Direction mLastDirection;
-        int mIdFocus;
-        int mIdLastFocusSystem;
-        float mSpeed;
-        TimerHandling mTimerInputSpeed;
-        void UpdateCards();
-        void SetPositionHorizontalBox();
-
     public:
 
-        GuiHorizontalCards();
+        enum class Direction : std::uint8_t
+        {
+            None,
+            Left,
+            Right
+        };
+
+        explicit GuiHorizontalCards(const EntityContext& entityContext, GameListManager* gameListManagerRef, Window* window);
         EntityType GetType() const override { return EntityType::GuiHorizontalCardsClass; }
         void Init();
         void Update() override;
         void Draw() override;
         void End() override;
-        void SetFocus(int newId, bool bForce = false);
-        void SetCovers();
-        void ChangeList(const CurrentList list);
+        void SetFocus(int newId, bool force = false);
+        void Focus();
+        void UpdateCovers();
+        void RemoveCoversFromScreen();
+        void ChangeList(CurrentList list);
         void Click();
+        bool IsMovement() const;
+        virtual void SetThemeValue() override;
 
     private:
 
+        GuiTextBlock* m_guiTitle{nullptr};
+        GuiMiniCover* m_miniCover{nullptr};
+        GuiHorizontalBox* m_horizontalBox{nullptr};
+        GuiFrame* m_frame{nullptr};
+        GuiHintBar* m_hintBar{nullptr};
+        GuiMenu* m_guiMenu{nullptr};
+        GuiBase* m_guiMenuBackground{nullptr};
+        GuiBase* m_guiTopBar{nullptr};
+        GuiBase* m_guiBottomBar{nullptr};
+        std::vector<GuiCard*> m_guiCards{};
+        float m_positionX{0};
+        bool m_isLeft{false};
+        bool m_isRight{false};
+        bool m_isNeedUpdate{false};
+        Direction m_lastDirection{Direction::None};
+        int m_idFocus{0};
+        int m_idLastFocusSystem{3};
+        float m_speed{22.0f};
+        float m_multiply{22.0f};
+        bool m_isPress{false};
+        TimerHandling m_timerInputSpeed{};
+        bool m_topBarAnimation{false};
+        int m_loadTexturesCards{0};
+
+        GameListManager* m_gameListManagerRef{nullptr};
+
+        void CancelMultiply();
+        void UpdateCards();
+        void UpdateInput();
+        void SetPositionHorizontalBox();
+        void FocusAnimationBar(InputCategory category);
         void ClearCovers();
+        void SetSpeedCards();
+        void SetTextHintBar();
+        void SetMenuBar();
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // GUI_HORIZONTAL_CARDS_H
+#endif // GUI_HORIZONTAL_CARDS_H

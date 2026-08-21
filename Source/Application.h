@@ -1,93 +1,76 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include "Audio/AudioManager.h"
+
 #include "Components/FocusManager.h"
 #include "Data/GameListManager.h"
 #include "Entity/EntityManager.h"
-#include "Graphics/Render.h"
-#include "Graphics/RenderSystem.h"
-#include "Graphics/SpriteManager.h"
-#include "Guis/GuiWindow.h"
-#include "Utils/ConfigurationManager.h"
+#include "Graphics/RenderEntities.h"
+#include "Input/InputManager.h"
+#include "Themes/ThemesManager.h"
 #include "Utils/ProcessManager.h"
-#include "Utils/TimerManager.h"
+
 
 namespace ClassicLauncher
 {
+
+    class RenderScreen;
+
     class GuiWindow;
     class GuiBlackScreen;
     class ProcessManager;
     class VideoPlayer;
     class InputManager;
-    class Themes;
+    class ThemesManager;
     class TimerManager;
     class FocusManager;
+    class Window;
     class ConfigurationManager;
-
-    struct ApplicationSpecification
-    {
-        int width = 1280;
-        int height = 720;
-#if _DEBUG
-        const char* title = "Classic Launcher [DEVMODE]";
-#else
-        const char* title = "Classic Launcher";
-#endif
-        int posWindowX = 0;
-        int posWindowY = 0;
-    };
+    class SpriteManager;
+    class TimerManager;
+    class AudioManager;
+    class FontManager;
 
     class Application
     {
-        ApplicationSpecification mSpecification;
-        Render mRender;
-        RenderSystem mRenderSystem;
-        Print mPrint;
-        AudioManager mAudioManager;
-        SpriteManager mSpriteManager;
-        EntityManager mEntityManager;
-        GameListManager mGameListManager;
-        ProcessManager mProcessManager;
-        Themes mThemes;
-        FocusManager mFocusManager;
-        InputManager mInputManager;
-        TimerManager mTimerManager;
-        ConfigurationManager mConfigurationManager;
-
-        GuiWindow* mGuiWindow;
-
     public:
 
-        Application();
+        Application(ConfigurationManager& configManager,
+                    SpriteManager& spriteManager,
+                    TimerManager& timerManager,
+                    AudioManager& audioManager,
+                    FontManager& fontManager,
+                    ProcessManager& processManager,
+                    Window& window);
         ~Application();
-        static Application& Get();
-        ApplicationSpecification GetSpecification() { return mSpecification; }
-        Render* GetRender() { return &mRender; }
-        RenderSystem* GetRenderSystem() { return &mRenderSystem; }
-        Print* GetPrint() { return &mPrint; }
-        AudioManager* GetAudioManager() { return &mAudioManager; }
-        SpriteManager* GetSpriteManager() { return &mSpriteManager; }
-        EntityManager* GetEntityManager() { return &mEntityManager; }
-        GameListManager* GetGameListManager() { return &mGameListManager; }
-        ProcessManager* GetProcessManager() { return &mProcessManager; }
-        Themes* GetThemes() { return &mThemes; }
-        TimerManager* GetTimerManager() { return &mTimerManager; }
-        FocusManager* GetFocusManager() { return &mFocusManager; }
-        ConfigurationManager* GetConfigurationManager() { return &mConfigurationManager; }
-        GuiBlackScreen* GetGuiBlackScreen();
+
         void Init();
-        void CreateProcess();
+        void Update();
+        void ProcessUpdate();
+        void Draw();
+        void End();
+        void Restore();
+        void Suspend();
 
     private:
 
-        void Loop();
-        void Update();
-        void Draw();
-        void End();
-        void ToggleFullscreen();
+        RenderEntities m_renderEntities;
+        GameListManager m_gameListManager;
+        ThemesManager m_themesManager;
+        FocusManager m_focusManager;
+        EntityManager m_entityManager;
+
+        ProcessManager* m_processManagerRef{nullptr};
+        ConfigurationManager* m_configManagerRef{nullptr};
+        SpriteManager* m_spriteManagerRef{nullptr};
+        TimerManager* m_timerManagerRef{nullptr};
+        AudioManager* m_audioManagerRef{nullptr};
+        FontManager* m_fontManagerRef{nullptr};
+        Window* m_windowRef{nullptr};
+
+        GuiWindow* m_guiWindow{nullptr};
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

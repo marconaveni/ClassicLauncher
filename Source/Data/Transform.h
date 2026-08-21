@@ -1,74 +1,29 @@
 #ifndef TRANSFORM_H
 #define TRANSFORM_H
 
-#include "Core.h"
+#include "Data/Color.h"
+#include "Data/Rectangle.h"
 
 namespace ClassicLauncher
 {
-    class Transform
+    // Represents the local transformation of an entity.
+    // The final world transform is computed by combining this transform
+    // with the transform of its parent entity.
+    struct Transform
     {
-    private:
-
-        friend class RenderSystem;
-
-        Rectangle mTransform;
-        Rectangle mSource;
-        Vector2 mScale;
-
-        float rootX;
-        float rootY;
-        float rootScaleX;
-        float rootScaleY;
+        RectFloat position{};            // Local position and size relative to the parent entity.
+        RectFloat source{};              // Texture region used for rendering (UV/source rectangle).
         
-        void SetTransforms(const float m);
+        Vector2f offset{};               // Additional positional offset applied after the base position.
+        Vector2f origin{};               // Pivot point used for rotation and scaling.
         
-public:
+        Vector2f scale{1.0f, 1.0f};      // Local scaling factor relative to the parent transform.
+        float rotation{};                // Local rotation angle relative to the parent.
         
-        Vector2 offset;
-        float x;
-        float y;
-        float width;
-        float height;
-        float scaleX;
-        float scaleY;
-        float rotation;
-        Color color;
-
-        float sourceX;
-        float sourceY;
-        float scaleWidth;
-        float scaleHeight;
-
-        Transform()
-            : rootX(0)
-            , rootY(0)
-            , rootScaleX(1)
-            , rootScaleY(1)
-            , offset()
-            , x(0)
-            , y(0)
-            , width(0)
-            , height(0)
-            , scaleX(1)
-            , scaleY(1)
-            , rotation(0)
-            , color({ 255, 255, 255, 255 })
-            , sourceX(0)
-            , sourceY(0)
-            , scaleWidth(0)
-            , scaleHeight(0)
-            , mScale(1, 1)
-        {
-        }
-
-        Rectangle GetTransform() { return mTransform; }
-        Rectangle GetSource() { return mSource; }
-        Vector2 GetScale() { return mScale; }
-        Vector2 GetRootPosition() { return Vector2(rootX, rootY); }
-        Vector2 GetRootScale() { return Vector2(rootScaleX, rootScaleY); }
-        void UpdateTransform(Transform& otherTransform);
+        Color color{255, 255, 255, 255}; // Tint color and opacity applied to the entity.
     };
 
-}  // namespace ClassicLauncher
 
-#endif  // TRANSFORM_H
+} // namespace ClassicLauncher
+
+#endif // TRANSFORM_H

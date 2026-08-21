@@ -1,44 +1,56 @@
 #include "EntityManager.h"
-#include <algorithm>  // std::sort
-#include "Application.h"
+
+#include <algorithm> // std::sort
+
+#include "Graphics/SpriteManager.h"
+#include "Helper.h"
+#include "Utils/TimerManager.h"
+
 
 namespace ClassicLauncher
 {
 
-    EntityManager::EntityManager(SpriteManager* spriteManagerReference, TimerManager* timerManagerReference)
-        : mSpriteManagerReference(spriteManagerReference), mTimerManagerReference(timerManagerReference)
+    EntityManager::EntityManager(SpriteManager* spriteManager, TimerManager* timerManager, FocusManager* focusManager, FontManager* fontManager, Window* window, AudioManager* audioManager)
+        : m_spriteManagerReference(spriteManager)
+        , m_timerManagerReference(timerManager)
+        , m_focusManagerReference(focusManager)
+        , m_fontManagerReference(fontManager)
+        , m_windowReference(window)
+        , m_audioManager(audioManager)
     {
     }
 
     EntityManager::~EntityManager()
     {
-        ClearAllEntitys();
+        ClearAllEntities();
     }
 
     void EntityManager::SetNewEntities()
     {
-        if (mTempEntities.size() > 0)
+        if (m_tempEntities.empty())
         {
-            for (auto& entity : mTempEntities)
-            {
-                mEntities.push_back(std::move(entity));
-            }
-            mTempEntities.clear();
-            mPrepareNewOrdination = true;
+            return;
         }
+
+        for (auto& entity : m_tempEntities)
+        {
+            m_entities.push_back(std::move(entity));
+        }
+        m_tempEntities.clear();
+        m_markOrder = true;
     }
 
     void EntityManager::SetNameId(Entity* entity, const std::string& name)
     {
         int counter = 0;
-        for (const auto& ent : mEntities)
+        for (const auto& ent : m_entities)
         {
             if (ent->GetType() == entity->GetType())
             {
                 counter++;
             }
         }
-        for (const auto& ent : mTempEntities)
+        for (const auto& ent : m_tempEntities)
         {
             if (ent->GetType() == entity->GetType())
             {
@@ -46,113 +58,133 @@ namespace ClassicLauncher
             }
         }
 
-        entity->mNameId = std::to_string(counter) + "_" + name;
-        entity->mId = GetEntitySize();
-        entity->mIdZOrder = GetEntitySize();
+        entity->m_nameId = TEXT("%d_%s", counter, name.c_str());
+        entity->m_zOrder.insertionIndex = m_counter;
+        m_counter++;
     }
 
-    void EntityManager::SetVisibleAll(Entity* entity, bool bVisible)
+    void EntityManager::SetVisibleAll(Entity* entity, bool isVisible)
     {
-        for (auto& entity : entity->GetChilds())
+        for (auto& entity : entity->GetChildren())
         {
-            entity->mVisible = bVisible;
+            entity->m_isVisible = isVisible;
         }
     }
 
     void EntityManager::SetZOrder()
     {
-        if (!mPrepareNewOrdination)
+        if (!m_markOrder)
         {
             return;
         }
-        std::sort(
-            mEntities.begin(), mEntities.end(), [](const std::unique_ptr<Entity>& a, const std::unique_ptr<Entity>& b) { return a->GetIdZOrder() < b->GetIdZOrder(); });
-        mPrepareNewOrdination = false;
+
+        std::sort(m_entities.begin(),
+                  m_entities.end(),
+                  [](const std::unique_ptr<Entity>& a, const std::unique_ptr<Entity>& b)
+                  {
+                      if (a->GetZOrder().id != b->GetZOrder().id)
+                      {
+                          return a->GetZOrder().id < b->GetZOrder().id; // z menor desenha antes
+                      }
+                      return a->GetZOrder().insertionIndex < b->GetZOrder().insertionIndex;
+                  });
+        m_markOrder = false;
     }
 
     void EntityManager::SetZOrder(Entity* entity, int zOrder)
     {
-        const int multiply = GetEntitySize() * zOrder;
         entity->SetZOrder(zOrder);
-        entity->mIdZOrder = entity->mId + multiply;
-        mPrepareNewOrdination = true;
+        m_markOrder = true;
     }
 
     void EntityManager::UpdateAll()
     {
         SetNewEntities();
 
-        for (auto& entity : mEntities)
+        for (auto& entity : m_entities)
         {
-            entity->mToDraw = entity->mVisible;
+            entity->m_isCanDraw = entity->m_isVisible;
             entity->Update();
         }
-        UpdatePositionAll();
+        UpdateWorldTransform();
     }
 
-    void EntityManager::UpdatePositionAll()
+    void EntityManager::UpdateWorldTransform()
     {
-        bool bIsDeleteEntities = false;
-        for (auto& entity : mEntities)
+        bool isDeleteEntities = false;
+        for (auto& entity : m_entities)
         {
-            entity->UpdatePosition();
-            bIsDeleteEntities = entity->mToDelete || bIsDeleteEntities;
+            entity->UpdateWorldTransform();
+            isDeleteEntities = entity->m_isCanDelete || isDeleteEntities;
         }
-        DeleteEntitys(bIsDeleteEntities);
+        DeleteEntities(isDeleteEntities);
         SetZOrder();
     }
 
     void EntityManager::End()
     {
-        for (auto& entity : mEntities)
+        for (auto& entity : m_entities)
         {
             entity->End();
-            entity->RemoveAllChilds();
+            entity->RemoveAllChildren();
         }
-        ClearAllEntitys();
+        ClearAllEntities();
     }
 
-    void EntityManager::ClearAllEntitys()
+    void EntityManager::ClearAllEntities()
     {
-        if (mEntities.size() == 0)
+        if (m_entities.empty())
         {
             return;
         }
 
-        for (auto& entity : mEntities)
+        for (auto& entity : m_entities)
         {
             entity.reset();
             entity = nullptr;
         }
-        mEntities.clear();  // Limpa o vetor
-        mEntities.shrink_to_fit();
+        m_entities.clear(); // Limpa o vetor
+        m_entities.shrink_to_fit();
+        m_counter = 0;
     }
 
-    void EntityManager::DeleteEntitys(bool bIsDeleteEntities)
+    void EntityManager::SetThemeValue()
     {
-        if (!bIsDeleteEntities)
+        for (auto& entity : m_tempEntities)
+        {
+            entity->SetThemeValue();
+        }
+        for (auto& entity : m_entities)
+        {
+            entity->SetThemeValue();
+        }
+    }
+
+    void EntityManager::DeleteEntities(bool isDeleteEntities)
+    {
+        if (!isDeleteEntities)
         {
             return;
         }
 
-        for (auto& entity : mEntities)
+        for (auto& entity : m_entities)
         {
-            if (entity->mToDelete)
+            if (entity->m_isCanDelete)
             {
                 entity.reset();
             }
         }
 
-        mEntities.erase(std::remove_if(mEntities.begin(),
-                                       mEntities.end(),
-                                       [](const std::unique_ptr<Entity>& entity)
-                                       {
-                                           return !entity;  // Return true element
-                                       }),
-                        mEntities.end());
+        m_entities.erase(std::remove_if(m_entities.begin(),
+                                        m_entities.end(),
+                                        [](const std::unique_ptr<Entity>& entity)
+                                        {
+                                            return !entity; // Return true element
+                                        }),
+                         m_entities.end());
 
-        mTimerManagerReference->ClearAllTimers();
-        mPrepareNewOrdination = true;
+        m_timerManagerReference->ClearAllTimers();
+        m_markOrder = true;
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

@@ -3,10 +3,8 @@
 
 #include <functional>
 #include <memory>
-#include <string>
 #include <unordered_map>
-#include <vector>
-#include "Core.h"
+
 #include "Utils/Timer.h"
 
 namespace ClassicLauncher
@@ -14,6 +12,7 @@ namespace ClassicLauncher
     class Timer;
     class Entity;
     class Application;
+    class Window;
 
     struct TimerHandling
     {
@@ -21,28 +20,31 @@ namespace ClassicLauncher
 
     private:
 
-        int id = -1;
+        int id{-1};
     };
 
     class TimerManager
     {
-        friend class Application;
+    public:
+
+        TimerManager(Window* window);
+        ~TimerManager() = default;
+        void SetTimer(TimerHandling& timerHandling, std::function<void()> callbackFunction, Entity* targetEntity, float delay, bool isLooped = false);
+        void ClearTimer(TimerHandling& timerHandling);
+        void ClearAllTimers();
 
     private:
 
-        std::unordered_map<int, std::unique_ptr<Timer>> mTimers;
-        void ValidTimerHandling(TimerHandling& timerHandling);
-        void Update();
-        
-        public:
-        
-        TimerManager() = default;
-        ~TimerManager() = default;
-        void SetTimer(TimerHandling& timerHandling, std::function<void()> callbackFunction, Entity* targetEntity, float delay, bool bLooped = false);
-        void ClearTimer(const TimerHandling& timerHandling);
-        void ClearAllTimers();
+        friend class Application;
+
+        void ValidTimerHandling(TimerHandling& timerHandling) const;
+        void Update() const;
+
+        std::unordered_map<TimerHandling*, std::unique_ptr<Timer>> m_timers{};
+        int m_counter{0};
+        Window* m_windowRef{nullptr};
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

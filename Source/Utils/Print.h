@@ -4,29 +4,29 @@
 #include <chrono>
 #include <string>
 #include <vector>
-#include "Core.h"
-#include "Log.h"
+
+#include "Data/Color.h"
+
 
 namespace ClassicLauncher
 {
 
+    class FontManager;
+    class Window;
+
     struct Message
     {
-        std::string textMessage;
-        float duration;
-        std::string label;
-        std::chrono::time_point<std::chrono::steady_clock> start;
-        std::chrono::time_point<std::chrono::steady_clock> end;
-        Color textColor;
-        int size;
+        Message() = default;
 
-        Message()
-            : textMessage(""), duration(0), label(""), start(), end(), textColor(), size(0)
-        {
-        }
+        std::string textMessage{};
+        float duration{0.0f};
+        std::string label{};
+        std::chrono::time_point<std::chrono::steady_clock> start{};
+        std::chrono::time_point<std::chrono::steady_clock> end{};
+        Color textColor{};
+        int size{0};
 
         void SetStart() { start = std::chrono::steady_clock::now(); }
-
         void SetEnd() { end = std::chrono::steady_clock::now(); }
 
         bool IsTimeElapsed()
@@ -42,21 +42,22 @@ namespace ClassicLauncher
     {
     public:
 
-        Print();
-        void PrintOnScreen(const char* text, float duration = 2.0f, const char* label = "", const Color& textColor = Color::Cyan(), bool bLog = false);
+        Print(FontManager& fontManager, Window* window);
+        void Init();
+        void PrintOnScreen(const char* text, float duration = 2.0f, const char* label = "", const Color& textColor = Color::Cyan, bool enableLog = false);
         void DrawMessage();
-        void LoadFont(const std::string& path, int size = 20, float spacing = 1);
-        void Unload();
 
     private:
 
-        void InternalPrintOnScreen(const std::string& text, float duration, const std::string& label, const Color& textColor, bool bLog, int sizeY);
-        int mSize;
-        float mSpacing;
-        Font mFont;
-        std::vector<Message> mMessages;
+        void InternalPrintOnScreen(const std::string& text, float duration, const std::string& label, const Color& textColor, bool enableLog, int sizeY);
+        int m_size{16};
+        float m_spacing{0};
+        std::string m_fontName{};
+        std::vector<Message> m_messages{};
+        FontManager* m_fontManagerRef{nullptr};
+        Window* m_windowRef{nullptr};
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // PRINT
+#endif // PRINT

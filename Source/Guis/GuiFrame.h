@@ -1,32 +1,40 @@
 #ifndef GUI_FRAME_H
 #define GUI_FRAME_H
 
-#include <vector>
-#include "Entity/EntityGui.h"
+#include "Animations/Animatable.h"
+#include "Entity/Entity.h"
+#include "Utils/TimerManager.h"
 
 
 namespace ClassicLauncher
 {
-    class FocusManager;
+    class GuiBase;
+    class Window;
 
-    class GuiFrame : public EntityGui
+    class GuiFrame : public Entity, public Animatable
     {
-    private:
-
-        std::vector<Entity*> mFollowEntities;
-        FocusManager* mFocusManager;
-        TimerHandling mTimer;
-
     public:
 
-        GuiFrame(FocusManager* focusManager);
-        ~GuiFrame();
-        void SetFrame(float clampXMin, float clampXMax, float clampYMin, float clampYMax);
+        explicit GuiFrame(const EntityContext& entityContext, Window* window);
+        ~GuiFrame() = default;
+        void SetFrame(/* bool force = false */);
         void Click();
+        virtual void AnimationFinished(const std::string& name) override;
         virtual EntityType GetType() const override { return EntityType::GuiFrameClass; }
         virtual void Update() override;
+        void SetLimitArea(RectFloat area);
+        [[nodiscard]] bool IsFrameMove();
+
+    private:
+
+        void UpdateFramePosition();
+
+        GuiBase* m_frameMenu{nullptr};
+        RectFloat m_limitAreaMove{};
+        TimerHandling m_timer{};
+        bool m_isMove{false};
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
 #endif

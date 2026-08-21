@@ -1,67 +1,49 @@
 #include "GuiBlackScreen.h"
-#include "Application.h"
+
 
 namespace ClassicLauncher
 {
-    GuiBlackScreen::GuiBlackScreen()
+
+    GuiBlackScreen::GuiBlackScreen(const EntityContext& entityContext, Window* window)
+        : Entity(entityContext)
+        , Animatable(window)
     {
-        mTransform.color.SetOpacity(0);
-        mTransform.scaleWidth = 1280;
-        mTransform.scaleHeight = 720;
-        mTextureName = "black";
+        SetOpacity(0);
+        SetSize(Sizef{1280.0f, 720.0f});
+        SetSource(0.0f, 0.0f, 1280.0f, 720.0f);
+        m_textureName = "black";
     }
 
     void GuiBlackScreen::FadeIn()
     {
-        mTransform.color.SetOpacity(0);
-        Transform target = mTransform;
+        SetOpacity(0);
+        Transform target = GetTransform();
         target.color.a = 255;
-        StartAnimation("fade-in", 0.3f, mTransform, target, Ease::EaseLinearNone, false);
+        GetAnimationManager().StartAnimation("fade-in", 0.3f, this, target, Ease::EaseLinearNone, false);
     }
 
     void GuiBlackScreen::FadeOut()
     {
-        mTransform.color.SetOpacity(255);
-        Transform target = mTransform;
+        SetOpacity(255);
+        Transform target = GetTransform();
         target.color.a = 0;
-        StartAnimation("fade-out", 0.3f, mTransform, target, Ease::EaseQuadOut, false);
+        GetAnimationManager().StartAnimation("fade-out", 0.3f, this, target, Ease::EaseLinearNone, false);
     }
-    
+
     void GuiBlackScreen::FadeInFadeOut()
     {
-        mTransform.color.SetOpacity(0);
-        Transform target = mTransform;
+        SetOpacity(0);
+        Transform target = GetTransform();
         target.color.a = 255;
-        StartAnimation("fade-in-out", 0.3f, mTransform, target, Ease::EaseLinearNone, false);
-    }
-
-    void GuiBlackScreen::KeepBlack()
-    {        
-        mTransform.color.SetOpacity(255);
-        Transform target = mTransform;   
-        StartAnimation("keep", 1.0f, mTransform, target, Ease::EaseLinearNone, false);
-
-    }
-
-    void GuiBlackScreen::SetOpacity(int opacity)
-    {
-        mTransform.color.SetOpacity(opacity);
+        GetAnimationManager().StartAnimation("fade-in", 0.3f, this, target, Ease::EaseLinearNone, false);
+        GetTimerManager()->SetTimer(m_timer, CALLFUNCTION(FadeOut, this), this, 1.8f);
     }
 
     void GuiBlackScreen::Update()
     {
-        EntityGui::Update();
+        Entity::Update();
+        Animatable::UpdateAnimation();
     }
-    
-    void GuiBlackScreen::AnimationFinished(std::string name)
-    {
-        if (name == "fade-in-out")
-        {
-            KeepBlack();
-        }
-        if (name == "keep")
-        {
-            FadeOut();
-        }
-    }
-}  // namespace  ClassicLauncher
+
+
+} // namespace  ClassicLauncher

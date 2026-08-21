@@ -1,64 +1,89 @@
 #ifndef INPUT_MANAGER_H
 #define INPUT_MANAGER_H
 
-#include "Core.h"
+#include <cstdint>
+
+#include "Input/Gamepad.h"
+#include "Input/Keyboard.h"
+#include "Input/Mouse.h"
 
 namespace ClassicLauncher
 {
-    // clang-format off
     enum InputCategory
-    {    
-        main =              0x00000001,       
-        videoFullscreen =   0x00000010,       
-        debug =             0x10000000       
-    };
-    // clang-format on
-
-    enum InputName
     {
-        unknown = 0,
-        leftFaceUp,         // dpad (up)                                   key(up)
-        leftFaceRight,      // dpad (right)                                key(right)
-        leftFaceDown,       // dpad (down)                                 key(down)
-        leftFaceLeft,       // dpad (left)                                 key(left)
-        rightFaceUp,        // right right button PS (triangle) XB (Y)     key(f)
-        rightFaceRight,     // right right button PS (circle) XB (B)       key(backspace)
-        rightFaceDown,      // right right button PS (cross) XB (A)        key(enter)
-        rightFaceLeft,      // right left button PS (square) XB (X)        key(a)
-        leftTriggerFront,   // left trigger button PS (L1) XB (LB)         key(q)
-        leftTriggerBack,    // left trigger button PS (L2) XB (LT)         key(z)
-        rightTriggerFront,  // right trigger button PS (R1) XB (RB)        key(e)
-        rightTriggerBack,   // right trigger button PS (R2) XB (RT)        key(c)
-        middleFaceLeft,     // center left button PS (select) XB (back)    key(esc)
-        middleFaceCenter,   // center center button PS (pslogo) XB (guide) key(f1)
-        middleFaceRight,    // center right button PS (start) XB (start)   key(s)
-        leftThumb,          // left thumb button PS (L3) XB (LS)           key(n)
-        rightThumb          // right thumb button PS (R3) XB (RS)          key(m)
+        // clang-format off
+        MainBottom =        0x00000001,       
+        MainCenter =        0x00000010,       
+        MainTop =           0x00000100,       
+        VideoFullscreen =   0x00001000,       
+        Debug =             0x10000000
+        // clang-format on
+    };
+
+    enum InputName : std::uint8_t
+    {
+        Unknown = 0, // None
+        DPadUp,      // DPad (Up)                Key(Up)
+        DPadRight,   // DPad (Right)             Key(Right)
+        DPadDown,    // DPad (Down)              Key(Down)
+        DPadLeft,    // DPad (Left)              Key(Left)
+        Triangle,    // PS (Triangle) XB (Y)     Key(F)
+        Circle,      // PS (Circle)   XB (B)     Key(Backspace)
+        Cross,       // PS (Cross)    XB (A)     Key(Enter)
+        Square,      // PS (Square)   XB (X)     Key(A)
+        L1,          // PS (L1)       XB (LB)    Key(Q)
+        L2,          // PS (L2)       XB (LT)    Key(Z)
+        R1,          // PS (R1)       XB (RB)    Key(E)
+        R2,          // PS (R2)       XB (RT)    Key(C)
+        Select,      // PS (Select)   XB (Back)  Key(Esc)
+        PS,          // PS (Pslogo)   XB (Guide) Key(F1)
+        Start,       // PS (Start)    XB (Start) Key(S)
+        L3,          // PS (L3)       XB (LS)    Key(N)
+        R3,          // PS (R3)       XB (RS)    Key(M)
     };
 
     struct InputMapper
     {
-        int gamePad;
-        int keyPad;
-        float amoutDown;
-        InputName name;
-        bool bPress;
-        bool bDown;
-        bool bRelease;
-        bool bUp;
+        enum class Direction : std::int8_t
+        {
+            Negative = -1,
+            Zero = 0,
+            Positive = 1
+        };
 
-        InputMapper(InputName name, int gamePad, int keyPad)
-            : gamePad(gamePad), keyPad(keyPad), amoutDown(0), name(name), bPress(false), bDown(false), bRelease(false), bUp(false)
+        InputName name{};
+        int gamePad{0};
+        int keyPad{0};
+        int axis{0};
+        Direction directionAxis{Direction::Zero};
+
+        float lastAxisValue{0.0f};
+        float amoutDown{0.0f};
+        bool isPress{false};
+        bool isDown{false};
+        bool isRelease{false};
+        bool isUp{false};
+        bool isAxisDown{false};
+
+
+        InputMapper(InputName name, int gamePad, int keyPad, int axis = -1, Direction directionAxis = Direction::Zero)
+            : name(name)
+            , gamePad(gamePad)
+            , keyPad(keyPad)
+            , axis(axis)
+            , directionAxis(directionAxis)
         {
         }
 
         void CancelInput()
         {
-            bPress = false;
-            bDown = false;
-            bRelease = false;
-            bUp = false;
-            amoutDown = 0;
+            lastAxisValue = 0.0f;
+            amoutDown = 0.0f;
+            isPress = false;
+            isDown = false;
+            isRelease = false;
+            isUp = false;
+            isAxisDown = false;
         }
     };
 
@@ -68,39 +93,8 @@ namespace ClassicLauncher
 
         InputManager();
         ~InputManager();
-        void UpdateInputState();
 
-    protected:
-
-        int mGamePadIdSelected;
-        int mAmoutDown;
-        bool mDisableInput;
-        unsigned int mCategory;
-
-        // clang-format off
-        InputMapper mInputs[18]{ 
-            InputMapper(unknown, 0, KEY_NULL), 
-            InputMapper(leftFaceUp, 1, KEY_UP), 
-            InputMapper(leftFaceRight, 2, KEY_RIGHT), 
-            InputMapper(leftFaceDown, 3, KEY_DOWN), 
-            InputMapper(leftFaceLeft, 4, KEY_LEFT), 
-            InputMapper(rightFaceUp, 5, KEY_F), 
-            InputMapper(rightFaceRight, 6, KEY_BACKSPACE), 
-            InputMapper(rightFaceDown, 7, KEY_ENTER), 
-            InputMapper(rightFaceLeft, 8, KEY_A), 
-            InputMapper(leftTriggerFront, 9, KEY_Q), 
-            InputMapper(leftTriggerBack, 10, KEY_Z), 
-            InputMapper(rightTriggerFront, 11, KEY_E), 
-            InputMapper(rightTriggerBack, 12, KEY_C), 
-            InputMapper(middleFaceLeft, 13, KEY_ESCAPE), 
-            InputMapper(middleFaceCenter, 14, KEY_F1), 
-            InputMapper(middleFaceRight, 15, KEY_S), 
-            InputMapper(leftThumb, 16, KEY_N), 
-            InputMapper(rightThumb, 17, KEY_M) 
-            };
-        // clang-format on
-
-    public:
+        void UpdateInputState(float frameTime);
 
         static bool IsPress(InputName name, unsigned int category);
         static bool IsDown(InputName name, unsigned int category);
@@ -113,9 +107,33 @@ namespace ClassicLauncher
 
     private:
 
-        bool CheckCategory(unsigned int category);
+        [[nodiscard]] bool CheckCategory(unsigned int category) const;
+
+        int m_amoutDown{0};
+        bool m_disableInput{false};
+        unsigned int m_category{0};
+
+        InputMapper m_inputs[18]{
+            InputMapper(Unknown, GamePad::Button::Unknown, Keyboard::Key::KeyNull),
+            InputMapper(DPadUp, GamePad::Button::LeftFaceUp, Keyboard::Key::Up, GamePad::Axis::LeftY, InputMapper::Direction::Negative),
+            InputMapper(DPadRight, GamePad::Button::LeftFaceRight, Keyboard::Key::Right, GamePad::Axis::LeftX, InputMapper::Direction::Positive),
+            InputMapper(DPadDown, GamePad::Button::LeftFaceDown, Keyboard::Key::Down, GamePad::Axis::LeftY, InputMapper::Direction::Positive),
+            InputMapper(DPadLeft, GamePad::Button::LeftFaceLeft, Keyboard::Key::Left, GamePad::Axis::LeftX, InputMapper::Direction::Negative),
+            InputMapper(Triangle, GamePad::Button::RightFaceUp, Keyboard::Key::F),
+            InputMapper(Circle, GamePad::Button::RightFaceRight, Keyboard::Key::Backspace),
+            InputMapper(Cross, GamePad::Button::RightFaceDown, Keyboard::Key::Enter),
+            InputMapper(Square, GamePad::Button::RightFaceLeft, Keyboard::Key::A),
+            InputMapper(L1, GamePad::Button::LeftTrigger1, Keyboard::Key::Q),
+            InputMapper(L2, GamePad::Button::LeftTrigger2, Keyboard::Key::Z),
+            InputMapper(R1, GamePad::Button::RightTrigger1, Keyboard::Key::E),
+            InputMapper(R2, GamePad::Button::RightTrigger2, Keyboard::Key::C),
+            InputMapper(Select, GamePad::Button::MiddleLeft, Keyboard::Key::Escape),
+            InputMapper(PS, GamePad::Button::Middle, Keyboard::Key::F1),
+            InputMapper(Start, GamePad::Button::MiddleRight, Keyboard::Key::S),
+            InputMapper(L3, GamePad::Button::LeftThumb, Keyboard::Key::N),
+            InputMapper(R3, GamePad::Button::RightThumb, Keyboard::Key::M)};
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // INPUT_MANAGER_H
+#endif // INPUT_MANAGER_H

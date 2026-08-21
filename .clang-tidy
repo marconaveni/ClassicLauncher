@@ -1,0 +1,40 @@
+# .clang-tidy
+Checks: >
+  clang-diagnostic-*,
+  clang-analyzer-*,
+  modernize-*,-modernize-use-trailing-return-type,-modernize-use-ranges,
+  performance-*,
+  readability-*,-readability-identifier-length,-readability-magic-numbers,-readability-uppercase-literal-suffix,-readability-implicit-bool-conversion
+
+
+#WarningsAsErrors: 'clang-analyzer-*,clang-diagnostic-*'  
+
+# Foca nos seus diretórios de código. Ajuste se usar outros nomes.
+HeaderFilterRegex: '^(Source)(/|\\)' 
+
+# Use o formato do clang-format se quiser auto-fixar estilo quando pedir -fix
+FormatStyle: none
+
+CheckOptions:
+  - { key: readability-identifier-naming.ClassCase,           value: CamelCase }
+  - { key: readability-identifier-naming.FunctionCase,        value: CamelCase }
+  - { key: readability-identifier-naming.VariableCase,        value: camelBack }
+  - { key: readability-identifier-naming.ParameterCase,       value: camelBack }
+  - { key: readability-identifier-naming.MemberCase,          value: camelBack }
+  - { key: readability-identifier-naming.PrivateMemberCase,   value: CamelCase }
+  - { key: readability-identifier-naming.ProtectedMemberPrefix, value: m }
+  - { key: readability-identifier-naming.PrivateMemberPrefix,   value: m }
+  - key: modernize-use-trailing-return-type.IgnoreMacros
+    value: 'true'
+  - key: readability-identifier-length.MinimumParameterNameLength
+    value: '1'
+  - key: readability-identifier-length.IgnoredParameterNames
+    value: '^(i|j|k|x|y|t|b|c|d|m)$'
+  - key: readability-magic-numbers.IgnoredIntegerValues
+    value: '0;1;2;6;8;9;10;11;12;14;15;23;28;29;30;31;59;1900'
+  - key: readability-magic-numbers.IgnoredFloatingPointValues
+    value: '0.0;5.0;10.0'
+  - key: readability-magic-numbers.AllowedVariablesPattern
+    value: '^(k[A-Z][A-Za-z0-9_]*)$'  # kConstStyle vira ok
+  - key: readability-function-cognitive-complexity.Threshold
+    value: '60'

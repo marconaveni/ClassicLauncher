@@ -1,56 +1,69 @@
 #ifndef SIZE_H
 #define SIZE_H
 
-#include <string>
-#include "Vector2.h"
-#include "raylib.h"
 
 namespace ClassicLauncher
 {
+    template <typename T>
+    class Vector2; // circular include
+
+
+    template <typename T>
     class Size
     {
     public:
 
-        float width;
-        float height;
+        T width{};  // Vector width component
+        T height{}; // Vector height component
 
-        Size()
-            : width(0), height(0) {};
-
-        Size(float width, float height)
-            : width(width), height(height) {};
-
-        Size(float width)
-            : width(width), height(0) {};
-
-        Size()
-            : Size{ 0, 0 } {};
-
-        Size& operator=(const Size& size)
+        constexpr Size(T width, T height)
+            : width(width)
+            , height(height)
         {
-            Set(size.width, size.height);
-            return *this;
         }
 
-        bool operator==(const Size& other) const { return width == other.width && height == other.height; }
-        bool operator!=(const Size& other) const { return !(*this == other); }
-
-        void SetWidth(float width) { this->width = width; }
-        void SetHeight(float height) { this->height = height; }
-        void Set(Size size) { Set(size.width, size.height); }
-        void Set(float width, float height)
+        constexpr Size(T x)
+            : width(x)
+            , height(x)
         {
-            this->width = width;
-            this->height = height;
         }
 
-        std::string ToString() const { return "Size(width: " + std::to_string(width) + ", height: " + std::to_string(height) + ")"; }
-        int GetIntWidth() const { return static_cast<int>(width); }
-        int GetIntHeight() const { return static_cast<int>(height); }
+        constexpr Size(const Vector2<T>& v)
+            : width(v.x)
+            , height(v.y)
+        {
+        }
 
-        Vector2 ToVector() { return Vector2(width, height); }
+        constexpr Size()
+            : width(0)
+            , height(0)
+        {
+        }
+
+        template <typename U>
+        constexpr explicit operator Size<U>() const
+        {
+            return Size<U>(static_cast<U>(width), static_cast<U>(height));
+        }
+
+        constexpr bool operator==(const Size& other) const { return width == other.width && height == other.height; }
+        constexpr bool operator!=(const Size& other) const { return !(*this == other); }
+        constexpr Size operator+(const Size& other) const { return Size{width + other.width, height + other.height}; }
+        constexpr Size operator-(const Size& other) const { return Size{width - other.width, height - other.height}; }
+        constexpr Size operator*(T scalar) const { return {width * scalar, height * scalar}; }
+        constexpr Size operator/(T scalar) const { return {width / scalar, height / scalar}; }
+
+
+        constexpr Size<int> ToInt() const { return Size<int>(static_cast<int>(width), static_cast<int>(height)); }
+        constexpr Size<float> ToFloat() const { return Size<float>(static_cast<float>(width), static_cast<float>(height)); }
+        constexpr Size<double> ToDouble() const { return Size<double>(static_cast<double>(width), static_cast<double>(height)); }
     };
 
-}  // namespace ClassicLauncher
+    using Sizef = Size<float>;
+    using Sized = Size<double>;
+    using Sizei = Size<int>;
 
-#endif  // SIZE_H
+
+} // namespace ClassicLauncher
+
+#endif // SIZE_H

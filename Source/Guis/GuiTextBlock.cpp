@@ -1,156 +1,172 @@
 #include "GuiTextBlock.h"
-#include "Application.h"
+
+#include "Graphics/FontManager.h"
+#include "Helper.h"
+#include "Themes/ThemesManager.h"
+#include "Utils/Math.h"
+#include "Window/Window.h"
+#include "Wrap.h"
+
 
 namespace ClassicLauncher
 {
     void GuiTextBlock::LoadNewFont(const std::string& path, int size, int spacing)
     {
-        mPathFont = path;
-        mSize = size;
-        mSpacing = spacing;
+        m_pathFont = path;
+        m_sizeText = size;
+        m_spacing = spacing;
         UpdateFont(path);
     }
 
     void GuiTextBlock::UpdateFont(const std::string& path)
     {
-        if (IsFontValid(mFont))
-        {
-            UnloadFont(mFont);
-            mFont = Font();
-        }
-        const float scale = Themes::GetScaleTexture();
-        mFont = LoadFontEx(path.data(), mSize * scale, NULL, 250);
+        m_renderScale = ThemesManager::GetScaleRenderer();
+        m_nameFont = GetFontManager()->Load(path, m_sizeText * m_renderScale);
     }
 
-    GuiTextBlock::GuiTextBlock(const std::string& path, int size, int spacing)
-        : mFont(Font{ 0 })
-        , mText()
-        , mPathFont()
-        , mSize()
-        , mSpacing()
-        , mColor(Color::White())
-        , mTextMovement(false)
-        , mDesiredWidth(10)
-        , mOffset(0)
-        , mToLeft(true)
-        , mDelay(0)
-        , mMensuredText(Vector2())
-        , mSpeed(0.5f)
-        , mMaxDelay(3.0f)
-        , mTextOverflowPolicy(TextOverflowPolicy::none)
+    GuiTextBlock::GuiTextBlock(const EntityContext& entityContext)
+        : Entity(entityContext)
     {
-        LoadNewFont(path, size, spacing);
-        mTextureName = "text";
     }
 
     GuiTextBlock::~GuiTextBlock()
     {
-        UnloadText();
+    }
+
+    void GuiTextBlock::Init(const std::string& path, int size, int spacing)
+    {
+        LoadNewFont(path, size, spacing);
     }
 
     void GuiTextBlock::Update()
     {
-        EntityGui::Update();
+        Entity::Update();
 
-        if (mTextOverflowPolicy == TextOverflowPolicy::clip)
+        if (m_autoSize)
         {
-            EnableScissorMode(mTransform.GetTransform().x, mTransform.GetTransform().y, mDesiredWidth, mMensuredText.y);
+            // SetSize(m_mensuredText.x, m_mensuredText.y);
+            return;
         }
 
-        const int positionText = mDesiredWidth - mMensuredText.GetIntX();
-        if (mTextOverflowPolicy == TextOverflowPolicy::clip && positionText < 0)
+
+        if (m_centerText && GetSize().width > GetMeasureTextBox().x)
         {
-            if (mDelay < mMaxDelay)
+            const float widthPosition = GetSize().width * GetWorldTransform().scale.x * GetScale().x;
+            const float widthText = GetMeasureTextBox().x * GetWorldTransform().scale.x * GetScale().x;
+            m_positionText = (widthPosition * m_renderScale - widthText * m_renderScale) / 2.0f;
+        }
+        else
+        {
+            m_positionText = 0.0f;
+        }
+
+        const float positionText = (GetSize().width - m_mensuredText.x) * m_renderScale;
+        if (m_textOverflowPolicy == TextOverflowPolicy::Clip && positionText < 0)
+        {
+            if (m_delay < m_maxDelay)
             {
-                mDelay += GetFrameTime();
+                m_delay += GetWindow()->GetFrameTime();
                 return;
             }
+            LOG(LogTrace, "positionText %.2f m_offsetText %.2f", positionText, m_offsetText);
 
-            mSpeed = 0.50f * 60.0f * GetFrameTime();
+            m_speed = 0.50f * 60.0f * GetWindow()->GetFrameTime();
 
-            if (positionText - mOffset > 0 || positionText - mOffset < positionText)
+            if (positionText - m_offsetText > 0 || positionText - m_offsetText < positionText)
             {
-                mDelay = 0.0f;
-                mToLeft = !mToLeft;
+                m_delay = 0.0f;
+                m_isLeft = !m_isLeft;
             }
 
-            mOffset += (mToLeft) ? -mSpeed : mSpeed;
+            m_offsetText += (m_isLeft) ? -m_speed : m_speed;
         }
     }
 
     void GuiTextBlock::Draw()
-    {     
-        mColor.a = mTransform.color.a;
-        Vector2 posi = mTransform.GetTransform().GetPosition();
-        posi.x += mOffset * Themes::GetScaleTexture();
-        Vector2 scale = mTransform.GetScale();
-        DrawTextEx(mFont, mText.data(), posi, mSize * Math::Max(scale.x * Themes::GetScaleTexture(), scale.y * Themes::GetScaleTexture()), mSpacing, mColor);
+    {
+
+        Font* font = GetFontManager()->GetFont(m_nameFont);
+
+        if (!font || !IsVisible())
+        {
+            return;
+        }
+
+        RectFloat finalTransformRect = m_finalRender.transform;
+
+        if (m_textOverflowPolicy == TextOverflowPolicy::Clip)
+        {
+            rlw::BeginScissorMode(finalTransformRect.x, finalTransformRect.y, finalTransformRect.width, finalTransformRect.height);
+        }
+        rlw::DrawTextEx(*font,
+                        m_text.data(),
+                        Vector2f{finalTransformRect.x + m_positionText + m_offsetText, finalTransformRect.y}, // Vector2f{300 , 400},
+                        m_sizeText * GetWorldTransform().scale.y * m_renderScale,
+                        m_spacing * m_renderScale,
+                        GetColor());
+        if (m_textOverflowPolicy == TextOverflowPolicy::Clip)
+        {
+            rlw::EndScissorMode();
+        }
     }
 
     void GuiTextBlock::End()
     {
-        UnloadText();
     }
 
     void GuiTextBlock::SetText(const std::string& text)
     {
-        mText = text;
-        mOffset = 0;
-        mDelay = 1;
+        m_text = text;
+        m_offsetText = 0;
+        m_delay = 1;
 
-        mMensuredText = MeasureTextBox();
-        mTransform.scaleWidth = mMensuredText.x;
-        mTransform.scaleHeight = mMensuredText.y;
+        m_mensuredText = MeasureTextBox();
+        const float x = m_autoSize ? m_mensuredText.x : GetSize().width;
+        SetSize(x, m_mensuredText.y);
     }
 
-    void GuiTextBlock::SetSize(int size)
+    void GuiTextBlock::SetAutoSize(bool enable)
     {
-        LoadNewFont(mPathFont.c_str(), size, mSpacing);
+        m_autoSize = enable;
+        SetSize(m_mensuredText.x, m_mensuredText.y);
+    }
+
+    void GuiTextBlock::SetSizeFont(int size)
+    {
+        LoadNewFont(m_pathFont, size, m_spacing);
     }
 
     void GuiTextBlock::SetSpacing(int spacing)
     {
-        mSpacing = spacing;
+        m_spacing = spacing;
     }
 
-    void GuiTextBlock::SetColor(Color tint)
+    Vector2f GuiTextBlock::GetMeasureTextBox()
     {
-        mColor = tint;
+        return m_mensuredText;
     }
 
-    Vector2 GuiTextBlock::GetMeasureTextBox()
+    Vector2f GuiTextBlock::MeasureTextBox()
     {
-        return mMensuredText;
-    }
+        Font* font = GetFontManager()->GetFont(m_nameFont);
+        if (!font)
+        {
+            return Vector2f{};
+        }
 
-    Vector2 GuiTextBlock::MeasureTextBox()
-    {
-        return MeasureTextEx(mFont, mText.c_str(), mSize, mSpacing);
+        return font->MeasureTextEx(m_text, m_sizeText, m_spacing);
+        // return m_font.MeasureTextEx(m_text, m_sizeText, m_spacing);
     }
 
     void GuiTextBlock::SetTextOverflowPolicy(TextOverflowPolicy textOverflowPolicy)
     {
-        mTextOverflowPolicy = textOverflowPolicy;
-    }
-
-    void GuiTextBlock::SetDesiredWidth(int newWidth)
-    {
-        mDesiredWidth = newWidth;
+        m_textOverflowPolicy = textOverflowPolicy;
     }
 
     void GuiTextBlock::SetOffSetMoveText(float speed, float maxDelay)
     {
-        mSpeed = speed;
-        mMaxDelay = maxDelay;
+        m_speed = speed;
+        m_maxDelay = maxDelay;
     }
 
-    void GuiTextBlock::UnloadText()
-    {
-        if (IsFontValid(mFont))
-        {
-            UnloadFont(mFont);
-            mFont = Font();
-        }
-    }
-
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

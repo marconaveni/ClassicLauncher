@@ -1,51 +1,59 @@
 #ifndef GUI_MINI_COVER_H
 #define GUI_MINI_COVER_H
 
-#include <memory>
-#include <string>
 #include <vector>
 
-#include "Application.h"
-#include "GuiComponent.h"
-#include "Guis/GuiSizeBox.h"
-#include "Guis/GuiHorizontalBox.h"
+#include "Animations/Animatable.h"
+#include "Entity/Entity.h"
+
 
 namespace ClassicLauncher
 {
 
-    class EntityGui;
-    class GuiComponent;
+    class GuiBase;
     class GuiSizeBox;
     class GuiHorizontalBox;
+    class EntityManager;
+    class GameListManager;
+    class Window;
 
-    class GuiMiniCover : public EntityGui
+    class GuiMiniCover : public Entity, public Animatable
     {
-    private:
-
-        std::vector<GuiComponent*> mGuiCovers;
-        std::vector<GuiSizeBox*> mGuiSizeBoxs;
-        GuiHorizontalBox* mGuiHorizontalBox;
-        GuiComponent* mArrow;
-        int mSize;
-        Vector2 mSizeCover;
-
     public:
 
-        GuiMiniCover();
-        virtual ~GuiMiniCover() override = default;
+        explicit GuiMiniCover(const EntityContext& entityContext, GameListManager* gameListManagerRef, Window* window);
         EntityType GetType() const override { return EntityType::GuiMiniCoverClass; }
         void Init();
         void Update() override;
         void End() override;
+        virtual void SetThemeValue() override;
         void SetCovers();
-        void SetCover(std::string name, GuiComponent* miniCover);
+        void SetCover(const std::string& name, GuiBase* miniCover);
         void ClearCovers();
 
     private:
 
+        struct MiniCover
+        {
+            GuiSizeBox* sizeBox{nullptr};
+            GuiBase* gui{nullptr};
+            bool focus{false};
+        };
+
+
+        std::vector<MiniCover> m_guiMiniCovers{};
+        GuiHorizontalBox* m_guiHorizontalBox{nullptr};
+        GuiBase* m_arrow{nullptr};
+        int m_numCovers{32};
+        Vector2f m_sizeCover{28.0f, 40.0f};
+        bool m_focus{false};
+
+        GameListManager* m_gameListManagerRef{nullptr};
+
         void SetPositionCovers(int numCovers);
+        void CreateMiniCovers();
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // GUI_MINI_COVER_H
+#endif // GUI_MINI_COVER_H

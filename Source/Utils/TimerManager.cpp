@@ -1,54 +1,79 @@
 #include "TimerManager.h"
 
+#include <algorithm>
+#include <utility>
+
+#include "Helper.h"
+#include "Window/Window.h"
+
 namespace ClassicLauncher
 {
-    void TimerManager::ValidTimerHandling(TimerHandling& timerHandling)
+    
+    TimerManager::TimerManager(Window* window)
+        : m_windowRef(window)
     {
-        const int size = static_cast<int>(mTimers.size() - 1);
+    }
+
+    void TimerManager::ValidTimerHandling(TimerHandling& timerHandling) const
+    {
+        const int size = static_cast<int>(m_timers.size() - 1);
         if (timerHandling.id < 0 || timerHandling.id > size)
         {
             timerHandling.id = -1;
-            return;
         }
     }
 
-    void TimerManager::SetTimer(TimerHandling& timerHandling, std::function<void()> callbackFunction, Entity* targetEntity, float delay, bool bLooped)
+    void TimerManager::SetTimer(TimerHandling& timerHandling, std::function<void()> callbackFunction, Entity* targetEntity, float delay, bool isLooped)
     {
         ValidTimerHandling(timerHandling);
 
         if (timerHandling.id < 0)
         {
-            std::unique_ptr<Timer> newTimer = std::make_unique<Timer>();
-            timerHandling.id = mTimers.size();
-            mTimers.insert(std::make_pair(timerHandling.id, std::move(newTimer)));
+            std::unique_ptr<Timer> newTimer = std::make_unique<Timer>(m_windowRef);
+            timerHandling.id = static_cast<int>(m_timers.size());
+            m_timers.insert(std::make_pair(&timerHandling, std::move(newTimer)));
         }
-        mTimers[timerHandling.id]->SetTimer(callbackFunction, targetEntity, delay, bLooped);
+        m_timers[&timerHandling]->SetTimer(std::move(callbackFunction), targetEntity, delay, isLooped);
     }
 
-    void TimerManager::ClearTimer(const TimerHandling& timerHandling)
+    void TimerManager::ClearTimer(TimerHandling& timerHandling)
     {
+        ValidTimerHandling(timerHandling);
+
         if (timerHandling.id < 0)
         {
-            return;
+            std::unique_ptr<Timer> newTimer = std::make_unique<Timer>(m_windowRef);
+            timerHandling.id = static_cast<int>(m_timers.size());
+            m_timers.insert(std::make_pair(&timerHandling, std::move(newTimer)));
         }
-        mTimers[timerHandling.id]->Stop();
+        m_timers[&timerHandling]->Stop();
     }
 
-    void TimerManager::Update()
+    void TimerManager::Update() const
     {
-        for (auto& timer : mTimers)
+        for (auto& timer : m_timers)
         {
             timer.second->Update();
         }
+        LOG(LogTrace, "num m_timers in TimerManager %d", m_timers.size());
     }
 
     void TimerManager::ClearAllTimers()
     {
-        for (auto& timer : mTimers)
+        for (auto it = m_timers.begin(); it != m_timers.end();)
         {
-            timer.second.reset();
+            auto& timer = it->second;
+            if (!timer->IsActive())
+            {
+                LOG(LogTrace, "m_timers[%d] deleted", it->first->id);
+                it->first->id = -1;
+                it = m_timers.erase(it); // erase return the next iterator
+            }
+            else
+            {
+                ++it;
+            }
         }
-        mTimers.clear();
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

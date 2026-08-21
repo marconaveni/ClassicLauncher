@@ -1,13 +1,13 @@
 #ifndef ANIMATION_H
 #define ANIMATION_H
 
-
-#include "Core.h"
+#include "Data/Transform.h"
 
 namespace ClassicLauncher
 {
+    class Window;
 
-    enum class Ease 
+    enum class Ease : std::uint8_t
     {
         EaseLinearNone,
         EaseLinearIn,
@@ -44,39 +44,41 @@ namespace ClassicLauncher
     {
     public:
 
-        float mCurrentTime;
-        float mDuration;
+        Animation() = default;
 
-        bool mIsStart;
-        bool mIsRunning;
-        bool mIsFinish;
-        bool mIsReset;
-        bool mRelative;
+        float m_currentTime{0.0f};
+        float m_duration{0.0f};
 
-        Ease mType;
+        bool m_isStart{false};
+        bool m_isRunning{false};
+        bool m_isFinish{false};
+        bool m_isReset{false};
 
-        Transform mStartTransform;
-        Transform mCurrentTransform;
-        Transform mFinalTransform;
+        Ease m_typeEase{Ease::EaseLinearNone};
 
-        Animation();
+        Transform m_startTransform{};
+        Transform m_currentTransform{};
+        Transform m_finalTransform{};
+
 
         void StartAnimation(float durationAnimation,
-                            const Transform& startAnimationTransform,
-                            const Transform& finalAnimationTransform,
+                            const Transform& startAnimation,
+                            const Transform& targetAnimation,
                             Ease typeAnimation = Ease::EaseLinearNone,
-                            bool bForceReset = true);
+                            bool forceReset = true);
         void UpdateAnimation();
-        void FinishAnimation();
-        void ResetAnimation();
+        bool FinishAnimation();
+        bool ResetAnimation();
         bool GetAnimationIsRun() const;
         bool GetAnimationFinish() const;
+        void SetWindow(Window* window) { m_windowRef = window; }
 
-    protected:
+    private:
 
-        float GetAnimation(float t, float b, float c, float d) const;
+        float GetAnimation(float t, float b, float c, float d) const;            
+        Window* m_windowRef{nullptr};
     };
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher
 
-#endif  // ANIMATION_H
+#endif // ANIMATION_H

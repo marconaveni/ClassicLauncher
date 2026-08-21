@@ -21,7 +21,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:     
         submodules: true  # Clone submodules
 
@@ -30,7 +30,7 @@ jobs:
 
     - name: Set up Python
       # Configura o Python no ambiente
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6
       with:
         python-version: 3.x  # set python version
   
@@ -54,7 +54,7 @@ jobs:
       run: ctest -C ${{env.BUILD_TYPE}}
 
     - name: Upload Artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: Classic-Launcher-windows-x64  # Artifacts
-        path: ${{github.workspace}}/build/Release  # paths
+        path: ${{github.workspace}}/build/bin/Release  # paths

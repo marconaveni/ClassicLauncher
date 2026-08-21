@@ -1,150 +1,209 @@
 #include "GuiMiniCover.h"
-#include "Core.h"
+
+#include "Data/GameListManager.h"
+#include "Entity/EntityManager.h"
 #include "Graphics/SpriteManager.h"
+#include "Guis/Components/GuiHorizontalBox.h"
+#include "Guis/Components/GuiSizeBox.h"
+#include "Guis/GuiBase.h"
+#include "Helper.h"
+#include "Input/InputManager.h"
+#include "Themes/ThemesManager.h"
+#include "Utils/Math.h"
+#include "Utils/Utils.h"
+
 
 namespace ClassicLauncher
 {
-    GuiMiniCover::GuiMiniCover()
-        : mGuiCovers(), mArrow(nullptr), mSize(32), mSizeCover(28.0f, 40.0f)
-        // : mGuiCovers(), mArrow(nullptr), mSize(23), mSizeCover(40.0f, 58.0f) // test
+
+    GuiMiniCover::GuiMiniCover(const EntityContext& entityContext, GameListManager* gameListManagerRef, Window* window)
+        : Entity(entityContext)
+        , Animatable(window)
+        , m_gameListManagerRef(gameListManagerRef)
     {
     }
 
     void GuiMiniCover::Init()
     {
-        mTransform.y = 505.0f;
-        mTransform.width = 1280.0f;
-        mTransform.height = 72.0f;
+        SetPosition({0, 505.0f});
+        SetSize({1280.0f, 72.0f});
 
-        mGuiHorizontalBox = GetApplication()->GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
-        mGuiHorizontalBox->mTransform.x = mTransform.width / 2.0f;
-        mGuiHorizontalBox->mTransform.y = 20.0f;
-        mGuiHorizontalBox->SetAutoSize(true);
-        mGuiHorizontalBox->SetAffectScale(true);
-        mGuiHorizontalBox->SetSpace(1.0f);
-        AddChild(mGuiHorizontalBox);
+        CreateMiniCovers();
 
-        for (int i = 0; i < mSize; i++)
+        std::vector<RectFloat> recs = {RectFloat{1236.0f, 0.0f, 30.0f, 18.0f},  // frame 1
+                                       RectFloat{1267.0f, 0.0f, 30.0f, 18.0f},  // frame 2
+                                       RectFloat{1298.0f, 0.0f, 30.0f, 18.0f}}; // frame 3
+
+        m_arrow = GetEntityManager()->CreateEntity<GuiBase>("arrow");
+        m_arrow->SetPosition(GetSize().width / 2, 0);
+        m_arrow->m_textureName = "sprite";
+        GetAnimationManager().AddAnimationFrame("frame", 0.2f, m_arrow, recs);
+        AddChild(m_arrow);
+    }
+
+    void GuiMiniCover::CreateMiniCovers()
+    {
+
+        if (m_guiMiniCovers.size() > 0)
         {
-            auto miniCover = GetApplication()->GetEntityManager()->CreateEntity<GuiComponent>("miniCover");
-            auto sizeBox = GetApplication()->GetEntityManager()->CreateEntity<GuiSizeBox>("GuiSizeBox");
-
-            miniCover->mTextureName = "transparent";
-
-            sizeBox->mTransform.width = mSizeCover.x;
-            sizeBox->mTransform.height = mSizeCover.y;
-            sizeBox->AttachGui(miniCover);
-
-            mGuiHorizontalBox->AttachGui(sizeBox);
-            mGuiCovers.emplace_back(miniCover);
-            mGuiSizeBoxs.emplace_back(sizeBox);
+            m_guiHorizontalBox->SelfDelete();
+            RemoveChild(m_guiHorizontalBox);
+            m_guiMiniCovers.clear();
         }
+        // LOG(LOG_CLASSIC_WARNING, "children %d" , GetChildren().size());
 
-        std::vector<Rectangle> recs = { { 1236.0f, 0.0f, 30.0f, 18.0f }, { 1267.0f, 0.0f, 30.0f, 18.0f }, { 1298.0f, 0.0f, 30.0f, 18.0f } };
+        m_guiHorizontalBox = GetEntityManager()->CreateEntity<GuiHorizontalBox>("GuiHorizontalBox");
+        m_guiHorizontalBox->SetPosition({0, 20.0f});
+        m_guiHorizontalBox->SetSpace(1.0f);
+        AddChild(m_guiHorizontalBox);
 
-        mArrow = GetApplication()->GetEntityManager()->CreateEntity<GuiComponent>("arrow");
-        mArrow->mTransform.x = mTransform.width / 2;
-        mArrow->mTextureName = "sprite";
-        mArrow->AddAnimationFrame("frame", 0.2f, recs);
-        AddChild(mArrow);
+        for (int i = 0; i < m_numCovers; i++)
+        {
+            MiniCover miniCover;
+            miniCover.gui = GetEntityManager()->CreateEntity<GuiBase>("miniCover");
+            miniCover.gui->SetSize(m_sizeCover);
+            miniCover.gui->SetSource({976.0f, 283.0f}, m_sizeCover);
+
+            miniCover.sizeBox = GetEntityManager()->CreateEntity<GuiSizeBox>("sizeBox");
+            miniCover.sizeBox->SetSize(m_sizeCover);
+
+            miniCover.gui->m_textureName = "sprite";
+
+            miniCover.sizeBox->AddChild(miniCover.gui);
+            miniCover.sizeBox->SetMargin(Margin::LeftOnly);
+
+            m_guiHorizontalBox->AttachGui(miniCover.sizeBox);
+            m_guiHorizontalBox->AddChild(miniCover.sizeBox);
+            m_guiMiniCovers.emplace_back(miniCover);
+        }
     }
 
     void GuiMiniCover::Update()
     {
-        EntityGui::Update();
+        Entity::Update();
+        Animatable::UpdateAnimation();
 
-        for (auto& miniCover : mGuiCovers)
+        for (auto& miniCover : m_guiMiniCovers)
         {
-            Texture2D* textureReference = GetApplication()->GetSpriteManager()->GetTexture(miniCover->mTextureName);
-            const float scale = Themes::GetScaleTexture();
-            if (textureReference != nullptr && miniCover->mTextureName != "sprite" && miniCover->mTransform.width == 0 && miniCover->mTransform.height == 0)
+            Texture* textureReference = GetSpriteManager()->GetTexture(miniCover.gui->m_textureName);
+            const float scale = ThemesManager::GetScaleRenderer();
+            if (textureReference != nullptr && miniCover.gui->m_textureName != "sprite" && miniCover.gui->m_textureName != "transparent")
             {
-                miniCover->mTransform.width = textureReference->width / scale;
-                miniCover->mTransform.height = textureReference->height / scale;
+                const Sizef& textureSize = textureReference->GetSize().ToFloat();
+                miniCover.gui->SetSize(textureSize / scale);
+                miniCover.gui->SetSource({0, 0}, textureSize / scale);
             }
+
+            if (miniCover.focus)
+            {
+                const float position = miniCover.sizeBox->GetPosition().x + m_guiHorizontalBox->GetPosition().x;
+                const float offset = (miniCover.sizeBox->GetSize().width - m_arrow->GetSize().width) / 2;
+                m_arrow->SetPosition(position + offset, m_arrow->GetPosition().y);
+            }
+        }
+
+        if (Keyboard::IsReleased(Keyboard::V))
+        {
+            m_numCovers = 23;
+            m_sizeCover = Vector2f(40.0f, 58.0f);
+            CreateMiniCovers();
         }
     }
 
     void GuiMiniCover::End()
     {
-        EntityGui::End();
+        Entity::End();
+    }
+
+    void GuiMiniCover::SetThemeValue()
+    {
+        const int numCovers = ThemesManager::GetConfigurationThemes().numCovers;
+        const float sizeX = ThemesManager::GetConfigurationThemes().sizeX;
+        const float sizeY = ThemesManager::GetConfigurationThemes().sizeY;
+        const float offsetTop = ThemesManager::GetConfigurationThemes().offsetTopCover;
+        const float offsetLeft = ThemesManager::GetConfigurationThemes().offsetLeftCover;
+        const float offsetTopArrow = ThemesManager::GetConfigurationThemes().offsetTopArrow;
+
+        if (sizeX != m_sizeCover.x || sizeY != m_sizeCover.y || numCovers != m_numCovers)
+        {
+            m_numCovers = numCovers;
+            m_sizeCover = Vector2f(sizeX, sizeY);
+            CreateMiniCovers();
+        }
+        m_guiHorizontalBox->SetOffset(offsetLeft, offsetTop);
+        m_arrow->SetOffset(offsetLeft, offsetTopArrow);
     }
 
     void GuiMiniCover::SetPositionCovers(int numCovers)
     {
-        mGuiHorizontalBox->mTransform.x = (mTransform.width - ((mSizeCover.x + 1) * numCovers)) / 2.0f;
-        mArrow->mTransform.x = mGuiHorizontalBox->mTransform.x + ((mSizeCover.x + 1) * numCovers) / 2.0f;
-        mArrow->mTransform.x = (numCovers % 2 == 0) ? mArrow->mTransform.x : mArrow->mTransform.x - mArrow->mTransform.width / 2;
-        mArrow->mTransform.x--;
-
-        mGuiHorizontalBox->mTransform.x *= mTransform.GetRootScale().x;
-        mArrow->mTransform.x *= mTransform.GetRootScale().x;
+        const float x = (GetSize().width - ((m_sizeCover.x + 1) * numCovers)) / 2.0f;
+        m_guiHorizontalBox->SetPosition(x, m_guiHorizontalBox->GetPosition().y);
     }
 
     void GuiMiniCover::SetCovers()
     {
         ClearCovers();
-        GameListManager* pManager = GetApplication()->GetGameListManager();
-        SpriteManager* pSpriteManager = GetApplication()->GetSpriteManager();
-        const int gameListSize = pManager->GetGameListSize();
-        const float scale = Themes::GetScaleTexture();
+
+        const int gameListSize = m_gameListManagerRef->GetGameListSize();
+        const float scaleRender = ThemesManager::GetScaleRenderer();
 
         if (gameListSize == 0)
         {
             return;
         }
 
-        const int numCovers = gameListSize < mSize ? gameListSize + 1 : mSize;
+        const int numCovers = gameListSize < m_numCovers ? gameListSize + 1 : m_numCovers;
 
         for (int i = 0; i < numCovers; i++)
         {
-            const int index = pManager->GetGameId() + i - static_cast<int>(std::round(numCovers / 2));
-            int indexFinal = UtilsFunctionLibrary::SetIndexArray(index, gameListSize);
+            const int index = m_gameListManagerRef->GetGameId() + i - static_cast<int>(std::round(numCovers / 2));
+            int indexFinal = Utils::SetIndexArray(index, gameListSize);
             indexFinal = Math::Clamp(indexFinal, 0, gameListSize - 1);
 
-            const std::string fileName = pManager->GetCurrentGameList(indexFinal)->image;
+            const std::string fileName = m_gameListManagerRef->GetCurrentGameList(indexFinal)->image;
             std::string name = "sprite";
 
             if (!fileName.empty())
             {
                 name = std::to_string(indexFinal) + "_MCV";
-                pSpriteManager->LoadSprite(name, fileName, mSizeCover.x * scale, mSizeCover.y * scale);
+                GetSpriteManager()->LoadSprite(name, fileName, m_sizeCover.x * scaleRender, m_sizeCover.y * scaleRender);
             }
 
-            if (i - 1 >= 0 && i <= static_cast<int>(mGuiCovers.size()) - 2)
+            m_guiMiniCovers.at(i).focus = (indexFinal == m_gameListManagerRef->GetGameId());
+
+            if (i - 1 >= 0 && i <= static_cast<int>(m_guiMiniCovers.size()) - 2)
             {
-                SetCover(name, mGuiCovers.at(i));
+                SetCover(name, m_guiMiniCovers.at(i).gui);
+                m_guiMiniCovers.at(i).sizeBox->Update();
             }
         }
 
         SetPositionCovers(numCovers);
     }
 
-    void GuiMiniCover::SetCover(std::string name, GuiComponent* miniCover)
+    void GuiMiniCover::SetCover(const std::string& name, GuiBase* miniCover)
     {
-        miniCover->mTextureName = name;
+
+        miniCover->m_textureName = name;
         if (name == "sprite")
         {
-            miniCover->mTransform.width = 28;
-            miniCover->mTransform.height = 28;
-            miniCover->mTransform.sourceX = 976;
-            miniCover->mTransform.sourceY = 283;
+            miniCover->SetSize(28.0f, 28.0f);
+            miniCover->SetSource({976.0f, 283.0f}, miniCover->GetSize());
         }
         else
         {
-            miniCover->mTransform.width = 0;
-            miniCover->mTransform.height = 0;
-            miniCover->mTransform.sourceX = 0;
-            miniCover->mTransform.sourceY = 0;
+            miniCover->SetSize(0.0f, 0.0f);
+            miniCover->SetSource(RectFloat{});
         }
     }
 
     void GuiMiniCover::ClearCovers()
     {
-        for (auto& guiCover : mGuiCovers)
+        for (auto& guiCover : m_guiMiniCovers)
         {
-            SetCover("transparent", guiCover);
+            guiCover.focus = false;
+            SetCover("transparent", guiCover.gui);
         }
     }
 
-}  // namespace ClassicLauncher
+} // namespace ClassicLauncher

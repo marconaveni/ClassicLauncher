@@ -1,67 +1,104 @@
 #ifndef MATH_H
 #define MATH_H
 
+#include <algorithm> // std::clamp
+#include <cmath>
 #include <random>
+
+#include "ClassicAssert.h"
+#include "Data/Rectangle.h"
+#include "Data/Vector2.h"
 
 namespace ClassicLauncher::Math
 {
 
     template <typename T>
-    static constexpr T Max(T a, T b)
+    inline constexpr T Max(T a, T b)
     {
         return (b < a) ? a : b;
     }
 
     template <typename T>
-    static constexpr T Min(T a, T b)
+    inline constexpr T Min(T a, T b)
     {
         return (a < b) ? a : b;
     }
 
+    template <typename T, typename U, typename V>
+    inline constexpr T Clamp(T value, U min, V max)
+    {
+        CLASSIC_ASSERT(std::is_signed_v<T> == std::is_signed_v<U> && std::is_signed_v<T> == std::is_signed_v<V>,
+                       "Clamp arguments must all be of the same signedness to avoid errors.");
+
+        return (value < min) ? min : (value > max) ? max : value;
+    }
+
+
     template <typename T>
-    static constexpr T Clamp(T value, T min, T max)
+    inline constexpr bool CheckCollisionPointRec(Vector2<T> point, Rectangle<T> rec)
     {
-        return Max(Min<T>(value, max), min);
+        return ((point.x >= rec.x) && (point.x < (rec.x + rec.width)) && (point.y >= rec.y) && (point.y < (rec.y + rec.height)));
     }
 
-    static constexpr float Clamp(const float value, const float min, const float max)
+    template <typename T>
+    inline constexpr bool CheckCollisionRecs(Rectangle<T> rec1, Rectangle<T> rec2)
     {
-        return Clamp<float>(value, min, max);
+        return ((rec1.x < (rec2.x + rec2.width) && (rec1.x + rec1.width) > rec2.x) && (rec1.y < (rec2.y + rec2.height) && (rec1.y + rec1.height) > rec2.y));
     }
 
-    static constexpr double Clamp(const double value, const double min, const double max)
+    inline constexpr int ToInt(float value)
     {
-        return Clamp<double>(value, min, max);
+        return static_cast<int>(value);
     }
 
-    class RandomGenerator
+    inline constexpr int ToIntRound(float value)
     {
-    public:
-
-        RandomGenerator()
-            : eng(rd())
-        {
-        }
-
-        double Generate(double min, double max)
-        {
-            std::uniform_real_distribution distribution(min, max);
-            return distribution(eng);
-        }
-
-    private:
-
-        std::random_device rd;
-        std::default_random_engine eng;
-    };
-
-    static double Random(const double min, const double max)
-    {
-        static RandomGenerator generator;
-        return generator.Generate(min, max);
+        return static_cast<int>(value >= 0.0f ? value + 0.5f : value - 0.5f);
     }
 
-    static float GetAngle(float v1X, float v1Y, float v2X, float v2Y)
+    inline constexpr float BytesToTerabytes(int value)
+    {
+        return value / (1024.0f * 1024.0f * 1024.0f * 1024.0f);
+    }
+
+    inline constexpr float BytesToGigabytes(int value)
+    {
+        return value / (1024.0f * 1024.0f * 1024.0f);
+    }
+
+    inline constexpr float BytesToMegabytes(int value)
+    {
+        return value / (1024.0f * 1024.0f);
+    }
+
+    template <typename T>
+    static Vector2<T> VecClamp(Vector2<T> value, Vector2<T> min, Vector2<T> max)
+    {
+        Vector2<T> result{};
+        result.x = std::clamp(value.x, min.x, max.x);
+        result.y = std::clamp(value.y, min.y, max.y);
+        return result;
+    }
+
+    inline float FloatAbs(float value)
+    {
+        return std::fabs(value);
+    }
+
+    inline int IntAbs(int value)
+    {
+        return std::abs(value);
+    }
+
+    inline int Random(const int min, const int max)
+    {
+        std::random_device dev;
+        std::mt19937 rng(dev());
+        std::uniform_int_distribution<std::mt19937::result_type> dist(min, max);
+        return dist(rng);
+    }
+
+    inline float GetAngle(float v1X, float v1Y, float v2X, float v2Y)
     {
         float deltaY = v2Y - v1Y;
         float deltaX = v2X - v1X;
@@ -70,12 +107,12 @@ namespace ClassicLauncher::Math
         // return angleInDegrees ;
     }
 
-    static float GetAngle360(float v1X, float v1Y, float v2X, float v2Y)
+    inline float GetAngle360(float v1X, float v1Y, float v2X, float v2Y)
     {
         float angleInDegrees = GetAngle(v1X, v1Y, v2X, v2Y);
         return (angleInDegrees < 0) ? (angleInDegrees + 360) : angleInDegrees;
     }
 
-}  // namespace ClassicLauncher::Math
+} // namespace ClassicLauncher::Math
 
-#endif  // MATH
+#endif // MATH
