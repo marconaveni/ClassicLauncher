@@ -10,7 +10,6 @@
 #include "Utils/Utils.h"
 
 
-
 namespace ClassicLauncher::Resources
 {
 
@@ -18,22 +17,21 @@ namespace ClassicLauncher::Resources
 
     void SetClassicLauncherDirectory()
     {
-#if WIN32
+#if _WIN32
         std::string path = GetExecutableDirectory("portable.txt"); // portable mode is avaliable only windows system
 
         if (std::filesystem::exists(path))
         {
             s_classicLauncherPath = GetExecutableDirectory(".classicLauncher/");
+            return;
         }
-        else
 #endif
+
+        s_classicLauncherPath = GetHomeDirectory() + ".classicLauncher/";
+        s_classicLauncherPath = String::NormalizePath(s_classicLauncherPath);
+        if (!std::filesystem::exists(s_classicLauncherPath))
         {
-            s_classicLauncherPath = GetHomeDirectory() + ".classicLauncher/";
-            s_classicLauncherPath = String::NormalizePath(s_classicLauncherPath);
-            if (!std::filesystem::exists(s_classicLauncherPath))
-            {
-                std::filesystem::create_directory(s_classicLauncherPath); // Todo Do tests
-            }
+            std::filesystem::create_directory(s_classicLauncherPath); // Todo Do tests
         }
     }
 

@@ -32,8 +32,8 @@ namespace ClassicLauncher
         std::string genre{};
         std::string players{};
         std::string hash{};
-        std::string image{};
-        std::string thumbnail{};
+        std::string image{};     // cover
+        std::string thumbnail{}; // screenshot
         std::string video{};
         std::string genreId{};
         bool isFavorite{false};
@@ -75,8 +75,8 @@ namespace ClassicLauncher
         std::string romPath{};
         std::string systemName{};
         std::string systemLabel{};
-        std::string image{};
-        std::string screenshot{};
+        std::string image{};     // cover
+        std::string thumbnail{}; // screenshot
         std::string video{};
         std::string desc{};
         HistoryPosition history{};

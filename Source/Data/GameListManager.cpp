@@ -73,6 +73,8 @@ namespace ClassicLauncher
             game.name = system.systemLabel;
             game.description = system.desc;
             game.image = system.image;
+            game.thumbnail = system.thumbnail;
+            game.video = system.video;
             game.executable = system.executable;
             game.arguments = system.arguments;
             ReplaceCurrentPath(&game, system.romPath);
@@ -144,18 +146,25 @@ namespace ClassicLauncher
             systems.romPath = IsValidElement(systemElement, "rompath") ? NormalizePath(systemElement->FirstChildElement("rompath")->GetText()) : "";
             systems.systemName = IsValidElement(systemElement, "systemname") ? systemElement->FirstChildElement("systemname")->GetText() : "";
             systems.systemLabel = IsValidElement(systemElement, "systemlabel") ? systemElement->FirstChildElement("systemlabel")->GetText() : "";
-            systems.image = IsValidElement(systemElement, "image") ? systemElement->FirstChildElement("image")->GetText() : "";
-            systems.screenshot = IsValidElement(systemElement, "thumbnail") ? systemElement->FirstChildElement("thumbnail")->GetText() : "";
-            systems.video = IsValidElement(systemElement, "video") ? systemElement->FirstChildElement("video")->GetText() : "";
             systems.desc = IsValidElement(systemElement, "desc") ? systemElement->FirstChildElement("desc")->GetText() : "";
-            std::filesystem::path path = NormalizePath(Resources::GetThemeDirectory() + "/" + systems.systemName);
-            std::filesystem::path file = NormalizePath(TEXT("/sprite%.0fx.png", ThemesManager::GetScaleRenderer()));
+
+            const std::filesystem::path path = NormalizePath(Resources::GetThemeDirectory() + "/" + systems.systemName);
+
             if (std::filesystem::is_directory(path))
             {
                 systems.theme.path = path;
                 systems.theme.isDirectoryExist = true;
             }
 
+            // clang-format off
+            const std::string image = NormalizePath(Resources::GetClassicLauncherDirectory("system_theme/media/" + systems.systemName + "/image.png"));
+            const std::string thumbnail = NormalizePath(Resources::GetClassicLauncherDirectory("system_theme/media/" + systems.systemName + "/screenshot.png"));
+            const std::string video = NormalizePath(Resources::GetClassicLauncherDirectory("system_theme/media/" + systems.systemName + "/video.mp4"));
+            systems.image = IsValidElement(systemElement, "image") ? systemElement->FirstChildElement("image")->GetText() : std::filesystem::exists(image) ? image : "";
+            systems.thumbnail = IsValidElement(systemElement, "thumbnail") ? systemElement->FirstChildElement("thumbnail")->GetText() : std::filesystem::exists(thumbnail) ? thumbnail : "";
+            systems.video = IsValidElement(systemElement, "video") ? systemElement->FirstChildElement("video")->GetText() : std::filesystem::exists(video) ? video : "";
+            // clang-format on
+            
             m_gameSystemList.push_back(systems);
 
             systemElement = systemElement->NextSiblingElement("system");

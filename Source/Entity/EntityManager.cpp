@@ -58,7 +58,7 @@ namespace ClassicLauncher
             }
         }
 
-        entity->m_nameId = String::TextFormat("%d_%s", counter, name.c_str());
+        entity->m_nameId = TEXT("%d_%s", counter, name.c_str());
         entity->m_zOrder.insertionIndex = m_counter;
         m_counter++;
     }

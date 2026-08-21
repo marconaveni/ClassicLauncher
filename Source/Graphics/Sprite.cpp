@@ -25,7 +25,7 @@ namespace ClassicLauncher
         {
             Join();
             m_isKeepRunning = true;
-            // m_filePath = file;
+            m_filePath = file.string();
             LOG(LogTrace, "Sprite - starting thread");
             m_workerThread = std::thread(&Sprite::LoadImage, this, file, width, height, aspectRatio);
         }
